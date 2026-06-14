@@ -1,0 +1,26 @@
+.react-grid-item {
+  transition: all 220ms ease;
+}
+
+.react-grid-item.react-grid-placeholder {
+  background: hsl(var(--primary) / 0.18);
+  border: 1px dashed hsl(var(--primary) / 0.45);
+  border-radius: 1.75rem;
+  opacity: 1;
+}
+
+.react-grid-item > .react-resizable-handle {
+  width: 18px;
+  height: 18px;
+  right: 12px;
+  bottom: 12px;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+  border-right: 2px solid hsl(var(--foreground) / 0.35);
+  border-bottom: 2px solid hsl(var(--foreground) / 0.35);
+}
+
+.layout {
+  min-height: 800px;
+}

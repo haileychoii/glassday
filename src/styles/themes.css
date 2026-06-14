@@ -1,0 +1,68 @@
+:root {
+  --background: 320 60% 97%;
+  --foreground: 250 30% 18%;
+
+  --card-glass: 0 0% 100% / 0.52;
+  --card-glass-border: 0 0% 100% / 0.72;
+
+  --primary: 270 60% 62%;
+  --primary-foreground: 0 0% 100%;
+  --primary-glow: 320 80% 80%;
+
+  --muted: 270 25% 94%;
+  --muted-foreground: 250 12% 48%;
+
+  --border: 270 25% 90%;
+  --radius: 1.75rem;
+
+  --bg-grad-1: 340 95% 90%;
+  --bg-grad-2: 270 85% 92%;
+  --bg-grad-3: 160 70% 90%;
+  --bg-grad-4: 210 90% 92%;
+
+  --shadow-glass:
+    0 18px 60px -20px hsl(270 50% 40% / 0.18),
+    inset 0 1px 0 hsl(0 0% 100% / 0.55);
+
+  --shadow-soft: 0 8px 28px -14px hsl(270 50% 40% / 0.25);
+}
+
+.theme-glass {
+  --background: 225 55% 97%;
+  --foreground: 235 28% 16%;
+
+  --card-glass: 0 0% 100% / 0.28;
+  --card-glass-border: 0 0% 100% / 0.8;
+
+  --primary: 230 70% 62%;
+  --primary-glow: 200 100% 82%;
+
+  --bg-grad-1: 205 100% 90%;
+  --bg-grad-2: 280 95% 92%;
+  --bg-grad-3: 330 100% 92%;
+  --bg-grad-4: 170 80% 90%;
+
+  --shadow-glass:
+    0 24px 80px -28px hsl(220 70% 40% / 0.28),
+    inset 0 1px 0 hsl(0 0% 100% / 0.75);
+}
+
+.theme-ios {
+  --background: 210 20% 96%;
+  --foreground: 220 18% 8%;
+
+  --card-glass: 0 0% 100% / 0.72;
+  --card-glass-border: 220 20% 88% / 0.9;
+
+  --primary: 212 100% 50%;
+  --primary-glow: 212 100% 70%;
+
+  --bg-grad-1: 210 25% 98%;
+  --bg-grad-2: 220 20% 94%;
+  --bg-grad-3: 0 0% 100%;
+  --bg-grad-4: 215 18% 92%;
+
+  --shadow-glass:
+    0 18px 50px -28px hsl(220 20% 20% / 0.35),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9);
+}
