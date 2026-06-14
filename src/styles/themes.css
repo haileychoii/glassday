@@ -15,37 +15,45 @@
   --border: 270 25% 90%;
   --radius: 1.75rem;
 
-  --bg-grad-1: 340 95% 90%;
-  --bg-grad-2: 270 85% 92%;
-  --bg-grad-3: 160 70% 90%;
-  --bg-grad-4: 210 90% 92%;
-
   --shadow-glass:
     0 18px 60px -20px hsl(270 50% 40% / 0.18),
     inset 0 1px 0 hsl(0 0% 100% / 0.55);
 
   --shadow-soft: 0 8px 28px -14px hsl(270 50% 40% / 0.25);
+
+  --wallpaper:
+    radial-gradient(circle at 18% 12%, hsl(340 95% 88% / 0.75), transparent 34%),
+    radial-gradient(circle at 82% 18%, hsl(270 90% 90% / 0.72), transparent 36%),
+    radial-gradient(circle at 25% 88%, hsl(160 75% 88% / 0.52), transparent 34%),
+    radial-gradient(circle at 82% 82%, hsl(40 95% 90% / 0.5), transparent 38%),
+    linear-gradient(135deg, hsl(320 60% 97%), hsl(270 80% 98%));
 }
+
+
 
 .theme-glass {
   --background: 225 55% 97%;
   --foreground: 235 28% 16%;
 
   --card-glass: 0 0% 100% / 0.28;
-  --card-glass-border: 0 0% 100% / 0.8;
+  --card-glass-border: 0 0% 100% / 0.84;
 
   --primary: 230 70% 62%;
   --primary-glow: 200 100% 82%;
 
-  --bg-grad-1: 205 100% 90%;
-  --bg-grad-2: 280 95% 92%;
-  --bg-grad-3: 330 100% 92%;
-  --bg-grad-4: 170 80% 90%;
-
   --shadow-glass:
     0 24px 80px -28px hsl(220 70% 40% / 0.28),
     inset 0 1px 0 hsl(0 0% 100% / 0.75);
+
+  --wallpaper:
+    radial-gradient(circle at 12% 18%, hsl(205 100% 78% / 0.72), transparent 30%),
+    radial-gradient(circle at 72% 14%, hsl(255 100% 82% / 0.62), transparent 32%),
+    radial-gradient(circle at 52% 48%, hsl(0 0% 100% / 0.48), transparent 42%),
+    radial-gradient(circle at 26% 86%, hsl(175 100% 78% / 0.48), transparent 34%),
+    radial-gradient(circle at 88% 82%, hsl(310 100% 86% / 0.5), transparent 36%),
+    linear-gradient(135deg, hsl(212 85% 94%), hsl(248 80% 96%));
 }
+
 
 .theme-ios {
   --background: 210 20% 96%;
@@ -57,12 +65,13 @@
   --primary: 212 100% 50%;
   --primary-glow: 212 100% 70%;
 
-  --bg-grad-1: 210 25% 98%;
-  --bg-grad-2: 220 20% 94%;
-  --bg-grad-3: 0 0% 100%;
-  --bg-grad-4: 215 18% 92%;
-
   --shadow-glass:
     0 18px 50px -28px hsl(220 20% 20% / 0.35),
     inset 0 1px 0 hsl(0 0% 100% / 0.9);
+
+  --wallpaper:
+    radial-gradient(circle at 20% 10%, hsl(210 30% 98% / 0.95), transparent 34%),
+    radial-gradient(circle at 85% 16%, hsl(220 20% 94% / 0.9), transparent 36%),
+    radial-gradient(circle at 50% 80%, hsl(0 0% 100% / 0.85), transparent 42%),
+    linear-gradient(135deg, hsl(210 20% 96%), hsl(220 18% 94%));
 }

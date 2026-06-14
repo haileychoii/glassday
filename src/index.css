@@ -19,11 +19,7 @@ body {
   margin: 0;
   color: hsl(var(--foreground));
   background: hsl(var(--background));
-  background-image:
-    radial-gradient(ellipse 60% 45% at 20% 10%, hsl(var(--bg-grad-1) / 0.8), transparent 65%),
-    radial-gradient(ellipse 55% 45% at 80% 15%, hsl(var(--bg-grad-2) / 0.7), transparent 65%),
-    radial-gradient(ellipse 55% 45% at 25% 90%, hsl(var(--bg-grad-3) / 0.6), transparent 65%),
-    radial-gradient(ellipse 50% 45% at 80% 85%, hsl(var(--bg-grad-4) / 0.6), transparent 65%);
+  background-image: var(--wallpaper);
   background-attachment: fixed;
   font-family:
     Pretendard,
@@ -34,13 +30,7 @@ body {
 }
 
 .bg-glass-gradient {
-  background:
-    radial-gradient(circle at 12% 18%, hsl(205 100% 82% / 0.55), transparent 30%),
-    radial-gradient(circle at 78% 18%, hsl(285 100% 88% / 0.62), transparent 34%),
-    radial-gradient(circle at 45% 55%, hsl(0 0% 100% / 0.42), transparent 42%),
-    radial-gradient(circle at 28% 85%, hsl(170 85% 82% / 0.42), transparent 32%),
-    radial-gradient(circle at 88% 88%, hsl(330 100% 88% / 0.45), transparent 35%),
-    linear-gradient(135deg, hsl(215 75% 96%), hsl(285 80% 97%));
+  background: var(--wallpaper);
 }
 
 .glass-card {
