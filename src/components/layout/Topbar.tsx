@@ -37,27 +37,29 @@ export const Topbar = () => {
           : "Good Evening";
 
   const dateText = now.toLocaleDateString("en-US", {
-    weekday: "long",
+    weekday: "short",
     month: "long",
     day: "numeric",
   });
 
   return (
-    <header className="h-auto md:h-[86px] px-4 md:px-6 py-4 border-b border-white/30 bg-white/15 backdrop-blur-2xl">
-      <div className="h-full flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{dateText}</span>
+    <header className="h-[78px] px-5 md:px-6 border-b border-white/35 bg-white/10 backdrop-blur-3xl">
+      <div className="h-full flex items-center justify-between gap-5">
+        <div className="min-w-0">
+          <div className="flex items-center gap-3 mb-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/35 border border-white/45 px-2.5 py-1 text-[11px] text-muted-foreground">
+              <Sparkles className="w-3 h-3" />
+              {dateText}
+            </span>
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
+          <h1 className="text-2xl md:text-[28px] font-semibold tracking-tight leading-none">
             {greeting}, <span className="text-primary">Junhee</span>
           </h1>
         </div>
 
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <div className="hidden xl:flex items-center gap-2 h-11 px-4 rounded-full bg-white/45 border border-white/50">
+        <div className="flex items-center gap-2 md:gap-3 shrink-0">
+          <div className="hidden xl:flex items-center gap-2 h-11 px-4 rounded-full bg-white/35 border border-white/50 backdrop-blur-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
             <Search className="w-4 h-4 text-muted-foreground" />
             <input
               placeholder="Search your OS..."
@@ -65,12 +67,12 @@ export const Topbar = () => {
             />
           </div>
 
-          <button className="h-11 px-4 rounded-full bg-white/45 border border-white/50 text-sm flex items-center gap-2 hover:bg-white/65 transition">
+          <button className="h-11 px-4 rounded-full bg-white/35 border border-white/50 text-sm flex items-center gap-2 hover:bg-white/55 transition backdrop-blur-2xl">
             <CalendarCheck className="w-4 h-4" />
             <span className="hidden sm:inline">Google Calendar</span>
           </button>
 
-          <div className="h-11 px-1.5 rounded-full bg-white/45 border border-white/50 flex items-center">
+          <div className="h-11 px-1.5 rounded-full bg-white/35 border border-white/50 flex items-center backdrop-blur-2xl">
             {themes.map((t) => (
               <button
                 key={t.id}
@@ -87,7 +89,7 @@ export const Topbar = () => {
             ))}
           </div>
 
-          <button className="w-11 h-11 rounded-full bg-white/45 border border-white/50 flex items-center justify-center hover:bg-white/65 transition">
+          <button className="w-11 h-11 rounded-full bg-white/35 border border-white/50 flex items-center justify-center hover:bg-white/55 transition backdrop-blur-2xl">
             <Bell className="w-4 h-4" />
           </button>
         </div>

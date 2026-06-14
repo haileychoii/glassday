@@ -1,9 +1,9 @@
+@import "./styles/themes.css";
+@import "./styles/grid.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "./styles/themes.css";
-@import "./styles/grid.css";
 
 * {
   box-sizing: border-box;
@@ -20,10 +20,10 @@ body {
   color: hsl(var(--foreground));
   background: hsl(var(--background));
   background-image:
-    radial-gradient(ellipse 60% 45% at 20% 10%, hsl(var(--bg-grad-1) / 0.75), transparent 65%),
-    radial-gradient(ellipse 55% 45% at 80% 15%, hsl(var(--bg-grad-2) / 0.65), transparent 65%),
-    radial-gradient(ellipse 55% 45% at 25% 90%, hsl(var(--bg-grad-3) / 0.55), transparent 65%),
-    radial-gradient(ellipse 50% 45% at 80% 85%, hsl(var(--bg-grad-4) / 0.55), transparent 65%);
+    radial-gradient(ellipse 60% 45% at 20% 10%, hsl(var(--bg-grad-1) / 0.8), transparent 65%),
+    radial-gradient(ellipse 55% 45% at 80% 15%, hsl(var(--bg-grad-2) / 0.7), transparent 65%),
+    radial-gradient(ellipse 55% 45% at 25% 90%, hsl(var(--bg-grad-3) / 0.6), transparent 65%),
+    radial-gradient(ellipse 50% 45% at 80% 85%, hsl(var(--bg-grad-4) / 0.6), transparent 65%);
   background-attachment: fixed;
   font-family:
     Pretendard,
@@ -33,27 +33,110 @@ body {
     sans-serif;
 }
 
+.bg-glass-gradient {
+  background:
+    radial-gradient(circle at 12% 18%, hsl(205 100% 82% / 0.55), transparent 30%),
+    radial-gradient(circle at 78% 18%, hsl(285 100% 88% / 0.62), transparent 34%),
+    radial-gradient(circle at 45% 55%, hsl(0 0% 100% / 0.42), transparent 42%),
+    radial-gradient(circle at 28% 85%, hsl(170 85% 82% / 0.42), transparent 32%),
+    radial-gradient(circle at 88% 88%, hsl(330 100% 88% / 0.45), transparent 35%),
+    linear-gradient(135deg, hsl(215 75% 96%), hsl(285 80% 97%));
+}
+
 .glass-card {
   height: 100%;
-  background: hsl(var(--card-glass));
-  border: 1px solid hsl(var(--card-glass-border));
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  box-shadow: var(--shadow-glass);
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(0 0% 100% / 0.46),
+      hsl(0 0% 100% / 0.18)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.78);
+  backdrop-filter: blur(34px) saturate(210%) contrast(108%);
+  -webkit-backdrop-filter: blur(34px) saturate(210%) contrast(108%);
+  box-shadow:
+    0 24px 80px -32px hsl(225 70% 40% / 0.34),
+    0 2px 8px hsl(0 0% 100% / 0.22) inset,
+    inset 0 1px 0 hsl(0 0% 100% / 0.9),
+    inset 0 -1px 0 hsl(0 0% 100% / 0.28);
   border-radius: var(--radius);
 }
 
-.glass-panel {
-  background: hsl(var(--card-glass));
-  border: 1px solid hsl(var(--card-glass-border));
-  backdrop-filter: blur(42px) saturate(190%);
-  -webkit-backdrop-filter: blur(42px) saturate(190%);
-  box-shadow: var(--shadow-glass);
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(0 0% 100% / 0.55),
+      transparent 28%,
+      transparent 72%,
+      hsl(0 0% 100% / 0.18)
+    );
+  opacity: 0.8;
 }
 
+.glass-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-panel {
+  position: relative;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(0 0% 100% / 0.38),
+      hsl(0 0% 100% / 0.16)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.7);
+  backdrop-filter: blur(46px) saturate(210%);
+  -webkit-backdrop-filter: blur(46px) saturate(210%);
+  box-shadow:
+    0 32px 100px -38px hsl(230 70% 45% / 0.35),
+    inset 0 1px 0 hsl(0 0% 100% / 0.75);
+}
+
+/* Glass theme: 더 투명하고 선명한 유리 */
+.theme-glass .glass-card {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.34),
+      hsl(0 0% 100% / 0.12)
+    );
+  border-color: hsl(0 0% 100% / 0.86);
+  box-shadow:
+    0 28px 90px -34px hsl(225 80% 38% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.95),
+    inset 0 -1px 0 hsl(0 0% 100% / 0.28);
+}
+
+.theme-glass .glass-panel {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.28),
+      hsl(0 0% 100% / 0.11)
+    );
+  border-color: hsl(0 0% 100% / 0.75);
+}
+
+
+/* iOS theme: 더 시스템 UI처럼 하얗고 단정하게 */
 .theme-ios .glass-card,
 .theme-ios .glass-panel {
   border-radius: 28px;
+  background: hsl(0 0% 100% / 0.8);
+  border-color: hsl(220 20% 88% / 0.95);
   backdrop-filter: blur(22px) saturate(160%);
   -webkit-backdrop-filter: blur(22px) saturate(160%);
+  box-shadow:
+    0 18px 50px -28px hsl(220 20% 20% / 0.32),
+    inset 0 1px 0 hsl(0 0% 100% / 0.95);
 }

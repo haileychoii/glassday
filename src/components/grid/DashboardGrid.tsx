@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Responsive, WidthProvider, type Layouts } from "react-grid-layout";
+import { Responsive, WidthProvider } from "react-grid-layout";
+import type { Layout, Layouts } from "react-grid-layout";
 
 import { defaultLayouts } from "./gridDefaults";
 
@@ -59,7 +60,7 @@ export const DashboardGrid = () => {
       isResizable
       compactType="vertical"
       preventCollision={false}
-      onLayoutChange={(_, allLayouts) => {
+      onLayoutChange={(_: Layout[], allLayouts: Layouts) => {
         setLayouts(allLayouts);
       }}
     >
