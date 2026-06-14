@@ -8,7 +8,7 @@ import {
   Target,
   BriefcaseBusiness,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 const navItems = [
   { label: "Dashboard", icon: Home, active: true },

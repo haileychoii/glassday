@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Bell, CalendarCheck, Search, Sparkles } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 type Theme = "pastel" | "glass" | "ios";
 
