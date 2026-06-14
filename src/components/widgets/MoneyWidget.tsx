@@ -1,40 +1,47 @@
-import { Activity, RotateCcw } from "lucide-react";
+import { RotateCcw, Wallet } from "lucide-react";
 import { GlassCard } from "../glass/GlassCard";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 
-type HealthData = {
-  current: number;
-  target: number;
-  start: number;
-  program: string;
+type MoneyData = {
+  monthlyCurrent: number;
+  monthlyGoal: number;
+  assetCurrent: number;
+  assetGoal: number;
 };
 
-const defaultHealth: HealthData = {
-  current: 54.8,
-  target: 48.0,
-  start: 58.0,
-  program: "Wegovy · Week 3",
+const defaultMoney: MoneyData = {
+  monthlyCurrent: 350000,
+  monthlyGoal: 1000000,
+  assetCurrent: 8400000,
+  assetGoal: 100000000,
 };
 
-export const HealthWidget = () => {
+const formatWon = (value: number) => {
+  return "₩" + value.toLocaleString();
+};
+
+export const MoneyWidget = () => {
   const {
-    value: health,
-    setValue: setHealth,
+    value: money,
+    setValue: setMoney,
     resetValue,
-  } = useLocalStorage<HealthData>("glassday.health", defaultHealth);
+  } = useLocalStorage<MoneyData>("glassday.money", defaultMoney);
 
-  const total = health.start - health.target;
-  const progressed = health.start - health.current;
-  const progress =
-    total <= 0 ? 0 : Math.max(0, Math.min(100, (progressed / total) * 100));
+  const monthlyPercent =
+    money.monthlyGoal <= 0
+      ? 0
+      : Math.min(100, (money.monthlyCurrent / money.monthlyGoal) * 100);
 
-  const remaining = Math.max(0, health.current - health.target).toFixed(1);
+  const assetPercent =
+    money.assetGoal <= 0
+      ? 0
+      : Math.min(100, (money.assetCurrent / money.assetGoal) * 100);
 
-  const updateField = <K extends keyof HealthData>(
+  const updateField = <K extends keyof MoneyData>(
     key: K,
-    value: HealthData[K]
+    value: MoneyData[K]
   ) => {
-    setHealth((prev) => ({
+    setMoney((prev) => ({
       ...prev,
       [key]: value,
     }));
@@ -42,80 +49,88 @@ export const HealthWidget = () => {
 
   return (
     <GlassCard
-      title="Health Progress"
-      subtitle="Editable and saved locally."
-      icon={<Activity className="w-4 h-4" />}
+      title="Wealth Tracker"
+      subtitle="Editable money goals."
+      icon={<Wallet className="w-4 h-4" />}
     >
-      <div className="space-y-4">
-        <div className="grid grid-cols-3 gap-2">
-          <label className="rounded-2xl bg-white/25 border border-white/40 p-3">
-            <div className="text-[11px] text-muted-foreground mb-1">
-              Start
-            </div>
-            <input
-              type="number"
-              step="0.1"
-              value={health.start}
-              onChange={(e) => updateField("start", Number(e.target.value))}
-              className="w-full bg-transparent outline-none text-lg font-semibold"
-            />
-          </label>
-
-          <label className="rounded-2xl bg-white/25 border border-white/40 p-3">
-            <div className="text-[11px] text-muted-foreground mb-1">
-              Current
-            </div>
-            <input
-              type="number"
-              step="0.1"
-              value={health.current}
-              onChange={(e) => updateField("current", Number(e.target.value))}
-              className="w-full bg-transparent outline-none text-lg font-semibold"
-            />
-          </label>
-
-          <label className="rounded-2xl bg-white/25 border border-white/40 p-3">
-            <div className="text-[11px] text-muted-foreground mb-1">
-              Goal
-            </div>
-            <input
-              type="number"
-              step="0.1"
-              value={health.target}
-              onChange={(e) => updateField("target", Number(e.target.value))}
-              className="w-full bg-transparent outline-none text-lg font-semibold"
-            />
-          </label>
-        </div>
-
+      <div className="space-y-5">
         <div>
           <div className="flex justify-between text-xs mb-2">
-            <span className="text-muted-foreground">Progress</span>
-            <span className="tabular-nums">{Math.round(progress)}%</span>
+            <span>Monthly Savings</span>
+            <span className="text-muted-foreground">
+              {Math.round(monthlyPercent)}%
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <input
+              type="number"
+              value={money.monthlyCurrent}
+              onChange={(e) =>
+                updateField("monthlyCurrent", Number(e.target.value))
+              }
+              className="w-full rounded-xl bg-white/25 border border-white/40 px-3 py-2 text-sm outline-none"
+            />
+
+            <input
+              type="number"
+              value={money.monthlyGoal}
+              onChange={(e) =>
+                updateField("monthlyGoal", Number(e.target.value))
+              }
+              className="w-full rounded-xl bg-white/25 border border-white/40 px-3 py-2 text-sm outline-none"
+            />
+          </div>
+
+          <div className="text-xs text-muted-foreground mb-2">
+            {formatWon(money.monthlyCurrent)} / {formatWon(money.monthlyGoal)}
           </div>
 
           <div className="h-2 rounded-full bg-white/30 overflow-hidden">
             <div
               className="h-full rounded-full progress-gradient transition-all duration-300"
-              style={{ width: `${progress}%` }}
+              style={{ width: `${monthlyPercent}%` }}
             />
-          </div>
-
-          <div className="text-xs text-muted-foreground mt-2">
-            {remaining}kg to go
           </div>
         </div>
 
-        <label className="block rounded-2xl bg-white/25 border border-white/40 p-3">
-          <div className="text-[11px] text-muted-foreground mb-1">
-            Program
+        <div>
+          <div className="flex justify-between text-xs mb-2">
+            <span>Future Asset Goal</span>
+            <span className="text-muted-foreground">
+              {Math.round(assetPercent)}%
+            </span>
           </div>
-          <input
-            value={health.program}
-            onChange={(e) => updateField("program", e.target.value)}
-            className="w-full bg-transparent outline-none text-sm font-medium"
-          />
-        </label>
+
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <input
+              type="number"
+              value={money.assetCurrent}
+              onChange={(e) =>
+                updateField("assetCurrent", Number(e.target.value))
+              }
+              className="w-full rounded-xl bg-white/25 border border-white/40 px-3 py-2 text-sm outline-none"
+            />
+
+            <input
+              type="number"
+              value={money.assetGoal}
+              onChange={(e) => updateField("assetGoal", Number(e.target.value))}
+              className="w-full rounded-xl bg-white/25 border border-white/40 px-3 py-2 text-sm outline-none"
+            />
+          </div>
+
+          <div className="text-xs text-muted-foreground mb-2">
+            {formatWon(money.assetCurrent)} / {formatWon(money.assetGoal)}
+          </div>
+
+          <div className="h-2 rounded-full bg-white/30 overflow-hidden">
+            <div
+              className="h-full rounded-full progress-gradient transition-all duration-300"
+              style={{ width: `${assetPercent}%` }}
+            />
+          </div>
+        </div>
 
         <button
           type="button"
@@ -123,7 +138,7 @@ export const HealthWidget = () => {
           className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition"
         >
           <RotateCcw className="w-3.5 h-3.5" />
-          Reset health data
+          Reset money data
         </button>
       </div>
     </GlassCard>
