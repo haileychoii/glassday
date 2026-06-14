@@ -45,7 +45,7 @@ export const CareerWidget = () => {
           </div>
         ))}
 
-        <div className="rounded-2xl bg-primary/10 border border-primary/15 p-4">
+        <div className="rounded-2xl accent-soft-card p-4">
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
             Next Deadline
           </div>

@@ -36,7 +36,7 @@ export const MoneyWidget = () => {
 
           <div className="h-2 rounded-full bg-white/30 overflow-hidden">
             <div
-              className="h-full rounded-full bg-primary"
+              className="h-full rounded-full progress-gradient"
               style={{
                 width: `${monthlyPercent}%`,
               }}
@@ -59,7 +59,7 @@ export const MoneyWidget = () => {
 
           <div className="h-2 rounded-full bg-white/30 overflow-hidden">
             <div
-              className="h-full rounded-full bg-primary"
+              className="h-full rounded-full progress-gradient"
               style={{
                 width: `${assetPercent}%`,
               }}

@@ -19,6 +19,20 @@ export const AppShell = ({ children }: AppShellProps) => {
               <Topbar />
 
               <main className="flex-1 p-4 md:p-6 overflow-auto bg-white/5">
+                <div className="mb-5">
+                    <div className="text-xs text-muted-foreground mb-1">
+                        Sunday, June 14
+                    </div>
+
+                    <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
+                        Good Evening, <span className="text-primary">Junhee</span>
+                    </h1>
+
+                    <p className="text-sm text-muted-foreground mt-2">
+                        Plan your day, move your goals, and keep your system light.
+                    </p>
+                </div>
+
                 {children}
               </main>
             </div>

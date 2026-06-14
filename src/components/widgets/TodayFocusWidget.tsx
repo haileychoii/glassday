@@ -33,15 +33,15 @@ export const TodayFocusWidget = () => {
         </div>
 
         <div className="flex gap-2">
-          <span className="px-3 py-1 rounded-full bg-primary/15 text-xs">
+          <span className="px-3 py-1 rounded-full accent-pill text-xs">
             Career
           </span>
 
-          <span className="px-3 py-1 rounded-full bg-primary/15 text-xs">
+          <span className="px-3 py-1 rounded-full accent-pill text-xs">
             NCS
           </span>
 
-          <span className="px-3 py-1 rounded-full bg-primary/15 text-xs">
+          <span className="px-3 py-1 rounded-full accent-pill text-xs">
             English
           </span>
         </div>

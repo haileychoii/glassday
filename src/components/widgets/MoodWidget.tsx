@@ -19,6 +19,7 @@ export const MoodWidget = () => {
       title="Energy Insights"
       subtitle="Feelings as signals"
       icon={<Heart className="w-4 h-4" />}
+      className="mood-widget"
     >
       <div className="space-y-3">
         {metrics.map((metric) => (
@@ -39,8 +40,8 @@ export const MoodWidget = () => {
                   className={cn(
                     "w-2.5 h-2.5 rounded-full transition-all",
                     n <= values[metric]
-                      ? "bg-primary scale-110"
-                      : "bg-white/45 hover:bg-white/75"
+                      ? "mood-dot-active scale-110"
+                      : "bg-white/35 hover:bg-white/65"
                   )}
                 />
               ))}
