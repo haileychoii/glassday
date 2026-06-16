@@ -102,6 +102,10 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
       <div key="mood">
         <MoodWidget />
       </div>
+
+      <div className="fixed bottom-4 right-4 z-50 bg-black text-white px-3 py-2 rounded-full text-xs">
+        editMode: {String(editMode)}
+      </div>
     </ResponsiveGridLayout>
   );
 };
