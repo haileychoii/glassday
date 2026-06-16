@@ -60,6 +60,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
       margin={[18, 18]}
       containerPadding={[0, 0]}
       draggableHandle=".drag-handle"
+      draggableCancel="input, textarea, select, button, .no-drag"
       isDraggable={editMode}
       isResizable={editMode}
       compactType="vertical"

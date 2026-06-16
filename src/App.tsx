@@ -3,7 +3,7 @@ import { AppShell } from "./components/layout/AppShell";
 import { DashboardGrid } from "./components/grid/DashboardGrid";
 
 function App() {
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(true);
 
   return (
     <AppShell

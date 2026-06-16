@@ -90,3 +90,34 @@
   background: hsl(0 0% 100% / 0.42);
   border-color: hsl(0 0% 100% / 0.68);
 }
+
+.layout.is-editing .react-resizable-handle {
+  display: block;
+  z-index: 20;
+}
+
+.layout.is-editing .react-grid-item {
+  outline: 1px dashed hsl(var(--primary) / 0.28);
+  outline-offset: 4px;
+}
+
+.layout.is-viewing .react-resizable-handle {
+  display: none;
+}
+
+.react-grid-item > .react-resizable-handle {
+  width: 22px;
+  height: 22px;
+  right: 10px;
+  bottom: 10px;
+  z-index: 30;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+  width: 8px;
+  height: 8px;
+  right: 4px;
+  bottom: 4px;
+  border-right: 2px solid hsl(var(--foreground) / 0.45);
+  border-bottom: 2px solid hsl(var(--foreground) / 0.45);
+}
