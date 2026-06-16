@@ -1,23 +1,40 @@
-import { useState } from "react";
-import { Heart } from "lucide-react";
+import { Heart, RotateCcw } from "lucide-react";
 import { GlassCard } from "../glass/GlassCard";
 import { cn } from "../../lib/utils";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 const metrics = ["Energy", "Focus", "Sleepiness", "Stress", "Appetite"] as const;
 
+type Metric = (typeof metrics)[number];
+
+type MoodValues = Record<Metric, number>;
+
+const defaultMood: MoodValues = {
+  Energy: 3,
+  Focus: 3,
+  Sleepiness: 4,
+  Stress: 2,
+  Appetite: 3,
+};
+
 export const MoodWidget = () => {
-  const [values, setValues] = useState<Record<string, number>>({
-    Energy: 3,
-    Focus: 3,
-    Sleepiness: 4,
-    Stress: 2,
-    Appetite: 3,
-  });
+  const {
+    value: values,
+    setValue: setValues,
+    resetValue,
+  } = useLocalStorage<MoodValues>("glassday.mood", defaultMood);
+
+  const updateMetric = (metric: Metric, value: number) => {
+    setValues((prev) => ({
+      ...prev,
+      [metric]: value,
+    }));
+  };
 
   return (
     <GlassCard
       title="Energy Insights"
-      subtitle="Feelings as signals"
+      subtitle="Saved locally."
       icon={<Heart className="w-4 h-4" />}
       className="mood-widget"
     >
@@ -31,12 +48,7 @@ export const MoodWidget = () => {
                 <button
                   key={n}
                   type="button"
-                  onClick={() =>
-                    setValues((prev) => ({
-                      ...prev,
-                      [metric]: n,
-                    }))
-                  }
+                  onClick={() => updateMetric(metric, n)}
                   className={cn(
                     "w-2.5 h-2.5 rounded-full transition-all",
                     n <= values[metric]
@@ -52,6 +64,15 @@ export const MoodWidget = () => {
             </span>
           </div>
         ))}
+
+        <button
+          type="button"
+          onClick={resetValue}
+          className="pt-2 flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          Reset mood data
+        </button>
       </div>
     </GlassCard>
   );

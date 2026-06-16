@@ -24,3 +24,20 @@
 .layout {
   min-height: 800px;
 }
+
+.layout.is-viewing .react-resizable-handle {
+  display: none;
+}
+
+.layout.is-editing .react-grid-item {
+  outline: 1px dashed hsl(var(--primary) / 0.22);
+  outline-offset: 4px;
+}
+
+.layout.is-editing .drag-handle {
+  cursor: move;
+}
+
+.layout.is-viewing .drag-handle {
+  cursor: default;
+}

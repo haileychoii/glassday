@@ -20,6 +20,10 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const STORAGE_KEY = "glassday.dashboard.layouts";
 
+type DashboardGridProps = {
+  editMode: boolean;
+};
+
 const loadLayouts = (): Layouts => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -31,7 +35,7 @@ const loadLayouts = (): Layouts => {
   }
 };
 
-export const DashboardGrid = () => {
+export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
   const [layouts, setLayouts] = useState<Layouts>(() => loadLayouts());
 
   useEffect(() => {
@@ -40,7 +44,7 @@ export const DashboardGrid = () => {
 
   return (
     <ResponsiveGridLayout
-      className="layout"
+      className={`layout ${editMode ? "is-editing" : "is-viewing"}`}
       layouts={layouts}
       breakpoints={{
         lg: 1200,
@@ -56,12 +60,14 @@ export const DashboardGrid = () => {
       margin={[18, 18]}
       containerPadding={[0, 0]}
       draggableHandle=".drag-handle"
-      isDraggable
-      isResizable
+      isDraggable={editMode}
+      isResizable={editMode}
       compactType="vertical"
       preventCollision={false}
       onLayoutChange={(_: Layout[], allLayouts: Layouts) => {
-        setLayouts(allLayouts);
+        if (editMode) {
+          setLayouts(allLayouts);
+        }
       }}
     >
       <div key="today">
