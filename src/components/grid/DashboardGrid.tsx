@@ -27,6 +27,7 @@ type DashboardGridProps = {
 const loadLayouts = (): Layouts => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
+
     if (!saved) return defaultLayouts;
 
     return JSON.parse(saved) as Layouts;
@@ -43,69 +44,71 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
   }, [layouts]);
 
   return (
-    <ResponsiveGridLayout
-      className={`layout ${editMode ? "is-editing" : "is-viewing"}`}
-      layouts={layouts}
-      breakpoints={{
-        lg: 1200,
-        md: 768,
-        sm: 0,
-      }}
-      cols={{
-        lg: 12,
-        md: 12,
-        sm: 4,
-      }}
-      rowHeight={76}
-      margin={[18, 18]}
-      containerPadding={[0, 0]}
-      draggableHandle=".drag-handle"
-      draggableCancel="input, textarea, select, button, .no-drag"
-      isDraggable={editMode}
-      isResizable={editMode}
-      compactType="vertical"
-      preventCollision={false}
-      onLayoutChange={(_: Layout[], allLayouts: Layouts) => {
+    <>
+      <div className="fixed bottom-4 right-4 z-[9999] bg-black text-white px-3 py-2 rounded-full text-xs">
+        editMode: {String(editMode)}
+      </div>
+
+      <ResponsiveGridLayout
+        className={`layout ${editMode ? "is-editing" : "is-viewing"}`}
+        layouts={layouts}
+        breakpoints={{
+          lg: 1200,
+          md: 768,
+          sm: 0,
+          }}
+        cols={{
+          lg: 12,
+          md: 12,
+          sm: 4,
+        }}
+        rowHeight={76}
+        margin={[18, 18]}
+        containerPadding={[0, 0]}
+        draggableCancel="input, textarea, select, button, .no-drag, .react-resizable-handle"
+        resizeHandles={["se"]}
+        isDraggable={editMode}
+        isResizable={editMode}
+        compactType="vertical"
+        preventCollision={false}
+        onLayoutChange={(_: Layout[], allLayouts: Layouts) => {
         if (editMode) {
           setLayouts(allLayouts);
         }
-      }}
-    >
-      <div key="today">
-        <TodayFocusWidget />
-      </div>
+        }}
+      >
+        <div key="today">
+          <TodayFocusWidget />
+        </div>
 
-      <div key="calendar">
-        <CalendarWidget />
-      </div>
+        <div key="calendar">
+          <CalendarWidget />
+        </div>
 
-      <div key="memo">
-        <MemoWidget />
-      </div>
+        <div key="memo">
+          <MemoWidget />
+        </div>
 
-      <div key="study">
-        <StudyWidget />
-      </div>
+        <div key="study">
+          <StudyWidget />
+        </div>
 
-      <div key="career">
-        <CareerWidget />
-      </div>
+        <div key="career">
+          <CareerWidget />
+        </div>
 
-      <div key="health">
-        <HealthWidget />
-      </div>
+        <div key="health">
+          <HealthWidget />
+        </div>
 
-      <div key="money">
-        <MoneyWidget />
-      </div>
+        <div key="money">
+          <MoneyWidget />
+        </div>
 
-      <div key="mood">
-        <MoodWidget />
-      </div>
-
-      <div className="fixed bottom-4 right-4 z-50 bg-black text-white px-3 py-2 rounded-full text-xs">
-        editMode: {String(editMode)}
-      </div>
-    </ResponsiveGridLayout>
+        <div key="mood">
+          <MoodWidget />
+        </div>
+      </ResponsiveGridLayout>
+    </>
   );
 };

@@ -121,3 +121,49 @@
   border-right: 2px solid hsl(var(--foreground) / 0.45);
   border-bottom: 2px solid hsl(var(--foreground) / 0.45);
 }
+
+.layout.is-editing .react-grid-item {
+  outline: 1px dashed hsl(var(--primary) / 0.28);
+  outline-offset: 4px;
+  cursor: grab;
+}
+
+.layout.is-editing .react-grid-item.react-draggable-dragging {
+  cursor: grabbing;
+  z-index: 100;
+}
+
+.layout.is-editing .glass-card {
+  user-select: none;
+}
+
+.layout.is-editing input,
+.layout.is-editing textarea,
+.layout.is-editing select,
+.layout.is-editing button {
+  user-select: auto;
+  cursor: auto;
+}
+
+.layout.is-viewing .react-resizable-handle {
+  display: none !important;
+}
+
+.layout.is-editing .react-resizable-handle {
+  display: block !important;
+  width: 24px;
+  height: 24px;
+  right: 10px;
+  bottom: 10px;
+  z-index: 50;
+  cursor: se-resize;
+}
+
+.layout.is-editing .react-resizable-handle::after {
+  width: 9px;
+  height: 9px;
+  right: 5px;
+  bottom: 5px;
+  border-right: 2px solid hsl(var(--foreground) / 0.48);
+  border-bottom: 2px solid hsl(var(--foreground) / 0.48);
+}
