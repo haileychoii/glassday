@@ -1,169 +1,105 @@
-.react-grid-item {
-  transition: all 220ms ease;
+.dashboard-grid-board {
+  position: relative;
+  display: grid;
+  width: 100%;
 }
 
-.react-grid-item.react-grid-placeholder {
-  background: hsl(var(--primary) / 0.18);
-  border: 1px dashed hsl(var(--primary) / 0.45);
-  border-radius: 1.75rem;
-  opacity: 1;
-}
-
-.react-grid-item > .react-resizable-handle {
-  width: 18px;
-  height: 18px;
-  right: 12px;
-  bottom: 12px;
-}
-
-.react-grid-item > .react-resizable-handle::after {
-  border-right: 2px solid hsl(var(--foreground) / 0.35);
-  border-bottom: 2px solid hsl(var(--foreground) / 0.35);
-}
-
-.layout {
-  min-height: 800px;
-}
-
-.layout.is-viewing .react-resizable-handle {
-  display: none;
-}
-
-.layout.is-editing .react-grid-item {
-  outline: 1px dashed hsl(var(--primary) / 0.22);
-  outline-offset: 4px;
-}
-
-.layout.is-editing .drag-handle {
-  cursor: move;
-}
-
-.layout.is-viewing .drag-handle {
-  cursor: default;
-}
-
-/* View Mode: 위젯 이동/크기조절/내용수정 잠금 */
-.layout.is-viewing .react-resizable-handle {
-  display: none;
-}
-
-.layout.is-viewing input,
-.layout.is-viewing textarea,
-.layout.is-viewing select,
-.layout.is-viewing button {
+.dashboard-grid-guides {
+  position: absolute;
+  inset: 0;
+  display: grid;
   pointer-events: none;
+  z-index: 0;
 }
 
-.layout.is-viewing input,
-.layout.is-viewing textarea,
-.layout.is-viewing select {
-  opacity: 0.88;
+.dashboard-grid-cell {
+  border: 1px dashed hsl(var(--primary) / 0.22);
+  border-radius: 16px;
+  background: hsl(0 0% 100% / 0.08);
 }
 
-.layout.is-viewing .edit-only {
-  display: none;
+.dashboard-grid-item {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  min-height: 0;
 }
 
-/* Edit Mode: 편집 가능하다는 느낌 */
-.layout.is-editing .react-grid-item {
-  outline: 1px dashed hsl(var(--primary) / 0.24);
-  outline-offset: 4px;
-}
-
-.layout.is-editing .drag-handle {
-  cursor: move;
-}
-
-.layout.is-viewing .drag-handle {
-  cursor: default;
-}
-
-.layout.is-editing input,
-.layout.is-editing textarea,
-.layout.is-editing select {
-  background: hsl(0 0% 100% / 0.26);
-}
-
-.layout.is-editing input:focus,
-.layout.is-editing textarea:focus,
-.layout.is-editing select:focus {
-  background: hsl(0 0% 100% / 0.42);
-  border-color: hsl(0 0% 100% / 0.68);
-}
-
-.layout.is-editing .react-resizable-handle {
-  display: block;
-  z-index: 20;
-}
-
-.layout.is-editing .react-grid-item {
+.resize-grid-mode .dashboard-grid-item {
   outline: 1px dashed hsl(var(--primary) / 0.28);
-  outline-offset: 4px;
+  outline-offset: 5px;
+  border-radius: var(--radius);
 }
 
-.layout.is-viewing .react-resizable-handle {
-  display: none;
+.resize-grid-mode .dashboard-grid-item.is-selected {
+  outline: 2px solid hsl(var(--primary) / 0.55);
+  outline-offset: 6px;
 }
 
-.react-grid-item > .react-resizable-handle {
+.resize-grid-mode .dashboard-grid-item.is-selected::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: calc(var(--radius) + 8px);
+  background: hsl(var(--primary) / 0.08);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.dashboard-resize-handle {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  z-index: 30;
   width: 22px;
   height: 22px;
-  right: 10px;
-  bottom: 10px;
-  z-index: 30;
-}
-
-.react-grid-item > .react-resizable-handle::after {
-  width: 8px;
-  height: 8px;
-  right: 4px;
-  bottom: 4px;
-  border-right: 2px solid hsl(var(--foreground) / 0.45);
-  border-bottom: 2px solid hsl(var(--foreground) / 0.45);
-}
-
-.layout.is-editing .react-grid-item {
-  outline: 1px dashed hsl(var(--primary) / 0.28);
-  outline-offset: 4px;
-  cursor: grab;
-}
-
-.layout.is-editing .react-grid-item.react-draggable-dragging {
-  cursor: grabbing;
-  z-index: 100;
-}
-
-.layout.is-editing .glass-card {
-  user-select: none;
-}
-
-.layout.is-editing input,
-.layout.is-editing textarea,
-.layout.is-editing select,
-.layout.is-editing button {
-  user-select: auto;
-  cursor: auto;
-}
-
-.layout.is-viewing .react-resizable-handle {
-  display: none !important;
-}
-
-.layout.is-editing .react-resizable-handle {
-  display: block !important;
-  width: 24px;
-  height: 24px;
-  right: 10px;
-  bottom: 10px;
-  z-index: 50;
+  border-radius: 8px;
+  border: 1px solid hsl(0 0% 100% / 0.72);
+  background:
+    linear-gradient(
+      135deg,
+      hsl(0 0% 100% / 0.88),
+      hsl(0 0% 100% / 0.38)
+    );
+  box-shadow:
+    0 8px 22px hsl(var(--primary) / 0.2),
+    inset 0 1px 0 hsl(0 0% 100% / 0.8);
   cursor: se-resize;
 }
 
-.layout.is-editing .react-resizable-handle::after {
-  width: 9px;
-  height: 9px;
+.dashboard-resize-handle::after {
+  content: "";
+  position: absolute;
   right: 5px;
   bottom: 5px;
-  border-right: 2px solid hsl(var(--foreground) / 0.48);
-  border-bottom: 2px solid hsl(var(--foreground) / 0.48);
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid hsl(var(--foreground) / 0.5);
+  border-bottom: 2px solid hsl(var(--foreground) / 0.5);
+}
+
+.grid-tool-button {
+  height: 34px;
+  min-width: 34px;
+  border-radius: 999px;
+  background: hsl(0 0% 100% / 0.35);
+  border: 1px solid hsl(0 0% 100% / 0.5);
+  padding: 0 10px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: 160ms ease;
+}
+
+.grid-tool-button:hover {
+  background: hsl(0 0% 100% / 0.58);
+  transform: translateY(-1px);
+}
+
+.resize-grid-mode input,
+.resize-grid-mode textarea,
+.resize-grid-mode select,
+.resize-grid-mode button:not(.dashboard-resize-handle):not(.grid-tool-button) {
+  pointer-events: none;
 }
