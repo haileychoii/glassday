@@ -1,6 +1,8 @@
-import { BriefcaseBusiness, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { BriefcaseBusiness, Lock, Pencil, Plus, Trash2 } from "lucide-react";
 import { GlassCard } from "../glass/GlassCard";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { cn } from "../../lib/utils";
 
 type CareerStatus = "Preparing" | "Submitted" | "Completed";
 
@@ -33,13 +35,10 @@ const defaultApplications: CareerItem[] = [
 ];
 
 export const CareerWidget = () => {
-  const {
-    value: applications,
-    setValue: setApplications,
-  } = useLocalStorage<CareerItem[]>(
-    "glassday.career",
-    defaultApplications
-  );
+  const [editing, setEditing] = useState(false);
+
+  const { value: applications, setValue: setApplications } =
+    useLocalStorage<CareerItem[]>("glassday.career", defaultApplications);
 
   const updateApplication = <K extends keyof CareerItem>(
     id: string,
@@ -47,24 +46,15 @@ export const CareerWidget = () => {
     value: CareerItem[K]
   ) => {
     setApplications((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              [key]: value,
-            }
-          : item
-      )
+      prev.map((item) => (item.id === id ? { ...item, [key]: value } : item))
     );
   };
 
   const addApplication = () => {
-    const id = crypto.randomUUID();
-
     setApplications((prev) => [
       ...prev,
       {
-        id,
+        id: crypto.randomUUID(),
         company: "New Company",
         role: "New Role",
         status: "Preparing",
@@ -79,8 +69,23 @@ export const CareerWidget = () => {
   return (
     <GlassCard
       title="Career Command Center"
-      subtitle="Editable application pipeline."
+      subtitle={editing ? "Editing pipeline" : "Application pipeline"}
       icon={<BriefcaseBusiness className="w-4 h-4" />}
+      actions={
+        <button
+          type="button"
+          onClick={() => setEditing((prev) => !prev)}
+          className={cn(
+            "h-8 px-3 rounded-full text-xs border transition flex items-center gap-1.5",
+            editing
+              ? "bg-foreground text-background border-foreground"
+              : "bg-white/35 border-white/50 text-muted-foreground hover:text-foreground"
+          )}
+        >
+          {editing ? <Lock className="w-3.5 h-3.5" /> : <Pencil className="w-3.5 h-3.5" />}
+          {editing ? "Done" : "Edit"}
+        </button>
+      }
     >
       <div className="space-y-3">
         {applications.map((app) => (
@@ -88,57 +93,79 @@ export const CareerWidget = () => {
             key={app.id}
             className="rounded-2xl bg-white/25 border border-white/40 p-3 space-y-2"
           >
-            <div className="flex gap-2">
-              <input
-                value={app.company}
-                onChange={(e) =>
-                  updateApplication(app.id, "company", e.target.value)
-                }
-                className="flex-1 min-w-0 bg-transparent outline-none text-sm font-semibold border-b border-transparent focus:border-white/50"
-              />
+            {editing ? (
+              <>
+                <div className="flex gap-2">
+                  <input
+                    value={app.company}
+                    onChange={(e) =>
+                      updateApplication(app.id, "company", e.target.value)
+                    }
+                    className="flex-1 min-w-0 bg-transparent outline-none text-sm font-semibold border-b border-white/30"
+                  />
 
-              <button
-                type="button"
-                onClick={() => removeApplication(app.id)}
-                className="edit-only w-7 h-7 rounded-full bg-white/30 border border-white/40 flex items-center justify-center hover:bg-white/50 transition"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            </div>
+                  <button
+                    type="button"
+                    onClick={() => removeApplication(app.id)}
+                    className="w-7 h-7 rounded-full bg-white/30 border border-white/40 flex items-center justify-center hover:bg-white/50 transition"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
 
-            <input
-              value={app.role}
-              onChange={(e) =>
-                updateApplication(app.id, "role", e.target.value)
-              }
-              className="w-full bg-transparent outline-none text-xs text-muted-foreground border-b border-transparent focus:border-white/50"
-            />
+                <input
+                  value={app.role}
+                  onChange={(e) =>
+                    updateApplication(app.id, "role", e.target.value)
+                  }
+                  className="w-full bg-transparent outline-none text-xs text-muted-foreground border-b border-white/30"
+                />
 
-            <select
-              value={app.status}
-              onChange={(e) =>
-                updateApplication(
-                  app.id,
-                  "status",
-                  e.target.value as CareerStatus
-                )
-              }
-              className="w-full rounded-xl bg-white/30 border border-white/40 px-3 py-2 text-xs outline-none"
-            >
-              <option value="Preparing">Preparing</option>
-              <option value="Submitted">Submitted</option>
-              <option value="Completed">Completed</option>
-            </select>
+                <select
+                  value={app.status}
+                  onChange={(e) =>
+                    updateApplication(
+                      app.id,
+                      "status",
+                      e.target.value as CareerStatus
+                    )
+                  }
+                  className="w-full rounded-xl bg-white/30 border border-white/40 px-3 py-2 text-xs outline-none"
+                >
+                  <option value="Preparing">Preparing</option>
+                  <option value="Submitted">Submitted</option>
+                  <option value="Completed">Completed</option>
+                </select>
+              </>
+            ) : (
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold truncate">
+                    {app.company}
+                  </div>
+                  <div className="text-xs text-muted-foreground truncate">
+                    {app.role}
+                  </div>
+                </div>
+
+                <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/35 border border-white/40">
+                  {app.status}
+                </span>
+              </div>
+            )}
           </div>
         ))}
 
-        <button
-          type="button"
-          onClick={addApplication}
-          className="edit-only w-full h-10 rounded-2xl accent-soft-card flex items-center justify-center gap-2 text-sm hover:bg-white/45 transition"        >
-          <Plus className="w-4 h-4" />
-          Add application
-        </button>
+        {editing && (
+          <button
+            type="button"
+            onClick={addApplication}
+            className="w-full h-10 rounded-2xl accent-soft-card flex items-center justify-center gap-2 text-sm hover:bg-white/45 transition"
+          >
+            <Plus className="w-4 h-4" />
+            Add application
+          </button>
+        )}
       </div>
     </GlassCard>
   );

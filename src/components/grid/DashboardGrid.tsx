@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUp,
+  Move,
   RotateCcw,
 } from "lucide-react";
 
@@ -30,7 +31,7 @@ type WidgetId =
   | "money"
   | "mood";
 
-type LayoutMode = "content" | "resize";
+type LayoutTool = "content" | "move" | "resize";
 
 type GridItem = {
   id: WidgetId;
@@ -51,7 +52,7 @@ const ROWS = 12;
 const ROW_HEIGHT = 82;
 const GAP = 16;
 
-const STORAGE_KEY = "glassday.widget.grid-layout.v1";
+const STORAGE_KEY = "glassday.widget.grid-layout.v2";
 
 const defaultGridLayout: GridItem[] = [
   { id: "today", x: 0, y: 0, w: 4, h: 3, minW: 3, minH: 2 },
@@ -108,8 +109,14 @@ const hasCollision = (candidate: GridItem, layout: GridItem[]) => {
 
 export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
   const boardRef = useRef<HTMLDivElement | null>(null);
-  const [layoutMode, setLayoutMode] = useState<LayoutMode>("content");
-  const [selectedId, setSelectedId] = useState<WidgetId | null>("calendar");
+
+  const [tool, setTool] = useState<LayoutTool>("content");
+  const [selectedId, setSelectedId] = useState<WidgetId>("calendar");
+
+  const [panelPos, setPanelPos] = useState(() => ({
+    x: Math.max(24, window.innerWidth - 520),
+    y: 96,
+  }));
 
   const {
     value: layout,
@@ -117,11 +124,8 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
     resetValue,
   } = useLocalStorage<GridItem[]>(STORAGE_KEY, defaultGridLayout);
 
-  const isResizeMode = editMode && layoutMode === "resize";
-
-  const selectedItem = selectedId
-    ? layout.find((item) => item.id === selectedId)
-    : null;
+  const selectedItem = layout.find((item) => item.id === selectedId);
+  const isLayoutTool = editMode && tool !== "content";
 
   const getCellMetrics = () => {
     const board = boardRef.current;
@@ -145,19 +149,6 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
     });
   };
 
-  const resizeItem = (id: WidgetId, dw: number, dh: number) => {
-    const item = layout.find((x) => x.id === id);
-    if (!item) return;
-
-    const candidate: GridItem = {
-      ...item,
-      w: clamp(item.w + dw, item.minW, COLS - item.x),
-      h: clamp(item.h + dh, item.minH, ROWS - item.y),
-    };
-
-    updateItem(candidate);
-  };
-
   const moveItem = (id: WidgetId, dx: number, dy: number) => {
     const item = layout.find((x) => x.id === id);
     if (!item) return;
@@ -171,11 +162,21 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
     updateItem(candidate);
   };
 
-  const startResize = (
-    event: PointerEvent<HTMLButtonElement>,
-    item: GridItem
-  ) => {
-    if (!isResizeMode) return;
+  const resizeItem = (id: WidgetId, dw: number, dh: number) => {
+    const item = layout.find((x) => x.id === id);
+    if (!item) return;
+
+    const candidate: GridItem = {
+      ...item,
+      w: clamp(item.w + dw, item.minW, COLS - item.x),
+      h: clamp(item.h + dh, item.minH, ROWS - item.y),
+    };
+
+    updateItem(candidate);
+  };
+
+  const startMove = (event: PointerEvent<HTMLElement>, item: GridItem) => {
+    if (!(editMode && tool === "move")) return;
 
     event.preventDefault();
     event.stopPropagation();
@@ -188,6 +189,57 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
     const startX = event.clientX;
     const startY = event.clientY;
     const startItem = { ...item };
+
+    document.body.style.userSelect = "none";
+
+    const handlePointerMove = (moveEvent: globalThis.PointerEvent) => {
+      const dx = moveEvent.clientX - startX;
+      const dy = moveEvent.clientY - startY;
+
+      const gx = Math.round(dx / metrics.stepX);
+      const gy = Math.round(dy / metrics.stepY);
+
+      const candidate: GridItem = {
+        ...startItem,
+        x: clamp(startItem.x + gx, 0, COLS - startItem.w),
+        y: clamp(startItem.y + gy, 0, ROWS - startItem.h),
+      };
+
+      setLayout((prev) => {
+        if (hasCollision(candidate, prev)) return prev;
+
+        return prev.map((x) =>
+          x.id === candidate.id ? candidate : x
+        );
+      });
+    };
+
+    const handlePointerUp = () => {
+      document.body.style.userSelect = "";
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+  };
+
+  const startResize = (event: PointerEvent<HTMLElement>, item: GridItem) => {
+    if (!(editMode && tool === "resize")) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    setSelectedId(item.id);
+
+    const metrics = getCellMetrics();
+    if (!metrics) return;
+
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const startItem = { ...item };
+
+    document.body.style.userSelect = "none";
 
     const handlePointerMove = (moveEvent: globalThis.PointerEvent) => {
       const dx = moveEvent.clientX - startX;
@@ -212,6 +264,33 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
     };
 
     const handlePointerUp = () => {
+      document.body.style.userSelect = "";
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+  };
+
+  const startPanelDrag = (event: PointerEvent<HTMLDivElement>) => {
+    event.preventDefault();
+
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const startPos = { ...panelPos };
+
+    const handlePointerMove = (moveEvent: globalThis.PointerEvent) => {
+      const nextX = startPos.x + (moveEvent.clientX - startX);
+      const nextY = startPos.y + (moveEvent.clientY - startY);
+
+      setPanelPos({
+        x: clamp(nextX, 12, window.innerWidth - 360),
+        y: clamp(nextY, 12, window.innerHeight - 180),
+      });
+    };
+
+    const handlePointerUp = () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
     };
@@ -223,130 +302,124 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
   return (
     <div className="space-y-4">
       {editMode && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-white/25 border border-white/40 px-4 py-3 backdrop-blur-2xl">
-          <div>
-            <div className="text-sm font-medium">Layout Tools</div>
-            <div className="text-xs text-muted-foreground mt-0.5">
-              Content Mode edits data. Resize Mode adjusts widgets on a 12×12 grid.
+        <div
+          className="layout-floating-panel"
+          style={{
+            left: panelPos.x,
+            top: panelPos.y,
+          }}
+        >
+          <div
+            className="layout-floating-panel-handle"
+            onPointerDown={startPanelDrag}
+          >
+            <div className="flex items-center gap-2">
+              <Move className="w-3.5 h-3.5" />
+              <span>Layout Controller</span>
             </div>
+            <span className="text-[10px] text-muted-foreground">
+              drag me
+            </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="h-10 rounded-full bg-white/35 border border-white/50 p-1 flex items-center">
-              <button
-                type="button"
-                onClick={() => setLayoutMode("content")}
-                className={cn(
-                  "h-8 px-3 rounded-full text-xs transition",
-                  layoutMode === "content"
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                Content
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setLayoutMode("resize")}
-                className={cn(
-                  "h-8 px-3 rounded-full text-xs transition",
-                  layoutMode === "resize"
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                Resize Grid
-              </button>
+          <div className="p-3 space-y-3">
+            <div className="grid grid-cols-3 gap-1 rounded-full bg-white/35 border border-white/50 p-1">
+              {(["content", "move", "resize"] as LayoutTool[]).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => setTool(mode)}
+                  className={cn(
+                    "h-8 rounded-full text-xs capitalize transition",
+                    tool === mode
+                      ? "bg-foreground text-background"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/45"
+                  )}
+                >
+                  {mode}
+                </button>
+              ))}
             </div>
+
+            {selectedItem && (
+              <div className="rounded-2xl bg-white/25 border border-white/40 p-3">
+                <div className="text-sm font-medium">
+                  {widgetLabels[selectedItem.id]}
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  x {selectedItem.x + 1}, y {selectedItem.y + 1}, w{" "}
+                  {selectedItem.w}, h {selectedItem.h}
+                </div>
+
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  <button
+                    type="button"
+                    onClick={() => moveItem(selectedItem.id, -1, 0)}
+                    className="grid-tool-button"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveItem(selectedItem.id, 1, 0)}
+                    className="grid-tool-button"
+                  >
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveItem(selectedItem.id, 0, -1)}
+                    className="grid-tool-button"
+                  >
+                    <ArrowUp className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveItem(selectedItem.id, 0, 1)}
+                    className="grid-tool-button"
+                  >
+                    <ArrowDown className="w-3.5 h-3.5" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => resizeItem(selectedItem.id, -1, 0)}
+                    className="grid-tool-button"
+                  >
+                    W-
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => resizeItem(selectedItem.id, 1, 0)}
+                    className="grid-tool-button"
+                  >
+                    W+
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => resizeItem(selectedItem.id, 0, -1)}
+                    className="grid-tool-button"
+                  >
+                    H-
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => resizeItem(selectedItem.id, 0, 1)}
+                    className="grid-tool-button"
+                  >
+                    H+
+                  </button>
+                </div>
+              </div>
+            )}
 
             <button
               type="button"
               onClick={resetValue}
-              className="h-10 rounded-full bg-white/35 border border-white/50 px-3 text-xs hover:bg-white/55 transition flex items-center gap-2"
+              className="w-full h-9 rounded-full bg-white/35 border border-white/50 text-xs hover:bg-white/55 transition flex items-center justify-center gap-2"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               Reset Grid
-            </button>
-          </div>
-        </div>
-      )}
-
-      {isResizeMode && selectedItem && (
-        <div className="rounded-3xl bg-white/25 border border-white/40 px-4 py-3 backdrop-blur-2xl flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div className="text-sm font-medium">
-              Selected: {widgetLabels[selectedItem.id]}
-            </div>
-            <div className="text-xs text-muted-foreground mt-0.5">
-              x {selectedItem.x + 1}, y {selectedItem.y + 1}, w {selectedItem.w}, h{" "}
-              {selectedItem.h}
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => moveItem(selectedItem.id, -1, 0)}
-              className="grid-tool-button"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => moveItem(selectedItem.id, 1, 0)}
-              className="grid-tool-button"
-            >
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => moveItem(selectedItem.id, 0, -1)}
-              className="grid-tool-button"
-            >
-              <ArrowUp className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => moveItem(selectedItem.id, 0, 1)}
-              className="grid-tool-button"
-            >
-              <ArrowDown className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => resizeItem(selectedItem.id, -1, 0)}
-              className="grid-tool-button"
-            >
-              W-
-            </button>
-
-            <button
-              type="button"
-              onClick={() => resizeItem(selectedItem.id, 1, 0)}
-              className="grid-tool-button"
-            >
-              W+
-            </button>
-
-            <button
-              type="button"
-              onClick={() => resizeItem(selectedItem.id, 0, -1)}
-              className="grid-tool-button"
-            >
-              H-
-            </button>
-
-            <button
-              type="button"
-              onClick={() => resizeItem(selectedItem.id, 0, 1)}
-              className="grid-tool-button"
-            >
-              H+
             </button>
           </div>
         </div>
@@ -356,7 +429,11 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
         ref={boardRef}
         className={cn(
           "dashboard-grid-board",
-          isResizeMode && "resize-grid-mode"
+          
+          editMode && "dashboard-grid-editing",
+          isLayoutTool && "dashboard-grid-locked-content",
+          tool === "move" && "move-grid-mode",
+          tool === "resize" && "resize-grid-mode"
         )}
         style={{
           gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`,
@@ -365,7 +442,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
           minHeight: ROWS * ROW_HEIGHT + (ROWS - 1) * GAP,
         }}
       >
-        {isResizeMode && (
+        {isLayoutTool && (
           <div
             className="dashboard-grid-guides"
             style={{
@@ -384,12 +461,16 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
           <section
             key={item.id}
             onClick={() => {
-              if (isResizeMode) setSelectedId(item.id);
+              if (editMode) setSelectedId(item.id);
+            }}
+            onPointerDown={(event) => {
+              if (tool === "move") startMove(event, item);
+              if (tool === "resize") startResize(event, item);
             }}
             className={cn(
               "dashboard-grid-item",
-              isResizeMode && "cursor-pointer",
-              selectedId === item.id && isResizeMode && "is-selected"
+              isLayoutTool && "layout-tool-item",
+              selectedId === item.id && isLayoutTool && "is-selected"
             )}
             style={{
               gridColumn: `${item.x + 1} / span ${item.w}`,
@@ -398,20 +479,19 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
           >
             <div
               className={cn(
-                "h-full",
-                isResizeMode && "pointer-events-none select-none"
+                "dashboard-grid-item-content h-full",
+                isLayoutTool && "is-muted-for-layout"
               )}
             >
               {widgetMap[item.id]}
             </div>
 
-            {isResizeMode && (
-              <button
-                type="button"
-                onPointerDown={(event) => startResize(event, item)}
-                className="dashboard-resize-handle"
-                aria-label={`Resize ${widgetLabels[item.id]}`}
-              />
+            {tool === "move" && selectedId === item.id && (
+              <div className="layout-action-badge">Drag anywhere to move</div>
+            )}
+
+            {tool === "resize" && selectedId === item.id && (
+              <div className="layout-action-badge">Drag anywhere to resize</div>
             )}
           </section>
         ))}

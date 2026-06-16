@@ -25,18 +25,21 @@
   min-height: 0;
 }
 
-.resize-grid-mode .dashboard-grid-item {
-  outline: 1px dashed hsl(var(--primary) / 0.28);
-  outline-offset: 5px;
+.dashboard-grid-editing .dashboard-grid-item {
   border-radius: var(--radius);
 }
 
-.resize-grid-mode .dashboard-grid-item.is-selected {
-  outline: 2px solid hsl(var(--primary) / 0.55);
+.layout-tool-item {
+  outline: 1px dashed hsl(var(--primary) / 0.25);
+  outline-offset: 5px;
+}
+
+.layout-tool-item.is-selected {
+  outline: 2px solid hsl(var(--primary) / 0.58);
   outline-offset: 6px;
 }
 
-.resize-grid-mode .dashboard-grid-item.is-selected::after {
+.layout-tool-item.is-selected::after {
   content: "";
   position: absolute;
   inset: -8px;
@@ -46,36 +49,71 @@
   z-index: -1;
 }
 
-.dashboard-resize-handle {
+.dashboard-grid-locked-content .dashboard-grid-item-content {
+  pointer-events: none;
+  user-select: none;
+}
+
+.dashboard-grid-locked-content .dashboard-grid-item-content .glass-card {
+  filter: brightness(0.92) saturate(0.86);
+  opacity: 0.78;
+}
+
+.move-grid-mode .dashboard-grid-item {
+  cursor: grab;
+}
+
+.move-grid-mode .dashboard-grid-item:active {
+  cursor: grabbing;
+}
+
+.resize-grid-mode .dashboard-grid-item {
+  cursor: nwse-resize;
+}
+
+.layout-action-badge {
   position: absolute;
-  right: -6px;
-  bottom: -6px;
-  z-index: 30;
-  width: 22px;
-  height: 22px;
-  border-radius: 8px;
-  border: 1px solid hsl(0 0% 100% / 0.72);
+  left: 14px;
+  bottom: 14px;
+  z-index: 20;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 11px;
+  background: hsl(var(--foreground) / 0.82);
+  color: hsl(var(--background));
+  box-shadow: 0 12px 28px hsl(var(--foreground) / 0.18);
+  pointer-events: none;
+}
+
+.layout-floating-panel {
+  position: fixed;
+  z-index: 9999;
+  width: 360px;
+  border-radius: 28px;
   background:
     linear-gradient(
       135deg,
-      hsl(0 0% 100% / 0.88),
+      hsl(0 0% 100% / 0.78),
       hsl(0 0% 100% / 0.38)
     );
+  border: 1px solid hsl(0 0% 100% / 0.72);
+  backdrop-filter: blur(30px) saturate(190%);
+  -webkit-backdrop-filter: blur(30px) saturate(190%);
   box-shadow:
-    0 8px 22px hsl(var(--primary) / 0.2),
+    0 28px 80px -30px hsl(var(--primary) / 0.4),
     inset 0 1px 0 hsl(0 0% 100% / 0.8);
-  cursor: se-resize;
 }
 
-.dashboard-resize-handle::after {
-  content: "";
-  position: absolute;
-  right: 5px;
-  bottom: 5px;
-  width: 7px;
-  height: 7px;
-  border-right: 2px solid hsl(var(--foreground) / 0.5);
-  border-bottom: 2px solid hsl(var(--foreground) / 0.5);
+.layout-floating-panel-handle {
+  height: 42px;
+  padding: 0 14px;
+  border-bottom: 1px solid hsl(0 0% 100% / 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: move;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .grid-tool-button {
@@ -97,9 +135,33 @@
   transform: translateY(-1px);
 }
 
-.resize-grid-mode input,
-.resize-grid-mode textarea,
-.resize-grid-mode select,
-.resize-grid-mode button:not(.dashboard-resize-handle):not(.grid-tool-button) {
+/* View Mode: 내용 수정 잠금 */
+
+
+.dashboard-grid-view-mode input,
+.dashboard-grid-view-mode textarea,
+.dashboard-grid-view-mode select {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.dashboard-grid-view-mode textarea {
+  resize: none;
+}
+
+.dashboard-grid-view-mode .edit-only {
+  display: none !important;
+}
+
+/* Layout tool mode: 위젯 조작 중에는 내용 수정 잠금 */
+.dashboard-grid-locked-content input,
+.dashboard-grid-locked-content textarea,
+.dashboard-grid-locked-content select,
+.dashboard-grid-locked-content button:not(.grid-tool-button) {
   pointer-events: none;
+}
+
+.dashboard-grid-locked-content .edit-only {
+  display: none !important;
 }
