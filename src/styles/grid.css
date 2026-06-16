@@ -41,3 +41,52 @@
 .layout.is-viewing .drag-handle {
   cursor: default;
 }
+
+/* View Mode: 위젯 이동/크기조절/내용수정 잠금 */
+.layout.is-viewing .react-resizable-handle {
+  display: none;
+}
+
+.layout.is-viewing input,
+.layout.is-viewing textarea,
+.layout.is-viewing select,
+.layout.is-viewing button {
+  pointer-events: none;
+}
+
+.layout.is-viewing input,
+.layout.is-viewing textarea,
+.layout.is-viewing select {
+  opacity: 0.88;
+}
+
+.layout.is-viewing .edit-only {
+  display: none;
+}
+
+/* Edit Mode: 편집 가능하다는 느낌 */
+.layout.is-editing .react-grid-item {
+  outline: 1px dashed hsl(var(--primary) / 0.24);
+  outline-offset: 4px;
+}
+
+.layout.is-editing .drag-handle {
+  cursor: move;
+}
+
+.layout.is-viewing .drag-handle {
+  cursor: default;
+}
+
+.layout.is-editing input,
+.layout.is-editing textarea,
+.layout.is-editing select {
+  background: hsl(0 0% 100% / 0.26);
+}
+
+.layout.is-editing input:focus,
+.layout.is-editing textarea:focus,
+.layout.is-editing select:focus {
+  background: hsl(0 0% 100% / 0.42);
+  border-color: hsl(0 0% 100% / 0.68);
+}

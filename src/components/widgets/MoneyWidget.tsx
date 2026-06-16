@@ -135,8 +135,7 @@ export const MoneyWidget = () => {
         <button
           type="button"
           onClick={resetValue}
-          className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition"
-        >
+          className="edit-only flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition"        >
           <RotateCcw className="w-3.5 h-3.5" />
           Reset money data
         </button>

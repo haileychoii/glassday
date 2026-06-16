@@ -173,3 +173,16 @@ body {
   backdrop-filter: blur(32px) saturate(190%);
   -webkit-backdrop-filter: blur(32px) saturate(190%);
 }
+
+.layout.is-viewing input,
+.layout.is-viewing textarea,
+.layout.is-viewing select {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.layout.is-viewing input[type="number"],
+.layout.is-viewing input[type="time"] {
+  background: hsl(0 0% 100% / 0.18) !important;
+  border-color: hsl(0 0% 100% / 0.24) !important;
+}

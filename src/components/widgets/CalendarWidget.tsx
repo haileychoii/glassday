@@ -103,7 +103,7 @@ export const CalendarWidget = () => {
               <button
                 type="button"
                 onClick={() => removeEvent(event.id)}
-                className="w-7 h-7 rounded-full bg-white/30 border border-white/40 flex items-center justify-center hover:bg-white/50 transition"
+                className="edit-only mt-4 h-10 rounded-2xl accent-soft-card flex items-center justify-center gap-2 hover:bg-white/45 transition"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
@@ -114,7 +114,7 @@ export const CalendarWidget = () => {
         <button
           type="button"
           onClick={addEvent}
-          className="mt-4 h-10 rounded-2xl accent-soft-card flex items-center justify-center gap-2 hover:bg-white/45 transition"
+          className="edit-only mt-4 h-10 rounded-2xl accent-soft-card flex items-center justify-center gap-2 hover:bg-white/45 transition"
         >
           <Plus className="w-4 h-4" />
           <span className="text-sm">Add Event</span>

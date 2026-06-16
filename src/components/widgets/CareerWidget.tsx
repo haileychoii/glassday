@@ -100,7 +100,7 @@ export const CareerWidget = () => {
               <button
                 type="button"
                 onClick={() => removeApplication(app.id)}
-                className="w-7 h-7 rounded-full bg-white/30 border border-white/40 flex items-center justify-center hover:bg-white/50 transition"
+                className="edit-only w-7 h-7 rounded-full bg-white/30 border border-white/40 flex items-center justify-center hover:bg-white/50 transition"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
@@ -135,8 +135,7 @@ export const CareerWidget = () => {
         <button
           type="button"
           onClick={addApplication}
-          className="w-full h-10 rounded-2xl accent-soft-card flex items-center justify-center gap-2 text-sm hover:bg-white/45 transition"
-        >
+          className="edit-only w-full h-10 rounded-2xl accent-soft-card flex items-center justify-center gap-2 text-sm hover:bg-white/45 transition"        >
           <Plus className="w-4 h-4" />
           Add application
         </button>
