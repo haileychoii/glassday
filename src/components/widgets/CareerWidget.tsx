@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   BriefcaseBusiness,
   Building2,
@@ -12,70 +12,11 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+
 import { GlassCard } from "../glass/GlassCard";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
-
 import { useDashboardData } from "../../context/DashboardDataContext";
-import type { CareerItem } from "../../types/dashboard";
-
-type CareerStatus = "Preparing" | "Submitted" | "Interview" | "Completed" | "Rejected";
-
-type CareerItem = {
-  id: string;
-  company: string;
-  role: string;
-  status: CareerStatus;
-  location: string;
-  workType: string;
-  deadline: string;
-  postingUrl: string;
-  jobDescription: string;
-  coverLetterQuestions: string[];
-  notes: string;
-};
-
-const defaultApplications: CareerItem[] = [
-  {
-    id: "korean-re",
-    company: "Korean Re",
-    role: "Reinsurance Underwriter",
-    status: "Preparing",
-    location: "Seoul",
-    workType: "Full-time",
-    deadline: "",
-    postingUrl: "",
-    jobDescription: "",
-    coverLetterQuestions: ["지원 동기", "직무 관련 경험"],
-    notes: "",
-  },
-  {
-    id: "rga",
-    company: "RGA",
-    role: "Actuarial Analyst",
-    status: "Completed",
-    location: "Seoul",
-    workType: "Intern / Full-time",
-    deadline: "",
-    postingUrl: "",
-    jobDescription: "IFRS17 Valuation, Treaty, Confirmation Letter, LCF, ER Grouping 관련 경험 정리",
-    coverLetterQuestions: ["영어 문서 활용 경험", "IFRS17 Valuation 경험"],
-    notes: "",
-  },
-  {
-    id: "pension",
-    company: "Public Pension Fund",
-    role: "Investment Strategy",
-    status: "Preparing",
-    location: "Seoul",
-    workType: "Full-time",
-    deadline: "",
-    postingUrl: "",
-    jobDescription: "",
-    coverLetterQuestions: ["공공기관 지원 동기", "데이터 기반 문제 해결 경험"],
-    notes: "",
-  },
-];
+import type { CareerItem, CareerStatus } from "../../types/dashboard";
 
 const statusOptions: CareerStatus[] = [
   "Preparing",
@@ -137,35 +78,41 @@ const getDdayInfo = (deadline: string) => {
   };
 };
 
-const normalizeCareerItem = (item: Partial<CareerItem>): CareerItem => ({
-  id: item.id ?? crypto.randomUUID(),
-  company: item.company ?? "New Company",
-  role: item.role ?? "New Position",
-  status: item.status ?? "Preparing",
-  location: item.location ?? "",
-  workType: item.workType ?? "",
-  deadline: item.deadline ?? "",
-  postingUrl: item.postingUrl ?? "",
-  jobDescription: item.jobDescription ?? "",
-  coverLetterQuestions: item.coverLetterQuestions ?? [],
-  notes: item.notes ?? "",
-});
+const getDeadlineDate = (app: CareerItem) => {
+  return app.applicationEndDate || app.deadline;
+};
+
+const sortApplications = (apps: CareerItem[]) => {
+  return [...apps].sort((a, b) => {
+    const aDeadline = getDeadlineDate(a);
+    const bDeadline = getDeadlineDate(b);
+
+    if (!aDeadline && !bDeadline) return 0;
+    if (!aDeadline) return 1;
+    if (!bDeadline) return -1;
+
+    return aDeadline.localeCompare(bDeadline);
+  });
+};
 
 export const CareerWidget = () => {
   const [editing, setEditing] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
- const {
-  careerApplications: applications,
-  addCareerApplication,
-  updateCareerApplication,
-  removeCareerApplication,
-} = useDashboardData();
+  const {
+    careerApplications,
+    addCareerApplication,
+    updateCareerApplication,
+    removeCareerApplication,
+  } = useDashboardData();
 
+  const applications = useMemo(
+    () => sortApplications(careerApplications),
+    [careerApplications]
+  );
 
-  const applications = rawApplications.map(normalizeCareerItem);
   const selectedApp = selectedId
-    ? applications.find((app) => app.id === selectedId) ?? null
+    ? careerApplications.find((app) => app.id === selectedId) ?? null
     : null;
 
   const updateApplication = <K extends keyof CareerItem>(
@@ -173,59 +120,56 @@ export const CareerWidget = () => {
     key: K,
     value: CareerItem[K]
   ) => {
-    setApplications((prev) =>
-      prev.map((item) => {
-        const normalized = normalizeCareerItem(item);
-        return normalized.id === id
-          ? { ...normalized, [key]: value }
-          : normalized;
-      })
-    );
+    updateCareerApplication(id, {
+      [key]: value,
+    } as Partial<CareerItem>);
   };
 
   const addApplication = () => {
-  const newItem = addCareerApplication();
-  setSelectedId(newItem.id);
-  setEditing(true);
-};
+    const newItem = addCareerApplication();
+
+    setSelectedId(newItem.id);
+    setEditing(true);
+  };
 
   const removeApplication = (id: string) => {
-  removeCareerApplication(id);
+    removeCareerApplication(id);
 
-  if (selectedId === id) {
-    setSelectedId(null);
-  }
-};
+    if (selectedId === id) {
+      setSelectedId(null);
+    }
+  };
 
   const addQuestion = (id: string) => {
-    const app = applications.find((item) => item.id === id);
+    const app = careerApplications.find((item) => item.id === id);
     if (!app) return;
 
-    updateApplication(id, "coverLetterQuestions", [
-      ...app.coverLetterQuestions,
-      "",
-    ]);
+    updateCareerApplication(id, {
+      coverLetterQuestions: [...app.coverLetterQuestions, ""],
+    });
   };
 
   const updateQuestion = (id: string, index: number, value: string) => {
-    const app = applications.find((item) => item.id === id);
+    const app = careerApplications.find((item) => item.id === id);
     if (!app) return;
 
     const next = [...app.coverLetterQuestions];
     next[index] = value;
 
-    updateApplication(id, "coverLetterQuestions", next);
+    updateCareerApplication(id, {
+      coverLetterQuestions: next,
+    });
   };
 
   const removeQuestion = (id: string, index: number) => {
-    const app = applications.find((item) => item.id === id);
+    const app = careerApplications.find((item) => item.id === id);
     if (!app) return;
 
-    updateApplication(
-      id,
-      "coverLetterQuestions",
-      app.coverLetterQuestions.filter((_, i) => i !== index)
-    );
+    updateCareerApplication(id, {
+      coverLetterQuestions: app.coverLetterQuestions.filter(
+        (_, i) => i !== index
+      ),
+    });
   };
 
   const openPostingUrl = (url: string) => {
@@ -251,6 +195,7 @@ export const CareerWidget = () => {
               type="button"
               onClick={addApplication}
               className="h-8 w-8 rounded-full bg-white/35 border border-white/50 flex items-center justify-center hover:bg-white/55 transition"
+              title="Add application"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -277,66 +222,66 @@ export const CareerWidget = () => {
       >
         <div className="space-y-3">
           {applications.map((app) => {
-            const dday = getDdayInfo(app.deadline);
+            const deadlineDate = getDeadlineDate(app);
+            const dday = getDdayInfo(deadlineDate);
+
             return (
-            <article
-              key={app.id}
-              onClick={() => setSelectedId(app.id)}
-              className="career-list-item"
-            >
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <div className="text-sm font-semibold truncate">
-            {app.company}
+              <article
+                key={app.id}
+                onClick={() => setSelectedId(app.id)}
+                className="career-list-item"
+              >
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <div className="text-sm font-semibold truncate">
+                      {app.company || "Untitled Company"}
+                    </div>
+
+                    <span className="career-status-pill">{app.status}</span>
+
+                    {deadlineDate && (
+                      <span className={`career-dday-pill ${dday.tone}`}>
+                        {dday.label}
+                      </span>
+                    )}
                   </div>
 
-          <span className="career-status-pill">
-            {app.status}
-          </span>
+                  <div className="text-xs text-muted-foreground truncate mt-1">
+                    {app.role || "Position"}
+                  </div>
 
-          {app.deadline && (
-            <span className={`career-dday-pill ${dday.tone}`}>
-              {dday.label}
-            </span>
-          )}
-                </div> 
-                {/* flex items-center gap-2 */}
+                  <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-muted-foreground">
+                    {app.location && (
+                      <span className="inline-flex items-center gap-1">
+                        <MapPin className="w-3 h-3" />
+                        {app.location}
+                      </span>
+                    )}
 
-                <div className="text-xs text-muted-foreground truncate mt-1">
-                  {app.role}
+                    {deadlineDate && (
+                      <span className="inline-flex items-center gap-1">
+                        <CalendarClock className="w-3 h-3" />
+                        {deadlineDate}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-2 mt-2 text-[11px] text-muted-foreground">
-                  {app.location && (
-                    <span className="inline-flex items-center gap-1">
-                      <MapPin className="w-3 h-3" />
-                      {app.location}
-                    </span>
-                  )}
-
-                  {app.deadline && (
-                    <span className="inline-flex items-center gap-1">
-                      <CalendarClock className="w-3 h-3" />
-                      {app.deadline}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {editing && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeApplication(app.id);
-                  }}
-                  className="career-delete-button"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </article>
-          ))}
+                {editing && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeApplication(app.id);
+                    }}
+                    className="career-delete-button"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </article>
+            );
+          })}
         </div>
       </GlassCard>
 
@@ -358,13 +303,17 @@ export const CareerWidget = () => {
                   {selectedApp.role || "Position"}
                 </div>
 
-                {selectedApp.deadline && (
+                {getDeadlineDate(selectedApp) && (
                   <div className="mt-3">
-    <span className={`career-dday-pill large ${getDdayInfo(selectedApp.deadline).tone}`}>
-      {getDdayInfo(selectedApp.deadline).label}
-    </span>
+                    <span
+                      className={`career-dday-pill large ${
+                        getDdayInfo(getDeadlineDate(selectedApp)).tone
+                      }`}
+                    >
+                      {getDdayInfo(getDeadlineDate(selectedApp)).label}
+                    </span>
                   </div>
-)}
+                )}
               </div>
 
               <div className="flex items-center gap-2">
@@ -402,7 +351,11 @@ export const CareerWidget = () => {
                       <input
                         value={selectedApp.company}
                         onChange={(e) =>
-                          updateApplication(selectedApp.id, "company", e.target.value)
+                          updateApplication(
+                            selectedApp.id,
+                            "company",
+                            e.target.value
+                          )
                         }
                         spellCheck={false}
                       />
@@ -417,7 +370,11 @@ export const CareerWidget = () => {
                       <input
                         value={selectedApp.role}
                         onChange={(e) =>
-                          updateApplication(selectedApp.id, "role", e.target.value)
+                          updateApplication(
+                            selectedApp.id,
+                            "role",
+                            e.target.value
+                          )
                         }
                         spellCheck={false}
                       />
@@ -456,7 +413,11 @@ export const CareerWidget = () => {
                       <input
                         value={selectedApp.location}
                         onChange={(e) =>
-                          updateApplication(selectedApp.id, "location", e.target.value)
+                          updateApplication(
+                            selectedApp.id,
+                            "location",
+                            e.target.value
+                          )
                         }
                         spellCheck={false}
                         placeholder="Seoul / Remote / Hybrid"
@@ -472,7 +433,11 @@ export const CareerWidget = () => {
                       <input
                         value={selectedApp.workType}
                         onChange={(e) =>
-                          updateApplication(selectedApp.id, "workType", e.target.value)
+                          updateApplication(
+                            selectedApp.id,
+                            "workType",
+                            e.target.value
+                          )
                         }
                         spellCheck={false}
                         placeholder="Full-time / Intern / Contract"
@@ -481,21 +446,95 @@ export const CareerWidget = () => {
                       <div>{selectedApp.workType || "-"}</div>
                     )}
                   </label>
+                </div>
+              </section>
 
+              <section className="career-detail-section">
+                <div className="career-section-title">Application Window</div>
+
+                <div className="career-detail-grid">
                   <label className="career-field">
-                    <span>Deadline</span>
+                    <span>Start Date</span>
                     {editing ? (
                       <input
                         type="date"
-                        value={selectedApp.deadline}
+                        value={selectedApp.applicationStartDate}
                         onChange={(e) =>
-                          updateApplication(selectedApp.id, "deadline", e.target.value)
+                          updateApplication(
+                            selectedApp.id,
+                            "applicationStartDate",
+                            e.target.value
+                          )
                         }
                       />
                     ) : (
-                      <div>{selectedApp.deadline || "-"}</div>
+                      <div>{selectedApp.applicationStartDate || "-"}</div>
                     )}
                   </label>
+
+                  <label className="career-field">
+                    <span>Start Time</span>
+                    {editing ? (
+                      <input
+                        type="time"
+                        value={selectedApp.applicationStartTime}
+                        onChange={(e) =>
+                          updateApplication(
+                            selectedApp.id,
+                            "applicationStartTime",
+                            e.target.value
+                          )
+                        }
+                      />
+                    ) : (
+                      <div>{selectedApp.applicationStartTime || "-"}</div>
+                    )}
+                  </label>
+
+                  <label className="career-field">
+                    <span>End Date</span>
+                    {editing ? (
+                      <input
+                        type="date"
+                        value={selectedApp.applicationEndDate}
+                        onChange={(e) =>
+                          updateApplication(
+                            selectedApp.id,
+                            "applicationEndDate",
+                            e.target.value
+                          )
+                        }
+                      />
+                    ) : (
+                      <div>{selectedApp.applicationEndDate || "-"}</div>
+                    )}
+                  </label>
+
+                  <label className="career-field">
+                    <span>End Time</span>
+                    {editing ? (
+                      <input
+                        type="time"
+                        value={selectedApp.applicationEndTime}
+                        onChange={(e) =>
+                          updateApplication(
+                            selectedApp.id,
+                            "applicationEndTime",
+                            e.target.value
+                          )
+                        }
+                      />
+                    ) : (
+                      <div>{selectedApp.applicationEndTime || "-"}</div>
+                    )}
+                  </label>
+                </div>
+
+                <div className="career-sync-hint">
+                  Calendar title:{" "}
+                  <strong>
+                    {selectedApp.company || "Company"} · Application Window
+                  </strong>
                 </div>
               </section>
 
@@ -508,7 +547,11 @@ export const CareerWidget = () => {
                     <input
                       value={selectedApp.postingUrl}
                       onChange={(e) =>
-                        updateApplication(selectedApp.id, "postingUrl", e.target.value)
+                        updateApplication(
+                          selectedApp.id,
+                          "postingUrl",
+                          e.target.value
+                        )
                       }
                       spellCheck={false}
                       placeholder="https://..."
@@ -554,7 +597,9 @@ export const CareerWidget = () => {
 
               <section className="career-detail-section">
                 <div className="career-section-title-row">
-                  <div className="career-section-title">Cover Letter Questions</div>
+                  <div className="career-section-title">
+                    Cover Letter Questions
+                  </div>
 
                   {editing && (
                     <button
@@ -594,7 +639,9 @@ export const CareerWidget = () => {
 
                           <button
                             type="button"
-                            onClick={() => removeQuestion(selectedApp.id, index)}
+                            onClick={() =>
+                              removeQuestion(selectedApp.id, index)
+                            }
                             className="career-question-delete"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -620,7 +667,11 @@ export const CareerWidget = () => {
                   <textarea
                     value={selectedApp.notes}
                     onChange={(e) =>
-                      updateApplication(selectedApp.id, "notes", e.target.value)
+                      updateApplication(
+                        selectedApp.id,
+                        "notes",
+                        e.target.value
+                      )
                     }
                     spellCheck={false}
                     placeholder="준비 메모, 내 경험 매칭, 제출 전 체크리스트 등"
