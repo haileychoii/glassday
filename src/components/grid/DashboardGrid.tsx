@@ -353,7 +353,8 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
                 >
                   {label}
                 </button>
-              ))}
+              );
+            })}
             </div>
 
             {selectedItem && (
