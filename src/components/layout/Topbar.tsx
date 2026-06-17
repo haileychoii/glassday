@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Bell, CalendarCheck, Lock, Pencil, Search } from "lucide-react";
+import { Bell, CalendarCheck, Grid3X3, Lock, Search } from "lucide-react";
 import { cn } from "../../lib/utils";
 
 type Theme = "pastel" | "glass" | "ios";
@@ -47,11 +47,11 @@ export const Topbar = ({ editMode, onToggleEditMode }: TopbarProps) => {
             )}
           >
             {editMode ? (
-              <Pencil className="w-4 h-4" />
+              <Grid3X3 className="w-4 h-4" />
             ) : (
               <Lock className="w-4 h-4" />
             )}
-            <span>{editMode ? "Edit Mode" : "View Mode"}</span>
+            <span>{editMode ? "Layout Mode" : "Layout Locked"}</span>
           </button>
 
           <button className="h-10 px-4 rounded-full bg-white/35 border border-white/50 text-sm flex items-center gap-2 hover:bg-white/55 transition">
