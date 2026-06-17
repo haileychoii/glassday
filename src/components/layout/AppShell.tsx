@@ -39,9 +39,9 @@ export const AppShell = ({
 
                   <p className="text-sm text-muted-foreground mt-2">
                    {editMode
-    ? "Layout Mode is on. Move or resize widgets without editing their content."
-    : "Layout is locked. Edit each widget directly from its own card."}
-                </p>
+                    ? "Layout Mode is on. Move or resize widgets without editing their content."
+                    : "Layout is locked. Edit each widget directly from its own card."}
+                  </p>
                 </div>
 
                 {children}

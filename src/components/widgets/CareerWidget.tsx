@@ -1,16 +1,38 @@
 import { useState } from "react";
-import { BriefcaseBusiness, Lock, Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  Building2,
+  CalendarClock,
+  ExternalLink,
+  Link,
+  Lock,
+  MapPin,
+  Pencil,
+  Plus,
+  Trash2,
+  X,
+} from "lucide-react";
 import { GlassCard } from "../glass/GlassCard";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
 
-type CareerStatus = "Preparing" | "Submitted" | "Completed";
+import { useDashboardData } from "../../context/DashboardDataContext";
+import type { CareerItem } from "../../types/dashboard";
+
+type CareerStatus = "Preparing" | "Submitted" | "Interview" | "Completed" | "Rejected";
 
 type CareerItem = {
   id: string;
   company: string;
   role: string;
   status: CareerStatus;
+  location: string;
+  workType: string;
+  deadline: string;
+  postingUrl: string;
+  jobDescription: string;
+  coverLetterQuestions: string[];
+  notes: string;
 };
 
 const defaultApplications: CareerItem[] = [
@@ -19,26 +41,132 @@ const defaultApplications: CareerItem[] = [
     company: "Korean Re",
     role: "Reinsurance Underwriter",
     status: "Preparing",
+    location: "Seoul",
+    workType: "Full-time",
+    deadline: "",
+    postingUrl: "",
+    jobDescription: "",
+    coverLetterQuestions: ["지원 동기", "직무 관련 경험"],
+    notes: "",
   },
   {
     id: "rga",
     company: "RGA",
     role: "Actuarial Analyst",
     status: "Completed",
+    location: "Seoul",
+    workType: "Intern / Full-time",
+    deadline: "",
+    postingUrl: "",
+    jobDescription: "IFRS17 Valuation, Treaty, Confirmation Letter, LCF, ER Grouping 관련 경험 정리",
+    coverLetterQuestions: ["영어 문서 활용 경험", "IFRS17 Valuation 경험"],
+    notes: "",
   },
   {
     id: "pension",
     company: "Public Pension Fund",
     role: "Investment Strategy",
     status: "Preparing",
+    location: "Seoul",
+    workType: "Full-time",
+    deadline: "",
+    postingUrl: "",
+    jobDescription: "",
+    coverLetterQuestions: ["공공기관 지원 동기", "데이터 기반 문제 해결 경험"],
+    notes: "",
   },
 ];
 
+const statusOptions: CareerStatus[] = [
+  "Preparing",
+  "Submitted",
+  "Interview",
+  "Completed",
+  "Rejected",
+];
+
+const DAY_MS = 1000 * 60 * 60 * 24;
+
+const getDdayInfo = (deadline: string) => {
+  if (!deadline) {
+    return {
+      label: "No deadline",
+      tone: "neutral",
+    };
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const dueDate = new Date(`${deadline}T00:00:00`);
+  dueDate.setHours(0, 0, 0, 0);
+
+  const diff = Math.ceil((dueDate.getTime() - today.getTime()) / DAY_MS);
+
+  if (diff < 0) {
+    return {
+      label: `D+${Math.abs(diff)}`,
+      tone: "closed",
+    };
+  }
+
+  if (diff === 0) {
+    return {
+      label: "D-Day",
+      tone: "urgent",
+    };
+  }
+
+  if (diff <= 3) {
+    return {
+      label: `D-${diff}`,
+      tone: "urgent",
+    };
+  }
+
+  if (diff <= 7) {
+    return {
+      label: `D-${diff}`,
+      tone: "soon",
+    };
+  }
+
+  return {
+    label: `D-${diff}`,
+    tone: "normal",
+  };
+};
+
+const normalizeCareerItem = (item: Partial<CareerItem>): CareerItem => ({
+  id: item.id ?? crypto.randomUUID(),
+  company: item.company ?? "New Company",
+  role: item.role ?? "New Position",
+  status: item.status ?? "Preparing",
+  location: item.location ?? "",
+  workType: item.workType ?? "",
+  deadline: item.deadline ?? "",
+  postingUrl: item.postingUrl ?? "",
+  jobDescription: item.jobDescription ?? "",
+  coverLetterQuestions: item.coverLetterQuestions ?? [],
+  notes: item.notes ?? "",
+});
+
 export const CareerWidget = () => {
   const [editing, setEditing] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const { value: applications, setValue: setApplications } =
-    useLocalStorage<CareerItem[]>("glassday.career", defaultApplications);
+ const {
+  careerApplications: applications,
+  addCareerApplication,
+  updateCareerApplication,
+  removeCareerApplication,
+} = useDashboardData();
+
+
+  const applications = rawApplications.map(normalizeCareerItem);
+  const selectedApp = selectedId
+    ? applications.find((app) => app.id === selectedId) ?? null
+    : null;
 
   const updateApplication = <K extends keyof CareerItem>(
     id: string,
@@ -46,127 +174,468 @@ export const CareerWidget = () => {
     value: CareerItem[K]
   ) => {
     setApplications((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, [key]: value } : item))
+      prev.map((item) => {
+        const normalized = normalizeCareerItem(item);
+        return normalized.id === id
+          ? { ...normalized, [key]: value }
+          : normalized;
+      })
     );
   };
 
   const addApplication = () => {
-    setApplications((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        company: "New Company",
-        role: "New Role",
-        status: "Preparing",
-      },
+  const newItem = addCareerApplication();
+  setSelectedId(newItem.id);
+  setEditing(true);
+};
+
+  const removeApplication = (id: string) => {
+  removeCareerApplication(id);
+
+  if (selectedId === id) {
+    setSelectedId(null);
+  }
+};
+
+  const addQuestion = (id: string) => {
+    const app = applications.find((item) => item.id === id);
+    if (!app) return;
+
+    updateApplication(id, "coverLetterQuestions", [
+      ...app.coverLetterQuestions,
+      "",
     ]);
   };
 
-  const removeApplication = (id: string) => {
-    setApplications((prev) => prev.filter((item) => item.id !== id));
+  const updateQuestion = (id: string, index: number, value: string) => {
+    const app = applications.find((item) => item.id === id);
+    if (!app) return;
+
+    const next = [...app.coverLetterQuestions];
+    next[index] = value;
+
+    updateApplication(id, "coverLetterQuestions", next);
+  };
+
+  const removeQuestion = (id: string, index: number) => {
+    const app = applications.find((item) => item.id === id);
+    if (!app) return;
+
+    updateApplication(
+      id,
+      "coverLetterQuestions",
+      app.coverLetterQuestions.filter((_, i) => i !== index)
+    );
+  };
+
+  const openPostingUrl = (url: string) => {
+    if (!url.trim()) return;
+
+    const safeUrl =
+      url.startsWith("http://") || url.startsWith("https://")
+        ? url
+        : `https://${url}`;
+
+    window.open(safeUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
-    <GlassCard
-      title="Career Command Center"
-      subtitle={editing ? "Editing pipeline" : "Application pipeline"}
-      icon={<BriefcaseBusiness className="w-4 h-4" />}
-      actions={
-        <button
-          type="button"
-          onClick={() => setEditing((prev) => !prev)}
-          className={cn(
-            "h-8 px-3 rounded-full text-xs border transition flex items-center gap-1.5",
-            editing
-              ? "bg-foreground text-background border-foreground"
-              : "bg-white/35 border-white/50 text-muted-foreground hover:text-foreground"
-          )}
-        >
-          {editing ? <Lock className="w-3.5 h-3.5" /> : <Pencil className="w-3.5 h-3.5" />}
-          {editing ? "Done" : "Edit"}
-        </button>
-      }
-    >
-      <div className="space-y-3">
-        {applications.map((app) => (
-          <div
-            key={app.id}
-            className="rounded-2xl bg-white/25 border border-white/40 p-3 space-y-2"
-          >
-            {editing ? (
-              <>
-                <div className="flex gap-2">
-                  <input
-                    value={app.company}
-                    onChange={(e) =>
-                      updateApplication(app.id, "company", e.target.value)
-                    }
-                    className="flex-1 min-w-0 bg-transparent outline-none text-sm font-semibold border-b border-white/30"
-                  />
+    <>
+      <GlassCard
+        title="Career Command Center"
+        subtitle={`${applications.length} active applications`}
+        icon={<BriefcaseBusiness className="w-4 h-4" />}
+        actions={
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={addApplication}
+              className="h-8 w-8 rounded-full bg-white/35 border border-white/50 flex items-center justify-center hover:bg-white/55 transition"
+            >
+              <Plus className="w-3.5 h-3.5" />
+            </button>
 
+            <button
+              type="button"
+              onClick={() => setEditing((prev) => !prev)}
+              className={cn(
+                "h-8 px-3 rounded-full text-xs border transition flex items-center gap-1.5",
+                editing
+                  ? "bg-foreground text-background border-foreground"
+                  : "bg-white/35 border-white/50 text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {editing ? (
+                <Lock className="w-3.5 h-3.5" />
+              ) : (
+                <Pencil className="w-3.5 h-3.5" />
+              )}
+              {editing ? "Done" : "Edit"}
+            </button>
+          </div>
+        }
+      >
+        <div className="space-y-3">
+          {applications.map((app) => {
+            const dday = getDdayInfo(app.deadline);
+            return (
+            <article
+              key={app.id}
+              onClick={() => setSelectedId(app.id)}
+              className="career-list-item"
+            >
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <div className="text-sm font-semibold truncate">
+            {app.company}
+                  </div>
+
+          <span className="career-status-pill">
+            {app.status}
+          </span>
+
+          {app.deadline && (
+            <span className={`career-dday-pill ${dday.tone}`}>
+              {dday.label}
+            </span>
+          )}
+                </div> 
+                {/* flex items-center gap-2 */}
+
+                <div className="text-xs text-muted-foreground truncate mt-1">
+                  {app.role}
+                </div>
+
+                <div className="flex items-center gap-2 mt-2 text-[11px] text-muted-foreground">
+                  {app.location && (
+                    <span className="inline-flex items-center gap-1">
+                      <MapPin className="w-3 h-3" />
+                      {app.location}
+                    </span>
+                  )}
+
+                  {app.deadline && (
+                    <span className="inline-flex items-center gap-1">
+                      <CalendarClock className="w-3 h-3" />
+                      {app.deadline}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {editing && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeApplication(app.id);
+                  }}
+                  className="career-delete-button"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </article>
+          ))}
+        </div>
+      </GlassCard>
+
+      {selectedApp && (
+        <div className="career-modal-backdrop">
+          <div className="career-modal-window">
+            <div className="career-modal-header">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                  <Building2 className="w-3.5 h-3.5" />
+                  Career Detail
+                </div>
+
+                <div className="text-xl font-semibold truncate">
+                  {selectedApp.company || "Untitled Company"}
+                </div>
+
+                <div className="text-sm text-muted-foreground truncate mt-1">
+                  {selectedApp.role || "Position"}
+                </div>
+
+                {selectedApp.deadline && (
+                  <div className="mt-3">
+    <span className={`career-dday-pill large ${getDdayInfo(selectedApp.deadline).tone}`}>
+      {getDdayInfo(selectedApp.deadline).label}
+    </span>
+                  </div>
+)}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditing((prev) => !prev)}
+                  className={cn(
+                    "h-8 px-3 rounded-full text-xs border transition flex items-center gap-1.5",
+                    editing
+                      ? "bg-foreground text-background border-foreground"
+                      : "bg-white/35 border-white/50 text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {editing ? "Done" : "Edit"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedId(null)}
+                  className="h-8 w-8 rounded-full bg-white/35 border border-white/50 flex items-center justify-center hover:bg-white/55 transition"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="career-modal-body">
+              <section className="career-detail-section">
+                <div className="career-section-title">Basic Info</div>
+
+                <div className="career-detail-grid">
+                  <label className="career-field">
+                    <span>Company</span>
+                    {editing ? (
+                      <input
+                        value={selectedApp.company}
+                        onChange={(e) =>
+                          updateApplication(selectedApp.id, "company", e.target.value)
+                        }
+                        spellCheck={false}
+                      />
+                    ) : (
+                      <div>{selectedApp.company || "-"}</div>
+                    )}
+                  </label>
+
+                  <label className="career-field">
+                    <span>Position</span>
+                    {editing ? (
+                      <input
+                        value={selectedApp.role}
+                        onChange={(e) =>
+                          updateApplication(selectedApp.id, "role", e.target.value)
+                        }
+                        spellCheck={false}
+                      />
+                    ) : (
+                      <div>{selectedApp.role || "-"}</div>
+                    )}
+                  </label>
+
+                  <label className="career-field">
+                    <span>Status</span>
+                    {editing ? (
+                      <select
+                        value={selectedApp.status}
+                        onChange={(e) =>
+                          updateApplication(
+                            selectedApp.id,
+                            "status",
+                            e.target.value as CareerStatus
+                          )
+                        }
+                      >
+                        {statusOptions.map((status) => (
+                          <option key={status} value={status}>
+                            {status}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <div>{selectedApp.status}</div>
+                    )}
+                  </label>
+
+                  <label className="career-field">
+                    <span>Location</span>
+                    {editing ? (
+                      <input
+                        value={selectedApp.location}
+                        onChange={(e) =>
+                          updateApplication(selectedApp.id, "location", e.target.value)
+                        }
+                        spellCheck={false}
+                        placeholder="Seoul / Remote / Hybrid"
+                      />
+                    ) : (
+                      <div>{selectedApp.location || "-"}</div>
+                    )}
+                  </label>
+
+                  <label className="career-field">
+                    <span>Work Type</span>
+                    {editing ? (
+                      <input
+                        value={selectedApp.workType}
+                        onChange={(e) =>
+                          updateApplication(selectedApp.id, "workType", e.target.value)
+                        }
+                        spellCheck={false}
+                        placeholder="Full-time / Intern / Contract"
+                      />
+                    ) : (
+                      <div>{selectedApp.workType || "-"}</div>
+                    )}
+                  </label>
+
+                  <label className="career-field">
+                    <span>Deadline</span>
+                    {editing ? (
+                      <input
+                        type="date"
+                        value={selectedApp.deadline}
+                        onChange={(e) =>
+                          updateApplication(selectedApp.id, "deadline", e.target.value)
+                        }
+                      />
+                    ) : (
+                      <div>{selectedApp.deadline || "-"}</div>
+                    )}
+                  </label>
+                </div>
+              </section>
+
+              <section className="career-detail-section">
+                <div className="career-section-title">Posting Link</div>
+
+                {editing ? (
+                  <div className="career-link-row">
+                    <Link className="w-4 h-4 text-muted-foreground" />
+                    <input
+                      value={selectedApp.postingUrl}
+                      onChange={(e) =>
+                        updateApplication(selectedApp.id, "postingUrl", e.target.value)
+                      }
+                      spellCheck={false}
+                      placeholder="https://..."
+                    />
+                  </div>
+                ) : selectedApp.postingUrl ? (
                   <button
                     type="button"
-                    onClick={() => removeApplication(app.id)}
-                    className="w-7 h-7 rounded-full bg-white/30 border border-white/40 flex items-center justify-center hover:bg-white/50 transition"
+                    onClick={() => openPostingUrl(selectedApp.postingUrl)}
+                    className="career-open-link-button"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <ExternalLink className="w-4 h-4" />
+                    Open posting link
                   </button>
+                ) : (
+                  <div className="career-empty-text">No link saved.</div>
+                )}
+              </section>
+
+              <section className="career-detail-section">
+                <div className="career-section-title">Job Description</div>
+
+                {editing ? (
+                  <textarea
+                    value={selectedApp.jobDescription}
+                    onChange={(e) =>
+                      updateApplication(
+                        selectedApp.id,
+                        "jobDescription",
+                        e.target.value
+                      )
+                    }
+                    spellCheck={false}
+                    placeholder="공고 내용, 주요 업무, 자격요건 등을 붙여넣기"
+                    className="career-textarea"
+                  />
+                ) : (
+                  <div className="career-rich-text">
+                    {selectedApp.jobDescription || "No job description yet."}
+                  </div>
+                )}
+              </section>
+
+              <section className="career-detail-section">
+                <div className="career-section-title-row">
+                  <div className="career-section-title">Cover Letter Questions</div>
+
+                  {editing && (
+                    <button
+                      type="button"
+                      onClick={() => addQuestion(selectedApp.id)}
+                      className="career-small-button"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      Add
+                    </button>
+                  )}
                 </div>
 
-                <input
-                  value={app.role}
-                  onChange={(e) =>
-                    updateApplication(app.id, "role", e.target.value)
-                  }
-                  className="w-full bg-transparent outline-none text-xs text-muted-foreground border-b border-white/30"
-                />
+                <div className="space-y-2">
+                  {selectedApp.coverLetterQuestions.length === 0 && (
+                    <div className="career-empty-text">
+                      No questions saved.
+                    </div>
+                  )}
 
-                <select
-                  value={app.status}
-                  onChange={(e) =>
-                    updateApplication(
-                      app.id,
-                      "status",
-                      e.target.value as CareerStatus
-                    )
-                  }
-                  className="w-full rounded-xl bg-white/30 border border-white/40 px-3 py-2 text-xs outline-none"
-                >
-                  <option value="Preparing">Preparing</option>
-                  <option value="Submitted">Submitted</option>
-                  <option value="Completed">Completed</option>
-                </select>
-              </>
-            ) : (
-              <div className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold truncate">
-                    {app.company}
-                  </div>
-                  <div className="text-xs text-muted-foreground truncate">
-                    {app.role}
-                  </div>
+                  {selectedApp.coverLetterQuestions.map((question, index) => (
+                    <div key={index} className="career-question-item">
+                      {editing ? (
+                        <>
+                          <textarea
+                            value={question}
+                            onChange={(e) =>
+                              updateQuestion(
+                                selectedApp.id,
+                                index,
+                                e.target.value
+                              )
+                            }
+                            spellCheck={false}
+                            placeholder={`${index + 1}. 자소서 항목`}
+                          />
+
+                          <button
+                            type="button"
+                            onClick={() => removeQuestion(selectedApp.id, index)}
+                            className="career-question-delete"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </>
+                      ) : (
+                        <div>
+                          <span className="text-muted-foreground mr-2">
+                            {index + 1}.
+                          </span>
+                          {question}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
+              </section>
 
-                <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/35 border border-white/40">
-                  {app.status}
-                </span>
-              </div>
-            )}
+              <section className="career-detail-section">
+                <div className="career-section-title">Notes</div>
+
+                {editing ? (
+                  <textarea
+                    value={selectedApp.notes}
+                    onChange={(e) =>
+                      updateApplication(selectedApp.id, "notes", e.target.value)
+                    }
+                    spellCheck={false}
+                    placeholder="준비 메모, 내 경험 매칭, 제출 전 체크리스트 등"
+                    className="career-textarea"
+                  />
+                ) : (
+                  <div className="career-rich-text">
+                    {selectedApp.notes || "No notes yet."}
+                  </div>
+                )}
+              </section>
+            </div>
           </div>
-        ))}
-
-        {editing && (
-          <button
-            type="button"
-            onClick={addApplication}
-            className="w-full h-10 rounded-2xl accent-soft-card flex items-center justify-center gap-2 text-sm hover:bg-white/45 transition"
-          >
-            <Plus className="w-4 h-4" />
-            Add application
-          </button>
-        )}
-      </div>
-    </GlassCard>
+        </div>
+      )}
+    </>
   );
 };

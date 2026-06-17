@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PointerEvent, ReactNode } from "react";
 import {
   ArrowDown,
@@ -126,6 +126,12 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
 
   const selectedItem = layout.find((item) => item.id === selectedId);
   const isLayoutTool = editMode && tool !== "content";
+
+  useEffect(() => {
+  if (!editMode) {
+    setTool("content");
+  }
+}, [editMode]);
 
   const getCellMetrics = () => {
     const board = boardRef.current;
@@ -324,7 +330,16 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
 
           <div className="p-3 space-y-3">
             <div className="grid grid-cols-3 gap-1 rounded-full bg-white/35 border border-white/50 p-1">
-              {(["content", "move", "resize"] as LayoutTool[]).map((mode) => (
+              {(["content", "move", "resize"] as LayoutTool[]).map((mode) => {
+                const label = 
+                mode === "content"
+                  ? "Select"
+                  :mode === "move"
+                  ? "Move"
+                  : "Resize";
+
+
+              return (
                 <button
                   key={mode}
                   type="button"
@@ -336,7 +351,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
                       : "text-muted-foreground hover:text-foreground hover:bg-white/45"
                   )}
                 >
-                  {mode}
+                  {label}
                 </button>
               ))}
             </div>
