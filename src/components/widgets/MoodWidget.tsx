@@ -1,4 +1,5 @@
-import { Heart, RotateCcw } from "lucide-react";
+import { useState } from "react";
+import { Heart, Lock, Pencil, RotateCcw } from "lucide-react";
 import { GlassCard } from "../glass/GlassCard";
 import { cn } from "../../lib/utils";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
@@ -18,6 +19,8 @@ const defaultMood: MoodValues = {
 };
 
 export const MoodWidget = () => {
+  const [editing, setEditing] = useState(false);
+
   const {
     value: values,
     setValue: setValues,
@@ -25,6 +28,8 @@ export const MoodWidget = () => {
   } = useLocalStorage<MoodValues>("glassday.mood", defaultMood);
 
   const updateMetric = (metric: Metric, value: number) => {
+    if (!editing) return;
+
     setValues((prev) => ({
       ...prev,
       [metric]: value,
@@ -34,9 +39,28 @@ export const MoodWidget = () => {
   return (
     <GlassCard
       title="Energy Insights"
-      subtitle="Saved locally."
+      subtitle={editing ? "Editing signals" : "Feelings as signals"}
       icon={<Heart className="w-4 h-4" />}
       className="mood-widget"
+      actions={
+        <button
+          type="button"
+          onClick={() => setEditing((prev) => !prev)}
+          className={cn(
+            "h-8 px-3 rounded-full text-xs border transition flex items-center gap-1.5",
+            editing
+              ? "bg-foreground text-background border-foreground"
+              : "bg-white/35 border-white/50 text-muted-foreground hover:text-foreground"
+          )}
+        >
+          {editing ? (
+            <Lock className="w-3.5 h-3.5" />
+          ) : (
+            <Pencil className="w-3.5 h-3.5" />
+          )}
+          {editing ? "Done" : "Edit"}
+        </button>
+      }
     >
       <div className="space-y-3">
         {metrics.map((metric) => (
@@ -51,9 +75,11 @@ export const MoodWidget = () => {
                   onClick={() => updateMetric(metric, n)}
                   className={cn(
                     "w-2.5 h-2.5 rounded-full transition-all",
+                    editing && "cursor-pointer",
                     n <= values[metric]
                       ? "mood-dot-active scale-110"
-                      : "bg-white/35 hover:bg-white/65"
+                      : "bg-white/35 hover:bg-white/65",
+                    !editing && "pointer-events-none"
                   )}
                 />
               ))}
@@ -65,13 +91,16 @@ export const MoodWidget = () => {
           </div>
         ))}
 
-        <button
-          type="button"
-          onClick={resetValue}
-          className="edit-only pt-2 flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition"        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          Reset mood data
-        </button>
+        {editing && (
+          <button
+            type="button"
+            onClick={resetValue}
+            className="pt-2 flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            Reset mood data
+          </button>
+        )}
       </div>
     </GlassCard>
   );
