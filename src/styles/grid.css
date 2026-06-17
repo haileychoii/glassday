@@ -138,21 +138,7 @@
 /* View Mode: 내용 수정 잠금 */
 
 
-.dashboard-grid-view-mode input,
-.dashboard-grid-view-mode textarea,
-.dashboard-grid-view-mode select {
-  background: transparent !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-}
 
-.dashboard-grid-view-mode textarea {
-  resize: none;
-}
-
-.dashboard-grid-view-mode .edit-only {
-  display: none !important;
-}
 
 /* Layout tool mode: 위젯 조작 중에는 내용 수정 잠금 */
 .dashboard-grid-locked-content input,
