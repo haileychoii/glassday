@@ -4,11 +4,11 @@ import {
   ChevronLeft,
   ChevronRight,
   Lock,
-  Pencil,
   Plus,
   Trash2,
   X,
 } from "lucide-react";
+
 import { GlassCard } from "../glass/GlassCard";
 import { cn } from "../../lib/utils";
 import { useDashboardData } from "../../context/DashboardDataContext";
@@ -29,28 +29,62 @@ const parseDate = (value: string) => {
 const addDays = (value: string, amount: number) => {
   const date = parseDate(value);
   date.setDate(date.getDate() + amount);
+
   return toLocalDateInput(date);
 };
 
 const getWeekDates = (value: string) => {
   const date = parseDate(value);
   const day = date.getDay();
+
   const mondayOffset = day === 0 ? -6 : 1 - day;
 
   return Array.from({ length: 7 }).map((_, index) => {
     const next = new Date(date);
     next.setDate(date.getDate() + mondayOffset + index);
+
     return toLocalDateInput(next);
   });
+};
+
+const getMonthDates = (value: string) => {
+  const date = parseDate(value);
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  const firstDate = new Date(year, month, 1);
+  const lastDate = new Date(year, month + 1, 0);
+
+  const startDay = firstDate.getDay();
+  const gridStart = new Date(firstDate);
+  gridStart.setDate(firstDate.getDate() - startDay);
+
+  const dates: string[] = [];
+
+  for (let i = 0; i < 42; i += 1) {
+    const next = new Date(gridStart);
+    next.setDate(gridStart.getDate() + i);
+    dates.push(toLocalDateInput(next));
+  }
+
+  return {
+    dates,
+    currentMonth: `${year}-${String(month + 1).padStart(2, "0")}`,
+    firstDate: toLocalDateInput(firstDate),
+    lastDate: toLocalDateInput(lastDate),
+  };
 };
 
 const eventTouchesDate = (event: CalendarEvent, date: string) => {
   return event.startDate <= date && event.endDate >= date;
 };
 
-const eventTouchesMonth = (event: CalendarEvent, date: string) => {
-  const month = date.slice(0, 7);
-  return event.startDate.slice(0, 7) <= month && event.endDate.slice(0, 7) >= month;
+const eventTouchesRange = (
+  event: CalendarEvent,
+  rangeStart: string,
+  rangeEnd: string
+) => {
+  return event.startDate <= rangeEnd && event.endDate >= rangeStart;
 };
 
 const formatEventTime = (event: CalendarEvent) => {
@@ -59,6 +93,28 @@ const formatEventTime = (event: CalendarEvent) => {
   }
 
   return `${event.startDate} ${event.startTime} → ${event.endDate} ${event.endTime}`;
+};
+
+const formatHeaderLabel = (selectedDate: string, view: CalendarView) => {
+  if (view === "day") {
+    return selectedDate;
+  }
+
+  if (view === "week") {
+    const weekDates = getWeekDates(selectedDate);
+    return `${weekDates[0]} → ${weekDates[6]}`;
+  }
+
+  return selectedDate.slice(0, 7);
+};
+
+const sortEvents = (events: CalendarEvent[]) => {
+  return [...events].sort((a, b) => {
+    const aValue = `${a.startDate} ${a.startTime}`;
+    const bValue = `${b.startDate} ${b.startTime}`;
+
+    return aValue.localeCompare(bValue);
+  });
 };
 
 export const CalendarWidget = () => {
@@ -74,14 +130,12 @@ export const CalendarWidget = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const editingEvent =
-    editingId ? calendarEvents.find((event) => event.id === editingId) ?? null : null;
+    editingId
+      ? calendarEvents.find((event) => event.id === editingId) ?? null
+      : null;
 
   const visibleEvents = useMemo(() => {
-    const sorted = [...calendarEvents].sort((a, b) => {
-      const aValue = `${a.startDate} ${a.startTime}`;
-      const bValue = `${b.startDate} ${b.startTime}`;
-      return aValue.localeCompare(bValue);
-    });
+    const sorted = sortEvents(calendarEvents);
 
     if (view === "day") {
       return sorted.filter((event) => eventTouchesDate(event, selectedDate));
@@ -90,33 +144,49 @@ export const CalendarWidget = () => {
     if (view === "week") {
       const weekDates = getWeekDates(selectedDate);
       return sorted.filter((event) =>
-        weekDates.some((date) => eventTouchesDate(event, date))
+        eventTouchesRange(event, weekDates[0], weekDates[6])
       );
     }
 
-    return sorted.filter((event) => eventTouchesMonth(event, selectedDate));
+    const monthInfo = getMonthDates(selectedDate);
+
+    return sorted.filter((event) =>
+      eventTouchesRange(event, monthInfo.firstDate, monthInfo.lastDate)
+    );
   }, [calendarEvents, selectedDate, view]);
 
-  const goPrev = () => {
-    if (view === "day") setSelectedDate((prev) => addDays(prev, -1));
-    if (view === "week") setSelectedDate((prev) => addDays(prev, -7));
+  const monthInfo = useMemo(() => getMonthDates(selectedDate), [selectedDate]);
 
-    if (view === "month") {
-      const date = parseDate(selectedDate);
-      date.setMonth(date.getMonth() - 1);
-      setSelectedDate(toLocalDateInput(date));
+  const goPrev = () => {
+    if (view === "day") {
+      setSelectedDate((prev) => addDays(prev, -1));
+      return;
     }
+
+    if (view === "week") {
+      setSelectedDate((prev) => addDays(prev, -7));
+      return;
+    }
+
+    const date = parseDate(selectedDate);
+    date.setMonth(date.getMonth() - 1);
+    setSelectedDate(toLocalDateInput(date));
   };
 
   const goNext = () => {
-    if (view === "day") setSelectedDate((prev) => addDays(prev, 1));
-    if (view === "week") setSelectedDate((prev) => addDays(prev, 7));
-
-    if (view === "month") {
-      const date = parseDate(selectedDate);
-      date.setMonth(date.getMonth() + 1);
-      setSelectedDate(toLocalDateInput(date));
+    if (view === "day") {
+      setSelectedDate((prev) => addDays(prev, 1));
+      return;
     }
+
+    if (view === "week") {
+      setSelectedDate((prev) => addDays(prev, 7));
+      return;
+    }
+
+    const date = parseDate(selectedDate);
+    date.setMonth(date.getMonth() + 1);
+    setSelectedDate(toLocalDateInput(date));
   };
 
   const createManualEvent = () => {
@@ -124,23 +194,37 @@ export const CalendarWidget = () => {
 
     updateCalendarEvent(newEvent.id, {
       startDate: selectedDate,
+      startTime: "09:00",
       endDate: selectedDate,
+      endTime: "10:00",
+      source: "manual",
     });
 
     setEditingId(newEvent.id);
+  };
+
+  const updateEditingEvent = (patch: Partial<CalendarEvent>) => {
+    if (!editingEvent) return;
+
+    updateCalendarEvent(editingEvent.id, patch);
+  };
+
+  const dayEventsByDate = (date: string) => {
+    return visibleEvents.filter((event) => eventTouchesDate(event, date));
   };
 
   return (
     <>
       <GlassCard
         title="Calendar"
-        subtitle="Manual events + career deadlines"
+        subtitle="Manual events + career application windows"
         icon={<CalendarDays className="w-4 h-4" />}
         actions={
           <button
             type="button"
             onClick={createManualEvent}
             className="h-8 w-8 rounded-full bg-white/35 border border-white/50 flex items-center justify-center hover:bg-white/55 transition"
+            title="Add event"
           >
             <Plus className="w-3.5 h-3.5" />
           </button>
@@ -149,7 +233,11 @@ export const CalendarWidget = () => {
         <div className="h-full flex flex-col gap-3">
           <div className="calendar-widget-toolbar">
             <div className="flex items-center gap-1">
-              <button type="button" onClick={goPrev} className="calendar-nav-button">
+              <button
+                type="button"
+                onClick={goPrev}
+                className="calendar-nav-button"
+              >
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
 
@@ -160,7 +248,11 @@ export const CalendarWidget = () => {
                 className="calendar-date-input"
               />
 
-              <button type="button" onClick={goNext} className="calendar-nav-button">
+              <button
+                type="button"
+                onClick={goNext}
+                className="calendar-nav-button"
+              >
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -182,42 +274,109 @@ export const CalendarWidget = () => {
             </div>
           </div>
 
-          <div className="calendar-event-list">
-            {visibleEvents.length === 0 && (
-              <div className="calendar-empty-state">
-                No events in this {view}.
-              </div>
-            )}
+          <div className="calendar-current-label">
+            {formatHeaderLabel(selectedDate, view)}
+          </div>
 
-            {visibleEvents.map((event) => (
-              <button
-                key={event.id}
-                type="button"
-                onClick={() => setEditingId(event.id)}
-                className="calendar-event-item"
-              >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="calendar-event-title">{event.title}</span>
+          {view === "month" ? (
+            <div className="calendar-month-grid">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                <div key={day} className="calendar-month-weekday">
+                  {day}
+                </div>
+              ))}
 
-                    {event.source === "career" && (
-                      <span className="calendar-career-badge">Career</span>
+              {monthInfo.dates.map((date) => {
+                const events = dayEventsByDate(date);
+                const isToday = date === toLocalDateInput();
+                const isCurrentMonth =
+                  date.slice(0, 7) === monthInfo.currentMonth;
+
+                return (
+                  <button
+                    key={date}
+                    type="button"
+                    onClick={() => {
+                      setSelectedDate(date);
+                      setView("day");
+                    }}
+                    className={cn(
+                      "calendar-month-cell",
+                      !isCurrentMonth && "is-muted",
+                      isToday && "is-today"
+                    )}
+                  >
+                    <div className="calendar-month-day-number">
+                      {Number(date.slice(-2))}
+                    </div>
+
+                    <div className="calendar-month-events">
+                      {events.slice(0, 2).map((event) => (
+                        <div
+                          key={event.id}
+                          className={cn(
+                            "calendar-month-event-chip",
+                            event.source === "career" && "is-career"
+                          )}
+                        >
+                          {event.title}
+                        </div>
+                      ))}
+
+                      {events.length > 2 && (
+                        <div className="calendar-month-more">
+                          +{events.length - 2} more
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="calendar-event-list">
+              {visibleEvents.length === 0 && (
+                <div className="calendar-empty-state">
+                  No events in this {view}.
+                </div>
+              )}
+
+              {visibleEvents.map((event) => (
+                <button
+                  key={event.id}
+                  type="button"
+                  onClick={() => setEditingId(event.id)}
+                  className="calendar-event-item"
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="calendar-event-title">
+                        {event.title}
+                      </span>
+
+                      {event.source === "career" && (
+                        <span className="calendar-career-badge">Career</span>
+                      )}
+
+                      {event.googleSyncStatus === "pending" && (
+                        <span className="calendar-pending-badge">Pending</span>
+                      )}
+                    </div>
+
+                    <div className="calendar-event-time">
+                      {formatEventTime(event)}
+                    </div>
+
+                    {event.location && (
+                      <div className="calendar-event-location">
+                        {event.location}
+                      </div>
                     )}
                   </div>
-
-                  <div className="calendar-event-time">
-                    {formatEventTime(event)}
-                  </div>
-
-                  {event.location && (
-                    <div className="calendar-event-location">
-                      {event.location}
-                    </div>
-                  )}
-                </div>
-              </button>
-            ))}
-          </div>
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="calendar-google-preview">
             <div>
@@ -241,9 +400,10 @@ export const CalendarWidget = () => {
               <div>
                 <div className="text-sm font-semibold">
                   {editingEvent.source === "career"
-                    ? "Career Calendar Event"
+                    ? "Career Application Window"
                     : "Calendar Event"}
                 </div>
+
                 <div className="text-xs text-muted-foreground mt-1">
                   {editingEvent.source === "career"
                     ? "Changes here will update Career Widget too."
@@ -267,7 +427,7 @@ export const CalendarWidget = () => {
                   value={editingEvent.title}
                   disabled={editingEvent.source === "career"}
                   onChange={(e) =>
-                    updateCalendarEvent(editingEvent.id, {
+                    updateEditingEvent({
                       title: e.target.value,
                     })
                   }
@@ -282,7 +442,7 @@ export const CalendarWidget = () => {
                     type="date"
                     value={editingEvent.startDate}
                     onChange={(e) =>
-                      updateCalendarEvent(editingEvent.id, {
+                      updateEditingEvent({
                         startDate: e.target.value,
                       })
                     }
@@ -295,7 +455,7 @@ export const CalendarWidget = () => {
                     type="time"
                     value={editingEvent.startTime}
                     onChange={(e) =>
-                      updateCalendarEvent(editingEvent.id, {
+                      updateEditingEvent({
                         startTime: e.target.value,
                       })
                     }
@@ -308,7 +468,7 @@ export const CalendarWidget = () => {
                     type="date"
                     value={editingEvent.endDate}
                     onChange={(e) =>
-                      updateCalendarEvent(editingEvent.id, {
+                      updateEditingEvent({
                         endDate: e.target.value,
                       })
                     }
@@ -321,7 +481,7 @@ export const CalendarWidget = () => {
                     type="time"
                     value={editingEvent.endTime}
                     onChange={(e) =>
-                      updateCalendarEvent(editingEvent.id, {
+                      updateEditingEvent({
                         endTime: e.target.value,
                       })
                     }
@@ -334,7 +494,7 @@ export const CalendarWidget = () => {
                 <input
                   value={editingEvent.location}
                   onChange={(e) =>
-                    updateCalendarEvent(editingEvent.id, {
+                    updateEditingEvent({
                       location: e.target.value,
                     })
                   }
@@ -348,7 +508,7 @@ export const CalendarWidget = () => {
                 <textarea
                   value={editingEvent.notes}
                   onChange={(e) =>
-                    updateCalendarEvent(editingEvent.id, {
+                    updateEditingEvent({
                       notes: e.target.value,
                     })
                   }
@@ -373,7 +533,7 @@ export const CalendarWidget = () => {
                 ) : (
                   <div className="calendar-managed-note">
                     <Lock className="w-3.5 h-3.5" />
-                    Managed by Career Widget. Date/time edits are synced both ways.
+                    Managed by Career Widget · Date/time edits sync both ways
                   </div>
                 )}
 
