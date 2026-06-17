@@ -38,10 +38,10 @@ export const AppShell = ({
                   </h1>
 
                   <p className="text-sm text-muted-foreground mt-2">
-                    {editMode
-                      ? "Edit your layout, resize widgets, and tune your system."
-                      : "Your layout is locked. Switch to Edit Mode to move widgets."}
-                  </p>
+                   {editMode
+    ? "Layout Mode is on. Move or resize widgets without editing their content."
+    : "Layout is locked. Edit each widget directly from its own card."}
+                </p>
                 </div>
 
                 {children}
