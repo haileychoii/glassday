@@ -435,9 +435,9 @@
   align-items: center;
   justify-content: center;
   padding: 28px;
-  background: hsl(var(--foreground) / 0.2);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: hsl(230 24% 18% / 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .memo-save-dialog {

@@ -54,79 +54,66 @@
 
 
 
-.theme-glass {
-  --background: 220 35% 96%;
+.theme-pastel {
+  --background: 330 45% 97%;
   --foreground: 228 24% 16%;
 
-  --card-glass: 0 0% 100% / 0.22;
-  --card-glass-border: 0 0% 100% / 0.52;
+  --primary: 326 48% 64%;
+  --primary-glow: 326 90% 86%;
+
+  --muted: 330 30% 92%;
+  --muted-foreground: 228 12% 46%;
+
+  --card-glass: 0 0% 100% / 0.36;
+  --card-glass-border: 0 0% 100% / 0.5;
+
+  --wallpaper:
+    radial-gradient(circle at 16% 12%, hsl(326 90% 92% / 0.8), transparent 28%),
+    radial-gradient(circle at 84% 18%, hsl(38 95% 91% / 0.68), transparent 26%),
+    radial-gradient(circle at 20% 84%, hsl(248 80% 94% / 0.62), transparent 24%),
+    linear-gradient(180deg, hsl(330 45% 97%), hsl(315 38% 95%));
+}
+
+.theme-glass {
+  --background: 220 35% 96%;
+  --foreground: 228 26% 12%;
 
   --primary: 232 72% 66%;
   --primary-glow: 212 100% 82%;
 
   --muted: 225 26% 92%;
-  --muted-foreground: 228 12% 44%;
+  --muted-foreground: 228 14% 36%;
 
-  --bg-grad-1: 212 100% 92%;
-  --bg-grad-2: 262 90% 93%;
-  --bg-grad-3: 332 95% 93%;
-  --bg-grad-4: 170 75% 92%;
-
-  --shadow-glass:
-    0 24px 64px -28px hsl(220 55% 42% / 0.22),
-    0 10px 24px -18px hsl(220 35% 30% / 0.16),
-    inset 0 1px 0 hsl(0 0% 100% / 0.78);
-
-  --shadow-soft:
-    0 20px 48px -26px hsl(220 38% 36% / 0.18);
-
-  --glass-highlight: hsl(0 0% 100% / 0.72);
-  --glass-edge: hsl(0 0% 100% / 0.62);
-  --glass-inner-shadow: hsl(220 30% 35% / 0.08);
-  --glass-tint-blue: hsl(210 100% 84% / 0.14);
-  --glass-tint-pink: hsl(320 100% 90% / 0.12);
-  --glass-tint-mint: hsl(160 80% 88% / 0.12);
-}
-
-
-.theme-ios {
-  --background: 210 20% 96%;
-  --foreground: 220 18% 8%;
-
-  --card-glass: 0 0% 100% / 0.72;
-  --card-glass-border: 220 20% 88% / 0.9;
-
-  --primary: 212 100% 50%;
-  --primary-glow: 212 100% 70%;
-
-  --accent-gradient:
-    linear-gradient(
-      90deg,
-      hsl(212 88% 54%),
-      hsl(230 52% 58%)
-    );
-
-  --accent-gradient-soft:
-    linear-gradient(
-      135deg,
-      hsl(212 88% 54% / 0.12),
-      hsl(230 52% 58% / 0.08)
-    );
-
-  --accent-dot-gradient:
-    linear-gradient(
-      135deg,
-      hsl(212 88% 54%),
-      hsl(230 52% 58%)
-    );
-
-  --shadow-glass:
-    0 18px 50px -28px hsl(220 20% 20% / 0.35),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9);
+  --card-glass: 0 0% 100% / 0.22;
+  --card-glass-border: 0 0% 100% / 0.62;
 
   --wallpaper:
-    radial-gradient(circle at 20% 10%, hsl(210 30% 98% / 0.95), transparent 34%),
-    radial-gradient(circle at 85% 16%, hsl(220 20% 94% / 0.9), transparent 36%),
-    radial-gradient(circle at 50% 80%, hsl(0 0% 100% / 0.85), transparent 42%),
-    linear-gradient(135deg, hsl(210 20% 96%), hsl(220 18% 94%));
+    radial-gradient(circle at 16% 14%, hsl(210 100% 92% / 0.78), transparent 28%),
+    radial-gradient(circle at 84% 18%, hsl(265 100% 94% / 0.7), transparent 26%),
+    radial-gradient(circle at 24% 84%, hsl(170 70% 93% / 0.62), transparent 24%),
+    radial-gradient(circle at 84% 82%, hsl(330 85% 94% / 0.58), transparent 24%),
+    linear-gradient(180deg, hsl(220 30% 96%), hsl(220 28% 94%));
+}
+
+.theme-ios {
+  --background: 215 35% 96%;
+  --foreground: 220 26% 13%;
+
+  --primary: 214 88% 58%;
+  --primary-glow: 214 100% 84%;
+
+  --muted: 215 24% 91%;
+  --muted-foreground: 220 12% 42%;
+
+  --card-glass: 0 0% 100% / 0.32;
+  --card-glass-border: 0 0% 100% / 0.48;
+
+  --wallpaper:
+    radial-gradient(circle at 20% 18%, hsl(214 100% 91% / 0.72), transparent 28%),
+    radial-gradient(circle at 78% 22%, hsl(260 75% 93% / 0.58), transparent 26%),
+    linear-gradient(180deg, hsl(215 35% 97%), hsl(218 28% 94%));
+}
+
+.bg-glass-gradient {
+  background: var(--wallpaper);
 }
