@@ -121,8 +121,10 @@ export const WeekTimeline = ({
                         style={{
                           top: position.top,
                           height: position.height,
-                          background: `linear-gradient(135deg, ${color}e6, ${color}88)`,
+                          background: `linear-gradient(135deg, ${color}aa, ${color}66)`,
+                          borderColor: `${color}cc`,
                         }}
+                        
                         title={event.title}
                       >
                         <strong>{event.title}</strong>

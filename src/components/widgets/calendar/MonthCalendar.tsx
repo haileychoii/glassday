@@ -122,10 +122,11 @@ export const MonthCalendar = ({
                             segment.isMiddle && "is-middle"
                           )}
                           style={{
-                            background: `linear-gradient(90deg, ${getEventColor(
-                              event
-                            )}cc, ${getEventColor(event)}66)`,
-                          }}
+  background: `linear-gradient(90deg, ${getEventColor(
+    event
+  )}aa, ${getEventColor(event)}55)`,
+  borderColor: `${getEventColor(event)}cc`,
+}}
                           title={`${event.title} · ${formatEventTime(event)}`}
                         >
                           {segment.isStart ? event.title : ""}
