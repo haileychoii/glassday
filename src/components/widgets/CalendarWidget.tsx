@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   CalendarDays,
   ChevronLeft,
@@ -393,7 +394,8 @@ export const CalendarWidget = () => {
         </div>
       </GlassCard>
 
-      {editingEvent && (
+      {editingEvent && 
+        createPortal(
         <div className="calendar-modal-backdrop">
           <div className="calendar-modal-window">
             <div className="calendar-modal-header">
@@ -547,7 +549,8 @@ export const CalendarWidget = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

@@ -587,7 +587,8 @@ export const MemoWidget = () => {
         </div>
       </GlassCard>
 
-      {maximized && activeNote && (
+      {maximized && activeNote && 
+      createPortal(
         <div className="memo-modal-backdrop">
           <div className="memo-modal-window">
             <div className="memo-modal-header">
@@ -643,7 +644,8 @@ export const MemoWidget = () => {
               {renderWorkspace(modalEditorRef, true)}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {saveDialogOpen &&
@@ -732,7 +734,7 @@ export const MemoWidget = () => {
     document.body
   )}
 
-  
+
     </>
   );
 };

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   BriefcaseBusiness,
   Building2,
@@ -325,7 +326,8 @@ export const CareerWidget = () => {
         </div>
       </GlassCard>
 
-      {selectedApp && (
+      {selectedApp && 
+        createPortal(
         <div className="career-modal-backdrop">
           <div className="career-modal-window">
             <div className="career-modal-header">
@@ -725,7 +727,8 @@ export const CareerWidget = () => {
               </section>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

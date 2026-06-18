@@ -370,40 +370,24 @@
 .memo-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 10000;
+  z-index: 999800;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 36px;
-  background: hsl(var(--foreground) / 0.18);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  padding: 28px;
+  background:
+    radial-gradient(
+      circle at 50% 30%,
+      hsl(0 0% 100% / 0.14),
+      hsl(225 24% 16% / 0.18)
+    );
+  backdrop-filter: blur(14px) saturate(125%);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
 }
 
 .memo-modal-window {
-  width: min(980px, 94vw);
-  height: min(720px, 88vh);
-  resize: both;
-  overflow: auto;
-  min-width: 520px;
-  min-height: 380px;
-  border-radius: 32px;
-  padding: 16px;
-  background:
-    linear-gradient(
-      135deg,
-      hsl(0 0% 100% / 0.82),
-      hsl(0 0% 100% / 0.46)
-    );
-  border: 1px solid hsl(0 0% 100% / 0.72);
-  backdrop-filter: blur(34px) saturate(190%);
-  -webkit-backdrop-filter: blur(34px) saturate(190%);
-  box-shadow:
-    0 30px 90px -28px hsl(var(--primary) / 0.42),
-    inset 0 1px 0 hsl(0 0% 100% / 0.8);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  position: relative;
+  z-index: 999801;
 }
 
 .memo-modal-header {
@@ -637,54 +621,61 @@
 .career-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 10000;
-  padding: 36px;
-  background: hsl(var(--foreground) / 0.18);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  z-index: 999900;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 28px;
+  background:
+    radial-gradient(
+      circle at 50% 30%,
+      hsl(0 0% 100% / 0.14),
+      hsl(225 24% 16% / 0.18)
+    );
+  backdrop-filter: blur(14px) saturate(125%);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
 }
 
 .career-modal-window {
-  width: min(980px, 94vw);
-  height: min(760px, 88vh);
-  border-radius: 34px;
-  padding: 18px;
+  position: relative;
+  z-index: 999901;
+  width: min(960px, 94vw);
+  max-height: min(820px, 90vh);
+  overflow: hidden;
+  border-radius: 32px;
   background:
     linear-gradient(
-      135deg,
-      hsl(0 0% 100% / 0.86),
-      hsl(0 0% 100% / 0.48)
+      145deg,
+      hsl(0 0% 100% / 0.78),
+      hsl(0 0% 100% / 0.36)
     );
-  border: 1px solid hsl(0 0% 100% / 0.72);
-  backdrop-filter: blur(34px) saturate(190%);
-  -webkit-backdrop-filter: blur(34px) saturate(190%);
+  border: 1px solid hsl(0 0% 100% / 0.78);
+  backdrop-filter: blur(38px) saturate(190%);
+  -webkit-backdrop-filter: blur(38px) saturate(190%);
   box-shadow:
-    0 30px 90px -28px hsl(var(--primary) / 0.42),
-    inset 0 1px 0 hsl(0 0% 100% / 0.8);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+    0 36px 110px -34px hsl(220 38% 18% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9),
+    inset 0 -1px 0 hsl(220 25% 40% / 0.06);
 }
 
 .career-modal-header {
-  min-height: 64px;
+  position: relative;
+  z-index: 2;
+  padding: 22px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 20px;
-  padding: 4px 4px 0;
+  gap: 18px;
+  border-bottom: 1px solid hsl(0 0% 100% / 0.4);
 }
 
+
 .career-modal-body {
-  flex: 1;
-  min-height: 0;
+  position: relative;
+  z-index: 2;
+  max-height: calc(90vh - 130px);
   overflow: auto;
-  padding-right: 4px;
-  display: grid;
-  gap: 14px;
+  padding: 22px;
 }
 
 .career-detail-section {
@@ -1154,35 +1145,65 @@
 .calendar-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 10000;
-  padding: 36px;
-  background: hsl(var(--foreground) / 0.18);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  z-index: 999900;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 28px;
+  background:
+    radial-gradient(
+      circle at 50% 30%,
+      hsl(0 0% 100% / 0.14),
+      hsl(225 24% 16% / 0.18)
+    );
+  backdrop-filter: blur(14px) saturate(125%);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
 }
 
 .calendar-modal-window {
-  width: min(680px, 92vw);
-  max-height: min(720px, 88vh);
-  overflow: auto;
-  border-radius: 32px;
-  padding: 18px;
+  position: relative;
+  z-index: 999901;
+  width: min(560px, 94vw);
+  max-height: 90vh;
+  overflow: hidden;
+  border-radius: 30px;
   background:
     linear-gradient(
-      135deg,
-      hsl(0 0% 100% / 0.86),
-      hsl(0 0% 100% / 0.48)
+      145deg,
+      hsl(0 0% 100% / 0.78),
+      hsl(0 0% 100% / 0.36)
     );
-  border: 1px solid hsl(0 0% 100% / 0.72);
-  backdrop-filter: blur(34px) saturate(190%);
-  -webkit-backdrop-filter: blur(34px) saturate(190%);
+  border: 1px solid hsl(0 0% 100% / 0.78);
+  backdrop-filter: blur(38px) saturate(190%);
+  -webkit-backdrop-filter: blur(38px) saturate(190%);
   box-shadow:
-    0 30px 90px -28px hsl(var(--primary) / 0.42),
-    inset 0 1px 0 hsl(0 0% 100% / 0.8);
+    0 36px 110px -34px hsl(220 38% 18% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9),
+    inset 0 -1px 0 hsl(220 25% 40% / 0.06);
 }
+
+.calendar-modal-window {
+  position: relative;
+  z-index: 999901;
+  width: min(560px, 94vw);
+  max-height: 90vh;
+  overflow: hidden;
+  border-radius: 30px;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.78),
+      hsl(0 0% 100% / 0.36)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.78);
+  backdrop-filter: blur(38px) saturate(190%);
+  -webkit-backdrop-filter: blur(38px) saturate(190%);
+  box-shadow:
+    0 36px 110px -34px hsl(220 38% 18% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9),
+    inset 0 -1px 0 hsl(220 25% 40% / 0.06);
+}
+
 
 .calendar-modal-header {
   display: flex;

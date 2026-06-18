@@ -754,3 +754,97 @@ body {
 .theme-glass main {
   background: transparent;
 }
+
+.theme-glass .glass-panel {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.13),
+      hsl(0 0% 100% / 0.045)
+    );
+  border-color: hsl(0 0% 100% / 0.5);
+  backdrop-filter: blur(46px) saturate(190%);
+  -webkit-backdrop-filter: blur(46px) saturate(190%);
+}
+
+.theme-glass .glass-card {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.16),
+      hsl(0 0% 100% / 0.055)
+    );
+  border-color: hsl(0 0% 100% / 0.66);
+  backdrop-filter: blur(38px) saturate(200%);
+  -webkit-backdrop-filter: blur(38px) saturate(200%);
+  box-shadow:
+    0 34px 100px -46px hsl(220 45% 20% / 0.46),
+    0 12px 28px -24px hsl(220 25% 20% / 0.22),
+    inset 0 1px 0 hsl(0 0% 100% / 0.92),
+    inset 0 -1px 0 hsl(220 25% 30% / 0.07);
+}
+
+.theme-glass .glass-card::before {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.36),
+      transparent 18%,
+      transparent 76%,
+      hsl(0 0% 100% / 0.045)
+    ),
+    radial-gradient(
+      120% 90% at 8% 0%,
+      hsl(0 0% 100% / 0.34),
+      transparent 44%
+    ),
+    radial-gradient(
+      90% 80% at 100% 100%,
+      hsl(var(--primary-glow) / 0.12),
+      transparent 46%
+    );
+}
+
+.theme-glass .glass-card::after {
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.9),
+    inset 1px 0 0 hsl(0 0% 100% / 0.26),
+    inset -1px 0 0 hsl(220 30% 40% / 0.04),
+    inset 0 -1px 0 hsl(220 25% 30% / 0.06);
+}
+
+.theme-glass .glass-subtle,
+.theme-glass .career-list-item,
+.theme-glass .calendar-event-item,
+.theme-glass .calendar-month-day-cell,
+.theme-glass .memo-note-item,
+.theme-glass .career-detail-section {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.15),
+      hsl(0 0% 100% / 0.045)
+    );
+  border-color: hsl(0 0% 100% / 0.42);
+  backdrop-filter: blur(24px) saturate(185%);
+  -webkit-backdrop-filter: blur(24px) saturate(185%);
+  box-shadow:
+    0 16px 42px -32px hsl(220 35% 22% / 0.28),
+    inset 0 1px 0 hsl(0 0% 100% / 0.62);
+}
+
+.theme-glass .glass-button,
+.theme-glass .glass-control {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.2),
+      hsl(0 0% 100% / 0.06)
+    );
+  border-color: hsl(0 0% 100% / 0.56);
+  backdrop-filter: blur(22px) saturate(190%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%);
+  box-shadow:
+    0 16px 38px -28px hsl(220 35% 22% / 0.3),
+    inset 0 1px 0 hsl(0 0% 100% / 0.82);
+}
