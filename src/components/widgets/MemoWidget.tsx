@@ -940,15 +940,8 @@ export const MemoWidget = () => {
   };
 
   const memoWindow = memoWindowOpen
-    ? createPortal(
-        <div
-          className="memo-window-backdrop"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget && !windowPinned) {
-              closeMemoWindow();
-            }
-          }}
-        >
+  ? createPortal(
+      <div className="memo-window-layer">
           <div
             className="memo-window"
             style={{
@@ -960,7 +953,7 @@ export const MemoWidget = () => {
               <div>
                 <div className="text-sm font-semibold">Memo Window</div>
                 <div className="text-xs text-muted-foreground">
-                  {windowPinned ? "Pinned on screen" : "Drag to move"}
+                  {windowPinned ? "Floating memo is pinned" : "Floating memo window"}
                 </div>
               </div>
 
