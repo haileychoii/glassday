@@ -25,13 +25,15 @@ export const Topbar = ({ editMode, onToggleEditMode }: TopbarProps) => {
   }, [theme]);
 
   return (
-    <header className="h-[64px] px-5 md:px-6 border-b border-white/35 bg-white/10 backdrop-blur-3xl">
+    <header className="h-[68px] px-5 md:px-6 border-b border-white/35 bg-white/[0.08] backdrop-blur-3xl">
       <div className="h-full flex items-center justify-between gap-4">
-        <div className="hidden md:flex items-center gap-2 h-10 px-4 rounded-full bg-white/35 border border-white/50 backdrop-blur-2xl">
+        <div className="hidden md:flex items-center gap-2 h-10 px-4 rounded-full glass-control min-w-[270px]">
           <Search className="w-4 h-4 text-muted-foreground" />
+
           <input
             placeholder="Search your OS..."
-            className="w-52 bg-transparent outline-none text-sm placeholder:text-muted-foreground"
+            className="w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground"
+            spellCheck={false}
           />
         </div>
 
@@ -40,10 +42,8 @@ export const Topbar = ({ editMode, onToggleEditMode }: TopbarProps) => {
             type="button"
             onClick={onToggleEditMode}
             className={cn(
-              "h-10 px-4 rounded-full border text-sm flex items-center gap-2 transition",
-              editMode
-                ? "bg-foreground text-background border-foreground shadow-soft"
-                : "bg-white/35 border-white/50 text-foreground hover:bg-white/55"
+              "glass-button h-10 px-4 text-sm flex items-center gap-2",
+              editMode && "is-active"
             )}
           >
             {editMode ? (
@@ -51,24 +51,24 @@ export const Topbar = ({ editMode, onToggleEditMode }: TopbarProps) => {
             ) : (
               <Lock className="w-4 h-4" />
             )}
+
             <span>{editMode ? "Layout Mode" : "Layout Locked"}</span>
           </button>
 
-          <button className="h-10 px-4 rounded-full bg-white/35 border border-white/50 text-sm flex items-center gap-2 hover:bg-white/55 transition">
+          <button className="glass-button h-10 px-4 text-sm flex items-center gap-2">
             <CalendarCheck className="w-4 h-4" />
             <span className="hidden sm:inline">Google Calendar</span>
           </button>
 
-          <div className="h-10 px-1.5 rounded-full bg-white/35 border border-white/50 flex items-center">
+          <div className="glass-control h-10 px-1.5 rounded-full flex items-center gap-1">
             {themes.map((t) => (
               <button
                 key={t.id}
+                type="button"
                 onClick={() => setTheme(t.id)}
                 className={cn(
-                  "px-3 py-1.5 rounded-full text-xs transition-all",
-                  theme === t.id
-                    ? "bg-foreground text-background shadow-soft"
-                    : "text-muted-foreground hover:text-foreground"
+                  "theme-pill",
+                  theme === t.id && "is-active"
                 )}
               >
                 {t.label}
@@ -76,7 +76,7 @@ export const Topbar = ({ editMode, onToggleEditMode }: TopbarProps) => {
             ))}
           </div>
 
-          <button className="w-10 h-10 rounded-full bg-white/35 border border-white/50 flex items-center justify-center hover:bg-white/55 transition">
+          <button className="glass-button w-10 h-10 flex items-center justify-center">
             <Bell className="w-4 h-4" />
           </button>
         </div>

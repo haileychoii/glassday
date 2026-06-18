@@ -22,7 +22,7 @@ export const GlassCard = ({
       <div className="flex items-start justify-between gap-3 px-5 pt-5 pb-3">
         <div className="flex items-start gap-3 min-w-0">
           {icon && (
-            <div className="w-9 h-9 rounded-2xl bg-white/45 border border-white/50 flex items-center justify-center shrink-0">
+            <div className="glass-icon-box">
               {icon}
             </div>
           )}

@@ -55,49 +55,37 @@
 
 
 .theme-glass {
-  --background: 225 55% 97%;
-  --foreground: 235 28% 16%;
+  --background: 220 35% 96%;
+  --foreground: 228 24% 16%;
 
-  --card-glass: 0 0% 100% / 0.28;
-  --card-glass-border: 0 0% 100% / 0.84;
+  --card-glass: 0 0% 100% / 0.22;
+  --card-glass-border: 0 0% 100% / 0.52;
 
-  --primary: 230 70% 62%;
-  --primary-glow: 200 100% 82%;
+  --primary: 232 72% 66%;
+  --primary-glow: 212 100% 82%;
 
-  --accent-gradient:
-    linear-gradient(
-      90deg,
-      hsl(204 46% 62%),
-      hsl(235 38% 64%),
-      hsl(284 30% 66%)
-    );
+  --muted: 225 26% 92%;
+  --muted-foreground: 228 12% 44%;
 
-  --accent-gradient-soft:
-    linear-gradient(
-      135deg,
-      hsl(204 46% 62% / 0.15),
-      hsl(235 38% 64% / 0.12),
-      hsl(284 30% 66% / 0.13)
-    );
+  --bg-grad-1: 212 100% 92%;
+  --bg-grad-2: 262 90% 93%;
+  --bg-grad-3: 332 95% 93%;
+  --bg-grad-4: 170 75% 92%;
 
-  --accent-dot-gradient:
-    linear-gradient(
-      135deg,
-      hsl(204 46% 62%),
-      hsl(235 38% 64%)
-    );
-    
   --shadow-glass:
-    0 24px 80px -28px hsl(220 70% 40% / 0.28),
-    inset 0 1px 0 hsl(0 0% 100% / 0.75);
+    0 24px 64px -28px hsl(220 55% 42% / 0.22),
+    0 10px 24px -18px hsl(220 35% 30% / 0.16),
+    inset 0 1px 0 hsl(0 0% 100% / 0.78);
 
-  --wallpaper:
-    radial-gradient(circle at 12% 18%, hsl(205 100% 78% / 0.72), transparent 30%),
-    radial-gradient(circle at 72% 14%, hsl(255 100% 82% / 0.62), transparent 32%),
-    radial-gradient(circle at 52% 48%, hsl(0 0% 100% / 0.48), transparent 42%),
-    radial-gradient(circle at 26% 86%, hsl(175 100% 78% / 0.48), transparent 34%),
-    radial-gradient(circle at 88% 82%, hsl(310 100% 86% / 0.5), transparent 36%),
-    linear-gradient(135deg, hsl(212 85% 94%), hsl(248 80% 96%));
+  --shadow-soft:
+    0 20px 48px -26px hsl(220 38% 36% / 0.18);
+
+  --glass-highlight: hsl(0 0% 100% / 0.72);
+  --glass-edge: hsl(0 0% 100% / 0.62);
+  --glass-inner-shadow: hsl(220 30% 35% / 0.08);
+  --glass-tint-blue: hsl(210 100% 84% / 0.14);
+  --glass-tint-pink: hsl(320 100% 90% / 0.12);
+  --glass-tint-mint: hsl(160 80% 88% / 0.12);
 }
 
 

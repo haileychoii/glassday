@@ -82,16 +82,50 @@ const getDeadlineDate = (app: CareerItem) => {
   return app.applicationEndDate || app.deadline;
 };
 
+const getStatusRank = (status: CareerStatus) => {
+  if (status === "Interview") return 0;
+  if (status === "Submitted") return 1;
+  if (status === "Preparing") return 2;
+  if (status === "Completed") return 4;
+  if (status === "Rejected") return 5;
+
+  return 3;
+};
+
+const getDeadlineRank = (app: CareerItem) => {
+  const deadline = getDeadlineDate(app);
+
+  if (!deadline) return 999999;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const dueDate = new Date(`${deadline}T00:00:00`);
+  dueDate.setHours(0, 0, 0, 0);
+
+  return Math.ceil((dueDate.getTime() - today.getTime()) / DAY_MS);
+};
+
 const sortApplications = (apps: CareerItem[]) => {
   return [...apps].sort((a, b) => {
-    const aDeadline = getDeadlineDate(a);
-    const bDeadline = getDeadlineDate(b);
+    const aStatusRank = getStatusRank(a.status);
+    const bStatusRank = getStatusRank(b.status);
 
-    if (!aDeadline && !bDeadline) return 0;
-    if (!aDeadline) return 1;
-    if (!bDeadline) return -1;
+    if (aStatusRank !== bStatusRank) {
+      return aStatusRank - bStatusRank;
+    }
 
-    return aDeadline.localeCompare(bDeadline);
+    const aDeadlineRank = getDeadlineRank(a);
+    const bDeadlineRank = getDeadlineRank(b);
+
+    const aPassed = aDeadlineRank < 0;
+    const bPassed = bDeadlineRank < 0;
+
+    if (aPassed !== bPassed) {
+      return aPassed ? 1 : -1;
+    }
+
+    return aDeadlineRank - bDeadlineRank;
   });
 };
 
@@ -229,7 +263,12 @@ export const CareerWidget = () => {
               <article
                 key={app.id}
                 onClick={() => setSelectedId(app.id)}
-                className="career-list-item"
+                className={cn(
+                  "career-list-item",
+                  dday.tone === "urgent" && "is-urgent",
+                  dday.tone === "soon" && "is-soon",
+                  dday.tone === "closed" && "is-closed"
+                )}
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
@@ -237,8 +276,9 @@ export const CareerWidget = () => {
                       {app.company || "Untitled Company"}
                     </div>
 
-                    <span className="career-status-pill">{app.status}</span>
-
+                    <span className={`career-status-pill status-${app.status.toLowerCase()}`}>
+                      {app.status}
+                    </span>
                     {deadlineDate && (
                       <span className={`career-dday-pill ${dday.tone}`}>
                         {dday.label}
