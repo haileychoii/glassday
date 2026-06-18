@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   Bold,
   Download,
@@ -645,88 +646,93 @@ export const MemoWidget = () => {
         </div>
       )}
 
-      {saveDialogOpen && activeNote && (
-        <div className="memo-save-backdrop">
-          <div className="memo-save-dialog">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-semibold">Save Memo as TXT</div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  Filename is suggested from the first line. You can edit it
-                  before saving.
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setSaveDialogOpen(false)}
-                className="glass-button h-8 w-8 flex items-center justify-center"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="mt-4">
-              <label className="text-xs text-muted-foreground">File name</label>
-
-              <input
-                ref={saveInputRef}
-                value={saveFileName}
-                onChange={(e) => setSaveFileName(e.target.value)}
-                spellCheck={false}
-                className="memo-save-input"
-              />
-            </div>
-
-            <div className="memo-save-options">
-              <button
-                type="button"
-                onClick={saveToLocal}
-                className="memo-save-option glass-tint-blue"
-              >
-                <Download className="w-4 h-4" />
-
-                <div>
-                  <div className="font-semibold">Local</div>
-                  <div className="text-[11px] text-muted-foreground">
-                    Download to this computer
-                  </div>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={saveToGoogleDrive}
-                className="memo-save-option glass-tint-mint"
-              >
-                <UploadCloud className="w-4 h-4" />
-
-                <div>
-                  <div className="font-semibold">Google Drive</div>
-                  <div className="text-[11px] text-muted-foreground">
-                    Save after Google login setup
-                  </div>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={sendByEmail}
-                className="memo-save-option glass-tint-peach"
-              >
-                <Send className="w-4 h-4" />
-
-                <div>
-                  <div className="font-semibold">Email</div>
-                  <div className="text-[11px] text-muted-foreground">
-                    Open email with memo text
-                  </div>
-                </div>
-              </button>
+      {saveDialogOpen &&
+  activeNote &&
+  createPortal(
+    <div className="memo-save-backdrop">
+      <div className="memo-save-dialog">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div className="text-sm font-semibold">Save Memo as TXT</div>
+            <div className="text-xs text-muted-foreground mt-1">
+              Filename is suggested from the first line. You can edit it before
+              saving.
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setSaveDialogOpen(false)}
+            className="glass-button h-8 w-8 flex items-center justify-center"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
-      )}
+
+        <div className="mt-4">
+          <label className="text-xs text-muted-foreground">File name</label>
+
+          <input
+            ref={saveInputRef}
+            value={saveFileName}
+            onChange={(e) => setSaveFileName(e.target.value)}
+            spellCheck={false}
+            className="memo-save-input"
+          />
+        </div>
+
+        <div className="memo-save-options">
+          <button
+            type="button"
+            onClick={saveToLocal}
+            className="memo-save-option glass-tint-blue"
+          >
+            <Download className="w-4 h-4" />
+
+            <div>
+              <div className="font-semibold">Local</div>
+              <div className="text-[11px] text-muted-foreground">
+                Download to this computer
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={saveToGoogleDrive}
+            className="memo-save-option glass-tint-mint"
+          >
+            <UploadCloud className="w-4 h-4" />
+
+            <div>
+              <div className="font-semibold">Google Drive</div>
+              <div className="text-[11px] text-muted-foreground">
+                Save after Google login setup
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={sendByEmail}
+            className="memo-save-option glass-tint-peach"
+          >
+            <Send className="w-4 h-4" />
+
+            <div>
+              <div className="font-semibold">Email</div>
+              <div className="text-[11px] text-muted-foreground">
+                Open email with memo text
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  )}
+
+  
     </>
   );
 };

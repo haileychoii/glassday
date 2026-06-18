@@ -34,7 +34,7 @@ export const AppShell = ({
                 onToggleEditMode={onToggleEditMode}
               />
 
-              <main className="flex-1 p-4 md:p-6 overflow-auto bg-white/[0.035]">
+              <main className="flex-1 p-4 md:p-6 overflow-auto bg-transparent">
                 <div className="mb-5">
                   <div className="glass-chip mb-3 w-fit">
                     Sunday, June 14
