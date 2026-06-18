@@ -16,7 +16,7 @@ export type CalendarEvent = {
 
   source: CalendarSource;
   sourceId?: string;
-
+  color?: string;
   googleEventId?: string;
   googleSyncStatus?: "not_synced" | "synced" | "pending";
 };
