@@ -229,7 +229,7 @@ export const CalendarWidget = () => {
                   onClick={() => setEditingId(event.id)}
                   className="calendar-event-item"
                   style={{
-                    borderLeft: `6px solid ${event.color || "#DCEBFF")}aa`,
+                    borderLeft: `6px solid ${event.color || "#DCEBFF"}aa`,
                   }}
                 >
                   <div className="min-w-0">
