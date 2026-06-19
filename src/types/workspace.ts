@@ -2,6 +2,8 @@ import type { Layouts } from "react-grid-layout";
 
 export type WidgetId =
   | "today"
+  | "alerts"
+  | "journal"
   | "calendar"
   | "memo"
   | "study"
