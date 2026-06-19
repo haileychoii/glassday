@@ -912,28 +912,131 @@ body {
   -webkit-backdrop-filter: blur(16px) saturate(135%) !important;
 }
 
-/* ================================
-   GLASS THEME
-   배경은 오묘한 blue/purple gradient
-   위젯은 훨씬 투명하고 glassmorphism
-   ================================ */
+/* =========================================================
+   TRUE GLASSMORPHISM THEME
+   진한 오로라 배경 + 투명 유리 위젯
+   ========================================================= */
 
-.theme-glass .glass-card {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.18),
-      hsl(0 0% 100% / 0.06)
-    ) !important;
-  border: 1px solid hsl(0 0% 100% / 0.64) !important;
-  backdrop-filter: blur(46px) saturate(220%) brightness(1.04) !important;
-  -webkit-backdrop-filter: blur(46px) saturate(220%) brightness(1.04) !important;
-  box-shadow:
-    0 34px 110px -52px hsl(220 50% 18% / 0.5),
-    inset 0 1px 0 hsl(0 0% 100% / 0.86),
-    inset 0 -1px 0 hsl(220 30% 30% / 0.06) !important;
+.theme-glass {
+  --background: 232 56% 18%;
+  --foreground: 0 0% 100%;
+  --primary: 252 100% 78%;
+  --primary-glow: 190 100% 72%;
+  --muted: 230 24% 78%;
+  --muted-foreground: 0 0% 100% / 0.62;
+
+  --wallpaper:
+    radial-gradient(circle at 18% 14%, hsl(188 100% 68% / 0.82), transparent 28%),
+    radial-gradient(circle at 82% 16%, hsl(272 100% 68% / 0.86), transparent 30%),
+    radial-gradient(circle at 22% 84%, hsl(205 100% 62% / 0.58), transparent 30%),
+    radial-gradient(circle at 84% 78%, hsl(322 100% 70% / 0.58), transparent 32%),
+    radial-gradient(circle at 48% 48%, hsl(245 100% 74% / 0.48), transparent 42%),
+    linear-gradient(135deg, hsl(226 72% 30%), hsl(254 78% 34%) 46%, hsl(215 70% 28%));
 }
 
+.theme-glass .bg-glass-gradient {
+  background: var(--wallpaper) !important;
+}
+
+/* 흰 막 제거 */
+.theme-glass main,
+.theme-glass .dashboard-grid-board {
+  background: transparent !important;
+}
+
+/* header / sidebar도 진짜 유리 */
+.theme-glass header,
+.theme-glass aside {
+  background: hsl(0 0% 100% / 0.08) !important;
+  background-image: none !important;
+  border-color: hsl(0 0% 100% / 0.18) !important;
+  backdrop-filter: blur(32px) saturate(190%) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(1.1) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.38),
+    0 18px 70px -55px hsl(0 0% 0% / 0.55) !important;
+}
+
+/* 핵심: 위젯은 거의 투명한 유리판 */
+.theme-glass .glass-card {
+  position: relative;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.18),
+      hsl(0 0% 100% / 0.055)
+    ) !important;
+
+  border: 1px solid hsl(0 0% 100% / 0.5) !important;
+
+  backdrop-filter: blur(34px) saturate(210%) contrast(1.08) brightness(1.16) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(210%) contrast(1.08) brightness(1.16) !important;
+
+  box-shadow:
+    0 38px 120px -48px hsl(238 72% 10% / 0.58),
+    inset 0 1px 0 hsl(0 0% 100% / 0.72),
+    inset 0 -1px 0 hsl(0 0% 100% / 0.18),
+    inset 1px 0 0 hsl(0 0% 100% / 0.16),
+    inset -1px 0 0 hsl(0 0% 100% / 0.08) !important;
+}
+
+/* 유리 광택: 대각선 줄무늬 말고 부드러운 상단 하이라이트 */
+.theme-glass .glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: block !important;
+
+  background:
+    radial-gradient(
+      circle at 18% 0%,
+      hsl(0 0% 100% / 0.42),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.22),
+      transparent 34%
+    ) !important;
+
+  opacity: 0.95 !important;
+  transform: none !important;
+  z-index: 0;
+}
+
+.theme-glass .glass-card::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  pointer-events: none;
+  display: block !important;
+  border-radius: inherit;
+
+  background:
+    radial-gradient(
+      circle at 82% 12%,
+      hsl(270 100% 90% / 0.18),
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at 12% 88%,
+      hsl(190 100% 84% / 0.16),
+      transparent 30%
+    ) !important;
+
+  opacity: 1 !important;
+  z-index: 0;
+}
+
+.theme-glass .glass-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 내부 행/박스도 색 카드가 아니라 유리 레이어 */
 .theme-glass .glass-panel,
 .theme-glass .glass-control,
 .theme-glass .glass-subtle,
@@ -944,28 +1047,137 @@ body {
 .theme-glass .today-task-item,
 .theme-glass .today-mini-main,
 .theme-glass .today-mini-stat,
-.theme-glass .today-mini-next {
+.theme-glass .today-mini-next,
+.theme-glass .today-tasks-progress,
+.theme-glass .career-detail-section,
+.theme-glass .settings-section {
   background:
     linear-gradient(
-      180deg,
+      145deg,
       hsl(0 0% 100% / 0.16),
-      hsl(0 0% 100% / 0.045)
+      hsl(0 0% 100% / 0.04)
     ) !important;
-  border-color: hsl(0 0% 100% / 0.46) !important;
-  backdrop-filter: blur(38px) saturate(210%) brightness(1.05) !important;
-  -webkit-backdrop-filter: blur(38px) saturate(210%) brightness(1.05) !important;
+
+  border: 1px solid hsl(0 0% 100% / 0.32) !important;
+
+  backdrop-filter: blur(22px) saturate(190%) brightness(1.12) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(190%) brightness(1.12) !important;
+
   box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.72),
-    0 18px 52px -42px hsl(220 45% 18% / 0.38) !important;
+    inset 0 1px 0 hsl(0 0% 100% / 0.42),
+    0 12px 38px -34px hsl(0 0% 0% / 0.38) !important;
 }
 
+/* 버튼은 liquid glass capsule */
+.theme-glass .glass-button {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.2),
+      hsl(0 0% 100% / 0.06)
+    ) !important;
 
-/* Glass에서 내부 input/칩들도 너무 흰색 덩어리처럼 보이지 않게 */
+  border: 1px solid hsl(0 0% 100% / 0.38) !important;
+
+  backdrop-filter: blur(24px) saturate(200%) brightness(1.14) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) brightness(1.14) !important;
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.58),
+    0 10px 30px -24px hsl(0 0% 0% / 0.4) !important;
+}
+
+.theme-glass .glass-button.is-active,
+.theme-glass .glass-control button.bg-foreground,
+.theme-glass .glass-control button[class*="bg-foreground"] {
+  background: hsl(0 0% 100% / 0.86) !important;
+  color: hsl(236 42% 18%) !important;
+  border-color: hsl(0 0% 100% / 0.72) !important;
+  box-shadow:
+    0 10px 26px -18px hsl(0 0% 0% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
+}
+
+/* 글자 색: 어두운 배경 위에서도 또렷하게 */
+.theme-glass,
+.theme-glass .glass-card,
+.theme-glass .glass-panel {
+  color: hsl(0 0% 100% / 0.9) !important;
+}
+
+.theme-glass .text-muted-foreground,
+.theme-glass .calendar-event-time,
+.theme-glass .calendar-event-location,
+.theme-glass .today-mini-location,
+.theme-glass .today-task-meta,
+.theme-glass .memo-note-preview {
+  color: hsl(0 0% 100% / 0.56) !important;
+}
+
+.theme-glass h1,
+.theme-glass h2,
+.theme-glass h3,
+.theme-glass strong,
+.theme-glass .today-mini-time,
+.theme-glass .calendar-event-title,
+.theme-glass .today-task-title {
+  color: hsl(0 0% 100% / 0.92) !important;
+}
+
+/* input/select/textarea도 유리 */
 .theme-glass input,
-.theme-glass textarea,
-.theme-glass select {
-  background: hsl(0 0% 100% / 0.16) !important;
-  border-color: hsl(0 0% 100% / 0.34) !important;
+.theme-glass select,
+.theme-glass textarea {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.16),
+      hsl(0 0% 100% / 0.04)
+    ) !important;
+
+  border: 1px solid hsl(0 0% 100% / 0.28) !important;
+  color: hsl(0 0% 100% / 0.88) !important;
+
+  backdrop-filter: blur(18px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(190%) !important;
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.36) !important;
+}
+
+.theme-glass input::placeholder,
+.theme-glass textarea::placeholder {
+  color: hsl(0 0% 100% / 0.42) !important;
+}
+
+/* 사이드바 선택 행 */
+.theme-glass aside .is-active,
+.theme-glass .sidebar-item.is-active {
+  background: hsl(0 0% 100% / 0.18) !important;
+  border: 1px solid hsl(0 0% 100% / 0.38) !important;
+}
+
+/* progress bar */
+.theme-glass .today-tasks-progress-track,
+.theme-glass .progress-track {
+  background: hsl(0 0% 100% / 0.12) !important;
+  border: 1px solid hsl(0 0% 100% / 0.2) !important;
+}
+
+.theme-glass .today-tasks-progress-fill,
+.theme-glass .progress-fill {
+  background:
+    linear-gradient(
+      90deg,
+      hsl(188 100% 72% / 0.68),
+      hsl(278 100% 78% / 0.66)
+    ) !important;
+}
+
+/* 메모 종이만은 사용자가 고른 paper color 유지하되, glass 카드랑 분리 */
+.theme-glass .memo-editor,
+.theme-glass .memo-window-editor {
+  color: hsl(224 24% 16% / 0.9) !important;
 }
 
 /* ================================
@@ -1383,306 +1595,26 @@ body {
    배경은 선명한 gradient, 위젯은 투명 유리
    ========================================================= */
 
-.theme-glass {
-  --background: 222 42% 96%;
-  --foreground: 226 26% 13%;
-  --primary: 246 80% 68%;
-  --primary-glow: 205 100% 78%;
-  --muted: 224 25% 92%;
-  --muted-foreground: 226 12% 42%;
-
-  --wallpaper:
-    radial-gradient(circle at 12% 12%, hsl(203 100% 78% / 0.95), transparent 30%),
-    radial-gradient(circle at 82% 10%, hsl(262 100% 78% / 0.9), transparent 32%),
-    radial-gradient(circle at 18% 86%, hsl(172 85% 72% / 0.7), transparent 32%),
-    radial-gradient(circle at 88% 82%, hsl(325 95% 78% / 0.68), transparent 32%),
-    linear-gradient(135deg, hsl(217 72% 89%), hsl(246 68% 88%) 48%, hsl(198 72% 90%));
-}
-
-.theme-glass .bg-glass-gradient {
-  background: var(--wallpaper) !important;
-}
-
-/* main/board가 흰 막 씌우지 않게 */
-.theme-glass main,
-.theme-glass .dashboard-grid-board {
-  background: transparent !important;
-}
-
-/* 대각선 무늬 / shine 제거 */
-.theme-glass .glass-card::before,
-.theme-glass .glass-card::after,
-.theme-glass .glass-panel::before,
-.theme-glass .glass-panel::after,
-.theme-glass .glass-subtle::before,
-.theme-glass .glass-subtle::after,
-.theme-glass .glass-button::before,
-.theme-glass .glass-button::after {
-  display: none !important;
-}
-
-/* 진짜 유리 카드: 색 덩어리 X, 배경 많이 비침 */
-.theme-glass .glass-card {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.105),
-      hsl(0 0% 100% / 0.035)
-    ) !important;
-
-  border: 1px solid hsl(0 0% 100% / 0.58) !important;
-
-  backdrop-filter: blur(34px) saturate(210%) contrast(1.04) brightness(1.08) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(210%) contrast(1.04) brightness(1.08) !important;
-
-  box-shadow:
-    0 34px 110px -54px hsl(222 65% 18% / 0.52),
-    inset 0 1px 0 hsl(0 0% 100% / 0.72),
-    inset 0 -1px 0 hsl(225 35% 20% / 0.08) !important;
-}
-
-/* 내부 박스들도 색 입히지 말고 얇은 유리층 */
-.theme-glass .glass-panel,
-.theme-glass .glass-control,
-.theme-glass .glass-subtle,
-.theme-glass .career-list-item,
-.theme-glass .calendar-event-item,
-.theme-glass .calendar-month-day-cell,
-.theme-glass .memo-note-item,
-.theme-glass .today-task-item,
-.theme-glass .today-mini-main,
-.theme-glass .today-mini-stat,
-.theme-glass .today-mini-next,
-.theme-glass .today-tasks-progress,
-.theme-glass .career-detail-section,
-.theme-glass .settings-section {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.13),
-      hsl(0 0% 100% / 0.035)
-    ) !important;
-
-  border: 1px solid hsl(0 0% 100% / 0.42) !important;
-
-  backdrop-filter: blur(26px) saturate(200%) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(26px) saturate(200%) brightness(1.06) !important;
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.55),
-    0 14px 44px -38px hsl(222 55% 18% / 0.32) !important;
-}
-
-/* 버튼도 유리 버튼으로 */
-.theme-glass .glass-button {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.18),
-      hsl(0 0% 100% / 0.055)
-    ) !important;
-
-  border: 1px solid hsl(0 0% 100% / 0.48) !important;
-
-  backdrop-filter: blur(28px) saturate(220%) brightness(1.08) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(220%) brightness(1.08) !important;
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.68),
-    0 10px 30px -24px hsl(222 50% 18% / 0.35) !important;
-}
 
 
 
-/* input/select/textarea가 흰 박스처럼 보이지 않게 */
 
 
-/* Header / Sidebar도 유리판 */
 
-/* progress bar 트랙도 흰 막대 말고 투명하게 */
-.theme-glass .today-tasks-progress-track,
-.theme-glass .progress-track {
-  background: hsl(0 0% 100% / 0.14) !important;
-  border: 1px solid hsl(0 0% 100% / 0.22) !important;
-}
 
-.theme-glass .today-tasks-progress-fill,
-.theme-glass .progress-fill {
-  background:
-    linear-gradient(
-      90deg,
-      hsl(205 100% 72% / 0.62),
-      hsl(265 100% 78% / 0.6)
-    ) !important;
-}
 
-/* =========================================================
-   TRUE LIQUID GLASS THEME - FINAL FIX
-   배경은 은은한 glossy gradient
-   위젯은 색 없는 투명 유리
-   ========================================================= */
 
-.theme-glass {
-  --background: 220 40% 97%;
-  --foreground: 224 24% 14%;
-  --primary: 238 72% 64%;
-  --primary-glow: 204 100% 82%;
-  --muted: 220 20% 92%;
-  --muted-foreground: 224 12% 42%;
 
-  --wallpaper:
-    radial-gradient(circle at 12% 16%, hsl(195 100% 86% / 0.62), transparent 34%),
-    radial-gradient(circle at 84% 12%, hsl(264 100% 90% / 0.5), transparent 34%),
-    radial-gradient(circle at 22% 86%, hsl(172 88% 88% / 0.42), transparent 32%),
-    radial-gradient(circle at 86% 82%, hsl(325 100% 91% / 0.34), transparent 34%),
-    linear-gradient(135deg, hsl(214 58% 95%), hsl(230 48% 94%) 45%, hsl(204 54% 95%));
-}
 
-.theme-glass .bg-glass-gradient {
-  background: var(--wallpaper) !important;
-}
 
-/* 흰 막 / 색 막 방지 */
-.theme-glass main,
-.theme-glass .dashboard-grid-board {
-  background: transparent !important;
-}
 
-/* 대각선 무늬 전부 제거 */
-.theme-glass .glass-card::before,
-.theme-glass .glass-card::after,
-.theme-glass .glass-panel::before,
-.theme-glass .glass-panel::after,
-.theme-glass .glass-subtle::before,
-.theme-glass .glass-subtle::after,
-.theme-glass .glass-button::before,
-.theme-glass .glass-button::after {
-  display: none !important;
-}
 
-/* 카드 자체는 무색 투명 유리 */
-.theme-glass .glass-card {
-  background: hsl(0 0% 100% / 0.075) !important;
-  background-image: none !important;
 
-  border: 1px solid hsl(0 0% 100% / 0.56) !important;
 
-  backdrop-filter: blur(42px) saturate(185%) brightness(1.08) !important;
-  -webkit-backdrop-filter: blur(42px) saturate(185%) brightness(1.08) !important;
 
-  box-shadow:
-    0 34px 100px -56px hsl(220 45% 18% / 0.42),
-    inset 0 1px 0 hsl(0 0% 100% / 0.78),
-    inset 0 -1px 0 hsl(220 30% 20% / 0.06) !important;
-}
 
-/* 내부 박스도 색 없애고 투명 유리층으로 */
-.theme-glass .glass-panel,
-.theme-glass .glass-control,
-.theme-glass .glass-subtle,
-.theme-glass .career-list-item,
-.theme-glass .calendar-event-item,
-.theme-glass .calendar-month-day-cell,
-.theme-glass .memo-note-item,
-.theme-glass .today-task-item,
-.theme-glass .today-mini-main,
-.theme-glass .today-mini-stat,
-.theme-glass .today-mini-next,
-.theme-glass .today-tasks-progress,
-.theme-glass .career-detail-section,
-.theme-glass .settings-section {
-  background: hsl(0 0% 100% / 0.085) !important;
-  background-image: none !important;
 
-  border: 1px solid hsl(0 0% 100% / 0.38) !important;
 
-  backdrop-filter: blur(30px) saturate(175%) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(175%) brightness(1.06) !important;
 
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.48),
-    0 14px 44px -40px hsl(220 45% 16% / 0.24) !important;
-}
 
-/* 버튼도 색 있는 캡슐 말고 투명 유리 */
-.theme-glass .glass-button {
-  background: hsl(0 0% 100% / 0.105) !important;
-  background-image: none !important;
 
-  border: 1px solid hsl(0 0% 100% / 0.42) !important;
-
-  backdrop-filter: blur(28px) saturate(180%) brightness(1.08) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.08) !important;
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.58),
-    0 10px 30px -26px hsl(220 45% 16% / 0.28) !important;
-}
-
-.theme-glass .glass-button.is-active,
-.theme-glass .glass-control button.bg-foreground,
-.theme-glass .glass-control button[class*="bg-foreground"] {
-  background: hsl(224 24% 12% / 0.86) !important;
-  color: white !important;
-  border-color: hsl(0 0% 100% / 0.24) !important;
-}
-
-/* input/select가 흰 덩어리로 보이지 않게 */
-.theme-glass input,
-.theme-glass select,
-.theme-glass textarea {
-  background: hsl(0 0% 100% / 0.09) !important;
-  background-image: none !important;
-  border: 1px solid hsl(0 0% 100% / 0.26) !important;
-
-  backdrop-filter: blur(18px) saturate(170%) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(170%) brightness(1.06) !important;
-
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.36) !important;
-}
-
-/* header / sidebar도 투명 유리판 */
-.theme-glass header,
-.theme-glass aside {
-  background: hsl(0 0% 100% / 0.075) !important;
-  background-image: none !important;
-
-  border-color: hsl(0 0% 100% / 0.24) !important;
-
-  backdrop-filter: blur(38px) saturate(185%) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(38px) saturate(185%) brightness(1.06) !important;
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.36) !important;
-}
-
-/* Today Tasks high 같은 애들이 glass에서 분홍 카드처럼 되는 것 방지 */
-.theme-glass .today-task-item.is-high {
-  background: hsl(0 0% 100% / 0.09) !important;
-  border-color: hsl(350 80% 82% / 0.32) !important;
-}
-
-/* 메모 종이 영역은 사용자가 고른 paper color니까 유지하되, 너무 형광이면 부드럽게 */
-.theme-glass .memo-editor,
-.theme-glass .memo-window-editor {
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.42),
-    0 12px 36px -30px hsl(220 40% 16% / 0.28) !important;
-}
-
-/* 진행바 트랙도 투명하게 */
-.theme-glass .today-tasks-progress-track,
-.theme-glass .progress-track {
-  background: hsl(0 0% 100% / 0.12) !important;
-  border: 1px solid hsl(0 0% 100% / 0.2) !important;
-}
-
-.theme-glass .today-tasks-progress-fill,
-.theme-glass .progress-fill {
-  background:
-    linear-gradient(
-      90deg,
-      hsl(202 100% 74% / 0.52),
-      hsl(262 100% 82% / 0.5)
-    ) !important;
-}
