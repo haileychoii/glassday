@@ -1,6 +1,19 @@
 import { useEffect, useState } from "react";
 import { Bell, CalendarCheck, Grid3X3, Lock, Search } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { Settings } from "lucide-react";
+
+type TopbarProps = {
+  editMode: boolean;
+  onToggleEditMode: () => void;
+  onOpenSettings: () => void;
+};
+
+export const Topbar = ({
+  editMode,
+  onToggleEditMode,
+  onOpenSettings,
+}: TopbarProps) => {
 
 type Theme = "pastel" | "glass" | "ios";
 
@@ -54,6 +67,15 @@ export const Topbar = ({ editMode, onToggleEditMode }: TopbarProps) => {
 
             <span>{editMode ? "Layout Mode" : "Layout Locked"}</span>
           </button>
+
+          <button
+            type="button"
+            onClick={onOpenSettings}
+            className="glass-button h-9 px-3 text-xs flex items-center gap-1.5"
+          >
+  <Settings className="w-3.5 h-3.5" />
+  Settings
+</button>
 
           <button className="glass-button h-10 px-4 text-sm flex items-center gap-2">
             <CalendarCheck className="w-4 h-4" />

@@ -856,3 +856,84 @@ body {
     0 16px 38px -28px hsl(220 35% 22% / 0.3),
     inset 0 1px 0 hsl(0 0% 100% / 0.82);
 }
+
+/* ================================
+   Remove harsh diagonal stripe look
+   ================================ */
+
+.glass-card,
+.glass-panel,
+.glass-subtle,
+.glass-button,
+.career-list-item,
+.calendar-event-item,
+.memo-note-item,
+.calendar-month-day-cell,
+.career-detail-section {
+  background:
+    radial-gradient(
+      circle at 18% 0%,
+      hsl(0 0% 100% / 0.42),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.34),
+      hsl(0 0% 100% / 0.13)
+    ) !important;
+}
+
+/* 대각선 광택 pseudo-element가 있으면 거의 안 보이게 */
+.glass-card::before,
+.glass-panel::before,
+.glass-subtle::before,
+.glass-button::before {
+  opacity: 0.18 !important;
+  background:
+    radial-gradient(
+      circle at 20% 0%,
+      hsl(0 0% 100% / 0.5),
+      transparent 38%
+    ) !important;
+  transform: none !important;
+}
+
+/* Glass theme은 더 투명하지만 줄무늬는 줄임 */
+.theme-glass .glass-card {
+  background:
+    radial-gradient(
+      circle at 16% 0%,
+      hsl(0 0% 100% / 0.36),
+      transparent 36%
+    ),
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.18),
+      hsl(0 0% 100% / 0.055)
+    ) !important;
+}
+
+.theme-glass .glass-panel {
+  background:
+    radial-gradient(
+      circle at 16% 0%,
+      hsl(0 0% 100% / 0.28),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.14),
+      hsl(0 0% 100% / 0.04)
+    ) !important;
+}
+
+.glass-card::before,
+.glass-panel::before,
+.glass-subtle::before,
+.glass-button::before,
+.glass-card::after,
+.glass-panel::after,
+.glass-subtle::after,
+.glass-button::after {
+  display: none !important;
+}
