@@ -22,11 +22,11 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
 
 type WidgetId =
-  | "today"
+  | "todayFocus"
   | "calendar"
   | "memo"
-  | "study"
   | "career"
+  | "study"
   | "health"
   | "money"
   | "mood";
@@ -52,40 +52,111 @@ const ROWS = 12;
 const ROW_HEIGHT = 82;
 const GAP = 16;
 
-const STORAGE_KEY = "glassday.widget.grid-layout.v2";
+/**
+ * v3로 바꾼 이유:
+ * 기존 localStorage에 저장된 "today" id / 오래된 배치가 있으면
+ * 새 todayFocus 위젯이 안 뜨거나 꼬일 수 있어서 새 레이아웃으로 시작하게 함.
+ */
+const STORAGE_KEY = "glassday.widget.grid-layout.v3";
 
 const defaultGridLayout: GridItem[] = [
-  { id: "today", x: 0, y: 0, w: 4, h: 3, minW: 3, minH: 2 },
-  { id: "calendar", x: 4, y: 0, w: 8, h: 5, minW: 4, minH: 3 },
-  { id: "memo", x: 0, y: 3, w: 4, h: 3, minW: 3, minH: 2 },
-  { id: "study", x: 0, y: 6, w: 4, h: 3, minW: 3, minH: 2 },
-  { id: "career", x: 4, y: 5, w: 4, h: 3, minW: 3, minH: 2 },
-  { id: "health", x: 8, y: 5, w: 2, h: 3, minW: 2, minH: 2 },
-  { id: "money", x: 10, y: 5, w: 2, h: 3, minW: 2, minH: 2 },
-  { id: "mood", x: 0, y: 9, w: 4, h: 3, minW: 3, minH: 2 },
+  {
+    id: "todayFocus",
+    x: 0,
+    y: 0,
+    w: 5,
+    h: 4,
+    minW: 4,
+    minH: 3,
+  },
+  {
+    id: "calendar",
+    x: 5,
+    y: 0,
+    w: 7,
+    h: 5,
+    minW: 5,
+    minH: 4,
+  },
+  {
+    id: "memo",
+    x: 0,
+    y: 4,
+    w: 5,
+    h: 4,
+    minW: 4,
+    minH: 3,
+  },
+  {
+    id: "career",
+    x: 5,
+    y: 5,
+    w: 4,
+    h: 4,
+    minW: 4,
+    minH: 3,
+  },
+  {
+    id: "study",
+    x: 9,
+    y: 5,
+    w: 3,
+    h: 4,
+    minW: 3,
+    minH: 3,
+  },
+  {
+    id: "health",
+    x: 0,
+    y: 8,
+    w: 3,
+    h: 4,
+    minW: 3,
+    minH: 3,
+  },
+  {
+    id: "money",
+    x: 3,
+    y: 8,
+    w: 3,
+    h: 4,
+    minW: 3,
+    minH: 3,
+  },
+  {
+    id: "mood",
+    x: 6,
+    y: 9,
+    w: 3,
+    h: 3,
+    minW: 3,
+    minH: 3,
+  },
 ];
 
 const widgetMap: Record<WidgetId, ReactNode> = {
-  today: <TodayFocusWidget />,
+  todayFocus: <TodayFocusWidget />,
   calendar: <CalendarWidget />,
   memo: <MemoWidget />,
-  study: <StudyWidget />,
   career: <CareerWidget />,
+  study: <StudyWidget />,
   health: <HealthWidget />,
   money: <MoneyWidget />,
   mood: <MoodWidget />,
 };
 
 const widgetLabels: Record<WidgetId, string> = {
-  today: "Today Focus",
+  todayFocus: "Today Focus",
   calendar: "Calendar",
   memo: "Memo",
-  study: "Study",
   career: "Career",
+  study: "Study",
   health: "Health",
   money: "Money",
   mood: "Mood",
 };
+
+const widgetIds = Object.keys(widgetMap) as WidgetId[];
 
 const clamp = (value: number, min: number, max: number) => {
   return Math.max(min, Math.min(max, value));
@@ -107,11 +178,40 @@ const hasCollision = (candidate: GridItem, layout: GridItem[]) => {
   });
 };
 
+const normalizeLayout = (layout: GridItem[]) => {
+  const validItems = layout.filter((item) =>
+    widgetIds.includes(item.id)
+  );
+
+  const existingIds = new Set(validItems.map((item) => item.id));
+
+  const missingItems = defaultGridLayout.filter(
+    (item) => !existingIds.has(item.id)
+  );
+
+  return [...validItems, ...missingItems].map((item) => {
+    const defaultItem =
+      defaultGridLayout.find((defaultLayoutItem) => defaultLayoutItem.id === item.id) ??
+      item;
+
+    return {
+      ...defaultItem,
+      ...item,
+      minW: item.minW ?? defaultItem.minW,
+      minH: item.minH ?? defaultItem.minH,
+      w: clamp(item.w, item.minW ?? defaultItem.minW, COLS),
+      h: clamp(item.h, item.minH ?? defaultItem.minH, ROWS),
+      x: clamp(item.x, 0, COLS - item.w),
+      y: clamp(item.y, 0, ROWS - item.h),
+    };
+  });
+};
+
 export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
   const boardRef = useRef<HTMLDivElement | null>(null);
 
   const [tool, setTool] = useState<LayoutTool>("content");
-  const [selectedId, setSelectedId] = useState<WidgetId>("calendar");
+  const [selectedId, setSelectedId] = useState<WidgetId>("todayFocus");
 
   const [panelPos, setPanelPos] = useState(() => ({
     x: Math.max(24, window.innerWidth - 520),
@@ -119,19 +219,32 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
   }));
 
   const {
-    value: layout,
+    value: storedLayout,
     setValue: setLayout,
     resetValue,
   } = useLocalStorage<GridItem[]>(STORAGE_KEY, defaultGridLayout);
+
+  const layout = normalizeLayout(storedLayout);
 
   const selectedItem = layout.find((item) => item.id === selectedId);
   const isLayoutTool = editMode && tool !== "content";
 
   useEffect(() => {
-  if (!editMode) {
-    setTool("content");
-  }
-}, [editMode]);
+    if (!editMode) {
+      setTool("content");
+    }
+  }, [editMode]);
+
+  useEffect(() => {
+    const normalized = normalizeLayout(storedLayout);
+
+    const storedText = JSON.stringify(storedLayout);
+    const normalizedText = JSON.stringify(normalized);
+
+    if (storedText !== normalizedText) {
+      setLayout(normalized);
+    }
+  }, [storedLayout, setLayout]);
 
   const getCellMetrics = () => {
     const board = boardRef.current;
@@ -147,16 +260,18 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
 
   const updateItem = (candidate: GridItem) => {
     setLayout((prev) => {
-      if (hasCollision(candidate, prev)) return prev;
+      const normalized = normalizeLayout(prev);
 
-      return prev.map((item) =>
+      if (hasCollision(candidate, normalized)) return normalized;
+
+      return normalized.map((item) =>
         item.id === candidate.id ? candidate : item
       );
     });
   };
 
   const moveItem = (id: WidgetId, dx: number, dy: number) => {
-    const item = layout.find((x) => x.id === id);
+    const item = layout.find((currentItem) => currentItem.id === id);
     if (!item) return;
 
     const candidate: GridItem = {
@@ -169,7 +284,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
   };
 
   const resizeItem = (id: WidgetId, dw: number, dh: number) => {
-    const item = layout.find((x) => x.id === id);
+    const item = layout.find((currentItem) => currentItem.id === id);
     if (!item) return;
 
     const candidate: GridItem = {
@@ -212,10 +327,12 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
       };
 
       setLayout((prev) => {
-        if (hasCollision(candidate, prev)) return prev;
+        const normalized = normalizeLayout(prev);
 
-        return prev.map((x) =>
-          x.id === candidate.id ? candidate : x
+        if (hasCollision(candidate, normalized)) return normalized;
+
+        return normalized.map((currentItem) =>
+          currentItem.id === candidate.id ? candidate : currentItem
         );
       });
     };
@@ -261,10 +378,12 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
       };
 
       setLayout((prev) => {
-        if (hasCollision(candidate, prev)) return prev;
+        const normalized = normalizeLayout(prev);
 
-        return prev.map((x) =>
-          x.id === candidate.id ? candidate : x
+        if (hasCollision(candidate, normalized)) return normalized;
+
+        return normalized.map((currentItem) =>
+          currentItem.id === candidate.id ? candidate : currentItem
         );
       });
     };
@@ -323,6 +442,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
               <Move className="w-3.5 h-3.5" />
               <span>Layout Controller</span>
             </div>
+
             <span className="text-[10px] text-muted-foreground">
               drag me
             </span>
@@ -331,30 +451,29 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
           <div className="p-3 space-y-3">
             <div className="grid grid-cols-3 gap-1 rounded-full bg-white/35 border border-white/50 p-1">
               {(["content", "move", "resize"] as LayoutTool[]).map((mode) => {
-                const label = 
-                mode === "content"
-                  ? "Select"
-                  :mode === "move"
-                  ? "Move"
-                  : "Resize";
+                const label =
+                  mode === "content"
+                    ? "Select"
+                    : mode === "move"
+                      ? "Move"
+                      : "Resize";
 
-
-              return (
-                <button
-                  key={mode}
-                  type="button"
-                  onClick={() => setTool(mode)}
-                  className={cn(
-                    "h-8 rounded-full text-xs capitalize transition",
-                    tool === mode
-                      ? "bg-foreground text-background"
-                      : "text-muted-foreground hover:text-foreground hover:bg-white/45"
-                  )}
-                >
-                  {label}
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setTool(mode)}
+                    className={cn(
+                      "h-8 rounded-full text-xs capitalize transition",
+                      tool === mode
+                        ? "bg-foreground text-background"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/45"
+                    )}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
 
             {selectedItem && (
@@ -362,6 +481,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
                 <div className="text-sm font-medium">
                   {widgetLabels[selectedItem.id]}
                 </div>
+
                 <div className="text-xs text-muted-foreground mt-1">
                   x {selectedItem.x + 1}, y {selectedItem.y + 1}, w{" "}
                   {selectedItem.w}, h {selectedItem.h}
@@ -375,6 +495,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                   </button>
+
                   <button
                     type="button"
                     onClick={() => moveItem(selectedItem.id, 1, 0)}
@@ -382,6 +503,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
                   >
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
+
                   <button
                     type="button"
                     onClick={() => moveItem(selectedItem.id, 0, -1)}
@@ -389,6 +511,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
                   >
                     <ArrowUp className="w-3.5 h-3.5" />
                   </button>
+
                   <button
                     type="button"
                     onClick={() => moveItem(selectedItem.id, 0, 1)}
@@ -404,6 +527,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
                   >
                     W-
                   </button>
+
                   <button
                     type="button"
                     onClick={() => resizeItem(selectedItem.id, 1, 0)}
@@ -411,6 +535,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
                   >
                     W+
                   </button>
+
                   <button
                     type="button"
                     onClick={() => resizeItem(selectedItem.id, 0, -1)}
@@ -418,6 +543,7 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
                   >
                     H-
                   </button>
+
                   <button
                     type="button"
                     onClick={() => resizeItem(selectedItem.id, 0, 1)}
@@ -445,7 +571,6 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
         ref={boardRef}
         className={cn(
           "dashboard-grid-board",
-          
           editMode && "dashboard-grid-editing",
           isLayoutTool && "dashboard-grid-locked-content",
           tool === "move" && "move-grid-mode",
@@ -477,11 +602,18 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
           <section
             key={item.id}
             onClick={() => {
-              if (editMode) setSelectedId(item.id);
+              if (editMode) {
+                setSelectedId(item.id);
+              }
             }}
             onPointerDown={(event) => {
-              if (tool === "move") startMove(event, item);
-              if (tool === "resize") startResize(event, item);
+              if (tool === "move") {
+                startMove(event, item);
+              }
+
+              if (tool === "resize") {
+                startResize(event, item);
+              }
             }}
             className={cn(
               "dashboard-grid-item",
@@ -503,11 +635,15 @@ export const DashboardGrid = ({ editMode }: DashboardGridProps) => {
             </div>
 
             {tool === "move" && selectedId === item.id && (
-              <div className="layout-action-badge">Drag anywhere to move</div>
+              <div className="layout-action-badge">
+                Drag anywhere to move
+              </div>
             )}
 
             {tool === "resize" && selectedId === item.id && (
-              <div className="layout-action-badge">Drag anywhere to resize</div>
+              <div className="layout-action-badge">
+                Drag anywhere to resize
+              </div>
             )}
           </section>
         ))}
