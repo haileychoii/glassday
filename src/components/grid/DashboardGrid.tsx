@@ -1,4 +1,5 @@
-import { Responsive, WidthProvider, type Layout, type Layouts } from "react-grid-layout";
+import * as ReactGridLayout from "react-grid-layout";
+import type { Layout, Layouts } from "react-grid-layout";
 
 import { TodayFocusWidget } from "../widgets/TodayFocusWidget";
 import { CalendarWidget } from "../widgets/CalendarWidget";
@@ -15,7 +16,8 @@ import type { DashboardTab, WidgetId } from "../../types/workspace";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-
+const Responsive = ReactGridLayout.Responsive;
+const WidthProvider = ReactGridLayout.WidthProvider;
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 type DashboardGridProps = {
