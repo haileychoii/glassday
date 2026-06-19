@@ -2771,3 +2771,1458 @@
   color: hsl(350 70% 42%);
   background: hsl(350 100% 96% / 0.52);
 }
+
+/* ================================
+   Theme: Pixel Desk
+   Retro 90s window desktop style
+   ================================ */
+
+/* ================================
+   Theme: Pixel Desk
+   Retro 90s OS Desktop
+   ================================ */
+
+.theme-pixel {
+  --background: 216 64% 45%;
+  --foreground: 230 18% 12%;
+  --card: 52 18% 86%;
+  --card-foreground: 230 18% 12%;
+  --popover: 52 18% 86%;
+  --popover-foreground: 230 18% 12%;
+  --primary: 330 90% 74%;
+  --primary-foreground: 230 18% 12%;
+  --secondary: 220 18% 82%;
+  --secondary-foreground: 230 18% 12%;
+  --muted: 220 12% 72%;
+  --muted-foreground: 230 12% 32%;
+  --accent: 330 92% 78%;
+  --accent-foreground: 230 18% 12%;
+  --border: 230 12% 18%;
+  --input: 230 12% 18%;
+  --ring: 330 90% 70%;
+}
+
+.theme-pixel body,
+.theme-pixel #root {
+  image-rendering: pixelated;
+}
+
+.theme-pixel .bg-glass-gradient {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      hsl(216 66% 39% / 0.34) 0,
+      hsl(216 66% 39% / 0.34) 2px,
+      transparent 2px,
+      transparent 7px
+    ),
+    linear-gradient(135deg, hsl(216 70% 48%), hsl(216 62% 42%)) !important;
+}
+
+/* Pixel desktop icons */
+
+.pixel-desktop-decor {
+  display: none;
+}
+
+.theme-pixel .pixel-desktop-decor {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pixel-desktop-icon {
+  position: absolute;
+  width: 74px;
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 0 hsl(230 20% 8% / 0.8);
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.pixel-desktop-icon-box {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(54 20% 86%);
+  color: hsl(230 18% 12%);
+  border-top: 3px solid hsl(0 0% 100% / 0.95);
+  border-left: 3px solid hsl(0 0% 100% / 0.95);
+  border-right: 3px solid hsl(230 18% 18% / 0.82);
+  border-bottom: 3px solid hsl(230 18% 18% / 0.82);
+  box-shadow: 3px 3px 0 hsl(230 20% 8% / 0.28);
+}
+
+.pixel-icon-disk {
+  right: 34px;
+  top: 64px;
+}
+
+.pixel-icon-project {
+  right: 132px;
+  top: 164px;
+}
+
+.pixel-icon-memo {
+  right: 42px;
+  top: 282px;
+}
+
+.pixel-icon-settings {
+  left: 28px;
+  top: 128px;
+}
+
+.pixel-icon-file {
+  right: 54px;
+  bottom: 164px;
+}
+
+.pixel-icon-trash {
+  right: 42px;
+  bottom: 48px;
+}
+
+.pixel-desktop-icon-label {
+  padding: 2px 4px;
+  background: hsl(0 0% 100% / 0.16);
+}
+
+/* Shell */
+
+.theme-pixel .liquid-shell,
+.theme-pixel .glass-panel {
+  border-radius: 0 !important;
+  background: hsl(220 14% 74% / 0.94) !important;
+  border-top: 3px solid hsl(0 0% 100% / 0.9) !important;
+  border-left: 3px solid hsl(0 0% 100% / 0.9) !important;
+  border-right: 3px solid hsl(230 18% 18% / 0.82) !important;
+  border-bottom: 3px solid hsl(230 18% 18% / 0.82) !important;
+  box-shadow:
+    6px 6px 0 hsl(230 20% 8% / 0.36),
+    inset 1px 1px 0 hsl(0 0% 100% / 0.8) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-pixel aside {
+  background: hsl(220 13% 80% / 0.95) !important;
+  border-right: 3px solid hsl(230 18% 20% / 0.75) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-pixel .topbar {
+  background: hsl(220 13% 80% / 0.96) !important;
+  border-bottom: 3px solid hsl(230 18% 20% / 0.7) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Cards as retro windows */
+
+.theme-pixel .glass-card {
+  position: relative;
+  border-radius: 0 !important;
+  background: hsl(54 20% 86% / 0.98) !important;
+  border-top: 3px solid hsl(0 0% 100% / 0.95) !important;
+  border-left: 3px solid hsl(0 0% 100% / 0.95) !important;
+  border-right: 3px solid hsl(230 18% 20% / 0.8) !important;
+  border-bottom: 3px solid hsl(230 18% 20% / 0.8) !important;
+  box-shadow:
+    5px 5px 0 hsl(230 20% 8% / 0.28),
+    inset 1px 1px 0 hsl(0 0% 100% / 0.85) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: hidden;
+}
+
+.theme-pixel .glass-card::before {
+  content: "";
+  display: block;
+  height: 24px;
+  margin: -1px -1px 12px;
+  background: linear-gradient(90deg, hsl(330 95% 75%), hsl(330 90% 84%));
+  border-bottom: 2px solid hsl(230 18% 18% / 0.78);
+}
+
+.theme-pixel .glass-card::after {
+  content: "□  ×";
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  z-index: 5;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: hsl(230 18% 12%);
+}
+
+/* Buttons */
+
+.theme-pixel .glass-button,
+.theme-pixel .calendar-nav-button,
+.theme-pixel .calendar-view-button,
+.theme-pixel .widget-picker-button,
+.theme-pixel .settings-reset-button,
+.theme-pixel button {
+  border-radius: 0 !important;
+}
+
+.theme-pixel .glass-button,
+.theme-pixel .calendar-nav-button,
+.theme-pixel .calendar-view-button,
+.theme-pixel .widget-picker-button,
+.theme-pixel .settings-reset-button {
+  background: hsl(54 20% 86% / 0.98) !important;
+  border-top: 2px solid hsl(0 0% 100% / 0.95) !important;
+  border-left: 2px solid hsl(0 0% 100% / 0.95) !important;
+  border-right: 2px solid hsl(230 18% 20% / 0.78) !important;
+  border-bottom: 2px solid hsl(230 18% 20% / 0.78) !important;
+  box-shadow: 2px 2px 0 hsl(230 20% 8% / 0.18) !important;
+  color: hsl(230 18% 12%) !important;
+}
+
+.theme-pixel .glass-button:active,
+.theme-pixel .calendar-nav-button:active,
+.theme-pixel .calendar-view-button:active,
+.theme-pixel .widget-picker-button:active {
+  border-top-color: hsl(230 18% 20% / 0.78) !important;
+  border-left-color: hsl(230 18% 20% / 0.78) !important;
+  border-right-color: hsl(0 0% 100% / 0.95) !important;
+  border-bottom-color: hsl(0 0% 100% / 0.95) !important;
+  transform: translate(1px, 1px);
+}
+
+/* Inputs */
+
+.theme-pixel input,
+.theme-pixel textarea,
+.theme-pixel select,
+.theme-pixel .memo-editor,
+.theme-pixel .memo-title-input,
+.theme-pixel .calendar-date-input,
+.theme-pixel .theme-select {
+  border-radius: 0 !important;
+  background: hsl(0 0% 100% / 0.96) !important;
+  border-top: 2px solid hsl(230 18% 20% / 0.7) !important;
+  border-left: 2px solid hsl(230 18% 20% / 0.7) !important;
+  border-right: 2px solid hsl(0 0% 100% / 0.9) !important;
+  border-bottom: 2px solid hsl(0 0% 100% / 0.9) !important;
+  box-shadow: inset 2px 2px 0 hsl(230 18% 20% / 0.12) !important;
+}
+
+/* Floating windows / modals */
+
+.theme-pixel .memo-window,
+.theme-pixel .calendar-modal-window,
+.theme-pixel .settings-modal-window,
+.theme-pixel .career-modal-window {
+  border-radius: 0 !important;
+  background: hsl(54 20% 86% / 0.98) !important;
+  border-top: 3px solid hsl(0 0% 100% / 0.95) !important;
+  border-left: 3px solid hsl(0 0% 100% / 0.95) !important;
+  border-right: 3px solid hsl(230 18% 18% / 0.86) !important;
+  border-bottom: 3px solid hsl(230 18% 18% / 0.86) !important;
+  box-shadow:
+    8px 8px 0 hsl(230 20% 8% / 0.35),
+    inset 1px 1px 0 hsl(0 0% 100% / 0.86) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-pixel .memo-window-titlebar,
+.theme-pixel .calendar-modal-header,
+.theme-pixel .settings-modal-header,
+.theme-pixel .career-modal-header {
+  background: linear-gradient(90deg, hsl(330 95% 75%), hsl(330 90% 84%)) !important;
+  border-bottom: 3px solid hsl(230 18% 18% / 0.72) !important;
+  color: hsl(230 18% 10%) !important;
+}
+
+.theme-pixel .memo-window-body,
+.theme-pixel .calendar-modal-body,
+.theme-pixel .settings-modal-body,
+.theme-pixel .career-modal-body {
+  background: hsl(54 20% 86% / 0.95) !important;
+}
+
+/* Sidebar */
+
+.theme-pixel .sidebar-tab-item {
+  border-radius: 0 !important;
+}
+
+.theme-pixel .sidebar-tab-item.is-active {
+  background: hsl(330 90% 82% / 0.65) !important;
+  border-top: 2px solid hsl(0 0% 100% / 0.95) !important;
+  border-left: 2px solid hsl(0 0% 100% / 0.95) !important;
+  border-right: 2px solid hsl(230 18% 20% / 0.78) !important;
+  border-bottom: 2px solid hsl(230 18% 20% / 0.78) !important;
+}
+
+/* Inner panels */
+
+.theme-pixel .dashboard-tab-header,
+.theme-pixel .widget-picker-panel,
+.theme-pixel .calendar-month-day-cell,
+.theme-pixel .calendar-week-timeline,
+.theme-pixel .calendar-event-item,
+.theme-pixel .memo-list-panel,
+.theme-pixel .memo-workspace,
+.theme-pixel .settings-section,
+.theme-pixel .career-detail-section {
+  border-radius: 0 !important;
+  background: hsl(54 20% 88% / 0.94) !important;
+  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
+  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Calendar bars */
+
+.theme-pixel .calendar-range-chip,
+.theme-pixel .calendar-week-event {
+  border-radius: 0 !important;
+  box-shadow: 2px 2px 0 hsl(230 20% 8% / 0.14) !important;
+}
+
+/* Color chips */
+
+.theme-pixel .event-color-chip,
+.theme-pixel .memo-color-chip {
+  border-radius: 0 !important;
+}
+
+/* Settings theme preview */
+
+.theme-pixel .settings-theme-preview.theme-pixel,
+.settings-theme-preview.theme-pixel {
+  background:
+    linear-gradient(90deg, hsl(330 95% 78%), hsl(330 86% 84%)) 0 0 / 100% 14px no-repeat,
+    hsl(54 20% 86%);
+  border-top: 2px solid hsl(0 0% 100% / 0.95);
+  border-left: 2px solid hsl(0 0% 100% / 0.95);
+  border-right: 2px solid hsl(230 18% 20% / 0.78);
+  border-bottom: 2px solid hsl(230 18% 20% / 0.78);
+}
+
+/* ================================
+   Theme: Cupertino
+   macOS Finder + iOS Widget Style
+   ================================ */
+
+.theme-ios {
+  --background: 210 28% 94%;
+  --foreground: 220 18% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 18% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 18% 10%;
+  --primary: 207 100% 52%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 215 18% 92%;
+  --secondary-foreground: 220 18% 10%;
+  --muted: 215 14% 88%;
+  --muted-foreground: 220 10% 48%;
+  --accent: 207 100% 52%;
+  --accent-foreground: 0 0% 100%;
+  --border: 220 12% 82%;
+  --input: 220 12% 82%;
+  --ring: 207 100% 52%;
+}
+
+.apple-desktop-decor {
+  display: none;
+}
+
+.theme-ios .apple-desktop-decor {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* macOS wallpaper */
+
+.theme-ios .bg-glass-gradient {
+  background:
+    radial-gradient(circle at 18% 18%, hsl(205 100% 92% / 0.9), transparent 36%),
+    radial-gradient(circle at 78% 18%, hsl(230 100% 94% / 0.78), transparent 38%),
+    radial-gradient(circle at 48% 92%, hsl(42 100% 88% / 0.5), transparent 44%),
+    linear-gradient(145deg, #f9fbff 0%, #eef3f8 46%, #e8edf3 100%) !important;
+}
+
+/* top menu bar */
+
+.apple-menu-bar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 30px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    Pretendard,
+    sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: hsl(220 18% 8% / 0.78);
+  background: hsl(0 0% 100% / 0.58);
+  border-bottom: 1px solid hsl(220 14% 80% / 0.42);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+}
+
+.apple-menu-left,
+.apple-menu-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.apple-logo {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  display: inline-flex;
+  background: hsl(220 18% 10%);
+  color: transparent;
+}
+
+/* desktop folders */
+
+.apple-desktop-folder {
+  position: fixed;
+  width: 92px;
+  text-align: center;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    Pretendard,
+    sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: hsl(220 18% 12% / 0.86);
+  text-shadow: 0 1px 0 hsl(0 0% 100% / 0.88);
+}
+
+.apple-folder-shape {
+  width: 74px;
+  height: 58px;
+  margin: 0 auto 8px;
+  border-radius: 14px 14px 18px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(202 100% 45% / 0.72);
+  background:
+    linear-gradient(180deg, hsl(200 100% 65%), hsl(199 100% 55%));
+  box-shadow:
+    0 18px 34px -20px hsl(204 90% 36% / 0.5),
+    inset 0 1px 0 hsl(0 0% 100% / 0.55),
+    inset 0 -8px 18px hsl(204 100% 42% / 0.22);
+}
+
+.apple-folder-shape::before {
+  content: "";
+  position: absolute;
+  width: 34px;
+  height: 10px;
+  margin-top: -54px;
+  margin-left: -24px;
+  border-radius: 10px 10px 0 0;
+  background: hsl(200 100% 66%);
+}
+
+.apple-folder-career {
+  right: 86px;
+  top: 84px;
+}
+
+.apple-folder-study {
+  right: 218px;
+  top: 182px;
+}
+
+.apple-folder-memo {
+  right: 72px;
+  top: 292px;
+}
+
+.apple-folder-health {
+  left: 42px;
+  bottom: 134px;
+}
+
+/* notification */
+
+.apple-floating-notification {
+  position: fixed;
+  top: 54px;
+  right: 34px;
+  width: 330px;
+  min-height: 72px;
+  padding: 14px 16px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: hsl(0 0% 100% / 0.72);
+  border: 1px solid hsl(0 0% 100% / 0.74);
+  box-shadow:
+    0 24px 70px -34px hsl(220 24% 20% / 0.46),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+}
+
+.apple-notification-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(145deg, #35c759, #2fb14f);
+  color: white;
+}
+
+.apple-floating-notification strong {
+  display: block;
+  font-size: 12px;
+}
+
+.apple-floating-notification span {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: hsl(220 10% 44%);
+}
+
+/* dock */
+
+.apple-dock {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  height: 70px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 24px;
+  background: hsl(0 0% 100% / 0.54);
+  border: 1px solid hsl(0 0% 100% / 0.68);
+  box-shadow:
+    0 28px 80px -34px hsl(220 24% 20% / 0.55),
+    inset 0 1px 0 hsl(0 0% 100% / 0.8);
+  backdrop-filter: blur(36px) saturate(180%);
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+}
+
+.apple-dock-item {
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(220 18% 18%);
+  background:
+    linear-gradient(145deg, hsl(0 0% 100% / 0.88), hsl(215 20% 96% / 0.72));
+  border: 1px solid hsl(0 0% 100% / 0.76);
+  box-shadow:
+    0 12px 26px -18px hsl(220 24% 18% / 0.45),
+    inset 0 1px 0 hsl(0 0% 100% / 0.82);
+}
+
+.apple-dock-separator {
+  width: 1px;
+  height: 38px;
+  background: hsl(220 10% 60% / 0.36);
+  margin: 0 2px;
+}
+
+/* shell */
+
+.theme-ios .liquid-shell,
+.theme-ios .glass-panel {
+  border-radius: 38px !important;
+  background: hsl(0 0% 100% / 0.42) !important;
+  border: 1px solid hsl(0 0% 100% / 0.68) !important;
+  box-shadow:
+    0 40px 120px -48px hsl(220 24% 16% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.78) !important;
+  backdrop-filter: blur(34px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(170%) !important;
+}
+
+/* sidebar finder style */
+
+.theme-ios aside {
+  background: hsl(0 0% 100% / 0.5) !important;
+  border-right: 1px solid hsl(220 14% 78% / 0.44) !important;
+  backdrop-filter: blur(34px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(180%) !important;
+}
+
+.theme-ios aside::before {
+  content: "Favorites";
+  display: block;
+  padding: 20px 24px 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: hsl(220 8% 46% / 0.72);
+}
+
+.theme-ios .sidebar-tab-item {
+  min-height: 44px;
+  border-radius: 14px !important;
+  margin-bottom: 4px;
+  background: transparent !important;
+}
+
+.theme-ios .sidebar-tab-item:hover {
+  background: hsl(220 10% 72% / 0.16) !important;
+}
+
+.theme-ios .sidebar-tab-item.is-active {
+  background: hsl(220 10% 72% / 0.26) !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.42) !important;
+}
+
+.theme-ios .sidebar-tab-main {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* topbar as mac toolbar */
+
+.theme-ios .topbar {
+  height: 78px !important;
+  background: hsl(0 0% 100% / 0.56) !important;
+  border-bottom: 1px solid hsl(220 14% 76% / 0.42) !important;
+  backdrop-filter: blur(34px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(180%) !important;
+}
+
+.theme-ios .topbar::before {
+  content: "";
+  position: absolute;
+  left: 22px;
+  top: 18px;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #ff5f57;
+  box-shadow:
+    20px 0 0 #ffbd2e,
+    40px 0 0 #28c840;
+}
+
+/* cards as iOS widgets */
+
+.theme-ios .glass-card {
+  border-radius: 30px !important;
+  background:
+    linear-gradient(145deg, hsl(0 0% 100% / 0.86), hsl(0 0% 100% / 0.62)) !important;
+  border: 1px solid hsl(0 0% 100% / 0.74) !important;
+  box-shadow:
+    0 22px 64px -36px hsl(220 24% 20% / 0.44),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88),
+    inset 0 -1px 0 hsl(220 16% 82% / 0.18) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+}
+
+.theme-ios .glass-card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 30px 80px -42px hsl(220 24% 20% / 0.5),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
+}
+
+/* buttons */
+
+.theme-ios .glass-button,
+.theme-ios .calendar-nav-button,
+.theme-ios .calendar-view-button,
+.theme-ios .widget-picker-button,
+.theme-ios .settings-reset-button,
+.theme-ios .calendar-google-button,
+.theme-ios .calendar-done-button {
+  border-radius: 999px !important;
+  background: hsl(0 0% 100% / 0.72) !important;
+  border: 1px solid hsl(220 14% 78% / 0.46) !important;
+  color: hsl(220 18% 16% / 0.82) !important;
+  box-shadow:
+    0 10px 26px -20px hsl(220 24% 20% / 0.4),
+    inset 0 1px 0 hsl(0 0% 100% / 0.86) !important;
+  backdrop-filter: blur(18px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
+}
+
+.theme-ios .glass-button.is-active,
+.theme-ios .calendar-view-button.is-active {
+  background: hsl(207 100% 52% / 0.94) !important;
+  color: white !important;
+  border-color: hsl(207 100% 52% / 0.7) !important;
+}
+
+/* inputs */
+
+.theme-ios input,
+.theme-ios textarea,
+.theme-ios select,
+.theme-ios .memo-editor,
+.theme-ios .memo-title-input,
+.theme-ios .calendar-date-input,
+.theme-ios .theme-select {
+  border-radius: 16px !important;
+  background: hsl(0 0% 100% / 0.78) !important;
+  border: 1px solid hsl(220 14% 78% / 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.82),
+    0 10px 26px -22px hsl(220 24% 20% / 0.32) !important;
+}
+
+/* modals and floating windows */
+
+.theme-ios .memo-window,
+.theme-ios .calendar-modal-window,
+.theme-ios .settings-modal-window,
+.theme-ios .career-modal-window {
+  border-radius: 28px !important;
+  background: hsl(0 0% 100% / 0.78) !important;
+  border: 1px solid hsl(0 0% 100% / 0.76) !important;
+  box-shadow:
+    0 38px 110px -42px hsl(220 24% 16% / 0.48),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
+  backdrop-filter: blur(38px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(38px) saturate(180%) !important;
+}
+
+.theme-ios .memo-window-titlebar,
+.theme-ios .calendar-modal-header,
+.theme-ios .settings-modal-header,
+.theme-ios .career-modal-header {
+  background: hsl(0 0% 96% / 0.72) !important;
+  border-bottom: 1px solid hsl(220 14% 78% / 0.44) !important;
+  color: hsl(220 18% 12%) !important;
+}
+
+.theme-ios .memo-window-titlebar::before,
+.theme-ios .calendar-modal-header::before,
+.theme-ios .settings-modal-header::before,
+.theme-ios .career-modal-header::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #ff5f57;
+  box-shadow:
+    20px 0 0 #ffbd2e,
+    40px 0 0 #28c840;
+  margin-right: 52px;
+  flex-shrink: 0;
+}
+
+/* inner panels */
+
+.theme-ios .dashboard-tab-header,
+.theme-ios .widget-picker-panel,
+.theme-ios .calendar-month-day-cell,
+.theme-ios .calendar-week-timeline,
+.theme-ios .calendar-event-item,
+.theme-ios .memo-list-panel,
+.theme-ios .memo-workspace,
+.theme-ios .settings-section,
+.theme-ios .career-detail-section,
+.theme-ios .settings-action-card,
+.theme-ios .settings-sync-box {
+  border-radius: 24px !important;
+  background: hsl(0 0% 100% / 0.58) !important;
+  border: 1px solid hsl(0 0% 100% / 0.64) !important;
+  box-shadow:
+    0 16px 44px -34px hsl(220 24% 20% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}
+
+/* calendar */
+
+.theme-ios .calendar-range-chip,
+.theme-ios .calendar-week-event {
+  border-radius: 14px !important;
+  border: 1px solid hsl(0 0% 100% / 0.6) !important;
+  box-shadow:
+    0 10px 28px -22px hsl(220 24% 20% / 0.36),
+    inset 0 1px 0 hsl(0 0% 100% / 0.74) !important;
+}
+
+.theme-ios .calendar-week-event strong {
+  font-weight: 800;
+}
+
+/* memo */
+
+.theme-ios .memo-window-editor {
+  border-radius: 24px !important;
+}
+
+.theme-ios .memo-color-chip,
+.theme-ios .event-color-chip {
+  border-radius: 999px !important;
+}
+
+/* settings preview */
+
+.settings-theme-preview.theme-ios {
+  background:
+    radial-gradient(circle at 30% 30%, hsl(207 100% 76% / 0.7), transparent 38%),
+    linear-gradient(145deg, #ffffff, #eef3f8);
+}
+
+/* ================================
+   Today Focus Widget
+   ================================ */
+
+.today-focus {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.today-focus-hero {
+  min-height: 82px;
+  padding: 16px;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background:
+    radial-gradient(circle at 18% 12%, hsl(var(--primary) / 0.18), transparent 42%),
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.46),
+      hsl(0 0% 100% / 0.18)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.48);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.68),
+    0 18px 40px -32px hsl(var(--primary) / 0.36);
+}
+
+.today-focus-kicker {
+  font-size: 11px;
+  font-weight: 800;
+  color: hsl(var(--foreground) / 0.44);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.today-focus-main {
+  margin-top: 5px;
+  font-size: 20px;
+  font-weight: 850;
+  line-height: 1.1;
+  color: hsl(var(--foreground) / 0.84);
+}
+
+.today-focus-ring {
+  width: 58px;
+  height: 58px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    conic-gradient(
+      hsl(var(--primary) / 0.82),
+      hsl(var(--primary) / 0.22),
+      hsl(0 0% 100% / 0.35)
+    );
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.7),
+    0 12px 28px -22px hsl(var(--primary) / 0.5);
+}
+
+.today-focus-ring span {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(0 0% 100% / 0.76);
+  font-size: 13px;
+  font-weight: 900;
+  color: hsl(var(--foreground) / 0.72);
+}
+
+.today-focus-section {
+  min-height: 0;
+  padding: 12px;
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.34),
+      hsl(0 0% 100% / 0.13)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.42);
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.52);
+}
+
+.today-focus-section-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 850;
+  color: hsl(var(--foreground) / 0.6);
+}
+
+.today-focus-task-list {
+  display: grid;
+  gap: 7px;
+}
+
+.today-focus-task {
+  height: 34px;
+  border-radius: 15px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: hsl(0 0% 100% / 0.32);
+  border: 1px solid hsl(0 0% 100% / 0.42);
+}
+
+.today-focus-task.is-done {
+  opacity: 0.55;
+}
+
+.today-focus-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--primary));
+}
+
+.today-focus-task-input {
+  min-width: 0;
+  flex: 1;
+  background: transparent !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  font-size: 12px;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.72);
+}
+
+.today-focus-task.is-done .today-focus-task-input {
+  text-decoration: line-through;
+}
+
+.today-focus-delete {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(350 70% 46% / 0.74);
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.today-focus-task:hover .today-focus-delete {
+  opacity: 1;
+}
+
+.today-focus-grid {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.today-focus-mini-list,
+.today-focus-memo-list {
+  display: grid;
+  gap: 8px;
+}
+
+.today-focus-mini-item,
+.today-focus-career-item,
+.today-focus-memo {
+  min-height: 42px;
+  border-radius: 16px;
+  padding: 9px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: hsl(0 0% 100% / 0.3);
+  border: 1px solid hsl(0 0% 100% / 0.4);
+}
+
+.today-focus-color {
+  width: 8px;
+  height: 28px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  border: 1px solid hsl(0 0% 100% / 0.65);
+}
+
+.today-focus-mini-item strong,
+.today-focus-career-item strong,
+.today-focus-memo strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.1;
+  color: hsl(var(--foreground) / 0.76);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.today-focus-mini-item span,
+.today-focus-career-item span,
+.today-focus-memo span {
+  display: block;
+  margin-top: 3px;
+  font-size: 10.5px;
+  color: hsl(var(--foreground) / 0.46);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.today-focus-career-item {
+  justify-content: space-between;
+}
+
+.today-focus-dday {
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.12);
+  border: 1px solid hsl(var(--primary) / 0.18);
+}
+
+.today-focus-dday.is-danger {
+  color: hsl(350 75% 46%);
+  background: hsl(350 100% 96% / 0.74);
+  border-color: hsl(350 80% 78% / 0.48);
+}
+
+.today-focus-memo svg {
+  flex-shrink: 0;
+  color: hsl(var(--primary) / 0.72);
+}
+
+.today-focus-empty {
+  min-height: 38px;
+  border-radius: 15px;
+  padding: 11px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  color: hsl(var(--foreground) / 0.42);
+  background: hsl(0 0% 100% / 0.22);
+  border: 1px dashed hsl(0 0% 100% / 0.38);
+}
+
+.today-focus-alert {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  color: hsl(350 70% 44%);
+  background: hsl(350 100% 96% / 0.72);
+  border: 1px solid hsl(350 80% 78% / 0.42);
+}
+
+/* Pixel Desk support */
+
+.theme-pixel .today-focus-hero,
+.theme-pixel .today-focus-section,
+.theme-pixel .today-focus-task,
+.theme-pixel .today-focus-mini-item,
+.theme-pixel .today-focus-career-item,
+.theme-pixel .today-focus-memo,
+.theme-pixel .today-focus-empty,
+.theme-pixel .today-focus-alert {
+  border-radius: 0 !important;
+  background: hsl(54 20% 88% / 0.94) !important;
+  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
+  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
+  box-shadow: none !important;
+}
+
+/* Mac Core support */
+
+.theme-ios .today-focus-hero,
+.theme-ios .today-focus-section,
+.theme-ios .today-focus-task,
+.theme-ios .today-focus-mini-item,
+.theme-ios .today-focus-career-item,
+.theme-ios .today-focus-memo,
+.theme-ios .today-focus-empty {
+  border-radius: 22px !important;
+  background: hsl(0 0% 100% / 0.58) !important;
+  border: 1px solid hsl(0 0% 100% / 0.64) !important;
+  box-shadow:
+    0 16px 44px -34px hsl(220 24% 20% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}
+
+/* ================================
+   Alert Center Widget
+   ================================ */
+
+.alert-center {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.alert-center-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.alert-summary-card {
+  min-height: 68px;
+  border-radius: 22px;
+  padding: 12px;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.42),
+      hsl(0 0% 100% / 0.16)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.44);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.62),
+    0 14px 32px -28px hsl(220 35% 20% / 0.28);
+}
+
+.alert-summary-card strong {
+  display: block;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.alert-summary-card span {
+  display: block;
+  margin-top: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  color: hsl(var(--foreground) / 0.45);
+}
+
+.alert-summary-card.is-danger strong {
+  color: hsl(350 72% 48%);
+}
+
+.alert-summary-card.is-warning strong {
+  color: hsl(34 92% 48%);
+}
+
+.alert-summary-card.is-info strong {
+  color: hsl(var(--primary));
+}
+
+.alert-center-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding-right: 2px;
+}
+
+.alert-item {
+  position: relative;
+  min-height: 84px;
+  border-radius: 22px;
+  padding: 12px 38px 12px 12px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 10px;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.4),
+      hsl(0 0% 100% / 0.14)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.44);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.6),
+    0 14px 34px -28px hsl(220 35% 20% / 0.26);
+}
+
+.alert-item.is-danger {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(350 100% 97% / 0.72),
+      hsl(0 0% 100% / 0.18)
+    );
+  border-color: hsl(350 80% 80% / 0.46);
+}
+
+.alert-item.is-warning {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(42 100% 96% / 0.72),
+      hsl(0 0% 100% / 0.18)
+    );
+  border-color: hsl(38 90% 78% / 0.46);
+}
+
+.alert-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(0 0% 100% / 0.44);
+  border: 1px solid hsl(0 0% 100% / 0.5);
+  color: hsl(var(--foreground) / 0.58);
+}
+
+.alert-item.is-danger .alert-icon {
+  color: hsl(350 72% 48%);
+  background: hsl(350 100% 96% / 0.72);
+}
+
+.alert-item.is-warning .alert-icon {
+  color: hsl(34 92% 45%);
+  background: hsl(42 100% 96% / 0.72);
+}
+
+.alert-content {
+  min-width: 0;
+}
+
+.alert-title-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alert-title-row strong {
+  min-width: 0;
+  flex: 1;
+  display: block;
+  font-size: 12.5px;
+  font-weight: 900;
+  color: hsl(var(--foreground) / 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.alert-content p {
+  margin-top: 5px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: hsl(var(--foreground) / 0.52);
+}
+
+.alert-severity-pill {
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  font-size: 9px;
+  font-weight: 900;
+  background: hsl(0 0% 100% / 0.52);
+  border: 1px solid hsl(0 0% 100% / 0.54);
+}
+
+.alert-severity-pill.is-danger {
+  color: hsl(350 72% 44%);
+  background: hsl(350 100% 96% / 0.86);
+}
+
+.alert-severity-pill.is-warning {
+  color: hsl(34 92% 42%);
+  background: hsl(42 100% 96% / 0.86);
+}
+
+.alert-severity-pill.is-info {
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.12);
+}
+
+.alert-action-label {
+  width: fit-content;
+  margin-top: 8px;
+  height: 23px;
+  padding: 0 9px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.1);
+  border: 1px solid hsl(var(--primary) / 0.14);
+}
+
+.alert-dismiss-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--foreground) / 0.38);
+  background: hsl(0 0% 100% / 0.36);
+  border: 1px solid hsl(0 0% 100% / 0.44);
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.alert-item:hover .alert-dismiss-button {
+  opacity: 1;
+}
+
+.alert-empty-state {
+  min-height: 180px;
+  border-radius: 26px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  text-align: center;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.34),
+      hsl(0 0% 100% / 0.12)
+    );
+  border: 1px dashed hsl(0 0% 100% / 0.44);
+  color: hsl(var(--foreground) / 0.44);
+}
+
+.alert-empty-state strong {
+  font-size: 13px;
+  color: hsl(var(--foreground) / 0.62);
+}
+
+.alert-empty-state span {
+  max-width: 260px;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+/* Pixel Desk support */
+
+.theme-pixel .alert-summary-card,
+.theme-pixel .alert-item,
+.theme-pixel .alert-icon,
+.theme-pixel .alert-empty-state,
+.theme-pixel .alert-action-label,
+.theme-pixel .alert-severity-pill,
+.theme-pixel .alert-dismiss-button {
+  border-radius: 0 !important;
+  background: hsl(54 20% 88% / 0.94) !important;
+  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
+  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
+  box-shadow: none !important;
+}
+
+/* Mac Core support */
+
+.theme-ios .alert-summary-card,
+.theme-ios .alert-item,
+.theme-ios .alert-icon,
+.theme-ios .alert-empty-state,
+.theme-ios .alert-action-label,
+.theme-ios .alert-severity-pill,
+.theme-ios .alert-dismiss-button {
+  border-radius: 20px !important;
+  background: hsl(0 0% 100% / 0.58) !important;
+  border: 1px solid hsl(0 0% 100% / 0.64) !important;
+  box-shadow:
+    0 16px 44px -34px hsl(220 24% 20% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}

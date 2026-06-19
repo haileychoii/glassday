@@ -11,7 +11,7 @@ import { CareerWidget } from "../widgets/CareerWidget";
 import { HealthWidget } from "../widgets/HealthWidget";
 import { MoneyWidget } from "../widgets/MoneyWidget";
 import { MoodWidget } from "../widgets/MoodWidget";
-
+import { AlertCenterWidget } from "../widgets/AlertCenterWidget";
 import { defaultLayouts } from "./gridDefaults";
 import { allWidgetIds, widgetRegistry } from "../../constants/widgets";
 import type { DashboardTab, WidgetId } from "../../types/workspace";
@@ -38,6 +38,7 @@ type DashboardGridProps = {
 
 const widgetMap: Record<WidgetId, JSX.Element> = {
   today: <TodayFocusWidget />,
+  alerts: <AlertCenterWidget />,
   calendar: <CalendarWidget />,
   memo: <MemoWidget />,
   study: <StudyWidget />,

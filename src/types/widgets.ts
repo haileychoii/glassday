@@ -7,6 +7,12 @@ export const widgetRegistry: Record<WidgetId, WidgetMeta> = {
     description: "오늘 가장 중요한 일",
     category: "home",
   },
+  alerts: {
+    id: "alerts",
+    label: "Alert Center",
+    description: "마감, 일정, 기록 누락 알림",
+    category: "home",
+  },
   calendar: {
     id: "calendar",
     label: "Calendar",

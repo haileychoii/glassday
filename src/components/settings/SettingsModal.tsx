@@ -20,8 +20,9 @@ import {
   resetGlassdayLayout,
   resetGlassdaySection,
 } from "../../utils/backup";
+import { applyTheme, getCurrentTheme, themeOptions, type ThemeId } from "../../constants/themes";
 
-type ThemeId = "pastel" | "glass" | "ios";
+
 
 type SettingsModalProps = {
   open: boolean;
@@ -44,12 +45,22 @@ const themeOptions: { id: ThemeId; label: string; description: string }[] = [
     label: "iOS",
     description: "Clean Apple-like frosted style",
   },
+  {
+    id: "pixel",
+    label: "Pixel Desk",
+    description: "Retro 90s desktop window style",
+  }
 ];
 
 const getCurrentTheme = (): ThemeId => {
   const saved = localStorage.getItem("glassday.theme.v1");
 
-  if (saved === "pastel" || saved === "glass" || saved === "ios") {
+  if (
+    saved === "pastel" ||
+    saved === "glass" ||
+    saved === "ios" ||
+    saved === "pixel"
+  ) {
     return saved;
   }
 
@@ -61,13 +72,18 @@ const getCurrentTheme = (): ThemeId => {
     return "ios";
   }
 
+  if (document.documentElement.classList.contains("theme-pixel")) {
+    return "pixel";
+  }
+
   return "pastel";
 };
+
 
 const applyTheme = (theme: ThemeId) => {
   const root = document.documentElement;
 
-  root.classList.remove("theme-pastel", "theme-glass", "theme-ios");
+  root.classList.remove("theme-pastel", "theme-glass", "theme-ios", "theme-pixel");
   root.classList.add(`theme-${theme}`);
 
   localStorage.setItem("glassday.theme.v1", theme);
@@ -92,11 +108,11 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
   if (!open) return null;
 
-  const handleThemeChange = (nextTheme: ThemeId) => {
-    setTheme(nextTheme);
-    applyTheme(nextTheme);
-    setStatus(`Theme changed to ${nextTheme}.`);
-  };
+const handleThemeChange = (nextTheme: ThemeId) => {
+  setTheme(nextTheme);
+  applyTheme(nextTheme);
+  setStatus(`Theme changed to ${themeOptions.find((item) => item.id === nextTheme)?.label ?? nextTheme}.`);
+};
 
   const handleExport = () => {
     downloadGlassdayBackup();

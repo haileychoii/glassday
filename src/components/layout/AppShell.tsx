@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import type { DashboardTab } from "../../types/workspace";
+import { PixelDesktopDecor } from "./PixelDesktopDecor";
+import { AppleDesktopDecor } from "./AppleDesktopDecor";
 
 type AppShellProps = {
   children: ReactNode;
@@ -31,6 +33,12 @@ export const AppShell = ({
   return (
     <div className="min-h-screen relative overflow-hidden bg-background text-foreground">
       <div className="fixed inset-0 bg-glass-gradient" />
+      <PixelDesktopDecor />
+
+      <div className="fixed inset-0 bg-glass-gradient" />
+      <PixelDesktopDecor />
+      <AppleDesktopDecor />
+
 
       <div className="relative z-10 min-h-screen p-4 md:p-6">
         <div className="glass-panel liquid-shell min-h-[calc(100vh-2rem)] md:min-h-[calc(100vh-3rem)] rounded-[2.2rem] overflow-hidden">
