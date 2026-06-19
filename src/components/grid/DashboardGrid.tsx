@@ -1,7 +1,9 @@
-import * as ReactGridLayout from "react-grid-layout";
+import ReactGridLayout from "react-grid-layout";
 import type { Layout, Layouts } from "react-grid-layout";
 
 import { TodayFocusWidget } from "../widgets/TodayFocusWidget";
+import { AlertCenterWidget } from "../widgets/AlertCenterWidget";
+import { DailyJournalWidget } from "../widgets/DailyJournalWidget";
 import { CalendarWidget } from "../widgets/CalendarWidget";
 import { MemoWidget } from "../widgets/MemoWidget";
 import { StudyWidget } from "../widgets/StudyWidget";
@@ -16,9 +18,15 @@ import type { DashboardTab, WidgetId } from "../../types/workspace";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-const Responsive = ReactGridLayout.Responsive;
-const WidthProvider = ReactGridLayout.WidthProvider;
-const ResponsiveGridLayout = WidthProvider(Responsive);
+
+const RGL = ReactGridLayout as unknown as {
+  Responsive: React.ComponentType<any>;
+  WidthProvider: (
+    component: React.ComponentType<any>
+  ) => React.ComponentType<any>;
+};
+
+const ResponsiveGridLayout = RGL.WidthProvider(RGL.Responsive);
 
 type DashboardGridProps = {
   editMode: boolean;
