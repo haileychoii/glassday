@@ -861,27 +861,6 @@ body {
    Remove harsh diagonal stripe look
    ================================ */
 
-.glass-card,
-.glass-panel,
-.glass-subtle,
-.glass-button,
-.career-list-item,
-.calendar-event-item,
-.memo-note-item,
-.calendar-month-day-cell,
-.career-detail-section {
-  background:
-    radial-gradient(
-      circle at 18% 0%,
-      hsl(0 0% 100% / 0.42),
-      transparent 38%
-    ),
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.34),
-      hsl(0 0% 100% / 0.13)
-    ) !important;
-}
 
 /* 대각선 광택 pseudo-element가 있으면 거의 안 보이게 */
 .glass-card::before,
@@ -927,13 +906,603 @@ body {
     ) !important;
 }
 
+/* =========================================================
+   FINAL THEME RESET
+   Pastel / Glass / iOS를 다시 분리
+   대각선 무늬 제거 + 배경 뿌연 문제 복구
+   ========================================================= */
+
+/* 화면 배경은 반드시 theme wallpaper를 따라가게 */
+.bg-glass-gradient {
+  background: var(--wallpaper) !important;
+}
+
+/* 대각선 shine/pattern 제거 */
 .glass-card::before,
-.glass-panel::before,
-.glass-subtle::before,
-.glass-button::before,
 .glass-card::after,
+.glass-panel::before,
 .glass-panel::after,
+.glass-subtle::before,
 .glass-subtle::after,
+.glass-button::before,
 .glass-button::after {
   display: none !important;
+}
+
+/* ================================
+   THEME WALLPAPERS
+   ================================ */
+
+.theme-pastel {
+  --background: 330 55% 98%;
+  --foreground: 228 24% 16%;
+  --primary: 326 58% 68%;
+  --primary-glow: 326 95% 88%;
+  --muted: 330 34% 94%;
+  --muted-foreground: 228 12% 46%;
+
+  --wallpaper:
+    radial-gradient(circle at 14% 14%, hsl(326 100% 92% / 0.72), transparent 30%),
+    radial-gradient(circle at 88% 12%, hsl(38 100% 90% / 0.55), transparent 28%),
+    radial-gradient(circle at 22% 88%, hsl(245 95% 94% / 0.58), transparent 30%),
+    radial-gradient(circle at 78% 78%, hsl(190 80% 92% / 0.42), transparent 28%),
+    linear-gradient(180deg, hsl(330 65% 98%), hsl(318 45% 96%));
+}
+
+.theme-glass {
+  --background: 220 42% 96%;
+  --foreground: 228 26% 13%;
+  --primary: 236 80% 66%;
+  --primary-glow: 210 100% 82%;
+  --muted: 224 28% 92%;
+  --muted-foreground: 228 14% 38%;
+
+  --wallpaper:
+    radial-gradient(circle at 14% 12%, hsl(205 100% 86% / 0.86), transparent 32%),
+    radial-gradient(circle at 84% 16%, hsl(260 100% 88% / 0.8), transparent 34%),
+    radial-gradient(circle at 20% 86%, hsl(172 82% 86% / 0.58), transparent 32%),
+    radial-gradient(circle at 86% 82%, hsl(328 95% 90% / 0.56), transparent 30%),
+    linear-gradient(135deg, hsl(218 50% 96%), hsl(245 42% 92%) 48%, hsl(210 46% 95%));
+}
+
+.theme-ios {
+  --background: 215 35% 97%;
+  --foreground: 220 26% 14%;
+  --primary: 214 88% 58%;
+  --primary-glow: 214 100% 84%;
+  --muted: 215 24% 92%;
+  --muted-foreground: 220 12% 42%;
+
+  --wallpaper:
+    radial-gradient(circle at 20% 18%, hsl(214 100% 92% / 0.58), transparent 30%),
+    radial-gradient(circle at 78% 22%, hsl(260 78% 94% / 0.38), transparent 28%),
+    linear-gradient(180deg, hsl(215 42% 98%), hsl(218 30% 95%));
+}
+
+/* ================================
+   BASE GLASS STRUCTURE
+   ================================ */
+
+.glass-card,
+.glass-panel,
+.glass-subtle,
+.glass-control,
+.glass-button {
+  background-image: none !important;
+}
+
+/* ================================
+   PASTEL THEME
+   배경은 파스텔, 위젯은 자연스러운 흰 반투명
+   ================================ */
+
+.theme-pastel .glass-card {
+  background: hsl(0 0% 100% / 0.42) !important;
+  border: 1px solid hsl(0 0% 100% / 0.58) !important;
+  backdrop-filter: blur(22px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(140%) !important;
+  box-shadow:
+    0 28px 78px -42px hsl(330 45% 40% / 0.32),
+    inset 0 1px 0 hsl(0 0% 100% / 0.72) !important;
+}
+
+.theme-pastel .glass-panel,
+.theme-pastel .glass-control,
+.theme-pastel .glass-subtle,
+.theme-pastel .career-list-item,
+.theme-pastel .calendar-event-item,
+.theme-pastel .calendar-month-day-cell,
+.theme-pastel .memo-note-item,
+.theme-pastel .today-task-item,
+.theme-pastel .today-mini-main,
+.theme-pastel .today-mini-stat,
+.theme-pastel .today-mini-next {
+  background: hsl(0 0% 100% / 0.32) !important;
+  border-color: hsl(0 0% 100% / 0.48) !important;
+  backdrop-filter: blur(18px) saturate(135%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(135%) !important;
+}
+
+.theme-pastel .glass-button {
+  background: hsl(0 0% 100% / 0.34) !important;
+  border: 1px solid hsl(0 0% 100% / 0.5) !important;
+  backdrop-filter: blur(16px) saturate(135%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(135%) !important;
+}
+
+/* ================================
+   GLASS THEME
+   배경은 오묘한 blue/purple gradient
+   위젯은 훨씬 투명하고 glassmorphism
+   ================================ */
+
+.theme-glass .glass-card {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.18),
+      hsl(0 0% 100% / 0.06)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.64) !important;
+  backdrop-filter: blur(46px) saturate(220%) brightness(1.04) !important;
+  -webkit-backdrop-filter: blur(46px) saturate(220%) brightness(1.04) !important;
+  box-shadow:
+    0 34px 110px -52px hsl(220 50% 18% / 0.5),
+    inset 0 1px 0 hsl(0 0% 100% / 0.86),
+    inset 0 -1px 0 hsl(220 30% 30% / 0.06) !important;
+}
+
+.theme-glass .glass-panel,
+.theme-glass .glass-control,
+.theme-glass .glass-subtle,
+.theme-glass .career-list-item,
+.theme-glass .calendar-event-item,
+.theme-glass .calendar-month-day-cell,
+.theme-glass .memo-note-item,
+.theme-glass .today-task-item,
+.theme-glass .today-mini-main,
+.theme-glass .today-mini-stat,
+.theme-glass .today-mini-next {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.16),
+      hsl(0 0% 100% / 0.045)
+    ) !important;
+  border-color: hsl(0 0% 100% / 0.46) !important;
+  backdrop-filter: blur(38px) saturate(210%) brightness(1.05) !important;
+  -webkit-backdrop-filter: blur(38px) saturate(210%) brightness(1.05) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.72),
+    0 18px 52px -42px hsl(220 45% 18% / 0.38) !important;
+}
+
+.theme-glass .glass-button {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.22),
+      hsl(0 0% 100% / 0.075)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.5) !important;
+  backdrop-filter: blur(32px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
+}
+
+/* Glass에서 내부 input/칩들도 너무 흰색 덩어리처럼 보이지 않게 */
+.theme-glass input,
+.theme-glass textarea,
+.theme-glass select {
+  background: hsl(0 0% 100% / 0.16) !important;
+  border-color: hsl(0 0% 100% / 0.34) !important;
+}
+
+/* ================================
+   iOS THEME
+   mac/iPhone 느낌: 밝고 깔끔, glass보다 덜 투명
+   ================================ */
+
+.theme-ios .glass-card {
+  background: hsl(0 0% 100% / 0.58) !important;
+  border: 1px solid hsl(0 0% 100% / 0.7) !important;
+  backdrop-filter: blur(28px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(170%) !important;
+  box-shadow:
+    0 26px 80px -48px hsl(215 25% 30% / 0.34),
+    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
+}
+
+.theme-ios .glass-panel,
+.theme-ios .glass-control,
+.theme-ios .glass-subtle,
+.theme-ios .career-list-item,
+.theme-ios .calendar-event-item,
+.theme-ios .calendar-month-day-cell,
+.theme-ios .memo-note-item,
+.theme-ios .today-task-item,
+.theme-ios .today-mini-main,
+.theme-ios .today-mini-stat,
+.theme-ios .today-mini-next {
+  background: hsl(0 0% 100% / 0.48) !important;
+  border-color: hsl(0 0% 100% / 0.62) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+}
+
+.theme-ios .glass-button {
+  background: hsl(0 0% 100% / 0.5) !important;
+  border: 1px solid hsl(0 0% 100% / 0.64) !important;
+  backdrop-filter: blur(22px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
+}
+
+/* ================================
+   Topbar / Sidebar도 테마별로 과하게 뿌옇지 않게
+   ================================ */
+
+.theme-pastel header,
+.theme-pastel aside {
+  background: hsl(0 0% 100% / 0.28) !important;
+  backdrop-filter: blur(24px) saturate(135%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(135%) !important;
+}
+
+.theme-glass header,
+.theme-glass aside {
+  background: hsl(0 0% 100% / 0.12) !important;
+  backdrop-filter: blur(42px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(42px) saturate(210%) !important;
+}
+
+.theme-ios header,
+.theme-ios aside {
+  background: hsl(0 0% 100% / 0.5) !important;
+  backdrop-filter: blur(26px) saturate(165%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(165%) !important;
+}
+
+/* =========================================================
+   iOS / macOS Theme Final Override
+   누가 봐도 Apple-style dashboard 느낌
+   ========================================================= */
+
+.theme-ios {
+  --background: 214 38% 97%;
+  --foreground: 220 30% 13%;
+  --primary: 211 100% 50%;
+  --primary-glow: 211 100% 84%;
+  --muted: 214 24% 93%;
+  --muted-foreground: 220 12% 42%;
+
+  --wallpaper:
+    radial-gradient(circle at 18% 16%, hsl(211 100% 92% / 0.72), transparent 30%),
+    radial-gradient(circle at 82% 18%, hsl(245 80% 94% / 0.38), transparent 26%),
+    radial-gradient(circle at 30% 86%, hsl(190 90% 94% / 0.36), transparent 30%),
+    linear-gradient(180deg, hsl(214 44% 98%), hsl(216 34% 94%));
+}
+
+/* 앱 전체 폰트/톤을 Apple 시스템 느낌으로 */
+.theme-ios body,
+.theme-ios {
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    "Apple SD Gothic Neo",
+    "Pretendard",
+    system-ui,
+    sans-serif;
+}
+
+/* 전체 배경 */
+.theme-ios .bg-glass-gradient {
+  background: var(--wallpaper) !important;
+}
+
+/* Header = macOS toolbar */
+.theme-ios header {
+  height: 78px !important;
+  background: hsl(214 35% 98% / 0.72) !important;
+  border-bottom: 1px solid hsl(214 28% 82% / 0.58) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  box-shadow: 0 1px 0 hsl(0 0% 100% / 0.72) inset !important;
+}
+
+/* Sidebar = Finder sidebar */
+.theme-ios aside {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(214 50% 96% / 0.82),
+      hsl(214 32% 93% / 0.72)
+    ) !important;
+  border-right: 1px solid hsl(214 28% 82% / 0.62) !important;
+  backdrop-filter: blur(30px) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(175%) !important;
+  box-shadow:
+    inset -1px 0 0 hsl(0 0% 100% / 0.55),
+    18px 0 50px -44px hsl(214 30% 30% / 0.32) !important;
+}
+
+/* 사이드바 메뉴 = Finder selected row */
+.theme-ios aside button,
+.theme-ios aside a,
+.theme-ios .sidebar-item {
+  border-radius: 14px !important;
+}
+
+.theme-ios aside .is-active,
+.theme-ios .sidebar-item.is-active {
+  background: hsl(211 100% 96% / 0.86) !important;
+  border: 1px solid hsl(211 80% 84% / 0.62) !important;
+  color: hsl(211 90% 42%) !important;
+}
+
+/* 위젯 카드 = macOS app panel */
+.theme-ios .glass-card {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.82),
+      hsl(214 38% 98% / 0.64)
+    ) !important;
+  border: 1px solid hsl(214 24% 82% / 0.72) !important;
+  border-radius: 24px !important;
+  backdrop-filter: blur(26px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(170%) !important;
+  box-shadow:
+    0 18px 48px -34px hsl(214 25% 32% / 0.42),
+    0 1px 0 hsl(0 0% 100% / 0.82) inset,
+    0 -1px 0 hsl(214 22% 70% / 0.08) inset !important;
+}
+
+/* 위젯 제목 영역은 더 정돈된 macOS window content 느낌 */
+.theme-ios .glass-card > div:first-child {
+  padding-top: 18px !important;
+  padding-bottom: 10px !important;
+}
+
+.theme-ios .glass-card h3 {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.theme-ios .glass-card p {
+  font-size: 11px !important;
+}
+
+/* 아이콘 박스 = iOS app icon 느낌 */
+.theme-ios .glass-icon-box,
+.theme-ios .settings-modal-icon {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 12px !important;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.95),
+      hsl(214 38% 95% / 0.74)
+    ) !important;
+  border: 1px solid hsl(214 24% 82% / 0.74) !important;
+  color: hsl(211 92% 46%) !important;
+  box-shadow:
+    0 10px 24px -18px hsl(214 30% 35% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.92) !important;
+}
+
+/* Segmented control = iOS/macOS segmented picker */
+.theme-ios .glass-control {
+  background: hsl(214 24% 90% / 0.72) !important;
+  border: 1px solid hsl(214 20% 82% / 0.66) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(18px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(150%) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.74),
+    inset 0 -1px 0 hsl(214 20% 70% / 0.14) !important;
+}
+
+.theme-ios .glass-control button {
+  border-radius: 11px !important;
+}
+
+.theme-ios .glass-control button.bg-foreground,
+.theme-ios .glass-control button[class*="bg-foreground"] {
+  background: hsl(0 0% 100% / 0.94) !important;
+  color: hsl(220 30% 14%) !important;
+  box-shadow:
+    0 4px 12px -8px hsl(214 30% 30% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.95) !important;
+}
+
+/* 일반 버튼 = macOS capsule button */
+.theme-ios .glass-button {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.88),
+      hsl(214 30% 96% / 0.68)
+    ) !important;
+  border: 1px solid hsl(214 22% 80% / 0.7) !important;
+  border-radius: 999px !important;
+  color: hsl(220 24% 18% / 0.82) !important;
+  backdrop-filter: blur(18px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(150%) !important;
+  box-shadow:
+    0 8px 20px -18px hsl(214 30% 28% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.92) !important;
+}
+
+.theme-ios .glass-button.is-active {
+  background: hsl(220 28% 12% / 0.92) !important;
+  color: white !important;
+  border-color: hsl(220 28% 12% / 0.92) !important;
+}
+
+/* 내부 리스트/행 = Finder file rows */
+.theme-ios .career-list-item,
+.theme-ios .calendar-event-item,
+.theme-ios .memo-note-item,
+.theme-ios .today-task-item,
+.theme-ios .today-mini-main,
+.theme-ios .today-mini-stat,
+.theme-ios .today-mini-next,
+.theme-ios .settings-section,
+.theme-ios .career-detail-section,
+.theme-ios .calendar-month-day-cell {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.74),
+      hsl(214 34% 97% / 0.52)
+    ) !important;
+  border: 1px solid hsl(214 22% 84% / 0.62) !important;
+  border-radius: 18px !important;
+  backdrop-filter: blur(16px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
+  box-shadow:
+    0 10px 28px -24px hsl(214 30% 30% / 0.28),
+    inset 0 1px 0 hsl(0 0% 100% / 0.86) !important;
+}
+
+/* 오늘 할 일 high는 iOS Reminders 느낌 */
+.theme-ios .today-task-item.is-high {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(7 100% 97% / 0.9),
+      hsl(0 0% 100% / 0.58)
+    ) !important;
+  border-color: hsl(7 80% 82% / 0.58) !important;
+}
+
+/* input/select/textarea = macOS text field */
+.theme-ios input,
+.theme-ios select,
+.theme-ios textarea {
+  background: hsl(0 0% 100% / 0.72) !important;
+  border: 1px solid hsl(214 22% 82% / 0.62) !important;
+  border-radius: 13px !important;
+  color: hsl(220 30% 15% / 0.82) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.9),
+    0 1px 0 hsl(214 22% 72% / 0.08) !important;
+}
+
+/* 검색창은 Spotlight 느낌 */
+.theme-ios header input {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Calendar event = Apple Calendar pastel strip */
+.theme-ios .calendar-event-item {
+  border-left-width: 5px !important;
+  border-radius: 16px !important;
+}
+
+.theme-ios .calendar-career-badge,
+.theme-ios .calendar-pending-badge,
+.theme-ios .today-focus-badge {
+  border-radius: 999px !important;
+  background: hsl(211 100% 95% / 0.86) !important;
+  border: 1px solid hsl(211 90% 82% / 0.54) !important;
+  color: hsl(211 90% 42%) !important;
+}
+
+/* Modal = macOS sheet/window */
+.theme-ios .calendar-modal-window,
+.theme-ios .career-modal-window,
+.theme-ios .settings-modal-window,
+.theme-ios .memo-save-dialog {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.9),
+      hsl(214 35% 97% / 0.78)
+    ) !important;
+  border: 1px solid hsl(214 22% 78% / 0.72) !important;
+  border-radius: 26px !important;
+  backdrop-filter: blur(34px) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(175%) !important;
+  box-shadow:
+    0 34px 120px -42px hsl(214 30% 22% / 0.52),
+    inset 0 1px 0 hsl(0 0% 100% / 0.92) !important;
+}
+
+/* 모달 헤더 = macOS titlebar 느낌 */
+.theme-ios .calendar-modal-header,
+.theme-ios .career-modal-header,
+.theme-ios .settings-modal-header {
+  background: hsl(214 35% 97% / 0.46) !important;
+  border-bottom: 1px solid hsl(214 22% 82% / 0.62) !important;
+}
+
+/* macOS traffic-light 느낌 장식 */
+.theme-ios .calendar-modal-header::before,
+.theme-ios .career-modal-header::before,
+.theme-ios .settings-modal-header::before,
+.theme-ios .memo-window-titlebar::before {
+  content: "";
+  width: 44px;
+  height: 12px;
+  flex: 0 0 auto;
+  margin-right: 8px;
+  background:
+    radial-gradient(circle at 6px 6px, #ff5f57 0 5px, transparent 5.5px),
+    radial-gradient(circle at 22px 6px, #ffbd2e 0 5px, transparent 5.5px),
+    radial-gradient(circle at 38px 6px, #28c840 0 5px, transparent 5.5px);
+}
+
+/* Memo floating window = macOS Notes 창 */
+.theme-ios .memo-window {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.88),
+      hsl(214 35% 96% / 0.78)
+    ) !important;
+  border: 1px solid hsl(214 22% 78% / 0.72) !important;
+  border-radius: 24px !important;
+  box-shadow:
+    0 34px 120px -42px hsl(214 30% 22% / 0.54),
+    inset 0 1px 0 hsl(0 0% 100% / 0.92) !important;
+}
+
+.theme-ios .memo-window-titlebar {
+  height: 62px !important;
+  background: hsl(214 35% 97% / 0.52) !important;
+  border-bottom: 1px solid hsl(214 22% 82% / 0.62) !important;
+}
+
+/* progress bar = iOS style */
+.theme-ios .today-tasks-progress-track,
+.theme-ios .progress-track,
+.theme-ios .calendar-week-hour-line {
+  background: hsl(214 24% 88% / 0.72) !important;
+}
+
+.theme-ios .today-tasks-progress-fill {
+  background: linear-gradient(90deg, #0a84ff, #64d2ff) !important;
+}
+
+/* 스크롤바도 macOS처럼 얇고 깔끔하게 */
+.theme-ios *::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.theme-ios *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.theme-ios *::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+  background-color: hsl(214 12% 50% / 0.36);
 }

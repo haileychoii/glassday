@@ -1,3 +1,4 @@
+<div className="min-h-screen bg-glass-gradient text-foreground overflow-hidden"></div>
 import type { ReactNode } from "react";
 import { Topbar } from "./Topbar";
 import { Sidebar } from "./Sidebar";
