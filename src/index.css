@@ -219,26 +219,7 @@ body {
     0 0 26px hsl(225 100% 84% / 0.18);
 }
 
-.theme-glass .glass-card::before {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.5),
-      transparent 18%,
-      transparent 72%,
-      hsl(0 0% 100% / 0.08)
-    ),
-    radial-gradient(
-      120% 90% at 10% 0%,
-      hsl(0 0% 100% / 0.48),
-      transparent 42%
-    ),
-    radial-gradient(
-      90% 80% at 100% 100%,
-      hsl(var(--primary-glow) / 0.1),
-      transparent 42%
-    );
-}
+
 
 .theme-pastel .glass-card {
   background:
@@ -743,21 +724,6 @@ body {
     inset 0 -1px 0 hsl(220 25% 30% / 0.06);
 }
 
-.theme-glass .glass-card::before {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.42),
-      transparent 20%,
-      transparent 72%,
-      hsl(0 0% 100% / 0.06)
-    ),
-    radial-gradient(
-      110% 80% at 12% 0%,
-      hsl(0 0% 100% / 0.42),
-      transparent 42%
-    );
-}
 
 .theme-glass main {
   background: transparent;
@@ -775,51 +741,8 @@ body {
   -webkit-backdrop-filter: blur(46px) saturate(190%);
 }
 
-.theme-glass .glass-card {
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.16),
-      hsl(0 0% 100% / 0.055)
-    );
-  border-color: hsl(0 0% 100% / 0.66);
-  backdrop-filter: blur(38px) saturate(200%);
-  -webkit-backdrop-filter: blur(38px) saturate(200%);
-  box-shadow:
-    0 34px 100px -46px hsl(220 45% 20% / 0.46),
-    0 12px 28px -24px hsl(220 25% 20% / 0.22),
-    inset 0 1px 0 hsl(0 0% 100% / 0.92),
-    inset 0 -1px 0 hsl(220 25% 30% / 0.07);
-}
 
-.theme-glass .glass-card::before {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.36),
-      transparent 18%,
-      transparent 76%,
-      hsl(0 0% 100% / 0.045)
-    ),
-    radial-gradient(
-      120% 90% at 8% 0%,
-      hsl(0 0% 100% / 0.34),
-      transparent 44%
-    ),
-    radial-gradient(
-      90% 80% at 100% 100%,
-      hsl(var(--primary-glow) / 0.12),
-      transparent 46%
-    );
-}
 
-.theme-glass .glass-card::after {
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.9),
-    inset 1px 0 0 hsl(0 0% 100% / 0.26),
-    inset -1px 0 0 hsl(220 30% 40% / 0.04),
-    inset 0 -1px 0 hsl(220 25% 30% / 0.06);
-}
 
 .theme-glass .glass-subtle,
 .theme-glass .career-list-item,
@@ -841,21 +764,7 @@ body {
     inset 0 1px 0 hsl(0 0% 100% / 0.62);
 }
 
-.theme-glass .glass-button,
-.theme-glass .glass-control {
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.2),
-      hsl(0 0% 100% / 0.06)
-    );
-  border-color: hsl(0 0% 100% / 0.56);
-  backdrop-filter: blur(22px) saturate(190%);
-  -webkit-backdrop-filter: blur(22px) saturate(190%);
-  box-shadow:
-    0 16px 38px -28px hsl(220 35% 22% / 0.3),
-    inset 0 1px 0 hsl(0 0% 100% / 0.82);
-}
+
 
 /* ================================
    Remove harsh diagonal stripe look
@@ -863,19 +772,7 @@ body {
 
 
 /* 대각선 광택 pseudo-element가 있으면 거의 안 보이게 */
-.glass-card::before,
-.glass-panel::before,
-.glass-subtle::before,
-.glass-button::before {
-  opacity: 0.18 !important;
-  background:
-    radial-gradient(
-      circle at 20% 0%,
-      hsl(0 0% 100% / 0.5),
-      transparent 38%
-    ) !important;
-  transform: none !important;
-}
+
 
 /* Glass theme은 더 투명하지만 줄무늬는 줄임
 .theme-glass .glass-card {
@@ -1062,17 +959,6 @@ body {
     0 18px 52px -42px hsl(220 45% 18% / 0.38) !important;
 }
 
-.theme-glass .glass-button {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.22),
-      hsl(0 0% 100% / 0.075)
-    ) !important;
-  border: 1px solid hsl(0 0% 100% / 0.5) !important;
-  backdrop-filter: blur(32px) saturate(210%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
-}
 
 /* Glass에서 내부 input/칩들도 너무 흰색 덩어리처럼 보이지 않게 */
 .theme-glass input,
@@ -1606,33 +1492,12 @@ body {
     0 10px 30px -24px hsl(222 50% 18% / 0.35) !important;
 }
 
-.theme-glass .glass-button.is-active,
-.theme-glass .glass-control button.bg-foreground,
-.theme-glass .glass-control button[class*="bg-foreground"] {
-  background: hsl(226 28% 12% / 0.88) !important;
-  color: white !important;
-  border-color: hsl(0 0% 100% / 0.3) !important;
-}
+
 
 /* input/select/textarea가 흰 박스처럼 보이지 않게 */
-.theme-glass input,
-.theme-glass select,
-.theme-glass textarea {
-  background: hsl(0 0% 100% / 0.12) !important;
-  border: 1px solid hsl(0 0% 100% / 0.32) !important;
-  backdrop-filter: blur(18px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.42) !important;
-}
+
 
 /* Header / Sidebar도 유리판 */
-.theme-glass header,
-.theme-glass aside {
-  background: hsl(0 0% 100% / 0.09) !important;
-  border-color: hsl(0 0% 100% / 0.26) !important;
-  backdrop-filter: blur(34px) saturate(220%) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(220%) brightness(1.06) !important;
-}
 
 /* progress bar 트랙도 흰 막대 말고 투명하게 */
 .theme-glass .today-tasks-progress-track,
@@ -1648,5 +1513,176 @@ body {
       90deg,
       hsl(205 100% 72% / 0.62),
       hsl(265 100% 78% / 0.6)
+    ) !important;
+}
+
+/* =========================================================
+   TRUE LIQUID GLASS THEME - FINAL FIX
+   배경은 은은한 glossy gradient
+   위젯은 색 없는 투명 유리
+   ========================================================= */
+
+.theme-glass {
+  --background: 220 40% 97%;
+  --foreground: 224 24% 14%;
+  --primary: 238 72% 64%;
+  --primary-glow: 204 100% 82%;
+  --muted: 220 20% 92%;
+  --muted-foreground: 224 12% 42%;
+
+  --wallpaper:
+    radial-gradient(circle at 12% 16%, hsl(195 100% 86% / 0.62), transparent 34%),
+    radial-gradient(circle at 84% 12%, hsl(264 100% 90% / 0.5), transparent 34%),
+    radial-gradient(circle at 22% 86%, hsl(172 88% 88% / 0.42), transparent 32%),
+    radial-gradient(circle at 86% 82%, hsl(325 100% 91% / 0.34), transparent 34%),
+    linear-gradient(135deg, hsl(214 58% 95%), hsl(230 48% 94%) 45%, hsl(204 54% 95%));
+}
+
+.theme-glass .bg-glass-gradient {
+  background: var(--wallpaper) !important;
+}
+
+/* 흰 막 / 색 막 방지 */
+.theme-glass main,
+.theme-glass .dashboard-grid-board {
+  background: transparent !important;
+}
+
+/* 대각선 무늬 전부 제거 */
+.theme-glass .glass-card::before,
+.theme-glass .glass-card::after,
+.theme-glass .glass-panel::before,
+.theme-glass .glass-panel::after,
+.theme-glass .glass-subtle::before,
+.theme-glass .glass-subtle::after,
+.theme-glass .glass-button::before,
+.theme-glass .glass-button::after {
+  display: none !important;
+}
+
+/* 카드 자체는 무색 투명 유리 */
+.theme-glass .glass-card {
+  background: hsl(0 0% 100% / 0.075) !important;
+  background-image: none !important;
+
+  border: 1px solid hsl(0 0% 100% / 0.56) !important;
+
+  backdrop-filter: blur(42px) saturate(185%) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(42px) saturate(185%) brightness(1.08) !important;
+
+  box-shadow:
+    0 34px 100px -56px hsl(220 45% 18% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.78),
+    inset 0 -1px 0 hsl(220 30% 20% / 0.06) !important;
+}
+
+/* 내부 박스도 색 없애고 투명 유리층으로 */
+.theme-glass .glass-panel,
+.theme-glass .glass-control,
+.theme-glass .glass-subtle,
+.theme-glass .career-list-item,
+.theme-glass .calendar-event-item,
+.theme-glass .calendar-month-day-cell,
+.theme-glass .memo-note-item,
+.theme-glass .today-task-item,
+.theme-glass .today-mini-main,
+.theme-glass .today-mini-stat,
+.theme-glass .today-mini-next,
+.theme-glass .today-tasks-progress,
+.theme-glass .career-detail-section,
+.theme-glass .settings-section {
+  background: hsl(0 0% 100% / 0.085) !important;
+  background-image: none !important;
+
+  border: 1px solid hsl(0 0% 100% / 0.38) !important;
+
+  backdrop-filter: blur(30px) saturate(175%) brightness(1.06) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(175%) brightness(1.06) !important;
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.48),
+    0 14px 44px -40px hsl(220 45% 16% / 0.24) !important;
+}
+
+/* 버튼도 색 있는 캡슐 말고 투명 유리 */
+.theme-glass .glass-button {
+  background: hsl(0 0% 100% / 0.105) !important;
+  background-image: none !important;
+
+  border: 1px solid hsl(0 0% 100% / 0.42) !important;
+
+  backdrop-filter: blur(28px) saturate(180%) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.08) !important;
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.58),
+    0 10px 30px -26px hsl(220 45% 16% / 0.28) !important;
+}
+
+.theme-glass .glass-button.is-active,
+.theme-glass .glass-control button.bg-foreground,
+.theme-glass .glass-control button[class*="bg-foreground"] {
+  background: hsl(224 24% 12% / 0.86) !important;
+  color: white !important;
+  border-color: hsl(0 0% 100% / 0.24) !important;
+}
+
+/* input/select가 흰 덩어리로 보이지 않게 */
+.theme-glass input,
+.theme-glass select,
+.theme-glass textarea {
+  background: hsl(0 0% 100% / 0.09) !important;
+  background-image: none !important;
+  border: 1px solid hsl(0 0% 100% / 0.26) !important;
+
+  backdrop-filter: blur(18px) saturate(170%) brightness(1.06) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%) brightness(1.06) !important;
+
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.36) !important;
+}
+
+/* header / sidebar도 투명 유리판 */
+.theme-glass header,
+.theme-glass aside {
+  background: hsl(0 0% 100% / 0.075) !important;
+  background-image: none !important;
+
+  border-color: hsl(0 0% 100% / 0.24) !important;
+
+  backdrop-filter: blur(38px) saturate(185%) brightness(1.06) !important;
+  -webkit-backdrop-filter: blur(38px) saturate(185%) brightness(1.06) !important;
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.36) !important;
+}
+
+/* Today Tasks high 같은 애들이 glass에서 분홍 카드처럼 되는 것 방지 */
+.theme-glass .today-task-item.is-high {
+  background: hsl(0 0% 100% / 0.09) !important;
+  border-color: hsl(350 80% 82% / 0.32) !important;
+}
+
+/* 메모 종이 영역은 사용자가 고른 paper color니까 유지하되, 너무 형광이면 부드럽게 */
+.theme-glass .memo-editor,
+.theme-glass .memo-window-editor {
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.42),
+    0 12px 36px -30px hsl(220 40% 16% / 0.28) !important;
+}
+
+/* 진행바 트랙도 투명하게 */
+.theme-glass .today-tasks-progress-track,
+.theme-glass .progress-track {
+  background: hsl(0 0% 100% / 0.12) !important;
+  border: 1px solid hsl(0 0% 100% / 0.2) !important;
+}
+
+.theme-glass .today-tasks-progress-fill,
+.theme-glass .progress-fill {
+  background:
+    linear-gradient(
+      90deg,
+      hsl(202 100% 74% / 0.52),
+      hsl(262 100% 82% / 0.5)
     ) !important;
 }
