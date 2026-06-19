@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { TodayFocusWidget } from "../widgets/TodayFocusWidget";
+import { TodayTasksWidget } from "../widgets/TodayTasksWidget";
 import { CalendarWidget } from "../widgets/CalendarWidget";
 import { MemoWidget } from "../widgets/MemoWidget";
 import { StudyWidget } from "../widgets/StudyWidget";
@@ -23,6 +24,7 @@ import { cn } from "../../lib/utils";
 
 type WidgetId =
   | "todayFocus"
+  | "todayTasks"
   | "calendar"
   | "memo"
   | "career"
@@ -48,7 +50,7 @@ type DashboardGridProps = {
 };
 
 const COLS = 12;
-const ROWS = 12;
+const ROWS = 15;
 const ROW_HEIGHT = 82;
 const GAP = 16;
 
@@ -57,39 +59,48 @@ const GAP = 16;
  * 기존 localStorage에 저장된 "today" id / 오래된 배치가 있으면
  * 새 todayFocus 위젯이 안 뜨거나 꼬일 수 있어서 새 레이아웃으로 시작하게 함.
  */
-const STORAGE_KEY = "glassday.widget.grid-layout.v3";
+const STORAGE_KEY = "glassday.widget.grid-layout.v4";
 
 const defaultGridLayout: GridItem[] = [
   {
     id: "todayFocus",
     x: 0,
     y: 0,
-    w: 5,
+    w: 4,
+    h: 3,
+    minW: 3,
+    minH: 3,
+  },
+  {
+    id: "todayTasks",
+    x: 0,
+    y: 3,
+    w: 4,
     h: 4,
-    minW: 4,
+    minW: 3,
     minH: 3,
   },
   {
     id: "calendar",
-    x: 5,
+    x: 4,
     y: 0,
-    w: 7,
+    w: 8,
     h: 5,
     minW: 5,
     minH: 4,
   },
   {
     id: "memo",
-    x: 0,
-    y: 4,
-    w: 5,
+    x: 4,
+    y: 5,
+    w: 4,
     h: 4,
     minW: 4,
     minH: 3,
   },
   {
     id: "career",
-    x: 5,
+    x: 8,
     y: 5,
     w: 4,
     h: 4,
@@ -98,9 +109,9 @@ const defaultGridLayout: GridItem[] = [
   },
   {
     id: "study",
-    x: 9,
-    y: 5,
-    w: 3,
+    x: 0,
+    y: 7,
+    w: 4,
     h: 4,
     minW: 3,
     minH: 3,
@@ -108,27 +119,27 @@ const defaultGridLayout: GridItem[] = [
   {
     id: "health",
     x: 0,
-    y: 8,
-    w: 3,
+    y: 11,
+    w: 4,
     h: 4,
     minW: 3,
     minH: 3,
   },
   {
     id: "money",
-    x: 3,
-    y: 8,
-    w: 3,
+    x: 4,
+    y: 9,
+    w: 4,
     h: 4,
     minW: 3,
     minH: 3,
   },
   {
     id: "mood",
-    x: 6,
+    x: 8,
     y: 9,
-    w: 3,
-    h: 3,
+    w: 4,
+    h: 4,
     minW: 3,
     minH: 3,
   },
@@ -136,6 +147,7 @@ const defaultGridLayout: GridItem[] = [
 
 const widgetMap: Record<WidgetId, ReactNode> = {
   todayFocus: <TodayFocusWidget />,
+  todayTasks: <TodayTasksWidget />,
   calendar: <CalendarWidget />,
   memo: <MemoWidget />,
   career: <CareerWidget />,
@@ -146,7 +158,8 @@ const widgetMap: Record<WidgetId, ReactNode> = {
 };
 
 const widgetLabels: Record<WidgetId, string> = {
-  todayFocus: "Today Focus",
+  todayFocus: "Today",
+  todayTasks: "Today Tasks",
   calendar: "Calendar",
   memo: "Memo",
   career: "Career",

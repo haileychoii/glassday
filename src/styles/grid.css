@@ -2211,3 +2211,430 @@
   justify-content: space-between !important;
   gap: 12px !important;
 }
+
+/* ================================
+   Today Mini Widget
+   ================================ */
+
+.today-mini-card .px-5.pb-5 {
+  overflow: hidden;
+}
+
+.today-mini {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 12px;
+}
+
+.today-mini-main {
+  min-height: 92px;
+  padding: 16px;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background:
+    radial-gradient(
+      circle at 20% 0%,
+      hsl(0 0% 100% / 0.62),
+      transparent 42%
+    ),
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.44),
+      hsl(0 0% 100% / 0.16)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.58);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.78),
+    0 16px 36px -30px hsl(220 35% 20% / 0.3);
+}
+
+.today-mini-time {
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: -0.06em;
+  color: hsl(var(--foreground) / 0.86);
+}
+
+.today-mini-location {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.46);
+}
+
+.today-mini-weather {
+  min-width: 92px;
+  min-height: 74px;
+  padding: 12px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.5),
+      hsl(0 0% 100% / 0.18)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.56);
+}
+
+.today-mini-weather strong {
+  display: block;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 850;
+  color: hsl(var(--foreground) / 0.8);
+}
+
+.today-mini-weather span {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.46);
+  white-space: nowrap;
+}
+
+.today-mini-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.today-mini-stat {
+  min-height: 58px;
+  padding: 12px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.34),
+      hsl(0 0% 100% / 0.12)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.46);
+}
+
+.today-mini-stat strong {
+  display: block;
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 850;
+}
+
+.today-mini-stat span {
+  display: block;
+  margin-top: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.44);
+}
+
+.today-mini-next {
+  min-height: 0;
+  padding: 12px 14px;
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.28),
+      hsl(0 0% 100% / 0.1)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.42);
+  overflow: hidden;
+}
+
+.today-mini-next-label {
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--foreground) / 0.38);
+}
+
+.today-mini-next-content {
+  margin-top: 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.today-mini-next-content span {
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 850;
+  background: hsl(0 0% 100% / 0.42);
+  border: 1px solid hsl(0 0% 100% / 0.48);
+  color: hsl(var(--foreground) / 0.56);
+}
+
+.today-mini-next-content strong {
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 800;
+  color: hsl(var(--foreground) / 0.76);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.today-mini-next-empty {
+  margin-top: 7px;
+  font-size: 11px;
+  color: hsl(var(--foreground) / 0.4);
+}
+
+/* ================================
+   Today Tasks Widget
+   ================================ */
+
+.today-tasks {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 12px;
+}
+
+.today-tasks-progress {
+  min-height: 76px;
+  padding: 14px;
+  border-radius: 24px;
+  display: grid;
+  gap: 12px;
+  background:
+    radial-gradient(
+      circle at 18% 0%,
+      hsl(0 0% 100% / 0.56),
+      transparent 40%
+    ),
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.36),
+      hsl(0 0% 100% / 0.12)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.5);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.72),
+    0 14px 32px -28px hsl(220 35% 20% / 0.22);
+}
+
+.today-tasks-progress-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--foreground) / 0.42);
+}
+
+.today-tasks-progress-value {
+  margin-top: 4px;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.today-tasks-progress-track {
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: hsl(0 0% 100% / 0.34);
+  border: 1px solid hsl(0 0% 100% / 0.46);
+}
+
+.today-tasks-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      90deg,
+      hsl(var(--primary) / 0.5),
+      hsl(270 80% 82% / 0.55)
+    );
+}
+
+.today-task-add-row {
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 92px 42px;
+  gap: 8px;
+}
+
+.today-task-add-row input,
+.today-task-add-row select {
+  min-width: 0;
+  height: 42px;
+  border-radius: 18px;
+  padding: 0 13px;
+  font-size: 12px;
+  background: hsl(0 0% 100% / 0.28);
+  border: 1px solid hsl(0 0% 100% / 0.46);
+  outline: none;
+}
+
+.today-task-add-row button {
+  height: 42px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(0 0% 100% / 0.38);
+  border: 1px solid hsl(0 0% 100% / 0.5);
+}
+
+.today-task-list {
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding-right: 2px;
+}
+
+.today-task-empty {
+  padding: 14px;
+  border-radius: 18px;
+  font-size: 12px;
+  color: hsl(var(--foreground) / 0.42);
+  background: hsl(0 0% 100% / 0.2);
+  border: 1px dashed hsl(0 0% 100% / 0.4);
+}
+
+.today-task-item {
+  min-height: 54px;
+  padding: 9px;
+  border-radius: 19px;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 82px 30px;
+  align-items: center;
+  gap: 8px;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.42),
+      hsl(0 0% 100% / 0.16)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.46);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    background 160ms ease;
+}
+
+.today-task-item:hover {
+  transform: translateY(-1px);
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.52),
+      hsl(0 0% 100% / 0.2)
+    );
+}
+
+.today-task-item.is-done {
+  opacity: 0.52;
+}
+
+.today-task-item.is-done .today-task-title {
+  text-decoration: line-through;
+}
+
+.today-task-item.is-high {
+  border-color: hsl(350 80% 82% / 0.52);
+  background:
+    linear-gradient(
+      145deg,
+      hsl(350 100% 97% / 0.54),
+      hsl(0 0% 100% / 0.16)
+    );
+}
+
+.today-task-check {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(0 0% 100% / 0.38);
+  border: 1px solid hsl(0 0% 100% / 0.5);
+  color: hsl(var(--foreground) / 0.68);
+}
+
+.today-task-main {
+  min-width: 0;
+}
+
+.today-task-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: hsl(var(--foreground) / 0.76);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.today-task-meta {
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.42);
+  text-transform: capitalize;
+}
+
+.today-task-hot {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: hsl(350 68% 48%);
+}
+
+.today-task-priority {
+  min-width: 0;
+  height: 30px;
+  border-radius: 999px;
+  padding: 0 8px;
+  font-size: 10px;
+  font-weight: 700;
+  background: hsl(0 0% 100% / 0.34);
+  border: 1px solid hsl(0 0% 100% / 0.46);
+  outline: none;
+}
+
+.today-task-delete {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--foreground) / 0.4);
+  background: hsl(0 0% 100% / 0.24);
+  border: 1px solid hsl(0 0% 100% / 0.36);
+}
+
+.today-task-delete:hover {
+  color: hsl(350 70% 48%);
+  background: hsl(350 100% 96% / 0.6);
+}
