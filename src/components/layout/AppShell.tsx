@@ -3,7 +3,7 @@ import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import type { DashboardTab } from "../../types/workspace";
 import { PixelDesktopDecor } from "./PixelDesktopDecor";
-import { AppleDesktopDecor } from "./AppleDesktopDecor";
+
 
 type AppShellProps = {
   children: ReactNode;
@@ -37,7 +37,7 @@ export const AppShell = ({
 
       <div className="fixed inset-0 bg-glass-gradient" />
       <PixelDesktopDecor />
-      <AppleDesktopDecor />
+      
 
 
       <div className="relative z-10 min-h-screen p-4 md:p-6">
