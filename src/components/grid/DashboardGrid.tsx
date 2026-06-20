@@ -1,4 +1,6 @@
-import ReactGridLayout from "react-grid-layout";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import GridLayout from "react-grid-layout";
 import type { Layout, Layouts } from "react-grid-layout";
 
 import { TodayFocusWidget } from "../widgets/TodayFocusWidget";
@@ -11,21 +13,13 @@ import { CareerWidget } from "../widgets/CareerWidget";
 import { HealthWidget } from "../widgets/HealthWidget";
 import { MoneyWidget } from "../widgets/MoneyWidget";
 import { MoodWidget } from "../widgets/MoodWidget";
+
 import { defaultLayouts } from "./gridDefaults";
 import { allWidgetIds, widgetRegistry } from "../../constants/widgets";
 import type { DashboardTab, WidgetId } from "../../types/workspace";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-
-const RGL = ReactGridLayout as unknown as {
-  Responsive: React.ComponentType<any>;
-  WidthProvider: (
-    component: React.ComponentType<any>
-  ) => React.ComponentType<any>;
-};
-
-const ResponsiveGridLayout = RGL.WidthProvider(RGL.Responsive);
 
 type DashboardGridProps = {
   editMode: boolean;
@@ -35,7 +29,7 @@ type DashboardGridProps = {
   onRemoveWidget: (widgetId: WidgetId) => void;
 };
 
-const widgetMap: Record<WidgetId, JSX.Element> = {
+const widgetMap: Record<WidgetId, ReactNode> = {
   today: <TodayFocusWidget />,
   alerts: <AlertCenterWidget />,
   journal: <DailyJournalWidget />,
@@ -48,38 +42,41 @@ const widgetMap: Record<WidgetId, JSX.Element> = {
   mood: <MoodWidget />,
 };
 
-const createFallbackLayout = (widgetId: WidgetId, index: number): Layout => {
+const getDefaultLayoutForWidget = (widgetId: WidgetId, index: number): Layout => {
+  const defaultItem =
+    defaultLayouts.lg?.find((item) => item.i === widgetId) ??
+    defaultLayouts.md?.find((item) => item.i === widgetId) ??
+    defaultLayouts.sm?.find((item) => item.i === widgetId);
+
+  if (defaultItem) {
+    return { ...defaultItem };
+  }
+
   return {
     i: widgetId,
     x: (index * 3) % 12,
-    y: Math.floor(index / 4) * 4,
-    w: 3,
-    h: 4,
+    y: Infinity,
+    w: 4,
+    h: 5,
   };
 };
 
-const ensureLayoutsForWidgets = (
-  layouts: Layouts,
+const ensureLayoutForWidgets = (
+  layout: Layout[] | undefined,
   widgetIds: WidgetId[]
-): Layouts => {
-  const breakpoints = ["lg", "md", "sm"] as const;
+): Layout[] => {
+  const safeLayout = Array.isArray(layout) ? layout : [];
+  const existingIds = new Set(safeLayout.map((item) => item.i));
 
-  return Object.fromEntries(
-    breakpoints.map((breakpoint) => {
-      const currentLayouts = layouts?.[breakpoint] ?? [];
-      const defaultBreakpointLayouts = defaultLayouts?.[breakpoint] ?? [];
+  const filteredLayout = safeLayout.filter((item) =>
+    widgetIds.includes(item.i as WidgetId)
+  );
 
-      const nextLayouts = widgetIds.map((widgetId, index) => {
-        return (
-          currentLayouts.find((item) => item.i === widgetId) ??
-          defaultBreakpointLayouts.find((item) => item.i === widgetId) ??
-          createFallbackLayout(widgetId, index)
-        );
-      });
+  const missingLayout = widgetIds
+    .filter((widgetId) => !existingIds.has(widgetId))
+    .map((widgetId, index) => getDefaultLayoutForWidget(widgetId, index));
 
-      return [breakpoint, nextLayouts];
-    })
-  ) as Layouts;
+  return [...filteredLayout, ...missingLayout];
 };
 
 export const DashboardGrid = ({
@@ -89,84 +86,124 @@ export const DashboardGrid = ({
   onAddWidget,
   onRemoveWidget,
 }: DashboardGridProps) => {
-  const layouts = ensureLayoutsForWidgets(activeTab.layouts, activeTab.widgetIds);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [width, setWidth] = useState(1200);
 
-  const hiddenWidgets = allWidgetIds.filter(
-    (widgetId) => !activeTab.widgetIds.includes(widgetId)
-  );
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+
+    const updateWidth = () => {
+      if (!wrapperRef.current) return;
+      setWidth(Math.max(320, wrapperRef.current.offsetWidth));
+    };
+
+    updateWidth();
+
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(wrapperRef.current);
+
+    window.addEventListener("resize", updateWidth);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateWidth);
+    };
+  }, []);
+
+  const activeWidgetIds = useMemo(() => {
+    return Array.isArray(activeTab.widgetIds) ? activeTab.widgetIds : [];
+  }, [activeTab.widgetIds]);
+
+  const layout = useMemo(() => {
+    return ensureLayoutForWidgets(activeTab.layouts?.lg, activeWidgetIds);
+  }, [activeTab.layouts, activeWidgetIds]);
+
+  const hiddenWidgetIds = useMemo(() => {
+    return allWidgetIds.filter((widgetId) => !activeWidgetIds.includes(widgetId));
+  }, [activeWidgetIds]);
+
+  const handleLayoutChange = (nextLayout: Layout[]) => {
+    onLayoutsChange({
+      ...activeTab.layouts,
+      lg: nextLayout,
+    });
+  };
 
   return (
-    <div className="dashboard-tab-space">
+    <div ref={wrapperRef} className="dashboard-tab-space">
       <div className="dashboard-tab-header">
         <div>
-          <div className="text-xs text-muted-foreground">Current Workspace</div>
-          <h2 className="text-xl font-semibold">
+          <div className="text-xs font-bold text-muted-foreground uppercase tracking-[0.18em]">
+            Workspace
+          </div>
+          <h2 className="text-xl font-semibold tracking-tight">
             {activeTab.icon} {activeTab.label}
           </h2>
         </div>
 
         {editMode && (
-          <div className="widget-picker-panel">
-            {hiddenWidgets.length === 0 ? (
-              <span className="text-xs text-muted-foreground">
-                All widgets are already here.
-              </span>
-            ) : (
-              hiddenWidgets.map((widgetId) => (
+          <div className="text-xs font-bold text-muted-foreground">
+            Drag widgets · Resize from corner
+          </div>
+        )}
+      </div>
+
+      {editMode && hiddenWidgetIds.length > 0 && (
+        <div className="widget-picker-panel">
+          <div className="text-xs font-bold text-muted-foreground">
+            Add widgets
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {hiddenWidgetIds.map((widgetId) => {
+              const widget = widgetRegistry[widgetId];
+
+              return (
                 <button
                   key={widgetId}
                   type="button"
                   onClick={() => onAddWidget(widgetId)}
                   className="widget-picker-button"
                 >
-                  + {widgetRegistry[widgetId].label}
+                  <strong>{widget.label}</strong>
+                  <span>{widget.description}</span>
                 </button>
-              ))
-            )}
+              );
+            })}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      <ResponsiveGridLayout
-        className="layout dashboard-grid-board"
-        layouts={layouts}
-        breakpoints={{
-          lg: 1200,
-          md: 768,
-          sm: 0,
-        }}
-        cols={{
-          lg: 12,
-          md: 12,
-          sm: 4,
-        }}
+      <GridLayout
+        className="layout"
+        layout={layout}
+        cols={12}
         rowHeight={76}
+        width={width}
         margin={[18, 18]}
         containerPadding={[0, 0]}
         isDraggable={editMode}
         isResizable={editMode}
-        compactType="vertical"
-        preventCollision={false}
-        onLayoutChange={(_, allLayouts) => {
-          onLayoutsChange(allLayouts);
-        }}
+        draggableCancel="button, input, textarea, select, [contenteditable='true'], .memo-editor, .floating-window"
+        onLayoutChange={handleLayoutChange}
       >
-        {activeTab.widgetIds.map((widgetId) => (
+        {activeWidgetIds.map((widgetId) => (
           <div key={widgetId} className="dashboard-grid-item">
             {editMode && (
               <button
                 type="button"
                 onClick={() => onRemoveWidget(widgetId)}
                 className="widget-remove-button"
+                title="Remove widget"
               >
-                Remove
+                ×
               </button>
             )}
 
             {widgetMap[widgetId]}
           </div>
         ))}
-      </ResponsiveGridLayout>
+      </GridLayout>
     </div>
   );
 };

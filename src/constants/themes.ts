@@ -20,7 +20,7 @@ export const themeOptions: ThemeOption[] = [
   {
     id: "ios",
     label: "Mac Core",
-    description: "Apple-like macOS and iOS interface",
+    description: "macOS Finder and iOS widget style",
   },
   {
     id: "pixel",
