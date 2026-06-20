@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, ReactNode } from "react";
 import {
   BriefcaseBusiness,
   CalendarDays,
@@ -31,7 +31,6 @@ import {
   addDays,
   collectJournalTagItems,
   collectJournalTags,
-  createJournalEntry,
   createJournalTask,
   createTagClip,
   extractTagsFromText,
@@ -59,8 +58,19 @@ type SelectionState = {
   text: string;
 } | null;
 
+const fieldPlaceholders: Record<JournalFieldKey, string> = {
+  workDone:
+    "예: #업무 Treaty/CL 검토, LCF 확인, ER Group 데이터 정리, SQL/Excel 검증...",
+  learned:
+    "예: #IFRS17 재보험 계약 구조, #SOAFM force of interest, #NCS 빠른 계산 팁...",
+  careerNote:
+    "예: #자소서소재 문제 발견, 개선, 협업, 검증, 자동화 등 나중에 쓸 만한 포인트",
+  oneLineReview: "예: #회고 오늘은 검증 로직을 더 구조적으로 이해했다.",
+};
+
 export const DailyJournalWidget = () => {
   const today = toLocalDateInput();
+
   const [selectedDate, setSelectedDate] = useState(today);
   const [tagInput, setTagInput] = useState("업무");
   const [selectedTag, setSelectedTag] = useState<string | undefined>();
@@ -71,8 +81,11 @@ export const DailyJournalWidget = () => {
   const careerNoteRef = useRef<HTMLTextAreaElement | null>(null);
   const reviewRef = useRef<HTMLInputElement | null>(null);
 
-  const { value: entries, setValue: setEntries } =
+  const { value: storedEntries, setValue: setEntries } =
     useLocalStorage<JournalEntries>("glassday.journal.entries.v1", {});
+
+  const entries =
+    storedEntries && typeof storedEntries === "object" ? storedEntries : {};
 
   const entry = useMemo<JournalEntry>(() => {
     return normalizeJournalEntry(entries[selectedDate], selectedDate);
@@ -88,14 +101,27 @@ export const DailyJournalWidget = () => {
     [entries, selectedTag]
   );
 
-  const visibleTags = selectedTag ? [selectedTag] : allTags.slice(0, 12);
+  const currentDateTags = useMemo(() => {
+    const tags = [
+      ...extractTagsFromText(entry.workDone),
+      ...extractTagsFromText(entry.learned),
+      ...extractTagsFromText(entry.careerNote),
+      ...extractTagsFromText(entry.oneLineReview),
+      ...(entry.tagClips ?? []).map((clip) => clip.tag),
+    ].filter(Boolean);
+
+    return [...new Set(tags)];
+  }, [entry]);
+
+  const visibleTags = selectedTag ? [selectedTag] : allTags.slice(0, 14);
 
   const updateEntry = (patch: Partial<JournalEntry>) => {
     setEntries((prev) => {
-      const current = normalizeJournalEntry(prev[selectedDate], selectedDate);
+      const safePrev = prev && typeof prev === "object" ? prev : {};
+      const current = normalizeJournalEntry(safePrev[selectedDate], selectedDate);
 
       return {
-        ...prev,
+        ...safePrev,
         [selectedDate]: {
           ...current,
           ...patch,
@@ -111,7 +137,7 @@ export const DailyJournalWidget = () => {
   ) => {
     updateEntry({
       [listName]: nextTasks,
-    } as Pick<JournalEntry, typeof listName>);
+    } as Partial<JournalEntry>);
   };
 
   const addTask = (listName: "todayTodos" | "tomorrowTodos") => {
@@ -149,7 +175,7 @@ export const DailyJournalWidget = () => {
     );
   };
 
-  const captureTextareaSelection = (
+  const captureSelection = (
     field: JournalFieldKey,
     element: HTMLTextAreaElement | HTMLInputElement
   ) => {
@@ -191,9 +217,13 @@ export const DailyJournalWidget = () => {
 
   const insertTagAtCursor = (field: JournalFieldKey) => {
     const tag = normalizeTag(tagInput);
+
     if (!tag) return;
 
-    const refs: Record<JournalFieldKey, HTMLTextAreaElement | HTMLInputElement | null> = {
+    const refs: Record<
+      JournalFieldKey,
+      HTMLTextAreaElement | HTMLInputElement | null
+    > = {
       workDone: workDoneRef.current,
       learned: learnedRef.current,
       careerNote: careerNoteRef.current,
@@ -209,13 +239,30 @@ export const DailyJournalWidget = () => {
 
     const before = currentValue.slice(0, start);
     const after = currentValue.slice(end);
-    const inserted = `${before}${before.endsWith(" ") || before.length === 0 ? "" : " "}#${tag} ${after}`;
+
+    const prefix =
+      before.length === 0 || before.endsWith(" ") || before.endsWith("\n")
+        ? ""
+        : " ";
+
+    const suffix =
+      after.length === 0 || after.startsWith(" ") || after.startsWith("\n")
+        ? ""
+        : " ";
+
+    const inserted = `${before}${prefix}#${tag}${suffix}${after}`;
 
     updateEntry({
       [field]: inserted,
-    } as Pick<JournalEntry, typeof field>);
+    } as Partial<JournalEntry>);
 
     setSelectedTag(tag);
+
+    window.setTimeout(() => {
+      element.focus();
+      const nextCursor = before.length + prefix.length + tag.length + 1 + suffix.length;
+      element.setSelectionRange(nextCursor, nextCursor);
+    }, 0);
   };
 
   const removeTagClip = (clipId: string) => {
@@ -224,41 +271,98 @@ export const DailyJournalWidget = () => {
     });
   };
 
-  const getCurrentDateInlineTags = () => {
-    return [
-      ...extractTagsFromText(entry.workDone),
-      ...extractTagsFromText(entry.learned),
-      ...extractTagsFromText(entry.careerNote),
-      ...extractTagsFromText(entry.oneLineReview),
-      ...(entry.tagClips ?? []).map((clip) => clip.tag),
-    ].filter(Boolean);
+  const renderTaskList = (
+    listName: "todayTodos" | "tomorrowTodos",
+    title: string,
+    icon: ReactNode
+  ) => {
+    const tasks = entry[listName];
+
+    return (
+      <section className="journal-section journal-task-section">
+        <div className="journal-section-title">
+          {icon}
+          <span>{title}</span>
+
+          <button
+            type="button"
+            onClick={() => addTask(listName)}
+            className="journal-mini-add"
+            title="Add task"
+          >
+            <Plus className="w-3 h-3" />
+          </button>
+        </div>
+
+        <div className="journal-task-list">
+          {tasks.length === 0 ? (
+            <div className="journal-task-empty">아직 등록된 할 일이 없어.</div>
+          ) : (
+            tasks.map((task) => (
+              <div
+                key={task.id}
+                className={cn("journal-task", task.done && "is-done")}
+              >
+                <button
+                  type="button"
+                  onClick={() =>
+                    updateTask(listName, task.id, {
+                      done: !task.done,
+                    })
+                  }
+                  className="journal-task-check"
+                  title={task.done ? "Mark undone" : "Mark done"}
+                >
+                  {task.done ? (
+                    <Check className="w-3 h-3" />
+                  ) : (
+                    <Circle className="w-3 h-3" />
+                  )}
+                </button>
+
+                <input
+                  value={task.text}
+                  onChange={(event) =>
+                    updateTask(listName, task.id, {
+                      text: event.target.value,
+                    })
+                  }
+                  spellCheck={false}
+                  placeholder="할 일 입력"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => removeTask(listName, task.id)}
+                  className="journal-task-delete"
+                  title="Delete task"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+    );
   };
 
-  const currentDateTags = [...new Set(getCurrentDateInlineTags())];
-
-  const renderTextArea = ({
+  const renderTextareaSection = ({
     field,
     title,
     icon,
-    placeholder,
+    refObject,
   }: {
-    field: JournalFieldKey;
+    field: Exclude<JournalFieldKey, "oneLineReview">;
     title: string;
-    icon: JSX.Element;
-    placeholder: string;
+    icon: ReactNode;
+    refObject: React.RefObject<HTMLTextAreaElement | null>;
   }) => {
-    const refs: Record<JournalFieldKey, typeof workDoneRef> = {
-      workDone: workDoneRef,
-      learned: learnedRef,
-      careerNote: careerNoteRef,
-      oneLineReview: reviewRef as unknown as typeof workDoneRef,
-    };
-
     return (
-      <section className="journal-section">
+      <section className="journal-section journal-text-section">
         <div className="journal-section-title">
           {icon}
-          {title}
+          <span>{title}</span>
 
           <button
             type="button"
@@ -271,93 +375,21 @@ export const DailyJournalWidget = () => {
         </div>
 
         <textarea
-          ref={refs[field]}
+          ref={refObject}
           value={String(entry[field] ?? "")}
           onChange={(event) =>
             updateEntry({
               [field]: event.target.value,
-            } as Pick<JournalEntry, typeof field>)
+            } as Partial<JournalEntry>)
           }
           onSelect={(event: ChangeEvent<HTMLTextAreaElement>) =>
-            captureTextareaSelection(field, event.currentTarget)
+            captureSelection(field, event.currentTarget)
           }
-          onMouseUp={(event) =>
-            captureTextareaSelection(field, event.currentTarget)
-          }
-          onKeyUp={(event) =>
-            captureTextareaSelection(field, event.currentTarget)
-          }
+          onMouseUp={(event) => captureSelection(field, event.currentTarget)}
+          onKeyUp={(event) => captureSelection(field, event.currentTarget)}
           spellCheck={false}
-          placeholder={placeholder}
+          placeholder={fieldPlaceholders[field]}
         />
-      </section>
-    );
-  };
-
-  const renderTaskList = (
-    listName: "todayTodos" | "tomorrowTodos",
-    title: string,
-    icon: JSX.Element
-  ) => {
-    const tasks = entry[listName];
-
-    return (
-      <section className="journal-section">
-        <div className="journal-section-title">
-          {icon}
-          {title}
-
-          <button
-            type="button"
-            onClick={() => addTask(listName)}
-            className="journal-mini-add"
-          >
-            <Plus className="w-3 h-3" />
-          </button>
-        </div>
-
-        <div className="journal-task-list">
-          {tasks.map((task) => (
-            <div
-              key={task.id}
-              className={cn("journal-task", task.done && "is-done")}
-            >
-              <button
-                type="button"
-                onClick={() =>
-                  updateTask(listName, task.id, {
-                    done: !task.done,
-                  })
-                }
-                className="journal-task-check"
-              >
-                {task.done ? (
-                  <Check className="w-3 h-3" />
-                ) : (
-                  <Circle className="w-3 h-3" />
-                )}
-              </button>
-
-              <input
-                value={task.text}
-                onChange={(event) =>
-                  updateTask(listName, task.id, {
-                    text: event.target.value,
-                  })
-                }
-                spellCheck={false}
-              />
-
-              <button
-                type="button"
-                onClick={() => removeTask(listName, task.id)}
-                className="journal-task-delete"
-              >
-                <Trash2 className="w-3 h-3" />
-              </button>
-            </div>
-          ))}
-        </div>
       </section>
     );
   };
@@ -399,6 +431,7 @@ export const DailyJournalWidget = () => {
             type="button"
             onClick={() => setSelectedDate((prev) => addDays(prev, -1))}
             className="journal-date-button"
+            title="Previous day"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
           </button>
@@ -414,6 +447,7 @@ export const DailyJournalWidget = () => {
             type="button"
             onClick={() => setSelectedDate((prev) => addDays(prev, 1))}
             className="journal-date-button"
+            title="Next day"
           >
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
@@ -454,7 +488,9 @@ export const DailyJournalWidget = () => {
               <button
                 key={tag}
                 type="button"
-                onClick={() => setSelectedTag(tag)}
+                onClick={() =>
+                  setSelectedTag((prev) => (prev === tag ? undefined : tag))
+                }
                 className={cn(
                   "journal-tag-chip",
                   selectedTag === tag && "is-active"
@@ -480,34 +516,33 @@ export const DailyJournalWidget = () => {
           )}
         </div>
 
-        {renderTextArea({
-          field: "workDone",
-          title: "회사에서 한 일",
-          icon: <BriefcaseBusiness className="w-3.5 h-3.5" />,
-          placeholder:
-            "예: #업무 Treaty/CL 검토, LCF 확인, ER Group 데이터 정리, SQL/Excel 검증...",
-        })}
+        <div className="journal-two-column">
+          {renderTextareaSection({
+            field: "workDone",
+            title: "회사에서 한 일",
+            icon: <BriefcaseBusiness className="w-3.5 h-3.5" />,
+            refObject: workDoneRef,
+          })}
 
-        {renderTextArea({
-          field: "learned",
-          title: "오늘 배운 것",
-          icon: <GraduationCap className="w-3.5 h-3.5" />,
-          placeholder:
-            "예: #IFRS17 재보험 계약 구조, #SOAFM force of interest, #NCS 빠른 계산 팁...",
-        })}
+          {renderTextareaSection({
+            field: "learned",
+            title: "오늘 배운 것",
+            icon: <GraduationCap className="w-3.5 h-3.5" />,
+            refObject: learnedRef,
+          })}
+        </div>
 
-        {renderTextArea({
+        {renderTextareaSection({
           field: "careerNote",
           title: "자소서/커리어 소재",
           icon: <Sparkles className="w-3.5 h-3.5" />,
-          placeholder:
-            "예: #자소서소재 문제 발견, 개선, 협업, 검증, 자동화 등 나중에 쓸 만한 포인트",
+          refObject: careerNoteRef,
         })}
 
         <section className="journal-section journal-condition-section">
           <div className="journal-section-title">
             <HeartPulse className="w-3.5 h-3.5" />
-            기분 / 컨디션
+            <span>기분 / 컨디션</span>
           </div>
 
           <div className="journal-mood-row">
@@ -544,7 +579,7 @@ export const DailyJournalWidget = () => {
                   onChange={(event) =>
                     updateEntry({
                       [item.key]: Number(event.target.value),
-                    } as Pick<JournalEntry, typeof item.key>)
+                    } as Partial<JournalEntry>)
                   }
                 />
 
@@ -557,7 +592,7 @@ export const DailyJournalWidget = () => {
         <section className="journal-section journal-review-section">
           <div className="journal-section-title">
             <NotebookPen className="w-3.5 h-3.5" />
-            한 줄 회고
+            <span>한 줄 회고</span>
 
             <button
               type="button"
@@ -578,23 +613,23 @@ export const DailyJournalWidget = () => {
               })
             }
             onSelect={(event: ChangeEvent<HTMLInputElement>) =>
-              captureTextareaSelection("oneLineReview", event.currentTarget)
+              captureSelection("oneLineReview", event.currentTarget)
             }
             onMouseUp={(event) =>
-              captureTextareaSelection("oneLineReview", event.currentTarget)
+              captureSelection("oneLineReview", event.currentTarget)
             }
             onKeyUp={(event) =>
-              captureTextareaSelection("oneLineReview", event.currentTarget)
+              captureSelection("oneLineReview", event.currentTarget)
             }
             spellCheck={false}
-            placeholder="예: #회고 오늘은 검증 로직을 더 구조적으로 이해했다."
+            placeholder={fieldPlaceholders.oneLineReview}
           />
         </section>
 
         <section className="journal-section journal-tag-library">
           <div className="journal-section-title">
             <Search className="w-3.5 h-3.5" />
-            Hashtag Library
+            <span>Hashtag Library</span>
 
             {selectedTag && (
               <button
@@ -632,10 +667,11 @@ export const DailyJournalWidget = () => {
           <div className="journal-tag-result-list">
             {tagItems.length === 0 ? (
               <div className="journal-tag-empty-card">
-                #업무 처럼 직접 쓰거나, 텍스트 일부를 선택해서 태그 클립으로 저장해봐.
+                #업무 처럼 직접 쓰거나, 텍스트 일부를 선택해서 태그 클립으로
+                저장해봐.
               </div>
             ) : (
-              tagItems.slice(0, 12).map((item) => (
+              tagItems.slice(0, 14).map((item) => (
                 <article key={item.id} className="journal-tag-result">
                   <div className="journal-tag-result-top">
                     <span>#{item.tag}</span>
@@ -651,6 +687,7 @@ export const DailyJournalWidget = () => {
                       type="button"
                       onClick={() => removeTagClip(item.id)}
                       className="journal-tag-result-delete"
+                      title="Delete clip"
                     >
                       <Trash2 className="w-3 h-3" />
                     </button>

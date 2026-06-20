@@ -41,7 +41,7 @@ export const AppleDesktopDecor = () => {
     <div className="apple-desktop-decor" aria-hidden="true">
       <div className="apple-menu-bar">
         <div className="apple-menu-left">
-          <span className="apple-logo">●</span>
+          <span className="apple-logo"/>
           <span>Finder</span>
           <span>File</span>
           <span>Edit</span>
