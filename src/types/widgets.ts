@@ -19,6 +19,15 @@ export const widgetRegistry: Record<WidgetId, WidgetMeta> = {
     description: "일정과 지원 기간",
     category: "home",
   },
+
+   journal: {
+    id: "journal",
+    label: "Daily Journal",
+    description: "오늘 할 일, 회사 기록, 회고",
+    category: "life",
+  },
+
+  
   memo: {
     id: "memo",
     label: "Memo",

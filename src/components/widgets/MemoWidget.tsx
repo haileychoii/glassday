@@ -25,6 +25,7 @@ import {
 import { GlassCard } from "../glass/GlassCard";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
+import { FloatingWindow } from "../common/FloatingWindow";
 
 type MemoNote = {
   id: string;
@@ -939,97 +940,164 @@ export const MemoWidget = () => {
     );
   };
 
-  const memoWindow = memoWindowOpen
-  ? createPortal(
-      <div className="memo-window-layer">
-          <div
-            className="memo-window"
-            style={{
-              left: memoWindowPosition.x,
-              top: memoWindowPosition.y,
-            }}
-          >
-            <div className="memo-window-titlebar" onMouseDown={startWindowDrag}>
-              <div>
-                <div className="text-sm font-semibold">Memo Window</div>
-                <div className="text-xs text-muted-foreground">
-                  {windowPinned ? "Floating memo is pinned" : "Floating memo window"}
-                </div>
-              </div>
+  // const memoWindow = memoWindowOpen
+  // ? createPortal(
+  //     <div className="memo-window-layer">
+  //         <div
+  //           className="memo-window"
+  //           style={{
+  //             left: memoWindowPosition.x,
+  //             top: memoWindowPosition.y,
+  //           }}
+  //         >
+  //           <div className="memo-window-titlebar" onMouseDown={startWindowDrag}>
+  //             <div>
+  //               <div className="text-sm font-semibold">Memo Window</div>
+  //               <div className="text-xs text-muted-foreground">
+  //                 {windowPinned ? "Floating memo is pinned" : "Floating memo window"}
+  //               </div>
+  //             </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={addNewMemo}
-                  className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  New
-                </button>
+  //             <div className="flex items-center gap-2">
+  //               <button
+  //                 type="button"
+  //                 onClick={addNewMemo}
+  //                 className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
+  //               >
+  //                 <Plus className="w-3.5 h-3.5" />
+  //                 New
+  //               </button>
 
-                <button
-                  type="button"
-                  onClick={openSaveDialog}
-                  className="glass-button glass-tint-blue h-8 px-3 text-xs flex items-center gap-1.5"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  Save
-                </button>
+  //               <button
+  //                 type="button"
+  //                 onClick={openSaveDialog}
+  //                 className="glass-button glass-tint-blue h-8 px-3 text-xs flex items-center gap-1.5"
+  //               >
+  //                 <Download className="w-3.5 h-3.5" />
+  //                 Save
+  //               </button>
 
-                <button
-                  type="button"
-                  onClick={() => setWindowPinned((prev) => !prev)}
-                  className={cn(
-                    "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-                    windowPinned && "is-active"
-                  )}
-                >
-                  <Pin className="w-3.5 h-3.5" />
-                  Pin
-                </button>
+  //               <button
+  //                 type="button"
+  //                 onClick={() => setWindowPinned((prev) => !prev)}
+  //                 className={cn(
+  //                   "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+  //                   windowPinned && "is-active"
+  //                 )}
+  //               >
+  //                 <Pin className="w-3.5 h-3.5" />
+  //                 Pin
+  //               </button>
 
-                <button
-                  type="button"
-                  onClick={togglePinnedNote}
-                  className={cn(
-                    "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-                    activeNote?.pinned && "is-active"
-                  )}
-                >
-                  <Pin className="w-3.5 h-3.5" />
-                  Note
-                </button>
+  //               <button
+  //                 type="button"
+  //                 onClick={togglePinnedNote}
+  //                 className={cn(
+  //                   "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+  //                   activeNote?.pinned && "is-active"
+  //                 )}
+  //               >
+  //                 <Pin className="w-3.5 h-3.5" />
+  //                 Note
+  //               </button>
 
-                <button
-                  type="button"
-                  onClick={() => setEditing((prev) => !prev)}
-                  className={cn(
-                    "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-                    editing && "is-active"
-                  )}
-                >
-                  {editing ? "Done" : "Edit"}
-                </button>
+  //               <button
+  //                 type="button"
+  //                 onClick={() => setEditing((prev) => !prev)}
+  //                 className={cn(
+  //                   "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+  //                   editing && "is-active"
+  //                 )}
+  //               >
+  //                 {editing ? "Done" : "Edit"}
+  //               </button>
 
-                <button
-                  type="button"
-                  onClick={closeMemoWindow}
-                  className="glass-button h-8 w-8 flex items-center justify-center"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+  //               <button
+  //                 type="button"
+  //                 onClick={closeMemoWindow}
+  //                 className="glass-button h-8 w-8 flex items-center justify-center"
+  //               >
+  //                 <X className="w-4 h-4" />
+  //               </button>
+  //             </div>
+  //           </div>
 
-            <div className="memo-window-body">
-              {renderNoteList()}
-              {renderWorkspace(windowEditorRef, true)}
-            </div>
-          </div>
-        </div>,
-        document.body
-      )
-    : null;
+  //           <div className="memo-window-body">
+  //             {renderNoteList()}
+  //             {renderWorkspace(windowEditorRef, true)}
+  //           </div>
+  //         </div>
+  //       </div>,
+  //       document.body
+  //     )
+  //   : null;
+
+  const memoWindow = (
+  <FloatingWindow
+    open={memoWindowOpen}
+    title="Memo Window"
+    subtitle="Resizable floating memo"
+    storageKey="glassday.memo.floatingWindow.rect.v1"
+    defaultRect={{
+      x: 120,
+      y: 72,
+      w: 1120,
+      h: 760,
+    }}
+    minWidth={720}
+    minHeight={480}
+    onClose={() => setMemoWindowOpen(false)}
+    actions={
+      <>
+        <button
+          type="button"
+          onClick={addNewMemo}
+          className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
+        >
+          <Plus className="w-3.5 h-3.5" />
+          New
+        </button>
+
+        <button
+          type="button"
+          onClick={openSaveDialog}
+          className="glass-button glass-tint-blue h-8 px-3 text-xs flex items-center gap-1.5"
+        >
+          <Download className="w-3.5 h-3.5" />
+          Save
+        </button>
+
+        <button
+          type="button"
+          onClick={togglePinnedNote}
+          className={cn(
+            "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+            activeNote?.pinned && "is-active"
+          )}
+        >
+          <Pin className="w-3.5 h-3.5" />
+          Note
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setEditing((prev) => !prev)}
+          className={cn(
+            "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+            editing && "is-active"
+          )}
+        >
+          {editing ? "Done" : "Edit"}
+        </button>
+      </>
+    }
+  >
+    <div className="memo-floating-body">
+      {renderNoteList()}
+      {renderWorkspace(windowEditorRef, true)}
+    </div>
+  </FloatingWindow>
+);
 
   const saveDialog =
     saveDialogOpen && activeNote

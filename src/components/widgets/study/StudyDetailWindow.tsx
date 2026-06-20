@@ -11,16 +11,16 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { GlassCard } from "../glass/GlassCard";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { cn } from "../../lib/utils";
-import { defaultStudySubjects } from "../../constants/study";
+import { FloatingWindow } from "../../common/FloatingWindow";
+import { useLocalStorage } from "../../../hooks/useLocalStorage";
+import { cn } from "../../../lib/utils";
+import { defaultStudySubjects } from "../../../constants/study";
 import type {
   StudyRecord,
   StudySubject,
   StudySubjectId,
   StudyTask,
-} from "../../types/study";
+} from "../../../types/study";
 import {
   addDays,
   createId,
@@ -32,44 +32,18 @@ import {
   getTotalProblemsByDate,
   getWeekDates,
   toLocalDateInput,
-} from "./study/studyUtils";
+} from "./studyUtils";
 
-import { Maximize2 } from "lucide-react";
-import { StudyDetailWindow } from "./study/StudyDetailWindow";
-
-const defaultTasks: StudyTask[] = [
-  {
-    id: "study-task-1",
-    date: toLocalDateInput(),
-    subjectId: "ncs",
-    text: "NCS 비율/분수 문제 20개",
-    done: false,
-    createdAt: Date.now(),
-  },
-  {
-    id: "study-task-2",
-    date: toLocalDateInput(),
-    subjectId: "essay",
-    text: "논술 개요 1개 작성",
-    done: false,
-    createdAt: Date.now(),
-  },
-  {
-    id: "study-task-3",
-    date: toLocalDateInput(),
-    subjectId: "soa-fm",
-    text: "FM interest theory 복습",
-    done: false,
-    createdAt: Date.now(),
-  },
-];
-const [detailOpen, setDetailOpen] = useState(false);
+type StudyDetailWindowProps = {
+  open: boolean;
+  onClose: () => void;
+};
 
 const getSubject = (subjects: StudySubject[], id: StudySubjectId) => {
   return subjects.find((subject) => subject.id === id) ?? subjects[0];
 };
 
-export const StudyWidget = () => {
+export const StudyDetailWindow = ({ open, onClose }: StudyDetailWindowProps) => {
   const today = toLocalDateInput();
 
   const [selectedDate, setSelectedDate] = useState(today);
@@ -90,36 +64,42 @@ export const StudyWidget = () => {
 
   const { value: tasks, setValue: setTasks } = useLocalStorage<StudyTask[]>(
     "glassday.study.tasks.v1",
-    defaultTasks
+    []
   );
 
   const selectedSubject = getSubject(subjects, selectedSubjectId);
 
-  const todayTotalMinutes = getTotalMinutesByDate(records, selectedDate);
-  const todayTotalProblems = getTotalProblemsByDate(records, selectedDate);
-  const todayGoalMinutes = subjects.reduce(
-    (sum, subject) => sum + subject.dailyGoalMinutes,
-    0
-  );
-
-  const todayProgress =
-    todayGoalMinutes > 0
-      ? Math.min(100, Math.round((todayTotalMinutes / todayGoalMinutes) * 100))
-      : 0;
-
-  const todayTasks = useMemo(
+  const selectedDateTasks = useMemo(
     () => getTasksByDate(tasks, selectedDate),
     [tasks, selectedDate]
   );
 
-  const completedTasks = todayTasks.filter((task) => task.done).length;
+  const selectedDateRecords = useMemo(
+    () => records.filter((record) => record.date === selectedDate),
+    [records, selectedDate]
+  );
 
   const weekDates = useMemo(() => getWeekDates(selectedDate), [selectedDate]);
+
+  const dayTotalMinutes = getTotalMinutesByDate(records, selectedDate);
+  const dayTotalProblems = getTotalProblemsByDate(records, selectedDate);
+
+  const dayGoalMinutes = subjects.reduce(
+    (sum, subject) => sum + subject.dailyGoalMinutes,
+    0
+  );
+
+  const dayProgress =
+    dayGoalMinutes > 0
+      ? Math.min(100, Math.round((dayTotalMinutes / dayGoalMinutes) * 100))
+      : 0;
 
   const weekTotalMinutes = weekDates.reduce(
     (sum, date) => sum + getTotalMinutesByDate(records, date),
     0
   );
+
+  const completedTasks = selectedDateTasks.filter((task) => task.done).length;
 
   const addStudyRecord = () => {
     const minutes = Math.max(0, Number(minutesInput) || 0);
@@ -191,54 +171,61 @@ export const StudyWidget = () => {
     );
   };
 
-  const selectedDateRecords = records
-    .filter((record) => record.date === selectedDate)
-    .slice(0, 6);
-
   return (
-    <><GlassCard
-      title="Study Planner"
-      subtitle={`${formatMinutes(todayTotalMinutes)} / ${formatMinutes(
-        todayGoalMinutes
-      )} · ${todayProgress}%`}
-      icon={<BookOpenCheck className="w-4 h-4" />}
-      actions={<div className="flex items-center gap-1.5">
-        <button
-          type="button"
-          onClick={() => setDetailOpen(true)}
-          className="glass-button h-8 w-8 flex items-center justify-center"
-          title="Open detail window"
-        >
-          <Maximize2 className="w-3.5 h-3.5" />
-        </button>
+    <FloatingWindow
+      open={open}
+      title="Study Detail"
+      subtitle={`${selectedDate} · ${formatMinutes(dayTotalMinutes)} / ${formatMinutes(
+        dayGoalMinutes
+      )}`}
+      storageKey="glassday.study.detailWindow.rect.v1"
+      defaultRect={{
+        x: 148,
+        y: 76,
+        w: 1180,
+        h: 780,
+      }}
+      minWidth={820}
+      minHeight={560}
+      onClose={onClose}
+      actions={
+        <>
+          <button
+            type="button"
+            onClick={() => setSelectedDate(today)}
+            className="glass-button h-8 px-3 text-xs"
+          >
+            Today
+          </button>
 
-        <button
-          type="button"
-          onClick={addTask}
-          className="glass-button h-8 w-8 flex items-center justify-center"
-          title="Add study task"
-        >
-          <Plus className="w-3.5 h-3.5" />
-        </button>
-      </div>}
+          <button
+            type="button"
+            onClick={addTask}
+            className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Task
+          </button>
+        </>
+      }
     >
-      <div className="study-planner">
-        <section className="study-hero">
+      <div className="study-detail-window">
+        <section className="study-detail-hero">
           <div>
-            <div className="study-kicker">Today Study</div>
-            <div className="study-main">{formatMinutes(todayTotalMinutes)}</div>
+            <div className="study-kicker">Study Detail</div>
+            <div className="study-main">{formatMinutes(dayTotalMinutes)}</div>
             <div className="study-sub">
-              {todayTotalProblems} problems · {completedTasks}/
-              {todayTasks.length} tasks
+              {dayTotalProblems} problems · {completedTasks}/
+              {selectedDateTasks.length} tasks · week {formatMinutes(weekTotalMinutes)}
             </div>
           </div>
 
           <div className="study-progress-ring">
-            <span>{todayProgress}%</span>
+            <span>{dayProgress}%</span>
           </div>
         </section>
 
-        <section className="study-date-row">
+        <section className="study-detail-date-row">
           <button
             type="button"
             onClick={() => setSelectedDate((prev) => addDays(prev, -1))}
@@ -251,7 +238,8 @@ export const StudyWidget = () => {
             type="date"
             value={selectedDate}
             onChange={(event) => setSelectedDate(event.target.value)}
-            className="study-date-input" />
+            className="study-date-input"
+          />
 
           <button
             type="button"
@@ -260,26 +248,19 @@ export const StudyWidget = () => {
           >
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
-
-          <button
-            type="button"
-            onClick={() => setSelectedDate(today)}
-            className="study-today-button"
-          >
-            Today
-          </button>
         </section>
 
-        <section className="study-subject-grid">
+        <section className="study-detail-subjects">
           {subjects.map((subject) => {
             const minutes = getSubjectMinutes(records, subject.id, selectedDate);
             const problems = getSubjectProblems(records, subject.id, selectedDate);
-            const progress = subject.dailyGoalMinutes > 0
-              ? Math.min(
-                100,
-                Math.round((minutes / subject.dailyGoalMinutes) * 100)
-              )
-              : 0;
+            const progress =
+              subject.dailyGoalMinutes > 0
+                ? Math.min(
+                    100,
+                    Math.round((minutes / subject.dailyGoalMinutes) * 100)
+                  )
+                : 0;
 
             return (
               <button
@@ -287,33 +268,30 @@ export const StudyWidget = () => {
                 type="button"
                 onClick={() => setSelectedSubjectId(subject.id)}
                 className={cn(
-                  "study-subject-card",
+                  "study-detail-subject-card",
                   selectedSubjectId === subject.id && "is-active"
                 )}
-                style={{
-                  borderColor: selectedSubjectId === subject.id
-                    ? `${subject.color}cc`
-                    : undefined,
-                }}
               >
                 <span
                   className="study-subject-color"
-                  style={{ backgroundColor: subject.color }} />
+                  style={{ backgroundColor: subject.color }}
+                />
 
-                <div className="min-w-0 flex-1 text-left">
-                  <strong>{subject.shortLabel}</strong>
+                <div className="min-w-0 flex-1">
+                  <strong>{subject.label}</strong>
                   <span>
-                    {formatMinutes(minutes)} · {problems}Q
+                    {formatMinutes(minutes)} · {problems}Q · goal{" "}
+                    {formatMinutes(subject.dailyGoalMinutes)}
                   </span>
                 </div>
 
-                <div className="study-subject-percent">{progress}%</div>
+                <em>{progress}%</em>
               </button>
             );
           })}
         </section>
 
-        <section className="study-input-panel">
+        <section className="study-detail-record-form">
           <div className="study-section-title">
             <Clock3 className="w-3.5 h-3.5" />
             Add Record · {selectedSubject.shortLabel}
@@ -326,7 +304,8 @@ export const StudyWidget = () => {
                 type="number"
                 min={0}
                 value={minutesInput}
-                onChange={(event) => setMinutesInput(event.target.value)} />
+                onChange={(event) => setMinutesInput(event.target.value)}
+              />
             </label>
 
             <label>
@@ -335,7 +314,8 @@ export const StudyWidget = () => {
                 type="number"
                 min={0}
                 value={problemsInput}
-                onChange={(event) => setProblemsInput(event.target.value)} />
+                onChange={(event) => setProblemsInput(event.target.value)}
+              />
             </label>
 
             <label className="study-note-field">
@@ -344,7 +324,8 @@ export const StudyWidget = () => {
                 value={noteInput}
                 onChange={(event) => setNoteInput(event.target.value)}
                 spellCheck={false}
-                placeholder="e.g. force of interest, NCS ratio..." />
+                placeholder="e.g. force of interest, NCS ratio..."
+              />
             </label>
 
             <button type="button" onClick={addStudyRecord}>
@@ -353,7 +334,42 @@ export const StudyWidget = () => {
           </div>
         </section>
 
-        <section className="study-goal-panel">
+        <section className="study-detail-week-panel">
+          <div className="study-section-title">
+            <BookOpenCheck className="w-3.5 h-3.5" />
+            Weekly Timeline
+          </div>
+
+          <div className="study-detail-week-bars">
+            {weekDates.map((date) => {
+              const minutes = getTotalMinutesByDate(records, date);
+              const height = Math.min(100, Math.max(8, minutes / 3));
+
+              return (
+                <button
+                  key={date}
+                  type="button"
+                  onClick={() => setSelectedDate(date)}
+                  className={cn(
+                    "study-detail-week-day",
+                    selectedDate === date && "is-active"
+                  )}
+                >
+                  <div className="study-week-bar-track">
+                    <div
+                      className="study-week-bar"
+                      style={{ height: `${height}%` }}
+                    />
+                  </div>
+                  <strong>{formatMinutes(minutes)}</strong>
+                  <span>{date.slice(5).replace("-", "/")}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="study-detail-goals">
           <div className="study-section-title">
             <Target className="w-3.5 h-3.5" />
             Daily Goals
@@ -367,49 +383,27 @@ export const StudyWidget = () => {
                   type="number"
                   min={0}
                   value={subject.dailyGoalMinutes}
-                  onChange={(event) => updateSubjectGoal(subject.id, Number(event.target.value))} />
+                  onChange={(event) =>
+                    updateSubjectGoal(subject.id, Number(event.target.value))
+                  }
+                />
                 <small>min</small>
               </label>
             ))}
           </div>
         </section>
 
-        <section className="study-week-panel">
-          <div className="study-section-title">
-            <BookOpenCheck className="w-3.5 h-3.5" />
-            This Week · {formatMinutes(weekTotalMinutes)}
-          </div>
-
-          <div className="study-week-bars">
-            {weekDates.map((date) => {
-              const minutes = getTotalMinutesByDate(records, date);
-              const height = Math.min(100, Math.max(8, minutes / 3));
-
-              return (
-                <div key={date} className="study-week-day">
-                  <div className="study-week-bar-track">
-                    <div
-                      className="study-week-bar"
-                      style={{ height: `${height}%` }} />
-                  </div>
-                  <span>{date.slice(5).replace("-", "/")}</span>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="study-task-panel">
+        <section className="study-detail-tasks">
           <div className="study-section-title">
             <Check className="w-3.5 h-3.5" />
             Checklist
           </div>
 
           <div className="study-task-list">
-            {todayTasks.length === 0 ? (
+            {selectedDateTasks.length === 0 ? (
               <div className="study-empty">No study tasks for this day.</div>
             ) : (
-              todayTasks.map((task) => {
+              selectedDateTasks.map((task) => {
                 const subject = getSubject(subjects, task.subjectId);
 
                 return (
@@ -419,9 +413,11 @@ export const StudyWidget = () => {
                   >
                     <button
                       type="button"
-                      onClick={() => updateTask(task.id, {
-                        done: !task.done,
-                      })}
+                      onClick={() =>
+                        updateTask(task.id, {
+                          done: !task.done,
+                        })
+                      }
                       className="study-task-check"
                     >
                       {task.done ? (
@@ -433,14 +429,18 @@ export const StudyWidget = () => {
 
                     <span
                       className="study-task-dot"
-                      style={{ backgroundColor: subject.color }} />
+                      style={{ backgroundColor: subject.color }}
+                    />
 
                     <input
                       value={task.text}
-                      onChange={(event) => updateTask(task.id, {
-                        text: event.target.value,
-                      })}
-                      spellCheck={false} />
+                      onChange={(event) =>
+                        updateTask(task.id, {
+                          text: event.target.value,
+                        })
+                      }
+                      spellCheck={false}
+                    />
 
                     <button
                       type="button"
@@ -456,10 +456,10 @@ export const StudyWidget = () => {
           </div>
         </section>
 
-        <section className="study-record-list-panel">
-          <div className="study-section-title">Recent Records</div>
+        <section className="study-detail-records">
+          <div className="study-section-title">Records</div>
 
-          <div className="study-record-list">
+          <div className="study-detail-record-list">
             {selectedDateRecords.length === 0 ? (
               <div className="study-empty">No records yet.</div>
             ) : (
@@ -470,7 +470,8 @@ export const StudyWidget = () => {
                   <article key={record.id} className="study-record-item">
                     <span
                       className="study-record-color"
-                      style={{ backgroundColor: subject.color }} />
+                      style={{ backgroundColor: subject.color }}
+                    />
 
                     <div className="min-w-0">
                       <strong>
@@ -496,11 +497,6 @@ export const StudyWidget = () => {
           </div>
         </section>
       </div>
-    </GlassCard>
-    <StudyDetailWindow
-        open={detailOpen}
-        onClose={() => setDetailOpen(false)} 
-        />
-        </>
-    </>
+    </FloatingWindow>
   );
+};

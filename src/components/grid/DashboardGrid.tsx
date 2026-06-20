@@ -39,6 +39,7 @@ type DashboardGridProps = {
 const widgetMap: Record<WidgetId, JSX.Element> = {
   today: <TodayFocusWidget />,
   alerts: <AlertCenterWidget />,
+  journal: <DailyJournalWidget />,
   calendar: <CalendarWidget />,
   memo: <MemoWidget />,
   study: <StudyWidget />,
