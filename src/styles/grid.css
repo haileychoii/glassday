@@ -3126,46 +3126,12 @@
 
 
 
-.apple-desktop-decor {
-  display: none;
-}
 
-.theme-ios .apple-desktop-decor {
-  display: block;
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-}
 
 /* macOS wallpaper */
 
 
 /* top menu bar */
-
-.apple-menu-bar {
-  position: fixed;
-  inset: 0 0 auto 0;
-  height: 30px;
-  padding: 0 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Pro Display",
-    "SF Pro Text",
-    Pretendard,
-    sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  color: hsl(220 18% 8% / 0.78);
-  background: hsl(0 0% 100% / 0.58);
-  border-bottom: 1px solid hsl(220 14% 80% / 0.42);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-}
 
 .apple-menu-left,
 .apple-menu-right {
@@ -3250,26 +3216,6 @@
 }
 
 /* notification */
-
-.apple-floating-notification {
-  position: fixed;
-  top: 54px;
-  right: 34px;
-  width: 330px;
-  min-height: 72px;
-  padding: 14px 16px;
-  border-radius: 22px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: hsl(0 0% 100% / 0.72);
-  border: 1px solid hsl(0 0% 100% / 0.74);
-  box-shadow:
-    0 24px 70px -34px hsl(220 24% 20% / 0.46),
-    inset 0 1px 0 hsl(0 0% 100% / 0.88);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-}
 
 .apple-notification-icon {
   width: 34px;
@@ -3464,77 +3410,10 @@
    dark macOS night desktop + Apple Gothic + cleaner windows
    ========================================================= */
 
-.theme-ios {
-  --background: 220 36% 8%;
-  --foreground: 220 28% 96%;
-  --muted-foreground: 220 16% 72%;
-  --primary: 212 100% 62%;
-  --primary-foreground: 0 0% 100%;
-  --card: 220 24% 14%;
-  --card-foreground: 220 28% 96%;
-  --border: 220 18% 100%;
-
-  font-family:
-    "Apple SD Gothic Neo",
-    "AppleGothic",
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Pro Display",
-    "SF Pro Text",
-    "Pretendard",
-    system-ui,
-    sans-serif !important;
-}
-
 /* 배경: 밤 macOS 데스크톱 느낌 */
-.theme-ios .bg-glass-gradient {
-  background:
-    radial-gradient(circle at 18% 18%, hsl(212 100% 58% / 0.4), transparent 34%),
-    radial-gradient(circle at 78% 22%, hsl(262 92% 60% / 0.34), transparent 32%),
-    radial-gradient(circle at 58% 72%, hsl(194 100% 46% / 0.24), transparent 42%),
-    linear-gradient(
-      145deg,
-      hsl(218 42% 8%) 0%,
-      hsl(224 46% 10%) 36%,
-      hsl(238 42% 13%) 62%,
-      hsl(216 42% 8%) 100%
-    ) !important;
-}
 
-.theme-ios .bg-glass-gradient::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(115deg, transparent 0%, hsl(210 100% 76% / 0.08) 38%, transparent 62%),
-    radial-gradient(circle at 50% 0%, hsl(0 0% 100% / 0.12), transparent 42%);
-  filter: blur(8px);
-}
-
-.theme-ios .bg-glass-gradient::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.18;
-  background-image:
-    radial-gradient(circle, hsl(0 0% 100% / 0.55) 0 1px, transparent 1.5px);
-  background-size: 120px 120px;
-  background-position: 28px 38px;
-}
 
 /* 전체 앱 껍데기: 하얀 웹페이지 느낌 제거 */
-.theme-ios .liquid-shell,
-.theme-ios .glass-panel {
-  background: hsl(218 34% 10% / 0.54) !important;
-  border: 1px solid hsl(0 0% 100% / 0.14) !important;
-  box-shadow:
-    0 38px 130px -46px hsl(220 80% 2% / 0.86),
-    inset 0 1px 0 hsl(0 0% 100% / 0.12) !important;
-  backdrop-filter: blur(34px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(150%) !important;
-}
 
 /* Apple menu bar */
 .theme-ios .apple-menu-bar {
@@ -3570,19 +3449,6 @@
 }
 
 /* Topbar 자체는 macOS 창 타이틀바 느낌 */
-.theme-ios .topbar {
-  height: 86px !important;
-  background:
-    linear-gradient(
-      180deg,
-      hsl(220 30% 12% / 0.78),
-      hsl(220 26% 10% / 0.5)
-    ) !important;
-  border-bottom: 1px solid hsl(0 0% 100% / 0.1) !important;
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.1) !important;
-  backdrop-filter: blur(30px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(160%) !important;
-}
 
 /* 제목 앞 이상한 빨노초가 h1 위에 겹치는 경우 방지 */
 .theme-ios .topbar h1::before,
@@ -3594,20 +3460,7 @@
 }
 
 /* Sidebar: Finder dark sidebar */
-.theme-ios aside {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(220 32% 13% / 0.68),
-      hsl(220 34% 9% / 0.56)
-    ) !important;
-  border-right: 1px solid hsl(0 0% 100% / 0.1) !important;
-  box-shadow:
-    inset 1px 0 0 hsl(0 0% 100% / 0.08),
-    18px 0 70px -54px hsl(220 80% 2% / 0.8) !important;
-  backdrop-filter: blur(34px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(150%) !important;
-}
+
 
 .theme-ios aside::before {
   color: hsl(220 18% 82% / 0.54) !important;
@@ -3637,122 +3490,10 @@
     0 14px 36px -30px hsl(220 80% 2% / 0.8) !important;
 }
 
-/* Workspace header 이상한 흰 바 제거 */
-.theme-ios .dashboard-tab-header {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
 
-/* Card: 하얀 네모/애매한 내부 테두리 줄이기 */
-.theme-ios .glass-card,
-.theme-ios .journal-section,
-.theme-ios .alert-item,
-.theme-ios .alert-summary-card,
-.theme-ios .study-input-panel,
-.theme-ios .study-week-panel,
-.theme-ios .study-goal-panel,
-.theme-ios .study-task-panel,
-.theme-ios .study-record-list-panel,
-.theme-ios .memo-workspace,
-.theme-ios .memo-list-panel,
-.theme-ios .career-card,
-.theme-ios .calendar-day-card {
-  background:
-    linear-gradient(
-      145deg,
-      hsl(220 24% 18% / 0.58),
-      hsl(220 24% 12% / 0.36)
-    ) !important;
-  border: 1px solid hsl(0 0% 100% / 0.12) !important;
-  box-shadow:
-    0 24px 80px -46px hsl(220 80% 2% / 0.78),
-    inset 0 1px 0 hsl(0 0% 100% / 0.11) !important;
-  backdrop-filter: blur(28px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
-}
 
-/* 내부 박스 테두리 너무 애매한 것 제거/완화 */
-.theme-ios .journal-task,
-.theme-ios .journal-task-empty,
-.theme-ios .journal-tag-tools,
-.theme-ios .journal-tag-input-wrap,
-.theme-ios .journal-tag-apply-button,
-.theme-ios .journal-tag-library,
-.theme-ios .journal-tag-chip,
-.theme-ios .journal-tag-result,
-.theme-ios .today-focus-task,
-.theme-ios .today-focus-mini-card,
-.theme-ios .study-task,
-.theme-ios .study-record-item,
-.theme-ios .memo-note-item,
-.theme-ios input,
-.theme-ios textarea {
-  background: hsl(0 0% 100% / 0.075) !important;
-  border: 1px solid hsl(0 0% 100% / 0.085) !important;
-  box-shadow: none !important;
-}
 
-/* textarea/input 안쪽 글자 가독성 */
-.theme-ios input,
-.theme-ios textarea {
-  color: hsl(220 28% 94% / 0.9) !important;
-}
 
-.theme-ios input::placeholder,
-.theme-ios textarea::placeholder {
-  color: hsl(220 18% 78% / 0.34) !important;
-}
-
-/* 글씨: Apple Gothic + 너무 두꺼운 폰트 제거 */
-.theme-ios body,
-.theme-ios .glass-card,
-.theme-ios aside,
-.theme-ios .topbar,
-.theme-ios button,
-.theme-ios input,
-.theme-ios textarea,
-.theme-ios select {
-  font-family:
-    "Apple SD Gothic Neo",
-    "AppleGothic",
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Pro Display",
-    "SF Pro Text",
-    "Pretendard",
-    system-ui,
-    sans-serif !important;
-}
-
-.theme-ios h1,
-.theme-ios h2,
-.theme-ios h3,
-.theme-ios strong,
-.theme-ios .font-semibold,
-.theme-ios .font-bold {
-  font-weight: 600 !important;
-  color: hsl(220 36% 97% / 0.94) !important;
-  letter-spacing: -0.035em !important;
-}
-
-.theme-ios p,
-.theme-ios span,
-.theme-ios small,
-.theme-ios .text-muted-foreground,
-.theme-ios .journal-sub,
-.theme-ios .study-sub {
-  color: hsl(220 18% 82% / 0.66) !important;
-  font-weight: 400 !important;
-}
-
-.theme-ios .uppercase,
-.theme-ios .journal-kicker,
-.theme-ios .study-kicker {
-  color: hsl(220 16% 76% / 0.58) !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.16em !important;
-}
 
 /* hashtag row 겹침/희미함 해결 */
 .theme-ios .journal-tag-tools {
@@ -3800,12 +3541,6 @@
   border: 1px solid hsl(0 0% 100% / 0.14) !important;
   outline: none !important;
   box-shadow: none !important;
-}
-
-.theme-ios .theme-select option {
-  color: #101827 !important;
-  background: #e9edf5 !important;
-  font-weight: 500;
 }
 
 .theme-ios .journal-task,
@@ -6361,4 +6096,226 @@
   border-radius: 16px !important;
   background: hsl(0 0% 100% / 0.44) !important;
   border: 1px solid hsl(0 0% 100% / 0.56) !important;
+}
+
+/* =========================================================
+   MAC CORE CLEAN RESET
+   bright Apple app style, no fake Finder, readable text
+   ========================================================= */
+
+.theme-ios {
+  --background: 214 45% 97%;
+  --foreground: 222 28% 14%;
+  --muted-foreground: 220 14% 48%;
+  --primary: 214 100% 56%;
+  --primary-foreground: 0 0% 100%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 28% 14%;
+  --border: 220 18% 82%;
+
+  font-family:
+    "Apple SD Gothic Neo",
+    "AppleGothic",
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    "Pretendard",
+    system-ui,
+    sans-serif !important;
+}
+
+.theme-ios .bg-glass-gradient {
+  background:
+    radial-gradient(circle at 14% 10%, hsl(210 100% 88% / 0.9), transparent 34%),
+    radial-gradient(circle at 82% 18%, hsl(255 100% 92% / 0.78), transparent 34%),
+    radial-gradient(circle at 64% 82%, hsl(190 100% 90% / 0.68), transparent 42%),
+    linear-gradient(
+      145deg,
+      hsl(214 55% 96%),
+      hsl(220 48% 98%),
+      hsl(210 60% 94%)
+    ) !important;
+}
+
+.theme-ios .bg-glass-gradient::before,
+.theme-ios .bg-glass-gradient::after {
+  display: none !important;
+  content: none !important;
+}
+
+.theme-ios .liquid-shell,
+.theme-ios .glass-panel {
+  background: hsl(0 0% 100% / 0.48) !important;
+  border: 1px solid hsl(220 22% 82% / 0.7) !important;
+  box-shadow:
+    0 30px 90px -54px hsl(220 34% 35% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
+  backdrop-filter: blur(28px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
+}
+
+.theme-ios .topbar {
+  height: 86px !important;
+  background: hsl(0 0% 100% / 0.66) !important;
+  border-bottom: 1px solid hsl(220 20% 78% / 0.55) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+}
+
+.theme-ios aside {
+  background: hsl(218 38% 96% / 0.74) !important;
+  border-right: 1px solid hsl(220 20% 78% / 0.58) !important;
+  box-shadow: inset -1px 0 0 hsl(0 0% 100% / 0.6) !important;
+  backdrop-filter: blur(26px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(150%) !important;
+}
+
+.theme-ios .dashboard-tab-header {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding-bottom: 18px;
+}
+
+/* Cards: clean Apple widget, not washed out */
+.theme-ios .glass-card,
+.theme-ios .journal-section,
+.theme-ios .alert-item,
+.theme-ios .alert-summary-card,
+.theme-ios .study-input-panel,
+.theme-ios .study-week-panel,
+.theme-ios .study-goal-panel,
+.theme-ios .study-task-panel,
+.theme-ios .study-record-list-panel,
+.theme-ios .memo-workspace,
+.theme-ios .memo-list-panel,
+.theme-ios .career-card,
+.theme-ios .calendar-day-card {
+  background: hsl(0 0% 100% / 0.72) !important;
+  border: 1px solid hsl(220 20% 78% / 0.52) !important;
+  box-shadow:
+    0 22px 60px -46px hsl(220 28% 36% / 0.46),
+    inset 0 1px 0 hsl(0 0% 100% / 0.92) !important;
+  backdrop-filter: blur(22px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(150%) !important;
+}
+
+/* Inner boxes: remove weird strong outlines */
+.theme-ios .journal-task,
+.theme-ios .journal-task-empty,
+.theme-ios .journal-tag-tools,
+.theme-ios .journal-tag-input-wrap,
+.theme-ios .journal-tag-apply-button,
+.theme-ios .journal-tag-library,
+.theme-ios .journal-tag-chip,
+.theme-ios .journal-tag-result,
+.theme-ios .today-focus-task,
+.theme-ios .today-focus-mini-card,
+.theme-ios .study-task,
+.theme-ios .study-record-item,
+.theme-ios .memo-note-item,
+.theme-ios input,
+.theme-ios textarea {
+  background: hsl(220 40% 98% / 0.72) !important;
+  border: 1px solid hsl(220 18% 82% / 0.42) !important;
+  box-shadow: none !important;
+}
+
+/* Typography */
+.theme-ios body,
+.theme-ios .glass-card,
+.theme-ios aside,
+.theme-ios .topbar,
+.theme-ios button,
+.theme-ios input,
+.theme-ios textarea,
+.theme-ios select {
+  font-family:
+    "Apple SD Gothic Neo",
+    "AppleGothic",
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    "Pretendard",
+    system-ui,
+    sans-serif !important;
+  color: hsl(222 28% 14% / 0.9) !important;
+  text-shadow: none !important;
+}
+
+.theme-ios h1,
+.theme-ios h2,
+.theme-ios h3,
+.theme-ios strong,
+.theme-ios .font-semibold,
+.theme-ios .font-bold {
+  color: hsl(222 30% 12% / 0.94) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.035em !important;
+}
+
+.theme-ios p,
+.theme-ios span,
+.theme-ios small,
+.theme-ios .text-muted-foreground,
+.theme-ios .journal-sub,
+.theme-ios .study-sub {
+  color: hsl(220 14% 42% / 0.78) !important;
+  font-weight: 400 !important;
+}
+
+.theme-ios .uppercase,
+.theme-ios .journal-kicker,
+.theme-ios .study-kicker {
+  color: hsl(220 12% 42% / 0.62) !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.14em !important;
+}
+
+/* Sidebar */
+.theme-ios .sidebar-tab-item {
+  color: hsl(222 20% 26% / 0.72) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 13px !important;
+  box-shadow: none !important;
+}
+
+.theme-ios .sidebar-tab-item.is-active {
+  color: hsl(222 28% 12% / 0.92) !important;
+  background: hsl(0 0% 100% / 0.68) !important;
+  border-color: hsl(220 18% 82% / 0.48) !important;
+  box-shadow: 0 14px 38px -32px hsl(220 30% 35% / 0.42) !important;
+}
+
+/* Top buttons/select */
+.theme-ios .glass-button,
+.theme-ios .theme-select {
+  color: hsl(222 24% 20% / 0.86) !important;
+  background: hsl(0 0% 100% / 0.7) !important;
+  border: 1px solid hsl(220 18% 78% / 0.58) !important;
+  box-shadow: none !important;
+}
+
+.theme-ios .theme-select option {
+  color: #1f2937 !important;
+  background: #ffffff !important;
+}
+
+/* Daily Journal spacing fix */
+.theme-ios .daily-journal {
+  background: transparent !important;
+}
+
+.theme-ios .journal-section-title {
+  gap: 8px !important;
+  padding-right: 38px !important;
+}
+
+.theme-ios .journal-section-title .journal-mini-add {
+  top: 12px !important;
+  right: 12px !important;
 }
