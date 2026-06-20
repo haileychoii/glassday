@@ -18,12 +18,7 @@
   background: hsl(0 0% 100% / 0.08);
 }
 
-.dashboard-grid-item {
-  position: relative;
-  z-index: 2;
-  min-width: 0;
-  min-height: 0;
-}
+
 
 .dashboard-grid-editing .dashboard-grid-item {
   border-radius: var(--radius);
@@ -34,161 +29,60 @@
   outline-offset: 5px;
 }
 
-.layout-tool-item.is-selected {
-  outline: 2px solid hsl(var(--primary) / 0.58);
-  outline-offset: 6px;
-}
 
-.layout-tool-item.is-selected::after {
-  content: "";
-  position: absolute;
-  inset: -8px;
-  border-radius: calc(var(--radius) + 8px);
-  background: hsl(var(--primary) / 0.08);
-  pointer-events: none;
-  z-index: -1;
-}
 
-.dashboard-grid-locked-content .dashboard-grid-item-content {
-  pointer-events: none;
-  user-select: none;
-}
-
-.dashboard-grid-locked-content .dashboard-grid-item-content .glass-card {
-  filter: brightness(0.92) saturate(0.86);
-  opacity: 0.78;
-}
-
-.move-grid-mode .dashboard-grid-item {
-  cursor: grab;
-}
-
-.move-grid-mode .dashboard-grid-item:active {
-  cursor: grabbing;
-}
-
-.resize-grid-mode .dashboard-grid-item {
-  cursor: nwse-resize;
-}
-
-.layout-action-badge {
-  position: absolute;
-  left: 14px;
-  bottom: 14px;
-  z-index: 20;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 11px;
-  background: hsl(var(--foreground) / 0.82);
-  color: hsl(var(--background));
-  box-shadow: 0 12px 28px hsl(var(--foreground) / 0.18);
-  pointer-events: none;
-}
-
-.layout-floating-panel {
-  position: fixed;
-  z-index: 9999;
-  width: 360px;
-  border-radius: 28px;
-  background:
-    linear-gradient(
-      135deg,
-      hsl(0 0% 100% / 0.78),
-      hsl(0 0% 100% / 0.38)
-    );
-  border: 1px solid hsl(0 0% 100% / 0.72);
-  backdrop-filter: blur(30px) saturate(190%);
-  -webkit-backdrop-filter: blur(30px) saturate(190%);
-  box-shadow:
-    0 28px 80px -30px hsl(var(--primary) / 0.4),
-    inset 0 1px 0 hsl(0 0% 100% / 0.8);
-}
-
-.layout-floating-panel-handle {
-  height: 42px;
-  padding: 0 14px;
-  border-bottom: 1px solid hsl(0 0% 100% / 0.42);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: move;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.grid-tool-button {
-  height: 34px;
-  min-width: 34px;
-  border-radius: 999px;
-  background: hsl(0 0% 100% / 0.35);
-  border: 1px solid hsl(0 0% 100% / 0.5);
-  padding: 0 10px;
-  font-size: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: 160ms ease;
-}
-
-.grid-tool-button:hover {
-  background: hsl(0 0% 100% / 0.58);
-  transform: translateY(-1px);
-}
 
 /* View Mode: 내용 수정 잠금 */
 
 
+/* ================================
+   Memo App Base Layout
+   clean responsive mac-like memo
+   ================================ */
 
-
-/* Layout tool mode: 위젯 조작 중에는 내용 수정 잠금 */
-.dashboard-grid-locked-content input,
-.dashboard-grid-locked-content textarea,
-.dashboard-grid-locked-content select,
-.dashboard-grid-locked-content button:not(.grid-tool-button) {
-  pointer-events: none;
-}
-
-.dashboard-grid-locked-content .edit-only {
-  display: none !important;
-}
-
-.memo-app {
+.memo-app,
+.memo-layout,
+.memo-floating-body {
   height: 100%;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(112px, 0.42fr) minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: clamp(220px, 24%, 280px) minmax(0, 1fr);
+  gap: 0;
+  overflow: hidden;
 }
 
 .memo-list-panel {
   min-width: 0;
   min-height: 0;
-  border-radius: 22px;
-  background: hsl(0 0% 100% / 0.22);
-  border: 1px solid hsl(0 0% 100% / 0.36);
-  padding: 8px;
+  height: 100%;
+  padding: 14px 12px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
+  border-radius: 0;
+  background: hsl(220 35% 97% / 0.62);
+  border: 0;
+  border-right: 1px solid hsl(220 18% 82% / 0.5);
+  box-shadow: inset -1px 0 0 hsl(0 0% 100% / 0.72);
 }
 
 .memo-list-header {
-  height: 30px;
-  padding: 0 4px 6px;
+  min-height: 32px;
+  padding: 0 4px 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 11px;
-  font-weight: 700;
-  color: hsl(var(--foreground) / 0.72);
+  font-weight: 650;
+  color: hsl(var(--foreground) / 0.58);
 }
 
 .memo-mini-button {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 999px;
-  background: hsl(0 0% 100% / 0.36);
-  border: 1px solid hsl(0 0% 100% / 0.48);
+  background: hsl(0 0% 100% / 0.56);
+  border: 1px solid hsl(220 18% 82% / 0.48);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -199,45 +93,42 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .memo-note-item {
   width: 100%;
+  min-height: 58px;
   border-radius: 16px;
-  padding: 8px;
+  padding: 10px 11px;
   border: 1px solid transparent;
   background: transparent;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   transition: 160ms ease;
 }
 
 .memo-note-item:hover {
-  background: hsl(0 0% 100% / 0.26);
+  background: hsl(0 0% 100% / 0.42);
 }
 
 .memo-note-item.is-active {
-  background: hsl(0 0% 100% / 0.42);
-  border-color: hsl(0 0% 100% / 0.55);
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.55);
+  background: hsl(0 0% 100% / 0.72);
+  border-color: hsl(220 18% 82% / 0.58);
+  box-shadow:
+    0 12px 30px -26px hsl(220 28% 36% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.82);
 }
 
-.memo-note-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: hsl(var(--foreground) / 0.9);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+
 
 .memo-note-preview {
-  margin-top: 2px;
-  font-size: 10px;
-  line-height: 1.25;
-  color: hsl(var(--foreground) / 0.46);
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 1.3;
+  font-weight: 400;
+  color: hsl(var(--foreground) / 0.42);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -247,65 +138,84 @@
   width: 24px;
   height: 24px;
   border-radius: 999px;
-  background: hsl(0 0% 100% / 0.32);
-  border: 1px solid hsl(0 0% 100% / 0.4);
+  background: hsl(0 0% 100% / 0.48);
+  border: 1px solid hsl(220 18% 82% / 0.48);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: hsl(var(--foreground) / 0.55);
+  color: hsl(var(--foreground) / 0.46);
 }
 
 .memo-note-delete:hover {
-  background: hsl(0 80% 96% / 0.7);
+  background: hsl(0 80% 96% / 0.72);
   color: hsl(0 70% 45%);
 }
 
 .memo-workspace {
   min-width: 0;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  height: 100%;
+  padding: clamp(14px, 2vw, 28px);
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 14px;
+  overflow: hidden;
+  background: hsl(0 0% 100% / 0.36);
 }
 
 .memo-title-input {
-  height: 34px;
-  border-radius: 16px;
-  padding: 0 12px;
-  background: hsl(0 0% 100% / 0.3);
-  border: 1px solid hsl(0 0% 100% / 0.42);
+  width: min(100%, 860px);
+  max-width: 860px;
+  height: 38px;
+  margin: 0 auto;
+  padding: 0 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   outline: none;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  color: hsl(var(--foreground) / 0.9);
 }
 
 .memo-title-view {
-  min-height: 34px;
+  width: min(100%, 860px);
+  max-width: 860px;
+  min-height: 38px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  font-size: 15px;
-  font-weight: 800;
-  color: hsl(var(--foreground) / 0.88);
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  color: hsl(var(--foreground) / 0.9);
 }
 
 .memo-toolbar {
+  width: min(100%, 860px);
+  max-width: 860px;
+  min-height: 42px;
+  margin: 0 auto;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  padding: 8px;
-  border-radius: 18px;
-  background: hsl(0 0% 100% / 0.28);
-  border: 1px solid hsl(0 0% 100% / 0.42);
+  align-items: center;
+  gap: 8px;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
 }
 
 .memo-select {
   height: 30px;
-  max-width: 120px;
+  max-width: 150px;
   border-radius: 999px;
   padding: 0 10px;
   font-size: 12px;
-  background: hsl(0 0% 100% / 0.42);
-  border: 1px solid hsl(0 0% 100% / 0.5);
+  background: hsl(0 0% 100% / 0.68);
+  border: 1px solid hsl(220 18% 82% / 0.54);
   outline: none;
 }
 
@@ -313,8 +223,8 @@
   width: 30px;
   height: 30px;
   border-radius: 999px;
-  background: hsl(0 0% 100% / 0.36);
-  border: 1px solid hsl(0 0% 100% / 0.48);
+  background: hsl(0 0% 100% / 0.56);
+  border: 1px solid hsl(220 18% 82% / 0.5);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -322,27 +232,46 @@
 }
 
 .memo-tool-button:hover {
-  background: hsl(0 0% 100% / 0.58);
+  background: hsl(0 0% 100% / 0.82);
   transform: translateY(-1px);
 }
 
 .memo-editor {
-  flex: 1;
-  min-height: 96px;
+  width: min(100%, 860px);
+  max-width: 860px;
+  height: 100%;
+  min-height: 260px;
+  margin: 0 auto;
+  padding: clamp(20px, 3.2vw, 42px) clamp(20px, 4vw, 56px);
   overflow: auto;
-  border-radius: 22px;
-  padding: 16px;
-  line-height: 1.65;
+  border-radius: 26px;
+  line-height: 1.72;
+  font-size: 15px;
+  font-weight: 450;
+  letter-spacing: -0.015em;
   white-space: pre-wrap;
   word-break: break-word;
   outline: none;
-  background: hsl(48 100% 92% / 0.34);
-  border: 1px solid hsl(48 90% 85% / 0.45);
+  color: hsl(var(--foreground) / 0.84);
+  background:
+    linear-gradient(
+      180deg,
+      hsl(336 72% 96% / 0.86),
+      hsl(336 70% 94% / 0.76)
+    );
+  border: 1px solid hsl(336 45% 86% / 0.58);
+  box-shadow:
+    0 24px 70px -58px hsl(330 40% 38% / 0.5),
+    inset 0 1px 0 hsl(0 0% 100% / 0.86);
 }
 
 .memo-editor-editing {
-  background: hsl(48 100% 90% / 0.5);
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.6);
+  background:
+    linear-gradient(
+      180deg,
+      hsl(336 72% 96% / 0.92),
+      hsl(336 70% 94% / 0.8)
+    );
 }
 
 .memo-editor-locked {
@@ -367,49 +296,7 @@
   padding-left: 22px;
 }
 
-.memo-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 999800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 28px;
-  background:
-    radial-gradient(
-      circle at 50% 30%,
-      hsl(0 0% 100% / 0.14),
-      hsl(225 24% 16% / 0.18)
-    );
-  backdrop-filter: blur(14px) saturate(125%);
-  -webkit-backdrop-filter: blur(14px) saturate(125%);
-}
 
-.memo-modal-window {
-  position: relative;
-  z-index: 999801;
-}
-
-.memo-modal-header {
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 0 4px;
-}
-
-.memo-modal-body {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  gap: 14px;
-}
-
-.memo-modal-editor {
-  min-height: 260px;
-}
 
 .memo-save-backdrop {
   position: fixed;
@@ -909,14 +796,8 @@
   color: hsl(var(--foreground) / 0.72);
 }
 
-.calendar-month-grid {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 6px;
-  overflow: auto;
-}
+/* -------- */
+
 
 .calendar-month-weekday {
   height: 22px;
@@ -928,15 +809,7 @@
   justify-content: center;
 }
 
-.calendar-month-cell {
-  min-height: 72px;
-  border-radius: 16px;
-  padding: 7px;
-  background: hsl(0 0% 100% / 0.22);
-  border: 1px solid hsl(0 0% 100% / 0.34);
-  text-align: left;
-  overflow: hidden;
-}
+
 
 .calendar-month-cell:hover {
   background: hsl(0 0% 100% / 0.38);
@@ -958,33 +831,7 @@
   margin-bottom: 5px;
 }
 
-.calendar-month-events {
-  display: grid;
-  gap: 3px;
-}
 
-.calendar-month-event-chip {
-  width: 100%;
-  border-radius: 999px;
-  padding: 2px 5px;
-  font-size: 9px;
-  line-height: 1.2;
-  background: hsl(0 0% 100% / 0.46);
-  color: hsl(var(--foreground) / 0.64);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.calendar-month-event-chip.is-career {
-  background: hsl(248 70% 92% / 0.78);
-  color: hsl(248 48% 38%);
-}
-
-.calendar-month-more {
-  font-size: 9px;
-  color: hsl(var(--foreground) / 0.42);
-}
 
 .calendar-widget-toolbar {
   display: flex;
@@ -1043,6 +890,7 @@
   min-height: 0;
   overflow: auto;
   display: grid;
+  align-content: start;
   gap: 8px;
 }
 
@@ -1095,6 +943,7 @@
     inset 0 1px 0 hsl(0 0% 100% / 0.72),
     0 8px 20px -16px hsl(248 50% 40% / 0.18);
 }
+/* ---------------------- */
 
 .calendar-pending-badge {
   font-size: 10px;
@@ -1103,21 +952,19 @@
   background:
     linear-gradient(
       135deg,
-      hsl(42 100% 90% / 0.68),
-      hsl(0 0% 100% / 0.18)
+      hsl(42 100% 90% / 0.62),
+      hsl(0 0% 100% / 0.16)
     );
-  border: 1px solid hsl(42 100% 78% / 0.58);
+  border: 1px solid hsl(42 100% 78% / 0.5);
   color: hsl(35 76% 34%);
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.72),
-    0 8px 20px -16px hsl(42 60% 40% / 0.18);
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.66);
 }
 
 .calendar-empty-state {
   border-radius: 20px;
   padding: 16px;
-  background: hsl(0 0% 100% / 0.2);
-  border: 1px dashed hsl(0 0% 100% / 0.38);
+  background: hsl(0 0% 100% / 0.16);
+  border: 1px dashed hsl(0 0% 100% / 0.32);
   font-size: 12px;
   color: hsl(var(--foreground) / 0.44);
 }
@@ -1125,8 +972,8 @@
 .calendar-google-preview {
   border-radius: 20px;
   padding: 12px;
-  background: hsl(0 0% 100% / 0.22);
-  border: 1px solid hsl(0 0% 100% / 0.36);
+  background: hsl(0 0% 100% / 0.18);
+  border: 1px solid hsl(0 0% 100% / 0.32);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1137,8 +984,8 @@
   height: 30px;
   border-radius: 999px;
   padding: 0 10px;
-  background: hsl(0 0% 100% / 0.36);
-  border: 1px solid hsl(0 0% 100% / 0.48);
+  background: hsl(0 0% 100% / 0.32);
+  border: 1px solid hsl(0 0% 100% / 0.42);
   font-size: 11px;
 }
 
@@ -1160,7 +1007,7 @@
   -webkit-backdrop-filter: blur(14px) saturate(125%);
 }
 
-.calendar-modal-window {
+/* .calendar-modal-window {
   position: relative;
   z-index: 999901;
   width: min(560px, 94vw);
@@ -1180,29 +1027,7 @@
     0 36px 110px -34px hsl(220 38% 18% / 0.42),
     inset 0 1px 0 hsl(0 0% 100% / 0.9),
     inset 0 -1px 0 hsl(220 25% 40% / 0.06);
-}
-
-.calendar-modal-window {
-  position: relative;
-  z-index: 999901;
-  width: min(560px, 94vw);
-  max-height: 90vh;
-  overflow: hidden;
-  border-radius: 30px;
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.78),
-      hsl(0 0% 100% / 0.36)
-    );
-  border: 1px solid hsl(0 0% 100% / 0.78);
-  backdrop-filter: blur(38px) saturate(190%);
-  -webkit-backdrop-filter: blur(38px) saturate(190%);
-  box-shadow:
-    0 36px 110px -34px hsl(220 38% 18% / 0.42),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9),
-    inset 0 -1px 0 hsl(220 25% 40% / 0.06);
-}
+} */
 
 
 .calendar-modal-header {
@@ -1211,7 +1036,7 @@
   gap: 18px;
   margin-bottom: 16px;
 }
-
+/* ------------- */
 .calendar-modal-body {
   display: grid;
   gap: 12px;
@@ -1314,26 +1139,6 @@
 
 
 
-.memo-window {
-  position: fixed;
-  width: min(1180px, calc(100vw - 48px));
-  height: min(780px, calc(100vh - 48px));
-  border-radius: 30px;
-  overflow: hidden;
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.92),
-      hsl(0 0% 100% / 0.76)
-    );
-  border: 1px solid hsl(0 0% 100% / 0.9);
-  backdrop-filter: blur(44px) saturate(165%);
-  -webkit-backdrop-filter: blur(44px) saturate(165%);
-  box-shadow:
-    0 48px 160px -42px hsl(220 35% 8% / 0.58),
-    inset 0 1px 0 hsl(0 0% 100% / 0.96);
-}
-
 .memo-window-titlebar {
   height: 68px;
   padding: 0 22px;
@@ -1353,7 +1158,7 @@
   height: calc(100% - 68px);
   padding: 18px;
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: clamp(220px, 24%, 280px) minmax(0, 1fr);
   gap: 18px;
   overflow: hidden;
 }
@@ -1365,17 +1170,24 @@
 }
 
 .memo-workspace.is-window-mode {
-  display: flex;
-  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 14px;
   overflow: hidden;
 }
 
 .memo-window-editor {
-  flex: 1;
+  width: min(100%, 860px);
+  max-width: 860px;
+  height: 100%;
   min-height: 0;
+  margin: 0 auto;
   overflow: auto;
   border-radius: 26px;
-  padding: 24px;
+  padding: clamp(20px, 3vw, 38px) clamp(20px, 4vw, 52px);
+  line-height: 1.72;
   box-shadow:
     inset 0 1px 0 hsl(0 0% 100% / 0.78),
     0 14px 36px -28px hsl(220 35% 20% / 0.24);
@@ -1437,6 +1249,14 @@
   display: flex;
   align-items: center;
   gap: 5px;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 550;
+  letter-spacing: -0.025em;
+  color: hsl(var(--foreground) / 0.76);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .memo-note-color-dot {
@@ -1450,6 +1270,8 @@
 .memo-note-item.is-pinned {
   border-color: hsl(var(--primary) / 0.26);
 }
+
+/* -------- */
 
 /* ================================
    Calendar Month Range View
@@ -1470,15 +1292,7 @@
   gap: 6px;
 }
 
-.calendar-month-weekday {
-  height: 22px;
-  font-size: 10px;
-  font-weight: 800;
-  color: hsl(var(--foreground) / 0.42);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 
 .calendar-month-weeks {
   min-height: 0;
@@ -1640,6 +1454,7 @@
 .calendar-week-header {
   display: grid;
   grid-template-columns: 48px repeat(7, minmax(86px, 1fr));
+  min-width: 650px;
   border-bottom: 1px solid hsl(0 0% 100% / 0.38);
 }
 
@@ -1678,7 +1493,7 @@
 .calendar-week-grid {
   display: grid;
   grid-template-columns: 48px 1fr;
-  min-height: 918px;
+  min-height: 972px;
 }
 
 .calendar-week-times {
@@ -1697,6 +1512,7 @@
 .calendar-week-days {
   display: grid;
   grid-template-columns: repeat(7, minmax(86px, 1fr));
+  min-width: 602px;
 }
 
 .calendar-week-day-column {
@@ -1744,6 +1560,8 @@
   font-size: 9px;
   opacity: 0.72;
 }
+
+/* --------- */
 
 /* ================================
    Calendar Event Color Picker
@@ -1830,6 +1648,8 @@
   position: fixed;
   width: min(1180px, calc(100vw - 48px));
   height: min(780px, calc(100vh - 48px));
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 24px);
   border-radius: 30px;
   overflow: hidden;
 
@@ -1848,6 +1668,14 @@
   box-shadow:
     0 40px 130px -42px hsl(220 35% 8% / 0.5),
     inset 0 1px 0 hsl(0 0% 100% / 0.92);
+}
+
+@media (max-width: 760px) {
+  .memo-window {
+    width: calc(100vw - 16px);
+    height: calc(100vh - 16px);
+    border-radius: 22px;
+  }
 }
 
 /* ================================
@@ -1953,8 +1781,29 @@
 
 .settings-theme-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
+}
+
+@media (max-width: 720px) {
+  .settings-action-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-modal-header {
+    height: auto;
+    min-height: 72px;
+    padding: 16px 20px;
+  }
+
+  .settings-modal-body {
+    padding: 18px 20px 24px;
+  }
+
+  .settings-sync-box {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
 .settings-theme-card {
@@ -2138,7 +1987,7 @@
   background: hsl(0 0% 100% / 0.36);
   border: 1px solid hsl(0 0% 100% / 0.48);
 }
-
+/* --------------- */
 /* ================================
    Calendar modal clipping / spacing fix
    ================================ */
@@ -2149,6 +1998,23 @@
   border-radius: 30px !important;
   overflow: hidden !important;
   box-sizing: border-box !important;
+}
+
+@media (max-width: 720px) {
+  .calendar-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .calendar-modal-actions {
+    align-items: stretch !important;
+    flex-direction: column !important;
+  }
+
+  .calendar-danger-button,
+  .calendar-done-button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
 }
 
 .calendar-modal-header {
@@ -2401,6 +2267,12 @@
   color: hsl(var(--foreground) / 0.4);
 }
 
+.today-mini-card .glass-card-body,
+.today-mini-card .px-5.pb-5 {
+  min-height: 0;
+  overflow: hidden;
+}
+
 /* ================================
    Today Tasks Widget
    ================================ */
@@ -2476,6 +2348,20 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 92px 42px;
   gap: 8px;
+}
+
+@media (max-width: 760px) {
+  .today-task-add-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .today-task-item {
+    grid-template-columns: 32px minmax(0, 1fr) 30px !important;
+  }
+
+  .today-task-priority {
+    display: none !important;
+  }
 }
 
 .today-task-add-row input,
@@ -2639,6 +2525,8 @@
   background: hsl(350 100% 96% / 0.6);
 }
 
+/* ------------------ */
+
 /* ================================
    Dashboard Workspace Tabs
    ================================ */
@@ -2681,22 +2569,27 @@
 
 .dashboard-grid-item {
   position: relative;
+  min-width: 0;
+  min-height: 0;
 }
 
 .widget-remove-button {
   position: absolute;
-  right: 10px;
-  top: 10px;
+  top: -12px;
+  right: -12px;
   z-index: 40;
+  width: 26px;
   height: 26px;
-  padding: 0 10px;
+  padding: 0;
   border-radius: 999px;
-  font-size: 10px;
-  font-weight: 800;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 700;
   color: hsl(350 70% 42%);
-  background: hsl(350 100% 96% / 0.82);
+  background: hsl(350 100% 96% / 0.88);
   border: 1px solid hsl(350 80% 80% / 0.7);
   box-shadow: 0 8px 18px -12px hsl(350 70% 40% / 0.3);
+  pointer-events: auto !important;
 }
 
 /* ================================
@@ -2944,15 +2837,23 @@
   overflow: hidden;
 }
 
-.theme-pixel .glass-card::before {
-  content: "";
-  display: block;
-  height: 24px;
-  margin: -1px -1px 12px;
-  background: linear-gradient(90deg, hsl(330 95% 75%), hsl(330 90% 84%));
-  border-bottom: 2px solid hsl(230 18% 18% / 0.78);
+
+.theme-pixel .glass-card {
+  padding-top: 28px !important;
 }
 
+.theme-pixel .glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  margin: 0;
+  background: linear-gradient(90deg, hsl(330 95% 75%), hsl(330 90% 84%));
+  border-bottom: 2px solid hsl(230 18% 18% / 0.78);
+  pointer-events: none;
+}
 .theme-pixel .glass-card::after {
   content: "□  ×";
   position: absolute;
@@ -2973,7 +2874,12 @@
 .theme-pixel .calendar-view-button,
 .theme-pixel .widget-picker-button,
 .theme-pixel .settings-reset-button,
-.theme-pixel button {
+.theme-pixel .calendar-google-button,
+.theme-pixel .calendar-danger-button,
+.theme-pixel .calendar-done-button,
+.theme-pixel .memo-tool-button,
+.theme-pixel .memo-mini-button,
+.theme-pixel .today-task-add-row button {
   border-radius: 0 !important;
 }
 
@@ -3001,6 +2907,10 @@
   border-bottom-color: hsl(0 0% 100% / 0.95) !important;
   transform: translate(1px, 1px);
 }
+
+
+
+/* ---------- */
 
 /* Inputs */
 
@@ -3119,6 +3029,8 @@
   border-bottom: 2px solid hsl(230 18% 20% / 0.78);
 }
 
+/* ----------- */
+
 /* ================================
    Theme: Cupertino
    macOS Finder + iOS Widget Style
@@ -3130,122 +3042,6 @@
 
 /* macOS wallpaper */
 
-
-/* top menu bar */
-
-.apple-menu-left,
-.apple-menu-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.apple-logo {
-  width: 13px;
-  height: 13px;
-  border-radius: 999px;
-  display: inline-flex;
-  background: hsl(220 18% 10%);
-  color: transparent;
-}
-
-/* desktop folders */
-
-
-
-
-
-
-
-/* notification */
-
-.apple-notification-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:
-    linear-gradient(145deg, #35c759, #2fb14f);
-  color: white;
-}
-
-.apple-floating-notification strong {
-  display: block;
-  font-size: 12px;
-}
-
-.apple-floating-notification span {
-  display: block;
-  margin-top: 2px;
-  font-size: 12px;
-  color: hsl(220 10% 44%);
-}
-
-/* dock */
-
-.apple-dock {
-  position: fixed;
-  left: 50%;
-  bottom: 20px;
-  transform: translateX(-50%);
-  height: 70px;
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-radius: 24px;
-  background: hsl(0 0% 100% / 0.54);
-  border: 1px solid hsl(0 0% 100% / 0.68);
-  box-shadow:
-    0 28px 80px -34px hsl(220 24% 20% / 0.55),
-    inset 0 1px 0 hsl(0 0% 100% / 0.8);
-  backdrop-filter: blur(36px) saturate(180%);
-  -webkit-backdrop-filter: blur(36px) saturate(180%);
-}
-
-.apple-dock-item {
-  width: 48px;
-  height: 48px;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: hsl(220 18% 18%);
-  background:
-    linear-gradient(145deg, hsl(0 0% 100% / 0.88), hsl(215 20% 96% / 0.72));
-  border: 1px solid hsl(0 0% 100% / 0.76);
-  box-shadow:
-    0 12px 26px -18px hsl(220 24% 18% / 0.45),
-    inset 0 1px 0 hsl(0 0% 100% / 0.82);
-}
-
-.apple-dock-separator {
-  width: 1px;
-  height: 38px;
-  background: hsl(220 10% 60% / 0.36);
-  margin: 0 2px;
-}
-
-/* shell */
-
-
-/* sidebar finder style */
-
-
-
-
-
-
-
-
-/* cards as iOS widgets */
-
-
-/* buttons */
-
-/* inputs */
 
 
 
@@ -3274,21 +3070,7 @@
   color: hsl(220 18% 12%) !important;
 }
 
-.theme-ios .memo-window-titlebar::before,
-.theme-ios .calendar-modal-header::before,
-.theme-ios .settings-modal-header::before,
-.theme-ios .career-modal-header::before {
-  content: "";
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: #ff5f57;
-  box-shadow:
-    20px 0 0 #ffbd2e,
-    40px 0 0 #28c840;
-  margin-right: 52px;
-  flex-shrink: 0;
-}
+
 
 /* inner panels */
 
@@ -3347,183 +3129,15 @@
     linear-gradient(145deg, #ffffff, #eef3f8);
 }
 
-/* =========================================================
-   MAC CORE REWORK
-   dark macOS night desktop + Apple Gothic + cleaner windows
-   ========================================================= */
-
-/* 배경: 밤 macOS 데스크톱 느낌 */
-
-
-/* 전체 앱 껍데기: 하얀 웹페이지 느낌 제거 */
-
-/* Apple menu bar */
-.theme-ios .apple-menu-bar {
-  height: 26px !important;
-  background: hsl(220 32% 8% / 0.72) !important;
-  color: hsl(220 28% 96% / 0.82) !important;
-  border-bottom: 1px solid hsl(0 0% 100% / 0.08) !important;
-  backdrop-filter: blur(28px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
-  font-family:
-    "Apple SD Gothic Neo",
-    "AppleGothic",
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-}
-
-.theme-ios .apple-logo {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  display: inline-block;
-  color: transparent !important;
-  background: hsl(0 0% 100% / 0.92);
-}
-
-/* Topbar 빨노초 겹침 제거 */
-.theme-ios .topbar::before {
-  display: none !important;
-  content: none !important;
-}
-
-/* Topbar 자체는 macOS 창 타이틀바 느낌 */
-
-/* 제목 앞 이상한 빨노초가 h1 위에 겹치는 경우 방지 */
-.theme-ios .topbar h1::before,
-.theme-ios .topbar h1::after,
-.theme-ios .topbar .text-xl::before,
-.theme-ios .topbar .text-xl::after {
-  display: none !important;
-  content: none !important;
-}
-
-/* Sidebar: Finder dark sidebar */
-
-
-.theme-ios aside::before {
-  color: hsl(220 18% 82% / 0.54) !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.02em !important;
-}
-
-/* Sidebar text */
-.theme-ios aside,
-.theme-ios .sidebar-tab-item {
-  color: hsl(220 24% 90% / 0.72) !important;
-}
-
-.theme-ios .sidebar-tab-item {
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  border-radius: 12px !important;
-  box-shadow: none !important;
-}
-
-.theme-ios .sidebar-tab-item.is-active {
-  color: hsl(220 28% 98% / 0.96) !important;
-  background: hsl(0 0% 100% / 0.13) !important;
-  border-color: hsl(0 0% 100% / 0.11) !important;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.1),
-    0 14px 36px -30px hsl(220 80% 2% / 0.8) !important;
-}
+/
 
 
 
 
+/* -------------- */
 
 
-/* hashtag row 겹침/희미함 해결 */
-.theme-ios .journal-tag-tools {
-  display: grid !important;
-  grid-template-columns: 180px auto minmax(0, 1fr) !important;
-  align-items: center !important;
-  gap: 10px !important;
-  min-height: 50px !important;
-  padding: 10px !important;
-  overflow: visible !important;
-}
 
-.theme-ios .journal-tag-input-wrap input {
-  color: hsl(220 28% 96% / 0.9) !important;
-}
-
-.theme-ios .journal-tag-apply-button {
-  color: hsl(212 100% 74% / 0.9) !important;
-  background: hsl(212 100% 62% / 0.12) !important;
-  border-color: hsl(212 100% 72% / 0.16) !important;
-}
-
-.theme-ios .journal-selection-preview {
-  color: hsl(220 18% 82% / 0.46) !important;
-}
-
-/* select: 흰 배경/흰 글씨 방지 */
-.theme-ios .theme-select {
-  appearance: none;
-  -webkit-appearance: none;
-  height: 32px;
-  min-width: 118px;
-  padding: 0 32px 0 12px;
-  border-radius: 999px;
-  
-  font-size: 12px;
-  font-weight: 500;
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.12),
-      hsl(0 0% 100% / 0.045)
-    ),
-    url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10L12 15L17 10' stroke='white' stroke-opacity='0.72' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 10px center / 14px 14px no-repeat !important;
-  border: 1px solid hsl(0 0% 100% / 0.14) !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.theme-ios .journal-task,
-.theme-ios .journal-tag-tools,
-.theme-ios .journal-section,
-.theme-ios input,
-.theme-ios textarea {
-  background: hsl(0 0% 100% / 0.075) !important;
-  border: 1px solid hsl(0 0% 100% / 0.085) !important;
-  box-shadow: none !important;
-}
-
-/* buttons */
-.theme-ios .glass-button {
-  color: hsl(220 24% 94% / 0.84) !important;
-  background: hsl(0 0% 100% / 0.08) !important;
-  border: 1px solid hsl(0 0% 100% / 0.13) !important;
-  box-shadow: none !important;
-}
-
-.theme-ios .glass-button:hover {
-  background: hsl(0 0% 100% / 0.14) !important;
-}
-
-/* alert card 내부 색감 */
-.theme-ios .alert-severity-pill.is-danger {
-  color: hsl(355 90% 72%) !important;
-  background: hsl(355 85% 58% / 0.12) !important;
-}
-
-.theme-ios .alert-severity-pill.is-warning {
-  color: hsl(36 100% 72%) !important;
-  background: hsl(36 100% 58% / 0.12) !important;
-}
-
-/* white overlay처럼 보이는 section들 제거 */
-.theme-ios .daily-journal,
-.theme-ios .alert-center,
-.theme-ios .study-planner {
-  background: transparent !important;
-}
 
 /* ================================
    Today Focus Widget
@@ -3637,7 +3251,7 @@
 }
 
 .today-focus-task {
-  height: 34px;
+  min-height: 34px;
   border-radius: 15px;
   padding: 0 8px;
   display: flex;
@@ -3848,6 +3462,8 @@
   backdrop-filter: blur(22px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
 }
+
+/* --------------------- */
 
 /* ================================
    Alert Center Widget
@@ -6949,4 +6565,255 @@
   .journal-condition-section {
     min-height: 420px !important;
   }
+}
+
+/* =========================================================
+   MEMO RESPONSIVE MAC-LIKE LAYOUT FIX
+   content width, margin, small-size behavior
+   ========================================================= */
+
+/* 메모 전체: 왼쪽 리스트 + 오른쪽 작업공간 */
+.memo-layout,
+.memo-floating-body {
+  height: 100% !important;
+  min-height: 0 !important;
+  display: grid !important;
+  grid-template-columns: clamp(210px, 24%, 280px) minmax(0, 1fr) !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+}
+
+/* 왼쪽 메모 리스트: macOS sidebar 느낌 */
+.memo-list-panel {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 14px 12px !important;
+  overflow: auto !important;
+  border-right: 1px solid hsl(220 18% 82% / 0.5) !important;
+  background: hsl(220 35% 97% / 0.62) !important;
+  box-shadow: inset -1px 0 0 hsl(0 0% 100% / 0.72) !important;
+}
+
+/* 오른쪽 작업공간 */
+.memo-workspace {
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: clamp(14px, 2vw, 28px) !important;
+  display: grid !important;
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
+  gap: 14px !important;
+  overflow: hidden !important;
+  background: hsl(0 0% 100% / 0.36) !important;
+}
+
+/* 제목 영역: 본문 종이랑 같은 max-width로 중앙 정렬 */
+.memo-title-input,
+.memo-workspace > h1,
+.memo-workspace > h2,
+.memo-workspace > h3,
+.memo-note-title,
+.memo-editor-title {
+  width: min(100%, 860px) !important;
+  max-width: 860px !important;
+  margin: 0 auto !important;
+  padding: 0 2px !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  font-size: 20px !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.035em !important;
+  color: hsl(var(--foreground) / 0.9) !important;
+}
+
+/* 툴바도 제목/본문이랑 같은 폭 */
+.memo-toolbar,
+.memo-editor-toolbar {
+  width: min(100%, 860px) !important;
+  max-width: 860px !important;
+  margin: 0 auto !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+/* 핵심: 본문 종이. 큰 화면에서는 중앙에 여백, 작은 화면에서는 꽉 차게 */
+.memo-editor,
+[contenteditable="true"].memo-editor {
+  width: min(100%, 860px) !important;
+  max-width: 860px !important;
+  height: 100% !important;
+  min-height: 260px !important;
+  margin: 0 auto !important;
+  padding: clamp(20px, 3.2vw, 42px) clamp(20px, 4vw, 56px) !important;
+  overflow: auto !important;
+  border-radius: 26px !important;
+  line-height: 1.72 !important;
+  font-size: 15px !important;
+  font-weight: 450 !important;
+  letter-spacing: -0.015em !important;
+  color: hsl(var(--foreground) / 0.84) !important;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(336 72% 96% / 0.86),
+      hsl(336 70% 94% / 0.76)
+    ) !important;
+  border: 1px solid hsl(336 45% 86% / 0.58) !important;
+  box-shadow:
+    0 24px 70px -58px hsl(330 40% 38% / 0.5),
+    inset 0 1px 0 hsl(0 0% 100% / 0.86) !important;
+}
+
+/* 리스트 아이템도 덜 뚱뚱하게 */
+.memo-note-item {
+  min-height: 58px !important;
+  padding: 10px 11px !important;
+  border-radius: 16px !important;
+}
+
+.memo-note-item strong,
+.memo-list-panel strong {
+  font-size: 13px !important;
+  font-weight: 550 !important;
+  letter-spacing: -0.025em !important;
+  color: hsl(var(--foreground) / 0.74) !important;
+}
+
+.memo-note-item span,
+.memo-list-panel small {
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: hsl(var(--foreground) / 0.42) !important;
+}
+
+/* 메모 해시태그 도구도 본문 폭에 맞춤 */
+.memo-tag-tools,
+.memo-tag-library {
+  width: min(100%, 860px) !important;
+  max-width: 860px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* 중간 이하: sidebar 좁히고 본문 여백 줄임 */
+@media (max-width: 1180px) {
+  .memo-layout,
+  .memo-floating-body {
+    grid-template-columns: clamp(190px, 26%, 240px) minmax(0, 1fr) !important;
+  }
+
+  .memo-workspace {
+    padding: 16px !important;
+  }
+
+  .memo-editor,
+  [contenteditable="true"].memo-editor {
+    max-width: 100% !important;
+    padding: 24px 28px !important;
+  }
+}
+
+/* 작은 위젯/좁은 창: 리스트 위, 에디터 아래 */
+@media (max-width: 760px) {
+  .memo-layout,
+  .memo-floating-body {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+  }
+
+  .memo-list-panel {
+    width: 100% !important;
+    max-height: 150px !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid hsl(220 18% 82% / 0.45) !important;
+  }
+
+  .memo-workspace {
+    padding: 12px !important;
+    gap: 10px !important;
+  }
+
+  .memo-title-input,
+  .memo-workspace > h1,
+  .memo-workspace > h2,
+  .memo-workspace > h3,
+  .memo-note-title,
+  .memo-editor-title,
+  .memo-toolbar,
+  .memo-editor-toolbar,
+  .memo-tag-tools,
+  .memo-tag-library {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  /* 작은 화면에서는 일부러 종이 테두리/여백 거의 제거 */
+  .memo-editor,
+  [contenteditable="true"].memo-editor {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 220px !important;
+    margin: 0 !important;
+    padding: 16px 14px !important;
+    border-radius: 14px !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+}
+
+/* 아주 작은 위젯에서는 진짜 메모장처럼 */
+@media (max-width: 540px) {
+  .memo-list-panel {
+    display: none !important;
+  }
+
+  .memo-workspace {
+    padding: 8px !important;
+  }
+
+  .memo-toolbar,
+  .memo-editor-toolbar {
+    gap: 6px !important;
+  }
+
+  .memo-editor,
+  [contenteditable="true"].memo-editor {
+    padding: 14px 12px !important;
+    border-radius: 10px !important;
+    background: hsl(336 72% 96% / 0.74) !important;
+  }
+}
+
+/* Mac Core에서는 더 Cupertino Notes 느낌 */
+.theme-ios .memo-list-panel {
+  background: hsl(220 42% 96% / 0.68) !important;
+  border-right: 1px solid hsl(220 18% 78% / 0.5) !important;
+}
+
+.theme-ios .memo-workspace {
+  background: hsl(0 0% 100% / 0.44) !important;
+}
+
+.theme-ios .memo-editor,
+.theme-ios [contenteditable="true"].memo-editor {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.84),
+      hsl(336 60% 96% / 0.68)
+    ) !important;
+  border: 1px solid hsl(220 18% 82% / 0.42) !important;
+  box-shadow:
+    0 22px 62px -52px hsl(220 28% 34% / 0.46),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
 }
