@@ -6519,3 +6519,434 @@
     grid-template-columns: 1fr !important;
   }
 }
+
+/* =========================================================
+   HARD FIX: widget content must stay inside card
+   ========================================================= */
+
+.dashboard-grid-item {
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item > .glass-card {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item > .glass-card > div:last-child {
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+/* Daily Journal must scroll inside its own widget */
+.daily-journal {
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: auto !important;
+  padding-right: 4px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 16px !important;
+  align-content: start !important;
+}
+
+.journal-two-column {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+  align-items: start !important;
+}
+
+.journal-section {
+  min-height: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.journal-task-section {
+  min-height: 150px !important;
+}
+
+.journal-text-section {
+  min-height: 190px !important;
+}
+
+.journal-text-section textarea {
+  min-height: 120px !important;
+  height: 120px !important;
+  resize: vertical !important;
+  overflow: auto !important;
+}
+
+.journal-condition-section {
+  min-height: 170px !important;
+}
+
+.journal-score-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.journal-tag-library {
+  min-height: 220px !important;
+}
+
+@media (max-width: 980px) {
+  .journal-two-column,
+  .journal-score-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* =========================================================
+   Memo widget clean app layout
+   ========================================================= */
+
+.memo-widget,
+.memo-app,
+.memo-layout {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.memo-workspace,
+.memo-list-panel {
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.memo-floating-body {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.memo-editor,
+.memo-editor-area,
+.memo-content,
+[contenteditable="true"].memo-editor {
+  min-height: 180px !important;
+  max-height: none !important;
+  overflow: auto !important;
+  line-height: 1.65 !important;
+}
+
+.memo-tag-tools {
+  margin: 10px 0 !important;
+  grid-template-columns: 180px auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.memo-tag-library {
+  max-height: 260px !important;
+  overflow: hidden !important;
+}
+
+.memo-tag-result-list {
+  max-height: 180px !important;
+  overflow: auto !important;
+}
+
+/* Memo card should not leak outside grid */
+.dashboard-grid-item:has(.memo-tag-library),
+.dashboard-grid-item:has(.memo-editor) {
+  overflow: hidden !important;
+}
+
+/* =========================================================
+   MEMO APP FINAL LAYOUT FIX
+   title / sidebar / paper width separation
+   ========================================================= */
+
+.memo-floating-body,
+.memo-widget,
+.memo-app,
+.memo-layout {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* 메모 위젯 내부를 진짜 앱처럼: 왼쪽 리스트 + 오른쪽 작업공간 */
+.memo-floating-body,
+.memo-layout {
+  display: grid !important;
+  grid-template-columns: 260px minmax(0, 1fr) !important;
+  gap: 16px !important;
+}
+
+/* 메모 리스트 */
+.memo-list-panel {
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+  padding: 14px !important;
+}
+
+/* 오른쪽 작업공간 */
+.memo-workspace {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: grid !important;
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
+  gap: 14px !important;
+  padding: 0 !important;
+}
+
+/* Portfolio Memo 같은 제목 영역 */
+.memo-workspace h1,
+.memo-workspace h2,
+.memo-workspace h3,
+.memo-title,
+.memo-note-title,
+.memo-editor-title {
+  margin: 0 !important;
+  padding: 0 4px !important;
+  min-height: 34px !important;
+  line-height: 34px !important;
+  font-size: 20px !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.035em !important;
+  color: hsl(var(--foreground) / 0.88) !important;
+}
+
+/* 제목 input이 있는 경우 */
+.memo-title-input,
+.memo-workspace input.memo-title-input {
+  width: 100% !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  font-size: 20px !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.035em !important;
+  color: hsl(var(--foreground) / 0.9) !important;
+}
+
+/* 툴바 */
+.memo-toolbar,
+.memo-editor-toolbar {
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+  padding: 0 4px !important;
+}
+
+/* 본문 종이 영역: 전체 너비 꽉 채우지 말고 중앙 종이처럼 */
+.memo-editor,
+[contenteditable="true"].memo-editor {
+  width: min(100%, 820px) !important;
+  max-width: 820px !important;
+  min-height: 360px !important;
+  height: 100% !important;
+  margin: 0 auto !important;
+  padding: 28px 32px !important;
+  overflow: auto !important;
+  border-radius: 28px !important;
+  line-height: 1.7 !important;
+  font-size: 15px !important;
+  font-weight: 450 !important;
+  letter-spacing: -0.015em !important;
+  color: hsl(var(--foreground) / 0.82) !important;
+  background: hsl(336 70% 94% / 0.78) !important;
+  border: 1px solid hsl(336 45% 86% / 0.7) !important;
+  box-shadow:
+    0 24px 70px -54px hsl(330 40% 40% / 0.45),
+    inset 0 1px 0 hsl(0 0% 100% / 0.82) !important;
+}
+
+/* 메모 리스트 아이템 제목도 이상하게 두껍지 않게 */
+.memo-note-item strong,
+.memo-note-title,
+.memo-list-panel strong {
+  font-size: 13px !important;
+  font-weight: 550 !important;
+  letter-spacing: -0.02em !important;
+  color: hsl(var(--foreground) / 0.76) !important;
+}
+
+.memo-note-item span,
+.memo-list-panel small {
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: hsl(var(--foreground) / 0.42) !important;
+}
+
+/* 메모 해시태그 도구는 본문 종이보다 위, 전체 폭 */
+.memo-tag-tools {
+  width: 100% !important;
+  margin: 0 !important;
+  grid-template-columns: 180px auto minmax(0, 1fr) !important;
+}
+
+/* 작은 화면에서는 1열 */
+@media (max-width: 900px) {
+  .memo-floating-body,
+  .memo-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .memo-list-panel {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    max-height: 180px !important;
+  }
+
+  .memo-editor,
+  [contenteditable="true"].memo-editor {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
+
+/* =========================================================
+   JOURNAL FINAL: no visual overlap
+   content scrolls inside journal card
+   ========================================================= */
+
+.dashboard-grid-item:has(.daily-journal) {
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item:has(.daily-journal) > .glass-card {
+  height: 100% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item:has(.daily-journal) .glass-card-body,
+.dashboard-grid-item:has(.daily-journal) > .glass-card > div:last-child {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+.daily-journal {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  overflow: visible !important;
+  padding-bottom: 20px !important;
+}
+
+/* 각 section이 절대 겹치지 않게 */
+.daily-journal > * {
+  position: relative !important;
+  flex-shrink: 0 !important;
+}
+
+.journal-two-column {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+  align-items: start !important;
+}
+
+.journal-section {
+  position: relative !important;
+  height: auto !important;
+  min-height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  overflow: visible !important;
+}
+
+.journal-task-section {
+  min-height: 190px !important;
+}
+
+.journal-text-section {
+  min-height: 220px !important;
+}
+
+.journal-condition-section {
+  min-height: 260px !important;
+}
+
+.journal-review-section {
+  min-height: 128px !important;
+}
+
+.journal-tag-library {
+  min-height: 260px !important;
+}
+
+/* range 영역 겹침 방지 */
+.journal-score-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+  align-items: start !important;
+}
+
+.journal-score-item {
+  position: relative !important;
+  min-width: 0 !important;
+  min-height: 72px !important;
+  display: grid !important;
+  grid-template-rows: auto 28px auto !important;
+  gap: 8px !important;
+}
+
+.journal-score-item input[type="range"] {
+  position: static !important;
+  width: 100% !important;
+  height: 24px !important;
+  margin: 0 !important;
+}
+
+.journal-score-item strong {
+  position: static !important;
+  display: block !important;
+  text-align: right !important;
+}
+
+/* textarea/input 안정화 */
+.journal-text-section textarea {
+  position: relative !important;
+  width: 100% !important;
+  height: 144px !important;
+  min-height: 144px !important;
+  resize: vertical !important;
+  overflow: auto !important;
+}
+
+.journal-review-section input {
+  position: relative !important;
+  width: 100% !important;
+  height: 44px !important;
+  min-height: 44px !important;
+}
+
+@media (max-width: 1100px) {
+  .journal-two-column,
+  .journal-score-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .journal-condition-section {
+    min-height: 420px !important;
+  }
+}

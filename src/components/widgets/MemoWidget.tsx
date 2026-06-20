@@ -901,15 +901,16 @@ export const MemoWidget = () => {
         {editing ? (
           <input
             value={activeNote.title}
-            onChange={(e) =>
-              updateActiveNote({
-                title: e.target.value,
+            onChange={(event) =>
+            updateNote(activeNote.id, {
+              title: event.target.value,
               })
             }
-            spellCheck={false}
             className="memo-title-input"
-            placeholder="Memo title"
+            spellCheck={false}
+            placeholder="Untitled Memo"
           />
+          
         ) : (
           <div className="memo-title-view">{getDisplayTitle(activeNote)}</div>
         )}
