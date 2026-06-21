@@ -1,1 +1,322 @@
- 
+.calendar-current-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.72);
+}
+
+/* -------- */
+
+
+.calendar-month-weekday {
+  height: 22px;
+  font-size: 10px;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.calendar-month-cell:hover {
+  background: hsl(0 0% 100% / 0.38);
+}
+
+.calendar-month-cell.is-muted {
+  opacity: 0.42;
+}
+
+.calendar-month-cell.is-today {
+  border-color: hsl(var(--primary) / 0.52);
+  background: hsl(var(--primary) / 0.1);
+}
+
+.calendar-month-day-number {
+  font-size: 11px;
+  font-weight: 800;
+  color: hsl(var(--foreground) / 0.75);
+  margin-bottom: 5px;
+}
+
+
+
+.calendar-widget-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.calendar-date-input {
+  height: 32px;
+  border-radius: 999px;
+  padding: 0 10px;
+  font-size: 12px;
+  background: hsl(0 0% 100% / 0.34);
+  border: 1px solid hsl(0 0% 100% / 0.46);
+  outline: none;
+}
+
+.calendar-nav-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: hsl(0 0% 100% / 0.34);
+  border: 1px solid hsl(0 0% 100% / 0.46);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-view-toggle {
+  height: 32px;
+  border-radius: 999px;
+  background: hsl(0 0% 100% / 0.3);
+  border: 1px solid hsl(0 0% 100% / 0.42);
+  padding: 3px;
+  display: flex;
+  gap: 2px;
+}
+
+.calendar-view-button {
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: hsl(var(--foreground) / 0.52);
+  text-transform: capitalize;
+}
+
+.calendar-view-button.is-active {
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
+}
+
+.calendar-event-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.calendar-event-item {
+  width: 100%;
+  border-radius: 20px;
+  padding: 12px;
+  background: hsl(0 0% 100% / 0.25);
+  border: 1px solid hsl(0 0% 100% / 0.38);
+  text-align: left;
+  transition: 160ms ease;
+}
+
+.calendar-event-item:hover {
+  background: hsl(0 0% 100% / 0.4);
+  transform: translateY(-1px);
+}
+
+.calendar-event-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.86);
+}
+
+.calendar-event-time {
+  margin-top: 4px;
+  font-size: 11px;
+  color: hsl(var(--foreground) / 0.5);
+}
+
+.calendar-event-location {
+  margin-top: 2px;
+  font-size: 11px;
+  color: hsl(var(--foreground) / 0.42);
+}
+
+.calendar-career-badge {
+  font-size: 10px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(248 100% 94% / 0.68),
+      hsl(0 0% 100% / 0.18)
+    );
+  border: 1px solid hsl(248 100% 86% / 0.58);
+  color: hsl(248 48% 38%);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.72),
+    0 8px 20px -16px hsl(248 50% 40% / 0.18);
+}
+/* ---------------------- */
+
+.calendar-pending-badge {
+  font-size: 10px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(42 100% 90% / 0.62),
+      hsl(0 0% 100% / 0.16)
+    );
+  border: 1px solid hsl(42 100% 78% / 0.5);
+  color: hsl(35 76% 34%);
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.66);
+}
+
+.calendar-empty-state {
+  border-radius: 20px;
+  padding: 16px;
+  background: hsl(0 0% 100% / 0.16);
+  border: 1px dashed hsl(0 0% 100% / 0.32);
+  font-size: 12px;
+  color: hsl(var(--foreground) / 0.44);
+}
+
+.calendar-google-preview {
+  border-radius: 20px;
+  padding: 12px;
+  background: hsl(0 0% 100% / 0.18);
+  border: 1px solid hsl(0 0% 100% / 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.calendar-google-button {
+  height: 30px;
+  border-radius: 999px;
+  padding: 0 10px;
+  background: hsl(0 0% 100% / 0.32);
+  border: 1px solid hsl(0 0% 100% / 0.42);
+  font-size: 11px;
+}
+
+.calendar-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background:
+    radial-gradient(
+      circle at 50% 30%,
+      hsl(0 0% 100% / 0.14),
+      hsl(225 24% 16% / 0.18)
+    );
+  backdrop-filter: blur(14px) saturate(125%);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
+}
+
+
+
+
+.calendar-modal-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+/* ------------- */
+.calendar-modal-body {
+  display: grid;
+  gap: 12px;
+}
+
+.calendar-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.calendar-field {
+  display: grid;
+  gap: 6px;
+}
+
+.calendar-field span {
+  font-size: 11px;
+  color: hsl(var(--foreground) / 0.5);
+  font-weight: 700;
+}
+
+.calendar-field input,
+.calendar-field textarea {
+  width: 100%;
+  border-radius: 16px;
+  background: hsl(0 0% 100% / 0.36);
+  border: 1px solid hsl(0 0% 100% / 0.48);
+  outline: none;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.calendar-field input {
+  height: 38px;
+}
+
+.calendar-field textarea {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.calendar-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.calendar-danger-button,
+.calendar-done-button {
+  height: 36px;
+  border-radius: 999px;
+  padding: 0 13px;
+  border: 1px solid hsl(0 0% 100% / 0.48);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.calendar-danger-button {
+  background: hsl(0 80% 96% / 0.72);
+  color: hsl(0 70% 45%);
+}
+
+.calendar-done-button {
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
+}
+
+.calendar-managed-note {
+  min-height: 36px;
+  border-radius: 999px;
+  padding: 0 12px;
+  background: hsl(0 0% 100% / 0.28);
+  border: 1px solid hsl(0 0% 100% / 0.42);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: hsl(var(--foreground) / 0.56);
+}
+
+.career-sync-hint {
+  margin-top: 12px;
+  border-radius: 18px;
+  padding: 10px 12px;
+  background: hsl(0 0% 100% / 0.24);
+  border: 1px solid hsl(0 0% 100% / 0.34);
+  font-size: 12px;
+  color: hsl(var(--foreground) / 0.58);
+} 
