@@ -562,3 +562,53 @@
   min-height: 0;
 }
 
+/* =========================================================
+   Memo widget clean app layout
+   ========================================================= */
+
+.memo-widget,
+.memo-app,
+.memo-layout {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.memo-workspace,
+.memo-list-panel {
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.memo-floating-body {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.memo-editor,
+.memo-editor-area,
+.memo-content,
+[contenteditable="true"].memo-editor {
+  min-height: 180px !important;
+  max-height: none !important;
+  overflow: auto !important;
+  line-height: 1.65 !important;
+}
+
+.memo-tag-tools {
+  margin: 10px 0 !important;
+  grid-template-columns: 180px auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.memo-tag-library {
+  max-height: 260px !important;
+  overflow: hidden !important;
+}
+
+.memo-tag-result-list {
+  max-height: 180px !important;
+  overflow: auto !important;
+}
