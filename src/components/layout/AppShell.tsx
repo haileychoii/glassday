@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import type { DashboardTab } from "../../types/workspace";
-import { PixelDesktopDecor } from "./PixelDesktopDecor";
+// import { PixelDesktopDecor } from "./PixelDesktopDecor";
 
 
 type AppShellProps = {
@@ -33,10 +33,10 @@ export const AppShell = ({
   return (
     <div className="min-h-screen relative overflow-hidden bg-background text-foreground">
       <div className="fixed inset-0 bg-glass-gradient" />
-      <PixelDesktopDecor />
+      {/* <PixelDesktopDecor /> */}
 
       <div className="fixed inset-0 bg-glass-gradient" />
-      <PixelDesktopDecor />
+      {/* <PixelDesktopDecor /> */}
       
 
 

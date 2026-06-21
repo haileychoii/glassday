@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import GridLayout from "react-grid-layout";
+import { Responsive } from "react-grid-layout";
 import type { Layout, Layouts } from "react-grid-layout";
 
 import { TodayFocusWidget } from "../widgets/TodayFocusWidget";
@@ -21,6 +21,8 @@ import type { DashboardTab, WidgetId } from "../../types/workspace";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
+type Breakpoint = "lg" | "md" | "sm";
+
 type DashboardGridProps = {
   editMode: boolean;
   activeTab: DashboardTab;
@@ -33,7 +35,18 @@ type DashboardGridProps = {
   }) => void;
 };
 
-const GRID_COLS = 16;
+const BREAKPOINTS: Record<Breakpoint, number> = {
+  lg: 1200,
+  md: 900,
+  sm: 0,
+};
+
+const GRID_COLS: Record<Breakpoint, number> = {
+  lg: 16,
+  md: 16,
+  sm: 16,
+};
+
 const ROW_HEIGHT = 52;
 
 const widgetMap: Record<WidgetId, ReactNode> = {
@@ -50,8 +63,8 @@ const widgetMap: Record<WidgetId, ReactNode> = {
 };
 
 const normalizeLayoutItem = (item: Layout): Layout => {
-  const safeWidth = Math.max(2, Math.min(item.w || 4, GRID_COLS));
-  const safeX = Math.max(0, Math.min(item.x || 0, GRID_COLS - safeWidth));
+  const safeWidth = Math.max(2, Math.min(item.w || 4, 16));
+  const safeX = Math.max(0, Math.min(item.x || 0, 16 - safeWidth));
 
   return {
     ...item,
@@ -64,32 +77,30 @@ const normalizeLayoutItem = (item: Layout): Layout => {
 
 const getDefaultLayoutForWidget = (
   widgetId: WidgetId,
+  breakpoint: Breakpoint,
   index: number
 ): Layout => {
   const defaultItem =
-    defaultLayouts.lg?.find((item) => item.i === widgetId) ??
-    defaultLayouts.md?.find((item) => item.i === widgetId) ??
-    defaultLayouts.sm?.find((item) => item.i === widgetId);
+    defaultLayouts[breakpoint]?.find((item) => item.i === widgetId) ??
+    defaultLayouts.lg?.find((item) => item.i === widgetId);
 
   if (defaultItem) {
-    return normalizeLayoutItem({
-      ...defaultItem,
-      w: Math.min(GRID_COLS, Math.max(3, defaultItem.w)),
-    });
+    return normalizeLayoutItem(defaultItem);
   }
 
   return {
     i: widgetId,
-    x: (index * 4) % GRID_COLS,
+    x: breakpoint === "sm" ? 0 : (index * 4) % 16,
     y: Infinity,
-    w: 5,
-    h: 6,
+    w: breakpoint === "sm" ? 16 : 8,
+    h: 8,
   };
 };
 
 const ensureLayoutForWidgets = (
   layout: Layout[] | undefined,
-  widgetIds: WidgetId[]
+  widgetIds: WidgetId[],
+  breakpoint: Breakpoint
 ): Layout[] => {
   const safeLayout = Array.isArray(layout) ? layout : [];
   const existingIds = new Set(safeLayout.map((item) => item.i));
@@ -100,9 +111,22 @@ const ensureLayoutForWidgets = (
 
   const missingLayout = widgetIds
     .filter((widgetId) => !existingIds.has(widgetId))
-    .map((widgetId, index) => getDefaultLayoutForWidget(widgetId, index));
+    .map((widgetId, index) =>
+      getDefaultLayoutForWidget(widgetId, breakpoint, index)
+    );
 
   return [...filteredLayout, ...missingLayout];
+};
+
+const ensureResponsiveLayouts = (
+  layouts: Layouts | undefined,
+  widgetIds: WidgetId[]
+): Layouts => {
+  return {
+    lg: ensureLayoutForWidgets(layouts?.lg, widgetIds, "lg"),
+    md: ensureLayoutForWidgets(layouts?.md, widgetIds, "md"),
+    sm: ensureLayoutForWidgets(layouts?.sm, widgetIds, "sm"),
+  };
 };
 
 const isOverlapping = (a: Layout, b: Layout) => {
@@ -148,8 +172,8 @@ export const DashboardGrid = ({
   onEditValidationChange,
 }: DashboardGridProps) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-
   const [width, setWidth] = useState(1200);
+  const [currentBreakpoint, setCurrentBreakpoint] = useState<Breakpoint>("lg");
   const [selectedWidgetId, setSelectedWidgetId] = useState<WidgetId | null>(
     null
   );
@@ -166,7 +190,6 @@ export const DashboardGrid = ({
 
     const observer = new ResizeObserver(updateWidth);
     observer.observe(wrapperRef.current);
-
     window.addEventListener("resize", updateWidth);
 
     return () => {
@@ -179,17 +202,22 @@ export const DashboardGrid = ({
     return Array.isArray(activeTab.widgetIds) ? activeTab.widgetIds : [];
   }, [activeTab.widgetIds]);
 
-  const layout = useMemo(() => {
-    return ensureLayoutForWidgets(activeTab.layouts?.lg, activeWidgetIds);
+  const responsiveLayouts = useMemo(() => {
+    return ensureResponsiveLayouts(activeTab.layouts, activeWidgetIds);
   }, [activeTab.layouts, activeWidgetIds]);
 
-  const collidingWidgetIds = useMemo(() => {
-    return editMode ? getCollidingWidgetIds(layout) : [];
-  }, [editMode, layout]);
+  const currentLayout = useMemo(() => {
+    return responsiveLayouts[currentBreakpoint] ?? responsiveLayouts.lg ?? [];
+  }, [responsiveLayouts, currentBreakpoint]);
 
-  const collidingSet = useMemo(() => {
-    return new Set<WidgetId>(collidingWidgetIds);
-  }, [collidingWidgetIds]);
+  const collidingWidgetIds = useMemo(() => {
+    return editMode ? getCollidingWidgetIds(currentLayout) : [];
+  }, [editMode, currentLayout]);
+
+  const collidingSet = useMemo(
+    () => new Set<WidgetId>(collidingWidgetIds),
+    [collidingWidgetIds]
+  );
 
   const hiddenWidgetIds = useMemo(() => {
     return allWidgetIds.filter((widgetId) => !activeWidgetIds.includes(widgetId));
@@ -203,15 +231,14 @@ export const DashboardGrid = ({
   }, [collidingWidgetIds, onEditValidationChange]);
 
   useEffect(() => {
-    if (!editMode) {
-      setSelectedWidgetId(null);
-    }
+    if (!editMode) setSelectedWidgetId(null);
   }, [editMode]);
 
-  const handleLayoutChange = (nextLayout: Layout[]) => {
+  const handleLayoutChange = (_layout: Layout[], allLayouts: Layouts) => {
     onLayoutsChange({
-      ...activeTab.layouts,
-      lg: nextLayout.map(normalizeLayoutItem),
+      lg: ensureLayoutForWidgets(allLayouts.lg, activeWidgetIds, "lg"),
+      md: ensureLayoutForWidgets(allLayouts.md, activeWidgetIds, "md"),
+      sm: ensureLayoutForWidgets(allLayouts.sm, activeWidgetIds, "sm"),
     });
   };
 
@@ -244,7 +271,7 @@ export const DashboardGrid = ({
           >
             {collidingWidgetIds.length > 0
               ? `${collidingWidgetIds.length} widgets overlapping`
-              : "16×16 edit grid"}
+              : `${currentBreakpoint.toUpperCase()} responsive grid`}
           </div>
         )}
       </div>
@@ -277,15 +304,16 @@ export const DashboardGrid = ({
 
       {editMode && (
         <div className="edit-grid-help">
-          위젯을 누른 채 드래그하면 이동, 모서리를 잡으면 크기 조절. 겹치면
-          붉은색으로 표시돼.
+          위젯을 누른 채 드래그하면 이동, 모서리를 잡으면 크기 조절. 화면
+          너비에 따라 LG / MD / SM 레이아웃이 따로 저장돼.
         </div>
       )}
 
       <div className="dashboard-edit-canvas">
-        <GridLayout
+        <Responsive
           className="layout"
-          layout={layout}
+          layouts={responsiveLayouts}
+          breakpoints={BREAKPOINTS}
           cols={GRID_COLS}
           rowHeight={ROW_HEIGHT}
           width={width}
@@ -298,6 +326,9 @@ export const DashboardGrid = ({
           allowOverlap={editMode}
           resizeHandles={["se", "sw", "ne", "nw", "e", "w", "n", "s"]}
           draggableCancel="button, input, textarea, select, [contenteditable='true'], .memo-editor, .floating-window"
+          onBreakpointChange={(breakpoint) =>
+            setCurrentBreakpoint(breakpoint as Breakpoint)
+          }
           onLayoutChange={handleLayoutChange}
         >
           {activeWidgetIds.map((widgetId) => {
@@ -308,9 +339,7 @@ export const DashboardGrid = ({
               <div
                 key={widgetId}
                 onMouseDown={() => {
-                  if (editMode) {
-                    setSelectedWidgetId(widgetId);
-                  }
+                  if (editMode) setSelectedWidgetId(widgetId);
                 }}
                 className={[
                   "dashboard-grid-item",
@@ -345,7 +374,7 @@ export const DashboardGrid = ({
               </div>
             );
           })}
-        </GridLayout>
+        </Responsive>
       </div>
     </div>
   );
