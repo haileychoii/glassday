@@ -62,3 +62,22 @@
   box-shadow: 0 8px 18px -12px hsl(350 70% 40% / 0.3);
   pointer-events: auto !important;
 } 
+
+/* =========================================================
+   HARD FIX: widget content must stay inside card
+   ========================================================= */
+
+.dashboard-grid-item {
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item > .glass-card {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item > .glass-card > div:last-child {
+  min-height: 0 !important;
+  overflow: auto !important;
+}
