@@ -406,6 +406,223 @@
   }
 }
 
+/* =========================================================
+   DAILY JOURNAL HARD LAYOUT FIX
+   no overlap, all themes
+   ========================================================= */
+
+.daily-journal {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 16px !important;
+  align-content: start !important;
+  overflow: visible !important;
+}
+
+.daily-journal * {
+  box-sizing: border-box;
+}
+
+.journal-hero,
+.journal-date-row,
+.journal-tag-tools,
+.journal-current-tags,
+.journal-two-column,
+.journal-section,
+.journal-condition-section,
+.journal-review-section,
+.journal-tag-library {
+  position: relative !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.journal-two-column {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+  align-items: stretch !important;
+}
+
+.journal-section {
+  min-height: auto !important;
+  height: auto !important;
+  padding: 18px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  overflow: visible !important;
+}
+
+.journal-task-section {
+  min-height: 172px !important;
+}
+
+.journal-text-section {
+  min-height: 188px !important;
+}
+
+.journal-section-title {
+  position: relative !important;
+  min-height: 30px !important;
+  height: auto !important;
+  padding: 0 42px 0 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  line-height: 1.25 !important;
+  overflow: visible !important;
+  white-space: normal !important;
+}
+
+.journal-section-title > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-width: 0 !important;
+  line-height: 1.25 !important;
+}
+
+.journal-section-title svg {
+  flex-shrink: 0 !important;
+}
+
+.journal-mini-add {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  z-index: 5 !important;
+}
+
+.journal-task-list {
+  position: relative !important;
+  flex: 1 !important;
+  min-height: 88px !important;
+  height: auto !important;
+  margin: 0 !important;
+  display: grid !important;
+  grid-auto-rows: minmax(34px, auto) !important;
+  align-content: start !important;
+  gap: 9px !important;
+  overflow: visible !important;
+}
+
+.journal-task {
+  position: relative !important;
+  min-height: 34px !important;
+  height: auto !important;
+  padding: 6px 34px 6px 34px !important;
+  display: grid !important;
+  grid-template-columns: 18px minmax(0, 1fr) 22px !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.journal-task-check {
+  position: static !important;
+  grid-column: 1 !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.journal-task input {
+  grid-column: 2 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 24px !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.journal-task-delete {
+  position: static !important;
+  grid-column: 3 !important;
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.journal-task-empty {
+  min-height: 58px !important;
+  height: auto !important;
+  padding: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  line-height: 1.45 !important;
+}
+
+.journal-text-section textarea {
+  position: relative !important;
+  width: 100% !important;
+  min-height: 118px !important;
+  height: 118px !important;
+  padding: 14px !important;
+  margin: 0 !important;
+  line-height: 1.55 !important;
+  resize: vertical !important;
+  overflow: auto !important;
+}
+
+.journal-condition-section {
+  min-height: 166px !important;
+}
+
+.journal-mood-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.journal-score-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.journal-score-item {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 6px !important;
+}
+
+.journal-score-item input[type="range"] {
+  width: 100% !important;
+}
+
+.journal-review-section input {
+  width: 100% !important;
+  height: 42px !important;
+  padding: 0 14px !important;
+  line-height: 42px !important;
+}
+
+.journal-tag-library {
+  min-height: 220px !important;
+}
+
+.journal-tag-result-list {
+  max-height: 260px !important;
+  overflow: auto !important;
+}
+
+@media (max-width: 980px) {
+  .journal-two-column,
+  .journal-score-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* Daily Journal must scroll inside its own widget */
 .daily-journal {
   height: 100% !important;
