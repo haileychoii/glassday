@@ -5,3 +5,325 @@
 .theme-pixel .dashboard-tab-header {
   display: none !important;
 } 
+
+/* =========================================================
+   THEME: PASTEL DREAM
+   soft pink / lavender / sky glass mood
+   ========================================================= */
+
+.theme-pastel {
+  --background: 318 72% 96%;
+  --foreground: 246 34% 18%;
+  --card: 0 0% 100%;
+  --card-foreground: 246 34% 18%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 246 34% 18%;
+  --primary: 318 58% 70%;
+  --primary-foreground: 246 34% 18%;
+  --secondary: 210 80% 92%;
+  --secondary-foreground: 246 34% 18%;
+  --muted: 275 54% 94%;
+  --muted-foreground: 246 18% 48%;
+  --accent: 190 72% 82%;
+  --accent-foreground: 246 34% 18%;
+  --border: 270 32% 86%;
+  --input: 0 0% 100%;
+  --ring: 318 58% 70%;
+
+  color: hsl(246 34% 18%);
+}
+
+/* 배경: 참고 이미지처럼 핑크/블루/라벤더 오로라 */
+.theme-pastel .bg-glass-gradient {
+  background:
+    radial-gradient(circle at 16% 8%, hsl(315 100% 90% / 0.9), transparent 34%),
+    radial-gradient(circle at 86% 12%, hsl(202 100% 88% / 0.95), transparent 36%),
+    radial-gradient(circle at 20% 78%, hsl(265 100% 91% / 0.85), transparent 38%),
+    radial-gradient(circle at 88% 84%, hsl(184 100% 86% / 0.78), transparent 36%),
+    linear-gradient(
+      135deg,
+      hsl(318 100% 96%) 0%,
+      hsl(280 100% 96%) 36%,
+      hsl(207 100% 95%) 68%,
+      hsl(185 100% 94%) 100%
+    ) !important;
+}
+
+.theme-pastel .bg-glass-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(120deg, hsl(0 0% 100% / 0.42), transparent 38%, hsl(0 0% 100% / 0.28)),
+    radial-gradient(circle at 50% 18%, hsl(0 0% 100% / 0.42), transparent 48%);
+  filter: blur(22px);
+  opacity: 0.95;
+}
+
+.theme-pastel .bg-glass-gradient::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* 전체 앱 껍데기 */
+.theme-pastel .liquid-shell,
+.theme-pastel .glass-panel {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.46),
+      hsl(315 100% 98% / 0.26)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.72) !important;
+  box-shadow:
+    0 44px 140px -62px hsl(276 42% 42% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.92) !important;
+  backdrop-filter: blur(32px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(160%) !important;
+}
+
+/* 사이드바 */
+.theme-pastel aside {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(318 100% 98% / 0.48),
+      hsl(255 100% 98% / 0.34)
+    ) !important;
+  border-right: 1px solid hsl(0 0% 100% / 0.56) !important;
+  box-shadow: inset -1px 0 0 hsl(270 36% 86% / 0.28) !important;
+  backdrop-filter: blur(28px) saturate(155%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(155%) !important;
+}
+
+/* topbar */
+.theme-pastel .topbar {
+  background:
+    linear-gradient(
+      90deg,
+      hsl(318 100% 98% / 0.5),
+      hsl(205 100% 98% / 0.34)
+    ) !important;
+  border-bottom: 1px solid hsl(0 0% 100% / 0.52) !important;
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.76) !important;
+  backdrop-filter: blur(26px) saturate(155%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(155%) !important;
+}
+
+/* 글씨 색감 */
+.theme-pastel h1,
+.theme-pastel h2,
+.theme-pastel h3,
+.theme-pastel strong,
+.theme-pastel .font-semibold,
+.theme-pastel .font-bold {
+  color: hsl(246 36% 18% / 0.94) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.04em !important;
+}
+
+.theme-pastel p,
+.theme-pastel span,
+.theme-pastel small,
+.theme-pastel .text-muted-foreground {
+  color: hsl(246 18% 46% / 0.72) !important;
+}
+
+/* 카드: 참고 이미지처럼 큼직하고 뽀얀 glass */
+.theme-pastel .glass-card,
+.theme-pastel .today-focus-hero,
+.theme-pastel .today-focus-section,
+.theme-pastel .today-focus-task,
+.theme-pastel .today-focus-mini-item,
+.theme-pastel .today-focus-career-item,
+.theme-pastel .today-focus-memo,
+.theme-pastel .alert-item,
+.theme-pastel .alert-summary-card,
+.theme-pastel .journal-section,
+.theme-pastel .calendar-month-day-cell,
+.theme-pastel .calendar-week-timeline,
+.theme-pastel .calendar-event-item,
+.theme-pastel .memo-list-panel,
+.theme-pastel .memo-workspace,
+.theme-pastel .settings-section,
+.theme-pastel .career-detail-section,
+.theme-pastel .study-input-panel,
+.theme-pastel .study-week-panel,
+.theme-pastel .study-goal-panel,
+.theme-pastel .study-task-panel,
+.theme-pastel .study-record-list-panel {
+
+  background:
+    radial-gradient(circle at 12% 0%, hsl(318 100% 96% / 0.42), transparent 42%),
+    radial-gradient(circle at 100% 0%, hsl(192 100% 93% / 0.42), transparent 46%),
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.68),
+      hsl(280 100% 98% / 0.36)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.76) !important;
+  box-shadow:
+    0 28px 90px -62px hsl(275 36% 42% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9),
+    inset 0 -1px 0 hsl(260 60% 88% / 0.18) !important;
+  backdrop-filter: blur(28px) saturate(165%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(165%) !important;
+}
+
+/* 카드 헤더 아이콘 박스 */
+.theme-pastel .glass-card-icon,
+.theme-pastel .today-focus-ring,
+.theme-pastel .today-task-check,
+.theme-pastel .alert-icon,
+.theme-pastel .settings-modal-icon {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(190 100% 87% / 0.7),
+      hsl(318 100% 91% / 0.5)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.78) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.9),
+    0 14px 34px -26px hsl(300 40% 48% / 0.38) !important;
+}
+
+/* 버튼 / select */
+.theme-pastel .glass-button,
+.theme-pastel .theme-select,
+.theme-pastel .calendar-nav-button,
+.theme-pastel .calendar-view-toggle,
+.theme-pastel .widget-picker-button,
+.theme-pastel .settings-reset-button {
+
+  color: hsl(246 28% 24% / 0.82) !important;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.82),
+      hsl(318 100% 98% / 0.5)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.72) !important;
+  box-shadow:
+    0 16px 36px -28px hsl(275 36% 40% / 0.32),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
+}
+
+.theme-pastel .glass-button:hover,
+.theme-pastel .calendar-nav-button:hover,
+.theme-pastel .widget-picker-button:hover {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.92),
+      hsl(200 100% 97% / 0.6)
+    ) !important;
+  transform: translateY(-1px);
+}
+
+/* view toggle */
+.theme-pastel .calendar-view-toggle {
+  padding: 4px !important;
+  background: hsl(0 0% 100% / 0.62) !important;
+}
+
+.theme-pastel .calendar-view-button {
+
+  color: hsl(246 18% 44% / 0.72) !important;
+}
+
+.theme-pastel .calendar-view-button.is-active {
+  color: hsl(246 30% 20% / 0.92) !important;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(318 100% 92% / 0.78),
+      hsl(200 100% 91% / 0.72)
+    ) !important;
+  box-shadow:
+    0 10px 22px -16px hsl(300 42% 48% / 0.34),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
+}
+
+/* input / textarea */
+.theme-pastel input,
+.theme-pastel textarea,
+.theme-pastel select,
+.theme-pastel .memo-editor,
+.theme-pastel .memo-title-input,
+.theme-pastel .calendar-date-input {
+  color: hsl(246 30% 20% / 0.86) !important;
+  background: hsl(0 0% 100% / 0.58) !important;
+  border: 1px solid hsl(0 0% 100% / 0.72) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.88),
+    0 12px 30px -28px hsl(275 36% 40% / 0.28) !important;
+}
+
+.theme-pastel input::placeholder,
+.theme-pastel textarea::placeholder {
+  color: hsl(246 16% 56% / 0.58) !important;
+}
+
+/* progress bar: mint → pink */
+.theme-pastel .today-tasks-progress-fill,
+.theme-pastel .progress-fill,
+.theme-pastel .health-progress-fill,
+.theme-pastel .money-progress-fill {
+  background:
+    linear-gradient(
+      90deg,
+      hsl(166 70% 78%),
+      hsl(318 78% 78%)
+    ) !important;
+}
+
+/* alert severity 색도 부드럽게 */
+.theme-pastel .alert-severity-pill.is-danger,
+.theme-pastel .today-focus-dday.is-danger,
+.theme-pastel .today-focus-alert {
+  color: hsl(350 58% 42%) !important;
+  background: hsl(350 100% 96% / 0.74) !important;
+  border-color: hsl(350 82% 84% / 0.58) !important;
+}
+
+.theme-pastel .alert-severity-pill.is-warning {
+  color: hsl(36 70% 40%) !important;
+  background: hsl(42 100% 94% / 0.76) !important;
+  border-color: hsl(42 90% 82% / 0.58) !important;
+}
+
+/* Memo 종이도 파스텔에서는 부드러운 연핑크 */
+.theme-pastel .memo-editor {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(332 100% 96% / 0.78),
+      hsl(284 100% 98% / 0.58)
+    ) !important;
+  border: 1px solid hsl(332 68% 88% / 0.45) !important;
+}
+
+/* Calendar 보라 덩어리 줄이고 맑게 */
+.theme-pastel .calendar-week-day-column {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(240 100% 97% / 0.4),
+      hsl(200 100% 97% / 0.22)
+    ) !important;
+}
+
+.theme-pastel .calendar-week-event,
+.theme-pastel .calendar-range-chip,
+.theme-pastel .calendar-week-range-bar,
+.theme-pastel .calendar-month-single-chip {
+  color: hsl(246 30% 20% / 0.74) !important;
+  border: 1px solid hsl(0 0% 100% / 0.72) !important;
+  box-shadow:
+    0 10px 24px -18px hsl(275 32% 40% / 0.24),
+    inset 0 1px 0 hsl(0 0% 100% / 0.82) !important;
+}
+
