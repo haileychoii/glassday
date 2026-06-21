@@ -315,3 +315,266 @@
   border: 1px solid hsl(0 0% 100% / 0.44);
   outline: none;
 } 
+
+/* ================================
+   Daily Journal layout fix
+   prevents empty task cards overlap
+   ================================ */
+
+.daily-journal {
+  align-content: start;
+}
+
+.journal-two-column {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+
+.journal-two-column .journal-section {
+  min-height: 132px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+.journal-section {
+  position: relative;
+  overflow: visible;
+}
+
+.journal-section-title {
+  min-height: 28px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: nowrap;
+  line-height: 1.2;
+  overflow: visible;
+  padding-right: 34px;
+}
+
+.journal-section-title svg {
+  flex-shrink: 0;
+}
+
+.journal-section-title .journal-mini-add {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  flex-shrink: 0;
+}
+
+.journal-task-list {
+  flex: 1;
+  min-height: 58px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.journal-task-empty {
+  min-height: 48px;
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.42);
+  background: hsl(0 0% 100% / 0.16);
+  border: 1px dashed hsl(0 0% 100% / 0.3);
+}
+
+.journal-section textarea {
+  margin-top: 8px;
+  min-height: 118px;
+}
+
+.journal-review-section input {
+  margin-top: 8px;
+}
+
+/* small width safety */
+@media (max-width: 900px) {
+  .journal-two-column {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Daily Journal must scroll inside its own widget */
+.daily-journal {
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: auto !important;
+  padding-right: 4px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 16px !important;
+  align-content: start !important;
+}
+
+.journal-two-column {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+  align-items: start !important;
+}
+
+.journal-section {
+  min-height: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.journal-task-section {
+  min-height: 150px !important;
+}
+
+.journal-text-section {
+  min-height: 190px !important;
+}
+
+.journal-text-section textarea {
+  min-height: 120px !important;
+  height: 120px !important;
+  resize: vertical !important;
+  overflow: auto !important;
+}
+
+.journal-condition-section {
+  min-height: 170px !important;
+}
+
+.journal-score-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.journal-tag-library {
+  min-height: 220px !important;
+}
+
+@media (max-width: 980px) {
+  .journal-two-column,
+  .journal-score-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.daily-journal {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  overflow: visible !important;
+  padding-bottom: 20px !important;
+}
+
+/* 각 section이 절대 겹치지 않게 */
+.daily-journal > * {
+  position: relative !important;
+  flex-shrink: 0 !important;
+}
+
+.journal-two-column {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+  align-items: start !important;
+}
+
+.journal-section {
+  position: relative !important;
+  height: auto !important;
+  min-height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  overflow: visible !important;
+}
+
+.journal-task-section {
+  min-height: 190px !important;
+}
+
+.journal-text-section {
+  min-height: 220px !important;
+}
+
+.journal-condition-section {
+  min-height: 260px !important;
+}
+
+.journal-review-section {
+  min-height: 128px !important;
+}
+
+.journal-tag-library {
+  min-height: 260px !important;
+}
+
+/* range 영역 겹침 방지 */
+.journal-score-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+  align-items: start !important;
+}
+
+.journal-score-item {
+  position: relative !important;
+  min-width: 0 !important;
+  min-height: 72px !important;
+  display: grid !important;
+  grid-template-rows: auto 28px auto !important;
+  gap: 8px !important;
+}
+
+.journal-score-item input[type="range"] {
+  position: static !important;
+  width: 100% !important;
+  height: 24px !important;
+  margin: 0 !important;
+}
+
+.journal-score-item strong {
+  position: static !important;
+  display: block !important;
+  text-align: right !important;
+}
+
+/* textarea/input 안정화 */
+.journal-text-section textarea {
+  position: relative !important;
+  width: 100% !important;
+  height: 144px !important;
+  min-height: 144px !important;
+  resize: vertical !important;
+  overflow: auto !important;
+}
+
+.journal-review-section input {
+  position: relative !important;
+  width: 100% !important;
+  height: 44px !important;
+  min-height: 44px !important;
+}
+
+@media (max-width: 1100px) {
+  .journal-two-column,
+  .journal-score-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .journal-condition-section {
+    min-height: 420px !important;
+  }
+}
