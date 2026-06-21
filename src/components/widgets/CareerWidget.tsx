@@ -19,6 +19,11 @@ import { cn } from "../../lib/utils";
 import { useDashboardData } from "../../context/DashboardDataContext";
 import type { CareerItem, CareerStatus } from "../../types/dashboard";
 
+import { CareerPriorityEditor } from "./career/CareerPriorityEditor";
+import { CareerPipeline } from "./career/CareerPipeline";
+import { CoverLetterTracker } from "./career/CoverLetterTracker";
+import { normalizeCareerItem } from "./career/careerUtils";
+
 const statusOptions: CareerStatus[] = [
   "Preparing",
   "Submitted",
