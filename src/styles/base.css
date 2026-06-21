@@ -1,1 +1,26 @@
- 
+ :root {
+  --background: 320 60% 97%;
+  --foreground: 250 30% 18%;
+
+  --card-glass: 0 0% 100% / 0.52;
+  --card-glass-border: 0 0% 100% / 0.72;
+
+  --primary: 270 60% 62%;
+  --primary-foreground: 0 0% 100%;
+  --primary-glow: 320 80% 80%;
+
+  --accent-gradient:
+    linear-gradient(
+      90deg,
+      hsl(248 38% 62%),
+      hsl(326 34% 66%),
+      hsl(205 36% 68%)
+    );
+
+  --accent-gradient-soft:
+    linear-gradient(
+      135deg,
+      hsl(248 38% 62% / 0.16),
+      hsl(326 34% 66% / 0.12),
+      hsl(205 36% 68% / 0.14)
+    );
