@@ -1,7 +1,11 @@
 import { LayoutGrid, Settings, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
-
-import { applyTheme, getCurrentTheme, themeOptions, type ThemeId } from "../../constants/themes";
+import {
+  applyTheme,
+  getCurrentTheme,
+  themeOptions,
+  type ThemeId,
+} from "../../constants/themes";
 import { cn } from "../../lib/utils";
 
 type TopbarProps = {
@@ -37,18 +41,23 @@ export const Topbar = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <select
-            value={theme}
-            onChange={(event) => setTheme(event.target.value as ThemeId)}
-            className="theme-select"
-          >
+        <div className="topbar-actions flex items-center gap-2">
+          <div className="theme-segmented-control" aria-label="Theme selector">
             {themeOptions.map((item) => (
-              <option key={item.id} value={item.id}>
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setTheme(item.id)}
+                className={cn(
+                  "theme-segment-button",
+                  theme === item.id && "is-active"
+                )}
+                title={item.description}
+              >
                 {item.label}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
 
           <button
             type="button"
