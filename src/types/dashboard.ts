@@ -33,6 +33,8 @@ export type CareerItem = {
   company: string;
   role: string;
   status: CareerStatus;
+  priority?: CareerPriority;
+  starred?: boolean;
 
   location: string;
   workType: string;
@@ -48,4 +50,25 @@ export type CareerItem = {
   jobDescription: string;
   coverLetterQuestions: string[];
   notes: string;
+  stages?:CareerStage[];
+  coverLetterItems?: CoverLetterItem[];
+
+  attatchments?; CareerAttachment[];
+  notes: string;
+};
+
+export type CareerAttachmentType = 
+| "resume"
+| "cover_letter"
+| "portfolio"
+| "certificate"
+| "job_posting"
+| "other";
+
+export type CareerAttachment = {
+  id: string;
+  label: string;
+  url: string;
+  type: CareerAttachmentType;
+  memo: string;
 };
