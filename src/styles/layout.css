@@ -70,3 +70,20 @@
   color: hsl(350 70% 42%);
   background: hsl(350 100% 96% / 0.52);
 }
+
+/* 카드 내부가 좁아질 때 글자/요소 튀어나오는 것 방지 */
+.glass-card,
+.glass-card * {
+  box-sizing: border-box;
+}
+
+.glass-card {
+  overflow: hidden;
+}
+
+/* 메인 영역이 좁아질 때 너무 답답하지 않게 */
+main {
+  min-width: 0 !important;
+}
+
+
