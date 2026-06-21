@@ -4,14 +4,6 @@
    ================================ */
 
 
-
-
-
-/* macOS wallpaper */
-
-
-
-
 /* modals and floating windows */
 
 .theme-ios .memo-window,
@@ -144,3 +136,55 @@
   -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
 }
 
+/* Mac Core support */
+
+.theme-ios .journal-hero,
+.theme-ios .journal-date-button,
+.theme-ios .journal-date-input,
+.theme-ios .journal-section,
+.theme-ios .journal-task,
+.theme-ios .journal-mini-add,
+.theme-ios .journal-mood-button,
+.theme-ios .journal-score-item,
+.theme-ios .journal-section textarea,
+.theme-ios .journal-review-section input {
+  border-radius: 20px !important;
+  background: hsl(0 0% 100% / 0.58) !important;
+  border: 1px solid hsl(0 0% 100% / 0.64) !important;
+  box-shadow:
+    0 16px 44px -34px hsl(220 24% 20% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}
+
+/* Mac Core support */
+
+.theme-ios .floating-window {
+  border-radius: 28px !important;
+  background: hsl(0 0% 100% / 0.78) !important;
+  border: 1px solid hsl(0 0% 100% / 0.76) !important;
+  box-shadow:
+    0 38px 110px -42px hsl(220 24% 16% / 0.48),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
+  backdrop-filter: blur(38px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(38px) saturate(180%) !important;
+}
+
+.theme-ios .floating-window-titlebar {
+  background: hsl(0 0% 96% / 0.72) !important;
+  border-bottom: 1px solid hsl(220 14% 78% / 0.44) !important;
+}
+
+.theme-ios .floating-window-titlebar::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #ff5f57;
+  box-shadow:
+    20px 0 0 #ffbd2e,
+    40px 0 0 #28c840;
+  margin-right: 50px;
+  flex-shrink: 0;
+}
