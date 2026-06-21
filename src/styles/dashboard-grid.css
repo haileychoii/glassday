@@ -90,5 +90,36 @@
   min-height: 0 !important;
 }
 
+/* Memo card should not leak outside grid */
+.dashboard-grid-item:has(.memo-tag-library),
+.dashboard-grid-item:has(.memo-editor) {
+  overflow: hidden !important;
+}
+
+/* =========================================================
+   JOURNAL FINAL: no visual overlap
+   content scrolls inside journal card
+   ========================================================= */
+
+.dashboard-grid-item:has(.daily-journal) {
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item:has(.daily-journal) > .glass-card {
+  height: 100% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item:has(.daily-journal) .glass-card-body,
+.dashboard-grid-item:has(.daily-journal) > .glass-card > div:last-child {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+
 
   
