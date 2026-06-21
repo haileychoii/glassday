@@ -115,3 +115,90 @@
   flex: 1;
   min-height: 0;
 }
+
+/* ================================
+   Floating Window System
+   draggable + resizable + no backdrop
+   ================================ */
+
+.floating-window-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482600;
+  pointer-events: none;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.floating-window {
+  position: fixed;
+  pointer-events: auto;
+  overflow: hidden;
+  resize: both;
+  border-radius: 30px;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.9),
+      hsl(0 0% 100% / 0.68)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.82);
+  box-shadow:
+    0 44px 140px -42px hsl(220 35% 8% / 0.52),
+    inset 0 1px 0 hsl(0 0% 100% / 0.92);
+  backdrop-filter: blur(38px) saturate(170%);
+  -webkit-backdrop-filter: blur(38px) saturate(170%);
+}
+
+.floating-window-titlebar {
+  height: 64px;
+  padding: 0 18px 0 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: move;
+  border-bottom: 1px solid hsl(0 0% 100% / 0.48);
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.54),
+      hsl(0 0% 100% / 0.2)
+    );
+}
+
+.floating-window-titlebar button,
+.floating-window-titlebar input,
+.floating-window-titlebar select {
+  cursor: pointer;
+}
+
+.floating-window-title-area {
+  min-width: 0;
+}
+
+.floating-window-title {
+  font-size: 14px;
+  font-weight: 850;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.floating-window-subtitle {
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 650;
+  color: hsl(var(--foreground) / 0.46);
+}
+
+.floating-window-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.floating-window-body {
+  height: calc(100% - 64px);
+  min-height: 0;
+  overflow: hidden;
+}
