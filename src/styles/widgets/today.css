@@ -444,3 +444,289 @@
   color: hsl(350 70% 48%);
   background: hsl(350 100% 96% / 0.6);
 }
+
+/* ================================
+   Today Focus Widget
+   ================================ */
+
+.today-focus {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.today-focus-hero {
+  min-height: 82px;
+  padding: 16px;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background:
+    radial-gradient(circle at 18% 12%, hsl(var(--primary) / 0.18), transparent 42%),
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.46),
+      hsl(0 0% 100% / 0.18)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.48);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.68),
+    0 18px 40px -32px hsl(var(--primary) / 0.36);
+}
+
+.today-focus-kicker {
+  font-size: 11px;
+  font-weight: 800;
+  color: hsl(var(--foreground) / 0.44);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.today-focus-main {
+  margin-top: 5px;
+  font-size: 20px;
+  font-weight: 850;
+  line-height: 1.1;
+  color: hsl(var(--foreground) / 0.84);
+}
+
+.today-focus-ring {
+  width: 58px;
+  height: 58px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    conic-gradient(
+      hsl(var(--primary) / 0.82),
+      hsl(var(--primary) / 0.22),
+      hsl(0 0% 100% / 0.35)
+    );
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.7),
+    0 12px 28px -22px hsl(var(--primary) / 0.5);
+}
+
+.today-focus-ring span {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(0 0% 100% / 0.76);
+  font-size: 13px;
+  font-weight: 900;
+  color: hsl(var(--foreground) / 0.72);
+}
+
+.today-focus-section {
+  min-height: 0;
+  padding: 12px;
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.34),
+      hsl(0 0% 100% / 0.13)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.42);
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.52);
+}
+
+.today-focus-section-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 850;
+  color: hsl(var(--foreground) / 0.6);
+}
+
+.today-focus-task-list {
+  display: grid;
+  gap: 7px;
+}
+
+.today-focus-task {
+  min-height: 34px;
+  border-radius: 15px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: hsl(0 0% 100% / 0.32);
+  border: 1px solid hsl(0 0% 100% / 0.42);
+}
+
+.today-focus-task.is-done {
+  opacity: 0.55;
+}
+
+.today-focus-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--primary));
+}
+
+.today-focus-task-input {
+  min-width: 0;
+  flex: 1;
+  background: transparent !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  font-size: 12px;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.72);
+}
+
+.today-focus-task.is-done .today-focus-task-input {
+  text-decoration: line-through;
+}
+
+.today-focus-delete {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(350 70% 46% / 0.74);
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.today-focus-task:hover .today-focus-delete {
+  opacity: 1;
+}
+
+.today-focus-grid {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.today-focus-mini-list,
+.today-focus-memo-list {
+  display: grid;
+  gap: 8px;
+}
+
+.today-focus-mini-item,
+.today-focus-career-item,
+.today-focus-memo {
+  min-height: 42px;
+  border-radius: 16px;
+  padding: 9px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: hsl(0 0% 100% / 0.3);
+  border: 1px solid hsl(0 0% 100% / 0.4);
+}
+
+.today-focus-color {
+  width: 8px;
+  height: 28px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  border: 1px solid hsl(0 0% 100% / 0.65);
+}
+
+.today-focus-mini-item strong,
+.today-focus-career-item strong,
+.today-focus-memo strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.1;
+  color: hsl(var(--foreground) / 0.76);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.today-focus-mini-item span,
+.today-focus-career-item span,
+.today-focus-memo span {
+  display: block;
+  margin-top: 3px;
+  font-size: 10.5px;
+  color: hsl(var(--foreground) / 0.46);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.today-focus-career-item {
+  justify-content: space-between;
+}
+
+.today-focus-dday {
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.12);
+  border: 1px solid hsl(var(--primary) / 0.18);
+}
+
+.today-focus-dday.is-danger {
+  color: hsl(350 75% 46%);
+  background: hsl(350 100% 96% / 0.74);
+  border-color: hsl(350 80% 78% / 0.48);
+}
+
+.today-focus-memo svg {
+  flex-shrink: 0;
+  color: hsl(var(--primary) / 0.72);
+}
+
+.today-focus-empty {
+  min-height: 38px;
+  border-radius: 15px;
+  padding: 11px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  color: hsl(var(--foreground) / 0.42);
+  background: hsl(0 0% 100% / 0.22);
+  border: 1px dashed hsl(0 0% 100% / 0.38);
+}
+
+.today-focus-alert {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  color: hsl(350 70% 44%);
+  background: hsl(350 100% 96% / 0.72);
+  border: 1px solid hsl(350 80% 78% / 0.42);
+}
