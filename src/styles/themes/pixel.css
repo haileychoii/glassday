@@ -1,1 +1,530 @@
- 
+/* ================================
+   Theme: Pixel Desk
+   Retro 90s OS Desktop
+   ================================ */
+.theme-pixel {
+  --background: 174 100% 25%;
+  --foreground: 0 0% 0%;
+  --card: 0 0% 78%;
+  --card-foreground: 0 0% 0%;
+  --popover: 0 0% 78%;
+  --popover-foreground: 0 0% 0%;
+  --primary: 240 100% 25%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 78%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 0 0% 70%;
+  --muted-foreground: 0 0% 24%;
+  --accent: 240 100% 25%;
+  --accent-foreground: 0 0% 100%;
+  --border: 0 0% 0%;
+  --input: 0 0% 100%;
+  --ring: 240 100% 25%;
+
+  font-family:
+    "NeoDunggeunmo",
+    "DungGeunMo",
+    "MS Sans Serif",
+    "Tahoma",
+    "Arial",
+    sans-serif !important;
+}
+
+
+/* 배경: Windows 95 teal만. 아이콘/폴더 없음 */
+.theme-pixel .bg-glass-gradient {
+  background: #008080 !important;
+}
+
+/* Pixel desktop icons */
+
+
+
+/* Shell */
+
+/* 전체 앱 shell = 큰 Windows 95 프로그램 창 */
+.theme-pixel .liquid-shell,
+.theme-pixel .glass-panel {
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    1px 1px 0 #dfdfdf inset,
+    -1px -1px 0 #808080 inset,
+    6px 6px 0 rgb(0 0 0 / 0.28) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* sidebar = classic left panel */
+.theme-pixel aside {
+  background: #c0c0c0 !important;
+  border-right: 2px solid #808080 !important;
+  box-shadow:
+    1px 0 0 #ffffff inset,
+    -1px 0 0 #404040 inset !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* topbar = Windows title/control strip 느낌 */
+.theme-pixel .topbar {
+  height: 64px !important;
+  background: #c0c0c0 !important;
+  border-bottom: 2px solid #808080 !important;
+  box-shadow:
+    0 1px 0 #ffffff inset,
+    0 -1px 0 #404040 inset !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 폰트 전체 적용 */
+.theme-pixel,
+.theme-pixel body,
+.theme-pixel #root,
+.theme-pixel .glass-card,
+.theme-pixel aside,
+.theme-pixel main,
+.theme-pixel button,
+.theme-pixel input,
+.theme-pixel textarea,
+.theme-pixel select,
+.theme-pixel .memo-editor,
+.theme-pixel .memo-title-input,
+.theme-pixel .theme-select {
+  font-family:
+    "NeoDunggeunmo",
+    "DungGeunMo",
+    "MS Sans Serif",
+    "Tahoma",
+    "Arial",
+    sans-serif !important;
+  letter-spacing: -0.01em !important;
+  text-shadow: none !important;
+}
+
+/* 텍스트 */
+.theme-pixel h1,
+.theme-pixel h2,
+.theme-pixel h3,
+.theme-pixel strong,
+.theme-pixel .font-semibold,
+.theme-pixel .font-bold {
+  font-family:
+    "NeoDunggeunmo",
+    "DungGeunMo",
+    "MS Sans Serif",
+    "Tahoma",
+    "Arial",
+    sans-serif !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+  letter-spacing: -0.02em !important;
+}
+
+
+.theme-pixel p,
+.theme-pixel span,
+.theme-pixel small,
+.theme-pixel .text-muted-foreground {
+  color: #404040 !important;
+}
+
+/* 카드 = Win95 window */
+.theme-pixel .glass-card,
+.theme-pixel .journal-section,
+.theme-pixel .alert-item,
+.theme-pixel .alert-summary-card,
+.theme-pixel .today-focus-hero,
+.theme-pixel .today-focus-section,
+.theme-pixel .today-focus-task,
+.theme-pixel .today-focus-mini-item,
+.theme-pixel .today-focus-career-item,
+.theme-pixel .today-focus-memo,
+.theme-pixel .today-focus-empty,
+.theme-pixel .calendar-month-day-cell,
+.theme-pixel .calendar-week-timeline,
+.theme-pixel .calendar-event-item,
+.theme-pixel .memo-list-panel,
+.theme-pixel .memo-workspace,
+.theme-pixel .settings-section,
+.theme-pixel .career-detail-section {
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    1px 1px 0 #dfdfdf inset,
+    -1px -1px 0 #808080 inset !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+/* Cards as retro windows */
+
+.theme-pixel .glass-card {
+  position: relative;
+  border-radius: 0 !important;
+  background: hsl(54 20% 86% / 0.98) !important;
+  border-top: 3px solid hsl(0 0% 100% / 0.95) !important;
+  border-left: 3px solid hsl(0 0% 100% / 0.95) !important;
+  border-right: 3px solid hsl(230 18% 20% / 0.8) !important;
+  border-bottom: 3px solid hsl(230 18% 20% / 0.8) !important;
+  box-shadow:
+    5px 5px 0 hsl(230 20% 8% / 0.28),
+    inset 1px 1px 0 hsl(0 0% 100% / 0.85) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: hidden;
+}
+
+
+/* 카드 위 titlebar */
+.theme-pixel .glass-card {
+  position: relative;
+  padding-top: 28px !important;
+  overflow: hidden !important;
+}
+
+.theme-pixel .glass-card::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  height: 22px;
+  background: #000080;
+  border-bottom: 1px solid #000000;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.theme-pixel .glass-card::after {
+  content: "□ ×";
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  z-index: 2;
+  height: 18px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  font-family: "MS Sans Serif", "Tahoma", sans-serif !important;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #ffffff;
+  pointer-events: none;
+}
+
+/* 카드 헤더가 titlebar에 안 겹치게 */
+.theme-pixel .glass-card-header {
+  position: relative;
+  z-index: 3;
+}
+
+
+/* Buttons */
+
+/* 버튼 = classic bevel */
+.theme-pixel .glass-button,
+.theme-pixel .calendar-nav-button,
+.theme-pixel .calendar-view-button,
+.theme-pixel .widget-picker-button,
+.theme-pixel .settings-reset-button,
+.theme-pixel .calendar-google-button,
+.theme-pixel .calendar-danger-button,
+.theme-pixel .calendar-done-button,
+.theme-pixel .memo-tool-button,
+.theme-pixel .memo-mini-button,
+.theme-pixel .today-task-add-row button,
+.theme-pixel .sidebar-tab-item,
+.theme-pixel button {
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    1px 1px 0 #dfdfdf inset,
+    -1px -1px 0 #808080 inset !important;
+  transform: none !important;
+}
+
+.theme-pixel .glass-button:active,
+.theme-pixel .calendar-nav-button:active,
+.theme-pixel .calendar-view-button:active,
+.theme-pixel .widget-picker-button:active,
+.theme-pixel .memo-tool-button:active,
+.theme-pixel .memo-mini-button:active,
+.theme-pixel button:active {
+  border-top-color: #404040 !important;
+  border-left-color: #404040 !important;
+  border-right-color: #ffffff !important;
+  border-bottom-color: #ffffff !important;
+  box-shadow:
+    1px 1px 0 #808080 inset,
+    -1px -1px 0 #dfdfdf inset !important;
+  padding-top: 1px !important;
+  padding-left: 1px !important;
+}
+
+/* ---------- */
+
+/* Inputs */
+
+/* inputs = sunken field */
+.theme-pixel input,
+.theme-pixel textarea,
+.theme-pixel select,
+.theme-pixel .memo-editor,
+.theme-pixel .memo-title-input,
+.theme-pixel .calendar-date-input,
+.theme-pixel .theme-select {
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow:
+    1px 1px 0 #808080 inset,
+    -1px -1px 0 #dfdfdf inset !important;
+  outline: none !important;
+}
+
+.theme-pixel input::placeholder,
+.theme-pixel textarea::placeholder {
+  color: #808080 !important;
+}
+
+/* select option */
+.theme-pixel select option,
+.theme-pixel .theme-select option {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* sidebar active */
+.theme-pixel .sidebar-tab-item {
+  min-height: 38px !important;
+}
+
+.theme-pixel .sidebar-tab-item.is-active {
+  background: #000080 !important;
+  color: #ffffff !important;
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+}
+
+.theme-pixel .sidebar-tab-item.is-active * {
+  color: #ffffff !important;
+}
+
+
+/* Floating windows / modals */
+
+/* floating windows / modals */
+.theme-pixel .memo-window,
+.theme-pixel .calendar-modal-window,
+.theme-pixel .settings-modal-window,
+.theme-pixel .career-modal-window {
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    1px 1px 0 #dfdfdf inset,
+    -1px -1px 0 #808080 inset,
+    8px 8px 0 rgb(0 0 0 / 0.34) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-pixel .memo-window-titlebar,
+.theme-pixel .calendar-modal-header,
+.theme-pixel .settings-modal-header,
+.theme-pixel .career-modal-header {
+  background: #000080 !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #000000 !important;
+}
+
+.theme-pixel .memo-window-titlebar *,
+.theme-pixel .calendar-modal-header *,
+.theme-pixel .settings-modal-header *,
+.theme-pixel .career-modal-header * {
+  color: #ffffff !important;
+}
+
+/* calendar bars */
+.theme-pixel .calendar-range-chip,
+.theme-pixel .calendar-week-event {
+  border-radius: 0 !important;
+  background: #ffffcc !important;
+  color: #000000 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #808080 !important;
+  border-bottom: 1px solid #808080 !important;
+  box-shadow: none !important;
+}
+
+.theme-pixel .calendar-week-event strong,
+.theme-pixel .calendar-week-event span {
+  color: #000000 !important;
+}
+
+/* color chips는 네모 */
+.theme-pixel .event-color-chip,
+.theme-pixel .memo-color-chip {
+  border-radius: 0 !important;
+}
+
+
+/* progress */
+.theme-pixel .today-focus-ring {
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: none !important;
+}
+
+.theme-pixel .today-focus-ring span {
+  border-radius: 0 !important;
+  background: #ffffff !important;
+}
+
+/* settings preview */
+.settings-theme-preview.theme-pixel {
+  background:
+    linear-gradient(#000080, #000080) 0 0 / 100% 14px no-repeat,
+    #c0c0c0 !important;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+}
+/* --------- */
+
+
+
+/* Inner panels */
+
+.theme-pixel .dashboard-tab-header,
+.theme-pixel .widget-picker-panel,
+.theme-pixel .calendar-month-day-cell,
+.theme-pixel .calendar-week-timeline,
+.theme-pixel .calendar-event-item,
+.theme-pixel .memo-list-panel,
+.theme-pixel .memo-workspace,
+.theme-pixel .settings-section,
+.theme-pixel .career-detail-section {
+  border-radius: 0 !important;
+  background: hsl(54 20% 88% / 0.94) !important;
+  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
+  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Pixel Desk support */
+
+.theme-pixel .today-focus-hero,
+.theme-pixel .today-focus-section,
+.theme-pixel .today-focus-task,
+.theme-pixel .today-focus-mini-item,
+.theme-pixel .today-focus-career-item,
+.theme-pixel .today-focus-memo,
+.theme-pixel .today-focus-empty,
+.theme-pixel .today-focus-alert {
+  border-radius: 0 !important;
+  background: hsl(54 20% 88% / 0.94) !important;
+  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
+  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
+  box-shadow: none !important;
+}
+
+/* Pixel Desk support */
+
+.theme-pixel .alert-summary-card,
+.theme-pixel .alert-item,
+.theme-pixel .alert-icon,
+.theme-pixel .alert-empty-state,
+.theme-pixel .alert-action-label,
+.theme-pixel .alert-severity-pill,
+.theme-pixel .alert-dismiss-button {
+  border-radius: 0 !important;
+  background: hsl(54 20% 88% / 0.94) !important;
+  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
+  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
+  box-shadow: none !important;
+}
+
+/* Mac Core support */
+
+.theme-ios .alert-summary-card,
+.theme-ios .alert-item,
+.theme-ios .alert-icon,
+.theme-ios .alert-empty-state,
+.theme-ios .alert-action-label,
+.theme-ios .alert-severity-pill,
+.theme-ios .alert-dismiss-button {
+  border-radius: 20px !important;
+  background: hsl(0 0% 100% / 0.58) !important;
+  border: 1px solid hsl(0 0% 100% / 0.64) !important;
+  box-shadow:
+    0 16px 44px -34px hsl(220 24% 20% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}
+
+/* Pixel Desk support */
+
+.theme-pixel .study-hero,
+.theme-pixel .study-date-button,
+.theme-pixel .study-today-button,
+.theme-pixel .study-date-input,
+.theme-pixel .study-subject-card,
+.theme-pixel .study-input-panel,
+.theme-pixel .study-goal-panel,
+.theme-pixel .study-week-panel,
+.theme-pixel .study-task-panel,
+.theme-pixel .study-record-list-panel,
+.theme-pixel .study-task,
+.theme-pixel .study-record-item,
+.theme-pixel .study-empty,
+.theme-pixel .study-goal-item,
+.theme-pixel .study-record-form input,
+.theme-pixel .study-record-form button {
+  border-radius: 0 !important;
+  background: hsl(54 20% 88% / 0.94) !important;
+  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
+  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
+  box-shadow: none !important;
+}
