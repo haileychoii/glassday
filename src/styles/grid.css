@@ -1355,9 +1355,9 @@
 }
 
 .calendar-range-chip {
-  height: 17px;
+  /* height: 17px;
   width: calc(100% + 6px);
-  margin-left: -3px;
+  margin-left: -3px; */
   padding: 0 7px;
   border-radius: 0;
   font-size: 9px;
@@ -7379,4 +7379,243 @@ main {
   display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
+}
+
+/* =========================================================
+   Calendar view toggle visibility fix
+   ========================================================= */
+
+.calendar-view-toggle {
+  height: 34px !important;
+  padding: 3px !important;
+  border-radius: 999px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  background: hsl(220 18% 12% / 0.92) !important;
+  border: 1px solid hsl(220 18% 20% / 0.18) !important;
+}
+
+.calendar-view-button {
+  height: 28px !important;
+  min-width: 54px !important;
+  padding: 0 12px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: hsl(220 12% 58%) !important;
+  background: transparent !important;
+}
+
+.calendar-view-button.is-active {
+  color: hsl(220 18% 16%) !important;
+  background: hsl(0 0% 100% / 0.96) !important;
+  box-shadow:
+    0 8px 18px -12px hsl(220 20% 12% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.92) !important;
+}
+
+.calendar-view-button:not(.is-active):hover {
+  color: hsl(0 0% 100% / 0.88) !important;
+}
+
+/* =========================================================
+   Calendar Week all-day range bars
+   ========================================================= */
+
+.calendar-week-timeline {
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.58),
+      hsl(220 50% 98% / 0.42)
+    ) !important;
+  border: 1px solid hsl(220 18% 82% / 0.48) !important;
+  box-shadow:
+    0 22px 70px -58px hsl(220 28% 30% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
+}
+
+.calendar-week-all-day {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  min-height: 42px;
+  border-bottom: 1px solid hsl(220 18% 82% / 0.36);
+  background: hsl(0 0% 100% / 0.38);
+  position: sticky;
+  top: 0;
+  z-index: 8;
+}
+
+.calendar-week-all-day-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2px;
+  font-size: 9px;
+  font-weight: 800;
+  color: hsl(var(--foreground) / 0.36);
+  border-right: 1px solid hsl(220 18% 82% / 0.34);
+}
+
+.calendar-week-all-day-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(86px, 1fr));
+  min-width: 602px;
+  align-items: center;
+  gap: 0;
+  padding: 7px 6px;
+  overflow: hidden;
+}
+
+.calendar-week-range-bar {
+  height: 24px;
+  min-width: 0;
+  margin: 0 2px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 10px;
+  font-weight: 800;
+  color: hsl(225 30% 20% / 0.78);
+  border: 1px solid hsl(0 0% 100% / 0.7);
+  box-shadow:
+    0 10px 24px -18px hsl(220 28% 24% / 0.26),
+    inset 0 1px 0 hsl(0 0% 100% / 0.74);
+}
+
+/* =========================================================
+   Calendar Week all-day range bars
+   ========================================================= */
+
+.calendar-week-timeline {
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.58),
+      hsl(220 50% 98% / 0.42)
+    ) !important;
+  border: 1px solid hsl(220 18% 82% / 0.48) !important;
+  box-shadow:
+    0 22px 70px -58px hsl(220 28% 30% / 0.42),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
+}
+
+.calendar-week-all-day {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  min-height: 42px;
+  border-bottom: 1px solid hsl(220 18% 82% / 0.36);
+  background: hsl(0 0% 100% / 0.38);
+  position: sticky;
+  top: 0;
+  z-index: 8;
+}
+
+.calendar-week-all-day-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2px;
+  font-size: 9px;
+  font-weight: 800;
+  color: hsl(var(--foreground) / 0.36);
+  border-right: 1px solid hsl(220 18% 82% / 0.34);
+}
+
+.calendar-week-all-day-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(86px, 1fr));
+  min-width: 602px;
+  align-items: center;
+  gap: 0;
+  padding: 7px 6px;
+  overflow: hidden;
+}
+
+.calendar-week-range-bar {
+  height: 24px;
+  min-width: 0;
+  margin: 0 2px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 10px;
+  font-weight: 800;
+  color: hsl(225 30% 20% / 0.78);
+  border: 1px solid hsl(0 0% 100% / 0.7);
+  box-shadow:
+    0 10px 24px -18px hsl(220 28% 24% / 0.26),
+    inset 0 1px 0 hsl(0 0% 100% / 0.74);
+}
+
+.calendar-week-timeline {
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
+}
+
+.calendar-week-all-day {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  min-height: 42px;
+  border-bottom: 1px solid hsl(220 18% 82% / 0.36);
+  background: hsl(0 0% 100% / 0.38);
+  position: sticky;
+  top: 0;
+  z-index: 8;
+}
+
+.calendar-week-all-day-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  color: hsl(var(--foreground) / 0.36);
+  border-right: 1px solid hsl(220 18% 82% / 0.34);
+}
+
+.calendar-week-all-day-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(86px, 1fr));
+  min-width: 602px;
+  align-items: center;
+  gap: 0;
+  padding: 7px 6px;
+  overflow: hidden;
+}
+
+.calendar-week-all-day-empty {
+  grid-column: 1 / -1;
+  font-size: 10px;
+  color: hsl(var(--foreground) / 0.34);
+}
+
+.calendar-week-range-bar {
+  height: 24px;
+  min-width: 0;
+  margin: 0 2px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 10px;
+  font-weight: 800;
+  color: hsl(225 30% 20% / 0.78);
+  border: 1px solid hsl(0 0% 100% / 0.7);
+  box-shadow:
+    0 10px 24px -18px hsl(220 28% 24% / 0.26),
+    inset 0 1px 0 hsl(0 0% 100% / 0.74);
 }
