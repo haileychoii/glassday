@@ -28,6 +28,38 @@ export type CareerStatus =
   | "Completed"
   | "Rejected";
 
+export type CareerPriority = "high" | "medium" | "low";
+
+export type CareerStageStatus =
+  | "not_started"
+  | "in_progress"
+  | "done"
+  | "passed"
+  | "failed"
+  | "waiting";
+
+export type CareerStage = {
+  id: string;
+  label: string;
+  status: CareerStageStatus;
+  date: string;
+  memo: string;
+};
+
+export type CoverLetterStatus =
+  | "not_started"
+  | "drafting"
+  | "reviewing"
+  | "done";
+
+export type CoverLetterItem = {
+  id: string;
+  question: string;
+  status: CoverLetterStatus;
+  answer: string;
+  memo: string;
+};
+
 export type CareerItem = {
   id: string;
   company: string;
