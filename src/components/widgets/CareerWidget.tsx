@@ -200,6 +200,7 @@ export const CareerWidget = () => {
       coverLetterQuestions: next,
     });
   };
+  const detailItem = selectedItem ? normalizeCareerItem(selectedItem) : null;
 
   const removeQuestion = (id: string, index: number) => {
     const app = careerApplications.find((item) => item.id === id);
