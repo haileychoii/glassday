@@ -528,3 +528,51 @@
   border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
   box-shadow: none !important;
 }
+
+/* Pixel Desk support */
+
+.theme-pixel .journal-hero,
+.theme-pixel .journal-date-button,
+.theme-pixel .journal-date-input,
+.theme-pixel .journal-section,
+.theme-pixel .journal-task,
+.theme-pixel .journal-mini-add,
+.theme-pixel .journal-mood-button,
+.theme-pixel .journal-score-item,
+.theme-pixel .journal-section textarea,
+.theme-pixel .journal-review-section input {
+  border-radius: 0 !important;
+  background: hsl(54 20% 88% / 0.94) !important;
+  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
+  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
+  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
+  box-shadow: none !important;
+}
+
+/* Pixel Desk support */
+
+.theme-pixel .floating-window {
+  border-radius: 0 !important;
+  background: hsl(54 20% 86% / 0.98) !important;
+  border-top: 3px solid hsl(0 0% 100% / 0.95) !important;
+  border-left: 3px solid hsl(0 0% 100% / 0.95) !important;
+  border-right: 3px solid hsl(230 18% 18% / 0.86) !important;
+  border-bottom: 3px solid hsl(230 18% 18% / 0.86) !important;
+  box-shadow:
+    8px 8px 0 hsl(230 20% 8% / 0.35),
+    inset 1px 1px 0 hsl(0 0% 100% / 0.86) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-pixel .floating-window-titlebar {
+  height: 58px;
+  border-bottom: 3px solid hsl(230 18% 18% / 0.72) !important;
+  background:
+    linear-gradient(
+      90deg,
+      hsl(330 95% 75%),
+      hsl(330 90% 84%)
+    ) !important;
+}
