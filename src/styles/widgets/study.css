@@ -619,3 +619,14 @@
   gap: 14px;
   overflow: auto;
 }
+
+@media (max-width: 760px){  
+.today-focus-hero {
+    flex-direction: column !important;
+  }
+
+  .today-focus-ring {
+    width: 52px !important;
+    height: 52px !important;
+  }
+}
