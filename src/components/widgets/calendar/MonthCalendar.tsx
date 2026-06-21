@@ -1,150 +1,285 @@
+import { useMemo } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
-import { getEventColor } from "../../../constants/colors";
-import { cn } from "../../../lib/utils";
-import {
-  chunkWeeks,
-  eventTouchesDate,
-  formatEventTime,
-  getMonthDates,
-  toLocalDateInput,
-} from "./calendarUtils";
 
 type MonthCalendarProps = {
-  selectedDate: string;
   events: CalendarEvent[];
-  onSelectDate: (date: string) => void;
-  onOpenEvent: (eventId: string) => void;
+  selectedDate?: string;
+  currentDate?: string;
+  onSelectDate?: (date: string) => void;
+  onDateSelect?: (date: string) => void;
+  onSelectEvent?: (event: CalendarEvent) => void;
+  onEventClick?: (event: CalendarEvent) => void;
 };
 
-const weekdays = ["월", "화", "수", "목", "금", "토", "일"];
+type MonthDay = {
+  date: string;
+  dayNumber: number;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+  isSelected: boolean;
+};
 
-const getMonthEventSegment = (
+type WeekRow = MonthDay[];
+
+type RangeSegment = CalendarEvent & {
+  weekIndex: number;
+  startColumn: number;
+  endColumn: number;
+  isStart: boolean;
+  isEnd: boolean;
+};
+
+const weekdayLabels = ["월", "화", "수", "목", "금", "토", "일"];
+
+const pad2 = (value: number) => String(value).padStart(2, "0");
+
+const toDateString = (date: Date) => {
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(
+    date.getDate()
+  )}`;
+};
+
+const parseDate = (dateString: string) => {
+  const [year, month, day] = dateString.split("-").map(Number);
+  return new Date(year, (month ?? 1) - 1, day ?? 1);
+};
+
+const addDays = (dateString: string, amount: number) => {
+  const date = parseDate(dateString);
+  date.setDate(date.getDate() + amount);
+  return toDateString(date);
+};
+
+const getMonthStart = (dateString: string) => {
+  const date = parseDate(dateString);
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-01`;
+};
+
+const getCalendarStart = (monthStart: string) => {
+  const date = parseDate(monthStart);
+  const day = date.getDay();
+  const mondayBasedDay = day === 0 ? 6 : day - 1;
+  date.setDate(date.getDate() - mondayBasedDay);
+  return toDateString(date);
+};
+
+const getCalendarWeeks = (baseDate: string): WeekRow[] => {
+  const monthStart = getMonthStart(baseDate);
+  const calendarStart = getCalendarStart(monthStart);
+  const currentMonth = parseDate(monthStart).getMonth();
+  const today = toDateString(new Date());
+
+  return Array.from({ length: 6 }, (_, weekIndex) => {
+    return Array.from({ length: 7 }, (_, dayIndex) => {
+      const date = addDays(calendarStart, weekIndex * 7 + dayIndex);
+      const parsed = parseDate(date);
+
+      return {
+        date,
+        dayNumber: parsed.getDate(),
+        isCurrentMonth: parsed.getMonth() === currentMonth,
+        isToday: date === today,
+        isSelected: date === baseDate,
+      };
+    });
+  });
+};
+
+const isRangeEvent = (event: CalendarEvent) => {
+  return event.startDate !== event.endDate;
+};
+
+const doesEventOverlapRange = (
   event: CalendarEvent,
-  date: string,
-  weekDates: string[]
+  rangeStart: string,
+  rangeEnd: string
 ) => {
-  const index = weekDates.indexOf(date);
-  if (index === -1) return null;
+  return event.startDate <= rangeEnd && event.endDate >= rangeStart;
+};
 
-  const isInRange = event.startDate <= date && event.endDate >= date;
-  if (!isInRange) return null;
+const getEventColor = (event: CalendarEvent) => {
+  if (event.color) return event.color;
 
-  const isStart = event.startDate === date || index === 0;
-  const isEnd = event.endDate === date || index === 6;
+  if (event.source === "career") {
+    return "linear-gradient(135deg, hsl(248 100% 94% / 0.95), hsl(220 100% 96% / 0.84))";
+  }
 
-  return {
-    isStart,
-    isEnd,
-    isMiddle: !isStart && !isEnd,
-  };
+  return "linear-gradient(135deg, hsl(210 100% 94% / 0.95), hsl(220 100% 97% / 0.86))";
 };
 
 export const MonthCalendar = ({
-  selectedDate,
   events,
+  selectedDate,
+  currentDate,
   onSelectDate,
-  onOpenEvent,
+  onDateSelect,
+  onSelectEvent,
+  onEventClick,
 }: MonthCalendarProps) => {
-  const monthInfo = getMonthDates(selectedDate);
-  const monthWeeks = chunkWeeks(monthInfo.dates);
+  const baseDate = selectedDate ?? currentDate ?? toDateString(new Date());
+
+  const weeks = useMemo(() => getCalendarWeeks(baseDate), [baseDate]);
+
+  const monthLabel = useMemo(() => {
+    const parsed = parseDate(baseDate);
+    return `${parsed.getFullYear()}-${pad2(parsed.getMonth() + 1)}`;
+  }, [baseDate]);
+
+  const rangeSegments = useMemo<RangeSegment[]>(() => {
+    const segments: RangeSegment[] = [];
+
+    weeks.forEach((week, weekIndex) => {
+      const weekStart = week[0].date;
+      const weekEnd = week[6].date;
+
+      events
+        .filter(isRangeEvent)
+        .filter((event) => doesEventOverlapRange(event, weekStart, weekEnd))
+        .forEach((event) => {
+          const startIndex = week.findIndex((day) => day.date === event.startDate);
+          const endIndex = week.findIndex((day) => day.date === event.endDate);
+
+          const safeStartIndex =
+            startIndex === -1 ? (event.startDate < weekStart ? 0 : 6) : startIndex;
+
+          const safeEndIndex =
+            endIndex === -1 ? (event.endDate > weekEnd ? 6 : 0) : endIndex;
+
+          segments.push({
+            ...event,
+            weekIndex,
+            startColumn: safeStartIndex + 1,
+            endColumn: safeEndIndex + 2,
+            isStart: event.startDate >= weekStart && event.startDate <= weekEnd,
+            isEnd: event.endDate >= weekStart && event.endDate <= weekEnd,
+          });
+        });
+    });
+
+    return segments;
+  }, [events, weeks]);
+
+  const singleDayEvents = useMemo(() => {
+    return events.filter((event) => !isRangeEvent(event));
+  }, [events]);
+
+  const handleDateSelect = (date: string) => {
+    onSelectDate?.(date);
+    onDateSelect?.(date);
+  };
+
+  const handleEventClick = (event: CalendarEvent) => {
+    onSelectEvent?.(event);
+    onEventClick?.(event);
+  };
 
   return (
     <div className="calendar-month-board">
+      <div className="calendar-month-title-row">
+        <strong>{monthLabel}</strong>
+      </div>
+
       <div className="calendar-month-weekdays">
-        {weekdays.map((day) => (
-          <div key={day} className="calendar-month-weekday">
-            {day}
+        {weekdayLabels.map((label) => (
+          <div key={label} className="calendar-month-weekday">
+            {label}
           </div>
         ))}
       </div>
 
       <div className="calendar-month-weeks">
-        {monthWeeks.map((weekDates) => (
-          <div key={weekDates.join("-")} className="calendar-month-week-row">
-            {weekDates.map((date) => {
-              const dateEvents = events.filter((event) =>
-                eventTouchesDate(event, date)
-              );
+        {weeks.map((week, weekIndex) => {
+          const weekRangeSegments = rangeSegments.filter(
+            (segment) => segment.weekIndex === weekIndex
+          );
 
-              const isToday = date === toLocalDateInput();
-              const isSelected = date === selectedDate;
-              const isCurrentMonth =
-                date.slice(0, 7) === monthInfo.currentMonth;
+          return (
+            <div key={week[0].date} className="calendar-month-week-row">
+              {week.map((day) => {
+                const daySingleEvents = singleDayEvents.filter(
+                  (event) => event.startDate === day.date
+                );
 
-              return (
-                <div
-                  key={date}
-                  className={cn(
-                    "calendar-month-day-cell",
-                    !isCurrentMonth && "is-muted",
-                    isToday && "is-today",
-                    isSelected && "is-selected"
-                  )}
-                >
+                return (
                   <button
+                    key={day.date}
                     type="button"
-                    onClick={() => onSelectDate(date)}
-                    className="calendar-month-day-top"
+                    onClick={() => handleDateSelect(day.date)}
+                    className={[
+                      "calendar-month-day-cell",
+                      !day.isCurrentMonth ? "is-muted" : "",
+                      day.isToday ? "is-today" : "",
+                      day.isSelected ? "is-selected" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                   >
-                    <span>{Number(date.slice(-2))}</span>
+                    <div className="calendar-month-day-top">
+                      <span>{day.dayNumber}</span>
+                      {daySingleEvents.length + weekRangeSegments.length > 0 && (
+                        <span className="calendar-month-count">
+                          {daySingleEvents.length + weekRangeSegments.length}
+                        </span>
+                      )}
+                    </div>
 
-                    {dateEvents.length > 0 && (
-                      <span className="calendar-month-count">
-                        {dateEvents.length}
-                      </span>
-                    )}
-                  </button>
-
-                  <div className="calendar-range-stack">
-                    {dateEvents.slice(0, 4).map((event) => {
-                      const segment = getMonthEventSegment(
-                        event,
-                        date,
-                        weekDates
-                      );
-
-                      if (!segment) return null;
-
-                      return (
+                    <div className="calendar-month-single-events">
+                      {daySingleEvents.slice(0, 2).map((event) => (
                         <button
-                          key={`${event.id}-${date}`}
+                          key={event.id}
                           type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onOpenEvent(event.id);
+                          className={[
+                            "calendar-month-single-chip",
+                            event.source === "career" ? "is-career" : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                          style={{ background: getEventColor(event) }}
+                          onClick={(clickEvent) => {
+                            clickEvent.stopPropagation();
+                            handleEventClick(event);
                           }}
-                          className={cn(
-                            "calendar-range-chip",
-                            event.source === "career" && "is-career",
-                            event.source === "manual" && "is-manual",
-                            segment.isStart && "is-start",
-                            segment.isEnd && "is-end",
-                            segment.isMiddle && "is-middle"
-                          )}
-                          style={{
-  background: `linear-gradient(90deg, ${getEventColor(
-    event
-  )}aa, ${getEventColor(event)}55)`,
-  borderColor: `${getEventColor(event)}cc`,
-}}
-                          title={`${event.title} · ${formatEventTime(event)}`}
+                          title={`${event.title} · ${event.startTime}-${event.endTime}`}
                         >
-                          {segment.isStart ? event.title : ""}
+                          {event.title}
                         </button>
-                      );
-                    })}
+                      ))}
+                    </div>
+                  </button>
+                );
+              })}
 
-                    {dateEvents.length > 4 && (
-                      <div className="calendar-month-more">
-                        +{dateEvents.length - 4} more
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ))}
+              <div className="calendar-month-range-layer">
+                {weekRangeSegments.map((event) => (
+                  <button
+                    key={`${event.id}-${weekIndex}`}
+                    type="button"
+                    className={[
+                      "calendar-range-chip",
+                      event.isStart ? "is-start" : "is-middle",
+                      event.isEnd ? "is-end" : "",
+                      event.isStart && event.isEnd ? "is-start-end" : "",
+                      event.source === "career" ? "is-career" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    style={{
+                      gridColumn: `${event.startColumn} / ${event.endColumn}`,
+                      background: getEventColor(event),
+                    }}
+                    onClick={(clickEvent) => {
+                      clickEvent.stopPropagation();
+                      handleEventClick(event);
+                    }}
+                    title={`${event.title} · ${event.startDate} → ${event.endDate}`}
+                  >
+                    {event.isStart ? event.title : ""}
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
