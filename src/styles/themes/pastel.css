@@ -327,3 +327,221 @@
     inset 0 1px 0 hsl(0 0% 100% / 0.82) !important;
 }
 
+/* =========================================================
+   THEME: PASTEL COLOR ONLY
+   참고 이미지 색감/배경/유리감만 적용
+   카드 크기/레이아웃/radius 건드리지 않음
+   ========================================================= */
+
+.theme-pastel {
+  --background: 315 88% 97%;
+  --foreground: 246 34% 18%;
+  --card: 0 0% 100%;
+  --card-foreground: 246 34% 18%;
+  --primary: 318 58% 72%;
+  --primary-foreground: 246 34% 18%;
+  --secondary: 200 88% 92%;
+  --secondary-foreground: 246 34% 18%;
+  --muted: 275 48% 94%;
+  --muted-foreground: 246 16% 48%;
+  --accent: 185 72% 84%;
+  --accent-foreground: 246 34% 18%;
+  --border: 275 32% 86%;
+  --input: 0 0% 100%;
+  --ring: 318 58% 72%;
+}
+
+/* 배경만 참고 이미지처럼 */
+.theme-pastel .bg-glass-gradient {
+  background:
+    radial-gradient(circle at 12% 8%, hsl(318 100% 90% / 0.82), transparent 34%),
+    radial-gradient(circle at 88% 10%, hsl(198 100% 88% / 0.9), transparent 35%),
+    radial-gradient(circle at 18% 82%, hsl(270 100% 92% / 0.75), transparent 38%),
+    radial-gradient(circle at 86% 88%, hsl(178 100% 88% / 0.72), transparent 36%),
+    linear-gradient(
+      135deg,
+      hsl(318 100% 97%) 0%,
+      hsl(285 100% 97%) 38%,
+      hsl(208 100% 96%) 70%,
+      hsl(184 100% 95%) 100%
+    ) !important;
+}
+
+.theme-pastel .bg-glass-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      120deg,
+      hsl(0 0% 100% / 0.42),
+      transparent 42%,
+      hsl(0 0% 100% / 0.26)
+    ),
+    radial-gradient(circle at 50% 15%, hsl(0 0% 100% / 0.36), transparent 48%);
+  filter: blur(22px);
+  opacity: 0.92;
+}
+
+.theme-pastel .bg-glass-gradient::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* 앱 전체 껍데기 색감만 */
+.theme-pastel .liquid-shell,
+.theme-pastel .glass-panel {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.46),
+      hsl(318 100% 98% / 0.22)
+    ) !important;
+  border-color: hsl(0 0% 100% / 0.7) !important;
+  box-shadow:
+    0 44px 140px -68px hsl(276 42% 42% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
+  backdrop-filter: blur(32px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(160%) !important;
+}
+
+/* topbar/side 색감 */
+.theme-pastel .topbar {
+  background:
+    linear-gradient(
+      90deg,
+      hsl(318 100% 98% / 0.5),
+      hsl(205 100% 98% / 0.32)
+    ) !important;
+  border-bottom-color: hsl(0 0% 100% / 0.5) !important;
+}
+
+.theme-pastel aside {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(318 100% 98% / 0.46),
+      hsl(255 100% 98% / 0.3)
+    ) !important;
+  border-right-color: hsl(0 0% 100% / 0.55) !important;
+}
+
+/* 카드 색감만. radius/크기 안 건드림 */
+.theme-pastel .glass-card,
+.theme-pastel .today-focus-hero,
+.theme-pastel .today-focus-section,
+.theme-pastel .today-focus-task,
+.theme-pastel .today-focus-mini-item,
+.theme-pastel .today-focus-career-item,
+.theme-pastel .today-focus-memo,
+.theme-pastel .alert-item,
+.theme-pastel .alert-summary-card,
+.theme-pastel .journal-section,
+.theme-pastel .calendar-month-day-cell,
+.theme-pastel .calendar-week-timeline,
+.theme-pastel .calendar-event-item,
+.theme-pastel .memo-list-panel,
+.theme-pastel .memo-workspace,
+.theme-pastel .settings-section,
+.theme-pastel .career-detail-section,
+.theme-pastel .study-input-panel,
+.theme-pastel .study-week-panel,
+.theme-pastel .study-goal-panel,
+.theme-pastel .study-task-panel,
+.theme-pastel .study-record-list-panel {
+  background:
+    radial-gradient(circle at 12% 0%, hsl(318 100% 96% / 0.38), transparent 42%),
+    radial-gradient(circle at 100% 0%, hsl(190 100% 93% / 0.36), transparent 46%),
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.68),
+      hsl(280 100% 98% / 0.32)
+    ) !important;
+  border-color: hsl(0 0% 100% / 0.72) !important;
+  box-shadow:
+    0 26px 80px -62px hsl(275 36% 42% / 0.32),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
+  backdrop-filter: blur(26px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(160%) !important;
+}
+
+/* 글씨 색감 */
+.theme-pastel h1,
+.theme-pastel h2,
+.theme-pastel h3,
+.theme-pastel strong,
+.theme-pastel .font-semibold,
+.theme-pastel .font-bold {
+  color: hsl(246 34% 18% / 0.94) !important;
+}
+
+.theme-pastel p,
+.theme-pastel span,
+.theme-pastel small,
+.theme-pastel .text-muted-foreground {
+  color: hsl(246 18% 46% / 0.72) !important;
+}
+
+/* 버튼 색감 */
+.theme-pastel .glass-button,
+.theme-pastel .calendar-nav-button,
+.theme-pastel .widget-picker-button,
+.theme-pastel .settings-reset-button {
+  color: hsl(246 28% 24% / 0.82) !important;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.82),
+      hsl(318 100% 98% / 0.48)
+    ) !important;
+  border-color: hsl(0 0% 100% / 0.7) !important;
+  box-shadow:
+    0 14px 32px -28px hsl(275 36% 40% / 0.3),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
+}
+
+/* Pastel에서 테마 선택 버튼을 참고처럼 더 뽀얗게 */
+.theme-pastel .theme-segmented-control {
+  background: hsl(0 0% 100% / 0.58) !important;
+  border-color: hsl(0 0% 100% / 0.72) !important;
+}
+
+.theme-pastel .theme-segment-button {
+  color: hsl(246 18% 44% / 0.7) !important;
+}
+
+.theme-pastel .theme-segment-button.is-active {
+  color: hsl(246 32% 20% / 0.92) !important;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(318 100% 92% / 0.78),
+      hsl(200 100% 91% / 0.7)
+    ) !important;
+}
+
+/* input 색감 */
+.theme-pastel input,
+.theme-pastel textarea,
+.theme-pastel select,
+.theme-pastel .memo-editor,
+.theme-pastel .memo-title-input,
+.theme-pastel .calendar-date-input {
+  color: hsl(246 30% 20% / 0.86) !important;
+  background: hsl(0 0% 100% / 0.56) !important;
+  border-color: hsl(0 0% 100% / 0.7) !important;
+}
+
+/* progress만 민트 → 핑크 */
+.theme-pastel .today-tasks-progress-fill,
+.theme-pastel .progress-fill,
+.theme-pastel .health-progress-fill,
+.theme-pastel .money-progress-fill {
+  background:
+    linear-gradient(
+      90deg,
+      hsl(166 70% 78%),
+      hsl(318 78% 78%)
+    ) !important;
+}
