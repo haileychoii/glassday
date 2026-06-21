@@ -612,3 +612,389 @@
   max-height: 180px !important;
   overflow: auto !important;
 }
+
+/* =========================================================
+   MEMO APP FINAL LAYOUT FIX
+   title / sidebar / paper width separation
+   ========================================================= */
+
+.memo-floating-body,
+.memo-widget,
+.memo-app,
+.memo-layout {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* 메모 위젯 내부를 진짜 앱처럼: 왼쪽 리스트 + 오른쪽 작업공간 */
+.memo-floating-body,
+.memo-layout {
+  display: grid !important;
+  grid-template-columns: 260px minmax(0, 1fr) !important;
+  gap: 16px !important;
+}
+
+/* 메모 리스트 */
+.memo-list-panel {
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+  padding: 14px !important;
+}
+
+/* 오른쪽 작업공간 */
+.memo-workspace {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: grid !important;
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
+  gap: 14px !important;
+  padding: 0 !important;
+}
+
+/* Portfolio Memo 같은 제목 영역 */
+.memo-workspace h1,
+.memo-workspace h2,
+.memo-workspace h3,
+.memo-title,
+.memo-note-title,
+.memo-editor-title {
+  margin: 0 !important;
+  padding: 0 4px !important;
+  min-height: 34px !important;
+  line-height: 34px !important;
+  font-size: 20px !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.035em !important;
+  color: hsl(var(--foreground) / 0.88) !important;
+}
+
+/* 제목 input이 있는 경우 */
+.memo-title-input,
+.memo-workspace input.memo-title-input {
+  width: 100% !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  font-size: 20px !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.035em !important;
+  color: hsl(var(--foreground) / 0.9) !important;
+}
+
+/* 툴바 */
+.memo-toolbar,
+.memo-editor-toolbar {
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+  padding: 0 4px !important;
+}
+
+/* 본문 종이 영역: 전체 너비 꽉 채우지 말고 중앙 종이처럼 */
+.memo-editor,
+[contenteditable="true"].memo-editor {
+  width: min(100%, 820px) !important;
+  max-width: 820px !important;
+  min-height: 360px !important;
+  height: 100% !important;
+  margin: 0 auto !important;
+  padding: 28px 32px !important;
+  overflow: auto !important;
+  border-radius: 28px !important;
+  line-height: 1.7 !important;
+  font-size: 15px !important;
+  font-weight: 450 !important;
+  letter-spacing: -0.015em !important;
+  color: hsl(var(--foreground) / 0.82) !important;
+  background: hsl(336 70% 94% / 0.78) !important;
+  border: 1px solid hsl(336 45% 86% / 0.7) !important;
+  box-shadow:
+    0 24px 70px -54px hsl(330 40% 40% / 0.45),
+    inset 0 1px 0 hsl(0 0% 100% / 0.82) !important;
+}
+
+/* 메모 리스트 아이템 제목도 이상하게 두껍지 않게 */
+.memo-note-item strong,
+.memo-note-title,
+.memo-list-panel strong {
+  font-size: 13px !important;
+  font-weight: 550 !important;
+  letter-spacing: -0.02em !important;
+  color: hsl(var(--foreground) / 0.76) !important;
+}
+
+.memo-note-item span,
+.memo-list-panel small {
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: hsl(var(--foreground) / 0.42) !important;
+}
+
+/* 메모 해시태그 도구는 본문 종이보다 위, 전체 폭 */
+.memo-tag-tools {
+  width: 100% !important;
+  margin: 0 !important;
+  grid-template-columns: 180px auto minmax(0, 1fr) !important;
+}
+
+/* 작은 화면에서는 1열 */
+@media (max-width: 900px) {
+  .memo-floating-body,
+  .memo-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .memo-list-panel {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    max-height: 180px !important;
+  }
+
+  .memo-editor,
+  [contenteditable="true"].memo-editor {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
+
+/* =========================================================
+   MEMO RESPONSIVE MAC-LIKE LAYOUT FIX
+   content width, margin, small-size behavior
+   ========================================================= */
+
+/* 메모 전체: 왼쪽 리스트 + 오른쪽 작업공간 */
+.memo-layout,
+.memo-floating-body {
+  height: 100% !important;
+  min-height: 0 !important;
+  display: grid !important;
+  grid-template-columns: clamp(210px, 24%, 280px) minmax(0, 1fr) !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+}
+
+/* 왼쪽 메모 리스트: macOS sidebar 느낌 */
+.memo-list-panel {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 14px 12px !important;
+  overflow: auto !important;
+  border-right: 1px solid hsl(220 18% 82% / 0.5) !important;
+  background: hsl(220 35% 97% / 0.62) !important;
+  box-shadow: inset -1px 0 0 hsl(0 0% 100% / 0.72) !important;
+}
+
+/* 오른쪽 작업공간 */
+.memo-workspace {
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: clamp(14px, 2vw, 28px) !important;
+  display: grid !important;
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
+  gap: 14px !important;
+  overflow: hidden !important;
+  background: hsl(0 0% 100% / 0.36) !important;
+}
+
+/* 제목 영역: 본문 종이랑 같은 max-width로 중앙 정렬 */
+.memo-title-input,
+.memo-workspace > h1,
+.memo-workspace > h2,
+.memo-workspace > h3,
+.memo-note-title,
+.memo-editor-title {
+  width: min(100%, 860px) !important;
+  max-width: 860px !important;
+  margin: 0 auto !important;
+  padding: 0 2px !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  font-size: 20px !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.035em !important;
+  color: hsl(var(--foreground) / 0.9) !important;
+}
+
+/* 툴바도 제목/본문이랑 같은 폭 */
+.memo-toolbar,
+.memo-editor-toolbar {
+  width: min(100%, 860px) !important;
+  max-width: 860px !important;
+  margin: 0 auto !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+/* 핵심: 본문 종이. 큰 화면에서는 중앙에 여백, 작은 화면에서는 꽉 차게 */
+.memo-editor,
+[contenteditable="true"].memo-editor {
+  width: min(100%, 860px) !important;
+  max-width: 860px !important;
+  height: 100% !important;
+  min-height: 260px !important;
+  margin: 0 auto !important;
+  padding: clamp(20px, 3.2vw, 42px) clamp(20px, 4vw, 56px) !important;
+  overflow: auto !important;
+  border-radius: 26px !important;
+  line-height: 1.72 !important;
+  font-size: 15px !important;
+  font-weight: 450 !important;
+  letter-spacing: -0.015em !important;
+  color: hsl(var(--foreground) / 0.84) !important;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(336 72% 96% / 0.86),
+      hsl(336 70% 94% / 0.76)
+    ) !important;
+  border: 1px solid hsl(336 45% 86% / 0.58) !important;
+  box-shadow:
+    0 24px 70px -58px hsl(330 40% 38% / 0.5),
+    inset 0 1px 0 hsl(0 0% 100% / 0.86) !important;
+}
+
+/* 리스트 아이템도 덜 뚱뚱하게 */
+.memo-note-item {
+  min-height: 58px !important;
+  padding: 10px 11px !important;
+  border-radius: 16px !important;
+}
+
+.memo-note-item strong,
+.memo-list-panel strong {
+  font-size: 13px !important;
+  font-weight: 550 !important;
+  letter-spacing: -0.025em !important;
+  color: hsl(var(--foreground) / 0.74) !important;
+}
+
+.memo-note-item span,
+.memo-list-panel small {
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: hsl(var(--foreground) / 0.42) !important;
+}
+
+/* 메모 해시태그 도구도 본문 폭에 맞춤 */
+.memo-tag-tools,
+.memo-tag-library {
+  width: min(100%, 860px) !important;
+  max-width: 860px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* 중간 이하: sidebar 좁히고 본문 여백 줄임 */
+@media (max-width: 1180px) {
+  .memo-layout,
+  .memo-floating-body {
+    grid-template-columns: clamp(190px, 26%, 240px) minmax(0, 1fr) !important;
+  }
+
+  .memo-workspace {
+    padding: 16px !important;
+  }
+
+  .memo-editor,
+  [contenteditable="true"].memo-editor {
+    max-width: 100% !important;
+    padding: 24px 28px !important;
+  }
+}
+
+/* 작은 위젯/좁은 창: 리스트 위, 에디터 아래 */
+@media (max-width: 760px) {
+  .memo-layout,
+  .memo-floating-body {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+  }
+
+  .memo-list-panel {
+    width: 100% !important;
+    max-height: 150px !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid hsl(220 18% 82% / 0.45) !important;
+  }
+
+  .memo-workspace {
+    padding: 12px !important;
+    gap: 10px !important;
+  }
+
+  .memo-title-input,
+  .memo-workspace > h1,
+  .memo-workspace > h2,
+  .memo-workspace > h3,
+  .memo-note-title,
+  .memo-editor-title,
+  .memo-toolbar,
+  .memo-editor-toolbar,
+  .memo-tag-tools,
+  .memo-tag-library {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  /* 작은 화면에서는 일부러 종이 테두리/여백 거의 제거 */
+  .memo-editor,
+  [contenteditable="true"].memo-editor {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 220px !important;
+    margin: 0 !important;
+    padding: 16px 14px !important;
+    border-radius: 14px !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+}
+
+/* 아주 작은 위젯에서는 진짜 메모장처럼 */
+@media (max-width: 540px) {
+  .memo-list-panel {
+    display: none !important;
+  }
+
+  .memo-workspace {
+    padding: 8px !important;
+  }
+
+  .memo-toolbar,
+  .memo-editor-toolbar {
+    gap: 6px !important;
+  }
+
+  .memo-editor,
+  [contenteditable="true"].memo-editor {
+    padding: 14px 12px !important;
+    border-radius: 10px !important;
+    background: hsl(336 72% 96% / 0.74) !important;
+  }
+}
+
