@@ -256,3 +256,31 @@
   font-size: 11px;
   line-height: 1.45;
 }
+
+/* Alert summary 숫자 3칸이 좁으면 자동 줄바꿈 */
+.alert-summary-grid,
+.alert-stats-grid {
+  min-width: 0 !important;
+}
+
+@media (max-width: 1180px) {
+  .alert-summary-grid,
+  .alert-stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .alert-item {
+    padding: 14px !important;
+  }
+}
+
+/* 더 좁으면 Alert 숫자 카드 1열 */
+@media (max-width: 760px) {
+  .alert-summary-grid,
+  .alert-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+
+}
