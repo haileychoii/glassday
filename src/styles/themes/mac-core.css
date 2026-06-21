@@ -1,1 +1,146 @@
- 
+/* ================================
+   Theme: Cupertino
+   macOS Finder + iOS Widget Style
+   ================================ */
+
+
+
+
+
+/* macOS wallpaper */
+
+
+
+
+/* modals and floating windows */
+
+.theme-ios .memo-window,
+.theme-ios .calendar-modal-window,
+.theme-ios .settings-modal-window,
+.theme-ios .career-modal-window {
+  border-radius: 28px !important;
+  background: hsl(0 0% 100% / 0.78) !important;
+  border: 1px solid hsl(0 0% 100% / 0.76) !important;
+  box-shadow:
+    0 38px 110px -42px hsl(220 24% 16% / 0.48),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
+  backdrop-filter: blur(38px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(38px) saturate(180%) !important;
+}
+
+.theme-ios .memo-window-titlebar,
+.theme-ios .calendar-modal-header,
+.theme-ios .settings-modal-header,
+.theme-ios .career-modal-header {
+  background: hsl(0 0% 96% / 0.72) !important;
+  border-bottom: 1px solid hsl(220 14% 78% / 0.44) !important;
+  color: hsl(220 18% 12%) !important;
+}
+
+
+
+/* inner panels */
+
+.theme-ios .dashboard-tab-header,
+.theme-ios .widget-picker-panel,
+.theme-ios .calendar-month-day-cell,
+.theme-ios .calendar-week-timeline,
+.theme-ios .calendar-event-item,
+.theme-ios .memo-list-panel,
+.theme-ios .memo-workspace,
+.theme-ios .settings-section,
+.theme-ios .career-detail-section,
+.theme-ios .settings-action-card,
+.theme-ios .settings-sync-box {
+  border-radius: 24px !important;
+  background: hsl(0 0% 100% / 0.58) !important;
+  border: 1px solid hsl(0 0% 100% / 0.64) !important;
+  box-shadow:
+    0 16px 44px -34px hsl(220 24% 20% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}
+
+/* calendar */
+
+.theme-ios .calendar-range-chip,
+.theme-ios .calendar-week-event {
+  border-radius: 14px !important;
+  border: 1px solid hsl(0 0% 100% / 0.6) !important;
+  box-shadow:
+    0 10px 28px -22px hsl(220 24% 20% / 0.36),
+    inset 0 1px 0 hsl(0 0% 100% / 0.74) !important;
+}
+
+.theme-ios .calendar-week-event strong {
+  font-weight: 800;
+}
+
+/* memo */
+
+.theme-ios .memo-window-editor {
+  border-radius: 24px !important;
+}
+
+.theme-ios .memo-color-chip,
+.theme-ios .event-color-chip {
+  border-radius: 999px !important;
+}
+
+/* settings preview */
+
+.settings-theme-preview.theme-ios {
+  background:
+    radial-gradient(circle at 30% 30%, hsl(207 100% 76% / 0.7), transparent 38%),
+    linear-gradient(145deg, #ffffff, #eef3f8);
+}
+
+
+/* Mac Core support */
+
+.theme-ios .today-focus-hero,
+.theme-ios .today-focus-section,
+.theme-ios .today-focus-task,
+.theme-ios .today-focus-mini-item,
+.theme-ios .today-focus-career-item,
+.theme-ios .today-focus-memo,
+.theme-ios .today-focus-empty {
+  border-radius: 22px !important;
+  background: hsl(0 0% 100% / 0.58) !important;
+  border: 1px solid hsl(0 0% 100% / 0.64) !important;
+  box-shadow:
+    0 16px 44px -34px hsl(220 24% 20% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}
+
+/* Mac Core support */
+
+.theme-ios .study-hero,
+.theme-ios .study-date-button,
+.theme-ios .study-today-button,
+.theme-ios .study-date-input,
+.theme-ios .study-subject-card,
+.theme-ios .study-input-panel,
+.theme-ios .study-goal-panel,
+.theme-ios .study-week-panel,
+.theme-ios .study-task-panel,
+.theme-ios .study-record-list-panel,
+.theme-ios .study-task,
+.theme-ios .study-record-item,
+.theme-ios .study-empty,
+.theme-ios .study-goal-item,
+.theme-ios .study-record-form input,
+.theme-ios .study-record-form button {
+  border-radius: 20px !important;
+  background: hsl(0 0% 100% / 0.58) !important;
+  border: 1px solid hsl(0 0% 100% / 0.64) !important;
+  box-shadow:
+    0 16px 44px -34px hsl(220 24% 20% / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}
+
