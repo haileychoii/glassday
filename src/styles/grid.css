@@ -6892,3 +6892,282 @@
   color: #1f2937 !important;
   background: #ffffff !important;
 }
+
+/* =========================================================
+   RESPONSIVE APP LAYOUT + WORKSPACE HEADER CONTROL
+   ========================================================= */
+
+/* Pastel / Glass / Pixel에서는 큰 Workspace Home 헤더 숨김 */
+:not(.theme-ios) .dashboard-tab-header,
+.theme-pastel .dashboard-tab-header,
+.theme-glass .dashboard-tab-header,
+.theme-pixel .dashboard-tab-header {
+  display: none !important;
+}
+
+/* Mac Core에서는 Workspace header 유지 */
+.theme-ios .dashboard-tab-header {
+  display: flex !important;
+}
+
+/* 메인 영역이 좁아질 때 너무 답답하지 않게 */
+main {
+  min-width: 0 !important;
+}
+
+/* react-grid-layout 아이템 내부 넘침 방지 */
+.dashboard-grid-item {
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+.dashboard-grid-item > .glass-card {
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+/* 카드 내부가 좁아질 때 글자/요소 튀어나오는 것 방지 */
+.glass-card,
+.glass-card * {
+  box-sizing: border-box;
+}
+
+.glass-card {
+  overflow: hidden;
+}
+
+/* 1280 이하: 전체 padding 줄이기 */
+@media (max-width: 1280px) {
+  .relative.z-10.min-h-screen {
+    padding: 14px !important;
+  }
+
+  main {
+    padding: 18px !important;
+  }
+
+  .glass-panel,
+  .liquid-shell {
+    border-radius: 28px !important;
+  }
+}
+
+/* 1100 이하: 사이드바 좁히기 */
+@media (max-width: 1100px) {
+  aside {
+    width: 210px !important;
+  }
+
+  .sidebar-tab-main {
+    font-size: 12px !important;
+  }
+
+  .topbar {
+    height: 76px !important;
+  }
+
+  .topbar h1 {
+    font-size: 20px !important;
+  }
+}
+
+/* 920 이하: 사이드바를 위쪽 가로 탭처럼 바꿈 */
+@media (max-width: 920px) {
+  .glass-panel > .flex,
+  .liquid-shell > .flex {
+    flex-direction: column !important;
+  }
+
+  aside {
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid hsl(0 0% 100% / 0.32) !important;
+    padding: 14px !important;
+  }
+
+  aside > div:first-child {
+    height: auto !important;
+    padding: 0 4px 10px !important;
+    border-bottom: 0 !important;
+  }
+
+  aside nav,
+  aside .sidebar-workspace-list {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    padding-bottom: 4px !important;
+  }
+
+  .sidebar-tab-item {
+    flex: 0 0 auto !important;
+    min-width: 112px !important;
+  }
+
+  .sidebar-tab-main {
+    height: 38px !important;
+    padding: 0 12px !important;
+    white-space: nowrap !important;
+  }
+
+  main {
+    padding: 14px !important;
+  }
+
+  .topbar {
+    height: auto !important;
+    min-height: 68px !important;
+  }
+
+  .topbar > div {
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    padding: 14px !important;
+  }
+}
+
+/* 720 이하: topbar 버튼/테마 선택도 2줄 허용 */
+@media (max-width: 720px) {
+  .relative.z-10.min-h-screen {
+    padding: 8px !important;
+  }
+
+  .glass-panel,
+  .liquid-shell {
+    border-radius: 22px !important;
+  }
+
+  .topbar > div {
+    gap: 10px !important;
+  }
+
+  .topbar > div > div:first-child {
+    width: 100% !important;
+  }
+
+  .topbar > div > div:last-child {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+  }
+
+  .theme-select {
+    min-width: 120px !important;
+  }
+
+  main {
+    padding: 12px !important;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE WIDGET INNER LAYOUT
+   ========================================================= */
+
+/* Today Focus 내부 2열이 좁으면 1열 */
+@media (max-width: 1180px) {
+  .today-focus-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .today-focus-hero {
+    align-items: flex-start !important;
+  }
+
+  .today-focus-main {
+    font-size: 18px !important;
+  }
+}
+
+/* Alert summary 숫자 3칸이 좁으면 자동 줄바꿈 */
+.alert-summary-grid,
+.alert-stats-grid {
+  min-width: 0 !important;
+}
+
+@media (max-width: 1180px) {
+  .alert-summary-grid,
+  .alert-stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .alert-item {
+    padding: 14px !important;
+  }
+}
+
+/* 더 좁으면 Alert 숫자 카드 1열 */
+@media (max-width: 760px) {
+  .alert-summary-grid,
+  .alert-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .today-focus-hero {
+    flex-direction: column !important;
+  }
+
+  .today-focus-ring {
+    width: 52px !important;
+    height: 52px !important;
+  }
+}
+
+/* =========================================================
+   PIXEL DESK FONT
+   ========================================================= */
+
+.theme-pixel,
+.theme-pixel body,
+.theme-pixel #root,
+.theme-pixel .glass-card,
+.theme-pixel aside,
+.theme-pixel .topbar,
+.theme-pixel main,
+.theme-pixel button,
+.theme-pixel input,
+.theme-pixel textarea,
+.theme-pixel select,
+.theme-pixel .memo-editor,
+.theme-pixel .memo-title-input,
+.theme-pixel .calendar-modal-window,
+.theme-pixel .settings-modal-window,
+.theme-pixel .memo-window {
+  font-family:
+    "NeoDunggeunmo",
+    "DungGeunMo",
+    "Courier New",
+    monospace !important;
+  letter-spacing: -0.02em;
+}
+
+/* 픽셀 테마에서는 제목도 둥근모 */
+.theme-pixel h1,
+.theme-pixel h2,
+.theme-pixel h3,
+.theme-pixel strong,
+.theme-pixel .font-semibold,
+.theme-pixel .font-bold {
+  font-family:
+    "NeoDunggeunmo",
+    "DungGeunMo",
+    "Courier New",
+    monospace !important;
+  font-weight: 700 !important;
+}
+
+/* Workspace header visibility by theme */
+.theme-pastel .dashboard-tab-header,
+.theme-glass .dashboard-tab-header,
+.theme-pixel .dashboard-tab-header {
+  display: none !important;
+}
+
+.theme-ios .dashboard-tab-header {
+  display: flex !important;
+}
