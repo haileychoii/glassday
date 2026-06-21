@@ -1,1 +1,7 @@
- 
+/* Pastel / Glass / Pixel에서는 큰 Workspace Home 헤더 숨김 */
+:not(.theme-ios) .dashboard-tab-header,
+.theme-pastel .dashboard-tab-header,
+.theme-glass .dashboard-tab-header,
+.theme-pixel .dashboard-tab-header {
+  display: none !important;
+} 
