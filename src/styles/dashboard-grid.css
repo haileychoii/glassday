@@ -81,3 +81,14 @@
   min-height: 0 !important;
   overflow: auto !important;
 }
+
+/* react-grid-layout 아이템 내부 넘침 방지 */
+
+
+.dashboard-grid-item > .glass-card {
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+
+  
