@@ -1,31 +1,13 @@
-import type { Layouts } from "react-grid-layout";
+import type { Layout } from "react-grid-layout";
 
-export type WidgetId =
-  | "today"
-  | "alerts"
-  | "journal"
-  | "calendar"
-  | "memo"
-  | "study"
-  | "career"
-  | "health"
-  | "money"
-  | "mood";
+export type Layouts = Record<string, Layout[]>;
 
-export type DashboardTabId = string;
+export type WorkspaceId = "home" | "career" | "study" | "memo" | "life";
 
 export type DashboardTab = {
-  id: DashboardTabId;
+  id: WorkspaceId;
   label: string;
   icon: string;
-  widgetIds: WidgetId[];
   layouts: Layouts;
-  locked?: boolean;
-};
-
-export type WidgetMeta = {
-  id: WidgetId;
-  label: string;
-  description: string;
-  category: "home" | "career" | "study" | "memo" | "life" | "money";
+  widgetIds: string[];
 };
