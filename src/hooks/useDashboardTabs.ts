@@ -1,5 +1,7 @@
 import { useMemo } from "react";
-import type { Layouts } from "react-grid-layout";
+import type { Layout } from "react-grid-layout";
+
+type Layouts = Record<string, Layout[]>;
 
 import { useLocalStorage } from "./useLocalStorage";
 import { defaultDashboardTabs } from "../constants/dashboardTabs";
