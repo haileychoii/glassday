@@ -1,10 +1,10 @@
 export type JournalMood =
-  | "great"
-  | "good"
-  | "neutral"
-  | "tired"
-  | "stressed"
-  | "low";
+  | "완전 좋음"
+  | "괜찮음"
+  | "보통"
+  | "피곤함"
+  | "스트레스"
+  | "저조함";
 
 export type JournalTask = {
   id: string;
@@ -12,37 +12,27 @@ export type JournalTask = {
   done: boolean;
 };
 
-export type JournalFieldKey =
-  | "workDone"
-  | "learned"
-  | "careerNote"
-  | "oneLineReview";
-
-export type JournalTagClip = {
+export type JournalClip = {
   id: string;
   tag: string;
   text: string;
-  field: JournalFieldKey;
-  date: string;
-  createdAt: number;
+  source: string;
+  createdAt: string;
 };
 
 export type JournalEntry = {
+  id: string;
   date: string;
-  todayTodos: JournalTask[];
-  tomorrowTodos: JournalTask[];
-  workDone: string;
+  todayTasks: JournalTask[];
+  tomorrowTasks: JournalTask[];
+  workLog: string;
   learned: string;
-  careerNote: string;
-  mood: JournalMood;
+  careerMaterial: string;
+  condition: JournalMood;
   energy: number;
   focus: number;
-  sleepiness: number;
+  sleepy: number;
   stress: number;
-  oneLineReview: string;
-  tagClips: JournalTagClip[];
-  createdAt: number;
-  updatedAt: number;
+  reflection: string;
+  clips: JournalClip[];
 };
-
-export type JournalEntries = Record<string, JournalEntry>;
