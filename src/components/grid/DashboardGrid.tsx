@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Responsive } from "react-grid-layout";
-import type { Layout, Layouts } from "react-grid-layout";
+import type { GridLayoutItem, Layouts, WidgetId } from "../../types/workspace";
 
 import { TodayFocusWidget } from "../widgets/TodayFocusWidget";
 import { AlertCenterWidget } from "../widgets/AlertCenterWidget";
