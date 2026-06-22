@@ -902,7 +902,7 @@ export const MemoWidget = () => {
           <input
             value={activeNote.title}
             onChange={(event) =>
-            updateNote(activeNote.id, {
+            updateActiveNote(activeNote.id, {
               title: event.target.value,
               })
             }
