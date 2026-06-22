@@ -49,11 +49,6 @@ type MemoFontGroup = {
   fonts: MemoFontOption[];
 };
 
-type MemoWindowPosition = {
-  x: number;
-  y: number;
-};
-
 const defaultMemoFont =
   "Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif";
 
@@ -377,7 +372,6 @@ const sortMemos = (notes: MemoNote[]) => {
 export const MemoWidget = () => {
   const [editing, setEditing] = useState(false);
   const [memoWindowOpen, setMemoWindowOpen] = useState(false);
-  const [windowPinned, setWindowPinned] = useState(false);
 
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [saveFileName, setSaveFileName] = useState("");
@@ -385,14 +379,6 @@ export const MemoWidget = () => {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const windowEditorRef = useRef<HTMLDivElement | null>(null);
   const saveInputRef = useRef<HTMLInputElement | null>(null);
-
-  const dragRef = useRef({
-    dragging: false,
-    startX: 0,
-    startY: 0,
-    initialX: 0,
-    initialY: 0,
-  });
 
   const { value: notes, setValue: setNotes } = useLocalStorage<MemoNote[]>(
     "glassday.memo.notes.v2",
@@ -402,18 +388,15 @@ export const MemoWidget = () => {
   const { value: selectedNoteId, setValue: setSelectedNoteId } =
     useLocalStorage<string>("glassday.memo.selected.v2", "default-memo");
 
-  const { value: memoWindowPosition, setValue: setMemoWindowPosition } =
-    useLocalStorage<MemoWindowPosition>("glassday.memo.window.position.v1", {
-      x: 120,
-      y: 72,
-    });
-
   const normalizedNotes = useMemo(
     () => notes.map((note) => normalizeNote(note)),
     [notes]
   );
 
-  const sortedNotes = useMemo(() => sortMemos(normalizedNotes), [normalizedNotes]);
+  const sortedNotes = useMemo(
+    () => sortMemos(normalizedNotes),
+    [normalizedNotes]
+  );
 
   const activeNote =
     normalizedNotes.find((note) => note.id === selectedNoteId) ??
@@ -473,37 +456,6 @@ export const MemoWidget = () => {
     });
   }, [saveDialogOpen]);
 
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      if (!dragRef.current.dragging) return;
-
-      const nextX =
-        dragRef.current.initialX + event.clientX - dragRef.current.startX;
-      const nextY =
-        dragRef.current.initialY + event.clientY - dragRef.current.startY;
-
-      const maxX = Math.max(16, window.innerWidth - 520);
-      const maxY = Math.max(16, window.innerHeight - 240);
-
-      setMemoWindowPosition({
-        x: Math.min(Math.max(16, nextX), maxX),
-        y: Math.min(Math.max(16, nextY), maxY),
-      });
-    };
-
-    const handleMouseUp = () => {
-      dragRef.current.dragging = false;
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [setMemoWindowPosition]);
-
   const updateActiveNote = (patch: Partial<MemoNote>) => {
     if (!activeNote) return;
 
@@ -553,9 +505,11 @@ export const MemoWidget = () => {
 
     if (nextNotes.length === 0) {
       const replacement = createMemoNote();
+
       setNotes([replacement]);
       setSelectedNoteId(replacement.id);
       setEditing(true);
+
       return;
     }
 
@@ -612,14 +566,14 @@ export const MemoWidget = () => {
     });
 
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const anchor = document.createElement("a");
 
-    a.href = url;
-    a.download = fileName;
+    anchor.href = url;
+    anchor.download = fileName;
 
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
 
     URL.revokeObjectURL(url);
     setSaveDialogOpen(false);
@@ -659,33 +613,13 @@ export const MemoWidget = () => {
     event.preventDefault();
   };
 
-  const startWindowDrag = (event: ReactMouseEvent<HTMLDivElement>) => {
-    const target = event.target as HTMLElement;
-
-    if (target.closest("button") || target.closest("select") || target.closest("input")) {
-      return;
-    }
-
-    dragRef.current = {
-      dragging: true,
-      startX: event.clientX,
-      startY: event.clientY,
-      initialX: memoWindowPosition.x,
-      initialY: memoWindowPosition.y,
-    };
-  };
-
-  const closeMemoWindow = () => {
-    setMemoWindowOpen(false);
-  };
-
   const renderToolbar = () => (
     <div className="memo-toolbar">
       <select
         value={activeNote?.fontFamily ?? defaultMemoFont}
-        onChange={(e) =>
+        onChange={(event) =>
           updateActiveNote({
-            fontFamily: e.target.value,
+            fontFamily: event.target.value,
           })
         }
         className="memo-select memo-font-select"
@@ -708,9 +642,9 @@ export const MemoWidget = () => {
 
       <select
         value={activeNote?.fontSize ?? "14px"}
-        onChange={(e) =>
+        onChange={(event) =>
           updateActiveNote({
-            fontSize: e.target.value,
+            fontSize: event.target.value,
           })
         }
         className="memo-select memo-size-select"
@@ -861,6 +795,7 @@ export const MemoWidget = () => {
                   {note.pinned && <Pin className="w-3 h-3" />}
                   <span>{getDisplayTitle(note)}</span>
                 </div>
+
                 <div className="memo-note-preview">{preview}</div>
               </div>
 
@@ -902,15 +837,14 @@ export const MemoWidget = () => {
           <input
             value={activeNote.title}
             onChange={(event) =>
-            updateActiveNote(activeNote.id, {
-              title: event.target.value,
+              updateActiveNote({
+                title: event.target.value,
               })
             }
             className="memo-title-input"
             spellCheck={false}
             placeholder="Untitled Memo"
           />
-          
         ) : (
           <div className="memo-title-view">{getDisplayTitle(activeNote)}</div>
         )}
@@ -941,164 +875,72 @@ export const MemoWidget = () => {
     );
   };
 
-  // const memoWindow = memoWindowOpen
-  // ? createPortal(
-  //     <div className="memo-window-layer">
-  //         <div
-  //           className="memo-window"
-  //           style={{
-  //             left: memoWindowPosition.x,
-  //             top: memoWindowPosition.y,
-  //           }}
-  //         >
-  //           <div className="memo-window-titlebar" onMouseDown={startWindowDrag}>
-  //             <div>
-  //               <div className="text-sm font-semibold">Memo Window</div>
-  //               <div className="text-xs text-muted-foreground">
-  //                 {windowPinned ? "Floating memo is pinned" : "Floating memo window"}
-  //               </div>
-  //             </div>
-
-  //             <div className="flex items-center gap-2">
-  //               <button
-  //                 type="button"
-  //                 onClick={addNewMemo}
-  //                 className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
-  //               >
-  //                 <Plus className="w-3.5 h-3.5" />
-  //                 New
-  //               </button>
-
-  //               <button
-  //                 type="button"
-  //                 onClick={openSaveDialog}
-  //                 className="glass-button glass-tint-blue h-8 px-3 text-xs flex items-center gap-1.5"
-  //               >
-  //                 <Download className="w-3.5 h-3.5" />
-  //                 Save
-  //               </button>
-
-  //               <button
-  //                 type="button"
-  //                 onClick={() => setWindowPinned((prev) => !prev)}
-  //                 className={cn(
-  //                   "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-  //                   windowPinned && "is-active"
-  //                 )}
-  //               >
-  //                 <Pin className="w-3.5 h-3.5" />
-  //                 Pin
-  //               </button>
-
-  //               <button
-  //                 type="button"
-  //                 onClick={togglePinnedNote}
-  //                 className={cn(
-  //                   "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-  //                   activeNote?.pinned && "is-active"
-  //                 )}
-  //               >
-  //                 <Pin className="w-3.5 h-3.5" />
-  //                 Note
-  //               </button>
-
-  //               <button
-  //                 type="button"
-  //                 onClick={() => setEditing((prev) => !prev)}
-  //                 className={cn(
-  //                   "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-  //                   editing && "is-active"
-  //                 )}
-  //               >
-  //                 {editing ? "Done" : "Edit"}
-  //               </button>
-
-  //               <button
-  //                 type="button"
-  //                 onClick={closeMemoWindow}
-  //                 className="glass-button h-8 w-8 flex items-center justify-center"
-  //               >
-  //                 <X className="w-4 h-4" />
-  //               </button>
-  //             </div>
-  //           </div>
-
-  //           <div className="memo-window-body">
-  //             {renderNoteList()}
-  //             {renderWorkspace(windowEditorRef, true)}
-  //           </div>
-  //         </div>
-  //       </div>,
-  //       document.body
-  //     )
-  //   : null;
-
   const memoWindow = (
-  <FloatingWindow
-    open={memoWindowOpen}
-    title="Memo Window"
-    subtitle="Resizable floating memo"
-    storageKey="glassday.memo.floatingWindow.rect.v1"
-    defaultRect={{
-      x: 120,
-      y: 72,
-      w: 1120,
-      h: 760,
-    }}
-    minWidth={720}
-    minHeight={480}
-    onClose={() => setMemoWindowOpen(false)}
-    actions={
-      <>
-        <button
-          type="button"
-          onClick={addNewMemo}
-          className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          New
-        </button>
+    <FloatingWindow
+      open={memoWindowOpen}
+      title="Memo Window"
+      subtitle="Resizable floating memo"
+      storageKey="glassday.memo.floatingWindow.rect.v1"
+      defaultRect={{
+        x: 120,
+        y: 72,
+        w: 1120,
+        h: 760,
+      }}
+      minWidth={720}
+      minHeight={480}
+      onClose={() => setMemoWindowOpen(false)}
+      actions={
+        <>
+          <button
+            type="button"
+            onClick={addNewMemo}
+            className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            New
+          </button>
 
-        <button
-          type="button"
-          onClick={openSaveDialog}
-          className="glass-button glass-tint-blue h-8 px-3 text-xs flex items-center gap-1.5"
-        >
-          <Download className="w-3.5 h-3.5" />
-          Save
-        </button>
+          <button
+            type="button"
+            onClick={openSaveDialog}
+            className="glass-button glass-tint-blue h-8 px-3 text-xs flex items-center gap-1.5"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Save
+          </button>
 
-        <button
-          type="button"
-          onClick={togglePinnedNote}
-          className={cn(
-            "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-            activeNote?.pinned && "is-active"
-          )}
-        >
-          <Pin className="w-3.5 h-3.5" />
-          Note
-        </button>
+          <button
+            type="button"
+            onClick={togglePinnedNote}
+            className={cn(
+              "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+              activeNote?.pinned && "is-active"
+            )}
+          >
+            <Pin className="w-3.5 h-3.5" />
+            Note
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setEditing((prev) => !prev)}
-          className={cn(
-            "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-            editing && "is-active"
-          )}
-        >
-          {editing ? "Done" : "Edit"}
-        </button>
-      </>
-    }
-  >
-    <div className="memo-floating-body">
-      {renderNoteList()}
-      {renderWorkspace(windowEditorRef, true)}
-    </div>
-  </FloatingWindow>
-);
+          <button
+            type="button"
+            onClick={() => setEditing((prev) => !prev)}
+            className={cn(
+              "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+              editing && "is-active"
+            )}
+          >
+            {editing ? "Done" : "Edit"}
+          </button>
+        </>
+      }
+    >
+      <div className="memo-floating-body">
+        {renderNoteList()}
+        {renderWorkspace(windowEditorRef, true)}
+      </div>
+    </FloatingWindow>
+  );
 
   const saveDialog =
     saveDialogOpen && activeNote
@@ -1131,7 +973,7 @@ export const MemoWidget = () => {
                 <input
                   ref={saveInputRef}
                   value={saveFileName}
-                  onChange={(e) => setSaveFileName(e.target.value)}
+                  onChange={(event) => setSaveFileName(event.target.value)}
                   spellCheck={false}
                   className="memo-save-input"
                 />
@@ -1234,6 +1076,7 @@ export const MemoWidget = () => {
               ) : (
                 <Pencil className="w-3.5 h-3.5" />
               )}
+
               {editing ? "Done" : "Edit"}
             </button>
           </div>
