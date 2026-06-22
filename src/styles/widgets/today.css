@@ -831,3 +831,55 @@
   border: 1px solid hsl(0 0% 100% / 0.28) !important;
 }
 
+/* ================================
+   Today Focus: compact height safety
+   ================================ */
+
+.today-focus-card .glass-card-body,
+.today-focus-widget .glass-card-body,
+.today-mini-card .glass-card-body {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+.today-focus,
+.today-mini {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.today-focus-main,
+.today-focus-section,
+.today-focus-block,
+.today-mini-main,
+.today-mini-next,
+.today-tasks-progress {
+  flex-shrink: 0 !important;
+}
+
+/* 높이가 부족하면 패딩 줄이고 스크롤 */
+@media (max-height: 760px) {
+  .today-focus-card,
+  .today-focus-widget,
+  .today-mini-card {
+    padding: 14px !important;
+  }
+
+  .today-focus,
+  .today-mini {
+    gap: 8px !important;
+  }
+
+  .today-focus-main,
+  .today-focus-section,
+  .today-focus-block,
+  .today-mini-main,
+  .today-mini-next {
+    padding: 10px 12px !important;
+  }
+}

@@ -167,60 +167,7 @@
 }
 /* Cards as retro windows */
 
-.theme-pixel .glass-card {
-  position: relative;
-  border-radius: 0 !important;
-  background: hsl(54 20% 86% / 0.98) !important;
-  border-top: 3px solid hsl(0 0% 100% / 0.95) !important;
-  border-left: 3px solid hsl(0 0% 100% / 0.95) !important;
-  border-right: 3px solid hsl(230 18% 20% / 0.8) !important;
-  border-bottom: 3px solid hsl(230 18% 20% / 0.8) !important;
-  box-shadow:
-    5px 5px 0 hsl(230 20% 8% / 0.28),
-    inset 1px 1px 0 hsl(0 0% 100% / 0.85) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  overflow: hidden;
-}
 
-
-/* 카드 위 titlebar */
-.theme-pixel .glass-card {
-  position: relative;
-  padding-top: 28px !important;
-  overflow: hidden !important;
-}
-
-.theme-pixel .glass-card::before {
-  content: "";
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  right: 3px;
-  height: 22px;
-  background: #000080;
-  border-bottom: 1px solid #000000;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.theme-pixel .glass-card::after {
-  content: "□ ×";
-  position: absolute;
-  top: 5px;
-  right: 8px;
-  z-index: 2;
-  height: 18px;
-  padding: 0 4px;
-  display: flex;
-  align-items: center;
-  font-family: "MS Sans Serif", "Tahoma", sans-serif !important;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: #ffffff;
-  pointer-events: none;
-}
 
 /* 카드 헤더가 titlebar에 안 겹치게 */
 .theme-pixel .glass-card-header {
@@ -763,3 +710,102 @@
   margin-top: 0 !important;
 }
 
+/* ================================
+   Pixel Desk: correct window titlebar
+   ================================ */
+
+.theme-pixel .glass-card {
+  position: relative !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 38px 18px 18px 18px !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+
+  background: #d8d8cc !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #424242 !important;
+  border-bottom: 2px solid #424242 !important;
+
+  box-shadow:
+    inset -1px -1px 0 #7b7b7b,
+    inset 1px 1px 0 #f7f7f7,
+    4px 4px 0 #8d8d88 !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 파란 창바: 카드 안쪽으로 들어가지 말고 맨 위에 붙임 */
+.theme-pixel .glass-card::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  top: 4px !important;
+  left: 4px !important;
+  right: 4px !important;
+  height: 26px !important;
+  z-index: 20 !important;
+
+  background: #000080 !important;
+  background-image: none !important;
+
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #303030 !important;
+  border-bottom: 1px solid #303030 !important;
+
+  pointer-events: none !important;
+}
+
+/* 최소화 / 최대화 / 닫기 */
+.theme-pixel .glass-card::after {
+  content: "_  □  ×" !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  position: absolute !important;
+  top: 7px !important;
+  right: 7px !important;
+  z-index: 21 !important;
+
+  height: 20px !important;
+  min-width: 62px !important;
+  padding: 0 4px !important;
+
+  font-family:
+    "NeoDunggeunmo",
+    "MS Sans Serif",
+    "Tahoma",
+    sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: 3px !important;
+  line-height: 1 !important;
+
+  color: #111111 !important;
+  background: #c0c0c0 !important;
+  background-image: none !important;
+
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #303030 !important;
+  border-bottom: 1px solid #303030 !important;
+
+  pointer-events: none !important;
+}
+
+/* 카드 내용은 창바 아래에서 시작 */
+.theme-pixel .glass-card > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Pixel에서 내부 섹션들이 너무 넓게 삐져나오지 않게 */
+.theme-pixel .glass-card-body {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+}

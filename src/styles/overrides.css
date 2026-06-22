@@ -65,3 +65,94 @@
     overflow-y: auto !important;
   }
 }
+
+/* ================================
+   Global: prevent widget content overlap
+   ================================ */
+
+.dashboard-grid-item,
+.dashboard-grid-item-content,
+.react-grid-item {
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item-content {
+  height: 100% !important;
+}
+
+.glass-card {
+  height: 100% !important;
+  min-height: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 카드 내부 body가 있으면 body만 스크롤 */
+.glass-card-body,
+.card-body,
+.widget-body {
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+/* 위젯 내부 레이아웃은 겹치지 않게 column 구조 */
+.today-focus-card,
+.today-focus-widget,
+.today-mini-card,
+.career-widget,
+.calendar-widget,
+.memo-widget,
+.study-widget,
+.alert-center-widget {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* 직접 glass-card 안에 내용이 있는 경우도 대비 */
+.today-focus,
+.today-mini,
+.today-tasks,
+.alert-center,
+.calendar-widget-inner,
+.memo-app,
+.study-widget-inner {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* 내용이 많아지는 영역은 스크롤 */
+.today-focus-list,
+.today-focus-sections,
+.today-task-list,
+.alert-list,
+.career-list,
+.calendar-event-list,
+.memo-note-list,
+.memo-editor,
+.study-list {
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* 섹션끼리 겹치지 않게 */
+.today-focus > *,
+.today-mini > *,
+.today-tasks > *,
+.alert-center > *,
+.career-widget > *,
+.calendar-widget > *,
+.study-widget > * {
+  flex-shrink: 0 !important;
+}
+
+/* 리스트 영역만 줄어들 수 있게 */
+.today-task-list,
+.alert-list,
+.career-list,
+.calendar-event-list,
+.study-list {
+  flex: 1 1 auto !important;
+}
