@@ -730,3 +730,104 @@
   background: hsl(350 100% 96% / 0.72);
   border: 1px solid hsl(350 80% 78% / 0.42);
 }
+
+/* ================================
+   FIX: Today Focus responsive overlap
+   ================================ */
+
+.today-focus-card,
+.today-focus-widget,
+.today-mini-card {
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.today-focus-card .glass-card-body,
+.today-focus-widget .glass-card-body,
+.today-mini-card .glass-card-body {
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+/* Today Focus 내부 전체 레이아웃 */
+.today-focus,
+.today-mini {
+  height: 100% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  overflow: hidden !important;
+}
+
+/* 안쪽 섹션은 절대 겹치지 않게 */
+.today-focus > *,
+.today-mini > * {
+  flex-shrink: 0 !important;
+}
+
+/* 리스트/내용 영역만 스크롤 허용 */
+.today-focus-list,
+.today-focus-sections,
+.today-mini-next,
+.today-task-list {
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+/* 높이가 좁아질 때 padding 줄이기 */
+@media (max-height: 760px), (max-width: 900px) {
+  .today-focus-card,
+  .today-focus-widget,
+  .today-mini-card {
+    padding: 14px !important;
+  }
+
+  .today-focus,
+  .today-mini {
+    gap: 8px !important;
+  }
+
+  .today-focus-main,
+  .today-focus-section,
+  .today-mini-main,
+  .today-mini-next,
+  .today-tasks-progress {
+    padding: 10px 12px !important;
+    border-radius: 18px !important;
+  }
+
+  .today-focus-main-title,
+  .today-mini-time {
+    font-size: 18px !important;
+  }
+}
+
+/* ================================
+   FIX: Top 3 ugly input rectangles
+   ================================ */
+
+.today-focus .top-three input,
+.today-focus .top-three textarea,
+.today-focus .today-task-title-input,
+.today-focus .today-focus-task input,
+.today-mini .top-three input,
+.today-mini .top-three textarea {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  height: auto !important;
+}
+
+/* Top3 각 row는 부드러운 pill 느낌만 */
+.today-focus .top-three-item,
+.today-focus .today-focus-task,
+.today-mini .top-three-item {
+  min-height: 34px !important;
+  padding: 8px 10px !important;
+  border-radius: 14px !important;
+  background: hsl(0 0% 100% / 0.22) !important;
+  border: 1px solid hsl(0 0% 100% / 0.28) !important;
+}
+

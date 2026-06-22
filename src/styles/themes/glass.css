@@ -315,3 +315,62 @@
 .theme-pixel .dashboard-tab-header {
   display: none !important;
 } 
+
+/* ================================
+   FIX: Glass theme readability
+   ================================ */
+
+.theme-glass {
+  color: hsl(248 28% 18%) !important;
+}
+
+.theme-glass .glass-card {
+  color: hsl(248 28% 18%) !important;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.46),
+      hsl(0 0% 100% / 0.18)
+    ) !important;
+  border-color: hsl(0 0% 100% / 0.48) !important;
+}
+
+.theme-glass .glass-card h1,
+.theme-glass .glass-card h2,
+.theme-glass .glass-card h3,
+.theme-glass .glass-card h4,
+.theme-glass .glass-card strong,
+.theme-glass .today-focus-title,
+.theme-glass .today-focus-main-title,
+.theme-glass .today-task-title,
+.theme-glass .calendar-event-title,
+.theme-glass .career-list-title strong {
+  color: hsl(248 32% 16% / 0.88) !important;
+  text-shadow: none !important;
+}
+
+.theme-glass .glass-card p,
+.theme-glass .glass-card span,
+.theme-glass .today-focus-subtitle,
+.theme-glass .today-focus-label,
+.theme-glass .today-task-meta,
+.theme-glass .calendar-event-time,
+.theme-glass .career-list-title span {
+  color: hsl(248 20% 24% / 0.62) !important;
+  text-shadow: none !important;
+}
+
+/* Glass 내부 박스도 너무 흰색으로 뜨지 않게 */
+.theme-glass .today-focus-main,
+.theme-glass .today-focus-section,
+.theme-glass .today-focus-block,
+.theme-glass .today-mini-main,
+.theme-glass .today-mini-next,
+.theme-glass .today-tasks-progress,
+.theme-glass .career-list-item,
+.theme-glass .calendar-event-chip {
+  background: hsl(0 0% 100% / 0.24) !important;
+  border: 1px solid hsl(0 0% 100% / 0.34) !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}

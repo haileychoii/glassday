@@ -1,1 +1,67 @@
- 
+ /* ================================
+   FIX: Remove diagonal stripe / noisy overlay
+   ================================ */
+
+.glass-card::before,
+.glass-card::after,
+.today-focus-card::before,
+.today-focus-card::after,
+.today-mini-main::before,
+.today-mini-main::after,
+.today-tasks-progress::before,
+.today-tasks-progress::after {
+  background-image: none !important;
+}
+
+/* 만약 decorative overlay가 따로 있으면 숨김 */
+.diagonal-pattern,
+.card-stripe-overlay,
+.glass-card-shine,
+.noise-overlay {
+  display: none !important;
+}
+
+/* ================================
+   FIX: Prevent widget inner overlap globally
+   ================================ */
+
+.glass-card {
+  min-height: 0 !important;
+}
+
+.glass-card-body {
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+.dashboard-grid-item,
+.dashboard-grid-item-content {
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* 내부 카드형 섹션이 절대 겹쳐 보이지 않도록 */
+.today-focus-main,
+.today-focus-section,
+.today-focus-block,
+.today-mini-main,
+.today-mini-next,
+.today-tasks-progress,
+.calendar-mini-card,
+.career-summary-card,
+.career-list-item,
+.memo-list-panel,
+.study-card {
+  position: relative !important;
+  z-index: auto !important;
+}
+
+/* 너무 낮은 위젯에서는 Today Focus를 스크롤형으로 */
+@media (max-height: 760px) {
+  .today-focus-card .glass-card-body,
+  .today-focus-widget .glass-card-body,
+  .today-mini-card .glass-card-body {
+    max-height: 100% !important;
+    overflow-y: auto !important;
+  }
+}

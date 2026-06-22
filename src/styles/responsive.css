@@ -242,3 +242,14 @@
     padding: 12px !important;
   }
 } 
+
+
+/* 너무 낮은 위젯에서는 Today Focus를 스크롤형으로 */
+@media (max-height: 760px) {
+  .today-focus-card .glass-card-body,
+  .today-focus-widget .glass-card-body,
+  .today-mini-card .glass-card-body {
+    max-height: 100% !important;
+    overflow-y: auto !important;
+  }
+}

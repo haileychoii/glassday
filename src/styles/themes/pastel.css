@@ -545,3 +545,78 @@
       hsl(318 78% 78%)
     ) !important;
 }
+
+/* ================================
+   FIX: Pastel readability / remove noisy inner fills
+   ================================ */
+
+.theme-pastel .today-focus-card,
+.theme-pastel .today-focus-widget,
+.theme-pastel .today-mini-card,
+.theme-pastel .glass-card {
+  color: hsl(250 30% 20%) !important;
+}
+
+/* 내부 박스들은 배경을 진하게 채우지 말고 선 + 아주 약한 tint만 */
+.theme-pastel .today-focus-main,
+.theme-pastel .today-focus-section,
+.theme-pastel .today-focus-block,
+.theme-pastel .today-mini-main,
+.theme-pastel .today-mini-next,
+.theme-pastel .today-tasks-progress,
+.theme-pastel .calendar-mini-card,
+.theme-pastel .career-summary-card,
+.theme-pastel .career-list-item,
+.theme-pastel .memo-card,
+.theme-pastel .study-card {
+  background: hsl(0 0% 100% / 0.32) !important;
+  border: 1px solid hsl(250 24% 78% / 0.34) !important;
+  box-shadow: none !important;
+}
+
+/* 내부 요소에 깔린 그라데이션/대각선/과한 광택 제거 */
+.theme-pastel .today-focus-main,
+.theme-pastel .today-focus-section,
+.theme-pastel .today-focus-block,
+.theme-pastel .today-mini-main,
+.theme-pastel .today-mini-weather,
+.theme-pastel .today-mini-stat,
+.theme-pastel .today-mini-next,
+.theme-pastel .today-tasks-progress,
+.theme-pastel .today-task-item,
+.theme-pastel .career-list-item,
+.theme-pastel .calendar-event-chip {
+  background-image: none !important;
+}
+
+/* Pastel에서 카드 안쪽 글씨는 어둡게 */
+.theme-pastel .glass-card h1,
+.theme-pastel .glass-card h2,
+.theme-pastel .glass-card h3,
+.theme-pastel .glass-card h4,
+.theme-pastel .glass-card strong,
+.theme-pastel .today-focus-title,
+.theme-pastel .today-focus-main-title,
+.theme-pastel .today-task-title,
+.theme-pastel .calendar-event-title,
+.theme-pastel .career-list-title strong {
+  color: hsl(250 30% 20% / 0.88) !important;
+}
+
+.theme-pastel .glass-card p,
+.theme-pastel .glass-card span,
+.theme-pastel .today-focus-subtitle,
+.theme-pastel .today-focus-label,
+.theme-pastel .today-task-meta,
+.theme-pastel .calendar-event-time,
+.theme-pastel .career-list-title span {
+  color: hsl(250 18% 34% / 0.58) !important;
+}
+
+/* Pastel에서는 더 연하게 */
+.theme-pastel .today-focus .top-three-item,
+.theme-pastel .today-focus .today-focus-task,
+.theme-pastel .today-mini .top-three-item {
+  background: transparent !important;
+  border: 1px solid hsl(250 24% 78% / 0.28) !important;
+}

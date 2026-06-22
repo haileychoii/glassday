@@ -1,5 +1,5 @@
 /* ================================
-   Theme: Cupertino
+   Theme: Mac Core
    macOS Finder + iOS Widget Style
    ================================ */
 
@@ -634,3 +634,283 @@
   display: flex !important;
 }
 
+/* ================================
+   Mac Core / iOS: workspace pill alignment fix
+   ================================ */
+
+/* iOS 테마 상단바 전체 */
+.theme-ios .topbar,
+.theme-ios .app-topbar,
+.theme-ios .workspace-topbar {
+  min-height: 72px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+
+/* WORKSPACE / Study 들어있는 흰 타원 */
+.theme-ios .workspace-pill,
+.theme-ios .workspace-chip,
+.theme-ios .workspace-current,
+.theme-ios .topbar-workspace,
+.theme-ios .workspace-title-wrap,
+.theme-ios .workspace-label-wrap {
+  min-height: 48px !important;
+  height: 48px !important;
+  padding: 0 18px !important;
+  border-radius: 999px !important;
+
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  gap: 3px !important;
+
+  line-height: 1 !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  border: 1px solid rgba(215, 215, 220, 0.92) !important;
+  box-shadow:
+    0 8px 22px rgba(30, 30, 35, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+/* WORKSPACE 글씨 */
+.theme-ios .workspace-label,
+.theme-ios .topbar-workspace-label {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  height: auto !important;
+
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: rgba(29, 29, 31, 0.48) !important;
+
+  transform: translateY(1px) !important;
+}
+
+/* Study 글씨 */
+.theme-ios .workspace-title,
+.theme-ios .topbar-workspace-title {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.05 !important;
+  height: auto !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+
+  font-size: 18px !important;
+  font-weight: 850 !important;
+  letter-spacing: -0.035em !important;
+  color: #1d1d1f !important;
+
+  transform: translateY(0) !important;
+}
+
+/* Study 옆 아이콘 정렬 */
+.theme-ios .workspace-title svg,
+.theme-ios .topbar-workspace-title svg {
+  width: 17px !important;
+  height: 17px !important;
+  flex-shrink: 0 !important;
+  transform: translateY(0.5px) !important;
+}
+
+/* ================================
+   Mac Core: solid macOS-like background
+   ================================ */
+
+.theme-ios {
+  background: #f5f5f7 !important;
+  background-image: none !important;
+  color: #1d1d1f !important;
+}
+
+/* 앱 전체 배경 그라데이션 제거 */
+.theme-ios body,
+.theme-ios .app-shell,
+.theme-ios .dashboard-shell,
+.theme-ios .liquid-shell,
+.theme-ios .bg-glass-gradient,
+.theme-ios .main-area,
+.theme-ios .dashboard-main {
+  background: #f5f5f7 !important;
+  background-image: none !important;
+}
+
+/* 혹시 body가 아니라 root 쪽에 theme-ios가 붙는 경우까지 */
+.theme-ios#root,
+#root.theme-ios {
+  background: #f5f5f7 !important;
+  background-image: none !important;
+}
+
+/* 오로라/구름/빛번짐 장식 제거 */
+.theme-ios .aurora-bg,
+.theme-ios .aurora-orb,
+.theme-ios .cloud-bg,
+.theme-ios .gradient-orb,
+.theme-ios .background-orb,
+.theme-ios .liquid-orb,
+.theme-ios .glass-bg-layer,
+.theme-ios .noise-overlay,
+.theme-ios .diagonal-pattern {
+  display: none !important;
+  background: none !important;
+  background-image: none !important;
+}
+
+/* Mac Core 카드: 은은한 흰색/회색, 그라데이션 X */
+.theme-ios .glass-card {
+  background: #ffffffcc !important;
+  background-image: none !important;
+  border: 1px solid #d7d7dc !important;
+  box-shadow:
+    0 18px 42px rgba(30, 30, 35, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+  color: #1d1d1f !important;
+  backdrop-filter: blur(20px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+}
+
+/* 내부 박스도 배경 그라데이션 제거 */
+.theme-ios .glass-card *,
+.theme-ios .today-mini-main,
+.theme-ios .today-mini-next,
+.theme-ios .today-tasks-progress,
+.theme-ios .today-task-item,
+.theme-ios .calendar-mini-card,
+.theme-ios .career-list-item,
+.theme-ios .memo-list-panel,
+.theme-ios .study-card {
+  background-image: none !important;
+}
+
+/* 내부 섹션은 macOS 설정창 느낌 */
+.theme-ios .today-mini-main,
+.theme-ios .today-mini-next,
+.theme-ios .today-tasks-progress,
+.theme-ios .today-task-item,
+.theme-ios .calendar-mini-card,
+.theme-ios .career-list-item,
+.theme-ios .memo-list-panel,
+.theme-ios .study-card {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border: 1px solid rgba(210, 210, 216, 0.9) !important;
+  box-shadow: none !important;
+}
+
+/* 상단바도 단색 */
+.theme-ios .topbar,
+.theme-ios .app-topbar,
+.theme-ios .workspace-topbar {
+  background: rgba(255, 255, 255, 0.72) !important;
+  background-image: none !important;
+  border: 1px solid rgba(215, 215, 220, 0.9) !important;
+  box-shadow:
+    0 12px 32px rgba(30, 30, 35, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+/* ================================
+   Mac Core / iOS: workspace pill alignment fix
+   ================================ */
+
+/* iOS 테마 상단바 전체 */
+.theme-ios .topbar,
+.theme-ios .app-topbar,
+.theme-ios .workspace-topbar {
+  min-height: 72px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+
+/* WORKSPACE / Study 들어있는 흰 타원 */
+.theme-ios .workspace-pill,
+.theme-ios .workspace-chip,
+.theme-ios .workspace-current,
+.theme-ios .topbar-workspace,
+.theme-ios .workspace-title-wrap,
+.theme-ios .workspace-label-wrap {
+  min-height: 48px !important;
+  height: 48px !important;
+  padding: 0 18px !important;
+  border-radius: 999px !important;
+
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  gap: 3px !important;
+
+  line-height: 1 !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  border: 1px solid rgba(215, 215, 220, 0.92) !important;
+  box-shadow:
+    0 8px 22px rgba(30, 30, 35, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+/* WORKSPACE 글씨 */
+.theme-ios .workspace-label,
+.theme-ios .topbar-workspace-label {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  height: auto !important;
+
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: rgba(29, 29, 31, 0.48) !important;
+
+  transform: translateY(1px) !important;
+}
+
+/* Study 글씨 */
+.theme-ios .workspace-title,
+.theme-ios .topbar-workspace-title {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.05 !important;
+  height: auto !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+
+  font-size: 18px !important;
+  font-weight: 850 !important;
+  letter-spacing: -0.035em !important;
+  color: #1d1d1f !important;
+
+  transform: translateY(0) !important;
+}
+
+/* Study 옆 아이콘 정렬 */
+.theme-ios .workspace-title svg,
+.theme-ios .topbar-workspace-title svg {
+  width: 17px !important;
+  height: 17px !important;
+  flex-shrink: 0 !important;
+  transform: translateY(0.5px) !important;
+}
+
+/* 더 macOS 설정창 느낌: 과한 타원 줄이기 */
+.theme-ios .workspace-pill,
+.theme-ios .workspace-chip,
+.theme-ios .workspace-current,
+.theme-ios .topbar-workspace,
+.theme-ios .workspace-title-wrap,
+.theme-ios .workspace-label-wrap {
+  border-radius: 18px !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  padding: 0 16px !important;
+}

@@ -683,3 +683,83 @@
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+/* Pixel Desk: widget window frame */
+
+.theme-pixel .glass-card {
+  position: relative;
+  padding-top: 36px !important;
+  border-radius: 0 !important;
+  background: #d8d8cc !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #424242 !important;
+  border-bottom: 2px solid #424242 !important;
+  box-shadow:
+    inset -1px -1px 0 #7b7b7b,
+    inset 1px 1px 0 #f7f7f7,
+    4px 4px 0 #8d8d88 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: hidden;
+}
+
+/* window titlebar */
+.theme-pixel .glass-card::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  height: 24px;
+  z-index: 4;
+  background: linear-gradient(90deg, #000080, #3040a0);
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #303030;
+  border-bottom: 1px solid #303030;
+  pointer-events: none;
+}
+
+/* minimize / maximize / close buttons */
+.theme-pixel .glass-card::after {
+  content: "_  □  ×";
+  position: absolute;
+  top: 8px;
+  right: 9px;
+  z-index: 5;
+  height: 20px;
+  min-width: 62px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "NeoDunggeunmo", "MS Sans Serif", "Tahoma", sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  line-height: 1;
+  color: #111111;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #303030;
+  border-bottom: 1px solid #303030;
+  pointer-events: none;
+}
+
+/* 카드 내부 내용이 타이틀바 밑으로 내려가게 */
+.theme-pixel .glass-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* 기존 카드 헤더가 너무 위로 붙는 것 방지 */
+.theme-pixel .glass-card-header,
+.theme-pixel .career-widget-header,
+.theme-pixel .calendar-widget-header,
+.theme-pixel .memo-widget-header,
+.theme-pixel .study-widget-header {
+  margin-top: 0 !important;
+}
+

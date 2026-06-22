@@ -87,3 +87,55 @@ main {
 }
 
 
+/* Topbar workspace alignment fix */
+
+.topbar,
+.app-topbar,
+.workspace-topbar {
+  min-height: 86px;
+}
+
+.topbar .workspace,
+.topbar .workspace-label-wrap,
+.topbar .workspace-title-wrap,
+.app-topbar .workspace,
+.app-topbar .workspace-label-wrap,
+.app-topbar .workspace-title-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  line-height: 1;
+}
+
+.topbar .workspace-label,
+.app-topbar .workspace-label,
+.workspace-label {
+  margin: 0;
+  line-height: 1;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  font-weight: 850;
+  transform: translateY(1px);
+}
+
+.topbar .workspace-title,
+.app-topbar .workspace-title,
+.workspace-title {
+  margin: 0;
+  line-height: 1.05;
+  font-size: 20px;
+  font-weight: 850;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar .workspace-title svg,
+.app-topbar .workspace-title svg,
+.workspace-title svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transform: translateY(1px);
+}
