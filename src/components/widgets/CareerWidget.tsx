@@ -1,387 +1,341 @@
-import { useMemo, useState } from "react";
-import { createPortal } from "react-dom";
 import {
   BriefcaseBusiness,
-  Building2,
-  CalendarClock,
+  CalendarDays,
   ExternalLink,
-  Link,
-  Lock,
-  MapPin,
-  Pencil,
+  FileText,
+  Filter,
   Plus,
+  Star,
   Trash2,
   X,
 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
-import { GlassCard } from "../glass/GlassCard";
-import { cn } from "../../lib/utils";
-import { useDashboardData } from "../../context/DashboardDataContext";
-import type { CareerItem, CareerStatus } from "../../types/dashboard";
-
-import { CareerPriorityEditor } from "./career/CareerPriorityEditor";
+import { CareerAttachments } from "./career/CareerAttachments";
 import { CareerPipeline } from "./career/CareerPipeline";
+import { CareerPriorityEditor } from "./career/CareerPriorityEditor";
 import { CoverLetterTracker } from "./career/CoverLetterTracker";
-import { normalizeCareerItem } from "./career/careerUtils";
+import { InterviewReviewPanel } from "./career/InterviewReviewPanel";
+import type {
+  CareerItem,
+  CareerPriority,
+  CareerStatus,
+} from "./career/careerTypes";
+import {
+  careerStatusOptions,
+  createCareerItem,
+  getCoverLetterProgress,
+  getDdayLabel,
+  getDdayTone,
+  getPriorityScore,
+  getStageProgress,
+  loadCareerItems,
+  normalizeCareerItem,
+  saveCareerItems,
+} from "./career/careerUtils";
 
-const statusOptions: CareerStatus[] = [
-  "Preparing",
-  "Submitted",
-  "Interview",
-  "Completed",
-  "Rejected",
-];
+type PriorityFilter = "all" | CareerPriority;
 
-const DAY_MS = 1000 * 60 * 60 * 24;
-
-const getDdayInfo = (deadline: string) => {
-  if (!deadline) {
-    return {
-      label: "No deadline",
-      tone: "neutral",
-    };
-  }
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const dueDate = new Date(`${deadline}T00:00:00`);
-  dueDate.setHours(0, 0, 0, 0);
-
-  const diff = Math.ceil((dueDate.getTime() - today.getTime()) / DAY_MS);
-
-  if (diff < 0) {
-    return {
-      label: `D+${Math.abs(diff)}`,
-      tone: "closed",
-    };
-  }
-
-  if (diff === 0) {
-    return {
-      label: "D-Day",
-      tone: "urgent",
-    };
-  }
-
-  if (diff <= 3) {
-    return {
-      label: `D-${diff}`,
-      tone: "urgent",
-    };
-  }
-
-  if (diff <= 7) {
-    return {
-      label: `D-${diff}`,
-      tone: "soon",
-    };
-  }
-
-  return {
-    label: `D-${diff}`,
-    tone: "normal",
-  };
-};
-
-const getDeadlineDate = (app: CareerItem) => {
-  return app.applicationEndDate || app.deadline;
-};
-
-const getStatusRank = (status: CareerStatus) => {
-  if (status === "Interview") return 0;
-  if (status === "Submitted") return 1;
-  if (status === "Preparing") return 2;
-  if (status === "Completed") return 4;
-  if (status === "Rejected") return 5;
-
-  return 3;
-};
-
-const getDeadlineRank = (app: CareerItem) => {
-  const deadline = getDeadlineDate(app);
-
-  if (!deadline) return 999999;
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const dueDate = new Date(`${deadline}T00:00:00`);
-  dueDate.setHours(0, 0, 0, 0);
-
-  return Math.ceil((dueDate.getTime() - today.getTime()) / DAY_MS);
-};
-
-const sortApplications = (apps: CareerItem[]) => {
-  return [...apps].sort((a, b) => {
-    const aStatusRank = getStatusRank(a.status);
-    const bStatusRank = getStatusRank(b.status);
-
-    if (aStatusRank !== bStatusRank) {
-      return aStatusRank - bStatusRank;
-    }
-
-    const aDeadlineRank = getDeadlineRank(a);
-    const bDeadlineRank = getDeadlineRank(b);
-
-    const aPassed = aDeadlineRank < 0;
-    const bPassed = bDeadlineRank < 0;
-
-    if (aPassed !== bPassed) {
-      return aPassed ? 1 : -1;
-    }
-
-    return aDeadlineRank - bDeadlineRank;
-  });
-};
+const priorityFilters: PriorityFilter[] = ["all", "high", "medium", "low"];
 
 export const CareerWidget = () => {
-  const [editing, setEditing] = useState(false);
+  const [items, setItems] = useState<CareerItem[]>(() => loadCareerItems());
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [priorityFilter, setPriorityFilter] =
+    useState<PriorityFilter>("all");
+  const [starredOnly, setStarredOnly] = useState(false);
 
-  const {
-    careerApplications,
-    addCareerApplication,
-    updateCareerApplication,
-    removeCareerApplication,
-  } = useDashboardData();
-
-  const applications = useMemo(
-    () => sortApplications(careerApplications),
-    [careerApplications]
+  const normalizedItems = useMemo(
+    () => items.map(normalizeCareerItem),
+    [items]
   );
 
-  const selectedApp = selectedId
-    ? careerApplications.find((app) => app.id === selectedId) ?? null
-    : null;
+  useEffect(() => {
+    saveCareerItems(normalizedItems);
+  }, [normalizedItems]);
 
-  const updateApplication = <K extends keyof CareerItem>(
-    id: string,
-    key: K,
-    value: CareerItem[K]
-  ) => {
-    updateCareerApplication(id, {
-      [key]: value,
-    } as Partial<CareerItem>);
+  const selectedItem = useMemo(() => {
+    if (!selectedId) return null;
+    return normalizedItems.find((item) => item.id === selectedId) ?? null;
+  }, [normalizedItems, selectedId]);
+
+  const updateCareerItem = (id: string, patch: Partial<CareerItem>) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? normalizeCareerItem({ ...item, ...patch }) : item
+      )
+    );
   };
 
-  const addApplication = () => {
-    const newItem = addCareerApplication();
+  const addCareerItem = () => {
+    const next = createCareerItem();
 
-    setSelectedId(newItem.id);
-    setEditing(true);
+    setItems((prev) => [next, ...prev]);
+    setSelectedId(next.id);
   };
 
-  const removeApplication = (id: string) => {
-    removeCareerApplication(id);
+  const deleteCareerItem = (id: string) => {
+    setItems((prev) => prev.filter((item) => item.id !== id));
 
     if (selectedId === id) {
       setSelectedId(null);
     }
   };
 
-  const addQuestion = (id: string) => {
-    const app = careerApplications.find((item) => item.id === id);
-    if (!app) return;
+  const visibleItems = useMemo(() => {
+    return normalizedItems
+      .filter((item) => {
+        if (starredOnly && !item.starred) return false;
+        if (priorityFilter !== "all" && item.priority !== priorityFilter) {
+          return false;
+        }
 
-    updateCareerApplication(id, {
-      coverLetterQuestions: [...app.coverLetterQuestions, ""],
-    });
-  };
+        return true;
+      })
+      .sort((a, b) => {
+        if ((a.starred ?? false) !== (b.starred ?? false)) {
+          return a.starred ? -1 : 1;
+        }
 
-  const updateQuestion = (id: string, index: number, value: string) => {
-    const app = careerApplications.find((item) => item.id === id);
-    if (!app) return;
+        return (
+          getPriorityScore(b.priority ?? "medium") -
+          getPriorityScore(a.priority ?? "medium")
+        );
+      });
+  }, [normalizedItems, priorityFilter, starredOnly]);
 
-    const next = [...app.coverLetterQuestions];
-    next[index] = value;
+  const summary = useMemo(() => {
+    const starred = normalizedItems.filter((item) => item.starred).length;
+    const preparing = normalizedItems.filter(
+      (item) => item.status === "Preparing"
+    ).length;
+    const interviews = normalizedItems.filter(
+      (item) => item.status === "Interview"
+    ).length;
+    const urgent = normalizedItems.filter((item) =>
+      ["urgent", "soon"].includes(getDdayTone(item.deadline))
+    ).length;
 
-    updateCareerApplication(id, {
-      coverLetterQuestions: next,
-    });
-  };
-  const detailItem = selectedItem ? normalizeCareerItem(selectedItem) : null;
-
-  const removeQuestion = (id: string, index: number) => {
-    const app = careerApplications.find((item) => item.id === id);
-    if (!app) return;
-
-    updateCareerApplication(id, {
-      coverLetterQuestions: app.coverLetterQuestions.filter(
-        (_, i) => i !== index
-      ),
-    });
-  };
-
-  const openPostingUrl = (url: string) => {
-    if (!url.trim()) return;
-
-    const safeUrl =
-      url.startsWith("http://") || url.startsWith("https://")
-        ? url
-        : `https://${url}`;
-
-    window.open(safeUrl, "_blank", "noopener,noreferrer");
-  };
+    return {
+      total: normalizedItems.length,
+      starred,
+      preparing,
+      interviews,
+      urgent,
+    };
+  }, [normalizedItems]);
 
   return (
     <>
-      <GlassCard
-        title="Career Command Center"
-        subtitle={`${applications.length} active applications`}
-        icon={<BriefcaseBusiness className="w-4 h-4" />}
-        actions={
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              onClick={addApplication}
-              className="h-8 w-8 rounded-full bg-white/35 border border-white/50 flex items-center justify-center hover:bg-white/55 transition"
-              title="Add application"
-            >
-              <Plus className="w-3.5 h-3.5" />
-            </button>
+      <section className="glass-card career-widget">
+        <div className="career-widget-header">
+          <div className="career-widget-title-wrap">
+            <div className="glass-card-icon">
+              <BriefcaseBusiness className="w-4 h-4" />
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setEditing((prev) => !prev)}
-              className={cn(
-                "h-8 px-3 rounded-full text-xs border transition flex items-center gap-1.5",
-                editing
-                  ? "bg-foreground text-background border-foreground"
-                  : "bg-white/35 border-white/50 text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {editing ? (
-                <Lock className="w-3.5 h-3.5" />
-              ) : (
-                <Pencil className="w-3.5 h-3.5" />
-              )}
-              {editing ? "Done" : "Edit"}
-            </button>
+            <div>
+              <h3>Career</h3>
+              <p>
+                {summary.total} applications · {summary.urgent} urgent
+              </p>
+            </div>
           </div>
-        }
-      >
-        <div className="space-y-3">
-          {applications.map((app) => {
-            const deadlineDate = getDeadlineDate(app);
-            const dday = getDdayInfo(deadlineDate);
 
-            return (
-              <article
-                key={app.id}
-                onClick={() => setSelectedId(app.id)}
-                className={cn(
-                  "career-list-item",
-                  dday.tone === "urgent" && "is-urgent",
-                  dday.tone === "soon" && "is-soon",
-                  dday.tone === "closed" && "is-closed"
-                )}
-              >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <div className="text-sm font-semibold truncate">
-                      {app.company || "Untitled Company"}
+          <button
+            type="button"
+            onClick={addCareerItem}
+            className="career-icon-button"
+            title="Add application"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="career-summary-grid">
+          <div className="career-summary-card">
+            <strong>{summary.starred}</strong>
+            <span>Starred</span>
+          </div>
+
+          <div className="career-summary-card">
+            <strong>{summary.preparing}</strong>
+            <span>Preparing</span>
+          </div>
+
+          <div className="career-summary-card">
+            <strong>{summary.interviews}</strong>
+            <span>Interview</span>
+          </div>
+        </div>
+
+        <div className="career-filter-row">
+          <button
+            type="button"
+            onClick={() => setStarredOnly((prev) => !prev)}
+            className={["career-filter-pill", starredOnly ? "is-active" : ""]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <Star className="w-3.5 h-3.5" />
+            Starred
+          </button>
+
+          {priorityFilters.map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setPriorityFilter(value)}
+              className={[
+                "career-filter-pill",
+                priorityFilter === value ? "is-active" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              <Filter className="w-3.5 h-3.5" />
+              {value === "all" ? "All" : value}
+            </button>
+          ))}
+        </div>
+
+        <div className="career-list">
+          {visibleItems.length === 0 ? (
+            <div className="career-empty-box">
+              조건에 맞는 지원건이 없어.
+            </div>
+          ) : (
+            visibleItems.map((item) => {
+              const stageProgress = getStageProgress(item.stages ?? []);
+              const clProgress = getCoverLetterProgress(
+                item.coverLetterItems ?? []
+              );
+              const ddayTone = getDdayTone(item.deadline);
+
+              return (
+                <article
+                  key={item.id}
+                  className={[
+                    "career-list-item",
+                    `priority-${item.priority ?? "medium"}`,
+                    ddayTone === "urgent" ? "is-urgent" : "",
+                    ddayTone === "soon" ? "is-soon" : "",
+                    ddayTone === "closed" ? "is-closed" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  onClick={() => setSelectedId(item.id)}
+                >
+                  <div className="career-list-main">
+                    <div className="career-list-title-row">
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          updateCareerItem(item.id, {
+                            starred: !item.starred,
+                          });
+                        }}
+                        className={[
+                          "career-list-star",
+                          item.starred ? "is-active" : "",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                      >
+                        ★
+                      </button>
+
+                      <div className="career-list-title">
+                        <strong>{item.company}</strong>
+                        <span>{item.role}</span>
+                      </div>
                     </div>
 
-                    <span className={`career-status-pill status-${app.status.toLowerCase()}`}>
-                      {app.status}
+                    <div className="career-list-meta">
+                      <span className={`career-status-pill status-${item.status.toLowerCase()}`}>
+                        {item.status}
+                      </span>
+
+                      <span className={`career-priority-tag is-${item.priority}`}>
+                        {item.priority}
+                      </span>
+
+                      <span>
+                        <FileText className="w-3 h-3" />
+                        CL {clProgress}%
+                      </span>
+
+                      <span>
+                        <CalendarDays className="w-3 h-3" />
+                        Stage {stageProgress}%
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="career-list-side">
+                    <span className={`career-dday-pill ${ddayTone}`}>
+                      {getDdayLabel(item.deadline)}
                     </span>
-                    {deadlineDate && (
-                      <span className={`career-dday-pill ${dday.tone}`}>
-                        {dday.label}
-                      </span>
-                    )}
+
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        deleteCareerItem(item.id);
+                      }}
+                      className="career-delete-button"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-
-                  <div className="text-xs text-muted-foreground truncate mt-1">
-                    {app.role || "Position"}
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-muted-foreground">
-                    {app.location && (
-                      <span className="inline-flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        {app.location}
-                      </span>
-                    )}
-
-                    {deadlineDate && (
-                      <span className="inline-flex items-center gap-1">
-                        <CalendarClock className="w-3 h-3" />
-                        {deadlineDate}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {editing && (
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeApplication(app.id);
-                    }}
-                    className="career-delete-button"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </article>
-            );
-          })}
+                </article>
+              );
+            })
+          )}
         </div>
-      </GlassCard>
+      </section>
 
-      {selectedApp && 
-        createPortal(
-        <div className="career-modal-backdrop">
+      {selectedItem && (
+        <div
+          className="career-modal-backdrop"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              setSelectedId(null);
+            }
+          }}
+        >
           <div className="career-modal-window">
             <div className="career-modal-header">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                  <Building2 className="w-3.5 h-3.5" />
-                  Career Detail
-                </div>
-
-                <div className="text-xl font-semibold truncate">
-                  {selectedApp.company || "Untitled Company"}
-                </div>
-
-                <div className="text-sm text-muted-foreground truncate mt-1">
-                  {selectedApp.role || "Position"}
-                </div>
-
-                {getDeadlineDate(selectedApp) && (
-                  <div className="mt-3">
-                    <span
-                      className={`career-dday-pill large ${
-                        getDdayInfo(getDeadlineDate(selectedApp)).tone
-                      }`}
-                    >
-                      {getDdayInfo(getDeadlineDate(selectedApp)).label}
-                    </span>
-                  </div>
-                )}
+              <div>
+                <div className="career-modal-kicker">Career Detail</div>
+                <h2>{selectedItem.company}</h2>
+                <p>{selectedItem.role}</p>
               </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setEditing((prev) => !prev)}
-                  className={cn(
-                    "h-8 px-3 rounded-full text-xs border transition flex items-center gap-1.5",
-                    editing
-                      ? "bg-foreground text-background border-foreground"
-                      : "bg-white/35 border-white/50 text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  {editing ? "Done" : "Edit"}
-                </button>
+              <div className="career-modal-actions">
+                {selectedItem.postingUrl && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      window.open(
+                        selectedItem.postingUrl,
+                        "_blank",
+                        "noopener,noreferrer"
+                      )
+                    }
+                    className="career-small-button"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Open
+                  </button>
+                )}
 
                 <button
                   type="button"
                   onClick={() => setSelectedId(null)}
-                  className="h-8 w-8 rounded-full bg-white/35 border border-white/50 flex items-center justify-center hover:bg-white/55 transition"
+                  className="career-icon-button"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -390,109 +344,89 @@ export const CareerWidget = () => {
 
             <div className="career-modal-body">
               <section className="career-detail-section">
-                <div className="career-section-title">Basic Info</div>
+                <div className="career-section-title">Overview</div>
 
                 <div className="career-detail-grid">
                   <label className="career-field">
                     <span>Company</span>
-                    {editing ? (
-                      <input
-                        value={selectedApp.company}
-                        onChange={(e) =>
-                          updateApplication(
-                            selectedApp.id,
-                            "company",
-                            e.target.value
-                          )
-                        }
-                        spellCheck={false}
-                      />
-                    ) : (
-                      <div>{selectedApp.company || "-"}</div>
-                    )}
+                    <input
+                      value={selectedItem.company}
+                      onChange={(event) =>
+                        updateCareerItem(selectedItem.id, {
+                          company: event.target.value,
+                        })
+                      }
+                    />
                   </label>
 
                   <label className="career-field">
-                    <span>Position</span>
-                    {editing ? (
-                      <input
-                        value={selectedApp.role}
-                        onChange={(e) =>
-                          updateApplication(
-                            selectedApp.id,
-                            "role",
-                            e.target.value
-                          )
-                        }
-                        spellCheck={false}
-                      />
-                    ) : (
-                      <div>{selectedApp.role || "-"}</div>
-                    )}
+                    <span>Role</span>
+                    <input
+                      value={selectedItem.role}
+                      onChange={(event) =>
+                        updateCareerItem(selectedItem.id, {
+                          role: event.target.value,
+                        })
+                      }
+                    />
                   </label>
 
                   <label className="career-field">
                     <span>Status</span>
-                    {editing ? (
-                      <select
-                        value={selectedApp.status}
-                        onChange={(e) =>
-                          updateApplication(
-                            selectedApp.id,
-                            "status",
-                            e.target.value as CareerStatus
-                          )
-                        }
-                      >
-                        {statusOptions.map((status) => (
-                          <option key={status} value={status}>
-                            {status}
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      <div>{selectedApp.status}</div>
-                    )}
+                    <select
+                      value={selectedItem.status}
+                      onChange={(event) =>
+                        updateCareerItem(selectedItem.id, {
+                          status: event.target.value as CareerStatus,
+                        })
+                      }
+                    >
+                      {careerStatusOptions.map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="career-field">
+                    <span>Deadline</span>
+                    <input
+                      type="date"
+                      value={selectedItem.deadline}
+                      onChange={(event) =>
+                        updateCareerItem(selectedItem.id, {
+                          deadline: event.target.value,
+                          applicationEndDate: event.target.value,
+                        })
+                      }
+                    />
                   </label>
 
                   <label className="career-field">
                     <span>Location</span>
-                    {editing ? (
-                      <input
-                        value={selectedApp.location}
-                        onChange={(e) =>
-                          updateApplication(
-                            selectedApp.id,
-                            "location",
-                            e.target.value
-                          )
-                        }
-                        spellCheck={false}
-                        placeholder="Seoul / Remote / Hybrid"
-                      />
-                    ) : (
-                      <div>{selectedApp.location || "-"}</div>
-                    )}
+                    <input
+                      value={selectedItem.location}
+                      onChange={(event) =>
+                        updateCareerItem(selectedItem.id, {
+                          location: event.target.value,
+                        })
+                      }
+                      placeholder="서울, 부산, Remote..."
+                    />
                   </label>
 
                   <label className="career-field">
                     <span>Work Type</span>
-                    {editing ? (
-                      <input
-                        value={selectedApp.workType}
-                        onChange={(e) =>
-                          updateApplication(
-                            selectedApp.id,
-                            "workType",
-                            e.target.value
-                          )
-                        }
-                        spellCheck={false}
-                        placeholder="Full-time / Intern / Contract"
-                      />
-                    ) : (
-                      <div>{selectedApp.workType || "-"}</div>
-                    )}
+                    <input
+                      value={selectedItem.workType}
+                      onChange={(event) =>
+                        updateCareerItem(selectedItem.id, {
+                          workType: event.target.value,
+                        })
+                      }
+                      placeholder="인턴 / 신입 / 정규직..."
+                    />
                   </label>
                 </div>
               </section>
@@ -503,238 +437,131 @@ export const CareerWidget = () => {
                 <div className="career-detail-grid">
                   <label className="career-field">
                     <span>Start Date</span>
-                    {editing ? (
-                      <input
-                        type="date"
-                        value={selectedApp.applicationStartDate}
-                        onChange={(e) =>
-                          updateApplication(
-                            selectedApp.id,
-                            "applicationStartDate",
-                            e.target.value
-                          )
-                        }
-                      />
-                    ) : (
-                      <div>{selectedApp.applicationStartDate || "-"}</div>
-                    )}
+                    <input
+                      type="date"
+                      value={selectedItem.applicationStartDate}
+                      onChange={(event) =>
+                        updateCareerItem(selectedItem.id, {
+                          applicationStartDate: event.target.value,
+                        })
+                      }
+                    />
                   </label>
 
                   <label className="career-field">
                     <span>Start Time</span>
-                    {editing ? (
-                      <input
-                        type="time"
-                        value={selectedApp.applicationStartTime}
-                        onChange={(e) =>
-                          updateApplication(
-                            selectedApp.id,
-                            "applicationStartTime",
-                            e.target.value
-                          )
-                        }
-                      />
-                    ) : (
-                      <div>{selectedApp.applicationStartTime || "-"}</div>
-                    )}
+                    <input
+                      type="time"
+                      value={selectedItem.applicationStartTime}
+                      onChange={(event) =>
+                        updateCareerItem(selectedItem.id, {
+                          applicationStartTime: event.target.value,
+                        })
+                      }
+                    />
                   </label>
 
                   <label className="career-field">
                     <span>End Date</span>
-                    {editing ? (
-                      <input
-                        type="date"
-                        value={selectedApp.applicationEndDate}
-                        onChange={(e) =>
-                          updateApplication(
-                            selectedApp.id,
-                            "applicationEndDate",
-                            e.target.value
-                          )
-                        }
-                      />
-                    ) : (
-                      <div>{selectedApp.applicationEndDate || "-"}</div>
-                    )}
+                    <input
+                      type="date"
+                      value={selectedItem.applicationEndDate}
+                      onChange={(event) =>
+                        updateCareerItem(selectedItem.id, {
+                          applicationEndDate: event.target.value,
+                          deadline: event.target.value,
+                        })
+                      }
+                    />
                   </label>
 
                   <label className="career-field">
                     <span>End Time</span>
-                    {editing ? (
-                      <input
-                        type="time"
-                        value={selectedApp.applicationEndTime}
-                        onChange={(e) =>
-                          updateApplication(
-                            selectedApp.id,
-                            "applicationEndTime",
-                            e.target.value
-                          )
-                        }
-                      />
-                    ) : (
-                      <div>{selectedApp.applicationEndTime || "-"}</div>
-                    )}
+                    <input
+                      type="time"
+                      value={selectedItem.applicationEndTime}
+                      onChange={(event) =>
+                        updateCareerItem(selectedItem.id, {
+                          applicationEndTime: event.target.value,
+                        })
+                      }
+                    />
                   </label>
                 </div>
-
-                <div className="career-sync-hint">
-                  Calendar title:{" "}
-                  <strong>
-                    {selectedApp.company || "Company"} · Application Window
-                  </strong>
-                </div>
               </section>
 
-              <section className="career-detail-section">
-                <div className="career-section-title">Posting Link</div>
+              <CareerPriorityEditor
+                item={selectedItem}
+                onChange={(patch) => updateCareerItem(selectedItem.id, patch)}
+              />
 
-                {editing ? (
-                  <div className="career-link-row">
-                    <Link className="w-4 h-4 text-muted-foreground" />
-                    <input
-                      value={selectedApp.postingUrl}
-                      onChange={(e) =>
-                        updateApplication(
-                          selectedApp.id,
-                          "postingUrl",
-                          e.target.value
-                        )
-                      }
-                      spellCheck={false}
-                      placeholder="https://..."
-                    />
-                  </div>
-                ) : selectedApp.postingUrl ? (
-                  <button
-                    type="button"
-                    onClick={() => openPostingUrl(selectedApp.postingUrl)}
-                    className="career-open-link-button"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    Open posting link
-                  </button>
-                ) : (
-                  <div className="career-empty-text">No link saved.</div>
-                )}
-              </section>
+              <CareerPipeline
+                item={selectedItem}
+                onChange={(patch) => updateCareerItem(selectedItem.id, patch)}
+              />
+
+              <CoverLetterTracker
+                item={selectedItem}
+                onChange={(patch) => updateCareerItem(selectedItem.id, patch)}
+              />
+
+              <CareerAttachments
+                item={selectedItem}
+                onChange={(patch) => updateCareerItem(selectedItem.id, patch)}
+              />
+
+              <InterviewReviewPanel
+                item={selectedItem}
+                onChange={(patch) => updateCareerItem(selectedItem.id, patch)}
+              />
 
               <section className="career-detail-section">
-                <div className="career-section-title">Job Description</div>
+                <div className="career-section-title">Posting & Notes</div>
 
-                {editing ? (
-                  <textarea
-                    value={selectedApp.jobDescription}
-                    onChange={(e) =>
-                      updateApplication(
-                        selectedApp.id,
-                        "jobDescription",
-                        e.target.value
-                      )
+                <label className="career-field">
+                  <span>Posting URL</span>
+                  <input
+                    value={selectedItem.postingUrl}
+                    onChange={(event) =>
+                      updateCareerItem(selectedItem.id, {
+                        postingUrl: event.target.value,
+                      })
                     }
-                    spellCheck={false}
-                    placeholder="공고 내용, 주요 업무, 자격요건 등을 붙여넣기"
-                    className="career-textarea"
+                    placeholder="https://..."
                   />
-                ) : (
-                  <div className="career-rich-text">
-                    {selectedApp.jobDescription || "No job description yet."}
-                  </div>
-                )}
-              </section>
+                </label>
 
-              <section className="career-detail-section">
-                <div className="career-section-title-row">
-                  <div className="career-section-title">
-                    Cover Letter Questions
-                  </div>
-
-                  {editing && (
-                    <button
-                      type="button"
-                      onClick={() => addQuestion(selectedApp.id)}
-                      className="career-small-button"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      Add
-                    </button>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  {selectedApp.coverLetterQuestions.length === 0 && (
-                    <div className="career-empty-text">
-                      No questions saved.
-                    </div>
-                  )}
-
-                  {selectedApp.coverLetterQuestions.map((question, index) => (
-                    <div key={index} className="career-question-item">
-                      {editing ? (
-                        <>
-                          <textarea
-                            value={question}
-                            onChange={(e) =>
-                              updateQuestion(
-                                selectedApp.id,
-                                index,
-                                e.target.value
-                              )
-                            }
-                            spellCheck={false}
-                            placeholder={`${index + 1}. 자소서 항목`}
-                          />
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              removeQuestion(selectedApp.id, index)
-                            }
-                            className="career-question-delete"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </>
-                      ) : (
-                        <div>
-                          <span className="text-muted-foreground mr-2">
-                            {index + 1}.
-                          </span>
-                          {question}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <section className="career-detail-section">
-                <div className="career-section-title">Notes</div>
-
-                {editing ? (
+                <label className="career-field mt-3">
+                  <span>Job Description</span>
                   <textarea
-                    value={selectedApp.notes}
-                    onChange={(e) =>
-                      updateApplication(
-                        selectedApp.id,
-                        "notes",
-                        e.target.value
-                      )
+                    value={selectedItem.jobDescription}
+                    onChange={(event) =>
+                      updateCareerItem(selectedItem.id, {
+                        jobDescription: event.target.value,
+                      })
                     }
-                    spellCheck={false}
-                    placeholder="준비 메모, 내 경험 매칭, 제출 전 체크리스트 등"
                     className="career-textarea"
+                    placeholder="공고 주요 내용, 직무 키워드, 필요 역량..."
                   />
-                ) : (
-                  <div className="career-rich-text">
-                    {selectedApp.notes || "No notes yet."}
-                  </div>
-                )}
+                </label>
+
+                <label className="career-field mt-3">
+                  <span>Notes</span>
+                  <textarea
+                    value={selectedItem.notes}
+                    onChange={(event) =>
+                      updateCareerItem(selectedItem.id, {
+                        notes: event.target.value,
+                      })
+                    }
+                    className="career-textarea"
+                    placeholder="지원 전략, 자소서 방향, 면접 준비 메모..."
+                  />
+                </label>
               </section>
             </div>
           </div>
-        </div>,
-        document.body
+        </div>
       )}
     </>
   );
