@@ -309,12 +309,12 @@
   border-bottom: 2px solid #000000 !important;
 }
 
-.theme-pixel .memo-window-titlebar *,
+/* .theme-pixel .memo-window-titlebar *,
 .theme-pixel .calendar-modal-header *,
 .theme-pixel .settings-modal-header *,
 .theme-pixel .career-modal-header * {
   color: #ffffff !important;
-}
+} */
 
 /* calendar bars */
 .theme-pixel .calendar-range-chip,
@@ -714,15 +714,26 @@
    Pixel Desk: correct window titlebar
    ================================ */
 
+/* ================================
+   Pixel Desk: widget titlebar like memo window
+   - memo window color untouched
+   - only normal widget glass-card gets blue titlebar
+   ================================ */
+
 .theme-pixel .glass-card {
   position: relative !important;
   height: 100% !important;
   min-height: 0 !important;
-  padding: 38px 18px 18px 18px !important;
+
+  /* 메모 윈도우처럼 위에 바 공간 확보 */
+  padding: 42px 18px 18px 18px !important;
+
   border-radius: 0 !important;
   overflow: hidden !important;
 
   background: #d8d8cc !important;
+  background-image: none !important;
+
   border-top: 2px solid #ffffff !important;
   border-left: 2px solid #ffffff !important;
   border-right: 2px solid #424242 !important;
@@ -737,43 +748,48 @@
   -webkit-backdrop-filter: none !important;
 }
 
-/* 파란 창바: 카드 안쪽으로 들어가지 말고 맨 위에 붙임 */
+/* 일반 위젯 파란 창바: 메모 윈도우 바처럼 맨 위에 자연스럽게 */
 .theme-pixel .glass-card::before {
   content: "" !important;
   display: block !important;
+
   position: absolute !important;
-  top: 4px !important;
-  left: 4px !important;
-  right: 4px !important;
-  height: 26px !important;
-  z-index: 20 !important;
+  top: 2px !important;
+  left: 2px !important;
+  right: 2px !important;
+  height: 28px !important;
+  z-index: 30 !important;
 
   background: #000080 !important;
   background-image: none !important;
 
-  border-top: 1px solid #ffffff !important;
-  border-left: 1px solid #ffffff !important;
-  border-right: 1px solid #303030 !important;
-  border-bottom: 1px solid #303030 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 2px solid #424242 !important;
+
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.35),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.35) !important;
 
   pointer-events: none !important;
 }
 
-/* 최소화 / 최대화 / 닫기 */
+/* 오른쪽 최소화/최대화/닫기 버튼만 */
 .theme-pixel .glass-card::after {
   content: "_  □  ×" !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
 
   position: absolute !important;
-  top: 7px !important;
+  top: 6px !important;
   right: 7px !important;
-  z-index: 21 !important;
+  z-index: 31 !important;
 
   height: 20px !important;
   min-width: 62px !important;
   padding: 0 4px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 
   font-family:
     "NeoDunggeunmo",
@@ -789,23 +805,182 @@
   background: #c0c0c0 !important;
   background-image: none !important;
 
-  border-top: 1px solid #ffffff !important;
-  border-left: 1px solid #ffffff !important;
-  border-right: 1px solid #303030 !important;
-  border-bottom: 1px solid #303030 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #424242 !important;
+  border-bottom: 2px solid #424242 !important;
 
+  box-shadow: none !important;
   pointer-events: none !important;
 }
 
-/* 카드 내용은 창바 아래에서 시작 */
+/* 카드 안 실제 내용은 창바 아래로 */
 .theme-pixel .glass-card > * {
   position: relative !important;
   z-index: 2 !important;
 }
 
-/* Pixel에서 내부 섹션들이 너무 넓게 삐져나오지 않게 */
+/* 카드 내부 내용이 넘치면 스크롤 */
 .theme-pixel .glass-card-body {
   height: 100% !important;
   min-height: 0 !important;
   overflow: auto !important;
+}
+
+
+/* 메모 목록 아이템: 둥근 카드 금지 */
+.theme-pixel .memo-note-item {
+  position: relative !important;
+
+  min-height: 48px !important;
+  border-radius: 0 !important;
+  padding: 8px 34px 8px 22px !important;
+
+  background: #e8e8dc !important;
+  background-image: none !important;
+
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #606060 !important;
+  border-bottom: 1px solid #606060 !important;
+
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+
+
+/* 실제 color chip 클래스가 있을 경우도 살림 */
+.theme-pixel .memo-color-chip,
+.theme-pixel .memo-note-color,
+.theme-pixel .memo-note-color-chip,
+.theme-pixel .memo-note-accent {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+
+  width: 8px !important;
+  min-width: 8px !important;
+  height: 30px !important;
+  border-radius: 0 !important;
+
+  background: var(--memo-color, #b7f7d0) !important;
+  border-left: 1px solid #ffffff !important;
+  border-top: 1px solid #ffffff !important;
+  border-right: 1px solid #808080 !important;
+  border-bottom: 1px solid #808080 !important;
+}
+
+/* ================================
+   Pixel Memo: single square color chip
+   ================================ */
+
+/* 메모 아이템은 왼쪽 정사각형 칩 + 내용 + 삭제버튼 구조 */
+.theme-pixel .memo-note-item {
+  display: grid !important;
+  grid-template-columns: 14px minmax(0, 1fr) 24px !important;
+  align-items: center !important;
+  gap: 8px !important;
+
+  min-height: 52px !important;
+  padding: 8px !important;
+  border-radius: 0 !important;
+
+  background: #e8e8dc !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #606060 !important;
+  border-bottom: 1px solid #606060 !important;
+
+  overflow: hidden !important;
+}
+
+/* 가짜 칩 제거 */
+.theme-pixel .memo-note-item::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* 실제 컬러칩 후보들 */
+.theme-pixel .memo-color-chip,
+.theme-pixel .memo-note-color,
+.theme-pixel .memo-note-color-chip,
+.theme-pixel .memo-note-accent {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  width: 12px !important;
+  min-width: 12px !important;
+  height: 12px !important;
+  min-height: 12px !important;
+
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #606060 !important;
+  border-bottom: 1px solid #606060 !important;
+
+  box-shadow: none !important;
+}
+
+/* 메모 텍스트 영역 */
+.theme-pixel .memo-note-item > div:not(.memo-color-chip):not(.memo-note-color):not(.memo-note-color-chip):not(.memo-note-accent) {
+  min-width: 0 !important;
+}
+
+/* 삭제 버튼은 오른쪽 칸 */
+.theme-pixel .memo-note-delete {
+  position: static !important;
+  transform: none !important;
+  width: 22px !important;
+  height: 22px !important;
+  justify-self: end !important;
+}
+
+/* Pixel Memo: varied chip colors */
+.theme-pixel .memo-note-item:nth-child(6n + 1) .memo-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 1) .memo-note-color,
+.theme-pixel .memo-note-item:nth-child(6n + 1) .memo-note-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 1) .memo-note-accent {
+  background: #f7a8c9 !important;
+}
+
+.theme-pixel .memo-note-item:nth-child(6n + 2) .memo-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 2) .memo-note-color,
+.theme-pixel .memo-note-item:nth-child(6n + 2) .memo-note-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 2) .memo-note-accent {
+  background: #fff1a8 !important;
+}
+
+.theme-pixel .memo-note-item:nth-child(6n + 3) .memo-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 3) .memo-note-color,
+.theme-pixel .memo-note-item:nth-child(6n + 3) .memo-note-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 3) .memo-note-accent {
+  background: #a9e9ff !important;
+}
+
+.theme-pixel .memo-note-item:nth-child(6n + 4) .memo-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 4) .memo-note-color,
+.theme-pixel .memo-note-item:nth-child(6n + 4) .memo-note-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 4) .memo-note-accent {
+  background: #c8f7b7 !important;
+}
+
+.theme-pixel .memo-note-item:nth-child(6n + 5) .memo-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 5) .memo-note-color,
+.theme-pixel .memo-note-item:nth-child(6n + 5) .memo-note-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 5) .memo-note-accent {
+  background: #cbb8ff !important;
+}
+
+.theme-pixel .memo-note-item:nth-child(6n + 6) .memo-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 6) .memo-note-color,
+.theme-pixel .memo-note-item:nth-child(6n + 6) .memo-note-color-chip,
+.theme-pixel .memo-note-item:nth-child(6n + 6) .memo-note-accent {
+  background: #ffbf91 !important;
 }
