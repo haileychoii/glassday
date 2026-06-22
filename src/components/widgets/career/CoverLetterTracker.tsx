@@ -3,7 +3,7 @@ import type {
   CareerItem,
   CoverLetterItem,
   CoverLetterStatus,
-} from "../../../types/dashboard";
+} from "./careerTypes";
 import {
   coverLetterStatusLabels,
   createCoverLetterItem,
