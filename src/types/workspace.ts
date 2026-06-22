@@ -1,28 +1,27 @@
-export type WidgetId =
-  | "today"
-  | "todayMini"
-  | "todayTasks"
-  | "calendar"
-  | "career"
-  | "study"
-  | "memo"
-  | "journal"
-  | "mood"
-  | "health"
-  | "money"
-  | "wealth"
-  | "topThree"
-  | "schedule"
-  | "alerts";
+import type { ComponentType } from "react";
+
+export type WidgetId = string;
 
 export type WidgetSize = "small" | "medium" | "large" | "wide" | "tall";
+
+export type WidgetCategory =
+  | "core"
+  | "life"
+  | "career"
+  | "study"
+  | "health"
+  | "money"
+  | "system"
+  | string;
 
 export type WidgetMeta = {
   id: WidgetId;
   label: string;
   description?: string;
-  icon?: string;
+  icon?: string | ComponentType<{ className?: string }>;
+  category?: WidgetCategory;
   defaultSize?: WidgetSize;
+  [key: string]: unknown;
 };
 
 export type WorkspaceId = string;
@@ -40,6 +39,8 @@ export type GridLayoutItem = {
   static?: boolean;
   isDraggable?: boolean;
   isResizable?: boolean;
+  moved?: boolean;
+  [key: string]: unknown;
 };
 
 export type Layouts = Record<string, GridLayoutItem[]>;
