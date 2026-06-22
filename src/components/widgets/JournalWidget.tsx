@@ -1,0 +1,1 @@
+export { DailyJournalWidget as JournalWidget } from "./DailyJournalWidget";
