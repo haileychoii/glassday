@@ -1,19 +1,29 @@
 import type {
   JournalClip,
   JournalEntry,
+  JournalHashtagGroup,
   JournalMood,
   JournalTask,
 } from "../../../types/journal";
 
 export const JOURNAL_STORAGE_KEY = "glassday.journal.entries.v1";
 
-const moodOptions: JournalMood[] = [
-  "완전 좋음",
-  "괜찮음",
-  "보통",
-  "피곤함",
-  "스트레스",
-  "저조함",
+export const journalMoodLabels: Record<JournalMood, string> = {
+  great: "Great",
+  good: "Good",
+  normal: "Normal",
+  tired: "Tired",
+  stressed: "Stressed",
+  low: "Low",
+};
+
+export const journalMoodOptions: JournalMood[] = [
+  "great",
+  "good",
+  "normal",
+  "tired",
+  "stressed",
+  "low",
 ];
 
 const createId = (prefix: string) => {
@@ -36,11 +46,11 @@ export const todayString = () => toDateString(new Date());
 
 export const addDaysToDateString = (dateString: string, amount: number) => {
   const [year, month, day] = dateString.split("-").map(Number);
-  const date = new Date(year, (month ?? 1) - 1, day ?? 1);
+  const base = new Date(year, (month ?? 1) - 1, day ?? 1);
 
-  date.setDate(date.getDate() + amount);
+  base.setDate(base.getDate() + amount);
 
-  return toDateString(date);
+  return toDateString(base);
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => {
@@ -66,11 +76,41 @@ const clampScore = (value: unknown, fallback = 3) => {
 };
 
 const asMood = (value: unknown): JournalMood => {
-  if (typeof value === "string" && moodOptions.includes(value as JournalMood)) {
+  if (
+    typeof value === "string" &&
+    journalMoodOptions.includes(value as JournalMood)
+  ) {
     return value as JournalMood;
   }
 
-  return "보통";
+  return "normal";
+};
+
+export const normalizeHashtag = (tag: string) => {
+  const trimmed = tag.trim();
+
+  if (!trimmed) return "#기록";
+
+  const withoutHash = trimmed.replace(/^#+/, "");
+
+  return `#${withoutHash.replace(/\s+/g, "")}`;
+};
+
+export const extractHashtags = (text: string) => {
+  const matches = text.match(/#[가-힣a-zA-Z0-9_]+/g) ?? [];
+
+  return Array.from(
+    new Set(matches.map((tag: string) => normalizeHashtag(tag)))
+  );
+};
+
+export const applyHashtagToText = (text: string, tag: string) => {
+  const normalizedTag = normalizeHashtag(tag);
+
+  if (!text.trim()) return normalizedTag;
+  if (text.includes(normalizedTag)) return text;
+
+  return `${normalizedTag} ${text}`;
 };
 
 export const createJournalTask = (text = ""): JournalTask => ({
@@ -114,8 +154,9 @@ export const createDefaultJournalEntry = (
   workLog: "",
   learned: "",
   careerMaterial: "",
+  memo: "",
 
-  condition: "보통",
+  condition: "normal",
 
   energy: 3,
   focus: 3,
@@ -190,6 +231,7 @@ export const normalizeJournalEntry = (
     workLog: asString(value.workLog),
     learned: asString(value.learned),
     careerMaterial: asString(value.careerMaterial),
+    memo: asString(value.memo),
 
     condition: asMood(value.condition),
 
@@ -244,6 +286,13 @@ export const saveJournalEntries = (entries: JournalEntry[]) => {
       },
     })
   );
+};
+
+export const clearJournalStorage = () => {
+  if (typeof window === "undefined") return;
+
+  window.localStorage.removeItem(JOURNAL_STORAGE_KEY);
+  window.dispatchEvent(new CustomEvent("glassday:journal-cleared"));
 };
 
 export const getJournalEntryByDate = (
@@ -301,6 +350,7 @@ export const getJournalProgress = (entry: JournalEntry) => {
     entry.workLog.trim(),
     entry.learned.trim(),
     entry.careerMaterial.trim(),
+    entry.memo.trim(),
     entry.reflection.trim(),
   ];
 
@@ -315,9 +365,9 @@ export const getJournalProgress = (entry: JournalEntry) => {
   const taskProgress =
     todayTaskCount === 0 ? 0 : doneTodayTaskCount / todayTaskCount;
 
-  const textProgress = filledTextFields / fields.length;
+  const textProgress = fields.length === 0 ? 0 : filledTextFields / fields.length;
 
-  return Math.round((taskProgress * 0.45 + textProgress * 0.55) * 100);
+  return Math.round((taskProgress * 0.4 + textProgress * 0.6) * 100);
 };
 
 export const getDoneTodayTaskCount = (entry: JournalEntry) => {
@@ -326,32 +376,6 @@ export const getDoneTodayTaskCount = (entry: JournalEntry) => {
 
 export const getTodayTaskCount = (entry: JournalEntry) => {
   return entry.todayTasks.length;
-};
-
-export const normalizeHashtag = (tag: string) => {
-  const trimmed = tag.trim();
-
-  if (!trimmed) return "#기록";
-
-  const withoutHash = trimmed.replace(/^#+/, "");
-
-  return `#${withoutHash.replace(/\s+/g, "")}`;
-};
-
-export const extractHashtags = (text: string) => {
-  const matches = text.match(/#[가-힣a-zA-Z0-9_]+/g) ?? [];
-
-  return Array.from(new Set(matches.map((tag: string) => normalizeHashtag(tag))));
-};
-
-export const applyHashtagToText = (text: string, tag: string) => {
-  const normalizedTag = normalizeHashtag(tag);
-
-  if (!text.trim()) return normalizedTag;
-
-  if (text.includes(normalizedTag)) return text;
-
-  return `${normalizedTag} ${text}`;
 };
 
 export const createClipFromSelection = ({
@@ -391,7 +415,9 @@ export const collectJournalClips = (entries: JournalEntry[]) => {
   );
 };
 
-export const collectHashtagLibrary = (entries: JournalEntry[]) => {
+export const collectHashtagLibrary = (
+  entries: JournalEntry[]
+): JournalHashtagGroup[] => {
   const allClips = collectJournalClips(entries);
   const library = new Map<string, JournalClip[]>();
 
@@ -416,16 +442,15 @@ export const getEntryHashtags = (entry: JournalEntry) => {
     entry.workLog,
     entry.learned,
     entry.careerMaterial,
+    entry.memo,
     entry.reflection,
     ...entry.todayTasks.map((task: JournalTask) => task.text),
     ...entry.tomorrowTasks.map((task: JournalTask) => task.text),
-    ...entry.clips.map((clip: JournalClip) => clip.tag),
+    ...entry.clips.map((clip: JournalClip) => `${clip.tag} ${clip.text}`),
   ];
 
   return Array.from(
-    new Set(
-      textBlocks.flatMap((text: string) => extractHashtags(text))
-    )
+    new Set(textBlocks.flatMap((text: string) => extractHashtags(text)))
   );
 };
 
@@ -452,15 +477,7 @@ export const getJournalSummary = (entries: JournalEntry[]) => {
   };
 };
 
-export const clearJournalStorage = () => {
-  if (typeof window === "undefined") return;
-
-  window.localStorage.removeItem(JOURNAL_STORAGE_KEY);
-
-  window.dispatchEvent(new CustomEvent("glassday:journal-cleared"));
-};
-
-/* 기존 컴포넌트 import 이름 대응용 aliases */
+/* 기존 import 이름 대응용 aliases */
 export const loadJournal = loadJournalEntries;
 export const saveJournal = saveJournalEntries;
 export const createEmptyJournalEntry = createDefaultJournalEntry;
