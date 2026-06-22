@@ -24,7 +24,9 @@ export type CalendarEvent = {
 export type CareerStatus =
   | "Preparing"
   | "Submitted"
+  | "Screening"
   | "Interview"
+  | "Offer"
   | "Completed"
   | "Rejected";
 
@@ -60,11 +62,40 @@ export type CoverLetterItem = {
   memo: string;
 };
 
+export type CareerAttachmentType =
+  | "resume"
+  | "cover_letter"
+  | "portfolio"
+  | "certificate"
+  | "job_posting"
+  | "other";
+
+export type CareerAttachment = {
+  id: string;
+  label: string;
+  url: string;
+  type: CareerAttachmentType;
+  memo: string;
+};
+
+export type InterviewReview = {
+  id: string;
+  stageLabel: string;
+  date: string;
+  interviewer: string;
+  questions: string;
+  answers: string;
+  mood: string;
+  result: string;
+  reflection: string;
+};
+
 export type CareerItem = {
   id: string;
   company: string;
   role: string;
   status: CareerStatus;
+
   priority?: CareerPriority;
   starred?: boolean;
 
@@ -80,27 +111,13 @@ export type CareerItem = {
 
   postingUrl: string;
   jobDescription: string;
+
   coverLetterQuestions: string[];
-  notes: string;
-  stages?:CareerStage[];
+  stages?: CareerStage[];
   coverLetterItems?: CoverLetterItem[];
+  attachments?: CareerAttachment[];
+  interviewReviews?: InterviewReview[];
 
-  attatchments?; CareerAttachment[];
+  result?: string;
   notes: string;
-};
-
-export type CareerAttachmentType = 
-| "resume"
-| "cover_letter"
-| "portfolio"
-| "certificate"
-| "job_posting"
-| "other";
-
-export type CareerAttachment = {
-  id: string;
-  label: string;
-  url: string;
-  type: CareerAttachmentType;
-  memo: string;
 };
