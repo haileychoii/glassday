@@ -1,33 +1,76 @@
 import type {
-  JournalEntries,
+  JournalClip,
   JournalEntry,
-  JournalFieldKey,
   JournalMood,
-  JournalTagClip,
   JournalTask,
 } from "../../../types/journal";
 
-export const toLocalDateInput = (date = new Date()) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+export const JOURNAL_STORAGE_KEY = "glassday.journal.entries.v1";
 
-  return `${year}-${month}-${day}`;
-};
+const moodOptions: JournalMood[] = [
+  "완전 좋음",
+  "괜찮음",
+  "보통",
+  "피곤함",
+  "스트레스",
+  "저조함",
+];
 
-export const addDays = (value: string, amount: number) => {
-  const date = new Date(`${value}T00:00:00`);
-  date.setDate(date.getDate() + amount);
-
-  return toLocalDateInput(date);
-};
-
-export const createId = (prefix: string) => {
+const createId = (prefix: string) => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
   }
 
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+
+const pad2 = (value: number) => String(value).padStart(2, "0");
+
+export const toDateString = (date: Date) => {
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(
+    date.getDate()
+  )}`;
+};
+
+export const todayString = () => toDateString(new Date());
+
+export const addDaysToDateString = (dateString: string, amount: number) => {
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(year, (month ?? 1) - 1, day ?? 1);
+
+  date.setDate(date.getDate() + amount);
+
+  return toDateString(date);
+};
+
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+};
+
+const asString = (value: unknown, fallback = "") => {
+  return typeof value === "string" ? value : fallback;
+};
+
+const asBoolean = (value: unknown, fallback = false) => {
+  return typeof value === "boolean" ? value : fallback;
+};
+
+const asNumber = (value: unknown, fallback = 0) => {
+  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
+};
+
+const clampScore = (value: unknown, fallback = 3) => {
+  const numberValue = asNumber(value, fallback);
+
+  return Math.max(1, Math.min(5, Math.round(numberValue)));
+};
+
+const asMood = (value: unknown): JournalMood => {
+  if (typeof value === "string" && moodOptions.includes(value as JournalMood)) {
+    return value as JournalMood;
+  }
+
+  return "보통";
 };
 
 export const createJournalTask = (text = ""): JournalTask => ({
@@ -36,217 +79,392 @@ export const createJournalTask = (text = ""): JournalTask => ({
   done: false,
 });
 
-export const createJournalEntry = (date: string): JournalEntry => {
-  const now = Date.now();
-
-  return {
-    date,
-    todayTodos: [
-      createJournalTask("오늘 가장 중요한 일 1개 끝내기"),
-      createJournalTask("회사/공부 기록 남기기"),
-    ],
-    tomorrowTodos: [createJournalTask("내일 첫 번째로 할 일 정하기")],
-    workDone: "",
-    learned: "",
-    careerNote: "",
-    mood: "neutral",
-    energy: 3,
-    focus: 3,
-    sleepiness: 3,
-    stress: 2,
-    oneLineReview: "",
-    tagClips: [],
-    createdAt: now,
-    updatedAt: now,
-  };
-};
-
-export const normalizeJournalEntry = (
-  entry: JournalEntry | undefined,
-  date: string
-): JournalEntry => {
-  const fallback = createJournalEntry(date);
-
-  if (!entry) return fallback;
-
-  return {
-    ...fallback,
-    ...entry,
-    todayTodos: entry.todayTodos ?? fallback.todayTodos,
-    tomorrowTodos: entry.tomorrowTodos ?? fallback.tomorrowTodos,
-    tagClips: entry.tagClips ?? [],
-  };
-};
-
-export const moodLabels: Record<JournalMood, string> = {
-  great: "완전 좋음",
-  good: "괜찮음",
-  neutral: "보통",
-  tired: "피곤함",
-  stressed: "스트레스",
-  low: "저조함",
-};
-
-export const moodEmojis: Record<JournalMood, string> = {
-  great: "✨",
-  good: "🌷",
-  neutral: "🌙",
-  tired: "🥱",
-  stressed: "🌧️",
-  low: "🫧",
-};
-
-export const getJournalCompletion = (entry: JournalEntry) => {
-  const checks = [
-    entry.todayTodos.some((task) => task.done),
-    entry.workDone.trim().length > 0,
-    entry.learned.trim().length > 0,
-    entry.tomorrowTodos.some((task) => task.text.trim().length > 0),
-    entry.oneLineReview.trim().length > 0,
-  ];
-
-  const completed = checks.filter(Boolean).length;
-
-  return Math.round((completed / checks.length) * 100);
-};
-
-export const getDoneTaskCount = (tasks: JournalTask[]) => {
-  return tasks.filter((task) => task.done).length;
-};
-
-export const normalizeTag = (tag: string) => {
-  return tag
-    .trim()
-    .replace(/^#+/, "")
-    .replace(/\s+/g, "")
-    .replace(/[^\w가-힣ㄱ-ㅎㅏ-ㅣ-]/g, "");
-};
-
-export const extractTagsFromText = (text: string) => {
-  const matches = text.match(/#[\w가-힣ㄱ-ㅎㅏ-ㅣ-]+/g) ?? [];
-
-  return [...new Set(matches.map((tag) => normalizeTag(tag)).filter(Boolean))];
-};
-
-export const getFieldLabel = (field: JournalFieldKey) => {
-  const labels: Record<JournalFieldKey, string> = {
-    workDone: "회사에서 한 일",
-    learned: "오늘 배운 것",
-    careerNote: "자소서/커리어 소재",
-    oneLineReview: "한 줄 회고",
-  };
-
-  return labels[field];
-};
-
-export const createTagClip = ({
+export const createJournalClip = ({
   tag,
   text,
-  field,
+  source,
   date,
 }: {
   tag: string;
   text: string;
-  field: JournalFieldKey;
+  source: string;
   date: string;
-}): JournalTagClip => {
+}): JournalClip => ({
+  id: createId("journal-clip"),
+  tag: normalizeHashtag(tag),
+  text,
+  source,
+  date,
+  createdAt: new Date().toISOString(),
+});
+
+export const createDefaultJournalEntry = (
+  date = todayString()
+): JournalEntry => ({
+  id: `journal-${date}`,
+  date,
+
+  todayTasks: [
+    createJournalTask("오늘 가장 중요한 일 1개 끝내기"),
+  ],
+  tomorrowTasks: [
+    createJournalTask("내일 첫 번째로 할 일 정하기"),
+  ],
+
+  workLog: "",
+  learned: "",
+  careerMaterial: "",
+
+  condition: "보통",
+
+  energy: 3,
+  focus: 3,
+  sleepy: 3,
+  stress: 2,
+
+  reflection: "",
+  clips: [],
+});
+
+const normalizeTask = (value: unknown): JournalTask => {
+  if (!isRecord(value)) {
+    return createJournalTask();
+  }
+
   return {
-    id: createId("journal-tag-clip"),
-    tag: normalizeTag(tag),
-    text: text.trim(),
-    field,
-    date,
-    createdAt: Date.now(),
+    id: asString(value.id, createId("journal-task")),
+    text: asString(value.text),
+    done: asBoolean(value.done),
   };
 };
 
-export type JournalInlineTagItem = {
-  id: string;
+const normalizeClip = (value: unknown, fallbackDate: string): JournalClip => {
+  if (!isRecord(value)) {
+    return createJournalClip({
+      tag: "#기록",
+      text: "",
+      source: "journal",
+      date: fallbackDate,
+    });
+  }
+
+  return {
+    id: asString(value.id, createId("journal-clip")),
+    tag: normalizeHashtag(asString(value.tag, "#기록")),
+    text: asString(value.text),
+    source: asString(value.source, "journal"),
+    date: asString(value.date, fallbackDate),
+    createdAt: asString(value.createdAt, new Date().toISOString()),
+  };
+};
+
+export const normalizeJournalEntry = (
+  value: unknown,
+  fallbackDate = todayString()
+): JournalEntry => {
+  if (!isRecord(value)) {
+    return createDefaultJournalEntry(fallbackDate);
+  }
+
+  const date = asString(value.date, fallbackDate);
+
+  const todayTasks = Array.isArray(value.todayTasks)
+    ? value.todayTasks.map((task: unknown) => normalizeTask(task))
+    : [];
+
+  const tomorrowTasks = Array.isArray(value.tomorrowTasks)
+    ? value.tomorrowTasks.map((task: unknown) => normalizeTask(task))
+    : [];
+
+  const clips = Array.isArray(value.clips)
+    ? value.clips.map((clip: unknown) => normalizeClip(clip, date))
+    : [];
+
+  return {
+    id: asString(value.id, `journal-${date}`),
+    date,
+
+    todayTasks,
+    tomorrowTasks,
+
+    workLog: asString(value.workLog),
+    learned: asString(value.learned),
+    careerMaterial: asString(value.careerMaterial),
+
+    condition: asMood(value.condition),
+
+    energy: clampScore(value.energy, 3),
+    focus: clampScore(value.focus, 3),
+    sleepy: clampScore(value.sleepy, 3),
+    stress: clampScore(value.stress, 2),
+
+    reflection: asString(value.reflection),
+    clips,
+  };
+};
+
+export const loadJournalEntries = (): JournalEntry[] => {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const raw = window.localStorage.getItem(JOURNAL_STORAGE_KEY);
+
+    if (!raw) {
+      return [createDefaultJournalEntry()];
+    }
+
+    const parsed = JSON.parse(raw) as unknown;
+
+    if (!Array.isArray(parsed)) {
+      return [createDefaultJournalEntry()];
+    }
+
+    return parsed.map((entry: unknown) => normalizeJournalEntry(entry));
+  } catch {
+    return [createDefaultJournalEntry()];
+  }
+};
+
+export const saveJournalEntries = (entries: JournalEntry[]) => {
+  if (typeof window === "undefined") return;
+
+  const normalizedEntries = entries.map((entry: JournalEntry) =>
+    normalizeJournalEntry(entry)
+  );
+
+  window.localStorage.setItem(
+    JOURNAL_STORAGE_KEY,
+    JSON.stringify(normalizedEntries)
+  );
+
+  window.dispatchEvent(
+    new CustomEvent("glassday:journal-updated", {
+      detail: {
+        entries: normalizedEntries,
+      },
+    })
+  );
+};
+
+export const getJournalEntryByDate = (
+  entries: JournalEntry[],
+  date: string
+) => {
+  return entries.find((entry: JournalEntry) => entry.date === date) ?? null;
+};
+
+export const getOrCreateJournalEntry = (
+  entries: JournalEntry[],
+  date: string
+) => {
+  return getJournalEntryByDate(entries, date) ?? createDefaultJournalEntry(date);
+};
+
+export const upsertJournalEntry = (
+  entries: JournalEntry[],
+  nextEntry: JournalEntry
+): JournalEntry[] => {
+  const normalizedEntry = normalizeJournalEntry(nextEntry);
+  const exists = entries.some(
+    (entry: JournalEntry) => entry.date === normalizedEntry.date
+  );
+
+  if (!exists) {
+    return [...entries, normalizedEntry].sort((a, b) =>
+      a.date.localeCompare(b.date)
+    );
+  }
+
+  return entries
+    .map((entry: JournalEntry) =>
+      entry.date === normalizedEntry.date ? normalizedEntry : entry
+    )
+    .sort((a, b) => a.date.localeCompare(b.date));
+};
+
+export const updateJournalEntry = (
+  entries: JournalEntry[],
+  date: string,
+  patch: Partial<JournalEntry>
+): JournalEntry[] => {
+  const current = getOrCreateJournalEntry(entries, date);
+
+  return upsertJournalEntry(entries, {
+    ...current,
+    ...patch,
+    date,
+  });
+};
+
+export const getJournalProgress = (entry: JournalEntry) => {
+  const fields = [
+    entry.workLog.trim(),
+    entry.learned.trim(),
+    entry.careerMaterial.trim(),
+    entry.reflection.trim(),
+  ];
+
+  const filledTextFields = fields.filter((field: string) => field.length > 0)
+    .length;
+
+  const todayTaskCount = entry.todayTasks.length;
+  const doneTodayTaskCount = entry.todayTasks.filter(
+    (task: JournalTask) => task.done
+  ).length;
+
+  const taskProgress =
+    todayTaskCount === 0 ? 0 : doneTodayTaskCount / todayTaskCount;
+
+  const textProgress = filledTextFields / fields.length;
+
+  return Math.round((taskProgress * 0.45 + textProgress * 0.55) * 100);
+};
+
+export const getDoneTodayTaskCount = (entry: JournalEntry) => {
+  return entry.todayTasks.filter((task: JournalTask) => task.done).length;
+};
+
+export const getTodayTaskCount = (entry: JournalEntry) => {
+  return entry.todayTasks.length;
+};
+
+export const normalizeHashtag = (tag: string) => {
+  const trimmed = tag.trim();
+
+  if (!trimmed) return "#기록";
+
+  const withoutHash = trimmed.replace(/^#+/, "");
+
+  return `#${withoutHash.replace(/\s+/g, "")}`;
+};
+
+export const extractHashtags = (text: string) => {
+  const matches = text.match(/#[가-힣a-zA-Z0-9_]+/g) ?? [];
+
+  return Array.from(new Set(matches.map((tag: string) => normalizeHashtag(tag))));
+};
+
+export const applyHashtagToText = (text: string, tag: string) => {
+  const normalizedTag = normalizeHashtag(tag);
+
+  if (!text.trim()) return normalizedTag;
+
+  if (text.includes(normalizedTag)) return text;
+
+  return `${normalizedTag} ${text}`;
+};
+
+export const createClipFromSelection = ({
+  entry,
+  tag,
+  text,
+  source,
+}: {
+  entry: JournalEntry;
   tag: string;
   text: string;
-  field: JournalFieldKey;
-  date: string;
-  source: "inline";
-};
+  source: string;
+}): JournalEntry => {
+  const normalizedText = text.trim();
 
-export type JournalTagLibraryItem =
-  | (JournalTagClip & { source: "clip" })
-  | JournalInlineTagItem;
+  if (!normalizedText) return entry;
 
-const getLinePreviewForTag = (text: string, tag: string) => {
-  const lines = text
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  const matchedLine =
-    lines.find((line) => line.includes(`#${tag}`)) ||
-    lines.find((line) => extractTagsFromText(line).includes(tag));
-
-  return matchedLine || text.slice(0, 120);
-};
-
-export const collectJournalTags = (entries: JournalEntries) => {
-  const tags = new Set<string>();
-
-  Object.values(entries).forEach((entry) => {
-    const normalized = normalizeJournalEntry(entry, entry.date);
-
-    normalized.tagClips.forEach((clip) => {
-      if (clip.tag) tags.add(clip.tag);
-    });
-
-    (["workDone", "learned", "careerNote", "oneLineReview"] as JournalFieldKey[]).forEach(
-      (field) => {
-        extractTagsFromText(String(normalized[field] ?? "")).forEach((tag) =>
-          tags.add(tag)
-        );
-      }
-    );
+  const clip = createJournalClip({
+    tag,
+    text: normalizedText,
+    source,
+    date: entry.date,
   });
 
-  return [...tags].sort((a, b) => a.localeCompare(b));
+  return {
+    ...entry,
+    clips: [clip, ...entry.clips],
+  };
 };
 
-export const collectJournalTagItems = (
-  entries: JournalEntries,
-  selectedTag?: string
-): JournalTagLibraryItem[] => {
-  const items: JournalTagLibraryItem[] = [];
+export const collectJournalClips = (entries: JournalEntry[]) => {
+  return entries.flatMap((entry: JournalEntry) =>
+    entry.clips.map((clip: JournalClip) => ({
+      ...clip,
+      date: clip.date || entry.date,
+    }))
+  );
+};
 
-  Object.values(entries).forEach((entry) => {
-    const normalized = normalizeJournalEntry(entry, entry.date);
+export const collectHashtagLibrary = (entries: JournalEntry[]) => {
+  const allClips = collectJournalClips(entries);
+  const library = new Map<string, JournalClip[]>();
 
-    normalized.tagClips.forEach((clip) => {
-      if (!selectedTag || clip.tag === selectedTag) {
-        items.push({
-          ...clip,
-          source: "clip",
-        });
-      }
-    });
+  allClips.forEach((clip: JournalClip) => {
+    const tag = normalizeHashtag(clip.tag);
+    const current = library.get(tag) ?? [];
 
-    (["workDone", "learned", "careerNote", "oneLineReview"] as JournalFieldKey[]).forEach(
-      (field) => {
-        const value = String(normalized[field] ?? "");
-        const tags = extractTagsFromText(value);
-
-        tags.forEach((tag) => {
-          if (selectedTag && tag !== selectedTag) return;
-
-          items.push({
-            id: `inline-${normalized.date}-${field}-${tag}`,
-            tag,
-            text: getLinePreviewForTag(value, tag),
-            field,
-            date: normalized.date,
-            createdAt: normalized.updatedAt,
-            source: "inline",
-          });
-        });
-      }
-    );
+    library.set(tag, [...current, clip]);
   });
 
-  return items.sort((a, b) => b.date.localeCompare(a.date));
+  return Array.from(library.entries())
+    .map(([tag, clips]) => ({
+      tag,
+      clips,
+      count: clips.length,
+    }))
+    .sort((a, b) => b.count - a.count);
 };
+
+export const getEntryHashtags = (entry: JournalEntry) => {
+  const textBlocks = [
+    entry.workLog,
+    entry.learned,
+    entry.careerMaterial,
+    entry.reflection,
+    ...entry.todayTasks.map((task: JournalTask) => task.text),
+    ...entry.tomorrowTasks.map((task: JournalTask) => task.text),
+    ...entry.clips.map((clip: JournalClip) => clip.tag),
+  ];
+
+  return Array.from(
+    new Set(
+      textBlocks.flatMap((text: string) => extractHashtags(text))
+    )
+  );
+};
+
+export const getJournalSummary = (entries: JournalEntry[]) => {
+  const today = todayString();
+  const todayEntry = getOrCreateJournalEntry(entries, today);
+  const progress = getJournalProgress(todayEntry);
+
+  const totalClips = entries.reduce((sum: number, entry: JournalEntry) => {
+    return sum + entry.clips.length;
+  }, 0);
+
+  const unfinishedTodayTasks = todayEntry.todayTasks.filter(
+    (task: JournalTask) => !task.done
+  ).length;
+
+  return {
+    today,
+    todayEntry,
+    progress,
+    totalEntries: entries.length,
+    totalClips,
+    unfinishedTodayTasks,
+  };
+};
+
+export const clearJournalStorage = () => {
+  if (typeof window === "undefined") return;
+
+  window.localStorage.removeItem(JOURNAL_STORAGE_KEY);
+
+  window.dispatchEvent(new CustomEvent("glassday:journal-cleared"));
+};
+
+/* 기존 컴포넌트 import 이름 대응용 aliases */
+export const loadJournal = loadJournalEntries;
+export const saveJournal = saveJournalEntries;
+export const createEmptyJournalEntry = createDefaultJournalEntry;
+export const getOrCreateEntry = getOrCreateJournalEntry;
+export const calculateJournalProgress = getJournalProgress;
+export const getHashtagsFromText = extractHashtags;
+export const getHashtagLibrary = collectHashtagLibrary;
