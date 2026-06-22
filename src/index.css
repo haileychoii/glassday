@@ -1,22 +1,3 @@
-@import "./base.css";
-@import "./layout.css";
-@import "./dashboard-grid.css";
-@import "./controls.css";
-@import "./overlays.css";
-
-@import "./widgets/today.css";
-@import "./widgets/alerts.css";
-@import "./widgets/journal.css";
-@import "./widgets/calendar.css";
-@import "./widgets/memo.css";
-@import "./widgets/study.css";
-@import "./widgets/career.css";
-@import "./widgets/settings.css";
-
-@import "./themes/pastel.css";
-@import "./themes/glass.css";
-@import "./themes/mac-core.css";
-@import "./themes/pixel.css";
-
-@import "./responsive.css";
-@import "./overrides.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
