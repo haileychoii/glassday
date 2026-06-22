@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import type { Layout } from "react-grid-layout";
 
-type Layouts = Record<string, Layout[]>;
-
 import { useLocalStorage } from "./useLocalStorage";
 import { defaultDashboardTabs } from "../constants/dashboardTabs";
 import type { DashboardTab, WidgetId } from "../types/workspace";
+
+type Layouts = Record<string, Layout[]>;
 
 const TABS_KEY = "glassday.dashboard.tabs.v1";
 const ACTIVE_TAB_KEY = "glassday.dashboard.activeTab.v1";
@@ -18,6 +18,14 @@ const createId = () => {
   return `tab-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
+const normalizeLayouts = (layouts: unknown): Layouts => {
+  if (!layouts || typeof layouts !== "object") {
+    return {};
+  }
+
+  return layouts as Layouts;
+};
+
 export const useDashboardTabs = () => {
   const { value: tabs, setValue: setTabs } = useLocalStorage<DashboardTab[]>(
     TABS_KEY,
@@ -28,7 +36,7 @@ export const useDashboardTabs = () => {
     useLocalStorage<string>(ACTIVE_TAB_KEY, "home");
 
   const activeTab = useMemo(() => {
-    return tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
+    return tabs.find((tab) => tab.id === activeTabId) ?? tabs[0] ?? null;
   }, [tabs, activeTabId]);
 
   const updateTab = (tabId: string, patch: Partial<DashboardTab>) => {
@@ -49,7 +57,7 @@ export const useDashboardTabs = () => {
 
     updateTab(activeTab.id, {
       layouts,
-    });
+    } as Partial<DashboardTab>);
   };
 
   const addWidgetToActiveTab = (widgetId: WidgetId) => {
@@ -65,15 +73,19 @@ export const useDashboardTabs = () => {
   const removeWidgetFromActiveTab = (widgetId: WidgetId) => {
     if (!activeTab) return;
 
+    const currentLayouts = normalizeLayouts(activeTab.layouts);
+
+    const nextLayouts = Object.fromEntries(
+      Object.entries(currentLayouts).map(([breakpoint, layouts]) => [
+        breakpoint,
+        layouts.filter((layout: Layout) => layout.i !== widgetId),
+      ])
+    ) as Layouts;
+
     updateTab(activeTab.id, {
       widgetIds: activeTab.widgetIds.filter((id) => id !== widgetId),
-      layouts: Object.fromEntries(
-        Object.entries(activeTab.layouts).map(([breakpoint, layouts]) => [
-          breakpoint,
-          layouts.filter((layout) => layout.i !== widgetId),
-        ])
-      ) as Layouts,
-    });
+      layouts: nextLayouts,
+    } as Partial<DashboardTab>);
   };
 
   const addTab = () => {
@@ -115,6 +127,7 @@ export const useDashboardTabs = () => {
     if (!target || target.locked) return;
 
     const nextTabs = tabs.filter((tab) => tab.id !== tabId);
+
     setTabs(nextTabs);
 
     if (activeTabId === tabId) {
