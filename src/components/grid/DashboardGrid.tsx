@@ -98,7 +98,7 @@ const getDefaultLayoutForWidget = (
 };
 
 const ensureLayoutForWidgets = (
-  layout: Layout[] | undefined,
+  layout: GridLayoutItem[] | undefined,
   widgetIds: WidgetId[],
   breakpoint: Breakpoint
 ): Layout[] => {
@@ -143,7 +143,7 @@ const isOverlapping = (a: Layout, b: Layout) => {
   return aLeft < bRight && aRight > bLeft && aTop < bBottom && aBottom > bTop;
 };
 
-const getCollidingWidgetIds = (layout: Layout[]): WidgetId[] => {
+const getCollidingWidgetIds = (layout: GridLayoutItem[]): WidgetId[] => {
   const collided = new Set<WidgetId>();
 
   for (let i = 0; i < layout.length; i += 1) {
@@ -234,7 +234,7 @@ export const DashboardGrid = ({
     if (!editMode) setSelectedWidgetId(null);
   }, [editMode]);
 
-  const handleLayoutChange = (_layout: Layout[], allLayouts: Layouts) => {
+  const handleLayoutChange = (_layout: GridLayoutItem[], allLayouts: Layouts) => {
     onLayoutsChange({
       lg: ensureLayoutForWidgets(allLayouts.lg, activeWidgetIds, "lg"),
       md: ensureLayoutForWidgets(allLayouts.md, activeWidgetIds, "md"),
