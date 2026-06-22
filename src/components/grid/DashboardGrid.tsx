@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 import { Responsive } from "react-grid-layout";
 
 import type {
@@ -25,6 +25,10 @@ import { allWidgetIds, widgetRegistry } from "../../constants/widgets";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+
+const ResponsiveGridLayout = Responsive as unknown as ComponentType<
+  Record<string, unknown>
+>;
 
 type Breakpoint = "lg" | "md" | "sm";
 
@@ -68,17 +72,19 @@ const widgetMap: Partial<Record<WidgetId, ReactNode>> = {
   mood: <MoodWidget />,
 };
 
-const isGridLayoutItem = (value: unknown): value is GridLayoutItem => {
-  if (!value || typeof value !== "object") return false;
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+};
 
-  const item = value as Partial<GridLayoutItem>;
+const isGridLayoutItem = (value: unknown): value is GridLayoutItem => {
+  if (!isRecord(value)) return false;
 
   return (
-    typeof item.i === "string" &&
-    typeof item.x === "number" &&
-    typeof item.y === "number" &&
-    typeof item.w === "number" &&
-    typeof item.h === "number"
+    typeof value.i === "string" &&
+    typeof value.x === "number" &&
+    typeof value.y === "number" &&
+    typeof value.w === "number" &&
+    typeof value.h === "number"
   );
 };
 
@@ -242,11 +248,7 @@ export const DashboardGrid = ({
   }, [activeTab.layouts, activeWidgetIds]);
 
   const currentLayout = useMemo<GridLayoutItem[]>(() => {
-    return (
-      responsiveLayouts[currentBreakpoint] ??
-      responsiveLayouts.lg ??
-      []
-    );
+    return responsiveLayouts[currentBreakpoint] ?? responsiveLayouts.lg ?? [];
   }, [responsiveLayouts, currentBreakpoint]);
 
   const collidingWidgetIds = useMemo<WidgetId[]>(() => {
@@ -353,7 +355,7 @@ export const DashboardGrid = ({
       )}
 
       <div className="dashboard-edit-canvas">
-        <Responsive
+        <ResponsiveGridLayout
           className="layout"
           layouts={responsiveLayouts}
           breakpoints={BREAKPOINTS}
@@ -369,7 +371,7 @@ export const DashboardGrid = ({
           allowOverlap={editMode}
           resizeHandles={["se", "sw", "ne", "nw", "e", "w", "n", "s"]}
           draggableCancel="button, input, textarea, select, [contenteditable='true'], .memo-editor, .floating-window"
-          onBreakpointChange={(breakpoint) =>
+          onBreakpointChange={(breakpoint: unknown) =>
             setCurrentBreakpoint(breakpoint as Breakpoint)
           }
           onLayoutChange={handleLayoutChange}
@@ -421,7 +423,7 @@ export const DashboardGrid = ({
               </div>
             );
           })}
-        </Responsive>
+        </ResponsiveGridLayout>
       </div>
     </div>
   );
