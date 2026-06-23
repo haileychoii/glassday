@@ -156,3 +156,155 @@
 .study-list {
   flex: 1 1 auto !important;
 }
+
+/* =========================================================
+   THEME SHAPE FIX
+   - Pixel Desk 제외: iPhone / Mac 감성 둥근 모서리 강제
+   - 반드시 grid.css 맨 아래에 추가
+========================================================= */
+
+/* 기본: 모든 비-pixel 테마는 부드러운 라운드 */
+.theme-mac-core,
+.theme-ios,
+.theme-glass,
+.theme-cloud,
+.theme-pastel,
+.theme-aurora,
+.theme-night,
+[data-theme="mac-core"],
+[data-theme="ios"],
+[data-theme="glass"],
+[data-theme="cloud"],
+[data-theme="pastel"],
+[data-theme="aurora"],
+[data-theme="night"] {
+  --app-radius-shell: 34px;
+  --app-radius-panel: 28px;
+  --app-radius-card: 26px;
+  --app-radius-inner: 22px;
+  --app-radius-button: 18px;
+  --app-radius-chip: 999px;
+}
+
+/* Pixel Desk만 네모/레트로 유지 */
+.theme-pixel-desk,
+[data-theme="pixel-desk"] {
+  --app-radius-shell: 14px;
+  --app-radius-panel: 8px;
+  --app-radius-card: 6px;
+  --app-radius-inner: 4px;
+  --app-radius-button: 2px;
+  --app-radius-chip: 2px;
+}
+
+/* 앱 전체 껍데기 */
+.theme-mac-core :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+.theme-ios :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+.theme-glass :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+.theme-cloud :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+.theme-pastel :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+.theme-aurora :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+.theme-night :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+[data-theme="mac-core"] :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+[data-theme="ios"] :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+[data-theme="glass"] :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+[data-theme="cloud"] :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+[data-theme="pastel"] :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+[data-theme="aurora"] :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+[data-theme="night"] :where(.app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell) {
+  border-radius: var(--app-radius-shell) !important;
+  overflow: hidden;
+}
+
+/* 상단 테마/설정/Edit 바 */
+.theme-mac-core :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+.theme-ios :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+.theme-glass :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+.theme-cloud :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+.theme-pastel :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+.theme-aurora :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+.theme-night :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+[data-theme="mac-core"] :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+[data-theme="ios"] :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+[data-theme="glass"] :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+[data-theme="cloud"] :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+[data-theme="pastel"] :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+[data-theme="aurora"] :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel),
+[data-theme="night"] :where(.topbar, .toolbar, .theme-bar, .theme-tabs, .header-panel, .control-panel) {
+  border-radius: var(--app-radius-panel) !important;
+  overflow: hidden;
+}
+
+/* 위젯 카드 전체 */
+.theme-mac-core :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+.theme-ios :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+.theme-glass :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+.theme-cloud :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+.theme-pastel :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+.theme-aurora :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+.theme-night :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+[data-theme="mac-core"] :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+[data-theme="ios"] :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+[data-theme="glass"] :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+[data-theme="cloud"] :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+[data-theme="pastel"] :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+[data-theme="aurora"] :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window),
+[data-theme="night"] :where(.glass-card, .widget-card, .dashboard-card, .grid-card, .card, .widget, .floating-window) {
+  border-radius: var(--app-radius-card) !important;
+  overflow: hidden;
+}
+
+/* 카드 내부 흰 박스 / 알림 카드 / 메모 리스트 / 캘린더 이벤트 */
+.theme-mac-core :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+.theme-ios :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+.theme-glass :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+.theme-cloud :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+.theme-pastel :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+.theme-aurora :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+.theme-night :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+[data-theme="mac-core"] :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+[data-theme="ios"] :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+[data-theme="glass"] :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+[data-theme="cloud"] :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+[data-theme="pastel"] :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+[data-theme="aurora"] :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item),
+[data-theme="night"] :where(.inner-card, .soft-card, .mini-card, .alert-item, .memo-item, .event-item, .calendar-item, .focus-card, .list-item) {
+  border-radius: var(--app-radius-inner) !important;
+  overflow: hidden;
+}
+
+/* 버튼도 iPhone식 라운드 */
+.theme-mac-core :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+.theme-ios :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+.theme-glass :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+.theme-cloud :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+.theme-pastel :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+.theme-aurora :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+.theme-night :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+[data-theme="mac-core"] :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+[data-theme="ios"] :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+[data-theme="glass"] :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+[data-theme="cloud"] :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+[data-theme="pastel"] :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+[data-theme="aurora"] :where(button, .button, .icon-button, .control-button, .add-button, .tab-button),
+[data-theme="night"] :where(button, .button, .icon-button, .control-button, .add-button, .tab-button) {
+  border-radius: var(--app-radius-button) !important;
+}
+
+/* 칩/뱃지/작은 상태값 */
+.theme-mac-core :where(.chip, .badge, .pill, .tag, .status),
+.theme-ios :where(.chip, .badge, .pill, .tag, .status),
+.theme-glass :where(.chip, .badge, .pill, .tag, .status),
+.theme-cloud :where(.chip, .badge, .pill, .tag, .status),
+.theme-pastel :where(.chip, .badge, .pill, .tag, .status),
+.theme-aurora :where(.chip, .badge, .pill, .tag, .status),
+.theme-night :where(.chip, .badge, .pill, .tag, .status),
+[data-theme="mac-core"] :where(.chip, .badge, .pill, .tag, .status),
+[data-theme="ios"] :where(.chip, .badge, .pill, .tag, .status),
+[data-theme="glass"] :where(.chip, .badge, .pill, .tag, .status),
+[data-theme="cloud"] :where(.chip, .badge, .pill, .tag, .status),
+[data-theme="pastel"] :where(.chip, .badge, .pill, .tag, .status),
+[data-theme="aurora"] :where(.chip, .badge, .pill, .tag, .status),
+[data-theme="night"] :where(.chip, .badge, .pill, .tag, .status) {
+  border-radius: var(--app-radius-chip) !important;
+}
