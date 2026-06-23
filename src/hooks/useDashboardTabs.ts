@@ -1,12 +1,44 @@
 import { useMemo } from "react";
-import type { Layouts } from "react-grid-layout";
 
 import { useLocalStorage } from "./useLocalStorage";
 import { defaultDashboardTabs } from "../constants/dashboardTabs";
-import type { DashboardTab, WidgetId } from "../types/workspace";
+import type {
+  DashboardTab,
+  GridLayoutItem,
+  Layouts,
+  WidgetId,
+} from "../types/workspace";
 
 const TABS_KEY = "glassday.dashboard.tabs.v1";
 const ACTIVE_TAB_KEY = "glassday.dashboard.activeTab.v1";
+
+const fallbackTab: DashboardTab = {
+  id: "home",
+  label: "Home",
+  icon: "✨",
+  widgetIds: ["today", "calendar", "memo", "study"],
+  layouts: {
+    lg: [
+      { i: "today", x: 0, y: 0, w: 4, h: 4 },
+      { i: "calendar", x: 4, y: 0, w: 6, h: 5 },
+      { i: "memo", x: 10, y: 0, w: 6, h: 5 },
+      { i: "study", x: 0, y: 4, w: 6, h: 5 },
+    ],
+    md: [
+      { i: "today", x: 0, y: 0, w: 8, h: 4 },
+      { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
+      { i: "memo", x: 0, y: 4, w: 8, h: 5 },
+      { i: "study", x: 8, y: 5, w: 8, h: 5 },
+    ],
+    sm: [
+      { i: "today", x: 0, y: 0, w: 16, h: 4 },
+      { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
+      { i: "memo", x: 0, y: 9, w: 16, h: 5 },
+      { i: "study", x: 0, y: 14, w: 16, h: 5 },
+    ],
+  },
+  locked: true,
+};
 
 const createId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -16,27 +48,136 @@ const createId = () => {
   return `tab-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
-export const useDashboardTabs = () => {
-  const { value: tabs, setValue: setTabs } = useLocalStorage<DashboardTab[]>(
-    TABS_KEY,
-    defaultDashboardTabs
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+};
+
+const isLayoutItem = (value: unknown): value is GridLayoutItem => {
+  if (!isRecord(value)) return false;
+
+  return (
+    typeof value.i === "string" &&
+    typeof value.x === "number" &&
+    typeof value.y === "number" &&
+    typeof value.w === "number" &&
+    typeof value.h === "number"
   );
+};
+
+const normalizeLayoutItem = (item: GridLayoutItem): GridLayoutItem => {
+  const safeW = Math.max(1, Math.min(item.w, 16));
+  const safeX = Math.max(0, Math.min(item.x, 16 - safeW));
+
+  return {
+    ...item,
+    i: item.i,
+    x: safeX,
+    y: Number.isFinite(item.y) ? Math.max(0, item.y) : item.y,
+    w: safeW,
+    h: Math.max(1, item.h),
+  };
+};
+
+const normalizeLayoutArray = (value: unknown): GridLayoutItem[] => {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .filter((item: unknown): item is GridLayoutItem => isLayoutItem(item))
+    .map((item) => normalizeLayoutItem(item));
+};
+
+const normalizeLayouts = (layouts: unknown): Layouts => {
+  if (!isRecord(layouts)) {
+    return {
+      lg: [],
+      md: [],
+      sm: [],
+    };
+  }
+
+  return {
+    lg: normalizeLayoutArray(layouts.lg),
+    md: normalizeLayoutArray(layouts.md),
+    sm: normalizeLayoutArray(layouts.sm),
+  };
+};
+
+const normalizeTab = (tab: DashboardTab): DashboardTab => {
+  return {
+    ...tab,
+    id: String(tab.id),
+    label: tab.label || "Untitled",
+    icon: tab.icon || "✨",
+    widgetIds: Array.isArray(tab.widgetIds) ? tab.widgetIds : [],
+    layouts: normalizeLayouts(tab.layouts),
+    locked: Boolean(tab.locked),
+  };
+};
+
+const normalizeTabs = (tabs: DashboardTab[]): DashboardTab[] => {
+  if (!Array.isArray(tabs) || tabs.length === 0) {
+    return [fallbackTab];
+  }
+
+  return tabs.map(normalizeTab);
+};
+
+const createNewTab = (): DashboardTab => {
+  return {
+    id: createId(),
+    label: "New Tab",
+    icon: "✨",
+    widgetIds: ["memo", "calendar"],
+    layouts: {
+      lg: [
+        { i: "memo", x: 0, y: 0, w: 5, h: 4 },
+        { i: "calendar", x: 5, y: 0, w: 7, h: 5 },
+      ],
+      md: [
+        { i: "memo", x: 0, y: 0, w: 8, h: 4 },
+        { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
+      ],
+      sm: [
+        { i: "memo", x: 0, y: 0, w: 16, h: 4 },
+        { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
+      ],
+    },
+    locked: false,
+  };
+};
+
+export const useDashboardTabs = () => {
+  const { value: storedTabs, setValue: setTabs } = useLocalStorage<
+    DashboardTab[]
+  >(TABS_KEY, defaultDashboardTabs);
 
   const { value: activeTabId, setValue: setActiveTabId } =
     useLocalStorage<string>(ACTIVE_TAB_KEY, "home");
 
+  const tabs = useMemo(() => {
+    return normalizeTabs(storedTabs);
+  }, [storedTabs]);
+
   const activeTab = useMemo(() => {
-    return tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
+    return (
+      tabs.find((tab) => tab.id === activeTabId) ??
+      tabs[0] ??
+      fallbackTab
+    );
   }, [tabs, activeTabId]);
 
   const updateTab = (tabId: string, patch: Partial<DashboardTab>) => {
     setTabs((prev) =>
-      prev.map((tab) =>
+      normalizeTabs(prev).map((tab) =>
         tab.id === tabId
-          ? {
+          ? normalizeTab({
               ...tab,
               ...patch,
-            }
+              layouts:
+                patch.layouts !== undefined
+                  ? normalizeLayouts(patch.layouts)
+                  : tab.layouts,
+            })
           : tab
       )
     );
@@ -46,13 +187,12 @@ export const useDashboardTabs = () => {
     if (!activeTab) return;
 
     updateTab(activeTab.id, {
-      layouts,
+      layouts: normalizeLayouts(layouts),
     });
   };
 
   const addWidgetToActiveTab = (widgetId: WidgetId) => {
     if (!activeTab) return;
-
     if (activeTab.widgetIds.includes(widgetId)) return;
 
     updateTab(activeTab.id, {
@@ -63,41 +203,25 @@ export const useDashboardTabs = () => {
   const removeWidgetFromActiveTab = (widgetId: WidgetId) => {
     if (!activeTab) return;
 
+    const currentLayouts = normalizeLayouts(activeTab.layouts);
+
+    const nextLayouts: Layouts = Object.fromEntries(
+      Object.entries(currentLayouts).map(([breakpoint, layouts]) => [
+        breakpoint,
+        layouts.filter((item: GridLayoutItem) => item.i !== widgetId),
+      ])
+    ) as Layouts;
+
     updateTab(activeTab.id, {
       widgetIds: activeTab.widgetIds.filter((id) => id !== widgetId),
-      layouts: Object.fromEntries(
-        Object.entries(activeTab.layouts).map(([breakpoint, layouts]) => [
-          breakpoint,
-          layouts.filter((layout) => layout.i !== widgetId),
-        ])
-      ) as Layouts,
+      layouts: nextLayouts,
     });
   };
 
   const addTab = () => {
-    const newTab: DashboardTab = {
-      id: createId(),
-      label: "New Tab",
-      icon: "✨",
-      widgetIds: ["memo", "calendar"],
-      layouts: {
-        lg: [
-          { i: "memo", x: 0, y: 0, w: 5, h: 4 },
-          { i: "calendar", x: 5, y: 0, w: 7, h: 5 },
-        ],
-        md: [
-          { i: "memo", x: 0, y: 0, w: 6, h: 4 },
-          { i: "calendar", x: 6, y: 0, w: 6, h: 5 },
-        ],
-        sm: [
-          { i: "memo", x: 0, y: 0, w: 4, h: 4 },
-          { i: "calendar", x: 0, y: 4, w: 4, h: 5 },
-        ],
-      },
-      locked: false,
-    };
+    const newTab = createNewTab();
 
-    setTabs((prev) => [...prev, newTab]);
+    setTabs((prev) => [...normalizeTabs(prev), newTab]);
     setActiveTabId(newTab.id);
   };
 
@@ -108,12 +232,14 @@ export const useDashboardTabs = () => {
   };
 
   const removeTab = (tabId: string) => {
-    const target = tabs.find((tab) => tab.id === tabId);
+    const normalizedTabs = normalizeTabs(tabs);
+    const target = normalizedTabs.find((tab) => tab.id === tabId);
 
     if (!target || target.locked) return;
 
-    const nextTabs = tabs.filter((tab) => tab.id !== tabId);
-    setTabs(nextTabs);
+    const nextTabs = normalizedTabs.filter((tab) => tab.id !== tabId);
+
+    setTabs(nextTabs.length > 0 ? nextTabs : [fallbackTab]);
 
     if (activeTabId === tabId) {
       setActiveTabId(nextTabs[0]?.id ?? "home");

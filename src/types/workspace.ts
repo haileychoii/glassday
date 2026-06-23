@@ -1,31 +1,55 @@
-import type { Layouts } from "react-grid-layout";
+import type { ComponentType } from "react";
 
-export type WidgetId =
-  | "today"
-  | "alerts"
-  | "journal"
-  | "calendar"
-  | "memo"
-  | "study"
+export type WidgetId = string;
+
+export type WidgetSize = "small" | "medium" | "large" | "wide" | "tall";
+
+export type WidgetCategory =
+  | "core"
+  | "life"
   | "career"
+  | "study"
   | "health"
   | "money"
-  | "mood";
+  | "system"
+  | string;
 
-export type DashboardTabId = string;
+export type WidgetMeta = {
+  id: WidgetId;
+  label: string;
+  description?: string;
+  icon?: string | ComponentType<{ className?: string }>;
+  category?: WidgetCategory;
+  defaultSize?: WidgetSize;
+  [key: string]: unknown;
+};
+
+export type WorkspaceId = string;
+
+export type GridLayoutItem = {
+  i: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  minW?: number;
+  maxW?: number;
+  minH?: number;
+  maxH?: number;
+  static?: boolean;
+  isDraggable?: boolean;
+  isResizable?: boolean;
+  moved?: boolean;
+  [key: string]: unknown;
+};
+
+export type Layouts = Record<string, GridLayoutItem[]>;
 
 export type DashboardTab = {
-  id: DashboardTabId;
+  id: WorkspaceId;
   label: string;
   icon: string;
   widgetIds: WidgetId[];
   layouts: Layouts;
   locked?: boolean;
-};
-
-export type WidgetMeta = {
-  id: WidgetId;
-  label: string;
-  description: string;
-  category: "home" | "career" | "study" | "memo" | "life" | "money";
 };

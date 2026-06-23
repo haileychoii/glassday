@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 import { Responsive } from "react-grid-layout";
-import type { Layout, Layouts } from "react-grid-layout";
+
+import type {
+  DashboardTab,
+  GridLayoutItem,
+  Layouts,
+  WidgetId,
+} from "../../types/workspace";
 
 import { TodayFocusWidget } from "../widgets/TodayFocusWidget";
 import { AlertCenterWidget } from "../widgets/AlertCenterWidget";
@@ -16,10 +22,13 @@ import { MoodWidget } from "../widgets/MoodWidget";
 
 import { defaultLayouts } from "./gridDefaults";
 import { allWidgetIds, widgetRegistry } from "../../constants/widgets";
-import type { DashboardTab, WidgetId } from "../../types/workspace";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+
+const ResponsiveGridLayout = Responsive as unknown as ComponentType<
+  Record<string, unknown>
+>;
 
 type Breakpoint = "lg" | "md" | "sm";
 
@@ -49,7 +58,7 @@ const GRID_COLS: Record<Breakpoint, number> = {
 
 const ROW_HEIGHT = 52;
 
-const widgetMap: Record<WidgetId, ReactNode> = {
+const widgetMap: Partial<Record<WidgetId, ReactNode>> = {
   today: <TodayFocusWidget />,
   alerts: <AlertCenterWidget />,
   journal: <DailyJournalWidget />,
@@ -59,30 +68,58 @@ const widgetMap: Record<WidgetId, ReactNode> = {
   career: <CareerWidget />,
   health: <HealthWidget />,
   money: <MoneyWidget />,
+  wealth: <MoneyWidget />,
   mood: <MoodWidget />,
 };
 
-const normalizeLayoutItem = (item: Layout): Layout => {
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+};
+
+const isGridLayoutItem = (value: unknown): value is GridLayoutItem => {
+  if (!isRecord(value)) return false;
+
+  return (
+    typeof value.i === "string" &&
+    typeof value.x === "number" &&
+    typeof value.y === "number" &&
+    typeof value.w === "number" &&
+    typeof value.h === "number"
+  );
+};
+
+const normalizeLayoutItem = (item: GridLayoutItem): GridLayoutItem => {
   const safeWidth = Math.max(2, Math.min(item.w || 4, 16));
   const safeX = Math.max(0, Math.min(item.x || 0, 16 - safeWidth));
 
   return {
     ...item,
+    i: item.i,
     x: safeX,
-    y: Math.max(0, item.y || 0),
+    y: Number.isFinite(item.y) ? Math.max(0, item.y) : item.y,
     w: safeWidth,
     h: Math.max(3, item.h || 5),
   };
+};
+
+const toLayoutArray = (value: unknown): GridLayoutItem[] => {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .filter((item: unknown): item is GridLayoutItem => isGridLayoutItem(item))
+    .map((item) => normalizeLayoutItem(item));
 };
 
 const getDefaultLayoutForWidget = (
   widgetId: WidgetId,
   breakpoint: Breakpoint,
   index: number
-): Layout => {
+): GridLayoutItem => {
+  const layouts = defaultLayouts as Partial<Layouts>;
+
   const defaultItem =
-    defaultLayouts[breakpoint]?.find((item) => item.i === widgetId) ??
-    defaultLayouts.lg?.find((item) => item.i === widgetId);
+    layouts[breakpoint]?.find((item) => item.i === widgetId) ??
+    layouts.lg?.find((item) => item.i === widgetId);
 
   if (defaultItem) {
     return normalizeLayoutItem(defaultItem);
@@ -98,16 +135,16 @@ const getDefaultLayoutForWidget = (
 };
 
 const ensureLayoutForWidgets = (
-  layout: Layout[] | undefined,
+  layout: unknown,
   widgetIds: WidgetId[],
   breakpoint: Breakpoint
-): Layout[] => {
-  const safeLayout = Array.isArray(layout) ? layout : [];
+): GridLayoutItem[] => {
+  const safeLayout = toLayoutArray(layout);
   const existingIds = new Set(safeLayout.map((item) => item.i));
 
-  const filteredLayout = safeLayout
-    .filter((item) => widgetIds.includes(item.i as WidgetId))
-    .map(normalizeLayoutItem);
+  const filteredLayout = safeLayout.filter((item) =>
+    widgetIds.includes(item.i as WidgetId)
+  );
 
   const missingLayout = widgetIds
     .filter((widgetId) => !existingIds.has(widgetId))
@@ -119,17 +156,20 @@ const ensureLayoutForWidgets = (
 };
 
 const ensureResponsiveLayouts = (
-  layouts: Layouts | undefined,
+  layouts: unknown,
   widgetIds: WidgetId[]
 ): Layouts => {
+  const source = layouts && typeof layouts === "object" ? layouts : {};
+  const sourceLayouts = source as Partial<Layouts>;
+
   return {
-    lg: ensureLayoutForWidgets(layouts?.lg, widgetIds, "lg"),
-    md: ensureLayoutForWidgets(layouts?.md, widgetIds, "md"),
-    sm: ensureLayoutForWidgets(layouts?.sm, widgetIds, "sm"),
+    lg: ensureLayoutForWidgets(sourceLayouts.lg, widgetIds, "lg"),
+    md: ensureLayoutForWidgets(sourceLayouts.md, widgetIds, "md"),
+    sm: ensureLayoutForWidgets(sourceLayouts.sm, widgetIds, "sm"),
   };
 };
 
-const isOverlapping = (a: Layout, b: Layout) => {
+const isOverlapping = (a: GridLayoutItem, b: GridLayoutItem) => {
   const aLeft = a.x;
   const aRight = a.x + a.w;
   const aTop = a.y;
@@ -143,7 +183,7 @@ const isOverlapping = (a: Layout, b: Layout) => {
   return aLeft < bRight && aRight > bLeft && aTop < bBottom && aBottom > bTop;
 };
 
-const getCollidingWidgetIds = (layout: Layout[]): WidgetId[] => {
+const getCollidingWidgetIds = (layout: GridLayoutItem[]): WidgetId[] => {
   const collided = new Set<WidgetId>();
 
   for (let i = 0; i < layout.length; i += 1) {
@@ -173,7 +213,8 @@ export const DashboardGrid = ({
 }: DashboardGridProps) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(1200);
-  const [currentBreakpoint, setCurrentBreakpoint] = useState<Breakpoint>("lg");
+  const [currentBreakpoint, setCurrentBreakpoint] =
+    useState<Breakpoint>("lg");
   const [selectedWidgetId, setSelectedWidgetId] = useState<WidgetId | null>(
     null
   );
@@ -198,19 +239,19 @@ export const DashboardGrid = ({
     };
   }, []);
 
-  const activeWidgetIds = useMemo(() => {
+  const activeWidgetIds = useMemo<WidgetId[]>(() => {
     return Array.isArray(activeTab.widgetIds) ? activeTab.widgetIds : [];
   }, [activeTab.widgetIds]);
 
-  const responsiveLayouts = useMemo(() => {
+  const responsiveLayouts = useMemo<Layouts>(() => {
     return ensureResponsiveLayouts(activeTab.layouts, activeWidgetIds);
   }, [activeTab.layouts, activeWidgetIds]);
 
-  const currentLayout = useMemo(() => {
+  const currentLayout = useMemo<GridLayoutItem[]>(() => {
     return responsiveLayouts[currentBreakpoint] ?? responsiveLayouts.lg ?? [];
   }, [responsiveLayouts, currentBreakpoint]);
 
-  const collidingWidgetIds = useMemo(() => {
+  const collidingWidgetIds = useMemo<WidgetId[]>(() => {
     return editMode ? getCollidingWidgetIds(currentLayout) : [];
   }, [editMode, currentLayout]);
 
@@ -219,8 +260,10 @@ export const DashboardGrid = ({
     [collidingWidgetIds]
   );
 
-  const hiddenWidgetIds = useMemo(() => {
-    return allWidgetIds.filter((widgetId) => !activeWidgetIds.includes(widgetId));
+  const hiddenWidgetIds = useMemo<WidgetId[]>(() => {
+    return (allWidgetIds as WidgetId[]).filter(
+      (widgetId) => !activeWidgetIds.includes(widgetId)
+    );
   }, [activeWidgetIds]);
 
   useEffect(() => {
@@ -234,11 +277,13 @@ export const DashboardGrid = ({
     if (!editMode) setSelectedWidgetId(null);
   }, [editMode]);
 
-  const handleLayoutChange = (_layout: Layout[], allLayouts: Layouts) => {
+  const handleLayoutChange = (_layout: unknown, allLayouts: unknown) => {
+    const nextLayouts = ensureResponsiveLayouts(allLayouts, activeWidgetIds);
+
     onLayoutsChange({
-      lg: ensureLayoutForWidgets(allLayouts.lg, activeWidgetIds, "lg"),
-      md: ensureLayoutForWidgets(allLayouts.md, activeWidgetIds, "md"),
-      sm: ensureLayoutForWidgets(allLayouts.sm, activeWidgetIds, "sm"),
+      lg: ensureLayoutForWidgets(nextLayouts.lg, activeWidgetIds, "lg"),
+      md: ensureLayoutForWidgets(nextLayouts.md, activeWidgetIds, "md"),
+      sm: ensureLayoutForWidgets(nextLayouts.sm, activeWidgetIds, "sm"),
     });
   };
 
@@ -293,8 +338,8 @@ export const DashboardGrid = ({
                   onClick={() => onAddWidget(widgetId)}
                   className="widget-picker-button"
                 >
-                  <strong>{widget.label}</strong>
-                  <span>{widget.description}</span>
+                  <strong>{widget?.label ?? widgetId}</strong>
+                  <span>{widget?.description ?? "Add widget"}</span>
                 </button>
               );
             })}
@@ -310,7 +355,7 @@ export const DashboardGrid = ({
       )}
 
       <div className="dashboard-edit-canvas">
-        <Responsive
+        <ResponsiveGridLayout
           className="layout"
           layouts={responsiveLayouts}
           breakpoints={BREAKPOINTS}
@@ -326,7 +371,7 @@ export const DashboardGrid = ({
           allowOverlap={editMode}
           resizeHandles={["se", "sw", "ne", "nw", "e", "w", "n", "s"]}
           draggableCancel="button, input, textarea, select, [contenteditable='true'], .memo-editor, .floating-window"
-          onBreakpointChange={(breakpoint) =>
+          onBreakpointChange={(breakpoint: unknown) =>
             setCurrentBreakpoint(breakpoint as Breakpoint)
           }
           onLayoutChange={handleLayoutChange}
@@ -370,11 +415,15 @@ export const DashboardGrid = ({
                   </>
                 )}
 
-                {widgetMap[widgetId]}
+                {widgetMap[widgetId] ?? (
+                  <div className="glass-card unknown-widget-card">
+                    Unknown widget: {widgetId}
+                  </div>
+                )}
               </div>
             );
           })}
-        </Responsive>
+        </ResponsiveGridLayout>
       </div>
     </div>
   );
