@@ -58,6 +58,9 @@ const GRID_COLS: Record<Breakpoint, number> = {
 
 const ROW_HEIGHT = 52;
 
+const DRAGGABLE_CANCEL_SELECTOR =
+  "button, input, textarea, select, option, a, [contenteditable='true'], .memo-editor, .floating-window, .widget-scroll-area, .calendar-event-list, .alert-center-list, .journal-main-scroll, .memo-note-list, .memo-floating-body, .calendar-google-preview, .calendar-view-toggle";
+
 const widgetMap: Partial<Record<WidgetId, ReactNode>> = {
   today: <TodayFocusWidget />,
   alerts: <AlertCenterWidget />,
@@ -219,6 +222,8 @@ export const DashboardGrid = ({
     null
   );
 
+  const isMobileGrid = width < 768;
+
   useEffect(() => {
     if (!wrapperRef.current) return;
 
@@ -316,7 +321,9 @@ export const DashboardGrid = ({
           >
             {collidingWidgetIds.length > 0
               ? `${collidingWidgetIds.length} widgets overlapping`
-              : `${currentBreakpoint.toUpperCase()} responsive grid`}
+              : isMobileGrid
+                ? "Mobile grid · drag by handle"
+                : `${currentBreakpoint.toUpperCase()} responsive grid`}
           </div>
         )}
       </div>
@@ -349,8 +356,8 @@ export const DashboardGrid = ({
 
       {editMode && (
         <div className="edit-grid-help">
-          위젯을 누른 채 드래그하면 이동, 모서리를 잡으면 크기 조절. 화면
-          너비에 따라 LG / MD / SM 레이아웃이 따로 저장돼.
+          위젯 이동은 위젯 상단의 작은 라벨을 잡고 드래그. 모바일에서는
+          스크롤 충돌 방지를 위해 크기 조절은 꺼져 있어.
         </div>
       )}
 
@@ -365,12 +372,18 @@ export const DashboardGrid = ({
           margin={[14, 14]}
           containerPadding={[0, 0]}
           isDraggable={editMode}
-          isResizable={editMode}
+          isResizable={editMode && !isMobileGrid}
+          isBounded={true}
           compactType={editMode ? null : "vertical"}
           preventCollision={!editMode}
           allowOverlap={editMode}
-          resizeHandles={["se", "sw", "ne", "nw", "e", "w", "n", "s"]}
-          draggableCancel="button, input, textarea, select, [contenteditable='true'], .memo-editor, .floating-window"
+          draggableHandle={editMode ? ".widget-drag-handle" : undefined}
+          draggableCancel={DRAGGABLE_CANCEL_SELECTOR}
+          resizeHandles={
+            isMobileGrid
+              ? []
+              : ["se", "sw", "ne", "nw", "e", "w", "n", "s"]
+          }
           onBreakpointChange={(breakpoint: unknown) =>
             setCurrentBreakpoint(breakpoint as Breakpoint)
           }
@@ -379,6 +392,7 @@ export const DashboardGrid = ({
           {activeWidgetIds.map((widgetId) => {
             const isSelected = selectedWidgetId === widgetId;
             const isColliding = collidingSet.has(widgetId);
+            const widget = widgetRegistry[widgetId];
 
             return (
               <div
@@ -397,8 +411,8 @@ export const DashboardGrid = ({
               >
                 {editMode && (
                   <>
-                    <div className="widget-edit-label">
-                      {widgetRegistry[widgetId]?.label ?? widgetId}
+                    <div className="widget-edit-label widget-drag-handle">
+                      {widget?.label ?? widgetId}
                     </div>
 
                     <button
