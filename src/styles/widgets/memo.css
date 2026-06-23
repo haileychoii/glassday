@@ -998,3 +998,94 @@
   }
 }
 
+/* ================================
+   Memo editor layout hard fix
+   ================================ */
+
+.memo-workspace {
+  height: 100% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  overflow: hidden !important;
+}
+
+.memo-workspace-header {
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+.memo-workspace-actions {
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.memo-toolbar {
+  flex-shrink: 0 !important;
+}
+
+.memo-color-palette {
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 4px 0 !important;
+  overflow-x: auto !important;
+}
+
+.memo-color-swatch {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  border-radius: 4px !important;
+  border: 1px solid hsl(var(--foreground) / 0.22) !important;
+}
+
+.memo-color-swatch.is-active {
+  outline: 2px solid hsl(var(--primary) / 0.7) !important;
+  outline-offset: 2px !important;
+}
+
+.memo-editor-shell {
+  flex: 1 1 auto !important;
+  min-height: 180px !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  overflow: hidden !important;
+}
+
+.memo-editor-label {
+  height: 24px !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 0 4px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  color: hsl(var(--foreground) / 0.52) !important;
+}
+
+.memo-editor {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+  display: block !important;
+  box-sizing: border-box !important;
+  outline: none !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}
+
+.memo-editor:empty::before {
+  content: attr(data-placeholder);
+  color: hsl(var(--foreground) / 0.34);
+  pointer-events: none;
+}

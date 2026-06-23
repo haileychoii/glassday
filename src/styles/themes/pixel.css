@@ -984,3 +984,70 @@
 .theme-pixel .memo-note-item:nth-child(6n + 6) .memo-note-accent {
   background: #ffbf91 !important;
 }
+
+/* ================================
+   Pixel Memo editor hard fix
+   ================================ */
+
+.theme-pixel .memo-workspace {
+  background: #d8d8cc !important;
+  overflow: hidden !important;
+}
+
+.theme-pixel .memo-editor-shell {
+  flex: 1 1 auto !important;
+  min-height: 220px !important;
+  display: grid !important;
+  grid-template-rows: 24px minmax(0, 1fr) !important;
+  overflow: hidden !important;
+  background: #d8d8cc !important;
+  border: none !important;
+}
+
+.theme-pixel .memo-editor-label {
+  height: 24px !important;
+  padding: 0 2px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  color: #111111 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.theme-pixel .memo-editor {
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 14px !important;
+
+  background: #ffffff !important;
+  color: #111111 !important;
+
+  border-top: 2px solid #424242 !important;
+  border-left: 2px solid #424242 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+
+  box-shadow:
+    inset 1px 1px 0 #808080,
+    inset -1px -1px 0 #f7f7f7 !important;
+
+  overflow: auto !important;
+}
+
+/* 예전 paper/toolbar 장식이 남아서 위에 줄줄이 생기는 것 방지 */
+.theme-pixel .memo-editor-shell::before,
+.theme-pixel .memo-editor-shell::after,
+.theme-pixel .memo-editor-label::before,
+.theme-pixel .memo-editor-label::after {
+  display: none !important;
+  content: none !important;
+}
+
+.theme-pixel .memo-note-color-chip {
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+  border-radius: 0 !important;
+}
