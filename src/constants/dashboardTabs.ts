@@ -1,95 +1,116 @@
-import type { DashboardTab } from "../types/workspace";
+import type {
+  DashboardTab,
+  GridLayoutItem,
+  Layouts,
+  WidgetId,
+} from "../types/workspace";
 import { defaultLayouts } from "../components/grid/gridDefaults";
 
-const pickLayouts = (widgetIds: string[]) => {
-  return Object.fromEntries(
-    Object.entries(defaultLayouts).map(([breakpoint, layouts]) => [
-      breakpoint,
-      layouts.filter((item) => widgetIds.includes(item.i)),
-    ])
+const cloneLayoutItem = (item: GridLayoutItem): GridLayoutItem => ({
+  ...item,
+});
+
+const pickLayouts = (widgetIds: WidgetId[]): Layouts => {
+  const pickedLayouts = Object.entries(defaultLayouts).map(
+    ([breakpoint, layouts]) => {
+      const pickedItems = layouts
+        .filter((item: GridLayoutItem) => widgetIds.includes(item.i))
+        .map(cloneLayoutItem);
+
+      return [breakpoint, pickedItems];
+    }
   );
+
+  return Object.fromEntries(pickedLayouts) as Layouts;
 };
+
+const homeWidgetIds: WidgetId[] = [
+  "today",
+  "alerts",
+  "journal",
+  "calendar",
+  "memo",
+  "career",
+  "study",
+  "health",
+  "money",
+  "mood",
+];
+
+const careerWidgetIds: WidgetId[] = [
+  "today",
+  "alerts",
+  "career",
+  "journal",
+  "calendar",
+  "memo",
+];
+
+const studyWidgetIds: WidgetId[] = [
+  "today",
+  "alerts",
+  "study",
+  "journal",
+  "calendar",
+  "memo",
+];
+
+const memoWidgetIds: WidgetId[] = [
+  "memo",
+  "journal",
+  "alerts",
+  "calendar",
+];
+
+const lifeWidgetIds: WidgetId[] = [
+  "alerts",
+  "journal",
+  "health",
+  "mood",
+  "money",
+  "calendar",
+  "memo",
+];
 
 export const defaultDashboardTabs: DashboardTab[] = [
   {
     id: "home",
     label: "Home",
     icon: "🏠",
-    widgetIds: [
-      "today",
-      "alerts",
-      "journal",
-      "calendar",
-      "memo",
-      "career",
-      "study",
-      "health",
-      "money",
-      "mood",
-    ],
-    layouts: defaultLayouts,
+    widgetIds: homeWidgetIds,
+    layouts: pickLayouts(homeWidgetIds),
     locked: true,
   },
   {
     id: "career",
     label: "Career",
     icon: "💼",
-    widgetIds: ["today", "alerts", "career", "journal", "calendar", "memo"],
-    layouts: pickLayouts([
-      "today",
-      "alerts",
-      "career",
-      "journal",
-      "calendar",
-      "memo",
-    ]),
+    widgetIds: careerWidgetIds,
+    layouts: pickLayouts(careerWidgetIds),
     locked: true,
   },
   {
     id: "study",
     label: "Study",
     icon: "📚",
-    widgetIds: ["today", "alerts", "study", "journal", "calendar", "memo"],
-    layouts: pickLayouts([
-      "today",
-      "alerts",
-      "study",
-      "journal",
-      "calendar",
-      "memo",
-    ]),
+    widgetIds: studyWidgetIds,
+    layouts: pickLayouts(studyWidgetIds),
     locked: true,
   },
   {
     id: "memo",
     label: "Memo",
     icon: "📝",
-    widgetIds: ["memo", "journal", "alerts", "calendar"],
-    layouts: pickLayouts(["memo", "journal", "alerts", "calendar"]),
+    widgetIds: memoWidgetIds,
+    layouts: pickLayouts(memoWidgetIds),
     locked: true,
   },
   {
     id: "life",
     label: "Life",
     icon: "🌿",
-    widgetIds: [
-      "alerts",
-      "journal",
-      "health",
-      "mood",
-      "money",
-      "calendar",
-      "memo",
-    ],
-    layouts: pickLayouts([
-      "alerts",
-      "journal",
-      "health",
-      "mood",
-      "money",
-      "calendar",
-      "memo",
-    ]),
+    widgetIds: lifeWidgetIds,
+    layouts: pickLayouts(lifeWidgetIds),
     locked: true,
   },
 ];
