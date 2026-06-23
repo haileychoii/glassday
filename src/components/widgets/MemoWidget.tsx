@@ -1,47 +1,47 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { MouseEvent as ReactMouseEvent, RefObject } from "react";
+import { createPortal } from "react-dom";
 import {
   Bold,
+  Check,
   Download,
   Italic,
   List,
   ListOrdered,
   Lock,
   Maximize2,
+  Palette,
+  Pencil,
   Pin,
   Plus,
-  Save,
+  Send,
   StickyNote,
-  Table,
+  Table2,
   Trash2,
-  Unlock,
+  UploadCloud,
   X,
 } from "lucide-react";
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type CSSProperties,
-  type MouseEvent,
-} from "react";
 
-type MemoColor =
-  | "#b7f7d0"
-  | "#fff1a8"
-  | "#f7a8c9"
-  | "#a9e9ff"
-  | "#cbb8ff"
-  | "#ffbf91"
-  | "#d9f99d"
-  | "#fbcfe8";
+import { GlassCard } from "../glass/GlassCard";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { cn } from "../../lib/utils";
+import { FloatingWindow } from "../common/FloatingWindow";
 
 type MemoNote = {
   id: string;
   title: string;
-  content: string;
-  color: MemoColor;
+  html: string;
+  fontFamily: string;
+  fontSize: string;
+  color: string;
   pinned: boolean;
-  locked: boolean;
-  updatedAt: string;
+  createdAt: number;
+  updatedAt: number;
+};
+
+type MemoFontOption = {
+  label: string;
+  value: string;
 };
 
 type MemoFontGroup = {
@@ -49,35 +49,214 @@ type MemoFontGroup = {
   fonts: MemoFontOption[];
 };
 
-type MemoWindowPosition = {
-  x: number;
-  y: number;
-};
-
 const defaultMemoFont =
   "Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif";
 
-const MEMO_COLORS: MemoColor[] = [
-  "#b7f7d0",
-  "#fff1a8",
-  "#f7a8c9",
-  "#a9e9ff",
-  "#cbb8ff",
-  "#ffbf91",
-  "#d9f99d",
-  "#fbcfe8",
+const defaultMemoColor = "#FFF7CF";
+
+const memoColors = [
+  "#FFF7CF",
+  "#FFE1E1",
+  "#FFE6F2",
+  "#E9D8FF",
+  "#DDE7FF",
+  "#DDF4FF",
+  "#DDF8EA",
+  "#EAF7D8",
+  "#F4E7D3",
+  "#F2F2F2",
+  "#FFFFFF",
+  "#EEF2FF",
 ];
 
-const FONT_OPTIONS = [
-  "Pretendard",
-  "NeoDunggeunmo",
-  "Arial",
-  "Georgia",
-  "Times New Roman",
-  "Courier New",
+const fontGroups: MemoFontGroup[] = [
+  {
+    label: "Korean Fonts",
+    fonts: [
+      {
+        label: "Pretendard",
+        value:
+          "Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif",
+      },
+      {
+        label: "Apple SD Gothic Neo",
+        value:
+          "'Apple SD Gothic Neo', Pretendard, 'Noto Sans KR', 'Malgun Gothic', sans-serif",
+      },
+      {
+        label: "Noto Sans KR",
+        value: "'Noto Sans KR', Pretendard, sans-serif",
+      },
+      {
+        label: "Noto Serif KR",
+        value: "'Noto Serif KR', serif",
+      },
+      {
+        label: "RIDIBatang",
+        value: "'RIDIBatang', 'Noto Serif KR', serif",
+      },
+      {
+        label: "Gmarket Sans",
+        value: "'Gmarket Sans', Pretendard, sans-serif",
+      },
+      {
+        label: "The Jamsil",
+        value: "'TheJamsil', Pretendard, sans-serif",
+      },
+      {
+        label: "NeoDunggeunmo",
+        value: "'NeoDunggeunmo', 'D2Coding', monospace",
+      },
+      {
+        label: "Kyobo Handwriting 2019",
+        value: "'Kyobo Handwriting 2019', Gaegu, cursive",
+      },
+      {
+        label: "Kyobo Handwriting 2020",
+        value: "'Kyobo Handwriting 2020', Gaegu, cursive",
+      },
+      {
+        label: "Kyobo Handwriting 2025",
+        value: "'Kyobo Handwriting 2025', Gaegu, cursive",
+      },
+      {
+        label: "Cafe24 Ssurround",
+        value: "'Cafe24Ssurround', Pretendard, sans-serif",
+      },
+      {
+        label: "Cafe24 Ssurround Air",
+        value: "'Cafe24SsurroundAir', Pretendard, sans-serif",
+      },
+      {
+        label: "Cafe24 Oneprettynight",
+        value: "'Cafe24Oneprettynight', Gaegu, cursive",
+      },
+      {
+        label: "Cafe24 Dangdanghae",
+        value: "'Cafe24Dangdanghae', Jua, sans-serif",
+      },
+      {
+        label: "Cafe24 Simplehae",
+        value: "'Cafe24Simplehae', Pretendard, sans-serif",
+      },
+      {
+        label: "Cafe24 Dongdong",
+        value: "'Cafe24Dongdong', Gaegu, cursive",
+      },
+      {
+        label: "Cafe24 ClassicType",
+        value: "'Cafe24ClassicType', 'Noto Serif KR', serif",
+      },
+      {
+        label: "Cafe24 Ohsquare",
+        value: "'Cafe24Ohsquare', Pretendard, sans-serif",
+      },
+      {
+        label: "UhBee Sehyun",
+        value: "'UhBee Se_hyun', Gaegu, cursive",
+      },
+      {
+        label: "UhBee Mimi",
+        value: "'UhBeeMiMi', Gaegu, cursive",
+      },
+      {
+        label: "UhBee Chaeeun",
+        value: "'UhBeechae-eun', Gaegu, cursive",
+      },
+      {
+        label: "UhBee MySen",
+        value: "'UhBee MySen', Gaegu, cursive",
+      },
+      {
+        label: "Gowun Dodum",
+        value: "'Gowun Dodum', sans-serif",
+      },
+      {
+        label: "Gowun Batang",
+        value: "'Gowun Batang', serif",
+      },
+      {
+        label: "Hahmlet",
+        value: "Hahmlet, serif",
+      },
+      {
+        label: "Nanum Gothic",
+        value: "'Nanum Gothic', sans-serif",
+      },
+      {
+        label: "Nanum Myeongjo",
+        value: "'Nanum Myeongjo', serif",
+      },
+      {
+        label: "Do Hyeon",
+        value: "'Do Hyeon', sans-serif",
+      },
+      {
+        label: "Jua",
+        value: "Jua, sans-serif",
+      },
+      {
+        label: "Poor Story",
+        value: "'Poor Story', cursive",
+      },
+      {
+        label: "Gaegu",
+        value: "Gaegu, cursive",
+      },
+    ],
+  },
+  {
+    label: "English Fonts",
+    fonts: [
+      {
+        label: "Inter",
+        value: "Inter, Pretendard, sans-serif",
+      },
+      {
+        label: "SF Pro / System",
+        value:
+          "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
+      },
+      {
+        label: "Arial",
+        value: "Arial, sans-serif",
+      },
+      {
+        label: "Helvetica",
+        value: "Helvetica, Arial, sans-serif",
+      },
+      {
+        label: "Georgia",
+        value: "Georgia, serif",
+      },
+      {
+        label: "Times New Roman",
+        value: "'Times New Roman', serif",
+      },
+      {
+        label: "Courier New",
+        value: "'Courier New', monospace",
+      },
+      {
+        label: "Verdana",
+        value: "Verdana, sans-serif",
+      },
+      {
+        label: "Trebuchet MS",
+        value: "'Trebuchet MS', sans-serif",
+      },
+      {
+        label: "Impact",
+        value: "Impact, sans-serif",
+      },
+    ],
+  },
 ];
 
-const SIZE_OPTIONS = ["12px", "14px", "16px", "18px", "20px", "24px"];
+const fontSizeOptions = Array.from({ length: 25 }, (_, index) => {
+  const size = index + 8;
+  return `${size}px`;
+});
 
 const createId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -87,108 +266,112 @@ const createId = () => {
   return `memo-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
-const nowIso = () => new Date().toISOString();
+const createMemoNote = (): MemoNote => {
+  const now = Date.now();
 
-const stripHtml = (html: string) => {
-  if (!html) return "";
-
-  const div = document.createElement("div");
-  div.innerHTML = html;
-
-  return div.textContent?.trim() ?? "";
-};
-
-const sanitizeFileName = (value: string) => {
-  return value
-    .trim()
-    .replace(/[\\/:*?"<>|]/g, "_")
-    .replace(/\s+/g, "_")
-    .slice(0, 60);
-};
-
-const createNote = (index = 0): MemoNote => {
   return {
     id: createId(),
     title: "새 메모",
-    content: "",
-    color: MEMO_COLORS[index % MEMO_COLORS.length],
+    html: "",
+    fontFamily: defaultMemoFont,
+    fontSize: "14px",
+    color: defaultMemoColor,
     pinned: false,
-    locked: false,
-    updatedAt: nowIso(),
+    createdAt: now,
+    updatedAt: now,
   };
 };
 
-const getDefaultNotes = (): MemoNote[] => [
+const defaultNotes: MemoNote[] = [
   {
-    id: "memo-default-1",
-    title: "새 메모",
-    content: "",
-    color: "#b7f7d0",
-    pinned: true,
-    locked: false,
-    updatedAt: nowIso(),
-  },
-  {
-    id: "memo-default-2",
+    id: "default-memo",
     title: "Portfolio Memo",
-    content: "Portfolio: Add LCF and ER Grouping project details.",
-    color: "#fff1a8",
+    html: "Portfolio: Add LCF and ER Grouping project details.",
+    fontFamily: defaultMemoFont,
+    fontSize: "14px",
+    color: defaultMemoColor,
     pinned: false,
-    locked: false,
-    updatedAt: nowIso(),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   },
 ];
 
-const normalizeNote = (note: Partial<MemoNote>, index: number): MemoNote => {
-  const color =
-    note.color && MEMO_COLORS.includes(note.color)
-      ? note.color
-      : MEMO_COLORS[index % MEMO_COLORS.length];
+const htmlToPlainText = (html: string) => {
+  const temp = document.createElement("div");
+  temp.innerHTML = html;
+  return temp.innerText;
+};
+
+const stripHtml = (html: string) => {
+  return htmlToPlainText(html).replace(/\s+/g, " ").trim();
+};
+
+const getFirstLineTitle = (html: string) => {
+  const plainText = htmlToPlainText(html);
+
+  const firstLine = plainText
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .find(Boolean);
+
+  return firstLine || "";
+};
+
+const sanitizeFileName = (name: string) => {
+  return name
+    .replace(/[\\/:*?"<>|]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 80);
+};
+
+const normalizeTxtFileName = (name: string) => {
+  const withoutExtension = name.replace(/\.txt$/i, "");
+  const cleaned = sanitizeFileName(withoutExtension) || "새 메모";
+
+  return `${cleaned}.txt`;
+};
+
+const getSuggestedFileName = (note: MemoNote) => {
+  const firstLine = getFirstLineTitle(note.html);
+  const baseName = firstLine || note.title || "새 메모";
+
+  return normalizeTxtFileName(baseName);
+};
+
+const getDisplayTitle = (note: MemoNote) => {
+  return note.title || getFirstLineTitle(note.html) || "새 메모";
+};
+
+const normalizeNote = (note: Partial<MemoNote>): MemoNote => {
+  const now = Date.now();
 
   return {
     id: note.id || createId(),
-    title: note.title || "새 메모",
-    content: note.content || "",
-    color,
-    pinned: Boolean(note.pinned),
-    locked: Boolean(note.locked),
-    updatedAt: note.updatedAt || nowIso(),
+    title: note.title ?? "새 메모",
+    html: note.html ?? "",
+    fontFamily: note.fontFamily || defaultMemoFont,
+    fontSize: note.fontSize || "14px",
+    color: note.color || defaultMemoColor,
+    pinned: note.pinned ?? false,
+    createdAt: note.createdAt ?? now,
+    updatedAt: note.updatedAt ?? now,
   };
 };
 
-const loadNotes = (): MemoNote[] => {
-  if (typeof window === "undefined") return getDefaultNotes();
+const sortMemos = (notes: MemoNote[]) => {
+  return [...notes].sort((a, b) => {
+    if (a.pinned !== b.pinned) {
+      return a.pinned ? -1 : 1;
+    }
 
-  try {
-    const raw = window.localStorage.getItem(MEMO_STORAGE_KEY);
-    if (!raw) return getDefaultNotes();
-
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return getDefaultNotes();
-
-    const normalized = parsed.map((note, index) => normalizeNote(note, index));
-    return normalized.length > 0 ? normalized : getDefaultNotes();
-  } catch {
-    return getDefaultNotes();
-  }
-};
-
-const classNames = (
-  ...values: Array<string | false | null | undefined>
-) => values.filter(Boolean).join(" ");
-
-export const MemoWidget = () => {
-  const [notes, setNotes] = useState<MemoNote[]>(() => loadNotes());
-  const [selectedId, setSelectedId] = useState<string>(() => {
-    const loaded = loadNotes();
-    return loaded[0]?.id ?? "";
+    return b.updatedAt - a.updatedAt;
   });
 };
 
 export const MemoWidget = () => {
   const [editing, setEditing] = useState(false);
   const [memoWindowOpen, setMemoWindowOpen] = useState(false);
-  const [windowPinned, setWindowPinned] = useState(false);
 
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [saveFileName, setSaveFileName] = useState("");
@@ -196,14 +379,6 @@ export const MemoWidget = () => {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const windowEditorRef = useRef<HTMLDivElement | null>(null);
   const saveInputRef = useRef<HTMLInputElement | null>(null);
-
-  const dragRef = useRef({
-    dragging: false,
-    startX: 0,
-    startY: 0,
-    initialX: 0,
-    initialY: 0,
-  });
 
   const { value: notes, setValue: setNotes } = useLocalStorage<MemoNote[]>(
     "glassday.memo.notes.v2",
@@ -213,18 +388,15 @@ export const MemoWidget = () => {
   const { value: selectedNoteId, setValue: setSelectedNoteId } =
     useLocalStorage<string>("glassday.memo.selected.v2", "default-memo");
 
-  const { value: memoWindowPosition, setValue: setMemoWindowPosition } =
-    useLocalStorage<MemoWindowPosition>("glassday.memo.window.position.v1", {
-      x: 120,
-      y: 72,
-    });
-
   const normalizedNotes = useMemo(
     () => notes.map((note) => normalizeNote(note)),
     [notes]
   );
 
-  const sortedNotes = useMemo(() => sortMemos(normalizedNotes), [normalizedNotes]);
+  const sortedNotes = useMemo(
+    () => sortMemos(normalizedNotes),
+    [normalizedNotes]
+  );
 
   const activeNote =
     normalizedNotes.find((note) => note.id === selectedNoteId) ??
@@ -236,23 +408,47 @@ export const MemoWidget = () => {
     : editorRef.current;
 
   useEffect(() => {
-    window.localStorage.setItem(MEMO_STORAGE_KEY, JSON.stringify(notes));
+    const shouldNormalize = notes.some((note) => {
+      const normalized = normalizeNote(note);
 
-    window.dispatchEvent(
-      new CustomEvent("glassday:memo-updated", {
-        detail: { notes },
-      })
-    );
-  }, [notes]);
+      return (
+        note.fontFamily !== normalized.fontFamily ||
+        note.fontSize !== normalized.fontSize ||
+        note.color !== normalized.color ||
+        note.pinned !== normalized.pinned ||
+        note.createdAt !== normalized.createdAt ||
+        note.updatedAt !== normalized.updatedAt
+      );
+    });
+
+    if (shouldNormalize) {
+      setNotes(notes.map((note) => normalizeNote(note)));
+    }
+  }, [notes, setNotes]);
 
   useEffect(() => {
-    if (!selectedNote || !editorRef.current) return;
-
-    editorRef.current.innerHTML = selectedNote.content || "";
-  }, [selectedNote?.id, isWindowOpen]);
+    if (!activeNote && normalizedNotes.length > 0) {
+      setSelectedNoteId(normalizedNotes[0].id);
+    }
+  }, [activeNote, normalizedNotes, setSelectedNoteId]);
 
   useEffect(() => {
-    if (!isWindowOpen) return;
+    if (!activeNote) return;
+
+    if (editorRef.current && editorRef.current.innerHTML !== activeNote.html) {
+      editorRef.current.innerHTML = activeNote.html;
+    }
+
+    if (
+      windowEditorRef.current &&
+      windowEditorRef.current.innerHTML !== activeNote.html
+    ) {
+      windowEditorRef.current.innerHTML = activeNote.html;
+    }
+  }, [activeNote?.id, activeNote?.html, memoWindowOpen]);
+
+  useEffect(() => {
+    if (!saveDialogOpen) return;
 
     requestAnimationFrame(() => {
       saveInputRef.current?.focus();
@@ -260,136 +456,85 @@ export const MemoWidget = () => {
     });
   }, [saveDialogOpen]);
 
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      if (!dragRef.current.dragging) return;
-
-      const nextX =
-        dragRef.current.initialX + event.clientX - dragRef.current.startX;
-      const nextY =
-        dragRef.current.initialY + event.clientY - dragRef.current.startY;
-
-      const maxX = Math.max(16, window.innerWidth - 520);
-      const maxY = Math.max(16, window.innerHeight - 240);
-
-      setMemoWindowPosition({
-        x: Math.min(Math.max(16, nextX), maxX),
-        y: Math.min(Math.max(16, nextY), maxY),
-      });
-    };
-
-    const handleMouseUp = () => {
-      dragRef.current.dragging = false;
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [setMemoWindowPosition]);
-
   const updateActiveNote = (patch: Partial<MemoNote>) => {
     if (!activeNote) return;
 
     setNotes((prev) =>
       prev.map((note) =>
-        note.id === noteId
+        note.id === activeNote.id
           ? {
-              ...note,
+              ...normalizeNote(note),
               ...patch,
-              updatedAt: nowIso(),
+              updatedAt: Date.now(),
             }
-          : note
+          : normalizeNote(note)
       )
     );
   };
 
-  const updateSelectedNote = (patch: Partial<MemoNote>) => {
-    if (!selectedNote) return;
-    updateNote(selectedNote.id, patch);
-  };
+  const syncFromEditor = (target: HTMLDivElement | null) => {
+    if (!target) return;
 
-  const addNote = () => {
-    const next = createNote(notes.length);
-
-    setNotes((prev) => [next, ...prev]);
-    setSelectedId(next.id);
-    setIsWindowOpen(true);
-  };
-
-  const deleteNote = (noteId: string) => {
-    setNotes((prev) => {
-      const next = prev.filter((note) => note.id !== noteId);
-
-      if (selectedId === noteId) {
-        setSelectedId(next[0]?.id ?? "");
-      }
-
-      return next.length > 0 ? next : [createNote(0)];
+    updateActiveNote({
+      html: target.innerHTML,
     });
-  };
-
-  const handleEditorInput = () => {
-    if (!selectedNote || !editorRef.current) return;
-
-    updateNote(selectedNote.id, {
-      content: editorRef.current.innerHTML,
-    });
-  };
-
-  const focusEditor = () => {
-    editorRef.current?.focus();
   };
 
   const runCommand = (command: string, value?: string) => {
-    if (!selectedNote || selectedNote.locked) return;
+    if (!editing) return;
 
-    focusEditor();
+    activeEditor?.focus();
     document.execCommand(command, false, value);
+
+    setTimeout(() => {
+      syncFromEditor(activeEditor);
+    }, 0);
+  };
+
+  const addNewMemo = () => {
+    const newNote = createMemoNote();
+
+    setNotes((prev) => [newNote, ...prev.map((note) => normalizeNote(note))]);
+    setSelectedNoteId(newNote.id);
+    setEditing(true);
+    setMemoWindowOpen(true);
+  };
+
+  const deleteMemo = (id: string) => {
+    const nextNotes = normalizedNotes.filter((note) => note.id !== id);
 
     if (nextNotes.length === 0) {
       const replacement = createMemoNote();
+
       setNotes([replacement]);
       setSelectedNoteId(replacement.id);
       setEditing(true);
+
       return;
     }
 
     setNotes(nextNotes);
 
-    if (!text) {
-      document.execCommand("insertHTML", false, `<span style="${style}"></span>`);
-    } else {
-      document.execCommand(
-        "insertHTML",
-        false,
-        `<span style="${style}">${text}</span>`
-      );
-    }
-
-    if (editorRef.current) {
-      updateSelectedNote({
-        content: editorRef.current.innerHTML,
-      });
+    if (selectedNoteId === id) {
+      setSelectedNoteId(nextNotes[0].id);
     }
   };
 
-  const insertTable = () => {
-    if (!selectedNote || selectedNote.locked) return;
+  const togglePinnedNote = () => {
+    if (!activeNote) return;
 
+    updateActiveNote({
+      pinned: !activeNote.pinned,
+    });
+  };
+
+  const insertTable = () => {
     const tableHtml = `
       <table>
         <tbody>
           <tr>
-            <th>Item</th>
-            <th>Memo</th>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
+            <td>항목</td>
+            <td>내용</td>
           </tr>
           <tr>
             <td></td>
@@ -397,53 +542,54 @@ export const MemoWidget = () => {
           </tr>
         </tbody>
       </table>
+      <p><br /></p>
     `;
 
     runCommand("insertHTML", tableHtml);
   };
 
-  const downloadNote = () => {
-    if (!selectedNote) return;
+  const openSaveDialog = () => {
+    if (!activeNote) return;
 
-    const title = sanitizeFileName(selectedNote.title || "memo");
-    const body = stripHtml(selectedNote.content);
-    const blob = new Blob([`${selectedNote.title}\n\n${body}`], {
+    setSaveFileName(getSuggestedFileName(activeNote));
+    setSaveDialogOpen(true);
+  };
+
+  const saveToLocal = () => {
+    if (!activeNote) return;
+
+    const fileName = normalizeTxtFileName(saveFileName);
+    const plainText = htmlToPlainText(activeNote.html);
+
+    const blob = new Blob([plainText], {
       type: "text/plain;charset=utf-8",
     });
 
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
 
-    a.href = url;
-    a.download = fileName;
+    anchor.href = url;
+    anchor.download = fileName;
 
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
 
     URL.revokeObjectURL(url);
+    setSaveDialogOpen(false);
   };
 
-  const handleSave = () => {
-    if (selectedNote && editorRef.current) {
-      updateSelectedNote({
-        content: editorRef.current.innerHTML,
-      });
-    }
+  const sendByEmail = () => {
+    if (!activeNote) return;
 
-    window.localStorage.setItem(MEMO_STORAGE_KEY, JSON.stringify(notes));
-    flashSaved();
-  };
+    const fileName = normalizeTxtFileName(saveFileName);
+    const plainText = htmlToPlainText(activeNote.html);
 
-  const handleToolbarMouseDown = (event: MouseEvent<HTMLDivElement>) => {
-    event.preventDefault();
-  };
+    const subject = encodeURIComponent(fileName);
+    const body = encodeURIComponent(`[${fileName}]\n\n${plainText}`);
 
-  const previewText = (note: MemoNote) => {
-    const text = stripHtml(note.content);
-
-    if (!text) return "Empty memo";
-    return text.length > 54 ? `${text.slice(0, 54)}...` : text;
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    setSaveDialogOpen(false);
   };
 
   const saveToGoogleDrive = () => {
@@ -467,33 +613,13 @@ export const MemoWidget = () => {
     event.preventDefault();
   };
 
-  const startWindowDrag = (event: ReactMouseEvent<HTMLDivElement>) => {
-    const target = event.target as HTMLElement;
-
-    if (target.closest("button") || target.closest("select") || target.closest("input")) {
-      return;
-    }
-
-    dragRef.current = {
-      dragging: true,
-      startX: event.clientX,
-      startY: event.clientY,
-      initialX: memoWindowPosition.x,
-      initialY: memoWindowPosition.y,
-    };
-  };
-
-  const closeMemoWindow = () => {
-    setMemoWindowOpen(false);
-  };
-
   const renderToolbar = () => (
     <div className="memo-toolbar">
       <select
         value={activeNote?.fontFamily ?? defaultMemoFont}
-        onChange={(e) =>
+        onChange={(event) =>
           updateActiveNote({
-            fontFamily: e.target.value,
+            fontFamily: event.target.value,
           })
         }
         className="memo-select memo-font-select"
@@ -510,13 +636,15 @@ export const MemoWidget = () => {
                 {font.label}
               </option>
             ))}
-          </select>
+          </optgroup>
+        ))}
+      </select>
 
       <select
         value={activeNote?.fontSize ?? "14px"}
-        onChange={(e) =>
+        onChange={(event) =>
           updateActiveNote({
-            fontSize: e.target.value,
+            fontSize: event.target.value,
           })
         }
         className="memo-select memo-size-select"
@@ -529,82 +657,116 @@ export const MemoWidget = () => {
         ))}
       </select>
 
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => runCommand("bold")}
+        className="memo-tool-button"
+        disabled={!editing}
+      >
+        <Bold className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => runCommand("italic")}
+        className="memo-tool-button"
+        disabled={!editing}
+      >
+        <Italic className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => runCommand("insertUnorderedList")}
+        className="memo-tool-button"
+        disabled={!editing}
+      >
+        <List className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => runCommand("insertOrderedList")}
+        className="memo-tool-button"
+        disabled={!editing}
+      >
+        <ListOrdered className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={insertTable}
+        className="memo-tool-button"
+        disabled={!editing}
+      >
+        <Table2 className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onClick={openSaveDialog}
+        className="memo-tool-button"
+      >
+        <Download className="w-3.5 h-3.5" />
+      </button>
+    </div>
+  );
+
+  const renderColorPicker = () => (
+    <div className="memo-color-area">
+      <div className="memo-color-label">
+        <Palette className="w-3.5 h-3.5" />
+        Paper
+      </div>
+
+      <div className="memo-color-picker">
+        {memoColors.map((color) => (
           <button
+            key={color}
             type="button"
-            className="memo-tool-button"
-            disabled={disabled}
-            onClick={() => runCommand("bold")}
-            title="Bold"
+            onClick={() =>
+              updateActiveNote({
+                color,
+              })
+            }
+            className={cn(
+              "memo-color-chip",
+              activeNote?.color === color && "is-active"
+            )}
+            style={{ backgroundColor: color }}
+            title={color}
+            disabled={!editing}
           >
-            <Bold className="w-3.5 h-3.5" />
+            {activeNote?.color === color && <Check className="w-3 h-3" />}
           </button>
+        ))}
+      </div>
+    </div>
+  );
 
-          <button
-            type="button"
-            className="memo-tool-button"
-            disabled={disabled}
-            onClick={() => runCommand("italic")}
-            title="Italic"
-          >
-            <Italic className="w-3.5 h-3.5" />
-          </button>
+  const renderNoteList = () => (
+    <div className="memo-list-panel">
+      <div className="memo-list-header">
+        <span>Memos</span>
 
-          <button
-            type="button"
-            className="memo-tool-button"
-            disabled={disabled}
-            onClick={() => runCommand("insertUnorderedList")}
-            title="Bullet list"
-          >
-            <List className="w-3.5 h-3.5" />
-          </button>
+        <button
+          type="button"
+          onClick={addNewMemo}
+          className="memo-mini-button"
+          title="New memo"
+        >
+          <Plus className="w-3.5 h-3.5" />
+        </button>
+      </div>
 
-          <button
-            type="button"
-            className="memo-tool-button"
-            disabled={disabled}
-            onClick={() => runCommand("insertOrderedList")}
-            title="Numbered list"
-          >
-            <ListOrdered className="w-3.5 h-3.5" />
-          </button>
-
-          <button
-            type="button"
-            className="memo-tool-button"
-            disabled={disabled}
-            onClick={insertTable}
-            title="Insert table"
-          >
-            <Table className="w-3.5 h-3.5" />
-          </button>
-
-          <button
-            type="button"
-            className="memo-tool-button"
-            onClick={downloadNote}
-            title="Download memo"
-          >
-            <Download className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        {renderColorPalette()}
-      </>
-    );
-  };
-
-  const renderWorkspace = (windowMode = false) => {
-    if (!selectedNote) {
-      return (
-        <div className="memo-workspace">
-          <div className="memo-empty-state">
-            <StickyNote className="w-5 h-5" />
-            <span>새 메모를 만들어줘.</span>
-          </div>
-        </div>
-      );
-    }
+      <div className="memo-note-list">
+        {sortedNotes.map((note) => {
+          const preview = stripHtml(note.html) || "Empty memo";
 
           return (
             <article
@@ -633,6 +795,7 @@ export const MemoWidget = () => {
                   {note.pinned && <Pin className="w-3 h-3" />}
                   <span>{getDisplayTitle(note)}</span>
                 </div>
+
                 <div className="memo-note-preview">{preview}</div>
               </div>
 
@@ -674,15 +837,14 @@ export const MemoWidget = () => {
           <input
             value={activeNote.title}
             onChange={(event) =>
-            updateNote(activeNote.id, {
-              title: event.target.value,
+              updateActiveNote({
+                title: event.target.value,
               })
             }
             className="memo-title-input"
             spellCheck={false}
             placeholder="Untitled Memo"
           />
-          
         ) : (
           <div className="memo-title-view">{getDisplayTitle(activeNote)}</div>
         )}
@@ -713,164 +875,72 @@ export const MemoWidget = () => {
     );
   };
 
-  // const memoWindow = memoWindowOpen
-  // ? createPortal(
-  //     <div className="memo-window-layer">
-  //         <div
-  //           className="memo-window"
-  //           style={{
-  //             left: memoWindowPosition.x,
-  //             top: memoWindowPosition.y,
-  //           }}
-  //         >
-  //           <div className="memo-window-titlebar" onMouseDown={startWindowDrag}>
-  //             <div>
-  //               <div className="text-sm font-semibold">Memo Window</div>
-  //               <div className="text-xs text-muted-foreground">
-  //                 {windowPinned ? "Floating memo is pinned" : "Floating memo window"}
-  //               </div>
-  //             </div>
-
-  //             <div className="flex items-center gap-2">
-  //               <button
-  //                 type="button"
-  //                 onClick={addNewMemo}
-  //                 className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
-  //               >
-  //                 <Plus className="w-3.5 h-3.5" />
-  //                 New
-  //               </button>
-
-  //               <button
-  //                 type="button"
-  //                 onClick={openSaveDialog}
-  //                 className="glass-button glass-tint-blue h-8 px-3 text-xs flex items-center gap-1.5"
-  //               >
-  //                 <Download className="w-3.5 h-3.5" />
-  //                 Save
-  //               </button>
-
-  //               <button
-  //                 type="button"
-  //                 onClick={() => setWindowPinned((prev) => !prev)}
-  //                 className={cn(
-  //                   "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-  //                   windowPinned && "is-active"
-  //                 )}
-  //               >
-  //                 <Pin className="w-3.5 h-3.5" />
-  //                 Pin
-  //               </button>
-
-  //               <button
-  //                 type="button"
-  //                 onClick={togglePinnedNote}
-  //                 className={cn(
-  //                   "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-  //                   activeNote?.pinned && "is-active"
-  //                 )}
-  //               >
-  //                 <Pin className="w-3.5 h-3.5" />
-  //                 Note
-  //               </button>
-
-  //               <button
-  //                 type="button"
-  //                 onClick={() => setEditing((prev) => !prev)}
-  //                 className={cn(
-  //                   "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-  //                   editing && "is-active"
-  //                 )}
-  //               >
-  //                 {editing ? "Done" : "Edit"}
-  //               </button>
-
-  //               <button
-  //                 type="button"
-  //                 onClick={closeMemoWindow}
-  //                 className="glass-button h-8 w-8 flex items-center justify-center"
-  //               >
-  //                 <X className="w-4 h-4" />
-  //               </button>
-  //             </div>
-  //           </div>
-
-  //           <div className="memo-window-body">
-  //             {renderNoteList()}
-  //             {renderWorkspace(windowEditorRef, true)}
-  //           </div>
-  //         </div>
-  //       </div>,
-  //       document.body
-  //     )
-  //   : null;
-
   const memoWindow = (
-  <FloatingWindow
-    open={memoWindowOpen}
-    title="Memo Window"
-    subtitle="Resizable floating memo"
-    storageKey="glassday.memo.floatingWindow.rect.v1"
-    defaultRect={{
-      x: 120,
-      y: 72,
-      w: 1120,
-      h: 760,
-    }}
-    minWidth={720}
-    minHeight={480}
-    onClose={() => setMemoWindowOpen(false)}
-    actions={
-      <>
-        <button
-          type="button"
-          onClick={addNewMemo}
-          className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          New
-        </button>
+    <FloatingWindow
+      open={memoWindowOpen}
+      title="Memo Window"
+      subtitle="Resizable floating memo"
+      storageKey="glassday.memo.floatingWindow.rect.v1"
+      defaultRect={{
+        x: 120,
+        y: 72,
+        w: 1120,
+        h: 760,
+      }}
+      minWidth={720}
+      minHeight={480}
+      onClose={() => setMemoWindowOpen(false)}
+      actions={
+        <>
+          <button
+            type="button"
+            onClick={addNewMemo}
+            className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            New
+          </button>
 
-        <button
-          type="button"
-          onClick={openSaveDialog}
-          className="glass-button glass-tint-blue h-8 px-3 text-xs flex items-center gap-1.5"
-        >
-          <Download className="w-3.5 h-3.5" />
-          Save
-        </button>
+          <button
+            type="button"
+            onClick={openSaveDialog}
+            className="glass-button glass-tint-blue h-8 px-3 text-xs flex items-center gap-1.5"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Save
+          </button>
 
-        <button
-          type="button"
-          onClick={togglePinnedNote}
-          className={cn(
-            "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-            activeNote?.pinned && "is-active"
-          )}
-        >
-          <Pin className="w-3.5 h-3.5" />
-          Note
-        </button>
+          <button
+            type="button"
+            onClick={togglePinnedNote}
+            className={cn(
+              "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+              activeNote?.pinned && "is-active"
+            )}
+          >
+            <Pin className="w-3.5 h-3.5" />
+            Note
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setEditing((prev) => !prev)}
-          className={cn(
-            "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
-            editing && "is-active"
-          )}
-        >
-          {editing ? "Done" : "Edit"}
-        </button>
-      </>
-    }
-  >
-    <div className="memo-floating-body">
-      {renderNoteList()}
-      {renderWorkspace(windowEditorRef, true)}
-    </div>
-  </FloatingWindow>
-);
+          <button
+            type="button"
+            onClick={() => setEditing((prev) => !prev)}
+            className={cn(
+              "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+              editing && "is-active"
+            )}
+          >
+            {editing ? "Done" : "Edit"}
+          </button>
+        </>
+      }
+    >
+      <div className="memo-floating-body">
+        {renderNoteList()}
+        {renderWorkspace(windowEditorRef, true)}
+      </div>
+    </FloatingWindow>
+  );
 
   const saveDialog =
     saveDialogOpen && activeNote
@@ -903,52 +973,95 @@ export const MemoWidget = () => {
                 <input
                   ref={saveInputRef}
                   value={saveFileName}
-                  onChange={(e) => setSaveFileName(e.target.value)}
+                  onChange={(event) => setSaveFileName(event.target.value)}
                   spellCheck={false}
                   className="memo-save-input"
                 />
               </div>
 
-                <div className="memo-window-actions">
-                  <button
-                    type="button"
-                    className="memo-window-action"
-                    onClick={addNote}
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    New
-                  </button>
+              <div className="memo-save-options">
+                <button
+                  type="button"
+                  onClick={saveToLocal}
+                  className="memo-save-option glass-tint-blue"
+                >
+                  <Download className="w-4 h-4" />
 
-                  <button
-                    type="button"
-                    className="memo-window-action"
-                    onClick={handleSave}
-                  >
-                    <Save className="w-3.5 h-3.5" />
-                    {savedPulse ? "Saved" : "Save"}
-                  </button>
+                  <div>
+                    <div className="font-semibold">Local</div>
+                    <div className="text-[11px] text-muted-foreground">
+                      Download to this computer
+                    </div>
+                  </div>
+                </button>
 
-                  <button
-                    type="button"
-                    className="memo-window-action"
-                    onClick={() =>
-                      selectedNote &&
-                      updateSelectedNote({
-                        pinned: !selectedNote.pinned,
-                      })
-                    }
-                  >
-                    <Pin className="w-3.5 h-3.5" />
-                    Note
-                  </button>
+                <button
+                  type="button"
+                  onClick={saveToGoogleDrive}
+                  className="memo-save-option glass-tint-mint"
+                >
+                  <UploadCloud className="w-4 h-4" />
 
-                  <button
-                    type="button"
-                    className="memo-window-action"
-                    onClick={() => setIsWindowOpen(false)}
-                  >
-                    Done
-                  </button>
+                  <div>
+                    <div className="font-semibold">Google Drive</div>
+                    <div className="text-[11px] text-muted-foreground">
+                      Save after Google login setup
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={sendByEmail}
+                  className="memo-save-option glass-tint-peach"
+                >
+                  <Send className="w-4 h-4" />
+
+                  <div>
+                    <div className="font-semibold">Email</div>
+                    <div className="text-[11px] text-muted-foreground">
+                      Open email with memo text
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )
+      : null;
+
+  return (
+    <>
+      <GlassCard
+        title="Memo"
+        subtitle={
+          editing
+            ? "Editing memo library"
+            : `${normalizedNotes.length} saved memo${
+                normalizedNotes.length > 1 ? "s" : ""
+              }`
+        }
+        icon={<StickyNote className="w-4 h-4" />}
+        actions={
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={addNewMemo}
+              className="glass-button h-8 w-8 flex items-center justify-center"
+              title="New memo"
+            >
+              <Plus className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMemoWindowOpen(true)}
+              className="glass-button h-8 w-8 flex items-center justify-center"
+              title="Open memo window"
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+            </button>
 
             <button
               type="button"
@@ -963,6 +1076,7 @@ export const MemoWidget = () => {
               ) : (
                 <Pencil className="w-3.5 h-3.5" />
               )}
+
               {editing ? "Done" : "Edit"}
             </button>
           </div>
@@ -979,5 +1093,3 @@ export const MemoWidget = () => {
     </>
   );
 };
-
-export default MemoWidget;
