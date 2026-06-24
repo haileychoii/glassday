@@ -1,6 +1,6 @@
 import type { WidgetId, WidgetMeta } from "../types/workspace";
 
-export const widgetRegistry = {
+export const widgetRegistry: Record<WidgetId, WidgetMeta> = {
   today: {
     id: "today",
     label: "Today Focus",
@@ -71,6 +71,6 @@ export const widgetRegistry = {
     category: "life",
     defaultSize: "small",
   },
-} satisfies Record<string, WidgetMeta>;
+};
 
 export const allWidgetIds = Object.keys(widgetRegistry) as WidgetId[];

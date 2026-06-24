@@ -207,14 +207,14 @@ export const CalendarWidget = () => {
                 setSelectedDate(date);
                 setView("day");
               }}
-              onOpenEvent={setEditingId}
+              
             />
           ) : view === "week" ? (
             <WeekTimeline
               selectedDate={selectedDate}
               events={visibleEvents}
               onSelectDate={setSelectedDate}
-              onOpenEvent={setEditingId}
+              
             />
           ) : (
             <div className="calendar-event-list">
