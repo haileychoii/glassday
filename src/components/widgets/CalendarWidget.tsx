@@ -55,10 +55,9 @@ export const CalendarWidget = () => {
   const [selectedDate, setSelectedDate] = useState(toLocalDateInput());
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const editingEvent =
-    editingId
-      ? calendarEvents.find((event) => event.id === editingId) ?? null
-      : null;
+  const editingEvent = editingId
+    ? calendarEvents.find((event) => event.id === editingId) ?? null
+    : null;
 
   const visibleEvents = useMemo(() => {
     const sorted = sortEvents(calendarEvents);
@@ -69,6 +68,7 @@ export const CalendarWidget = () => {
 
     if (view === "week") {
       const weekDates = getWeekDates(selectedDate);
+
       return sorted.filter((event) =>
         eventTouchesRange(event, weekDates[0], weekDates[6])
       );
@@ -80,6 +80,10 @@ export const CalendarWidget = () => {
       eventTouchesRange(event, monthInfo.firstDate, monthInfo.lastDate)
     );
   }, [calendarEvents, selectedDate, view]);
+
+  const dayEvents = visibleEvents.filter((event) =>
+    eventTouchesDate(event, selectedDate)
+  );
 
   const goPrev = () => {
     if (view === "day") {
@@ -130,10 +134,6 @@ export const CalendarWidget = () => {
     updateCalendarEvent(editingEvent.id, patch);
   };
 
-  const dayEvents = visibleEvents.filter((event) =>
-    eventTouchesDate(event, selectedDate)
-  );
-
   return (
     <>
       <GlassCard
@@ -165,7 +165,7 @@ export const CalendarWidget = () => {
               <input
                 type="date"
                 value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={(event) => setSelectedDate(event.target.value)}
                 className="calendar-date-input"
               />
 
@@ -311,9 +311,9 @@ export const CalendarWidget = () => {
                   <input
                     value={editingEvent.title}
                     disabled={editingEvent.source === "career"}
-                    onChange={(e) =>
+                    onChange={(event) =>
                       updateEditingEvent({
-                        title: e.target.value,
+                        title: event.target.value,
                       })
                     }
                     spellCheck={false}
@@ -326,9 +326,9 @@ export const CalendarWidget = () => {
                     <input
                       type="date"
                       value={editingEvent.startDate}
-                      onChange={(e) =>
+                      onChange={(event) =>
                         updateEditingEvent({
-                          startDate: e.target.value,
+                          startDate: event.target.value,
                         })
                       }
                     />
@@ -339,9 +339,9 @@ export const CalendarWidget = () => {
                     <input
                       type="time"
                       value={editingEvent.startTime}
-                      onChange={(e) =>
+                      onChange={(event) =>
                         updateEditingEvent({
-                          startTime: e.target.value,
+                          startTime: event.target.value,
                         })
                       }
                     />
@@ -352,9 +352,9 @@ export const CalendarWidget = () => {
                     <input
                       type="date"
                       value={editingEvent.endDate}
-                      onChange={(e) =>
+                      onChange={(event) =>
                         updateEditingEvent({
-                          endDate: e.target.value,
+                          endDate: event.target.value,
                         })
                       }
                     />
@@ -365,9 +365,9 @@ export const CalendarWidget = () => {
                     <input
                       type="time"
                       value={editingEvent.endTime}
-                      onChange={(e) =>
+                      onChange={(event) =>
                         updateEditingEvent({
-                          endTime: e.target.value,
+                          endTime: event.target.value,
                         })
                       }
                     />
@@ -378,9 +378,9 @@ export const CalendarWidget = () => {
                   <span>Location</span>
                   <input
                     value={editingEvent.location}
-                    onChange={(e) =>
+                    onChange={(event) =>
                       updateEditingEvent({
-                        location: e.target.value,
+                        location: event.target.value,
                       })
                     }
                     spellCheck={false}
@@ -404,9 +404,9 @@ export const CalendarWidget = () => {
                   <span>Memo</span>
                   <textarea
                     value={editingEvent.notes}
-                    onChange={(e) =>
+                    onChange={(event) =>
                       updateEditingEvent({
-                        notes: e.target.value,
+                        notes: event.target.value,
                       })
                     }
                     spellCheck={false}
