@@ -1,28 +1,23 @@
-import { Grid2X2, Settings } from "lucide-react";
-
-type ThemeId =
-  | "pastel"
-  | "cloud"
-  | "night"
-  | "glass"
-  | "aurora"
-  | "ios"
-  | "mac-core"
-  | "pixel-desk";
-
+type ThemeId = "pastel" | "cloud" | "night" | "glass" | "mac-core" | "pixel-desk";
 type ModeId = "apply" | "study" | "rest";
 
 type TopbarProps = {
-  theme?: ThemeId | string;
-  activeTheme?: ThemeId | string;
-  currentTheme?: ThemeId | string;
-  setTheme?: (theme: ThemeId | string) => void;
-  onThemeChange?: (theme: ThemeId | string) => void;
+  theme?: string;
+  activeTheme?: string;
+  currentTheme?: string;
+  setTheme?: (theme: string) => void;
+  setActiveTheme?: (theme: string) => void;
+  setCurrentTheme?: (theme: string) => void;
+  onThemeChange?: (theme: string) => void;
+  onThemeSelect?: (theme: string) => void;
 
-  mode?: ModeId | string;
-  activeMode?: ModeId | string;
-  setMode?: (mode: ModeId | string) => void;
-  onModeChange?: (mode: ModeId | string) => void;
+  mode?: string;
+  activeMode?: string;
+  currentMode?: string;
+  setMode?: (mode: string) => void;
+  setActiveMode?: (mode: string) => void;
+  onModeChange?: (mode: string) => void;
+  onModeSelect?: (mode: string) => void;
 
   isEditMode?: boolean;
   editMode?: boolean;
@@ -34,25 +29,32 @@ type TopbarProps = {
 
   userName?: string;
   name?: string;
-
-  [key: string]: unknown;
 };
 
-const themes = [
+const themes: { id: ThemeId; label: string }[] = [
   { id: "pastel", label: "Pastel" },
   { id: "cloud", label: "Cloud" },
   { id: "night", label: "Night" },
   { id: "glass", label: "Glass" },
-  { id: "ios", label: "iOS" },
   { id: "mac-core", label: "Mac Core" },
   { id: "pixel-desk", label: "Pixel Desk" },
-] as const;
+];
 
-const modes = [
+const modes: { id: ModeId; label: string }[] = [
   { id: "apply", label: "Apply" },
   { id: "study", label: "Study" },
   { id: "rest", label: "Rest" },
-] as const;
+];
+
+const normalizeTheme = (value: unknown) => {
+  const next = String(value ?? "glass");
+
+  if (next === "ios") return "mac-core";
+  if (next === "mac") return "mac-core";
+  if (next === "pixel") return "pixel-desk";
+
+  return next;
+};
 
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -67,12 +69,18 @@ export const Topbar = ({
   activeTheme,
   currentTheme,
   setTheme,
+  setActiveTheme,
+  setCurrentTheme,
   onThemeChange,
+  onThemeSelect,
 
   mode,
   activeMode,
+  currentMode,
   setMode,
+  setActiveMode,
   onModeChange,
+  onModeSelect,
 
   isEditMode,
   editMode,
@@ -85,35 +93,40 @@ export const Topbar = ({
   userName,
   name,
 }: TopbarProps) => {
-  const selectedTheme = String(activeTheme ?? currentTheme ?? theme ?? "glass");
-  const selectedMode = String(activeMode ?? mode ?? "apply");
+  const selectedTheme = normalizeTheme(activeTheme ?? currentTheme ?? theme ?? "glass");
+  const selectedMode = String(activeMode ?? currentMode ?? mode ?? "apply");
   const editing = Boolean(isEditMode ?? editMode);
   const displayName = String(userName ?? name ?? "Junhee");
 
-  const handleThemeClick = (nextTheme: string) => {
+  const changeTheme = (nextTheme: ThemeId) => {
     setTheme?.(nextTheme);
+    setActiveTheme?.(nextTheme);
+    setCurrentTheme?.(nextTheme);
     onThemeChange?.(nextTheme);
+    onThemeSelect?.(nextTheme);
   };
 
-  const handleModeClick = (nextMode: string) => {
+  const changeMode = (nextMode: ModeId) => {
     setMode?.(nextMode);
+    setActiveMode?.(nextMode);
     onModeChange?.(nextMode);
+    onModeSelect?.(nextMode);
   };
 
-  const handleEditClick = () => {
+  const toggleEdit = () => {
     onToggleEdit?.();
     toggleEditMode?.();
   };
 
-  const handleSettingsClick = () => {
+  const openSettingPanel = () => {
     onOpenSettings?.();
     openSettings?.();
   };
 
   return (
-    <header className="topbar mb-5 w-full rounded-[26px] border border-white/55 bg-white/55 px-4 py-3 shadow-[0_18px_50px_rgba(80,70,100,0.10)] backdrop-blur-2xl">
+    <header className="topbar mb-5 w-full rounded-[26px] border border-white/50 bg-white/55 px-4 py-3 shadow-sm backdrop-blur-2xl">
       <div className="flex items-center justify-between gap-4">
-        <div className="min-w-[170px] shrink-0">
+        <div className="min-w-[160px] shrink-0">
           <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-slate-500">
             Glassday
           </p>
@@ -123,71 +136,61 @@ export const Topbar = ({
           </h1>
         </div>
 
-        <div className="flex min-w-0 flex-1 items-center justify-end gap-3">
-          <div className="flex max-w-full items-center gap-2 overflow-x-auto rounded-[22px] border border-white/55 bg-white/45 p-1.5 backdrop-blur-xl">
-            {modes.map((item) => {
-              const active = selectedMode === item.id;
-
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => handleModeClick(item.id)}
-                  className={[
-                    "shrink-0 rounded-[18px] px-3.5 py-2 text-sm font-bold transition",
-                    active
-                      ? "bg-slate-950 text-white shadow-[0_8px_20px_rgba(15,23,42,0.22)]"
-                      : "text-slate-600 hover:bg-white/80 hover:text-slate-950",
-                  ].join(" ")}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-3 overflow-x-auto">
+          <div className="flex shrink-0 items-center gap-2 rounded-[22px] border border-white/55 bg-white/45 p-1.5">
+            {modes.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => changeMode(item.id)}
+                className={[
+                  "rounded-[18px] px-3.5 py-2 text-sm font-bold transition",
+                  selectedMode === item.id
+                    ? "bg-slate-950 text-white shadow-md"
+                    : "text-slate-600 hover:bg-white/80 hover:text-slate-950",
+                ].join(" ")}
+              >
+                {item.label}
+              </button>
+            ))}
           </div>
 
-          <div className="flex max-w-full items-center gap-2 overflow-x-auto rounded-[22px] border border-white/55 bg-white/45 p-1.5 backdrop-blur-xl">
-            {themes.map((item) => {
-              const active = selectedTheme === item.id;
-
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => handleThemeClick(item.id)}
-                  className={[
-                    "shrink-0 rounded-[18px] px-3.5 py-2 text-sm font-bold transition",
-                    active
-                      ? "bg-white text-slate-950 shadow-[0_8px_20px_rgba(15,23,42,0.12)]"
-                      : "text-slate-600 hover:bg-white/80 hover:text-slate-950",
-                  ].join(" ")}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
+          <div className="flex shrink-0 items-center gap-2 rounded-[22px] border border-white/55 bg-white/45 p-1.5">
+            {themes.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => changeTheme(item.id)}
+                className={[
+                  "rounded-[18px] px-3.5 py-2 text-sm font-bold transition",
+                  selectedTheme === item.id
+                    ? "bg-white text-slate-950 shadow-md"
+                    : "text-slate-600 hover:bg-white/80 hover:text-slate-950",
+                ].join(" ")}
+              >
+                {item.label}
+              </button>
+            ))}
           </div>
 
           <button
             type="button"
-            onClick={handleSettingsClick}
-            className="flex shrink-0 items-center gap-2 rounded-[20px] border border-white/60 bg-white/55 px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-white"
+            onClick={openSettingPanel}
+            className="shrink-0 rounded-[20px] border border-white/60 bg-white/55 px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm hover:bg-white"
           >
-            <Settings size={18} />
             Settings
           </button>
 
           <button
             type="button"
-            onClick={handleEditClick}
+            onClick={toggleEdit}
             className={[
-              "flex shrink-0 items-center gap-2 rounded-[20px] border px-4 py-2.5 text-sm font-bold shadow-sm transition",
+              "shrink-0 rounded-[20px] border px-4 py-2.5 text-sm font-bold shadow-sm transition",
               editing
-                ? "border-rose-200 bg-rose-100/90 text-rose-700"
+                ? "border-rose-200 bg-rose-100 text-rose-700"
                 : "border-white/60 bg-white/55 text-slate-700 hover:bg-white",
             ].join(" ")}
           >
-            <Grid2X2 size={18} />
             {editing ? "Done" : "Edit"}
           </button>
         </div>
