@@ -1051,3 +1051,15 @@
   min-height: 12px !important;
   border-radius: 0 !important;
 }
+
+/* Pixel Desk일 때만 각진 값으로 변경 */
+.theme-pixel-desk,
+.pixel-desk,
+[data-theme="pixel-desk"] {
+  --gd-radius-app: 10px;
+  --gd-radius-panel: 6px;
+  --gd-radius-widget: 4px;
+  --gd-radius-card: 4px;
+  --gd-radius-inner: 4px;
+  --gd-radius-button: 2px;
+}

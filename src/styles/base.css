@@ -32,4 +32,11 @@
       hsl(326 34% 66% / 0.12),
       hsl(205 36% 68% / 0.14)
     );
+
+  --gd-radius-app: 34px;
+  --gd-radius-panel: 30px;
+  --gd-radius-widget: 28px;
+  --gd-radius-card: 26px;
+  --gd-radius-inner: 24px;
+  --gd-radius-button: 18px;
  }

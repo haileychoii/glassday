@@ -253,3 +253,26 @@
     overflow-y: auto !important;
   }
 }
+
+/* 모바일에서는 더 iPhone스럽게 */
+@media (max-width: 768px) {
+  :root {
+    --gd-radius-app: 34px;
+    --gd-radius-panel: 28px;
+    --gd-radius-widget: 26px;
+    --gd-radius-card: 24px;
+    --gd-radius-inner: 24px;
+    --gd-radius-button: 18px;
+  }
+
+  .theme-pixel-desk,
+  .pixel-desk,
+  [data-theme="pixel-desk"] {
+    --gd-radius-app: 10px;
+    --gd-radius-panel: 6px;
+    --gd-radius-widget: 4px;
+    --gd-radius-card: 4px;
+    --gd-radius-inner: 4px;
+    --gd-radius-button: 2px;
+  }
+}

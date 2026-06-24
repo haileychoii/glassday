@@ -308,3 +308,35 @@
 [data-theme="night"] :where(.chip, .badge, .pill, .tag, .status) {
   border-radius: var(--app-radius-chip) !important;
 }
+
+/* 위젯 내부 박스 */
+.inner-card,
+.soft-card,
+.mini-card,
+.focus-card,
+.alert-item,
+.memo-item,
+.event-item,
+.calendar-item,
+.list-item,
+.todo-item,
+.study-item,
+.career-item,
+.money-item,
+.health-item,
+.mood-item {
+  border-radius: var(--gd-radius-card) !important;
+  overflow: hidden;
+}
+
+/* 버튼 네모 방지 */
+button,
+.button,
+.icon-button,
+.control-button,
+.add-button,
+.tab-button,
+.theme-button,
+.mode-button {
+  border-radius: var(--gd-radius-button) !important;
+}

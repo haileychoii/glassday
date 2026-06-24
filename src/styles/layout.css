@@ -139,3 +139,15 @@ main {
   flex-shrink: 0;
   transform: translateY(1px);
 }
+
+.topbar,
+.toolbar,
+.theme-bar,
+.theme-tabs,
+.header-panel,
+.control-panel,
+.settings-bar,
+.dashboard-toolbar {
+  border-radius: var(--gd-radius-panel) !important;
+  overflow: hidden;
+}

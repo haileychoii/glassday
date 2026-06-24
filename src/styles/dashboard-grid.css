@@ -121,5 +121,52 @@
 }
 
 
-
+/* react-grid-layout 아이템 자체 */
+.react-grid-item {
+  border-radius: var(--gd-radius-widget) !important;
+}
   
+/* react-grid-item 바로 안쪽 카드 */
+.react-grid-item > div,
+.react-grid-item > section,
+.react-grid-item > article {
+  border-radius: var(--gd-radius-widget) !important;
+  overflow: hidden;
+}
+
+/* 모든 위젯 카드 */
+.glass-card,
+.widget-card,
+.dashboard-card,
+.grid-card,
+.card,
+.widget,
+.floating-window,
+.window,
+.window-card,
+.panel,
+.widget-shell,
+.widget-frame {
+  border-radius: var(--gd-radius-widget) !important;
+  overflow: hidden;
+}
+
+/* 위젯 내부 박스 */
+.inner-card,
+.soft-card,
+.mini-card,
+.focus-card,
+.alert-item,
+.memo-item,
+.event-item,
+.calendar-item,
+.list-item,
+.todo-item,
+.study-item,
+.career-item,
+.money-item,
+.health-item,
+.mood-item {
+  border-radius: var(--gd-radius-card) !important;
+  overflow: hidden;
+}
