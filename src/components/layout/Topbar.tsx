@@ -1,3 +1,5 @@
+import { Grid2X2, Settings } from "lucide-react";
+
 type ThemeId =
   | "pastel"
   | "cloud"
@@ -26,6 +28,9 @@ type TopbarProps = {
   editMode?: boolean;
   onToggleEdit?: () => void;
   toggleEditMode?: () => void;
+
+  onOpenSettings?: () => void;
+  openSettings?: () => void;
 
   userName?: string;
   name?: string;
@@ -74,6 +79,9 @@ export const Topbar = ({
   onToggleEdit,
   toggleEditMode,
 
+  onOpenSettings,
+  openSettings,
+
   userName,
   name,
 }: TopbarProps) => {
@@ -97,21 +105,26 @@ export const Topbar = ({
     toggleEditMode?.();
   };
 
+  const handleSettingsClick = () => {
+    onOpenSettings?.();
+    openSettings?.();
+  };
+
   return (
-    <header className="topbar sticky top-0 z-40 mx-auto mb-5 w-full rounded-[28px] border border-white/35 bg-white/45 px-5 py-4 shadow-[0_18px_60px_rgba(80,90,120,0.14)] backdrop-blur-2xl">
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-        <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+    <header className="topbar mb-5 w-full rounded-[26px] border border-white/55 bg-white/55 px-4 py-3 shadow-[0_18px_50px_rgba(80,70,100,0.10)] backdrop-blur-2xl">
+      <div className="flex items-center justify-between gap-4">
+        <div className="min-w-[170px] shrink-0">
+          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-slate-500">
             Glassday
           </p>
 
-          <h1 className="mt-1 truncate text-2xl font-semibold tracking-tight text-slate-900">
+          <h1 className="mt-1 truncate text-xl font-bold tracking-tight text-slate-900">
             {getGreeting()}, {displayName}
           </h1>
         </div>
 
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <div className="flex flex-wrap items-center gap-2 rounded-[22px] border border-white/45 bg-white/40 p-1.5 shadow-inner backdrop-blur-xl">
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-3">
+          <div className="flex max-w-full items-center gap-2 overflow-x-auto rounded-[22px] border border-white/55 bg-white/45 p-1.5 backdrop-blur-xl">
             {modes.map((item) => {
               const active = selectedMode === item.id;
 
@@ -121,10 +134,10 @@ export const Topbar = ({
                   type="button"
                   onClick={() => handleModeClick(item.id)}
                   className={[
-                    "rounded-[18px] px-3.5 py-2 text-sm font-semibold transition",
+                    "shrink-0 rounded-[18px] px-3.5 py-2 text-sm font-bold transition",
                     active
-                      ? "bg-slate-900 text-white shadow-md"
-                      : "text-slate-600 hover:bg-white/70 hover:text-slate-900",
+                      ? "bg-slate-950 text-white shadow-[0_8px_20px_rgba(15,23,42,0.22)]"
+                      : "text-slate-600 hover:bg-white/80 hover:text-slate-950",
                   ].join(" ")}
                 >
                   {item.label}
@@ -133,7 +146,7 @@ export const Topbar = ({
             })}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 rounded-[22px] border border-white/45 bg-white/40 p-1.5 shadow-inner backdrop-blur-xl">
+          <div className="flex max-w-full items-center gap-2 overflow-x-auto rounded-[22px] border border-white/55 bg-white/45 p-1.5 backdrop-blur-xl">
             {themes.map((item) => {
               const active = selectedTheme === item.id;
 
@@ -143,10 +156,10 @@ export const Topbar = ({
                   type="button"
                   onClick={() => handleThemeClick(item.id)}
                   className={[
-                    "rounded-[18px] px-3.5 py-2 text-sm font-semibold transition",
+                    "shrink-0 rounded-[18px] px-3.5 py-2 text-sm font-bold transition",
                     active
-                      ? "bg-white text-slate-950 shadow-md"
-                      : "text-slate-600 hover:bg-white/70 hover:text-slate-900",
+                      ? "bg-white text-slate-950 shadow-[0_8px_20px_rgba(15,23,42,0.12)]"
+                      : "text-slate-600 hover:bg-white/80 hover:text-slate-950",
                   ].join(" ")}
                 >
                   {item.label}
@@ -157,15 +170,25 @@ export const Topbar = ({
 
           <button
             type="button"
+            onClick={handleSettingsClick}
+            className="flex shrink-0 items-center gap-2 rounded-[20px] border border-white/60 bg-white/55 px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-white"
+          >
+            <Settings size={18} />
+            Settings
+          </button>
+
+          <button
+            type="button"
             onClick={handleEditClick}
             className={[
-              "rounded-[20px] border px-4 py-2.5 text-sm font-bold shadow-sm transition",
+              "flex shrink-0 items-center gap-2 rounded-[20px] border px-4 py-2.5 text-sm font-bold shadow-sm transition",
               editing
-                ? "border-rose-200 bg-rose-100/80 text-rose-700 hover:bg-rose-100"
-                : "border-white/50 bg-white/60 text-slate-800 hover:bg-white",
+                ? "border-rose-200 bg-rose-100/90 text-rose-700"
+                : "border-white/60 bg-white/55 text-slate-700 hover:bg-white",
             ].join(" ")}
           >
-            {editing ? "Done" : "Edit Layout"}
+            <Grid2X2 size={18} />
+            {editing ? "Done" : "Edit"}
           </button>
         </div>
       </div>
