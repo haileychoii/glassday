@@ -7,6 +7,7 @@ import type {
   GridLayoutItem,
   Layouts,
   WidgetId,
+  WidgetMeta,
 } from "../../types/workspace";
 
 import { TodayFocusWidget } from "../widgets/TodayFocusWidget";
@@ -29,6 +30,8 @@ import "react-resizable/css/styles.css";
 const ResponsiveGridLayout = Responsive as unknown as ComponentType<
   Record<string, unknown>
 >;
+
+const safeWidgetRegistry = widgetRegistry as Record<string, WidgetMeta>;
 
 type Breakpoint = "lg" | "md" | "sm";
 
@@ -214,7 +217,7 @@ export const DashboardGrid = ({
   onRemoveWidget,
   onEditValidationChange,
 }: DashboardGridProps) => {
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const gridWidthRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(1200);
   const [currentBreakpoint, setCurrentBreakpoint] =
     useState<Breakpoint>("lg");
@@ -225,17 +228,19 @@ export const DashboardGrid = ({
   const isMobileGrid = width < 768;
 
   useEffect(() => {
-    if (!wrapperRef.current) return;
+    if (!gridWidthRef.current) return;
 
     const updateWidth = () => {
-      if (!wrapperRef.current) return;
-      setWidth(Math.max(320, wrapperRef.current.offsetWidth));
+      if (!gridWidthRef.current) return;
+
+      const nextWidth = gridWidthRef.current.getBoundingClientRect().width;
+      setWidth(Math.max(280, Math.floor(nextWidth)));
     };
 
     updateWidth();
 
     const observer = new ResizeObserver(updateWidth);
-    observer.observe(wrapperRef.current);
+    observer.observe(gridWidthRef.current);
     window.addEventListener("resize", updateWidth);
 
     return () => {
@@ -294,7 +299,6 @@ export const DashboardGrid = ({
 
   return (
     <div
-      ref={wrapperRef}
       className={["dashboard-tab-space", editMode ? "is-editing" : ""]
         .filter(Boolean)
         .join(" ")}
@@ -336,7 +340,7 @@ export const DashboardGrid = ({
 
           <div className="flex flex-wrap gap-2">
             {hiddenWidgetIds.map((widgetId) => {
-              const widget = widgetRegistry[widgetId];
+              const widget = safeWidgetRegistry[widgetId];
 
               return (
                 <button
@@ -361,7 +365,7 @@ export const DashboardGrid = ({
         </div>
       )}
 
-      <div className="dashboard-edit-canvas">
+      <div ref={gridWidthRef} className="dashboard-edit-canvas">
         <ResponsiveGridLayout
           className="layout"
           layouts={responsiveLayouts}
@@ -392,7 +396,7 @@ export const DashboardGrid = ({
           {activeWidgetIds.map((widgetId) => {
             const isSelected = selectedWidgetId === widgetId;
             const isColliding = collidingSet.has(widgetId);
-            const widget = widgetRegistry[widgetId];
+            const widget = safeWidgetRegistry[widgetId];
 
             return (
               <div
