@@ -804,3 +804,499 @@
     padding: 16px;
   }
 }
+
+/* =========================================================
+   Career floating window
+========================================================= */
+
+.career-floating-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  pointer-events: none;
+}
+
+.career-floating-window {
+  position: fixed;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 560px;
+  min-height: 520px;
+  border-radius: 30px;
+  overflow: hidden;
+  pointer-events: auto;
+  background:
+    linear-gradient(145deg, hsl(0 0% 100% / 0.72), hsl(0 0% 100% / 0.38));
+  border: 1px solid hsl(0 0% 100% / 0.68);
+  box-shadow:
+    0 36px 110px hsl(240 40% 20% / 0.22),
+    inset 0 1px 0 hsl(0 0% 100% / 0.82);
+  backdrop-filter: blur(34px) saturate(165%);
+  -webkit-backdrop-filter: blur(34px) saturate(165%);
+}
+
+.career-floating-titlebar {
+  min-height: 72px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: grab;
+  user-select: none;
+  border-bottom: 1px solid hsl(0 0% 100% / 0.42);
+  background:
+    linear-gradient(180deg, hsl(0 0% 100% / 0.42), hsl(0 0% 100% / 0.16));
+}
+
+.career-floating-titlebar:active {
+  cursor: grabbing;
+}
+
+.career-floating-title {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.career-modal-kicker {
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.76);
+}
+
+.career-floating-title h2 {
+  margin: 2px 0 0;
+  max-width: 420px;
+  font-size: 19px;
+  font-weight: 850;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.career-floating-body {
+  min-height: 0;
+  padding: 18px;
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  gap: 16px;
+}
+
+.career-window-resize-handle {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 22px;
+  height: 22px;
+  cursor: nwse-resize;
+  border-radius: 8px;
+  background:
+    linear-gradient(
+      135deg,
+      transparent 0 35%,
+      hsl(var(--foreground) / 0.18) 35% 42%,
+      transparent 42% 55%,
+      hsl(var(--foreground) / 0.18) 55% 62%,
+      transparent 62%
+    );
+}
+
+.career-detail-section {
+  padding: 16px;
+  border-radius: 24px;
+  background:
+    linear-gradient(145deg, hsl(0 0% 100% / 0.38), hsl(0 0% 100% / 0.15));
+  border: 1px solid hsl(0 0% 100% / 0.48);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.58),
+    0 14px 32px hsl(240 30% 20% / 0.06);
+}
+
+.career-section-title {
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(var(--foreground) / 0.68);
+}
+
+.career-section-row {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.career-section-row .career-section-title {
+  margin-bottom: 0;
+}
+
+.career-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.career-field {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.career-field-wide {
+  grid-column: 1 / -1;
+}
+
+.career-field span {
+  font-size: 11px;
+  font-weight: 800;
+  color: hsl(var(--muted-foreground) / 0.82);
+}
+
+.career-field input,
+.career-field select,
+.career-field textarea,
+.career-stage-row input,
+.career-stage-row select,
+.career-cl-item input,
+.career-cl-item select,
+.career-cl-item textarea,
+.career-link-row input,
+.career-review-header input,
+.career-review-item textarea {
+  width: 100%;
+  min-width: 0;
+  border-radius: 16px;
+  border: 1px solid hsl(0 0% 100% / 0.46);
+  background: hsl(0 0% 100% / 0.28);
+  padding: 10px 12px;
+  font-size: 12px;
+  outline: none;
+}
+
+.career-textarea {
+  min-height: 96px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.career-notes-textarea {
+  min-height: 140px;
+}
+
+.career-sync-note,
+.career-window-preview {
+  margin-bottom: 12px;
+  padding: 11px 12px;
+  border-radius: 18px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: hsl(var(--foreground) / 0.68);
+  background: hsl(0 0% 100% / 0.22);
+  border: 1px solid hsl(0 0% 100% / 0.38);
+}
+
+.career-window-preview {
+  margin-top: 12px;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.career-stage-list,
+.career-cl-list,
+.career-link-list,
+.career-review-list {
+  display: grid;
+  gap: 10px;
+}
+
+.career-stage-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) 120px 150px 36px;
+  gap: 8px;
+  align-items: center;
+}
+
+.career-cl-item,
+.career-review-item {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 20px;
+  background: hsl(0 0% 100% / 0.2);
+  border: 1px solid hsl(0 0% 100% / 0.34);
+}
+
+.career-cl-header,
+.career-review-header {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 120px 36px;
+  gap: 8px;
+  align-items: center;
+}
+
+.career-cl-header {
+  grid-template-columns: 24px 140px 36px;
+}
+
+.career-link-row {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 0.8fr) minmax(0, 1.4fr) 36px 36px;
+  gap: 8px;
+  align-items: center;
+}
+
+.career-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.career-small-button,
+.career-icon-button,
+.career-delete-button,
+.career-danger-button {
+  border-radius: 999px;
+  border: 1px solid hsl(0 0% 100% / 0.46);
+  background: hsl(0 0% 100% / 0.28);
+  color: hsl(var(--foreground) / 0.78);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.career-small-button {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.career-icon-button,
+.career-delete-button {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.career-danger-button {
+  height: 38px;
+  padding: 0 14px;
+  color: hsl(350 70% 44%);
+  background: hsl(350 100% 96% / 0.58);
+  border-color: hsl(350 80% 82% / 0.62);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.career-detail-danger-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .career-floating-layer {
+    pointer-events: auto;
+    background: hsl(240 30% 10% / 0.16);
+  }
+
+  .career-floating-window {
+    left: 12px !important;
+    top: 12px !important;
+    width: calc(100vw - 24px) !important;
+    height: calc(100vh - 24px) !important;
+    min-width: 0;
+    min-height: 0;
+    border-radius: 24px;
+  }
+
+  .career-floating-titlebar {
+    min-height: 68px;
+    padding: 14px;
+  }
+
+  .career-floating-title h2 {
+    max-width: 180px;
+    font-size: 16px;
+  }
+
+  .career-floating-body {
+    padding: 14px;
+  }
+
+  .career-detail-grid,
+  .career-stage-row,
+  .career-link-row,
+  .career-review-header {
+    grid-template-columns: 1fr;
+  }
+
+  .career-cl-header {
+    grid-template-columns: 24px 1fr 36px;
+  }
+
+  .career-window-resize-handle {
+    display: none;
+  }
+}
+
+/* =========================================================
+   Career Cover Letter — wide horizontal editor
+========================================================= */
+
+.career-cover-section {
+  min-width: 0 !important;
+}
+
+.career-section-subtitle {
+  margin: 4px 0 0;
+  font-size: 11px;
+  font-weight: 650;
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+.career-cover-wide-list {
+  width: 100% !important;
+  display: grid !important;
+  gap: 12px !important;
+}
+
+.career-cover-wide-row {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 10px !important;
+  padding: 12px !important;
+  border-radius: 20px !important;
+  background: hsl(0 0% 100% / 0.2) !important;
+  border: 1px solid hsl(0 0% 100% / 0.36) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.48),
+    0 10px 26px hsl(240 30% 20% / 0.05) !important;
+}
+
+.career-cover-question-line {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: 24px minmax(0, 1fr) 120px 36px !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.career-cover-icon {
+  width: 16px !important;
+  height: 16px !important;
+  color: hsl(var(--foreground) / 0.68) !important;
+}
+
+.career-cover-question-input {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 42px !important;
+  padding: 0 13px !important;
+  border-radius: 14px !important;
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  line-height: 1.2 !important;
+}
+
+.career-cover-status-select {
+  width: 120px !important;
+  min-width: 120px !important;
+  height: 42px !important;
+  padding: 0 10px !important;
+  border-radius: 14px !important;
+  font-size: 12px !important;
+  font-weight: 750 !important;
+}
+
+.career-cover-writing-line {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 10px !important;
+}
+
+.career-cover-writing-line label {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 6px !important;
+}
+
+.career-cover-writing-line label span {
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  color: hsl(var(--muted-foreground) / 0.78) !important;
+}
+
+.career-cover-answer-textarea,
+.career-cover-strategy-textarea {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 96px !important;
+  resize: vertical !important;
+  padding: 11px 12px !important;
+  border-radius: 16px !important;
+  font-size: 12px !important;
+  line-height: 1.55 !important;
+}
+
+/* 기존 좁은 career-cl 스타일이 남아 있어도 무력화 */
+.career-cl-header {
+  grid-template-columns: 24px minmax(0, 1fr) 36px !important;
+}
+
+.career-cl-header input {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Pixel Desk에서도 질문칸 넓게 유지 */
+html[data-theme="pixel-desk"] .career-cover-wide-row,
+body[data-theme="pixel-desk"] .career-cover-wide-row,
+html.theme-pixel-desk .career-cover-wide-row,
+body.theme-pixel-desk .career-cover-wide-row {
+  border-radius: 0 !important;
+}
+
+html[data-theme="pixel-desk"] .career-cover-question-input,
+html[data-theme="pixel-desk"] .career-cover-status-select,
+html[data-theme="pixel-desk"] .career-cover-answer-textarea,
+html[data-theme="pixel-desk"] .career-cover-strategy-textarea,
+body[data-theme="pixel-desk"] .career-cover-question-input,
+body[data-theme="pixel-desk"] .career-cover-status-select,
+body[data-theme="pixel-desk"] .career-cover-answer-textarea,
+body[data-theme="pixel-desk"] .career-cover-strategy-textarea {
+  border-radius: 0 !important;
+}
+
+/* 모바일은 너무 좁으니까 세로 전환 */
+@media (max-width: 768px) {
+  .career-cover-question-line {
+    grid-template-columns: 22px minmax(0, 1fr) 36px !important;
+  }
+
+  .career-cover-status-select {
+    grid-column: 2 / -1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .career-cover-writing-line {
+    grid-template-columns: 1fr !important;
+  }
+}

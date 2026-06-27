@@ -1653,3 +1653,131 @@ body.theme-mac-core .floating-window {
     padding: 22px 20px 34px !important;
   }
 }
+
+/* =========================================================
+   Mac Core fix
+   - Workspace HOME header hide
+   - widget/grid width normalize
+========================================================= */
+
+/* Mac Core에서도 Workspace HOME 헤더 숨김 */
+html[data-theme="mac-core"] .dashboard-tab-header,
+body[data-theme="mac-core"] .dashboard-tab-header,
+html.theme-mac-core .dashboard-tab-header,
+body.theme-mac-core .dashboard-tab-header,
+html.theme-ios .dashboard-tab-header,
+body.theme-ios .dashboard-tab-header,
+html.mac-core .dashboard-tab-header,
+body.mac-core .dashboard-tab-header,
+html.ios .dashboard-tab-header,
+body.ios .dashboard-tab-header {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Mac Core만 위젯 너비 달라지는 것 방지 */
+html[data-theme="mac-core"] .dashboard-tab-space,
+body[data-theme="mac-core"] .dashboard-tab-space,
+html.theme-mac-core .dashboard-tab-space,
+body.theme-mac-core .dashboard-tab-space,
+html.theme-ios .dashboard-tab-space,
+body.theme-ios .dashboard-tab-space {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 28px 32px 40px !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+/* 실제 grid가 부모 너비 100%를 쓰게 */
+html[data-theme="mac-core"] .dashboard-edit-canvas,
+body[data-theme="mac-core"] .dashboard-edit-canvas,
+html.theme-mac-core .dashboard-edit-canvas,
+body.theme-mac-core .dashboard-edit-canvas,
+html.theme-ios .dashboard-edit-canvas,
+body.theme-ios .dashboard-edit-canvas,
+html[data-theme="mac-core"] .react-grid-layout,
+body[data-theme="mac-core"] .react-grid-layout,
+html.theme-mac-core .react-grid-layout,
+body.theme-mac-core .react-grid-layout,
+html.theme-ios .react-grid-layout,
+body.theme-ios .react-grid-layout {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 위젯 wrapper가 임의로 줄어드는 것 방지 */
+html[data-theme="mac-core"] .react-grid-item,
+body[data-theme="mac-core"] .react-grid-item,
+html.theme-mac-core .react-grid-item,
+body.theme-mac-core .react-grid-item,
+html.theme-ios .react-grid-item,
+body.theme-ios .react-grid-item,
+html[data-theme="mac-core"] .dashboard-grid-item,
+body[data-theme="mac-core"] .dashboard-grid-item,
+html.theme-mac-core .dashboard-grid-item,
+body.theme-mac-core .dashboard-grid-item,
+html.theme-ios .dashboard-grid-item,
+body.theme-ios .dashboard-grid-item,
+html[data-theme="mac-core"] .dashboard-grid-item-content,
+body[data-theme="mac-core"] .dashboard-grid-item-content,
+html.theme-mac-core .dashboard-grid-item-content,
+body.theme-mac-core .dashboard-grid-item-content,
+html.theme-ios .dashboard-grid-item-content,
+body.theme-ios .dashboard-grid-item-content {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 카드가 grid item 안을 꽉 채우게 */
+html[data-theme="mac-core"] .dashboard-grid-item > .glass-card,
+body[data-theme="mac-core"] .dashboard-grid-item > .glass-card,
+html.theme-mac-core .dashboard-grid-item > .glass-card,
+body.theme-mac-core .dashboard-grid-item > .glass-card,
+html.theme-ios .dashboard-grid-item > .glass-card,
+body.theme-ios .dashboard-grid-item > .glass-card,
+html[data-theme="mac-core"] .dashboard-grid-item-content > .glass-card,
+body[data-theme="mac-core"] .dashboard-grid-item-content > .glass-card,
+html.theme-mac-core .dashboard-grid-item-content > .glass-card,
+body.theme-mac-core .dashboard-grid-item-content > .glass-card,
+html.theme-ios .dashboard-grid-item-content > .glass-card,
+body.theme-ios .dashboard-grid-item-content > .glass-card {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+/* 모바일에서도 다른 테마랑 같은 padding */
+@media (max-width: 768px) {
+  html[data-theme="mac-core"] .dashboard-tab-space,
+  body[data-theme="mac-core"] .dashboard-tab-space,
+  html.theme-mac-core .dashboard-tab-space,
+  body.theme-mac-core .dashboard-tab-space,
+  html.theme-ios .dashboard-tab-space,
+  body.theme-ios .dashboard-tab-space {
+    padding: 22px 20px 32px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  html[data-theme="mac-core"] .dashboard-tab-space,
+  body[data-theme="mac-core"] .dashboard-tab-space,
+  html.theme-mac-core .dashboard-tab-space,
+  body.theme-mac-core .dashboard-tab-space,
+  html.theme-ios .dashboard-tab-space,
+  body.theme-ios .dashboard-tab-space {
+    padding: 20px 16px 30px !important;
+  }
+}

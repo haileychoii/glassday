@@ -4,6 +4,7 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
+  ExternalLink,
   Lock,
   Plus,
   Trash2,
@@ -14,7 +15,7 @@ import { GlassCard } from "../glass/GlassCard";
 import { cn } from "../../lib/utils";
 import { useDashboardData } from "../../context/DashboardDataContext";
 import type { CalendarEvent, CalendarView } from "../../types/dashboard";
-import { getRandomPastelEventColor } from "../../constants/colors";
+import { getEventColor, getPastelColorById } from "../../constants/colors";
 import { EventColorPicker } from "./calendar/EventColorPicker";
 import { MonthCalendar } from "./calendar/MonthCalendar";
 import { WeekTimeline } from "./calendar/WeekTimeline";
@@ -43,13 +44,20 @@ const formatHeaderLabel = (selectedDate: string, view: CalendarView) => {
   return selectedDate.slice(0, 7);
 };
 
+type DashboardDataWithCareerDetail = ReturnType<typeof useDashboardData> & {
+  openCareerDetail?: (id: string) => void;
+};
+
 export const CalendarWidget = () => {
+  const dashboardData = useDashboardData() as DashboardDataWithCareerDetail;
+
   const {
     calendarEvents,
     addCalendarEvent,
     updateCalendarEvent,
     removeCalendarEvent,
-  } = useDashboardData();
+    openCareerDetail,
+  } = dashboardData;
 
   const [view, setView] = useState<CalendarView>("day");
   const [selectedDate, setSelectedDate] = useState(toLocalDateInput());
@@ -60,7 +68,12 @@ export const CalendarWidget = () => {
     : null;
 
   const visibleEvents = useMemo(() => {
-    const sorted = sortEvents(calendarEvents);
+    const normalizedEvents = calendarEvents.map((event) => ({
+      ...event,
+      color: event.color || getPastelColorById(event.id),
+    }));
+
+    const sorted = sortEvents(normalizedEvents);
 
     if (view === "day") {
       return sorted.filter((event) => eventTouchesDate(event, selectedDate));
@@ -114,15 +127,17 @@ export const CalendarWidget = () => {
   };
 
   const createManualEvent = () => {
-    const newEvent = addCalendarEvent();
+    const eventId = `manual-${Date.now()}`;
 
-    updateCalendarEvent(newEvent.id, {
+    const newEvent = addCalendarEvent({
+      id: eventId,
+      title: "New Event",
       startDate: selectedDate,
       startTime: "09:00",
       endDate: selectedDate,
       endTime: "10:00",
       source: "manual",
-      color: getRandomPastelEventColor(),
+      color: getPastelColorById(eventId),
     });
 
     setEditingId(newEvent.id);
@@ -132,6 +147,30 @@ export const CalendarWidget = () => {
     if (!editingEvent) return;
 
     updateCalendarEvent(editingEvent.id, patch);
+  };
+
+  const openEvent = (event: CalendarEvent) => {
+    if (event.source === "career") {
+      const careerId = event.careerApplicationId ?? event.sourceId;
+
+      if (careerId && openCareerDetail) {
+        openCareerDetail(careerId);
+        return;
+      }
+    }
+
+    setEditingId(event.id);
+  };
+
+  const openCareerFromModal = () => {
+    if (!editingEvent || editingEvent.source !== "career") return;
+
+    const careerId = editingEvent.careerApplicationId ?? editingEvent.sourceId;
+
+    if (!careerId || !openCareerDetail) return;
+
+    setEditingId(null);
+    openCareerDetail(careerId);
   };
 
   return (
@@ -205,16 +244,20 @@ export const CalendarWidget = () => {
               events={visibleEvents}
               onSelectDate={(date) => {
                 setSelectedDate(date);
-                setView("day");
               }}
-              
+              onDateSelect={(date) => {
+                setSelectedDate(date);
+              }}
+              onEventClick={openEvent}
+              onSelectEvent={openEvent}
             />
           ) : view === "week" ? (
             <WeekTimeline
               selectedDate={selectedDate}
               events={visibleEvents}
               onSelectDate={setSelectedDate}
-              
+              onEventClick={openEvent}
+              onSelectEvent={openEvent}
             />
           ) : (
             <div className="calendar-event-list">
@@ -226,10 +269,10 @@ export const CalendarWidget = () => {
                 <button
                   key={event.id}
                   type="button"
-                  onClick={() => setEditingId(event.id)}
+                  onClick={() => openEvent(event)}
                   className="calendar-event-item"
                   style={{
-                    borderLeft: `6px solid ${event.color || "#DCEBFF"}aa`,
+                    borderLeft: `6px solid ${getEventColor(event)}aa`,
                   }}
                 >
                   <div className="min-w-0">
@@ -320,6 +363,17 @@ export const CalendarWidget = () => {
                   />
                 </label>
 
+                {editingEvent.source === "career" && openCareerDetail && (
+                  <button
+                    type="button"
+                    onClick={openCareerFromModal}
+                    className="calendar-open-career-button"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Open Career Detail
+                  </button>
+                )}
+
                 <div className="calendar-detail-grid">
                   <label className="calendar-field">
                     <span>Start Date</span>
@@ -391,7 +445,7 @@ export const CalendarWidget = () => {
                 <div className="calendar-field">
                   <span>Event Color</span>
                   <EventColorPicker
-                    value={editingEvent.color}
+                    value={editingEvent.color || getEventColor(editingEvent)}
                     onChange={(color) =>
                       updateEditingEvent({
                         color,

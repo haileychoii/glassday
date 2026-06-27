@@ -1,93 +1,69 @@
-export type CalendarSource = "manual" | "career";
-
 export type CalendarView = "day" | "week" | "month";
+
+export type GoogleSyncStatus = "not_synced" | "pending" | "synced" | "error";
+
+export type CalendarEventSource = "manual" | "career" | "study" | "system";
 
 export type CalendarEvent = {
   id: string;
   title: string;
-
   startDate: string;
   startTime: string;
   endDate: string;
   endTime: string;
-
   location: string;
   notes: string;
-
-  source: CalendarSource;
+  source: CalendarEventSource;
   sourceId?: string;
+  careerApplicationId?: string;
   color?: string;
   googleEventId?: string;
-  googleSyncStatus?: "not_synced" | "synced" | "pending";
+  googleSyncStatus?: GoogleSyncStatus;
 };
 
 export type CareerStatus =
+  | "Saved"
   | "Preparing"
-  | "Submitted"
-  | "Screening"
+  | "Applied"
   | "Interview"
   | "Offer"
-  | "Completed"
-  | "Rejected";
+  | "Rejected"
+  | "Completed";
 
 export type CareerPriority = "high" | "medium" | "low";
 
-export type CareerStageStatus =
-  | "not_started"
-  | "in_progress"
-  | "done"
-  | "passed"
-  | "failed"
-  | "waiting";
+export type CareerStageStatus = "todo" | "doing" | "done";
 
 export type CareerStage = {
   id: string;
   label: string;
   status: CareerStageStatus;
-  date: string;
-  memo: string;
+  date?: string;
+  notes?: string;
 };
 
-export type CoverLetterStatus =
-  | "not_started"
-  | "drafting"
-  | "reviewing"
-  | "done";
+export type CoverLetterStatus = "todo" | "drafting" | "done";
 
 export type CoverLetterItem = {
   id: string;
   question: string;
   status: CoverLetterStatus;
-  answer: string;
-  memo: string;
+  answer?: string;
+  strategy?: string;
+  memo?: string;
 };
 
-export type CareerAttachmentType =
-  | "resume"
-  | "cover_letter"
-  | "portfolio"
-  | "certificate"
-  | "job_posting"
-  | "other";
-
-export type CareerAttachment = {
+export type CareerAttachmentLink = {
   id: string;
   label: string;
   url: string;
-  type: CareerAttachmentType;
-  memo: string;
 };
 
-export type InterviewReview = {
+export type CareerInterviewReview = {
   id: string;
-  stageLabel: string;
-  date: string;
-  interviewer: string;
-  questions: string;
-  answers: string;
-  mood: string;
-  result: string;
-  reflection: string;
+  title: string;
+  date?: string;
+  notes: string;
 };
 
 export type CareerItem = {
@@ -95,13 +71,11 @@ export type CareerItem = {
   company: string;
   role: string;
   status: CareerStatus;
-
   priority?: CareerPriority;
   starred?: boolean;
 
   location: string;
   workType: string;
-
   deadline: string;
 
   applicationStartDate: string;
@@ -113,11 +87,16 @@ export type CareerItem = {
   jobDescription: string;
 
   coverLetterQuestions: string[];
-  stages?: CareerStage[];
   coverLetterItems?: CoverLetterItem[];
-  attachments?: CareerAttachment[];
-  interviewReviews?: InterviewReview[];
+
+  stages?: CareerStage[];
+  attachmentLinks?: CareerAttachmentLink[];
+  interviewReviews?: CareerInterviewReview[];
 
   result?: string;
   notes: string;
+  calendarColor?: string;
+
+  createdAt?: string;
+  updatedAt?: string;
 };

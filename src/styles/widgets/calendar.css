@@ -1258,3 +1258,319 @@
   color: transparent !important;
 }
 
+/* =========================================================
+   Month Calendar — thin range bars + hover preview
+========================================================= */
+
+.calendar-month-title-row {
+  display: none !important;
+}
+
+.calendar-month-board {
+  position: relative !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.calendar-month-weekdays {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.calendar-month-weekday {
+  font-size: 11px !important;
+  font-weight: 750 !important;
+  text-align: center !important;
+  color: hsl(var(--muted-foreground) / 0.74) !important;
+}
+
+.calendar-month-weeks {
+  display: grid !important;
+  gap: 8px !important;
+}
+
+.calendar-month-week-row {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  min-height: 112px !important;
+}
+
+.calendar-month-day-cell {
+  position: relative !important;
+  min-width: 0 !important;
+  min-height: 112px !important;
+  padding: 9px 8px 8px !important;
+  border-radius: 16px !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.22),
+      hsl(0 0% 100% / 0.1)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.38) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.42),
+    0 8px 22px hsl(250 40% 40% / 0.04) !important;
+}
+
+.calendar-month-day-cell.is-muted {
+  opacity: 0.42 !important;
+}
+
+.calendar-month-day-cell.is-today {
+  border-color: hsl(var(--primary) / 0.32) !important;
+}
+
+.calendar-month-day-cell.is-selected {
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.56),
+    0 0 0 1px hsl(var(--primary) / 0.28),
+    0 12px 26px hsl(var(--primary) / 0.1) !important;
+}
+
+.calendar-month-day-top {
+  position: relative !important;
+  z-index: 2 !important;
+  height: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 4px !important;
+  font-size: 11px !important;
+  font-weight: 750 !important;
+  color: hsl(var(--foreground) / 0.68) !important;
+}
+
+.calendar-month-count {
+  min-width: 17px !important;
+  height: 17px !important;
+  padding: 0 5px !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 9px !important;
+  font-weight: 850 !important;
+  color: hsl(var(--foreground) / 0.58) !important;
+  background: hsl(0 0% 100% / 0.32) !important;
+  border: 1px solid hsl(0 0% 100% / 0.42) !important;
+}
+
+/* range bar가 차지하는 줄 수만큼 single event를 아래로 내림 */
+.calendar-month-single-events {
+  position: relative !important;
+  z-index: 3 !important;
+  margin-top: calc((var(--range-lanes, 0) * 17px) + 7px) !important;
+  display: grid !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+}
+
+.calendar-month-single-chip {
+  width: 100% !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  padding: 0 7px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  display: block !important;
+  overflow: hidden !important;
+
+  font-size: 9px !important;
+  line-height: 18px !important;
+  font-weight: 750 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  color: hsl(246 28% 24% / 0.82) !important;
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.42),
+    0 4px 10px hsl(250 34% 34% / 0.05) !important;
+}
+
+.calendar-month-range-layer {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 32px !important;
+  z-index: 4 !important;
+
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  grid-auto-rows: 14px !important;
+  gap: 3px 8px !important;
+
+  pointer-events: none !important;
+}
+
+.calendar-range-chip {
+  height: 14px !important;
+  min-height: 14px !important;
+  padding: 0 7px !important;
+  border: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  pointer-events: auto !important;
+
+  font-size: 8.5px !important;
+  line-height: 14px !important;
+  font-weight: 800 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  color: hsl(246 30% 25% / 0.78) !important;
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.42),
+    0 4px 8px hsl(250 34% 34% / 0.045) !important;
+}
+
+.calendar-range-chip.is-start {
+  border-radius: 999px 0 0 999px !important;
+}
+
+.calendar-range-chip.is-middle {
+  border-radius: 0 !important;
+}
+
+.calendar-range-chip.is-end {
+  border-radius: 0 999px 999px 0 !important;
+}
+
+.calendar-range-chip.is-start-end {
+  border-radius: 999px !important;
+}
+
+/* Hover preview */
+.calendar-month-event-preview {
+  position: fixed !important;
+  z-index: 100000 !important;
+  width: 300px !important;
+  max-width: calc(100vw - 28px) !important;
+  padding: 14px 15px !important;
+  border-radius: 18px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.82),
+      hsl(0 0% 100% / 0.54)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.68) !important;
+  box-shadow:
+    0 22px 54px hsl(250 38% 24% / 0.16),
+    inset 0 1px 0 hsl(0 0% 100% / 0.74) !important;
+  backdrop-filter: blur(22px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
+
+  pointer-events: none !important;
+}
+
+.calendar-month-event-preview-title {
+  font-size: 14px !important;
+  line-height: 1.28 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.03em !important;
+  color: hsl(246 32% 18% / 0.94) !important;
+  margin-bottom: 7px !important;
+}
+
+.calendar-month-event-preview-time,
+.calendar-month-event-preview-line {
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+  font-weight: 700 !important;
+  color: hsl(246 18% 34% / 0.72) !important;
+}
+
+.calendar-month-event-preview-badge {
+  width: fit-content !important;
+  margin-top: 8px !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+  font-size: 10px !important;
+  font-weight: 850 !important;
+  color: hsl(258 42% 34% / 0.9) !important;
+  background: hsl(258 100% 94% / 0.72) !important;
+  border: 1px solid hsl(258 100% 88% / 0.7) !important;
+}
+
+.calendar-month-event-preview-notes {
+  margin-top: 8px !important;
+  max-height: 72px !important;
+  overflow: hidden !important;
+  font-size: 11px !important;
+  line-height: 1.45 !important;
+  color: hsl(246 18% 34% / 0.62) !important;
+}
+
+/* Pastel theme month calendar tone */
+html[data-theme="pastel"] .calendar-month-day-cell,
+body[data-theme="pastel"] .calendar-month-day-cell,
+html.theme-pastel .calendar-month-day-cell,
+body.theme-pastel .calendar-month-day-cell {
+  background:
+    linear-gradient(
+      135deg,
+      hsl(330 100% 98% / 0.34),
+      hsl(215 100% 98% / 0.3)
+    ) !important;
+  border-color: hsl(0 0% 100% / 0.46) !important;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .calendar-month-week-row,
+  .calendar-month-day-cell {
+    min-height: 94px !important;
+  }
+
+  .calendar-month-range-layer {
+    top: 30px !important;
+    grid-auto-rows: 12px !important;
+  }
+
+  .calendar-range-chip {
+    height: 12px !important;
+    min-height: 12px !important;
+    font-size: 0 !important;
+    padding: 0 4px !important;
+  }
+
+  .calendar-month-single-events {
+    margin-top: calc((var(--range-lanes, 0) * 15px) + 6px) !important;
+  }
+
+  .calendar-month-single-chip {
+    height: 16px !important;
+    min-height: 16px !important;
+    line-height: 16px !important;
+    font-size: 8px !important;
+  }
+}
+
+.calendar-open-career-button {
+  width: fit-content;
+  min-height: 36px;
+  padding: 0 13px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 850;
+  color: hsl(var(--foreground) / 0.82);
+  background: hsl(0 0% 100% / 0.28);
+  border: 1px solid hsl(0 0% 100% / 0.44);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.52),
+    0 10px 24px hsl(250 30% 24% / 0.06);
+}
