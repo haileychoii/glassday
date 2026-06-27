@@ -85,6 +85,11 @@ const normalizeCoverLetterItems = (
           : typeof item?.strategy === "string"
             ? item.strategy
             : "",
+      answerLimit:
+        typeof item?.answerLimit === "number" &&
+        Number.isFinite(item.answerLimit)
+          ? item.answerLimit
+          : undefined,
     }));
   }
 
@@ -95,6 +100,7 @@ const normalizeCoverLetterItems = (
     answer: "",
     strategy: "",
     memo: "",
+    answerLimit: undefined,
   }));
 };
 
@@ -195,6 +201,7 @@ const defaultApplications: CareerItem[] = [
         answer: "",
         strategy: "",
         memo: "",
+        answerLimit: undefined,
       },
       {
         id: createId(),
@@ -203,6 +210,7 @@ const defaultApplications: CareerItem[] = [
         answer: "",
         strategy: "",
         memo: "",
+        answerLimit: undefined,
       },
     ],
     stages: createDefaultStages(),
@@ -238,6 +246,7 @@ const defaultApplications: CareerItem[] = [
         answer: "",
         strategy: "",
         memo: "",
+        answerLimit: undefined,
       },
       {
         id: createId(),
@@ -246,6 +255,7 @@ const defaultApplications: CareerItem[] = [
         answer: "",
         strategy: "",
         memo: "",
+        answerLimit: undefined,
       },
     ],
     stages: createDefaultStages(),
@@ -260,7 +270,7 @@ const defaultApplications: CareerItem[] = [
 const normalizeCareerItem = (item: Partial<CareerItem>): CareerItem => {
   const coverLetterQuestions = normalizeStringArray(item.coverLetterQuestions);
 
-  const normalized: CareerItem = {
+  return {
     id: item.id ?? createId(),
     company: item.company ?? "New Company",
     role: item.role ?? "New Position",
@@ -297,8 +307,6 @@ const normalizeCareerItem = (item: Partial<CareerItem>): CareerItem => {
     createdAt: item.createdAt ?? new Date().toISOString(),
     updatedAt: item.updatedAt ?? new Date().toISOString(),
   };
-
-  return normalized;
 };
 
 const createCareerCalendarEvent = (career: CareerItem): CalendarEvent | null => {
@@ -581,8 +589,7 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
     const updatedCareer = normalizeCareerItem({
       ...current,
       ...patch,
-      deadline:
-        patch.applicationEndDate ?? patch.deadline ?? current.deadline,
+      deadline: patch.applicationEndDate ?? patch.deadline ?? current.deadline,
       calendarColor:
         patch.calendarColor ??
         current.calendarColor ??

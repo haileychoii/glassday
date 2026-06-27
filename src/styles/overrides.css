@@ -411,3 +411,42 @@ body,
     padding-inline: 0 !important;
   }
 }
+
+/* =========================================================
+   Mobile Topbar: hide long theme segmented buttons
+   모바일에서는 테마 버튼 묶음 숨기고 select만 사용
+========================================================= */
+
+@media (max-width: 768px) {
+  .topbar .theme-segmented-control,
+  .topbar .theme-tabs,
+  .topbar .theme-button-group,
+  .topbar .theme-pill-group {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    max-width: 0 !important;
+    min-width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* 모바일에서는 select만 보이게 */
+  .topbar select,
+  .topbar .theme-mobile-select,
+  .topbar .theme-select {
+    display: inline-flex !important;
+    visibility: visible !important;
+    width: auto !important;
+    min-width: 118px !important;
+    max-width: 150px !important;
+    height: 34px !important;
+  }
+
+  .topbar-actions {
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+  }
+}

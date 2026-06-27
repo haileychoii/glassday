@@ -1296,13 +1296,13 @@
   display: grid !important;
   grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
   gap: 8px !important;
-  min-height: 112px !important;
+  min-height: 80px !important;
 }
 
 .calendar-month-day-cell {
   position: relative !important;
   min-width: 0 !important;
-  min-height: 112px !important;
+  min-height: 80px !important;
   padding: 9px 8px 8px !important;
   border-radius: 16px !important;
   cursor: pointer !important;
@@ -1557,20 +1557,815 @@ body.theme-pastel .calendar-month-day-cell {
   }
 }
 
-.calendar-open-career-button {
-  width: fit-content;
-  min-height: 36px;
-  padding: 0 13px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  font-weight: 850;
-  color: hsl(var(--foreground) / 0.82);
-  background: hsl(0 0% 100% / 0.28);
-  border: 1px solid hsl(0 0% 100% / 0.44);
+/* =========================================================
+   Calendar view toggle + event readability fix
+   Day / Week / Month 검정 pill 제거 + 글자 선명하게
+========================================================= */
+
+/* Day / Week / Month 전체 토글 바 */
+.calendar-view-toggle {
+  height: 36px !important;
+  padding: 4px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+
+  border-radius: 999px !important;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.44),
+      hsl(0 0% 100% / 0.2)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.52) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.72),
+    0 10px 24px hsl(245 35% 35% / 0.08) !important;
+  backdrop-filter: blur(18px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(145%) !important;
+}
+
+/* Day / Week / Month 버튼 기본 */
+.calendar-view-button {
+  height: 28px !important;
+  min-width: 58px !important;
+  padding: 0 13px !important;
+  border-radius: 999px !important;
+
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+
+  color: hsl(246 22% 28% / 0.68) !important;
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* 선택된 Day */
+.calendar-view-button.is-active {
+  color: hsl(246 28% 18% / 0.95) !important;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.92),
+      hsl(0 0% 100% / 0.62)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.7) !important;
+  box-shadow:
+    0 8px 18px hsl(245 35% 35% / 0.1),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
+}
+
+/* hover */
+.calendar-view-button:hover {
+  color: hsl(246 28% 18% / 0.88) !important;
+  background: hsl(0 0% 100% / 0.32) !important;
+}
+
+/* 캘린더 날짜 라벨 */
+.calendar-current-label {
+  color: hsl(246 22% 28% / 0.78) !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* 날짜 input / nav 버튼 글자 선명하게 */
+.calendar-date-input,
+.calendar-nav-button {
+  color: hsl(246 24% 22% / 0.86) !important;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.46),
+      hsl(0 0% 100% / 0.22)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.5) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.62),
+    0 8px 20px hsl(245 35% 35% / 0.06) !important;
+}
+
+/* Day view 이벤트 카드 */
+.calendar-event-item {
+  color: hsl(246 24% 20% / 0.88) !important;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.34),
+      hsl(0 0% 100% / 0.14)
+    ) !important;
+  border: 1px solid hsl(0 0% 100% / 0.38) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.44),
+    0 10px 26px hsl(245 35% 35% / 0.055) !important;
+}
+
+/* 이벤트 제목 */
+.calendar-event-title {
+  color: hsl(246 28% 18% / 0.88) !important;
+  font-weight: 850 !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* 이벤트 시간 */
+.calendar-event-time {
+  color: hsl(246 18% 34% / 0.68) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+/* 이벤트 장소 */
+.calendar-event-location {
+  color: hsl(246 16% 38% / 0.62) !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+}
+
+/* Career badge */
+.calendar-career-badge {
+  color: hsl(258 42% 38% / 0.9) !important;
+  background: hsl(258 100% 94% / 0.78) !important;
+  border: 1px solid hsl(258 100% 86% / 0.74) !important;
+  font-weight: 850 !important;
+}
+
+/* Pastel에서 더 예쁘게 */
+html[data-theme="pastel"] .calendar-view-toggle,
+body[data-theme="pastel"] .calendar-view-toggle,
+html.theme-pastel .calendar-view-toggle,
+body.theme-pastel .calendar-view-toggle {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(330 100% 98% / 0.64),
+      hsl(215 100% 98% / 0.34)
+    ) !important;
+  border-color: hsl(0 0% 100% / 0.58) !important;
+}
+
+html[data-theme="pastel"] .calendar-view-button.is-active,
+body[data-theme="pastel"] .calendar-view-button.is-active,
+html.theme-pastel .calendar-view-button.is-active,
+body.theme-pastel .calendar-view-button.is-active {
+  background:
+    linear-gradient(
+      135deg,
+      hsl(0 0% 100% / 0.92),
+      hsl(330 100% 97% / 0.66)
+    ) !important;
+  color: hsl(246 28% 18% / 0.94) !important;
+}
+
+/* Glass에서도 검정 pill 방지 */
+html[data-theme="glass"] .calendar-view-toggle,
+body[data-theme="glass"] .calendar-view-toggle,
+html.theme-glass .calendar-view-toggle,
+body.theme-glass .calendar-view-toggle {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.38),
+      hsl(0 0% 100% / 0.16)
+    ) !important;
+  border-color: hsl(0 0% 100% / 0.46) !important;
+}
+
+html[data-theme="glass"] .calendar-view-button,
+body[data-theme="glass"] .calendar-view-button,
+html.theme-glass .calendar-view-button,
+body.theme-glass .calendar-view-button {
+  color: hsl(248 28% 18% / 0.68) !important;
+}
+
+html[data-theme="glass"] .calendar-view-button.is-active,
+body[data-theme="glass"] .calendar-view-button.is-active,
+html.theme-glass .calendar-view-button.is-active,
+body.theme-glass .calendar-view-button.is-active {
+  color: hsl(248 30% 16% / 0.94) !important;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(0 0% 100% / 0.8),
+      hsl(270 100% 96% / 0.48)
+    ) !important;
+}
+
+/* =========================================================
+   Month Calendar — thinner soft range bars
+   연속 일정 막대 얇게 + 단일 일정이 위에 올라오게
+========================================================= */
+
+/* 주 row 높이는 유지하되 range bar가 차지하는 높이만 줄임 */
+.calendar-month-week-row {
+  min-height: 112px !important;
+}
+
+/* 단일/당일 일정은 range bar보다 위 */
+.calendar-month-single-events {
+  position: relative !important;
+  z-index: 8 !important;
+  margin-top: calc((var(--range-lanes, 0) * 12px) + 8px) !important;
+}
+
+/* range layer는 뒤로 */
+.calendar-month-range-layer {
+  top: 33px !important;
+  z-index: 3 !important;
+  grid-auto-rows: 9px !important;
+  gap: 3px 8px !important;
+  pointer-events: none !important;
+}
+
+/* 연속 일정 막대 자체를 훨씬 얇게 */
+.calendar-range-chip,
+.calendar-range-chip.is-soft-range {
+  height: 9px !important;
+  min-height: 9px !important;
+  max-height: 9px !important;
+
+  padding: 0 6px !important;
+  border: 0 !important;
+
+  font-size: 0 !important;
+  line-height: 9px !important;
+
+  opacity: 0.46 !important;
+  filter: saturate(0.92) brightness(1.04) !important;
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.38),
+    0 3px 7px hsl(250 34% 34% / 0.035) !important;
+
+  pointer-events: auto !important;
+}
+
+/* 제목은 hover 전에는 거의 안 보이게 */
+.calendar-range-chip {
+  color: transparent !important;
+}
+
+/* hover하면 막대가 살짝 선명해지고 제목이 보임 */
+.calendar-range-chip:hover {
+  height: 15px !important;
+  min-height: 15px !important;
+  max-height: 15px !important;
+
+  opacity: 0.9 !important;
+  z-index: 20 !important;
+
+  font-size: 9px !important;
+  line-height: 15px !important;
+  color: hsl(246 30% 22% / 0.84) !important;
+
+  filter: saturate(1.04) brightness(1.02) !important;
   box-shadow:
     inset 0 1px 0 hsl(0 0% 100% / 0.52),
-    0 10px 24px hsl(250 30% 24% / 0.06);
+    0 8px 16px hsl(250 34% 34% / 0.08) !important;
+}
+
+/* 단일 일정 칩은 확실히 위에 떠 보이게 */
+.calendar-month-single-chip {
+  position: relative !important;
+  z-index: 12 !important;
+
+  height: 18px !important;
+  min-height: 18px !important;
+  line-height: 18px !important;
+
+  opacity: 0.96 !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.52),
+    0 5px 12px hsl(250 34% 34% / 0.075) !important;
+}
+
+/* 단일 일정 hover는 더 위로 */
+.calendar-month-single-chip:hover {
+  z-index: 30 !important;
+  transform: translateY(-1px) !important;
+  filter: saturate(1.06) brightness(1.02) !important;
+}
+
+/* 셀 내부 날짜/count는 가장 위쪽 */
+.calendar-month-day-top {
+  z-index: 14 !important;
+}
+
+/* range bar가 career여도 너무 진하게 나오지 않게 */
+.calendar-range-chip.is-career {
+  opacity: 0.42 !important;
+}
+
+/* career range hover 시만 선명하게 */
+.calendar-range-chip.is-career:hover {
+  opacity: 0.9 !important;
+}
+
+/* 여러 줄 range가 있어도 너무 공간 많이 안 먹게 */
+.calendar-month-single-events {
+  margin-top: calc((var(--range-lanes, 0) * 12px) + 7px) !important;
+}
+
+/* Pastel에서는 range가 배경색처럼 더 부드럽게 */
+html[data-theme="pastel"] .calendar-range-chip,
+body[data-theme="pastel"] .calendar-range-chip,
+html.theme-pastel .calendar-range-chip,
+body.theme-pastel .calendar-range-chip {
+  opacity: 0.4 !important;
+  filter: saturate(0.88) brightness(1.05) !important;
+}
+
+html[data-theme="pastel"] .calendar-range-chip:hover,
+body[data-theme="pastel"] .calendar-range-chip:hover,
+html.theme-pastel .calendar-range-chip:hover,
+body.theme-pastel .calendar-range-chip:hover {
+  opacity: 0.88 !important;
+  filter: saturate(1.04) brightness(1.02) !important;
+}
+
+/* 모바일은 더 얇게 */
+@media (max-width: 900px) {
+  .calendar-month-range-layer {
+    top: 31px !important;
+    grid-auto-rows: 7px !important;
+    gap: 2px 6px !important;
+  }
+
+  .calendar-range-chip,
+  .calendar-range-chip.is-soft-range {
+    height: 7px !important;
+    min-height: 7px !important;
+    max-height: 7px !important;
+    font-size: 0 !important;
+    line-height: 7px !important;
+    opacity: 0.42 !important;
+  }
+
+  .calendar-range-chip:hover {
+    height: 12px !important;
+    min-height: 12px !important;
+    max-height: 12px !important;
+    font-size: 8px !important;
+    line-height: 12px !important;
+  }
+
+  .calendar-month-single-events {
+    margin-top: calc((var(--range-lanes, 0) * 10px) + 6px) !important;
+  }
+}
+
+.calendar-range-chip.has-single-overlap {
+  opacity: 0.28 !important;
+  filter: saturate(0.76) brightness(1.08) !important;
+}
+
+.calendar-range-chip.has-single-overlap:hover {
+  opacity: 0.9 !important;
+  filter: saturate(1.04) brightness(1.02) !important;
+}
+
+/* =========================================================
+   FINAL FIX: Month calendar range overlap + Pixel event color
+========================================================= */
+
+/* week row 높이가 range lane 수만큼 늘어나게 */
+.calendar-month-week-row {
+  min-height: calc(106px + (var(--range-lanes, 0) * 12px)) !important;
+  height: auto !important;
+  align-items: stretch !important;
+}
+
+/* 각 날짜 셀도 week row 높이와 같이 늘어남 */
+.calendar-month-week-row > .calendar-month-day-cell {
+  min-height: calc(106px + (var(--range-lanes, 0) * 12px)) !important;
+  height: auto !important;
+}
+
+/* 연속 일정 레이어는 얇고 뒤쪽에 깔림 */
+.calendar-month-range-layer {
+  top: 34px !important;
+  z-index: 3 !important;
+  grid-auto-rows: 8px !important;
+  gap: 3px 8px !important;
+  pointer-events: none !important;
+}
+
+/* 연속 일정 막대: 얇게, 부드럽게, 반투명 */
+.calendar-range-chip {
+  height: 8px !important;
+  min-height: 8px !important;
+  max-height: 8px !important;
+  padding: 0 6px !important;
+
+  font-size: 0 !important;
+  line-height: 8px !important;
+
+  color: transparent !important;
+  opacity: 0.38 !important;
+
+  background: var(--event-color, hsl(248 100% 94% / 0.72)) !important;
+  border: 0 !important;
+
+  filter: saturate(0.86) brightness(1.06) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.38),
+    0 2px 6px hsl(250 34% 34% / 0.035) !important;
+
+  pointer-events: auto !important;
+}
+
+/* 단일/당일 일정은 연속 일정 위에 올라오게 */
+.calendar-month-single-events {
+  position: relative !important;
+  z-index: 10 !important;
+  margin-top: calc((var(--range-lanes, 0) * 11px) + 8px) !important;
+}
+
+/* 단일 일정 chip 색상도 CSS 변수로 강제 */
+.calendar-month-single-chip {
+  position: relative !important;
+  z-index: 12 !important;
+
+  background: var(--event-color, hsl(210 100% 94% / 0.82)) !important;
+
+  height: 18px !important;
+  min-height: 18px !important;
+  line-height: 18px !important;
+
+  opacity: 0.96 !important;
+  color: hsl(246 28% 20% / 0.82) !important;
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.52),
+    0 5px 12px hsl(250 34% 34% / 0.075) !important;
+}
+
+/* 연속 일정 hover하면 제목만 잠깐 보이게 */
+.calendar-range-chip:hover {
+  height: 15px !important;
+  min-height: 15px !important;
+  max-height: 15px !important;
+
+  z-index: 30 !important;
+  opacity: 0.9 !important;
+
+  font-size: 9px !important;
+  line-height: 15px !important;
+  color: hsl(246 30% 22% / 0.84) !important;
+
+  filter: saturate(1.04) brightness(1.02) !important;
+}
+
+/* 단일 일정 hover는 더 위로 */
+.calendar-month-single-chip:hover {
+  z-index: 40 !important;
+  transform: translateY(-1px) !important;
+  filter: saturate(1.06) brightness(1.02) !important;
+}
+
+/* 단일 일정과 겹치는 연속 일정은 더 뒤로 물러남 */
+.calendar-range-chip.has-single-overlap {
+  opacity: 0.24 !important;
+  filter: saturate(0.72) brightness(1.08) !important;
+}
+
+.calendar-range-chip.has-single-overlap:hover {
+  opacity: 0.9 !important;
+  filter: saturate(1.04) brightness(1.02) !important;
+}
+
+/* 날짜/카운트는 항상 위 */
+.calendar-month-day-top {
+  position: relative !important;
+  z-index: 14 !important;
+}
+
+/* Pixel Desk: 기존 button background !important를 이김 */
+.theme-pixel .calendar-range-chip,
+html[data-theme="pixel-desk"] .calendar-range-chip,
+body[data-theme="pixel-desk"] .calendar-range-chip,
+html.theme-pixel-desk .calendar-range-chip,
+body.theme-pixel-desk .calendar-range-chip {
+  background: var(--event-color, #fff3b0) !important;
+  opacity: 0.5 !important;
+  border-radius: 0 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #808080 !important;
+  border-bottom: 1px solid #808080 !important;
+  box-shadow: none !important;
+}
+
+/* Pixel Desk: 단일 일정도 색상 유지 */
+.theme-pixel .calendar-month-single-chip,
+html[data-theme="pixel-desk"] .calendar-month-single-chip,
+body[data-theme="pixel-desk"] .calendar-month-single-chip,
+html.theme-pixel-desk .calendar-month-single-chip,
+body.theme-pixel-desk .calendar-month-single-chip {
+  background: var(--event-color, #dcecff) !important;
+  color: #111111 !important;
+  border-radius: 0 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #808080 !important;
+  border-bottom: 1px solid #808080 !important;
+  box-shadow: none !important;
+}
+
+/* Pixel Desk hover */
+.theme-pixel .calendar-range-chip:hover,
+html[data-theme="pixel-desk"] .calendar-range-chip:hover,
+body[data-theme="pixel-desk"] .calendar-range-chip:hover,
+html.theme-pixel-desk .calendar-range-chip:hover,
+body.theme-pixel-desk .calendar-range-chip:hover {
+  opacity: 0.95 !important;
+  color: #111111 !important;
+  font-size: 9px !important;
+}
+
+/* 모바일에서는 더 얇게 */
+@media (max-width: 900px) {
+  .calendar-month-week-row {
+    min-height: calc(92px + (var(--range-lanes, 0) * 10px)) !important;
+  }
+
+  .calendar-month-week-row > .calendar-month-day-cell {
+    min-height: calc(92px + (var(--range-lanes, 0) * 10px)) !important;
+  }
+
+  .calendar-month-range-layer {
+    top: 31px !important;
+    grid-auto-rows: 7px !important;
+    gap: 2px 6px !important;
+  }
+
+  .calendar-range-chip {
+    height: 7px !important;
+    min-height: 7px !important;
+    max-height: 7px !important;
+  }
+
+  .calendar-month-single-events {
+    margin-top: calc((var(--range-lanes, 0) * 9px) + 6px) !important;
+  }
+}
+
+/* =========================================================
+   Career Cover Letter — editable question + answer limit
+========================================================= */
+
+.career-cover-section {
+  min-width: 0 !important;
+}
+
+.career-section-subtitle {
+  margin: 4px 0 0 !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+  color: hsl(var(--muted-foreground) / 0.72) !important;
+}
+
+.career-cover-wide-list {
+  width: 100% !important;
+  display: grid !important;
+  gap: 14px !important;
+}
+
+.career-cover-wide-row {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 12px !important;
+  padding: 14px !important;
+  border-radius: 20px !important;
+  background: hsl(0 0% 100% / 0.22) !important;
+  border: 1px solid hsl(0 0% 100% / 0.36) !important;
+}
+
+.career-cover-wide-row.is-over-limit {
+  border-color: hsl(350 82% 72% / 0.68) !important;
+  box-shadow: 0 10px 26px hsl(350 65% 48% / 0.08) !important;
+}
+
+.career-cover-question-line {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: 24px minmax(0, 1fr) 128px 104px 36px !important;
+  align-items: start !important;
+  gap: 10px !important;
+}
+
+.career-cover-icon {
+  width: 16px !important;
+  height: 16px !important;
+  margin-top: 13px !important;
+  color: hsl(var(--foreground) / 0.68) !important;
+}
+
+.career-cover-question-input {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 42px !important;
+  height: auto !important;
+  padding: 11px 13px !important;
+  border-radius: 14px !important;
+
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  line-height: 1.45 !important;
+
+  resize: none !important;
+  overflow: hidden !important;
+  white-space: pre-wrap !important;
+
+  color: hsl(var(--foreground) / 0.9) !important;
+  background: hsl(0 0% 100% / 0.38) !important;
+  border: 1px solid hsl(0 0% 100% / 0.46) !important;
+
+  field-sizing: content;
+}
+
+.career-cover-question-input:focus,
+.career-cover-answer-textarea:focus,
+.career-cover-strategy-textarea:focus,
+.career-cover-limit-field input:focus {
+  outline: none !important;
+  border-color: hsl(var(--primary) / 0.44) !important;
+  background: hsl(0 0% 100% / 0.54) !important;
+}
+
+.career-cover-status-select {
+  width: 128px !important;
+  min-width: 128px !important;
+  height: 42px !important;
+  padding: 0 12px !important;
+  border-radius: 14px !important;
+
+  font-size: 12px !important;
+  font-weight: 850 !important;
+
+  color: hsl(246 28% 18% / 0.92) !important;
+  background: hsl(0 0% 100% / 0.82) !important;
+  border: 1px solid hsl(0 0% 100% / 0.58) !important;
+}
+
+.career-cover-status-select option {
+  color: #241f35 !important;
+  background: #fff8fc !important;
+  font-weight: 750 !important;
+}
+
+.career-cover-status-select:focus {
+  outline: none !important;
+  color: hsl(246 28% 18% / 0.96) !important;
+  background: #ffffff !important;
+  border-color: hsl(var(--primary) / 0.42) !important;
+}
+
+.career-cover-limit-field {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 4px !important;
+}
+
+.career-cover-limit-field span {
+  font-size: 9px !important;
+  font-weight: 850 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: hsl(var(--muted-foreground) / 0.72) !important;
+}
+
+.career-cover-limit-field input {
+  width: 100% !important;
+  height: 42px !important;
+  padding: 0 10px !important;
+  border-radius: 14px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  color: hsl(var(--foreground) / 0.9) !important;
+  background: hsl(0 0% 100% / 0.38) !important;
+  border: 1px solid hsl(0 0% 100% / 0.46) !important;
+}
+
+.career-cover-writing-line {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+}
+
+.career-cover-writing-field {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 7px !important;
+}
+
+.career-cover-writing-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+}
+
+.career-cover-writing-header span {
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  color: hsl(var(--muted-foreground) / 0.78) !important;
+}
+
+.career-cover-writing-header strong {
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  color: hsl(var(--foreground) / 0.58) !important;
+}
+
+.career-cover-writing-header strong.is-over {
+  color: hsl(350 72% 46% / 0.95) !important;
+}
+
+.career-cover-answer-textarea,
+.career-cover-strategy-textarea {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  resize: none !important;
+  overflow: hidden !important;
+
+  padding: 12px 13px !important;
+  border-radius: 16px !important;
+
+  font-size: 12px !important;
+  line-height: 1.6 !important;
+  font-weight: 650 !important;
+
+  color: hsl(var(--foreground) / 0.88) !important;
+  background: hsl(0 0% 100% / 0.34) !important;
+  border: 1px solid hsl(0 0% 100% / 0.42) !important;
+
+  field-sizing: content;
+}
+
+.career-cover-answer-textarea {
+  min-height: 132px !important;
+}
+
+.career-cover-strategy-textarea {
+  min-height: 96px !important;
+}
+
+.career-cover-limit-warning {
+  margin-top: -2px !important;
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  color: hsl(350 72% 46% / 0.94) !important;
+}
+
+/* 기존 좁은 자소서 row 스타일 무력화 */
+.career-cl-header,
+.career-cl-item {
+  width: 100% !important;
+}
+
+.career-cl-header input {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Pixel Desk select 검정 방지 */
+html[data-theme="pixel-desk"] .career-cover-status-select,
+body[data-theme="pixel-desk"] .career-cover-status-select,
+html.theme-pixel-desk .career-cover-status-select,
+body.theme-pixel-desk .career-cover-status-select {
+  color: #111111 !important;
+  background: #ffffff !important;
+  border-radius: 0 !important;
+}
+
+html[data-theme="pixel-desk"] .career-cover-status-select option,
+body[data-theme="pixel-desk"] .career-cover-status-select option,
+html.theme-pixel-desk .career-cover-status-select option,
+body.theme-pixel-desk .career-cover-status-select option {
+  color: #111111 !important;
+  background: #ffffff !important;
+}
+
+@media (max-width: 768px) {
+  .career-cover-question-line {
+    grid-template-columns: 22px minmax(0, 1fr) 36px !important;
+  }
+
+  .career-cover-status-select,
+  .career-cover-limit-field {
+    grid-column: 2 / -1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .career-cover-limit-field input {
+    width: 100% !important;
+  }
 }

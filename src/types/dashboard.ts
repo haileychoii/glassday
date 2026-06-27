@@ -51,6 +51,7 @@ export type CoverLetterItem = {
   answer?: string;
   strategy?: string;
   memo?: string;
+  answerLimit?: number;
 };
 
 export type CareerAttachmentLink = {

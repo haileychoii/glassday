@@ -11,14 +11,16 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { PointerEvent as ReactPointerEvent } from "react";
+import type {
+  FormEvent as ReactFormEvent,
+  PointerEvent as ReactPointerEvent,
+} from "react";
 
 import { useDashboardData } from "../../context/DashboardDataContext";
 import type {
   CareerItem,
   CareerStatus,
   CoverLetterItem,
-  CoverLetterStatus,
 } from "../../types/dashboard";
 
 type CareerWindowState = {
@@ -45,24 +47,60 @@ const statusOptions: CareerStatus[] = [
   "Completed",
 ];
 
-const coverLetterStatusOptions: CoverLetterStatus[] = [
-  "todo",
-  "drafting",
-  "done",
-];
+
+const createCoverLetterId = () => {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+
+  return `cl-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+
+const countWithSpaces = (value = "") => {
+  return value.length;
+};
+
+const parseAnswerLimit = (value: string) => {
+  const trimmed = value.trim();
+
+  if (!trimmed) return undefined;
+
+  const parsed = Number(trimmed);
+
+  if (!Number.isFinite(parsed) || parsed < 0) return undefined;
+
+  return Math.floor(parsed);
+};
+
+const autoGrowTextarea = (element: HTMLTextAreaElement | null) => {
+  if (!element) return;
+
+  const minHeight = element.classList.contains("career-cover-question-input")
+    ? 76
+    : 42;
+
+  element.style.height = "auto";
+  element.style.height = `${Math.max(element.scrollHeight, minHeight)}px`;
+};
+
+const handleAutoGrowTextarea = (
+  event: ReactFormEvent<HTMLTextAreaElement>
+) => {
+  autoGrowTextarea(event.currentTarget);
+};
 
 const getInitialWindowState = (): CareerWindowState => {
   if (typeof window === "undefined") {
     return {
       x: 120,
       y: 80,
-      width: 920,
-      height: 760,
+      width: 960,
+      height: 780,
     };
   }
 
-  const width = Math.min(920, window.innerWidth - 32);
-  const height = Math.min(760, window.innerHeight - 32);
+  const width = Math.min(960, window.innerWidth - 32);
+  const height = Math.min(780, window.innerHeight - 32);
 
   return {
     x: Math.max(16, Math.round((window.innerWidth - width) / 2)),
@@ -75,8 +113,8 @@ const getInitialWindowState = (): CareerWindowState => {
 const clampWindow = (state: CareerWindowState): CareerWindowState => {
   if (typeof window === "undefined") return state;
 
-  const minWidth = Math.min(540, window.innerWidth - 24);
-  const minHeight = Math.min(520, window.innerHeight - 24);
+  const minWidth = Math.min(560, window.innerWidth - 24);
+  const minHeight = Math.min(540, window.innerHeight - 24);
 
   const width = Math.max(
     minWidth,
@@ -151,6 +189,7 @@ const normalizeCareer = (item: CareerItem): CareerItem => ({
   postingUrl: item.postingUrl ?? "",
   jobDescription: item.jobDescription ?? "",
   coverLetterQuestions: item.coverLetterQuestions ?? [],
+  coverLetterItems: item.coverLetterItems ?? [],
   notes: item.notes ?? "",
 });
 
@@ -170,14 +209,17 @@ const formatApplicationWindow = (item: CareerItem) => {
 export const CareerWidget = () => {
   const {
     careerApplications,
+    activeCareerDetailId,
+    openCareerDetail,
+    closeCareerDetail,
     addCareerApplication,
     updateCareerApplication,
     removeCareerApplication,
   } = useDashboardData();
 
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [optimisticSelectedItem, setOptimisticSelectedItem] =
     useState<CareerItem | null>(null);
+
   const [windowState, setWindowState] = useState<CareerWindowState>(() =>
     getInitialWindowState()
   );
@@ -190,20 +232,32 @@ export const CareerWidget = () => {
   );
 
   const selectedFromContext = useMemo(() => {
-    if (!selectedId) return null;
+    if (!activeCareerDetailId) return null;
 
-    return normalizedItems.find((item) => item.id === selectedId) ?? null;
-  }, [normalizedItems, selectedId]);
+    return (
+      normalizedItems.find((item) => item.id === activeCareerDetailId) ?? null
+    );
+  }, [normalizedItems, activeCareerDetailId]);
 
   const selectedItem =
     selectedFromContext ??
-    (optimisticSelectedItem?.id === selectedId ? optimisticSelectedItem : null);
+    (optimisticSelectedItem?.id === activeCareerDetailId
+      ? optimisticSelectedItem
+      : null);
 
   useEffect(() => {
     if (selectedFromContext) {
       setOptimisticSelectedItem(null);
     }
   }, [selectedFromContext]);
+
+  useEffect(() => {
+    window.requestAnimationFrame(() => {
+      document
+        .querySelectorAll<HTMLTextAreaElement>(".career-auto-textarea")
+        .forEach((textarea) => autoGrowTextarea(textarea));
+    });
+  }, [selectedItem?.id, selectedItem?.coverLetterItems]);
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
@@ -293,27 +347,29 @@ export const CareerWidget = () => {
   }, [normalizedItems]);
 
   const openCareerWindow = (item: CareerItem) => {
-    setSelectedId(item.id);
     setOptimisticSelectedItem(null);
     setWindowState(clampWindow(getInitialWindowState()));
+    openCareerDetail(item.id);
   };
 
   const addCareerItem = () => {
-    const next = normalizeCareer(addCareerApplication());
+    const next = normalizeCareer(
+      addCareerApplication({
+        company: "New Company",
+        role: "New Position",
+        status: "Preparing",
+        postingUrl: "",
+        jobDescription: "",
+        applicationStartTime: "09:00",
+        applicationEndTime: "23:59",
+        coverLetterItems: [],
+        coverLetterQuestions: [],
+      })
+    );
 
     setOptimisticSelectedItem(next);
-    setSelectedId(next.id);
     setWindowState(clampWindow(getInitialWindowState()));
-
-    updateCareerApplication(next.id, {
-      company: next.company || "New Company",
-      role: next.role || "New Position",
-      status: next.status || "Preparing",
-      postingUrl: next.postingUrl || "",
-      jobDescription: next.jobDescription || "",
-      applicationStartTime: next.applicationStartTime || "09:00",
-      applicationEndTime: next.applicationEndTime || "23:59",
-    });
+    openCareerDetail(next.id);
   };
 
   const updateSelectedItem = (patch: Partial<CareerItem>) => {
@@ -331,14 +387,31 @@ export const CareerWidget = () => {
   const deleteCareerItem = (id: string) => {
     removeCareerApplication(id);
 
-    if (selectedId === id) {
-      setSelectedId(null);
+    if (activeCareerDetailId === id) {
       setOptimisticSelectedItem(null);
+      closeCareerDetail();
     }
+  };
+
+  const closeWindow = () => {
+    setOptimisticSelectedItem(null);
+    closeCareerDetail();
   };
 
   const startWindowMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return;
+
+    const target = event.target as HTMLElement;
+
+    if (
+      target.closest("button") ||
+      target.closest("input") ||
+      target.closest("textarea") ||
+      target.closest("select") ||
+      target.closest("a")
+    ) {
+      return;
+    }
 
     dragRef.current = {
       type: "move",
@@ -365,90 +438,90 @@ export const CareerWidget = () => {
     document.body.style.cursor = "nwse-resize";
   };
 
-const getCoverLetterItems = (item: CareerItem): CoverLetterItem[] => {
-  if (item.coverLetterItems && item.coverLetterItems.length > 0) {
-    return item.coverLetterItems.map((coverItem) => ({
-      id: coverItem.id,
-      question: coverItem.question ?? "",
-      status: coverItem.status ?? "todo",
-      answer: coverItem.answer ?? "",
-      strategy: coverItem.strategy ?? coverItem.memo ?? "",
-      memo: coverItem.memo ?? coverItem.strategy ?? "",
-    }));
-  }
+  const getCoverLetterItems = (item: CareerItem): CoverLetterItem[] => {
+    if (item.coverLetterItems && item.coverLetterItems.length > 0) {
+      return item.coverLetterItems.map((coverItem) => ({
+        id: coverItem.id,
+        question: coverItem.question ?? "",
+        status: coverItem.status ?? "todo",
+        answer: coverItem.answer ?? "",
+        strategy: coverItem.strategy ?? coverItem.memo ?? "",
+        memo: coverItem.memo ?? coverItem.strategy ?? "",
+        answerLimit: coverItem.answerLimit,
+      }));
+    }
 
-  return (item.coverLetterQuestions ?? []).map((question, index) => ({
-    id: `legacy-question-${index}`,
-    question,
-    status: "todo",
-    answer: "",
-    strategy: "",
-    memo: "",
-  }));
-};
-
-const updateCoverLetterItem = (
-  itemId: string,
-  patch: Partial<CoverLetterItem>
-) => {
-  if (!selectedItem) return;
-
-  const currentItems = getCoverLetterItems(selectedItem);
-
-  const nextItems = currentItems.map((item) =>
-    item.id === itemId
-      ? {
-          ...item,
-          ...patch,
-          memo: patch.strategy ?? patch.memo ?? item.memo ?? "",
-        }
-      : item
-  );
-
-  updateSelectedItem({
-    coverLetterItems: nextItems,
-    coverLetterQuestions: nextItems.map((item) => item.question),
-  });
-};
-
-const addCoverLetterItem = () => {
-  if (!selectedItem) return;
-
-  const currentItems = getCoverLetterItems(selectedItem);
-
-  const nextItems: CoverLetterItem[] = [
-    ...currentItems,
-    {
-      id:
-        typeof crypto !== "undefined" && "randomUUID" in crypto
-          ? crypto.randomUUID()
-          : `cl-${Date.now()}`,
-      question: "",
+    return (item.coverLetterQuestions ?? []).map((question, index) => ({
+      id: `legacy-question-${index}`,
+      question,
       status: "todo",
       answer: "",
       strategy: "",
       memo: "",
-    },
-  ];
+      answerLimit: undefined,
+    }));
+  };
 
-  updateSelectedItem({
-    coverLetterItems: nextItems,
-    coverLetterQuestions: nextItems.map((item) => item.question),
-  });
-};
+  const updateCoverLetterItem = (
+    itemId: string,
+    patch: Partial<CoverLetterItem>
+  ) => {
+    if (!selectedItem) return;
 
-const removeCoverLetterItem = (itemId: string) => {
-  if (!selectedItem) return;
+    const currentItems = getCoverLetterItems(selectedItem);
 
-  const nextItems = getCoverLetterItems(selectedItem).filter(
-    (item) => item.id !== itemId
-  );
+    const nextItems = currentItems.map((item) =>
+      item.id === itemId
+        ? {
+            ...item,
+            ...patch,
+            memo: patch.strategy ?? patch.memo ?? item.memo ?? "",
+          }
+        : item
+    );
 
-  updateSelectedItem({
-    coverLetterItems: nextItems,
-    coverLetterQuestions: nextItems.map((item) => item.question),
-  });
-};
+    updateSelectedItem({
+      coverLetterItems: nextItems,
+      coverLetterQuestions: nextItems.map((item) => item.question),
+    });
+  };
+
+  const addCoverLetterItem = () => {
+    if (!selectedItem) return;
+
+    const currentItems = getCoverLetterItems(selectedItem);
+
+    const nextItems: CoverLetterItem[] = [
+      ...currentItems,
+      {
+        id: createCoverLetterId(),
+        question: "",
+        status: "todo",
+        answer: "",
+        strategy: "",
+        memo: "",
+        answerLimit: undefined,
+      },
+    ];
+
+    updateSelectedItem({
+      coverLetterItems: nextItems,
+      coverLetterQuestions: nextItems.map((item) => item.question),
+    });
+  };
+
+  const removeCoverLetterItem = (itemId: string) => {
+    if (!selectedItem) return;
+
+    const nextItems = getCoverLetterItems(selectedItem).filter(
+      (item) => item.id !== itemId
+    );
+
+    updateSelectedItem({
+      coverLetterItems: nextItems,
+      coverLetterQuestions: nextItems.map((item) => item.question),
+    });
+  };
 
   return (
     <>
@@ -502,6 +575,10 @@ const removeCoverLetterItem = (itemId: string) => {
           ) : (
             sortedItems.map((item) => {
               const ddayTone = getDdayTone(item.deadline);
+              const coverLetterCount =
+                item.coverLetterItems?.length ??
+                item.coverLetterQuestions?.length ??
+                0;
 
               return (
                 <article
@@ -540,7 +617,7 @@ const removeCoverLetterItem = (itemId: string) => {
 
                       <span>
                         <FileText className="w-3 h-3" />
-                        CL {(item.coverLetterQuestions ?? []).length}
+                        CL {coverLetterCount}
                       </span>
 
                       <span>
@@ -594,8 +671,8 @@ const removeCoverLetterItem = (itemId: string) => {
                 top: windowState.y,
                 width: windowState.width,
                 height: windowState.height,
-                minWidth: 540,
-                minHeight: 520,
+                minWidth: 560,
+                minHeight: 540,
                 display: "grid",
                 gridTemplateRows: "auto minmax(0, 1fr)",
                 overflow: "hidden",
@@ -646,10 +723,7 @@ const removeCoverLetterItem = (itemId: string) => {
 
                   <button
                     type="button"
-                    onClick={() => {
-                      setSelectedId(null);
-                      setOptimisticSelectedItem(null);
-                    }}
+                    onClick={closeWindow}
                     className="career-icon-button"
                   >
                     <X className="w-4 h-4" />
@@ -859,102 +933,157 @@ const removeCoverLetterItem = (itemId: string) => {
 
                 <section className="career-detail-section career-cover-section">
                   <div className="career-section-row">
-                    <div>
-                      <div className="career-section-title">Cover Letter Questions</div>
-                        <p className="career-section-subtitle">
-                          질문은 가로로 길게 보고, 답변과 전략은 바로 아래에서 작성.
-                        </p>
-                      </div>
+    <div>
+      <div className="career-section-title">
+        Cover Letter Questions
+      </div>
+      <p className="career-section-subtitle">
+        질문을 누르면 바로 수정 가능 · 답변은 공백 포함 글자수 기준
+      </p>
+    </div>
 
-                      <button
-                        type="button"
-                        onClick={addCoverLetterItem}
-                        className="career-small-button"
-                      >
-                      <Plus className="w-3.5 h-3.5" />
-                        Add Question
-                      </button>
-                    </div>
+    <button
+      type="button"
+      onClick={addCoverLetterItem}
+      className="career-small-button"
+    >
+      <Plus className="w-3.5 h-3.5" />
+      Add Question
+    </button>
+  </div>
 
-                    <div className="career-cover-wide-list">
-                      {getCoverLetterItems(selectedItem).length === 0 ? (
-                        <div className="career-empty-box">
-                          아직 자소서 문항이 없어.
-                        </div>
-                    ) : (
-                        getCoverLetterItems(selectedItem).map((item, index) => (
-                          <article key={item.id} className="career-cover-wide-row">
-                            <div className="career-cover-question-line">
-                              <FileText className="career-cover-icon" />
+  <div className="career-cover-wide-list">
+    {getCoverLetterItems(selectedItem).length === 0 ? (
+      <div className="career-empty-box">
+        아직 자소서 문항이 없어.
+      </div>
+    ) : (
+      getCoverLetterItems(selectedItem).map((item, index) => {
+        const answerCount = countWithSpaces(item.answer ?? "");
+        const answerLimit = item.answerLimit;
+        const isOverLimit =
+          typeof answerLimit === "number" &&
+          answerCount > answerLimit;
 
-                              <input
-                                value={item.question}
-                                onChange={(event) =>
-                                  updateCoverLetterItem(item.id, {
-                                    question: event.target.value,
-                                  })
-                                }
-                                className="career-cover-question-input"
-                                placeholder={`${index + 1}. 자소서 문항 입력`}
-                              />
+        return (
+          <article
+            key={item.id}
+            className={[
+              "career-cover-wide-row",
+              isOverLimit ? "is-over-limit" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <div className="career-cover-question-line">
+              <FileText className="career-cover-icon" />
 
-                              <select
-                                value={item.status}
-                                onChange={(event) =>
-                                  updateCoverLetterItem(item.id, {
-                                    status: event.target.value as CoverLetterStatus,
-                                  })
-                                }
-                                className="career-cover-status-select"
-                              >
-                                {coverLetterStatusOptions.map((status) => (
-                                  <option key={status} value={status}>
-                                    {status}
-                                  </option>
-                                ))}
-                              </select>
+              <label className="career-cover-question-field">
+                <span>Question {index + 1}</span>
 
-                              <button
-                                type="button"
-                                onClick={() => removeCoverLetterItem(item.id)}
-                                className="career-delete-button"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
+                <textarea
+                  value={item.question}
+                  rows={5}
+                  
+                  
+                  onChange={(event) =>
+                    updateCoverLetterItem(item.id, {
+                      question: event.target.value,
+                    })
+                  }
+                  className="career-cover-question-input career-auto-textarea"
+                  placeholder={`${index + 1}. 자소서 문항 입력`}
+                />
+              </label>
 
-          <div className="career-cover-writing-line">
-            <label>
-              <span>Answer</span>
-              <textarea
-                value={item.answer ?? ""}
-                onChange={(event) =>
-                  updateCoverLetterItem(item.id, {
-                    answer: event.target.value,
-                  })
-                }
-                className="career-cover-answer-textarea"
-                placeholder="여기에 실제 답변 초안 작성"
-              />
-            </label>
+              <label className="career-cover-limit-field">
+                <span>Limit</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={item.answerLimit ?? ""}
+                  onChange={(event) =>
+                    updateCoverLetterItem(item.id, {
+                      answerLimit: parseAnswerLimit(event.target.value),
+                    })
+                  }
+                  placeholder="600"
+                />
+              </label>
 
-            <label>
-              <span>Strategy</span>
-              <textarea
-                value={item.strategy ?? item.memo ?? ""}
-                onChange={(event) =>
-                  updateCoverLetterItem(item.id, {
-                    strategy: event.target.value,
-                    memo: event.target.value,
-                  })
-                }
-                className="career-cover-strategy-textarea"
-                placeholder="키워드, 구조, 강조할 경험, 분량 전략"
-              />
-            </label>
-          </div>
-        </article>
-      ))
+              <button
+                type="button"
+                onClick={() => removeCoverLetterItem(item.id)}
+                className="career-delete-button"
+                title="Delete question"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="career-cover-writing-line">
+              <label className="career-cover-writing-field">
+                <div className="career-cover-writing-header">
+                  <span>Answer</span>
+
+                  <strong className={isOverLimit ? "is-over" : ""}>
+                    {answerCount}
+                    {typeof answerLimit === "number"
+                      ? ` / ${answerLimit}`
+                      : " chars"}
+                  </strong>
+                </div>
+
+                <textarea
+                  value={item.answer ?? ""}
+                  rows={4}
+                  onInput={handleAutoGrowTextarea}
+                  onFocus={(event) =>
+                    autoGrowTextarea(event.currentTarget)
+                  }
+                  onChange={(event) =>
+                    updateCoverLetterItem(item.id, {
+                      answer: event.target.value,
+                    })
+                  }
+                  className="career-cover-answer-textarea career-auto-textarea"
+                  placeholder="여기에 실제 답변 초안 작성"
+                />
+
+                {isOverLimit && (
+                  <div className="career-cover-limit-warning">
+                    공백 포함 {answerCount - (answerLimit ?? 0)}자 초과
+                  </div>
+                )}
+              </label>
+
+              <label className="career-cover-writing-field">
+                <div className="career-cover-writing-header">
+                  <span>Strategy</span>
+                  <strong>Memo</strong>
+                </div>
+
+                <textarea
+                  value={item.strategy ?? item.memo ?? ""}
+                  rows={3}
+                  onInput={handleAutoGrowTextarea}
+                  onFocus={(event) =>
+                    autoGrowTextarea(event.currentTarget)
+                  }
+                  onChange={(event) =>
+                    updateCoverLetterItem(item.id, {
+                      strategy: event.target.value,
+                      memo: event.target.value,
+                    })
+                  }
+                  className="career-cover-strategy-textarea career-auto-textarea"
+                  placeholder="키워드, 구조, 강조할 경험, 분량 전략"
+                />
+              </label>
+            </div>
+          </article>
+        );
+      })
     )}
   </div>
 </section>

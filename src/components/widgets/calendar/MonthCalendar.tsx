@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
-import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
 import { getEventColor } from "../../../constants/colors";
-
+import type {
+  CSSProperties,
+  MouseEvent as ReactMouseEvent,
+} from "react";
 type MonthCalendarProps = {
   events: CalendarEvent[];
   selectedDate?: string;
@@ -328,7 +330,12 @@ export const MonthCalendar = ({
                           ]
                             .filter(Boolean)
                             .join(" ")}
-                          style={{ background: getEventColor(event) }}
+                          style={
+                            {
+                              "--event-color": getEventColor(event),
+                              background: getEventColor(event),
+                            } as React.CSSProperties
+                          }
                           onMouseEnter={(mouseEvent) =>
                             showPreview(event, mouseEvent)
                           }
@@ -352,6 +359,13 @@ export const MonthCalendar = ({
 
               <div className="calendar-month-range-layer">
                 {weekRangeSegments.map((event) => {
+
+                  const hasSingleOverlap = singleDayEvents.some(
+                    (singleEvent) =>
+                      singleEvent.startDate >= week[event.startColumn - 1].date &&
+                      singleEvent.startDate <= week[event.endColumn - 2].date
+                  );
+
                   const shouldShowTitle =
                     event.isStart || event.startColumn === 1;
 
@@ -361,18 +375,25 @@ export const MonthCalendar = ({
                       type="button"
                       className={[
                         "calendar-range-chip",
+                        "is-soft-range",
+                        hasSingleOverlap ? "has-single-overlap" : "",
                         event.isStart ? "is-start" : "is-middle",
                         event.isEnd ? "is-end" : "",
                         event.isStart && event.isEnd ? "is-start-end" : "",
                         event.source === "career" ? "is-career" : "",
                       ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      style={{
-                        gridColumn: `${event.startColumn} / ${event.endColumn}`,
-                        gridRow: `${event.laneIndex + 1}`,
-                        background: getEventColor(event),
-                      }}
+                      .filter(Boolean)
+                      .join(" ")}
+
+
+                      style={
+                        {
+    gridColumn: `${event.startColumn} / ${event.endColumn}`,
+    gridRow: `${event.laneIndex + 1}`,
+    "--event-color": getEventColor(event),
+    background: getEventColor(event),
+  } as CSSProperties
+}
                       onMouseEnter={(mouseEvent) =>
                         showPreview(event, mouseEvent)
                       }
