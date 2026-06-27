@@ -1,376 +1,746 @@
 /* =========================================================
-   GLASS THEME REWORK
-   cosmic aurora background + clearer soft typography
-   ========================================================= */
+   Theme: Glass
+   Soft image-based glassmorphism
+   Background image source:
+   public/glass-background/glass2.jpg
+========================================================= */
 
+html[data-theme="glass"],
+body[data-theme="glass"],
+html.theme-glass,
+body.theme-glass,
 .theme-glass {
-  --background: 242 80% 8%;
-  --foreground: 236 42% 96%;
-  --muted-foreground: 236 30% 78%;
-  --primary: 282 95% 78%;
-  --primary-foreground: 252 45% 98%;
+  --background: 250 86% 96%;
+  --foreground: 248 30% 18%;
+  --muted-foreground: 248 16% 42%;
+  --primary: 268 86% 66%;
+  --primary-foreground: 0 0% 100%;
   --card: 0 0% 100%;
-  --card-foreground: 236 38% 96%;
+  --card-foreground: 248 30% 18%;
   --border: 0 0% 100%;
+
+  --glass-bg-image: url("/glass-background/glass2.jpg");
+
+  --glass-text: 248 30% 18%;
+  --glass-muted: 248 16% 42%;
+  --glass-border: 0 0% 100%;
+  --glass-white: 0 0% 100%;
+  --glass-purple: 268 86% 66%;
+  --glass-shadow: 248 38% 36%;
+
+  color: hsl(var(--glass-text) / 0.92) !important;
 }
 
-/* 배경: 우주 오로라 느낌 */
-.theme-glass .bg-glass-gradient {
+/* =========================================================
+   App background
+========================================================= */
+
+html[data-theme="glass"] body,
+body[data-theme="glass"],
+html.theme-glass body,
+body.theme-glass {
+  color: hsl(var(--glass-text) / 0.92) !important;
   background:
-    radial-gradient(circle at 12% 8%, hsl(195 100% 70% / 0.72), transparent 34%),
-    radial-gradient(circle at 78% 14%, hsl(286 100% 72% / 0.82), transparent 32%),
-    radial-gradient(circle at 54% 44%, hsl(258 100% 62% / 0.78), transparent 42%),
-    radial-gradient(circle at 22% 76%, hsl(218 100% 64% / 0.66), transparent 38%),
-    radial-gradient(circle at 88% 78%, hsl(315 100% 72% / 0.68), transparent 34%),
     linear-gradient(
       135deg,
-      hsl(226 70% 9%) 0%,
-      hsl(246 82% 13%) 28%,
-      hsl(266 85% 17%) 52%,
-      hsl(285 75% 18%) 72%,
-      hsl(222 72% 10%) 100%
+      hsl(248 84% 95%),
+      hsl(284 78% 94%) 45%,
+      hsl(220 90% 95%)
+    ) !important;
+  background-attachment: fixed !important;
+}
+
+/* Main background layer */
+html[data-theme="glass"] .bg-glass-gradient,
+body[data-theme="glass"] .bg-glass-gradient,
+html.theme-glass .bg-glass-gradient,
+body.theme-glass .bg-glass-gradient,
+.theme-glass .bg-glass-gradient {
+  position: relative !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(250 90% 96%),
+      hsl(290 72% 94%) 45%,
+      hsl(214 88% 95%)
     ) !important;
 }
 
+/* Background photo */
+html[data-theme="glass"] .bg-glass-gradient::before,
+body[data-theme="glass"] .bg-glass-gradient::before,
+html.theme-glass .bg-glass-gradient::before,
+body.theme-glass .bg-glass-gradient::before,
 .theme-glass .bg-glass-gradient::before {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  pointer-events: none;
-  background:
-    conic-gradient(
-      from 210deg at 52% 46%,
-      transparent 0deg,
-      hsl(190 100% 76% / 0.16) 48deg,
-      hsl(276 100% 74% / 0.24) 108deg,
-      hsl(315 100% 76% / 0.16) 168deg,
-      transparent 228deg,
-      hsl(210 100% 72% / 0.14) 300deg,
-      transparent 360deg
-    );
-  filter: blur(42px) saturate(160%);
-  animation: glassAuroraMove 18s ease-in-out infinite alternate;
-}
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
 
-.theme-glass .bg-glass-gradient::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.24;
   background-image:
-    radial-gradient(circle, hsl(0 0% 100% / 0.75) 0 1px, transparent 1.4px),
-    radial-gradient(circle, hsl(200 100% 88% / 0.45) 0 1px, transparent 1.8px);
-  background-size: 92px 92px, 148px 148px;
-  background-position: 12px 28px, 64px 96px;
-  mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+    linear-gradient(
+      135deg,
+      hsl(0 0% 100% / 0.08),
+      hsl(270 100% 94% / 0.06)
+    ),
+    var(--glass-bg-image) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+
+  opacity: 0.9 !important;
+  filter: saturate(115%) brightness(1.03) contrast(0.96) !important;
+  transform: scale(1.02) !important;
 }
 
-@keyframes glassAuroraMove {
-  from {
-    transform: translate3d(-2%, -1%, 0) rotate(-4deg) scale(1.04);
-  }
+/* Soft veil so text/cards are readable */
+html[data-theme="glass"] .bg-glass-gradient::after,
+body[data-theme="glass"] .bg-glass-gradient::after,
+html.theme-glass .bg-glass-gradient::after,
+body.theme-glass .bg-glass-gradient::after,
+.theme-glass .bg-glass-gradient::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
 
-  to {
-    transform: translate3d(3%, 2%, 0) rotate(5deg) scale(1.09);
-  }
+  background:
+    radial-gradient(
+      circle at 18% 8%,
+      hsl(0 0% 100% / 0.38),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 86% 14%,
+      hsl(270 100% 96% / 0.22),
+      transparent 36%
+    ),
+    linear-gradient(
+      180deg,
+      hsl(250 80% 98% / 0.22),
+      hsl(250 80% 96% / 0.18)
+    ) !important;
+
+  backdrop-filter: blur(2px) saturate(112%) !important;
+  -webkit-backdrop-filter: blur(2px) saturate(112%) !important;
 }
 
-/* 전체 껍데기: 흰 판 느낌 줄이기 */
+/* Keep app content above bg pseudo layers */
+html[data-theme="glass"] .bg-glass-gradient > *,
+body[data-theme="glass"] .bg-glass-gradient > *,
+html.theme-glass .bg-glass-gradient > *,
+body.theme-glass .bg-glass-gradient > *,
+.theme-glass .bg-glass-gradient > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Remove old aurora/noise/decor layers in glass */
+html[data-theme="glass"] .aurora-bg,
+html[data-theme="glass"] .aurora-orb,
+html[data-theme="glass"] .cloud-bg,
+html[data-theme="glass"] .gradient-orb,
+html[data-theme="glass"] .background-orb,
+html[data-theme="glass"] .liquid-orb,
+html[data-theme="glass"] .glass-bg-layer,
+html[data-theme="glass"] .noise-overlay,
+html[data-theme="glass"] .diagonal-pattern,
+body[data-theme="glass"] .aurora-bg,
+body[data-theme="glass"] .aurora-orb,
+body[data-theme="glass"] .cloud-bg,
+body[data-theme="glass"] .gradient-orb,
+body[data-theme="glass"] .background-orb,
+body[data-theme="glass"] .liquid-orb,
+body[data-theme="glass"] .glass-bg-layer,
+body[data-theme="glass"] .noise-overlay,
+body[data-theme="glass"] .diagonal-pattern,
+.theme-glass .aurora-bg,
+.theme-glass .aurora-orb,
+.theme-glass .cloud-bg,
+.theme-glass .gradient-orb,
+.theme-glass .background-orb,
+.theme-glass .liquid-orb,
+.theme-glass .glass-bg-layer,
+.theme-glass .noise-overlay,
+.theme-glass .diagonal-pattern {
+  display: none !important;
+  background: none !important;
+  background-image: none !important;
+}
+
+/* =========================================================
+   Shell / layout surfaces
+========================================================= */
+
+html[data-theme="glass"] .liquid-shell,
+html[data-theme="glass"] .glass-panel,
+html[data-theme="glass"] .app-shell,
+html[data-theme="glass"] .dashboard-shell,
+html[data-theme="glass"] .workspace-shell,
+html[data-theme="glass"] .desktop-shell,
+html[data-theme="glass"] .main-shell,
+html[data-theme="glass"] .dashboard-layout,
+html[data-theme="glass"] .app-layout,
+body[data-theme="glass"] .liquid-shell,
+body[data-theme="glass"] .glass-panel,
+body[data-theme="glass"] .app-shell,
+body[data-theme="glass"] .dashboard-shell,
+body[data-theme="glass"] .workspace-shell,
+body[data-theme="glass"] .desktop-shell,
+body[data-theme="glass"] .main-shell,
+body[data-theme="glass"] .dashboard-layout,
+body[data-theme="glass"] .app-layout,
 .theme-glass .liquid-shell,
-.theme-glass .glass-panel {
+.theme-glass .glass-panel,
+.theme-glass .app-shell,
+.theme-glass .dashboard-shell,
+.theme-glass .workspace-shell,
+.theme-glass .desktop-shell,
+.theme-glass .main-shell,
+.theme-glass .dashboard-layout,
+.theme-glass .app-layout {
   background:
     linear-gradient(
       145deg,
-      hsl(0 0% 100% / 0.11),
-      hsl(0 0% 100% / 0.035)
+      hsl(var(--glass-white) / 0.16),
+      hsl(var(--glass-white) / 0.06)
     ) !important;
-  border: 1px solid hsl(0 0% 100% / 0.28) !important;
+  border: 1px solid hsl(var(--glass-white) / 0.3) !important;
   box-shadow:
-    0 36px 120px -50px hsl(220 80% 4% / 0.78),
-    inset 0 1px 0 hsl(0 0% 100% / 0.26) !important;
-  backdrop-filter: blur(32px) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(145%) !important;
+    0 30px 90px hsl(var(--glass-shadow) / 0.14),
+    inset 0 1px 0 hsl(var(--glass-white) / 0.48) !important;
+  backdrop-filter: blur(24px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(145%) !important;
 }
 
-/* 사이드바/상단바도 너무 흰 느낌 제거 */
-.theme-glass aside,
-.theme-glass .topbar {
+/* =========================================================
+   Sidebar
+========================================================= */
+
+html[data-theme="glass"] aside,
+body[data-theme="glass"] aside,
+.theme-glass aside {
+  color: hsl(var(--glass-text) / 0.9) !important;
   background:
     linear-gradient(
       180deg,
-      hsl(0 0% 100% / 0.12),
-      hsl(0 0% 100% / 0.045)
+      hsl(var(--glass-white) / 0.26),
+      hsl(var(--glass-white) / 0.1)
     ) !important;
-  border-color: hsl(0 0% 100% / 0.18) !important;
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.22) !important;
-  backdrop-filter: blur(30px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
+  border-right: 1px solid hsl(var(--glass-white) / 0.34) !important;
+  box-shadow:
+    inset -1px 0 0 hsl(var(--glass-white) / 0.28),
+    18px 0 58px hsl(var(--glass-shadow) / 0.08) !important;
+  backdrop-filter: blur(28px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
 }
 
-/* 카드: 흰색 네모 덩어리 줄이고 진짜 유리처럼 */
-.theme-glass .glass-card,
-.theme-glass .today-focus-hero,
-.theme-glass .alert-summary-card,
-.theme-glass .alert-item,
-.theme-glass .journal-section,
-.theme-glass .study-input-panel,
-.theme-glass .study-week-panel,
-.theme-glass .study-goal-panel,
-.theme-glass .study-task-panel,
-.theme-glass .study-record-list-panel,
-.theme-glass .career-card,
-.theme-glass .calendar-day-card,
-.theme-glass .memo-workspace,
-.theme-glass .memo-list-panel {
+html[data-theme="glass"] .sidebar-tab-item,
+body[data-theme="glass"] .sidebar-tab-item,
+.theme-glass .sidebar-tab-item {
+  position: relative !important;
+  min-height: 44px !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+
+  color: hsl(var(--glass-text) / 0.62) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+}
+
+/* Remove double shape */
+html[data-theme="glass"] .sidebar-tab-item::before,
+html[data-theme="glass"] .sidebar-tab-item::after,
+body[data-theme="glass"] .sidebar-tab-item::before,
+body[data-theme="glass"] .sidebar-tab-item::after,
+.theme-glass .sidebar-tab-item::before,
+.theme-glass .sidebar-tab-item::after {
+  display: none !important;
+  content: none !important;
+}
+
+html[data-theme="glass"] .sidebar-tab-item.is-active,
+body[data-theme="glass"] .sidebar-tab-item.is-active,
+.theme-glass .sidebar-tab-item.is-active {
+  color: hsl(var(--glass-text) / 0.9) !important;
   background:
     linear-gradient(
       145deg,
-      hsl(0 0% 100% / 0.16),
-      hsl(0 0% 100% / 0.055)
+      hsl(var(--glass-white) / 0.38),
+      hsl(var(--glass-white) / 0.15)
     ) !important;
-  border: 1px solid hsl(0 0% 100% / 0.24) !important;
+  border: 1px solid hsl(var(--glass-white) / 0.46) !important;
   box-shadow:
-    0 22px 64px -42px hsl(230 85% 5% / 0.72),
-    inset 0 1px 0 hsl(0 0% 100% / 0.22),
-    inset 0 -1px 0 hsl(0 0% 100% / 0.06) !important;
-  backdrop-filter: blur(26px) saturate(165%) !important;
-  -webkit-backdrop-filter: blur(26px) saturate(165%) !important;
+    0 14px 34px hsl(var(--glass-shadow) / 0.08),
+    inset 0 1px 0 hsl(var(--glass-white) / 0.58) !important;
 }
 
-/* 카드 내부의 더 작은 박스: 흰색 바 제거 */
-.theme-glass .today-focus-task,
-.theme-glass .today-focus-mini-card,
-.theme-glass .journal-task,
-.theme-glass .study-task,
-.theme-glass .study-record-item,
-.theme-glass .memo-note-item,
-.theme-glass .calendar-event-card,
-.theme-glass input,
-.theme-glass textarea {
-  background: hsl(0 0% 100% / 0.105) !important;
-  border-color: hsl(0 0% 100% / 0.18) !important;
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.12) !important;
+html[data-theme="glass"] .sidebar-tab-item.is-active *,
+body[data-theme="glass"] .sidebar-tab-item.is-active *,
+.theme-glass .sidebar-tab-item.is-active * {
+  color: hsl(var(--glass-text) / 0.9) !important;
 }
 
-/* 글씨: 너무 두껍고 뿌연 흰색 줄이기 */
-.theme-glass body,
+/* =========================================================
+   Topbar
+========================================================= */
+
+html[data-theme="glass"] .topbar,
+body[data-theme="glass"] .topbar,
+.theme-glass .topbar {
+  color: hsl(var(--glass-text) / 0.92) !important;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(var(--glass-white) / 0.28),
+      hsl(var(--glass-white) / 0.1)
+    ) !important;
+  border-color: hsl(var(--glass-white) / 0.36) !important;
+  box-shadow:
+    0 18px 52px hsl(var(--glass-shadow) / 0.1),
+    inset 0 1px 0 hsl(var(--glass-white) / 0.58) !important;
+  backdrop-filter: blur(24px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+}
+
+html[data-theme="glass"] .topbar-title h1,
+body[data-theme="glass"] .topbar-title h1,
+.theme-glass .topbar-title h1 {
+  color: hsl(var(--glass-text) / 0.94) !important;
+  text-shadow: none !important;
+}
+
+html[data-theme="glass"] .topbar-title p,
+body[data-theme="glass"] .topbar-title p,
+.theme-glass .topbar-title p {
+  color: hsl(var(--glass-muted) / 0.7) !important;
+  text-shadow: none !important;
+}
+
+/* Right control pill */
+html[data-theme="glass"] .topbar-actions,
+body[data-theme="glass"] .topbar-actions,
+.theme-glass .topbar-actions {
+  border-radius: 999px !important;
+  padding: 8px 10px !important;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(var(--glass-white) / 0.34),
+      hsl(var(--glass-white) / 0.14)
+    ) !important;
+  border: 1px solid hsl(var(--glass-white) / 0.46) !important;
+  box-shadow:
+    0 18px 48px hsl(var(--glass-shadow) / 0.12),
+    inset 0 1px 0 hsl(var(--glass-white) / 0.62) !important;
+  backdrop-filter: blur(22px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(150%) !important;
+}
+
+html[data-theme="glass"] .theme-segmented-control,
+body[data-theme="glass"] .theme-segmented-control,
+.theme-glass .theme-segmented-control {
+  border-radius: 999px !important;
+  background: hsl(var(--glass-white) / 0.16) !important;
+  border: 1px solid hsl(var(--glass-white) / 0.24) !important;
+  box-shadow: inset 0 1px 0 hsl(var(--glass-white) / 0.36) !important;
+}
+
+html[data-theme="glass"] .theme-segment-button,
+body[data-theme="glass"] .theme-segment-button,
+.theme-glass .theme-segment-button {
+  border-radius: 999px !important;
+  color: hsl(var(--glass-text) / 0.64) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="glass"] .theme-segment-button.is-active,
+body[data-theme="glass"] .theme-segment-button.is-active,
+.theme-glass .theme-segment-button.is-active {
+  color: hsl(var(--glass-text) / 0.92) !important;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(var(--glass-white) / 0.72),
+      hsl(270 100% 96% / 0.44)
+    ) !important;
+  border-color: hsl(var(--glass-white) / 0.58) !important;
+  box-shadow:
+    0 8px 22px hsl(var(--glass-shadow) / 0.1),
+    inset 0 1px 0 hsl(var(--glass-white) / 0.78) !important;
+}
+
+/* =========================================================
+   Main glass cards
+========================================================= */
+
+html[data-theme="glass"] .glass-card,
+body[data-theme="glass"] .glass-card,
+.theme-glass .glass-card {
+  color: hsl(var(--glass-text) / 0.9) !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      hsl(var(--glass-white) / 0.3),
+      hsl(var(--glass-white) / 0.12)
+    ) !important;
+
+  border-radius: 30px !important;
+  border: 1px solid hsl(var(--glass-white) / 0.44) !important;
+
+  box-shadow:
+    0 20px 58px hsl(var(--glass-shadow) / 0.12),
+    inset 0 1px 0 hsl(var(--glass-white) / 0.64),
+    inset 0 -1px 0 hsl(var(--glass-white) / 0.14),
+    inset 0 0 16px hsl(var(--glass-white) / 0.16) !important;
+
+  backdrop-filter: blur(18px) saturate(155%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(155%) !important;
+
+  overflow: hidden !important;
+}
+
+/* Top highlight line */
+html[data-theme="glass"] .glass-card::before,
+body[data-theme="glass"] .glass-card::before,
+.theme-glass .glass-card::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 12% !important;
+  right: 12% !important;
+  height: 1px !important;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--glass-white) / 0.78),
+      transparent
+    ) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* Left highlight line */
+html[data-theme="glass"] .glass-card::after,
+body[data-theme="glass"] .glass-card::after,
+.theme-glass .glass-card::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  top: 14% !important;
+  left: 0 !important;
+  width: 1px !important;
+  height: 72% !important;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(var(--glass-white) / 0.66),
+      transparent,
+      hsl(var(--glass-white) / 0.22)
+    ) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+html[data-theme="glass"] .glass-card > *,
+body[data-theme="glass"] .glass-card > *,
+.theme-glass .glass-card > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* =========================================================
+   Typography
+========================================================= */
+
+html[data-theme="glass"] body,
+html[data-theme="glass"] .glass-card,
+html[data-theme="glass"] aside,
+html[data-theme="glass"] .topbar,
+body[data-theme="glass"],
+body[data-theme="glass"] .glass-card,
+body[data-theme="glass"] aside,
+body[data-theme="glass"] .topbar,
+.theme-glass,
 .theme-glass .glass-card,
-.theme-glass .topbar,
-.theme-glass aside {
-  color: hsl(238 45% 96% / 0.9) !important;
-  text-shadow: 0 1px 16px hsl(230 80% 5% / 0.22);
+.theme-glass aside,
+.theme-glass .topbar {
+  color: hsl(var(--glass-text) / 0.9) !important;
+  text-shadow: none !important;
 }
 
+html[data-theme="glass"] h1,
+html[data-theme="glass"] h2,
+html[data-theme="glass"] h3,
+html[data-theme="glass"] h4,
+html[data-theme="glass"] strong,
+html[data-theme="glass"] .font-semibold,
+html[data-theme="glass"] .font-bold,
+body[data-theme="glass"] h1,
+body[data-theme="glass"] h2,
+body[data-theme="glass"] h3,
+body[data-theme="glass"] h4,
+body[data-theme="glass"] strong,
+body[data-theme="glass"] .font-semibold,
+body[data-theme="glass"] .font-bold,
 .theme-glass h1,
 .theme-glass h2,
 .theme-glass h3,
+.theme-glass h4,
 .theme-glass strong,
-.theme-glass .text-xl,
-.theme-glass .text-2xl,
-.theme-glass .font-semibold {
-  font-weight: 650 !important;
-  letter-spacing: -0.035em;
-  color: hsl(238 70% 98% / 0.94) !important;
+.theme-glass .font-semibold,
+.theme-glass .font-bold {
+  color: hsl(var(--glass-text) / 0.92) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.035em !important;
+  text-shadow: none !important;
 }
 
+html[data-theme="glass"] p,
+html[data-theme="glass"] span,
+html[data-theme="glass"] small,
+html[data-theme="glass"] .text-muted-foreground,
+body[data-theme="glass"] p,
+body[data-theme="glass"] span,
+body[data-theme="glass"] small,
+body[data-theme="glass"] .text-muted-foreground,
 .theme-glass p,
 .theme-glass span,
 .theme-glass small,
-.theme-glass .text-muted-foreground,
-.theme-glass .journal-sub,
-.theme-glass .study-sub,
-.theme-glass .today-focus-sub {
-  color: hsl(236 38% 88% / 0.68) !important;
-  font-weight: 500 !important;
-}
-
-.theme-glass .uppercase,
-.theme-glass .tracking-\[0\.18em\],
-.theme-glass .journal-kicker,
-.theme-glass .study-kicker {
-  color: hsl(215 95% 88% / 0.66) !important;
-  font-weight: 650 !important;
-}
-
-/* 버튼도 유리 느낌 */
-.theme-glass .glass-button,
-.theme-glass button {
-  color: hsl(238 55% 96% / 0.86);
-}
-
-.theme-glass .glass-button {
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.18),
-      hsl(0 0% 100% / 0.06)
-    ) !important;
-  border: 1px solid hsl(0 0% 100% / 0.25) !important;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.22),
-    0 12px 32px -24px hsl(240 80% 4% / 0.6) !important;
-}
-
-.theme-glass .glass-button:hover {
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.26),
-      hsl(0 0% 100% / 0.09)
-    ) !important;
-}
-
-/* 오른쪽 위 테마 select 개선 */
-.theme-glass .theme-select {
-  appearance: none;
-  -webkit-appearance: none;
-  min-width: 122px;
-  height: 34px;
-  padding: 0 34px 0 13px;
-  border-radius: 14px;
-  color: hsl(238 55% 97% / 0.9) !important;
-  font-size: 12px;
-  font-weight: 650;
-  letter-spacing: -0.02em;
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.2),
-      hsl(0 0% 100% / 0.065)
-    ),
-    url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10L12 15L17 10' stroke='white' stroke-opacity='0.82' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 10px center / 14px 14px no-repeat !important;
-  border: 1px solid hsl(0 0% 100% / 0.28) !important;
-  outline: none !important;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.22),
-    0 12px 34px -24px hsl(240 80% 4% / 0.7) !important;
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-}
-
-.theme-glass .theme-select:hover,
-.theme-glass .theme-select:focus {
-  border-color: hsl(0 0% 100% / 0.46) !important;
-  background-color: hsl(0 0% 100% / 0.13) !important;
-}
-
-/* option은 브라우저 기본 드롭다운이라 별도 색 지정 필수 */
-.theme-glass .theme-select option {
-  color: #19142b !important;
-  background: #f5efff !important;
-  font-weight: 600;
-}
-
-/* sidebar active 너무 하얀 박스 줄이기 */
-.theme-glass .sidebar-tab-item {
-  color: hsl(238 45% 94% / 0.72) !important;
-  background: transparent !important;
-  border-color: transparent !important;
-}
-
-.theme-glass .sidebar-tab-item.is-active {
-  color: hsl(238 60% 98% / 0.96) !important;
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.18),
-      hsl(0 0% 100% / 0.065)
-    ) !important;
-  border-color: hsl(0 0% 100% / 0.26) !important;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.18),
-    0 18px 44px -34px hsl(240 80% 4% / 0.62) !important;
-}
-
-/* react-grid-layout resize handle 더 은은하게 */
-.theme-glass .react-resizable-handle::after {
-  border-color: hsl(0 0% 100% / 0.36) !important;
-}
-
-/* input placeholder 가독성 */
-.theme-glass input::placeholder,
-.theme-glass textarea::placeholder {
-  color: hsl(236 35% 88% / 0.34) !important;
-}
-
-/* Glass theme */
-.theme-glass .journal-task-empty {
-  background: hsl(0 0% 100% / 0.08) !important;
-  border-color: hsl(0 0% 100% / 0.16) !important;
-  color: hsl(236 38% 88% / 0.5) !important;
-}
-
-/* Pastel / Glass / Pixel에서는 큰 Workspace Home 헤더 숨김 */
-:not(.theme-ios) .dashboard-tab-header,
-.theme-pastel .dashboard-tab-header,
-.theme-glass .dashboard-tab-header,
-.theme-pixel .dashboard-tab-header {
-  display: none !important;
-}
-
-/* Pastel / Glass / Pixel에서는 큰 Workspace Home 숨김 */
-.theme-pastel .dashboard-tab-header,
-.theme-glass .dashboard-tab-header,
-.theme-pixel .dashboard-tab-header {
-  display: none !important;
-} 
-
-/* ================================
-   FIX: Glass theme readability
-   ================================ */
-
-.theme-glass {
-  color: hsl(248 28% 18%) !important;
-}
-
-.theme-glass .glass-card {
-  color: hsl(248 28% 18%) !important;
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.46),
-      hsl(0 0% 100% / 0.18)
-    ) !important;
-  border-color: hsl(0 0% 100% / 0.48) !important;
-}
-
-.theme-glass .glass-card h1,
-.theme-glass .glass-card h2,
-.theme-glass .glass-card h3,
-.theme-glass .glass-card h4,
-.theme-glass .glass-card strong,
-.theme-glass .today-focus-title,
-.theme-glass .today-focus-main-title,
-.theme-glass .today-task-title,
-.theme-glass .calendar-event-title,
-.theme-glass .career-list-title strong {
-  color: hsl(248 32% 16% / 0.88) !important;
+.theme-glass .text-muted-foreground {
+  color: hsl(var(--glass-muted) / 0.72) !important;
   text-shadow: none !important;
 }
 
-.theme-glass .glass-card p,
-.theme-glass .glass-card span,
-.theme-glass .today-focus-subtitle,
-.theme-glass .today-focus-label,
-.theme-glass .today-task-meta,
-.theme-glass .calendar-event-time,
-.theme-glass .career-list-title span {
-  color: hsl(248 20% 24% / 0.62) !important;
-  text-shadow: none !important;
-}
+/* =========================================================
+   Inner panels / list items
+========================================================= */
 
-/* Glass 내부 박스도 너무 흰색으로 뜨지 않게 */
+html[data-theme="glass"] .today-focus-main,
+html[data-theme="glass"] .today-focus-hero,
+html[data-theme="glass"] .today-focus-section,
+html[data-theme="glass"] .today-focus-block,
+html[data-theme="glass"] .today-mini-main,
+html[data-theme="glass"] .today-mini-next,
+html[data-theme="glass"] .today-tasks-progress,
+html[data-theme="glass"] .career-list-item,
+html[data-theme="glass"] .calendar-mini-card,
+html[data-theme="glass"] .calendar-event-chip,
+html[data-theme="glass"] .today-focus-task,
+html[data-theme="glass"] .today-focus-mini-card,
+html[data-theme="glass"] .journal-section,
+html[data-theme="glass"] .journal-task,
+html[data-theme="glass"] .study-card,
+html[data-theme="glass"] .study-task,
+html[data-theme="glass"] .study-record-item,
+html[data-theme="glass"] .alert-item,
+html[data-theme="glass"] .alert-summary-card,
+html[data-theme="glass"] .memo-workspace,
+html[data-theme="glass"] .memo-list-panel,
+html[data-theme="glass"] .memo-note-item,
+html[data-theme="glass"] .calendar-event-card,
+html[data-theme="glass"] .calendar-event-item,
+body[data-theme="glass"] .today-focus-main,
+body[data-theme="glass"] .today-focus-hero,
+body[data-theme="glass"] .today-focus-section,
+body[data-theme="glass"] .today-focus-block,
+body[data-theme="glass"] .today-mini-main,
+body[data-theme="glass"] .today-mini-next,
+body[data-theme="glass"] .today-tasks-progress,
+body[data-theme="glass"] .career-list-item,
+body[data-theme="glass"] .calendar-mini-card,
+body[data-theme="glass"] .calendar-event-chip,
+body[data-theme="glass"] .today-focus-task,
+body[data-theme="glass"] .today-focus-mini-card,
+body[data-theme="glass"] .journal-section,
+body[data-theme="glass"] .journal-task,
+body[data-theme="glass"] .study-card,
+body[data-theme="glass"] .study-task,
+body[data-theme="glass"] .study-record-item,
+body[data-theme="glass"] .alert-item,
+body[data-theme="glass"] .alert-summary-card,
+body[data-theme="glass"] .memo-workspace,
+body[data-theme="glass"] .memo-list-panel,
+body[data-theme="glass"] .memo-note-item,
+body[data-theme="glass"] .calendar-event-card,
+body[data-theme="glass"] .calendar-event-item,
 .theme-glass .today-focus-main,
+.theme-glass .today-focus-hero,
 .theme-glass .today-focus-section,
 .theme-glass .today-focus-block,
 .theme-glass .today-mini-main,
 .theme-glass .today-mini-next,
 .theme-glass .today-tasks-progress,
 .theme-glass .career-list-item,
-.theme-glass .calendar-event-chip {
-  background: hsl(0 0% 100% / 0.24) !important;
-  border: 1px solid hsl(0 0% 100% / 0.34) !important;
-  box-shadow: none !important;
+.theme-glass .calendar-mini-card,
+.theme-glass .calendar-event-chip,
+.theme-glass .today-focus-task,
+.theme-glass .today-focus-mini-card,
+.theme-glass .journal-section,
+.theme-glass .journal-task,
+.theme-glass .study-card,
+.theme-glass .study-task,
+.theme-glass .study-record-item,
+.theme-glass .alert-item,
+.theme-glass .alert-summary-card,
+.theme-glass .memo-workspace,
+.theme-glass .memo-list-panel,
+.theme-glass .memo-note-item,
+.theme-glass .calendar-event-card,
+.theme-glass .calendar-event-item {
+  color: hsl(var(--glass-text) / 0.86) !important;
+  border-radius: 24px !important;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(var(--glass-white) / 0.27),
+      hsl(var(--glass-white) / 0.1)
+    ) !important;
+  border: 1px solid hsl(var(--glass-white) / 0.34) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(var(--glass-white) / 0.48),
+    0 10px 26px hsl(var(--glass-shadow) / 0.06) !important;
+  backdrop-filter: blur(14px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(145%) !important;
   background-image: none !important;
+}
+
+/* Remove double pseudo shape from memo items */
+html[data-theme="glass"] .memo-note-item::before,
+html[data-theme="glass"] .memo-note-item::after,
+body[data-theme="glass"] .memo-note-item::before,
+body[data-theme="glass"] .memo-note-item::after,
+.theme-glass .memo-note-item::before,
+.theme-glass .memo-note-item::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* =========================================================
+   Inputs / buttons
+========================================================= */
+
+html[data-theme="glass"] input,
+html[data-theme="glass"] textarea,
+html[data-theme="glass"] select,
+html[data-theme="glass"] .memo-editor,
+html[data-theme="glass"] .calendar-date-input,
+body[data-theme="glass"] input,
+body[data-theme="glass"] textarea,
+body[data-theme="glass"] select,
+body[data-theme="glass"] .memo-editor,
+body[data-theme="glass"] .calendar-date-input,
+.theme-glass input,
+.theme-glass textarea,
+.theme-glass select,
+.theme-glass .memo-editor,
+.theme-glass .calendar-date-input {
+  color: hsl(var(--glass-text) / 0.9) !important;
+  border-radius: 18px !important;
+  background: hsl(var(--glass-white) / 0.32) !important;
+  border: 1px solid hsl(var(--glass-white) / 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(var(--glass-white) / 0.52),
+    0 8px 20px hsl(var(--glass-shadow) / 0.06) !important;
+  backdrop-filter: blur(14px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(145%) !important;
+}
+
+html[data-theme="glass"] input::placeholder,
+html[data-theme="glass"] textarea::placeholder,
+body[data-theme="glass"] input::placeholder,
+body[data-theme="glass"] textarea::placeholder,
+.theme-glass input::placeholder,
+.theme-glass textarea::placeholder {
+  color: hsl(var(--glass-muted) / 0.42) !important;
+}
+
+html[data-theme="glass"] .glass-button,
+html[data-theme="glass"] button,
+html[data-theme="glass"] .calendar-nav-button,
+html[data-theme="glass"] .calendar-view-button,
+body[data-theme="glass"] .glass-button,
+body[data-theme="glass"] button,
+body[data-theme="glass"] .calendar-nav-button,
+body[data-theme="glass"] .calendar-view-button,
+.theme-glass .glass-button,
+.theme-glass button,
+.theme-glass .calendar-nav-button,
+.theme-glass .calendar-view-button {
+  color: hsl(var(--glass-text) / 0.82) !important;
+  border-radius: 999px !important;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(var(--glass-white) / 0.36),
+      hsl(var(--glass-white) / 0.14)
+    ) !important;
+  border: 1px solid hsl(var(--glass-white) / 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(var(--glass-white) / 0.54),
+    0 10px 24px hsl(var(--glass-shadow) / 0.08) !important;
+  backdrop-filter: blur(14px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(145%) !important;
+}
+
+html[data-theme="glass"] .glass-button.is-active,
+html[data-theme="glass"] .calendar-view-button.is-active,
+body[data-theme="glass"] .glass-button.is-active,
+body[data-theme="glass"] .calendar-view-button.is-active,
+.theme-glass .glass-button.is-active,
+.theme-glass .calendar-view-button.is-active {
+  color: hsl(var(--glass-text) / 0.94) !important;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(var(--glass-white) / 0.72),
+      hsl(270 100% 96% / 0.48)
+    ) !important;
+  border-color: hsl(var(--glass-white) / 0.62) !important;
+}
+
+/* =========================================================
+   Hide workspace header for Glass
+========================================================= */
+
+html[data-theme="glass"] .dashboard-tab-header,
+body[data-theme="glass"] .dashboard-tab-header,
+.theme-glass .dashboard-tab-header {
+  display: none !important;
+}
+
+/* =========================================================
+   Mobile
+========================================================= */
+
+@media (max-width: 768px) {
+  html[data-theme="glass"] .topbar-actions,
+  body[data-theme="glass"] .topbar-actions,
+  .theme-glass .topbar-actions {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    border-radius: 28px !important;
+  }
+
+  html[data-theme="glass"] .theme-button-group,
+  body[data-theme="glass"] .theme-button-group,
+  .theme-glass .theme-button-group {
+    display: none !important;
+  }
+
+  html[data-theme="glass"] .theme-select-mobile,
+  body[data-theme="glass"] .theme-select-mobile,
+  .theme-glass .theme-select-mobile {
+    display: inline-flex !important;
+  }
 }

@@ -2,7 +2,22 @@
    Theme: Pixel Desk
    Retro 90s OS Desktop
    ================================ */
-.theme-pixel {
+
+/* =========================================================
+   Root variables
+   실제 테마명이 pixel-desk여도, 예전 theme-pixel이어도 둘 다 대응
+========================================================= */
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) {
   --background: 174 100% 25%;
   --foreground: 0 0% 0%;
   --card: 0 0% 78%;
@@ -21,6 +36,20 @@
   --input: 0 0% 100%;
   --ring: 240 100% 25%;
 
+  --gd-radius-app: 0px;
+  --gd-radius-panel: 0px;
+  --gd-radius-widget: 0px;
+  --gd-radius-card: 0px;
+  --gd-radius-inner: 0px;
+  --gd-radius-button: 0px;
+
+  --app-radius-shell: 0px;
+  --app-radius-panel: 0px;
+  --app-radius-card: 0px;
+  --app-radius-inner: 0px;
+  --app-radius-button: 0px;
+  --app-radius-chip: 0px;
+
   font-family:
     "NeoDunggeunmo",
     "DungGeunMo",
@@ -30,129 +59,327 @@
     sans-serif !important;
 }
 
+/* =========================================================
+   Global background / font
+========================================================= */
 
-/* 배경: Windows 95 teal만. 아이콘/폴더 없음 */
-.theme-pixel .bg-glass-gradient {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+),
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) body,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) #root {
   background: #008080 !important;
-}
-
-/* Pixel desktop icons */
-
-
-
-/* Shell */
-
-/* 전체 앱 shell = 큰 Windows 95 프로그램 창 */
-.theme-pixel .liquid-shell,
-.theme-pixel .glass-panel {
-  border-radius: 0 !important;
-  background: #c0c0c0 !important;
-  border-top: 2px solid #ffffff !important;
-  border-left: 2px solid #ffffff !important;
-  border-right: 2px solid #404040 !important;
-  border-bottom: 2px solid #404040 !important;
-  box-shadow:
-    1px 1px 0 #dfdfdf inset,
-    -1px -1px 0 #808080 inset,
-    6px 6px 0 rgb(0 0 0 / 0.28) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* sidebar = classic left panel */
-.theme-pixel aside {
-  background: #c0c0c0 !important;
-  border-right: 2px solid #808080 !important;
-  box-shadow:
-    1px 0 0 #ffffff inset,
-    -1px 0 0 #404040 inset !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* topbar = Windows title/control strip 느낌 */
-.theme-pixel .topbar {
-  height: 64px !important;
-  background: #c0c0c0 !important;
-  border-bottom: 2px solid #808080 !important;
-  box-shadow:
-    0 1px 0 #ffffff inset,
-    0 -1px 0 #404040 inset !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* 폰트 전체 적용 */
-.theme-pixel,
-.theme-pixel body,
-.theme-pixel #root,
-.theme-pixel .glass-card,
-.theme-pixel aside,
-.theme-pixel main,
-.theme-pixel button,
-.theme-pixel input,
-.theme-pixel textarea,
-.theme-pixel select,
-.theme-pixel .memo-editor,
-.theme-pixel .memo-title-input,
-.theme-pixel .theme-select {
-  font-family:
-    "NeoDunggeunmo",
-    "DungGeunMo",
-    "MS Sans Serif",
-    "Tahoma",
-    "Arial",
-    sans-serif !important;
-  letter-spacing: -0.01em !important;
-  text-shadow: none !important;
-}
-
-/* 텍스트 */
-.theme-pixel h1,
-.theme-pixel h2,
-.theme-pixel h3,
-.theme-pixel strong,
-.theme-pixel .font-semibold,
-.theme-pixel .font-bold {
-  font-family:
-    "NeoDunggeunmo",
-    "DungGeunMo",
-    "MS Sans Serif",
-    "Tahoma",
-    "Arial",
-    sans-serif !important;
-  font-weight: 700 !important;
+  background-image: none !important;
   color: #000000 !important;
-  letter-spacing: -0.02em !important;
+  font-family:
+    "NeoDunggeunmo",
+    "DungGeunMo",
+    "MS Sans Serif",
+    "Tahoma",
+    "Arial",
+    sans-serif !important;
 }
 
-
-.theme-pixel p,
-.theme-pixel span,
-.theme-pixel small,
-.theme-pixel .text-muted-foreground {
-  color: #404040 !important;
+/* 배경 장식 제거 */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .bg-glass-gradient,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .aurora-bg,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .aurora-orb,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .cloud-bg,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .gradient-orb,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .background-orb,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .liquid-orb,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-bg-layer,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .noise-overlay,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel
+) .diagonal-pattern {
+  display: none !important;
+  background: none !important;
+  background-image: none !important;
 }
 
-/* 카드 = Win95 window */
-.theme-pixel .glass-card,
-.theme-pixel .journal-section,
-.theme-pixel .alert-item,
-.theme-pixel .alert-summary-card,
-.theme-pixel .today-focus-hero,
-.theme-pixel .today-focus-section,
-.theme-pixel .today-focus-task,
-.theme-pixel .today-focus-mini-item,
-.theme-pixel .today-focus-career-item,
-.theme-pixel .today-focus-memo,
-.theme-pixel .today-focus-empty,
-.theme-pixel .calendar-month-day-cell,
-.theme-pixel .calendar-week-timeline,
-.theme-pixel .calendar-event-item,
-.theme-pixel .memo-list-panel,
-.theme-pixel .memo-workspace,
-.theme-pixel .settings-section,
-.theme-pixel .career-detail-section {
+/* no desktop icons/folders */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .pixel-desktop-decor,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .pixel-desktop-icon,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .pixel-desktop-icon-box,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .pixel-desktop-icon-label,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .apple-desktop-decor,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .apple-desktop-folder,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .apple-folder-shape {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* =========================================================
+   App shell / sidebar
+========================================================= */
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .liquid-shell,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-panel,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .dashboard-shell,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .workspace-shell,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .desktop-shell,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .main-shell,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .dashboard-layout,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-layout {
   border-radius: 0 !important;
   background: #c0c0c0 !important;
   border-top: 2px solid #ffffff !important;
@@ -165,33 +392,419 @@
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
-/* Cards as retro windows */
 
-
-
-/* 카드 헤더가 titlebar에 안 겹치게 */
-.theme-pixel .glass-card-header {
-  position: relative;
-  z-index: 3;
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) aside {
+  background: #c0c0c0 !important;
+  border-right: 2px solid #808080 !important;
+  box-shadow:
+    1px 0 0 #ffffff inset,
+    -1px 0 0 #404040 inset !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
+/* =========================================================
+   Topbar
+========================================================= */
 
-/* Buttons */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .topbar {
+  position: relative !important;
+  width: 100% !important;
+  height: 86px !important;
+  min-height: 86px !important;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    0 1px 0 #ffffff inset,
+    0 -1px 0 #808080 inset !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: visible !important;
+}
 
-/* 버튼 = classic bevel */
-.theme-pixel .glass-button,
-.theme-pixel .calendar-nav-button,
-.theme-pixel .calendar-view-button,
-.theme-pixel .widget-picker-button,
-.theme-pixel .settings-reset-button,
-.theme-pixel .calendar-google-button,
-.theme-pixel .calendar-danger-button,
-.theme-pixel .calendar-done-button,
-.theme-pixel .memo-tool-button,
-.theme-pixel .memo-mini-button,
-.theme-pixel .today-task-add-row button,
-.theme-pixel .sidebar-tab-item,
-.theme-pixel button {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .topbar-inner {
+  min-height: 86px !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .topbar-actions {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  gap: 10px !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .theme-segmented-control {
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    1px 1px 0 #dfdfdf inset,
+    -1px -1px 0 #808080 inset !important;
+  backdrop-filter: none !important;
+}
+
+/* =========================================================
+   Typography
+========================================================= */
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+),
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-card,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) aside,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) main,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) button,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) input,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) textarea,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) select,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-editor,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-title-input {
+  font-family:
+    "NeoDunggeunmo",
+    "DungGeunMo",
+    "MS Sans Serif",
+    "Tahoma",
+    "Arial",
+    sans-serif !important;
+  letter-spacing: -0.01em !important;
+  text-shadow: none !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) h1,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) h2,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) h3,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) strong,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .font-semibold,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .font-bold {
+  font-weight: 700 !important;
+  color: #000000 !important;
+  letter-spacing: -0.02em !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) p,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) span,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) small,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .text-muted-foreground {
+  color: #404040 !important;
+}
+
+/* =========================================================
+   Buttons / inputs
+========================================================= */
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) button,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-button,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .theme-segment-button,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .topbar-action-button,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-nav-button,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-view-button,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .widget-picker-button,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .sidebar-tab-item {
   border-radius: 0 !important;
   background: #c0c0c0 !important;
   color: #000000 !important;
@@ -205,13 +818,36 @@
   transform: none !important;
 }
 
-.theme-pixel .glass-button:active,
-.theme-pixel .calendar-nav-button:active,
-.theme-pixel .calendar-view-button:active,
-.theme-pixel .widget-picker-button:active,
-.theme-pixel .memo-tool-button:active,
-.theme-pixel .memo-mini-button:active,
-.theme-pixel button:active {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) button:active,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-button:active,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .theme-segment-button:active {
   border-top-color: #404040 !important;
   border-left-color: #404040 !important;
   border-right-color: #ffffff !important;
@@ -219,22 +855,68 @@
   box-shadow:
     1px 1px 0 #808080 inset,
     -1px -1px 0 #dfdfdf inset !important;
-  padding-top: 1px !important;
-  padding-left: 1px !important;
 }
 
-/* ---------- */
-
-/* Inputs */
-
-/* inputs = sunken field */
-.theme-pixel input,
-.theme-pixel textarea,
-.theme-pixel select,
-.theme-pixel .memo-editor,
-.theme-pixel .memo-title-input,
-.theme-pixel .calendar-date-input,
-.theme-pixel .theme-select {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) input,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) textarea,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) select,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-editor,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-date-input,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .theme-select-mobile {
   border-radius: 0 !important;
   background: #ffffff !important;
   color: #000000 !important;
@@ -248,24 +930,17 @@
   outline: none !important;
 }
 
-.theme-pixel input::placeholder,
-.theme-pixel textarea::placeholder {
-  color: #808080 !important;
-}
-
-/* select option */
-.theme-pixel select option,
-.theme-pixel .theme-select option {
-  background: #ffffff !important;
-  color: #000000 !important;
-}
-
-/* sidebar active */
-.theme-pixel .sidebar-tab-item {
-  min-height: 38px !important;
-}
-
-.theme-pixel .sidebar-tab-item.is-active {
+/* Sidebar active */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .sidebar-tab-item.is-active {
   background: #000080 !important;
   color: #ffffff !important;
   border-top: 2px solid #404040 !important;
@@ -274,462 +949,82 @@
   border-bottom: 2px solid #ffffff !important;
 }
 
-.theme-pixel .sidebar-tab-item.is-active * {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .sidebar-tab-item.is-active * {
   color: #ffffff !important;
-}
-
-
-/* Floating windows / modals */
-
-/* floating windows / modals */
-.theme-pixel .memo-window,
-.theme-pixel .calendar-modal-window,
-.theme-pixel .settings-modal-window,
-.theme-pixel .career-modal-window {
-  border-radius: 0 !important;
-  background: #c0c0c0 !important;
-  border-top: 2px solid #ffffff !important;
-  border-left: 2px solid #ffffff !important;
-  border-right: 2px solid #404040 !important;
-  border-bottom: 2px solid #404040 !important;
-  box-shadow:
-    1px 1px 0 #dfdfdf inset,
-    -1px -1px 0 #808080 inset,
-    8px 8px 0 rgb(0 0 0 / 0.34) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.theme-pixel .memo-window-titlebar,
-.theme-pixel .calendar-modal-header,
-.theme-pixel .settings-modal-header,
-.theme-pixel .career-modal-header {
-  background: #000080 !important;
-  color: #ffffff !important;
-  border-bottom: 2px solid #000000 !important;
-}
-
-/* .theme-pixel .memo-window-titlebar *,
-.theme-pixel .calendar-modal-header *,
-.theme-pixel .settings-modal-header *,
-.theme-pixel .career-modal-header * {
-  color: #ffffff !important;
-} */
-
-/* calendar bars */
-.theme-pixel .calendar-range-chip,
-.theme-pixel .calendar-week-event {
-  border-radius: 0 !important;
-  background: #ffffcc !important;
-  color: #000000 !important;
-  border-top: 1px solid #ffffff !important;
-  border-left: 1px solid #ffffff !important;
-  border-right: 1px solid #808080 !important;
-  border-bottom: 1px solid #808080 !important;
-  box-shadow: none !important;
-}
-
-.theme-pixel .calendar-week-event strong,
-.theme-pixel .calendar-week-event span {
-  color: #000000 !important;
-}
-
-/* color chips는 네모 */
-.theme-pixel .event-color-chip,
-.theme-pixel .memo-color-chip {
-  border-radius: 0 !important;
-}
-
-
-/* progress */
-.theme-pixel .today-focus-ring {
-  border-radius: 0 !important;
-  background: #c0c0c0 !important;
-  border-top: 2px solid #404040 !important;
-  border-left: 2px solid #404040 !important;
-  border-right: 2px solid #ffffff !important;
-  border-bottom: 2px solid #ffffff !important;
-  box-shadow: none !important;
-}
-
-.theme-pixel .today-focus-ring span {
-  border-radius: 0 !important;
-  background: #ffffff !important;
-}
-
-/* settings preview */
-.settings-theme-preview.theme-pixel {
-  background:
-    linear-gradient(#000080, #000080) 0 0 / 100% 14px no-repeat,
-    #c0c0c0 !important;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-right: 2px solid #404040;
-  border-bottom: 2px solid #404040;
-}
-/* --------- */
-
-
-
-/* Inner panels */
-
-.theme-pixel .dashboard-tab-header,
-.theme-pixel .widget-picker-panel,
-.theme-pixel .calendar-month-day-cell,
-.theme-pixel .calendar-week-timeline,
-.theme-pixel .calendar-event-item,
-.theme-pixel .memo-list-panel,
-.theme-pixel .memo-workspace,
-.theme-pixel .settings-section,
-.theme-pixel .career-detail-section {
-  border-radius: 0 !important;
-  background: hsl(54 20% 88% / 0.94) !important;
-  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
-  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* Pixel Desk support */
-
-.theme-pixel .today-focus-hero,
-.theme-pixel .today-focus-section,
-.theme-pixel .today-focus-task,
-.theme-pixel .today-focus-mini-item,
-.theme-pixel .today-focus-career-item,
-.theme-pixel .today-focus-memo,
-.theme-pixel .today-focus-empty,
-.theme-pixel .today-focus-alert {
-  border-radius: 0 !important;
-  background: hsl(54 20% 88% / 0.94) !important;
-  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
-  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
-  box-shadow: none !important;
-}
-
-/* Pixel Desk support */
-
-.theme-pixel .alert-summary-card,
-.theme-pixel .alert-item,
-.theme-pixel .alert-icon,
-.theme-pixel .alert-empty-state,
-.theme-pixel .alert-action-label,
-.theme-pixel .alert-severity-pill,
-.theme-pixel .alert-dismiss-button {
-  border-radius: 0 !important;
-  background: hsl(54 20% 88% / 0.94) !important;
-  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
-  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
-  box-shadow: none !important;
-}
-
-/* Mac Core support */
-
-.theme-ios .alert-summary-card,
-.theme-ios .alert-item,
-.theme-ios .alert-icon,
-.theme-ios .alert-empty-state,
-.theme-ios .alert-action-label,
-.theme-ios .alert-severity-pill,
-.theme-ios .alert-dismiss-button {
-  border-radius: 20px !important;
-  background: hsl(0 0% 100% / 0.58) !important;
-  border: 1px solid hsl(0 0% 100% / 0.64) !important;
-  box-shadow:
-    0 16px 44px -34px hsl(220 24% 20% / 0.38),
-    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
-  backdrop-filter: blur(22px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
-}
-
-/* Pixel Desk support */
-
-.theme-pixel .study-hero,
-.theme-pixel .study-date-button,
-.theme-pixel .study-today-button,
-.theme-pixel .study-date-input,
-.theme-pixel .study-subject-card,
-.theme-pixel .study-input-panel,
-.theme-pixel .study-goal-panel,
-.theme-pixel .study-week-panel,
-.theme-pixel .study-task-panel,
-.theme-pixel .study-record-list-panel,
-.theme-pixel .study-task,
-.theme-pixel .study-record-item,
-.theme-pixel .study-empty,
-.theme-pixel .study-goal-item,
-.theme-pixel .study-record-form input,
-.theme-pixel .study-record-form button {
-  border-radius: 0 !important;
-  background: hsl(54 20% 88% / 0.94) !important;
-  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
-  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
-  box-shadow: none !important;
-}
-
-/* Pixel Desk support */
-
-.theme-pixel .journal-hero,
-.theme-pixel .journal-date-button,
-.theme-pixel .journal-date-input,
-.theme-pixel .journal-section,
-.theme-pixel .journal-task,
-.theme-pixel .journal-mini-add,
-.theme-pixel .journal-mood-button,
-.theme-pixel .journal-score-item,
-.theme-pixel .journal-section textarea,
-.theme-pixel .journal-review-section input {
-  border-radius: 0 !important;
-  background: hsl(54 20% 88% / 0.94) !important;
-  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
-  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
-  box-shadow: none !important;
-}
-
-/* Pixel Desk support */
-
-.theme-pixel .floating-window {
-  border-radius: 0 !important;
-  background: hsl(54 20% 86% / 0.98) !important;
-  border-top: 3px solid hsl(0 0% 100% / 0.95) !important;
-  border-left: 3px solid hsl(0 0% 100% / 0.95) !important;
-  border-right: 3px solid hsl(230 18% 18% / 0.86) !important;
-  border-bottom: 3px solid hsl(230 18% 18% / 0.86) !important;
-  box-shadow:
-    8px 8px 0 hsl(230 20% 8% / 0.35),
-    inset 1px 1px 0 hsl(0 0% 100% / 0.86) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.theme-pixel .floating-window-titlebar {
-  height: 58px;
-  border-bottom: 3px solid hsl(230 18% 18% / 0.72) !important;
-  background:
-    linear-gradient(
-      90deg,
-      hsl(330 95% 75%),
-      hsl(330 90% 84%)
-    ) !important;
-}
-
-/* Pixel Desk */
-
-.theme-pixel .study-detail-hero,
-.theme-pixel .study-detail-subject-card,
-.theme-pixel .study-detail-record-form,
-.theme-pixel .study-detail-week-panel,
-.theme-pixel .study-detail-goals,
-.theme-pixel .study-detail-tasks,
-.theme-pixel .study-detail-records {
-  border-radius: 0 !important;
-  background: hsl(54 20% 88% / 0.94) !important;
-  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
-  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
-  box-shadow: none !important;
-}
-
-/* Pixel Desk support */
-
-.theme-pixel .journal-tag-tools,
-.theme-pixel .journal-tag-input-wrap,
-.theme-pixel .journal-tag-apply-button,
-.theme-pixel .journal-tag-chip,
-.theme-pixel .journal-clear-tag,
-.theme-pixel .journal-tag-result,
-.theme-pixel .journal-tag-empty-card,
-.theme-pixel .journal-tag-result-delete {
-  border-radius: 0 !important;
-  background: hsl(54 20% 88% / 0.94) !important;
-  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
-  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
-  box-shadow: none !important;
-}
-
-/* Pixel theme */
-.theme-pixel .journal-task-empty {
-  border-radius: 0 !important;
-  background: hsl(54 20% 88% / 0.94) !important;
-  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
-  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
 }
 
 /* =========================================================
-   PIXEL DESK FONT
-   ========================================================= */
+   Grid / card rectangle fix
+========================================================= */
 
-.theme-pixel,
-.theme-pixel body,
-.theme-pixel #root,
-.theme-pixel .glass-card,
-.theme-pixel aside,
-.theme-pixel .topbar,
-.theme-pixel main,
-.theme-pixel button,
-.theme-pixel input,
-.theme-pixel textarea,
-.theme-pixel select,
-.theme-pixel .memo-editor,
-.theme-pixel .memo-title-input,
-.theme-pixel .calendar-modal-window,
-.theme-pixel .settings-modal-window,
-.theme-pixel .memo-window {
-  font-family:
-    "NeoDunggeunmo",
-    "DungGeunMo",
-    "Courier New",
-    monospace !important;
-  letter-spacing: -0.02em;
-}
-
-/* 픽셀 테마에서는 제목도 둥근모 */
-.theme-pixel h1,
-.theme-pixel h2,
-.theme-pixel h3,
-.theme-pixel strong,
-.theme-pixel .font-semibold,
-.theme-pixel .font-bold {
-  font-family:
-    "NeoDunggeunmo",
-    "DungGeunMo",
-    "Courier New",
-    monospace !important;
-  font-weight: 700 !important;
-}
-
-.theme-pixel .dashboard-tab-header {
-  display: none !important;
-}
-
-/* no desktop icons/folders in Pixel Desk */
-.theme-pixel .pixel-desktop-decor,
-.theme-pixel .pixel-desktop-icon,
-.theme-pixel .pixel-desktop-icon-box,
-.theme-pixel .pixel-desktop-icon-label,
-.theme-pixel .apple-desktop-decor,
-.theme-pixel .apple-desktop-folder,
-.theme-pixel .apple-folder-shape {
-  display: none !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-/* Pixel Desk: widget window frame */
-
-.theme-pixel .glass-card {
-  position: relative;
-  padding-top: 36px !important;
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .react-grid-item,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .dashboard-grid-item,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .dashboard-grid-item-content {
   border-radius: 0 !important;
-  background: #d8d8cc !important;
-  border-top: 2px solid #ffffff !important;
-  border-left: 2px solid #ffffff !important;
-  border-right: 2px solid #424242 !important;
-  border-bottom: 2px solid #424242 !important;
-  box-shadow:
-    inset -1px -1px 0 #7b7b7b,
-    inset 1px 1px 0 #f7f7f7,
-    4px 4px 0 #8d8d88 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  overflow: hidden;
+  overflow: visible !important;
+  clip-path: none !important;
+  box-shadow: none !important;
 }
 
-/* window titlebar */
-.theme-pixel .glass-card::before {
-  content: "";
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  right: 6px;
-  height: 24px;
-  z-index: 4;
-  background: linear-gradient(90deg, #000080, #3040a0);
-  border-top: 1px solid #ffffff;
-  border-left: 1px solid #ffffff;
-  border-right: 1px solid #303030;
-  border-bottom: 1px solid #303030;
-  pointer-events: none;
-}
+/* =========================================================
+   Widget window
+========================================================= */
 
-/* minimize / maximize / close buttons */
-.theme-pixel .glass-card::after {
-  content: "_  □  ×";
-  position: absolute;
-  top: 8px;
-  right: 9px;
-  z-index: 5;
-  height: 20px;
-  min-width: 62px;
-  padding: 0 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "NeoDunggeunmo", "MS Sans Serif", "Tahoma", sans-serif;
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  line-height: 1;
-  color: #111111;
-  background: #c0c0c0;
-  border-top: 1px solid #ffffff;
-  border-left: 1px solid #ffffff;
-  border-right: 1px solid #303030;
-  border-bottom: 1px solid #303030;
-  pointer-events: none;
-}
-
-/* 카드 내부 내용이 타이틀바 밑으로 내려가게 */
-.theme-pixel .glass-card > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* 기존 카드 헤더가 너무 위로 붙는 것 방지 */
-.theme-pixel .glass-card-header,
-.theme-pixel .career-widget-header,
-.theme-pixel .calendar-widget-header,
-.theme-pixel .memo-widget-header,
-.theme-pixel .study-widget-header {
-  margin-top: 0 !important;
-}
-
-/* ================================
-   Pixel Desk: correct window titlebar
-   ================================ */
-
-/* ================================
-   Pixel Desk: widget titlebar like memo window
-   - memo window color untouched
-   - only normal widget glass-card gets blue titlebar
-   ================================ */
-
-.theme-pixel .glass-card {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-card {
   position: relative !important;
   height: 100% !important;
   min-height: 0 !important;
 
-  /* 메모 윈도우처럼 위에 바 공간 확보 */
   padding: 42px 18px 18px 18px !important;
 
   border-radius: 0 !important;
   overflow: hidden !important;
+  clip-path: none !important;
 
   background: #d8d8cc !important;
   background-image: none !important;
@@ -748,8 +1043,17 @@
   -webkit-backdrop-filter: none !important;
 }
 
-/* 일반 위젯 파란 창바: 메모 윈도우 바처럼 맨 위에 자연스럽게 */
-.theme-pixel .glass-card::before {
+/* Window titlebar */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-card::before {
   content: "" !important;
   display: block !important;
 
@@ -774,8 +1078,17 @@
   pointer-events: none !important;
 }
 
-/* 오른쪽 최소화/최대화/닫기 버튼만 */
-.theme-pixel .glass-card::after {
+/* Minimize / maximize / close */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-card::after {
   content: "_  □  ×" !important;
 
   position: absolute !important;
@@ -814,70 +1127,518 @@
   pointer-events: none !important;
 }
 
-/* 카드 안 실제 내용은 창바 아래로 */
-.theme-pixel .glass-card > * {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-card > * {
   position: relative !important;
   z-index: 2 !important;
 }
 
-/* 카드 내부 내용이 넘치면 스크롤 */
-.theme-pixel .glass-card-body {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-card-body {
   height: 100% !important;
   min-height: 0 !important;
   overflow: auto !important;
 }
 
+/* =========================================================
+   Inner panels
+========================================================= */
 
-/* 메모 목록 아이템: 둥근 카드 금지 */
-.theme-pixel .memo-note-item {
-  position: relative !important;
-
-  min-height: 48px !important;
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .journal-section,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .alert-item,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .alert-summary-card,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .today-focus-hero,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .today-focus-section,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .today-focus-task,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .today-focus-mini-item,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .today-focus-career-item,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .today-focus-memo,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .today-focus-empty,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-month-day-cell,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-week-timeline,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-event-item,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-list-panel,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-workspace,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .settings-section,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .career-detail-section,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .study-hero,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .study-subject-card,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .study-input-panel,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .study-goal-panel,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .study-week-panel,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .study-task-panel,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .study-record-list-panel,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .study-task,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .study-record-item,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .study-empty,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .career-card,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .career-list-item,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-mini-card,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .journal-task,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .journal-task-empty {
   border-radius: 0 !important;
-  padding: 8px 34px 8px 22px !important;
-
   background: #e8e8dc !important;
   background-image: none !important;
-
-  border-top: 1px solid #ffffff !important;
-  border-left: 1px solid #ffffff !important;
-  border-right: 1px solid #606060 !important;
-  border-bottom: 1px solid #606060 !important;
-
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #606060 !important;
+  border-bottom: 2px solid #606060 !important;
   box-shadow: none !important;
-  overflow: visible !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
+/* =========================================================
+   Floating windows / modals
+========================================================= */
 
-
-/* 실제 color chip 클래스가 있을 경우도 살림 */
-.theme-pixel .memo-color-chip,
-.theme-pixel .memo-note-color,
-.theme-pixel .memo-note-color-chip,
-.theme-pixel .memo-note-accent {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  flex-shrink: 0 !important;
-
-  width: 8px !important;
-  min-width: 8px !important;
-  height: 30px !important;
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-window,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-modal-window,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .settings-modal-window,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .career-modal-window,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .floating-window {
   border-radius: 0 !important;
-
-  background: var(--memo-color, #b7f7d0) !important;
-  border-left: 1px solid #ffffff !important;
-  border-top: 1px solid #ffffff !important;
-  border-right: 1px solid #808080 !important;
-  border-bottom: 1px solid #808080 !important;
+  background: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    1px 1px 0 #dfdfdf inset,
+    -1px -1px 0 #808080 inset,
+    8px 8px 0 rgb(0 0 0 / 0.34) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-/* ================================
-   Pixel Memo: single square color chip
-   ================================ */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-window-titlebar,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-modal-header,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .settings-modal-header,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .career-modal-header,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .floating-window-titlebar {
+  background: #000080 !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #000000 !important;
+}
 
-/* 메모 아이템은 왼쪽 정사각형 칩 + 내용 + 삭제버튼 구조 */
-.theme-pixel .memo-note-item {
+/* =========================================================
+   Memo-specific
+========================================================= */
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item {
   display: grid !important;
   grid-template-columns: 14px minmax(0, 1fr) 24px !important;
   align-items: center !important;
@@ -896,17 +1657,60 @@
   overflow: hidden !important;
 }
 
-/* 가짜 칩 제거 */
-.theme-pixel .memo-note-item::before {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item::before {
   display: none !important;
   content: none !important;
 }
 
-/* 실제 컬러칩 후보들 */
-.theme-pixel .memo-color-chip,
-.theme-pixel .memo-note-color,
-.theme-pixel .memo-note-color-chip,
-.theme-pixel .memo-note-accent {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-color,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-accent {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -928,13 +1732,16 @@
   box-shadow: none !important;
 }
 
-/* 메모 텍스트 영역 */
-.theme-pixel .memo-note-item > div:not(.memo-color-chip):not(.memo-note-color):not(.memo-note-color-chip):not(.memo-note-accent) {
-  min-width: 0 !important;
-}
-
-/* 삭제 버튼은 오른쪽 칸 */
-.theme-pixel .memo-note-delete {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-delete {
   position: static !important;
   transform: none !important;
   width: 22px !important;
@@ -942,59 +1749,288 @@
   justify-self: end !important;
 }
 
-/* Pixel Memo: varied chip colors */
-.theme-pixel .memo-note-item:nth-child(6n + 1) .memo-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 1) .memo-note-color,
-.theme-pixel .memo-note-item:nth-child(6n + 1) .memo-note-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 1) .memo-note-accent {
+/* varied chip colors */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 1) .memo-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 1) .memo-note-color,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 1) .memo-note-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 1) .memo-note-accent {
   background: #f7a8c9 !important;
 }
 
-.theme-pixel .memo-note-item:nth-child(6n + 2) .memo-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 2) .memo-note-color,
-.theme-pixel .memo-note-item:nth-child(6n + 2) .memo-note-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 2) .memo-note-accent {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 2) .memo-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 2) .memo-note-color,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel
+) .memo-note-item:nth-child(6n + 2) .memo-note-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 2) .memo-note-accent {
   background: #fff1a8 !important;
 }
 
-.theme-pixel .memo-note-item:nth-child(6n + 3) .memo-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 3) .memo-note-color,
-.theme-pixel .memo-note-item:nth-child(6n + 3) .memo-note-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 3) .memo-note-accent {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 3) .memo-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel
+) .memo-note-item:nth-child(6n + 3) .memo-note-color,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 3) .memo-note-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 3) .memo-note-accent {
   background: #a9e9ff !important;
 }
 
-.theme-pixel .memo-note-item:nth-child(6n + 4) .memo-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 4) .memo-note-color,
-.theme-pixel .memo-note-item:nth-child(6n + 4) .memo-note-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 4) .memo-note-accent {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 4) .memo-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 4) .memo-note-color,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 4) .memo-note-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 4) .memo-note-accent {
   background: #c8f7b7 !important;
 }
 
-.theme-pixel .memo-note-item:nth-child(6n + 5) .memo-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 5) .memo-note-color,
-.theme-pixel .memo-note-item:nth-child(6n + 5) .memo-note-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 5) .memo-note-accent {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 5) .memo-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 5) .memo-note-color,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 5) .memo-note-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 5) .memo-note-accent {
   background: #cbb8ff !important;
 }
 
-.theme-pixel .memo-note-item:nth-child(6n + 6) .memo-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 6) .memo-note-color,
-.theme-pixel .memo-note-item:nth-child(6n + 6) .memo-note-color-chip,
-.theme-pixel .memo-note-item:nth-child(6n + 6) .memo-note-accent {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 6) .memo-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 6) .memo-note-color,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 6) .memo-note-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-note-item:nth-child(6n + 6) .memo-note-accent {
   background: #ffbf91 !important;
 }
 
-/* ================================
-   Pixel Memo editor hard fix
-   ================================ */
-
-.theme-pixel .memo-workspace {
+/* Memo editor */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-workspace {
   background: #d8d8cc !important;
   overflow: hidden !important;
 }
 
-.theme-pixel .memo-editor-shell {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-editor-shell {
   flex: 1 1 auto !important;
   min-height: 220px !important;
   display: grid !important;
@@ -1004,7 +2040,16 @@
   border: none !important;
 }
 
-.theme-pixel .memo-editor-label {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-editor-label {
   height: 24px !important;
   padding: 0 2px !important;
   display: flex !important;
@@ -1015,7 +2060,16 @@
   border: none !important;
 }
 
-.theme-pixel .memo-editor {
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-editor {
   height: 100% !important;
   min-height: 0 !important;
   padding: 14px !important;
@@ -1035,31 +2089,167 @@
   overflow: auto !important;
 }
 
-/* 예전 paper/toolbar 장식이 남아서 위에 줄줄이 생기는 것 방지 */
-.theme-pixel .memo-editor-shell::before,
-.theme-pixel .memo-editor-shell::after,
-.theme-pixel .memo-editor-label::before,
-.theme-pixel .memo-editor-label::after {
-  display: none !important;
-  content: none !important;
+/* =========================================================
+   Calendar / progress / chips
+========================================================= */
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-range-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-week-event {
+  border-radius: 0 !important;
+  background: #ffffcc !important;
+  color: #000000 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #808080 !important;
+  border-bottom: 1px solid #808080 !important;
+  box-shadow: none !important;
 }
 
-.theme-pixel .memo-note-color-chip {
-  width: 12px !important;
-  height: 12px !important;
-  min-width: 12px !important;
-  min-height: 12px !important;
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .event-color-chip,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-color-chip {
   border-radius: 0 !important;
 }
 
-/* Pixel Desk일 때만 각진 값으로 변경 */
-.theme-pixel-desk,
-.pixel-desk,
-[data-theme="pixel-desk"] {
-  --gd-radius-app: 10px;
-  --gd-radius-panel: 6px;
-  --gd-radius-widget: 4px;
-  --gd-radius-card: 4px;
-  --gd-radius-inner: 4px;
-  --gd-radius-button: 2px;
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .today-focus-ring {
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: none !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .today-focus-ring span {
+  border-radius: 0 !important;
+  background: #ffffff !important;
+}
+
+/* settings preview */
+.settings-theme-preview.theme-pixel,
+.settings-theme-preview.theme-pixel-desk {
+  background:
+    linear-gradient(#000080, #000080) 0 0 / 100% 14px no-repeat,
+    #c0c0c0 !important;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+}
+
+/* =========================================================
+   Workspace header
+========================================================= */
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .dashboard-tab-header {
+  display: none !important;
+}
+
+/* =========================================================
+   Mobile
+========================================================= */
+
+@media (max-width: 768px) {
+  :where(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  ) .topbar {
+    height: auto !important;
+    min-height: 112px !important;
+  }
+
+  :where(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  ) .theme-button-group {
+    display: none !important;
+  }
+
+  :where(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  ) .theme-select-mobile {
+    display: inline-flex !important;
+  }
 }

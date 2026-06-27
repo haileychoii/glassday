@@ -1,270 +1,14 @@
 /* ================================
    Theme: Mac Core
-   macOS Finder + iOS Widget Style
+   Clean macOS / iOS Widget Style
    ================================ */
 
-
-/* modals and floating windows */
-
-.theme-ios .memo-window,
-.theme-ios .calendar-modal-window,
-.theme-ios .settings-modal-window,
-.theme-ios .career-modal-window {
-  border-radius: 28px !important;
-  background: hsl(0 0% 100% / 0.78) !important;
-  border: 1px solid hsl(0 0% 100% / 0.76) !important;
-  box-shadow:
-    0 38px 110px -42px hsl(220 24% 16% / 0.48),
-    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
-  backdrop-filter: blur(38px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(38px) saturate(180%) !important;
-}
-
-.theme-ios .memo-window-titlebar,
-.theme-ios .calendar-modal-header,
-.theme-ios .settings-modal-header,
-.theme-ios .career-modal-header {
-  background: hsl(0 0% 96% / 0.72) !important;
-  border-bottom: 1px solid hsl(220 14% 78% / 0.44) !important;
-  color: hsl(220 18% 12%) !important;
-}
-
-
-
-/* inner panels */
-
-.theme-ios .dashboard-tab-header,
-.theme-ios .widget-picker-panel,
-.theme-ios .calendar-month-day-cell,
-.theme-ios .calendar-week-timeline,
-.theme-ios .calendar-event-item,
-.theme-ios .memo-list-panel,
-.theme-ios .memo-workspace,
-.theme-ios .settings-section,
-.theme-ios .career-detail-section,
-.theme-ios .settings-action-card,
-.theme-ios .settings-sync-box {
-  border-radius: 24px !important;
-  background: hsl(0 0% 100% / 0.58) !important;
-  border: 1px solid hsl(0 0% 100% / 0.64) !important;
-  box-shadow:
-    0 16px 44px -34px hsl(220 24% 20% / 0.38),
-    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
-  backdrop-filter: blur(22px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
-}
-
-/* calendar */
-
-.theme-ios .calendar-range-chip,
-.theme-ios .calendar-week-event {
-  border-radius: 14px !important;
-  border: 1px solid hsl(0 0% 100% / 0.6) !important;
-  box-shadow:
-    0 10px 28px -22px hsl(220 24% 20% / 0.36),
-    inset 0 1px 0 hsl(0 0% 100% / 0.74) !important;
-}
-
-.theme-ios .calendar-week-event strong {
-  font-weight: 800;
-}
-
-/* memo */
-
-.theme-ios .memo-window-editor {
-  border-radius: 24px !important;
-}
-
-.theme-ios .memo-color-chip,
-.theme-ios .event-color-chip {
-  border-radius: 999px !important;
-}
-
-/* settings preview */
-
-.settings-theme-preview.theme-ios {
-  background:
-    radial-gradient(circle at 30% 30%, hsl(207 100% 76% / 0.7), transparent 38%),
-    linear-gradient(145deg, #ffffff, #eef3f8);
-}
-
-
-/* Mac Core support */
-
-.theme-ios .today-focus-hero,
-.theme-ios .today-focus-section,
-.theme-ios .today-focus-task,
-.theme-ios .today-focus-mini-item,
-.theme-ios .today-focus-career-item,
-.theme-ios .today-focus-memo,
-.theme-ios .today-focus-empty {
-  border-radius: 22px !important;
-  background: hsl(0 0% 100% / 0.58) !important;
-  border: 1px solid hsl(0 0% 100% / 0.64) !important;
-  box-shadow:
-    0 16px 44px -34px hsl(220 24% 20% / 0.38),
-    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
-  backdrop-filter: blur(22px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
-}
-
-/* Mac Core support */
-
-.theme-ios .study-hero,
-.theme-ios .study-date-button,
-.theme-ios .study-today-button,
-.theme-ios .study-date-input,
-.theme-ios .study-subject-card,
-.theme-ios .study-input-panel,
-.theme-ios .study-goal-panel,
-.theme-ios .study-week-panel,
-.theme-ios .study-task-panel,
-.theme-ios .study-record-list-panel,
-.theme-ios .study-task,
-.theme-ios .study-record-item,
-.theme-ios .study-empty,
-.theme-ios .study-goal-item,
-.theme-ios .study-record-form input,
-.theme-ios .study-record-form button {
-  border-radius: 20px !important;
-  background: hsl(0 0% 100% / 0.58) !important;
-  border: 1px solid hsl(0 0% 100% / 0.64) !important;
-  box-shadow:
-    0 16px 44px -34px hsl(220 24% 20% / 0.38),
-    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
-  backdrop-filter: blur(22px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
-}
-
-/* Mac Core support */
-
-.theme-ios .journal-hero,
-.theme-ios .journal-date-button,
-.theme-ios .journal-date-input,
-.theme-ios .journal-section,
-.theme-ios .journal-task,
-.theme-ios .journal-mini-add,
-.theme-ios .journal-mood-button,
-.theme-ios .journal-score-item,
-.theme-ios .journal-section textarea,
-.theme-ios .journal-review-section input {
-  border-radius: 20px !important;
-  background: hsl(0 0% 100% / 0.58) !important;
-  border: 1px solid hsl(0 0% 100% / 0.64) !important;
-  box-shadow:
-    0 16px 44px -34px hsl(220 24% 20% / 0.38),
-    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
-  backdrop-filter: blur(22px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
-}
-
-/* Mac Core support */
-
-.theme-ios .floating-window {
-  border-radius: 28px !important;
-  background: hsl(0 0% 100% / 0.78) !important;
-  border: 1px solid hsl(0 0% 100% / 0.76) !important;
-  box-shadow:
-    0 38px 110px -42px hsl(220 24% 16% / 0.48),
-    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
-  backdrop-filter: blur(38px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(38px) saturate(180%) !important;
-}
-
-.theme-ios .floating-window-titlebar {
-  background: hsl(0 0% 96% / 0.72) !important;
-  border-bottom: 1px solid hsl(220 14% 78% / 0.44) !important;
-}
-
-.theme-ios .floating-window-titlebar::before {
-  content: "";
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: #ff5f57;
-  box-shadow:
-    20px 0 0 #ffbd2e,
-    40px 0 0 #28c840;
-  margin-right: 50px;
-  flex-shrink: 0;
-}
-
-/* Mac Core */
-
-.theme-ios .study-detail-hero,
-.theme-ios .study-detail-subject-card,
-.theme-ios .study-detail-record-form,
-.theme-ios .study-detail-week-panel,
-.theme-ios .study-detail-goals,
-.theme-ios .study-detail-tasks,
-.theme-ios .study-detail-records {
-  border-radius: 22px !important;
-  background: hsl(0 0% 100% / 0.58) !important;
-  border: 1px solid hsl(0 0% 100% / 0.64) !important;
-  box-shadow:
-    0 16px 44px -34px hsl(220 24% 20% / 0.38),
-    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
-  backdrop-filter: blur(22px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
-}
-
-/* Mac Core support */
-
-.theme-ios .journal-tag-tools,
-.theme-ios .journal-tag-input-wrap,
-.theme-ios .journal-tag-apply-button,
-.theme-ios .journal-tag-chip,
-.theme-ios .journal-clear-tag,
-.theme-ios .journal-tag-result,
-.theme-ios .journal-tag-empty-card,
-.theme-ios .journal-tag-result-delete {
-  border-radius: 20px !important;
-  background: hsl(0 0% 100% / 0.58) !important;
-  border: 1px solid hsl(0 0% 100% / 0.64) !important;
-  box-shadow:
-    0 16px 44px -34px hsl(220 24% 20% / 0.38),
-    inset 0 1px 0 hsl(0 0% 100% / 0.84) !important;
-  backdrop-filter: blur(22px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
-}
-
-/* small width safety */
-@media (max-width: 900px) {
-  .journal-two-column {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Glass theme */
-.theme-glass .journal-task-empty {
-  background: hsl(0 0% 100% / 0.08) !important;
-  border-color: hsl(0 0% 100% / 0.16) !important;
-  color: hsl(236 38% 88% / 0.5) !important;
-}
-
-/* Pixel theme */
-.theme-pixel .journal-task-empty {
-  border-radius: 0 !important;
-  background: hsl(54 20% 88% / 0.94) !important;
-  border-top: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-left: 2px solid hsl(0 0% 100% / 0.92) !important;
-  border-right: 2px solid hsl(230 18% 20% / 0.72) !important;
-  border-bottom: 2px solid hsl(230 18% 20% / 0.72) !important;
-}
-
-/* Mac Core theme */
-.theme-ios .journal-task-empty {
-  border-radius: 16px !important;
-  background: hsl(0 0% 100% / 0.44) !important;
-  border: 1px solid hsl(0 0% 100% / 0.56) !important;
-}
-
-/* =========================================================
-   MAC CORE CLEAN RESET
-   bright Apple app style, no fake Finder, readable text
-   ========================================================= */
-
-.theme-ios {
+html[data-theme="mac-core"],
+body[data-theme="mac-core"],
+html.theme-mac-core,
+body.theme-mac-core,
+html.theme-ios,
+body.theme-ios {
   --background: 214 45% 97%;
   --foreground: 222 28% 14%;
   --muted-foreground: 220 14% 48%;
@@ -286,113 +30,796 @@
     sans-serif !important;
 }
 
-.theme-ios .bg-glass-gradient {
-  background:
-    radial-gradient(circle at 14% 10%, hsl(210 100% 88% / 0.9), transparent 34%),
-    radial-gradient(circle at 82% 18%, hsl(255 100% 92% / 0.78), transparent 34%),
-    radial-gradient(circle at 64% 82%, hsl(190 100% 90% / 0.68), transparent 42%),
-    linear-gradient(
-      145deg,
-      hsl(214 55% 96%),
-      hsl(220 48% 98%),
-      hsl(210 60% 94%)
-    ) !important;
+/* ================================
+   Background
+   ================================ */
+
+html[data-theme="mac-core"] body,
+body[data-theme="mac-core"],
+html.theme-mac-core body,
+body.theme-mac-core,
+html.theme-ios body,
+body.theme-ios {
+  background: #f5f5f7 !important;
+  background-image: none !important;
+  color: #1d1d1f !important;
 }
 
-.theme-ios .bg-glass-gradient::before,
-.theme-ios .bg-glass-gradient::after {
+html[data-theme="mac-core"] .bg-glass-gradient,
+html[data-theme="mac-core"] .app-shell,
+html[data-theme="mac-core"] .dashboard-shell,
+html[data-theme="mac-core"] .liquid-shell,
+html[data-theme="mac-core"] .main-area,
+html[data-theme="mac-core"] .dashboard-main,
+body[data-theme="mac-core"] .bg-glass-gradient,
+body[data-theme="mac-core"] .app-shell,
+body[data-theme="mac-core"] .dashboard-shell,
+body[data-theme="mac-core"] .liquid-shell,
+body[data-theme="mac-core"] .main-area,
+body[data-theme="mac-core"] .dashboard-main,
+html.theme-mac-core .bg-glass-gradient,
+html.theme-mac-core .app-shell,
+html.theme-mac-core .dashboard-shell,
+html.theme-mac-core .liquid-shell,
+html.theme-mac-core .main-area,
+html.theme-mac-core .dashboard-main,
+body.theme-mac-core .bg-glass-gradient,
+body.theme-mac-core .app-shell,
+body.theme-mac-core .dashboard-shell,
+body.theme-mac-core .liquid-shell,
+body.theme-mac-core .main-area,
+body.theme-mac-core .dashboard-main,
+html.theme-ios .bg-glass-gradient,
+html.theme-ios .app-shell,
+html.theme-ios .dashboard-shell,
+html.theme-ios .liquid-shell,
+html.theme-ios .main-area,
+html.theme-ios .dashboard-main,
+body.theme-ios .bg-glass-gradient,
+body.theme-ios .app-shell,
+body.theme-ios .dashboard-shell,
+body.theme-ios .liquid-shell,
+body.theme-ios .main-area,
+body.theme-ios .dashboard-main {
+  background: #f5f5f7 !important;
+  background-image: none !important;
+}
+
+/* Remove fake desktop decorations */
+html[data-theme="mac-core"] .apple-desktop-decor,
+html[data-theme="mac-core"] .apple-menu-bar,
+html[data-theme="mac-core"] .apple-floating-notification,
+html[data-theme="mac-core"] .apple-dock,
+html[data-theme="mac-core"] .apple-desktop-folder,
+html[data-theme="mac-core"] .pixel-desktop-decor,
+html[data-theme="mac-core"] .pixel-desktop-icon,
+body[data-theme="mac-core"] .apple-desktop-decor,
+body[data-theme="mac-core"] .apple-menu-bar,
+body[data-theme="mac-core"] .apple-floating-notification,
+body[data-theme="mac-core"] .apple-dock,
+body[data-theme="mac-core"] .apple-desktop-folder,
+body[data-theme="mac-core"] .pixel-desktop-decor,
+body[data-theme="mac-core"] .pixel-desktop-icon,
+html.theme-mac-core .apple-desktop-decor,
+html.theme-mac-core .apple-menu-bar,
+html.theme-mac-core .apple-floating-notification,
+html.theme-mac-core .apple-dock,
+html.theme-mac-core .apple-desktop-folder,
+html.theme-mac-core .pixel-desktop-decor,
+html.theme-mac-core .pixel-desktop-icon,
+body.theme-mac-core .apple-desktop-decor,
+body.theme-mac-core .apple-menu-bar,
+body.theme-mac-core .apple-floating-notification,
+body.theme-mac-core .apple-dock,
+body.theme-mac-core .apple-desktop-folder,
+body.theme-mac-core .pixel-desktop-decor,
+body.theme-mac-core .pixel-desktop-icon,
+html.theme-ios .apple-desktop-decor,
+html.theme-ios .apple-menu-bar,
+html.theme-ios .apple-floating-notification,
+html.theme-ios .apple-dock,
+html.theme-ios .apple-desktop-folder,
+html.theme-ios .pixel-desktop-decor,
+html.theme-ios .pixel-desktop-icon,
+body.theme-ios .apple-desktop-decor,
+body.theme-ios .apple-menu-bar,
+body.theme-ios .apple-floating-notification,
+body.theme-ios .apple-dock,
+body.theme-ios .apple-desktop-folder,
+body.theme-ios .pixel-desktop-decor,
+body.theme-ios .pixel-desktop-icon {
   display: none !important;
-  content: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
-.theme-ios .liquid-shell,
-.theme-ios .glass-panel {
-  background: hsl(0 0% 100% / 0.48) !important;
-  border: 1px solid hsl(220 22% 82% / 0.7) !important;
-  box-shadow:
-    0 30px 90px -54px hsl(220 34% 35% / 0.42),
-    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
-  backdrop-filter: blur(28px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
+/* Remove aurora/noise layers */
+html[data-theme="mac-core"] .aurora-bg,
+html[data-theme="mac-core"] .aurora-orb,
+html[data-theme="mac-core"] .cloud-bg,
+html[data-theme="mac-core"] .gradient-orb,
+html[data-theme="mac-core"] .background-orb,
+html[data-theme="mac-core"] .liquid-orb,
+html[data-theme="mac-core"] .glass-bg-layer,
+html[data-theme="mac-core"] .noise-overlay,
+html[data-theme="mac-core"] .diagonal-pattern,
+body[data-theme="mac-core"] .aurora-bg,
+body[data-theme="mac-core"] .aurora-orb,
+body[data-theme="mac-core"] .cloud-bg,
+body[data-theme="mac-core"] .gradient-orb,
+body[data-theme="mac-core"] .background-orb,
+body[data-theme="mac-core"] .liquid-orb,
+body[data-theme="mac-core"] .glass-bg-layer,
+body[data-theme="mac-core"] .noise-overlay,
+body[data-theme="mac-core"] .diagonal-pattern,
+html.theme-mac-core .aurora-bg,
+html.theme-mac-core .aurora-orb,
+html.theme-mac-core .cloud-bg,
+html.theme-mac-core .gradient-orb,
+html.theme-mac-core .background-orb,
+html.theme-mac-core .liquid-orb,
+html.theme-mac-core .glass-bg-layer,
+html.theme-mac-core .noise-overlay,
+html.theme-mac-core .diagonal-pattern,
+body.theme-mac-core .aurora-bg,
+body.theme-mac-core .aurora-orb,
+body.theme-mac-core .cloud-bg,
+body.theme-mac-core .gradient-orb,
+body.theme-mac-core .background-orb,
+body.theme-mac-core .liquid-orb,
+body.theme-mac-core .glass-bg-layer,
+body.theme-mac-core .noise-overlay,
+body.theme-mac-core .diagonal-pattern,
+html.theme-ios .aurora-bg,
+html.theme-ios .aurora-orb,
+html.theme-ios .cloud-bg,
+html.theme-ios .gradient-orb,
+html.theme-ios .background-orb,
+html.theme-ios .liquid-orb,
+html.theme-ios .glass-bg-layer,
+html.theme-ios .noise-overlay,
+html.theme-ios .diagonal-pattern,
+body.theme-ios .aurora-bg,
+body.theme-ios .aurora-orb,
+body.theme-ios .cloud-bg,
+body.theme-ios .gradient-orb,
+body.theme-ios .background-orb,
+body.theme-ios .liquid-orb,
+body.theme-ios .glass-bg-layer,
+body.theme-ios .noise-overlay,
+body.theme-ios .diagonal-pattern {
+  display: none !important;
+  background: none !important;
+  background-image: none !important;
 }
 
-.theme-ios .topbar {
-  height: 86px !important;
-  background: hsl(0 0% 100% / 0.66) !important;
-  border-bottom: 1px solid hsl(220 20% 78% / 0.55) !important;
+/* ================================
+   Topbar
+   절대 fixed 금지
+   Good Morning 숨기기 금지
+   ================================ */
+
+html[data-theme="mac-core"] .topbar,
+body[data-theme="mac-core"] .topbar,
+html.theme-mac-core .topbar,
+body.theme-mac-core .topbar,
+html.theme-ios .topbar,
+body.theme-ios .topbar {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+
+  width: 100% !important;
+  height: 96px !important;
+  min-height: 96px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: block !important;
+
+  background: transparent !important;
+  border: 0 !important;
   box-shadow: none !important;
-  backdrop-filter: blur(24px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: visible !important;
 }
 
-.theme-ios aside {
-  background: hsl(218 38% 96% / 0.74) !important;
-  border-right: 1px solid hsl(220 20% 78% / 0.58) !important;
-  box-shadow: inset -1px 0 0 hsl(0 0% 100% / 0.6) !important;
+html[data-theme="mac-core"] .topbar-inner,
+body[data-theme="mac-core"] .topbar-inner,
+html.theme-mac-core .topbar-inner,
+body.theme-mac-core .topbar-inner,
+html.theme-ios .topbar-inner,
+body.theme-ios .topbar-inner {
+  width: 100% !important;
+  height: 96px !important;
+  min-height: 96px !important;
+  padding: 22px 36px 14px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 24px !important;
+}
+
+html[data-theme="mac-core"] .topbar-title,
+body[data-theme="mac-core"] .topbar-title,
+html.theme-mac-core .topbar-title,
+body.theme-mac-core .topbar-title,
+html.theme-ios .topbar-title,
+body.theme-ios .topbar-title {
+  display: block !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+html[data-theme="mac-core"] .topbar-title-row,
+body[data-theme="mac-core"] .topbar-title-row,
+html.theme-mac-core .topbar-title-row,
+body.theme-mac-core .topbar-title-row,
+html.theme-ios .topbar-title-row,
+body.theme-ios .topbar-title-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+html[data-theme="mac-core"] .topbar-title h1,
+body[data-theme="mac-core"] .topbar-title h1,
+html.theme-mac-core .topbar-title h1,
+body.theme-mac-core .topbar-title h1,
+html.theme-ios .topbar-title h1,
+body.theme-ios .topbar-title h1 {
+  display: block !important;
+  margin: 0 !important;
+  color: #1d1d1f !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.035em !important;
+  line-height: 1.14 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+html[data-theme="mac-core"] .topbar-title p,
+body[data-theme="mac-core"] .topbar-title p,
+html.theme-mac-core .topbar-title p,
+body.theme-mac-core .topbar-title p,
+html.theme-ios .topbar-title p,
+body.theme-ios .topbar-title p {
+  display: block !important;
+  margin: 6px 0 0 !important;
+  color: rgba(29, 29, 31, 0.58) !important;
+  font-size: 13px !important;
+  line-height: 1.2 !important;
+}
+
+html[data-theme="mac-core"] .topbar-actions,
+body[data-theme="mac-core"] .topbar-actions,
+html.theme-mac-core .topbar-actions,
+body.theme-mac-core .topbar-actions,
+html.theme-ios .topbar-actions,
+body.theme-ios .topbar-actions {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+
+  margin-left: auto !important;
+  width: auto !important;
+  max-width: min(680px, 72vw) !important;
+  min-height: 58px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+
+  padding: 10px 12px !important;
+  border-radius: 30px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.74),
+      rgba(247, 248, 252, 0.48)
+    ) !important;
+  border: 1px solid rgba(210, 214, 224, 0.78) !important;
+  box-shadow:
+    0 18px 45px rgba(70, 90, 130, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(26px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(140%) !important;
+
+  overflow: visible !important;
+  transform: none !important;
+}
+
+html[data-theme="mac-core"] .theme-segmented-control,
+body[data-theme="mac-core"] .theme-segmented-control,
+html.theme-mac-core .theme-segmented-control,
+body.theme-mac-core .theme-segmented-control,
+html.theme-ios .theme-segmented-control,
+body.theme-ios .theme-segmented-control {
+  height: 40px !important;
+  padding: 4px !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+html[data-theme="mac-core"] .theme-segment-button,
+body[data-theme="mac-core"] .theme-segment-button,
+html.theme-mac-core .theme-segment-button,
+body.theme-mac-core .theme-segment-button,
+html.theme-ios .theme-segment-button,
+body.theme-ios .theme-segment-button {
+  height: 32px !important;
+  padding: 0 14px !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  border: 0 !important;
+  color: rgba(29, 29, 31, 0.72) !important;
+  box-shadow: none !important;
+  white-space: nowrap !important;
+}
+
+html[data-theme="mac-core"] .theme-segment-button.is-active,
+body[data-theme="mac-core"] .theme-segment-button.is-active,
+html.theme-mac-core .theme-segment-button.is-active,
+body.theme-mac-core .theme-segment-button.is-active,
+html.theme-ios .theme-segment-button.is-active,
+body.theme-ios .theme-segment-button.is-active {
+  background: rgba(255, 255, 255, 0.88) !important;
+  color: #1d1d1f !important;
+  box-shadow:
+    0 8px 22px rgba(70, 90, 130, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+html[data-theme="mac-core"] .topbar-action-button,
+html[data-theme="mac-core"] .topbar .glass-button,
+body[data-theme="mac-core"] .topbar-action-button,
+body[data-theme="mac-core"] .topbar .glass-button,
+html.theme-mac-core .topbar-action-button,
+html.theme-mac-core .topbar .glass-button,
+body.theme-mac-core .topbar-action-button,
+body.theme-mac-core .topbar .glass-button,
+html.theme-ios .topbar-action-button,
+html.theme-ios .topbar .glass-button,
+body.theme-ios .topbar-action-button,
+body.theme-ios .topbar .glass-button {
+  height: 40px !important;
+  padding: 0 14px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.68) !important;
+  border: 1px solid rgba(210, 214, 224, 0.78) !important;
+  color: rgba(29, 29, 31, 0.78) !important;
+  box-shadow:
+    0 8px 20px rgba(70, 90, 130, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+/* ================================
+   Sidebar
+   ================================ */
+
+html[data-theme="mac-core"] aside,
+body[data-theme="mac-core"] aside,
+html.theme-mac-core aside,
+body.theme-mac-core aside,
+html.theme-ios aside,
+body.theme-ios aside {
+  background: rgba(246, 247, 250, 0.74) !important;
+  border-right: 1px solid rgba(210, 214, 224, 0.72) !important;
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.6) !important;
   backdrop-filter: blur(26px) saturate(150%) !important;
   -webkit-backdrop-filter: blur(26px) saturate(150%) !important;
 }
 
-.theme-ios .dashboard-tab-header {
+html[data-theme="mac-core"] .sidebar-tab-item,
+body[data-theme="mac-core"] .sidebar-tab-item,
+html.theme-mac-core .sidebar-tab-item,
+body.theme-mac-core .sidebar-tab-item,
+html.theme-ios .sidebar-tab-item,
+body.theme-ios .sidebar-tab-item {
+  color: rgba(42, 45, 54, 0.72) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="mac-core"] .sidebar-tab-item.is-active,
+body[data-theme="mac-core"] .sidebar-tab-item.is-active,
+html.theme-mac-core .sidebar-tab-item.is-active,
+body.theme-mac-core .sidebar-tab-item.is-active,
+html.theme-ios .sidebar-tab-item.is-active,
+body.theme-ios .sidebar-tab-item.is-active {
+  color: rgba(29, 29, 31, 0.92) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-color: rgba(210, 214, 224, 0.58) !important;
+  box-shadow: 0 14px 38px -32px rgba(60, 80, 120, 0.42) !important;
+}
+
+/* ================================
+   Workspace
+   ================================ */
+
+html[data-theme="mac-core"] .dashboard-tab-space,
+body[data-theme="mac-core"] .dashboard-tab-space,
+html.theme-mac-core .dashboard-tab-space,
+body.theme-mac-core .dashboard-tab-space,
+html.theme-ios .dashboard-tab-space,
+body.theme-ios .dashboard-tab-space {
+  padding: 34px 42px 44px !important;
+}
+
+html[data-theme="mac-core"] .dashboard-tab-header,
+body[data-theme="mac-core"] .dashboard-tab-header,
+html.theme-mac-core .dashboard-tab-header,
+body.theme-mac-core .dashboard-tab-header,
+html.theme-ios .dashboard-tab-header,
+body.theme-ios .dashboard-tab-header {
+  display: flex !important;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
-  padding-bottom: 18px;
+  padding-bottom: 18px !important;
+  margin-bottom: 26px !important;
 }
 
-/* Cards: clean Apple widget, not washed out */
-.theme-ios .glass-card,
-.theme-ios .journal-section,
-.theme-ios .alert-item,
-.theme-ios .alert-summary-card,
-.theme-ios .study-input-panel,
-.theme-ios .study-week-panel,
-.theme-ios .study-goal-panel,
-.theme-ios .study-task-panel,
-.theme-ios .study-record-list-panel,
-.theme-ios .memo-workspace,
-.theme-ios .memo-list-panel,
-.theme-ios .career-card,
-.theme-ios .calendar-day-card {
-  background: hsl(0 0% 100% / 0.72) !important;
-  border: 1px solid hsl(220 20% 78% / 0.52) !important;
+/* ================================
+   Cards / widgets
+   ================================ */
+
+html[data-theme="mac-core"] .glass-card,
+body[data-theme="mac-core"] .glass-card,
+html.theme-mac-core .glass-card,
+body.theme-mac-core .glass-card,
+html.theme-ios .glass-card,
+body.theme-ios .glass-card {
+  border-radius: 28px !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  background-image: none !important;
+  border: 1px solid rgba(210, 214, 224, 0.72) !important;
   box-shadow:
-    0 22px 60px -46px hsl(220 28% 36% / 0.46),
-    inset 0 1px 0 hsl(0 0% 100% / 0.92) !important;
+    0 22px 60px rgba(30, 30, 35, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  color: #1d1d1f !important;
   backdrop-filter: blur(22px) saturate(150%) !important;
   -webkit-backdrop-filter: blur(22px) saturate(150%) !important;
 }
 
-/* Inner boxes: remove weird strong outlines */
-.theme-ios .journal-task,
-.theme-ios .journal-task-empty,
-.theme-ios .journal-tag-tools,
-.theme-ios .journal-tag-input-wrap,
-.theme-ios .journal-tag-apply-button,
-.theme-ios .journal-tag-library,
-.theme-ios .journal-tag-chip,
-.theme-ios .journal-tag-result,
-.theme-ios .today-focus-task,
-.theme-ios .today-focus-mini-card,
-.theme-ios .study-task,
-.theme-ios .study-record-item,
-.theme-ios .memo-note-item,
-.theme-ios input,
-.theme-ios textarea {
-  background: hsl(220 40% 98% / 0.72) !important;
-  border: 1px solid hsl(220 18% 82% / 0.42) !important;
+html[data-theme="mac-core"] .glass-card::before,
+html[data-theme="mac-core"] .glass-card::after,
+body[data-theme="mac-core"] .glass-card::before,
+body[data-theme="mac-core"] .glass-card::after,
+html.theme-mac-core .glass-card::before,
+html.theme-mac-core .glass-card::after,
+body.theme-mac-core .glass-card::before,
+body.theme-mac-core .glass-card::after,
+html.theme-ios .glass-card::before,
+html.theme-ios .glass-card::after,
+body.theme-ios .glass-card::before,
+body.theme-ios .glass-card::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Inner panels */
+html[data-theme="mac-core"] .today-focus-hero,
+html[data-theme="mac-core"] .today-focus-section,
+html[data-theme="mac-core"] .today-focus-task,
+html[data-theme="mac-core"] .today-focus-mini-item,
+html[data-theme="mac-core"] .today-focus-career-item,
+html[data-theme="mac-core"] .today-focus-memo,
+html[data-theme="mac-core"] .today-focus-empty,
+html[data-theme="mac-core"] .study-hero,
+html[data-theme="mac-core"] .study-date-button,
+html[data-theme="mac-core"] .study-today-button,
+html[data-theme="mac-core"] .study-date-input,
+html[data-theme="mac-core"] .study-subject-card,
+html[data-theme="mac-core"] .study-input-panel,
+html[data-theme="mac-core"] .study-goal-panel,
+html[data-theme="mac-core"] .study-week-panel,
+html[data-theme="mac-core"] .study-task-panel,
+html[data-theme="mac-core"] .study-record-list-panel,
+html[data-theme="mac-core"] .study-task,
+html[data-theme="mac-core"] .study-record-item,
+html[data-theme="mac-core"] .study-empty,
+html[data-theme="mac-core"] .study-goal-item,
+html[data-theme="mac-core"] .journal-hero,
+html[data-theme="mac-core"] .journal-date-button,
+html[data-theme="mac-core"] .journal-date-input,
+html[data-theme="mac-core"] .journal-section,
+html[data-theme="mac-core"] .journal-task,
+html[data-theme="mac-core"] .journal-mini-add,
+html[data-theme="mac-core"] .journal-mood-button,
+html[data-theme="mac-core"] .journal-score-item,
+html[data-theme="mac-core"] .journal-section textarea,
+html[data-theme="mac-core"] .journal-review-section input,
+html[data-theme="mac-core"] .alert-item,
+html[data-theme="mac-core"] .alert-summary-card,
+html[data-theme="mac-core"] .memo-workspace,
+html[data-theme="mac-core"] .memo-list-panel,
+html[data-theme="mac-core"] .career-card,
+html[data-theme="mac-core"] .calendar-day-card,
+body[data-theme="mac-core"] .today-focus-hero,
+body[data-theme="mac-core"] .today-focus-section,
+body[data-theme="mac-core"] .today-focus-task,
+body[data-theme="mac-core"] .today-focus-mini-item,
+body[data-theme="mac-core"] .today-focus-career-item,
+body[data-theme="mac-core"] .today-focus-memo,
+body[data-theme="mac-core"] .today-focus-empty,
+body[data-theme="mac-core"] .study-hero,
+body[data-theme="mac-core"] .study-date-button,
+body[data-theme="mac-core"] .study-today-button,
+body[data-theme="mac-core"] .study-date-input,
+body[data-theme="mac-core"] .study-subject-card,
+body[data-theme="mac-core"] .study-input-panel,
+body[data-theme="mac-core"] .study-goal-panel,
+body[data-theme="mac-core"] .study-week-panel,
+body[data-theme="mac-core"] .study-task-panel,
+body[data-theme="mac-core"] .study-record-list-panel,
+body[data-theme="mac-core"] .study-task,
+body[data-theme="mac-core"] .study-record-item,
+body[data-theme="mac-core"] .study-empty,
+body[data-theme="mac-core"] .study-goal-item,
+body[data-theme="mac-core"] .journal-hero,
+body[data-theme="mac-core"] .journal-date-button,
+body[data-theme="mac-core"] .journal-date-input,
+body[data-theme="mac-core"] .journal-section,
+body[data-theme="mac-core"] .journal-task,
+body[data-theme="mac-core"] .journal-mini-add,
+body[data-theme="mac-core"] .journal-mood-button,
+body[data-theme="mac-core"] .journal-score-item,
+body[data-theme="mac-core"] .journal-section textarea,
+body[data-theme="mac-core"] .journal-review-section input,
+body[data-theme="mac-core"] .alert-item,
+body[data-theme="mac-core"] .alert-summary-card,
+body[data-theme="mac-core"] .memo-workspace,
+body[data-theme="mac-core"] .memo-list-panel,
+body[data-theme="mac-core"] .career-card,
+body[data-theme="mac-core"] .calendar-day-card,
+html.theme-mac-core .today-focus-hero,
+html.theme-mac-core .today-focus-section,
+html.theme-mac-core .today-focus-task,
+html.theme-mac-core .today-focus-mini-item,
+html.theme-mac-core .today-focus-career-item,
+html.theme-mac-core .today-focus-memo,
+html.theme-mac-core .today-focus-empty,
+html.theme-mac-core .study-hero,
+html.theme-mac-core .study-date-button,
+html.theme-mac-core .study-today-button,
+html.theme-mac-core .study-date-input,
+html.theme-mac-core .study-subject-card,
+html.theme-mac-core .study-input-panel,
+html.theme-mac-core .study-goal-panel,
+html.theme-mac-core .study-week-panel,
+html.theme-mac-core .study-task-panel,
+html.theme-mac-core .study-record-list-panel,
+html.theme-mac-core .study-task,
+html.theme-mac-core .study-record-item,
+html.theme-mac-core .study-empty,
+html.theme-mac-core .study-goal-item,
+html.theme-mac-core .journal-hero,
+html.theme-mac-core .journal-date-button,
+html.theme-mac-core .journal-date-input,
+html.theme-mac-core .journal-section,
+html.theme-mac-core .journal-task,
+html.theme-mac-core .journal-mini-add,
+html.theme-mac-core .journal-mood-button,
+html.theme-mac-core .journal-score-item,
+html.theme-mac-core .journal-section textarea,
+html.theme-mac-core .journal-review-section input,
+html.theme-mac-core .alert-item,
+html.theme-mac-core .alert-summary-card,
+html.theme-mac-core .memo-workspace,
+html.theme-mac-core .memo-list-panel,
+html.theme-mac-core .career-card,
+html.theme-mac-core .calendar-day-card,
+body.theme-mac-core .today-focus-hero,
+body.theme-mac-core .today-focus-section,
+body.theme-mac-core .today-focus-task,
+body.theme-mac-core .today-focus-mini-item,
+body.theme-mac-core .today-focus-career-item,
+body.theme-mac-core .today-focus-memo,
+body.theme-mac-core .today-focus-empty,
+body.theme-mac-core .study-hero,
+body.theme-mac-core .study-date-button,
+body.theme-mac-core .study-today-button,
+body.theme-mac-core .study-date-input,
+body.theme-mac-core .study-subject-card,
+body.theme-mac-core .study-input-panel,
+body.theme-mac-core .study-goal-panel,
+body.theme-mac-core .study-week-panel,
+body.theme-mac-core .study-task-panel,
+body.theme-mac-core .study-record-list-panel,
+body.theme-mac-core .study-task,
+body.theme-mac-core .study-record-item,
+body.theme-mac-core .study-empty,
+body.theme-mac-core .study-goal-item,
+body.theme-mac-core .journal-hero,
+body.theme-mac-core .journal-date-button,
+body.theme-mac-core .journal-date-input,
+body.theme-mac-core .journal-section,
+body.theme-mac-core .journal-task,
+body.theme-mac-core .journal-mini-add,
+body.theme-mac-core .journal-mood-button,
+body.theme-mac-core .journal-score-item,
+body.theme-mac-core .journal-section textarea,
+body.theme-mac-core .journal-review-section input,
+body.theme-mac-core .alert-item,
+body.theme-mac-core .alert-summary-card,
+body.theme-mac-core .memo-workspace,
+body.theme-mac-core .memo-list-panel,
+body.theme-mac-core .career-card,
+body.theme-mac-core .calendar-day-card,
+html.theme-ios .today-focus-hero,
+html.theme-ios .today-focus-section,
+html.theme-ios .today-focus-task,
+html.theme-ios .today-focus-mini-item,
+html.theme-ios .today-focus-career-item,
+html.theme-ios .today-focus-memo,
+html.theme-ios .today-focus-empty,
+html.theme-ios .study-hero,
+html.theme-ios .study-date-button,
+html.theme-ios .study-today-button,
+html.theme-ios .study-date-input,
+html.theme-ios .study-subject-card,
+html.theme-ios .study-input-panel,
+html.theme-ios .study-goal-panel,
+html.theme-ios .study-week-panel,
+html.theme-ios .study-task-panel,
+html.theme-ios .study-record-list-panel,
+html.theme-ios .study-task,
+html.theme-ios .study-record-item,
+html.theme-ios .study-empty,
+html.theme-ios .study-goal-item,
+html.theme-ios .journal-hero,
+html.theme-ios .journal-date-button,
+html.theme-ios .journal-date-input,
+html.theme-ios .journal-section,
+html.theme-ios .journal-task,
+html.theme-ios .journal-mini-add,
+html.theme-ios .journal-mood-button,
+html.theme-ios .journal-score-item,
+html.theme-ios .journal-section textarea,
+html.theme-ios .journal-review-section input,
+html.theme-ios .alert-item,
+html.theme-ios .alert-summary-card,
+html.theme-ios .memo-workspace,
+html.theme-ios .memo-list-panel,
+html.theme-ios .career-card,
+html.theme-ios .calendar-day-card,
+body.theme-ios .today-focus-hero,
+body.theme-ios .today-focus-section,
+body.theme-ios .today-focus-task,
+body.theme-ios .today-focus-mini-item,
+body.theme-ios .today-focus-career-item,
+body.theme-ios .today-focus-memo,
+body.theme-ios .today-focus-empty,
+body.theme-ios .study-hero,
+body.theme-ios .study-date-button,
+body.theme-ios .study-today-button,
+body.theme-ios .study-date-input,
+body.theme-ios .study-subject-card,
+body.theme-ios .study-input-panel,
+body.theme-ios .study-goal-panel,
+body.theme-ios .study-week-panel,
+body.theme-ios .study-task-panel,
+body.theme-ios .study-record-list-panel,
+body.theme-ios .study-task,
+body.theme-ios .study-record-item,
+body.theme-ios .study-empty,
+body.theme-ios .study-goal-item,
+body.theme-ios .journal-hero,
+body.theme-ios .journal-date-button,
+body.theme-ios .journal-date-input,
+body.theme-ios .journal-section,
+body.theme-ios .journal-task,
+body.theme-ios .journal-mini-add,
+body.theme-ios .journal-mood-button,
+body.theme-ios .journal-score-item,
+body.theme-ios .journal-section textarea,
+body.theme-ios .journal-review-section input,
+body.theme-ios .alert-item,
+body.theme-ios .alert-summary-card,
+body.theme-ios .memo-workspace,
+body.theme-ios .memo-list-panel,
+body.theme-ios .career-card,
+body.theme-ios .calendar-day-card {
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.68) !important;
+  background-image: none !important;
+  border: 1px solid rgba(210, 214, 224, 0.72) !important;
+  box-shadow:
+    0 16px 44px -34px rgba(45, 55, 80, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+}
+
+/* Inputs */
+html[data-theme="mac-core"] input,
+html[data-theme="mac-core"] textarea,
+html[data-theme="mac-core"] select,
+body[data-theme="mac-core"] input,
+body[data-theme="mac-core"] textarea,
+body[data-theme="mac-core"] select,
+html.theme-mac-core input,
+html.theme-mac-core textarea,
+html.theme-mac-core select,
+body.theme-mac-core input,
+body.theme-mac-core textarea,
+body.theme-mac-core select,
+html.theme-ios input,
+html.theme-ios textarea,
+html.theme-ios select,
+body.theme-ios input,
+body.theme-ios textarea,
+body.theme-ios select {
+  background: rgba(248, 249, 252, 0.76) !important;
+  border: 1px solid rgba(210, 214, 224, 0.64) !important;
+  color: #1d1d1f !important;
   box-shadow: none !important;
 }
 
 /* Typography */
-.theme-ios body,
-.theme-ios .glass-card,
-.theme-ios aside,
-.theme-ios .topbar,
-.theme-ios button,
-.theme-ios input,
-.theme-ios textarea,
-.theme-ios select {
+html[data-theme="mac-core"] body,
+html[data-theme="mac-core"] .glass-card,
+html[data-theme="mac-core"] aside,
+html[data-theme="mac-core"] .topbar,
+html[data-theme="mac-core"] button,
+html[data-theme="mac-core"] input,
+html[data-theme="mac-core"] textarea,
+html[data-theme="mac-core"] select,
+body[data-theme="mac-core"],
+body[data-theme="mac-core"] .glass-card,
+body[data-theme="mac-core"] aside,
+body[data-theme="mac-core"] .topbar,
+body[data-theme="mac-core"] button,
+body[data-theme="mac-core"] input,
+body[data-theme="mac-core"] textarea,
+body[data-theme="mac-core"] select,
+html.theme-mac-core body,
+html.theme-mac-core .glass-card,
+html.theme-mac-core aside,
+html.theme-mac-core .topbar,
+html.theme-mac-core button,
+html.theme-mac-core input,
+html.theme-mac-core textarea,
+html.theme-mac-core select,
+body.theme-mac-core,
+body.theme-mac-core .glass-card,
+body.theme-mac-core aside,
+body.theme-mac-core .topbar,
+body.theme-mac-core button,
+body.theme-mac-core input,
+body.theme-mac-core textarea,
+body.theme-mac-core select,
+html.theme-ios body,
+html.theme-ios .glass-card,
+html.theme-ios aside,
+html.theme-ios .topbar,
+html.theme-ios button,
+html.theme-ios input,
+html.theme-ios textarea,
+html.theme-ios select,
+body.theme-ios,
+body.theme-ios .glass-card,
+body.theme-ios aside,
+body.theme-ios .topbar,
+body.theme-ios button,
+body.theme-ios input,
+body.theme-ios textarea,
+body.theme-ios select {
   font-family:
     "Apple SD Gothic Neo",
     "AppleGothic",
@@ -403,514 +830,826 @@
     "Pretendard",
     system-ui,
     sans-serif !important;
-  color: hsl(222 28% 14% / 0.9) !important;
+  color: rgba(29, 29, 31, 0.9) !important;
   text-shadow: none !important;
 }
 
-.theme-ios h1,
-.theme-ios h2,
-.theme-ios h3,
-.theme-ios strong,
-.theme-ios .font-semibold,
-.theme-ios .font-bold {
-  color: hsl(222 30% 12% / 0.94) !important;
-  font-weight: 600 !important;
+html[data-theme="mac-core"] h1,
+html[data-theme="mac-core"] h2,
+html[data-theme="mac-core"] h3,
+html[data-theme="mac-core"] strong,
+html[data-theme="mac-core"] .font-semibold,
+html[data-theme="mac-core"] .font-bold,
+body[data-theme="mac-core"] h1,
+body[data-theme="mac-core"] h2,
+body[data-theme="mac-core"] h3,
+body[data-theme="mac-core"] strong,
+body[data-theme="mac-core"] .font-semibold,
+body[data-theme="mac-core"] .font-bold,
+html.theme-mac-core h1,
+html.theme-mac-core h2,
+html.theme-mac-core h3,
+html.theme-mac-core strong,
+html.theme-mac-core .font-semibold,
+html.theme-mac-core .font-bold,
+body.theme-mac-core h1,
+body.theme-mac-core h2,
+body.theme-mac-core h3,
+body.theme-mac-core strong,
+body.theme-mac-core .font-semibold,
+body.theme-mac-core .font-bold,
+html.theme-ios h1,
+html.theme-ios h2,
+html.theme-ios h3,
+html.theme-ios strong,
+html.theme-ios .font-semibold,
+html.theme-ios .font-bold,
+body.theme-ios h1,
+body.theme-ios h2,
+body.theme-ios h3,
+body.theme-ios strong,
+body.theme-ios .font-semibold,
+body.theme-ios .font-bold {
+  color: rgba(29, 29, 31, 0.94) !important;
+  font-weight: 650 !important;
   letter-spacing: -0.035em !important;
 }
 
-.theme-ios p,
-.theme-ios span,
-.theme-ios small,
-.theme-ios .text-muted-foreground,
-.theme-ios .journal-sub,
-.theme-ios .study-sub {
-  color: hsl(220 14% 42% / 0.78) !important;
-  font-weight: 400 !important;
+/* ================================
+   Floating windows / modals
+   ================================ */
+
+html[data-theme="mac-core"] .memo-window,
+html[data-theme="mac-core"] .calendar-modal-window,
+html[data-theme="mac-core"] .settings-modal-window,
+html[data-theme="mac-core"] .career-modal-window,
+html[data-theme="mac-core"] .floating-window,
+body[data-theme="mac-core"] .memo-window,
+body[data-theme="mac-core"] .calendar-modal-window,
+body[data-theme="mac-core"] .settings-modal-window,
+body[data-theme="mac-core"] .career-modal-window,
+body[data-theme="mac-core"] .floating-window,
+html.theme-mac-core .memo-window,
+html.theme-mac-core .calendar-modal-window,
+html.theme-mac-core .settings-modal-window,
+html.theme-mac-core .career-modal-window,
+html.theme-mac-core .floating-window,
+body.theme-mac-core .memo-window,
+body.theme-mac-core .calendar-modal-window,
+body.theme-mac-core .settings-modal-window,
+body.theme-mac-core .career-modal-window,
+body.theme-mac-core .floating-window,
+html.theme-ios .memo-window,
+html.theme-ios .calendar-modal-window,
+html.theme-ios .settings-modal-window,
+html.theme-ios .career-modal-window,
+html.theme-ios .floating-window,
+body.theme-ios .memo-window,
+body.theme-ios .calendar-modal-window,
+body.theme-ios .settings-modal-window,
+body.theme-ios .career-modal-window,
+body.theme-ios .floating-window {
+  border-radius: 28px !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(210, 214, 224, 0.76) !important;
+  box-shadow:
+    0 38px 110px -42px rgba(45, 55, 80, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(38px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(38px) saturate(180%) !important;
 }
 
-.theme-ios .uppercase,
-.theme-ios .journal-kicker,
-.theme-ios .study-kicker {
-  color: hsl(220 12% 42% / 0.62) !important;
-  font-weight: 650 !important;
-  letter-spacing: 0.14em !important;
+html[data-theme="mac-core"] .memo-window-titlebar,
+html[data-theme="mac-core"] .calendar-modal-header,
+html[data-theme="mac-core"] .settings-modal-header,
+html[data-theme="mac-core"] .career-modal-header,
+html[data-theme="mac-core"] .floating-window-titlebar,
+body[data-theme="mac-core"] .memo-window-titlebar,
+body[data-theme="mac-core"] .calendar-modal-header,
+body[data-theme="mac-core"] .settings-modal-header,
+body[data-theme="mac-core"] .career-modal-header,
+body[data-theme="mac-core"] .floating-window-titlebar,
+html.theme-mac-core .memo-window-titlebar,
+html.theme-mac-core .calendar-modal-header,
+html.theme-mac-core .settings-modal-header,
+html.theme-mac-core .career-modal-header,
+html.theme-mac-core .floating-window-titlebar,
+body.theme-mac-core .memo-window-titlebar,
+body.theme-mac-core .calendar-modal-header,
+body.theme-mac-core .settings-modal-header,
+body.theme-mac-core .career-modal-header,
+body.theme-mac-core .floating-window-titlebar,
+html.theme-ios .memo-window-titlebar,
+html.theme-ios .calendar-modal-header,
+html.theme-ios .settings-modal-header,
+html.theme-ios .career-modal-header,
+html.theme-ios .floating-window-titlebar,
+body.theme-ios .memo-window-titlebar,
+body.theme-ios .calendar-modal-header,
+body.theme-ios .settings-modal-header,
+body.theme-ios .career-modal-header,
+body.theme-ios .floating-window-titlebar {
+  background: rgba(246, 247, 250, 0.78) !important;
+  border-bottom: 1px solid rgba(210, 214, 224, 0.62) !important;
+  color: #1d1d1f !important;
 }
 
-/* Sidebar */
-.theme-ios .sidebar-tab-item {
-  color: hsl(222 20% 26% / 0.72) !important;
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  border-radius: 13px !important;
-  box-shadow: none !important;
+/* macOS traffic dots only for floating windows */
+html[data-theme="mac-core"] .floating-window-titlebar::before,
+body[data-theme="mac-core"] .floating-window-titlebar::before,
+html.theme-mac-core .floating-window-titlebar::before,
+body.theme-mac-core .floating-window-titlebar::before,
+html.theme-ios .floating-window-titlebar::before,
+body.theme-ios .floating-window-titlebar::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #ff5f57;
+  box-shadow:
+    20px 0 0 #ffbd2e,
+    40px 0 0 #28c840;
+  margin-right: 50px;
+  flex-shrink: 0;
 }
 
-.theme-ios .sidebar-tab-item.is-active {
-  color: hsl(222 28% 12% / 0.92) !important;
-  background: hsl(0 0% 100% / 0.68) !important;
-  border-color: hsl(220 18% 82% / 0.48) !important;
-  box-shadow: 0 14px 38px -32px hsl(220 30% 35% / 0.42) !important;
+/* ================================
+   Responsive
+   ================================ */
+
+@media (max-width: 900px) {
+  html[data-theme="mac-core"] .journal-two-column,
+  body[data-theme="mac-core"] .journal-two-column,
+  html.theme-mac-core .journal-two-column,
+  body.theme-mac-core .journal-two-column,
+  html.theme-ios .journal-two-column,
+  body.theme-ios .journal-two-column {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* Top buttons/select */
-.theme-ios .glass-button,
-.theme-ios .theme-select {
-  color: hsl(222 24% 20% / 0.86) !important;
-  background: hsl(0 0% 100% / 0.7) !important;
-  border: 1px solid hsl(220 18% 78% / 0.58) !important;
-  box-shadow: none !important;
-}
+@media (max-width: 768px) {
+  html[data-theme="mac-core"] .topbar,
+  body[data-theme="mac-core"] .topbar,
+  html.theme-mac-core .topbar,
+  body.theme-mac-core .topbar,
+  html.theme-ios .topbar,
+  body.theme-ios .topbar {
+    height: auto !important;
+    min-height: 118px !important;
+  }
 
-.theme-ios .theme-select option {
-  color: #1f2937 !important;
-  background: #ffffff !important;
-}
+  html[data-theme="mac-core"] .topbar-inner,
+  body[data-theme="mac-core"] .topbar-inner,
+  html.theme-mac-core .topbar-inner,
+  body.theme-mac-core .topbar-inner,
+  html.theme-ios .topbar-inner,
+  body.theme-ios .topbar-inner {
+    min-height: 118px !important;
+    height: auto !important;
+    padding: 18px 20px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
 
-/* Daily Journal spacing fix */
-.theme-ios .daily-journal {
-  background: transparent !important;
-}
+  html[data-theme="mac-core"] .topbar-actions,
+  body[data-theme="mac-core"] .topbar-actions,
+  html.theme-mac-core .topbar-actions,
+  body.theme-mac-core .topbar-actions,
+  html.theme-ios .topbar-actions,
+  body.theme-ios .topbar-actions {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 52px !important;
+    justify-content: flex-start !important;
+    padding: 8px !important;
+    border-radius: 26px !important;
+    overflow-x: auto !important;
+  }
 
-.theme-ios .journal-section-title {
-  gap: 8px !important;
-  padding-right: 38px !important;
-}
+  html[data-theme="mac-core"] .theme-button-group,
+  body[data-theme="mac-core"] .theme-button-group,
+  html.theme-mac-core .theme-button-group,
+  body.theme-mac-core .theme-button-group,
+  html.theme-ios .theme-button-group,
+  body.theme-ios .theme-button-group {
+    display: none !important;
+  }
 
-.theme-ios .journal-section-title .journal-mini-add {
-  top: 12px !important;
-  right: 12px !important;
+  html[data-theme="mac-core"] .theme-select-mobile,
+  body[data-theme="mac-core"] .theme-select-mobile,
+  html.theme-mac-core .theme-select-mobile,
+  body.theme-mac-core .theme-select-mobile,
+  html.theme-ios .theme-select-mobile,
+  body.theme-ios .theme-select-mobile {
+    display: inline-flex !important;
+    height: 38px !important;
+    border-radius: 999px !important;
+  }
+
+  html[data-theme="mac-core"] .dashboard-tab-space,
+  body[data-theme="mac-core"] .dashboard-tab-space,
+  html.theme-mac-core .dashboard-tab-space,
+  body.theme-mac-core .dashboard-tab-space,
+  html.theme-ios .dashboard-tab-space,
+  body.theme-ios .dashboard-tab-space {
+    padding: 22px 20px 34px !important;
+  }
 }
 
 /* =========================================================
-   MAC CORE: remove fake desktop/topbar/decor completely
-   ========================================================= */
+   MAC CORE — CUPERTINO DEPTH RESTORE
+   fake desktop X / real Apple widget feel O
+   Put this at the VERY END of mac-core.css
+========================================================= */
 
-.theme-ios .apple-desktop-decor,
-.theme-ios .apple-menu-bar,
-.theme-ios .apple-floating-notification,
-.theme-ios .apple-dock,
-.theme-ios .apple-desktop-folder,
-.theme-ios .pixel-desktop-decor,
-.theme-ios .pixel-desktop-icon {
-  display: none !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+html[data-theme="mac-core"],
+body[data-theme="mac-core"],
+html.theme-mac-core,
+body.theme-mac-core,
+html.theme-ios,
+body.theme-ios {
+  --mac-bg: #f6f3f8;
+  --mac-surface: rgba(255, 255, 255, 0.62);
+  --mac-surface-strong: rgba(255, 255, 255, 0.82);
+  --mac-border: rgba(215, 210, 224, 0.68);
+  --mac-text: #252237;
+  --mac-subtext: rgba(37, 34, 55, 0.58);
+  --mac-purple: #a879e8;
+  --mac-blue: #8ec5ff;
+  --mac-pink: #ffc4df;
+  --mac-shadow: 0 24px 70px rgba(96, 74, 125, 0.13);
+  --mac-inner: inset 0 1px 0 rgba(255, 255, 255, 0.88);
 }
 
-
-/* topbar 사라진 만큼 main이 바로 위로 붙도록 */
-.theme-ios main {
-  padding-top: 22px !important;
+/* app background: iOS/macOS soft wallpaper */
+html[data-theme="mac-core"] body,
+body[data-theme="mac-core"],
+html.theme-mac-core body,
+body.theme-mac-core,
+html.theme-ios body,
+body.theme-ios {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 206, 232, 0.72), transparent 30%),
+    radial-gradient(circle at 86% 10%, rgba(190, 216, 255, 0.68), transparent 34%),
+    radial-gradient(circle at 62% 88%, rgba(207, 187, 255, 0.5), transparent 38%),
+    linear-gradient(135deg, #fbf7fb 0%, #f6f4fb 45%, #f1f6ff 100%) !important;
+  color: var(--mac-text) !important;
 }
 
-/* 이상한 빨노초/가짜 장식 전부 제거 */
-.theme-ios .topbar::before,
-.theme-ios .topbar::after,
-.theme-ios h1::before,
-.theme-ios h1::after,
-.theme-ios .topbar h1::before,
-.theme-ios .topbar h1::after,
-.theme-ios .glass-panel::before,
-.theme-ios .glass-panel::after,
-.theme-ios .liquid-shell::before,
-.theme-ios .liquid-shell::after {
-  display: none !important;
-  content: none !important;
-}
-
-/* Mac Core에서는 더 Cupertino Notes 느낌 */
-.theme-ios .memo-list-panel {
-  background: hsl(220 42% 96% / 0.68) !important;
-  border-right: 1px solid hsl(220 18% 78% / 0.5) !important;
-}
-
-.theme-ios .memo-workspace {
-  background: hsl(0 0% 100% / 0.44) !important;
-}
-
-.theme-ios .memo-editor,
-.theme-ios [contenteditable="true"].memo-editor {
+/* sidebar: translucent Apple sidebar */
+html[data-theme="mac-core"] aside,
+body[data-theme="mac-core"] aside,
+html.theme-mac-core aside,
+body.theme-mac-core aside,
+html.theme-ios aside,
+body.theme-ios aside {
   background:
     linear-gradient(
       180deg,
-      hsl(0 0% 100% / 0.84),
-      hsl(336 60% 96% / 0.68)
+      rgba(255, 255, 255, 0.58),
+      rgba(255, 255, 255, 0.32)
     ) !important;
-  border: 1px solid hsl(220 18% 82% / 0.42) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.72) !important;
   box-shadow:
-    0 22px 62px -52px hsl(220 28% 34% / 0.46),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
+    inset -1px 0 0 rgba(180, 170, 195, 0.18),
+    18px 0 60px rgba(130, 105, 160, 0.06) !important;
+  backdrop-filter: blur(34px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(170%) !important;
 }
 
-/* =========================================================
-   MAC CORE: hide big topbar, keep top-right controls
-   ========================================================= */
-
-.theme-ios .topbar {
-  position: fixed !important;
-  top: 28px !important;
-  right: 34px !important;
-  z-index: 9999 !important;
-
-  display: flex !important;
-  width: auto !important;
-  height: auto !important;
-
-  padding: 0 !important;
-  border: 0 !important;
+/* sidebar item */
+html[data-theme="mac-core"] .sidebar-tab-item,
+body[data-theme="mac-core"] .sidebar-tab-item,
+html.theme-mac-core .sidebar-tab-item,
+body.theme-mac-core .sidebar-tab-item,
+html.theme-ios .sidebar-tab-item,
+body.theme-ios .sidebar-tab-item {
+  min-height: 44px !important;
+  border-radius: 18px !important;
+  color: rgba(37, 34, 55, 0.68) !important;
   background: transparent !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="mac-core"] .sidebar-tab-item.is-active,
+body[data-theme="mac-core"] .sidebar-tab-item.is-active,
+html.theme-mac-core .sidebar-tab-item.is-active,
+body.theme-mac-core .sidebar-tab-item.is-active,
+html.theme-ios .sidebar-tab-item.is-active,
+body.theme-ios .sidebar-tab-item.is-active {
+  color: var(--mac-text) !important;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.82),
+      rgba(255, 255, 255, 0.48)
+    ) !important;
+  border-color: rgba(255, 255, 255, 0.82) !important;
+  box-shadow:
+    0 16px 36px rgba(105, 85, 135, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94) !important;
+}
+
+/* topbar should be normal layout, but floating Cupertino control pill */
+html[data-theme="mac-core"] .topbar,
+body[data-theme="mac-core"] .topbar,
+html.theme-mac-core .topbar,
+body.theme-mac-core .topbar,
+html.theme-ios .topbar,
+body.theme-ios .topbar {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  width: 100% !important;
+  min-height: 96px !important;
+  background: transparent !important;
+  border: 0 !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
-/* 왼쪽 Good Morning 문구 숨기기 */
-.theme-ios .topbar > div > div:first-child {
-  display: none !important;
+html[data-theme="mac-core"] .topbar-inner,
+body[data-theme="mac-core"] .topbar-inner,
+html.theme-mac-core .topbar-inner,
+body.theme-mac-core .topbar-inner,
+html.theme-ios .topbar-inner,
+body.theme-ios .topbar-inner {
+  min-height: 96px !important;
+  padding: 22px 40px 14px !important;
 }
 
-/* 버튼 묶음만 보이게 */
-.theme-ios .topbar > div {
-  height: auto !important;
-  padding: 0 !important;
-  display: flex !important;
-  justify-content: flex-end !important;
+/* Good Morning typography */
+html[data-theme="mac-core"] .topbar-title h1,
+body[data-theme="mac-core"] .topbar-title h1,
+html.theme-mac-core .topbar-title h1,
+body.theme-mac-core .topbar-title h1,
+html.theme-ios .topbar-title h1,
+body.theme-ios .topbar-title h1 {
+  color: var(--mac-text) !important;
+  font-size: 25px !important;
+  font-weight: 760 !important;
+  letter-spacing: -0.045em !important;
 }
 
-/* 오른쪽 버튼 박스 */
-.theme-ios .topbar > div > div:last-child {
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-
-  padding: 8px !important;
-  border-radius: 999px !important;
-  background: hsl(0 0% 100% / 0.48) !important;
-  border: 1px solid hsl(0 0% 100% / 0.62) !important;
-  box-shadow:
-    0 18px 54px -34px hsl(220 28% 20% / 0.36),
-    inset 0 1px 0 hsl(0 0% 100% / 0.86) !important;
-  backdrop-filter: blur(26px) saturate(170%) !important;
-  -webkit-backdrop-filter: blur(26px) saturate(170%) !important;
+html[data-theme="mac-core"] .topbar-title p,
+body[data-theme="mac-core"] .topbar-title p,
+html.theme-mac-core .topbar-title p,
+body.theme-mac-core .topbar-title p,
+html.theme-ios .topbar-title p,
+body.theme-ios .topbar-title p {
+  color: var(--mac-subtext) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
 }
 
-/* Mac Core 버튼/셀렉트는 밝게 */
-.theme-ios .topbar .glass-button,
-.theme-ios .topbar .theme-select {
-  height: 34px !important;
-  color: hsl(220 20% 22% / 0.86) !important;
+/* right controls pill */
+html[data-theme="mac-core"] .topbar-actions,
+body[data-theme="mac-core"] .topbar-actions,
+html.theme-mac-core .topbar-actions,
+body.theme-mac-core .topbar-actions,
+html.theme-ios .topbar-actions,
+body.theme-ios .topbar-actions {
+  margin-left: auto !important;
+  padding: 10px 12px !important;
+  min-height: 60px !important;
+  border-radius: 34px !important;
+
   background:
     linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.88),
-      hsl(220 24% 96% / 0.72)
+      135deg,
+      rgba(255, 255, 255, 0.76),
+      rgba(255, 255, 255, 0.34)
     ) !important;
-  border: 1px solid hsl(220 18% 78% / 0.58) !important;
+  border: 1px solid rgba(255, 255, 255, 0.86) !important;
   box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.95),
-    0 10px 26px -22px hsl(220 30% 25% / 0.38) !important;
+    0 24px 70px rgba(93, 76, 125, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    inset 0 -1px 0 rgba(180, 170, 210, 0.18) !important;
+  backdrop-filter: blur(34px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(170%) !important;
 }
 
-/* select 글씨 흰색 되는 문제 방지 */
-.theme-ios .topbar .theme-select option {
-  color: #1f2937 !important;
-  background: #ffffff !important;
-}
-
-/* =========================================================
-   RESPONSIVE APP LAYOUT + WORKSPACE HEADER CONTROL
-   ========================================================= */
-
-/* Pastel / Glass / Pixel에서는 큰 Workspace Home 헤더 숨김 */
-:not(.theme-ios) .dashboard-tab-header,
-.theme-pastel .dashboard-tab-header,
-.theme-glass .dashboard-tab-header,
-.theme-pixel .dashboard-tab-header {
-  display: none !important;
-}
-
-/* Mac Core에서는 Workspace header 유지 */
-.theme-ios .dashboard-tab-header {
-  display: flex !important;
-}
-
-/* ================================
-   Mac Core / iOS: workspace pill alignment fix
-   ================================ */
-
-/* iOS 테마 상단바 전체 */
-.theme-ios .topbar,
-.theme-ios .app-topbar,
-.theme-ios .workspace-topbar {
-  min-height: 72px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 14px !important;
-}
-
-/* WORKSPACE / Study 들어있는 흰 타원 */
-.theme-ios .workspace-pill,
-.theme-ios .workspace-chip,
-.theme-ios .workspace-current,
-.theme-ios .topbar-workspace,
-.theme-ios .workspace-title-wrap,
-.theme-ios .workspace-label-wrap {
-  min-height: 48px !important;
-  height: 48px !important;
-  padding: 0 18px !important;
+/* theme segmented control */
+html[data-theme="mac-core"] .theme-segmented-control,
+body[data-theme="mac-core"] .theme-segmented-control,
+html.theme-mac-core .theme-segmented-control,
+body.theme-mac-core .theme-segmented-control,
+html.theme-ios .theme-segmented-control,
+body.theme-ios .theme-segmented-control {
+  height: 40px !important;
+  padding: 4px !important;
   border-radius: 999px !important;
-
-  display: inline-flex !important;
-  flex-direction: column !important;
-  align-items: flex-start !important;
-  justify-content: center !important;
-  gap: 3px !important;
-
-  line-height: 1 !important;
-  background: rgba(255, 255, 255, 0.72) !important;
-  border: 1px solid rgba(215, 215, 220, 0.92) !important;
-  box-shadow:
-    0 8px 22px rgba(30, 30, 35, 0.055),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.28) !important;
+  border: 1px solid rgba(255, 255, 255, 0.36) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62) !important;
 }
 
-/* WORKSPACE 글씨 */
-.theme-ios .workspace-label,
-.theme-ios .topbar-workspace-label {
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1 !important;
-  height: auto !important;
-
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.14em !important;
-  text-transform: uppercase !important;
-  color: rgba(29, 29, 31, 0.48) !important;
-
-  transform: translateY(1px) !important;
-}
-
-/* Study 글씨 */
-.theme-ios .workspace-title,
-.theme-ios .topbar-workspace-title {
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1.05 !important;
-  height: auto !important;
-
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 7px !important;
-
-  font-size: 18px !important;
-  font-weight: 850 !important;
-  letter-spacing: -0.035em !important;
-  color: #1d1d1f !important;
-
-  transform: translateY(0) !important;
-}
-
-/* Study 옆 아이콘 정렬 */
-.theme-ios .workspace-title svg,
-.theme-ios .topbar-workspace-title svg {
-  width: 17px !important;
-  height: 17px !important;
-  flex-shrink: 0 !important;
-  transform: translateY(0.5px) !important;
-}
-
-/* ================================
-   Mac Core: solid macOS-like background
-   ================================ */
-
-.theme-ios {
-  background: #f5f5f7 !important;
-  background-image: none !important;
-  color: #1d1d1f !important;
-}
-
-/* 앱 전체 배경 그라데이션 제거 */
-.theme-ios body,
-.theme-ios .app-shell,
-.theme-ios .dashboard-shell,
-.theme-ios .liquid-shell,
-.theme-ios .bg-glass-gradient,
-.theme-ios .main-area,
-.theme-ios .dashboard-main {
-  background: #f5f5f7 !important;
-  background-image: none !important;
-}
-
-/* 혹시 body가 아니라 root 쪽에 theme-ios가 붙는 경우까지 */
-.theme-ios#root,
-#root.theme-ios {
-  background: #f5f5f7 !important;
-  background-image: none !important;
-}
-
-/* 오로라/구름/빛번짐 장식 제거 */
-.theme-ios .aurora-bg,
-.theme-ios .aurora-orb,
-.theme-ios .cloud-bg,
-.theme-ios .gradient-orb,
-.theme-ios .background-orb,
-.theme-ios .liquid-orb,
-.theme-ios .glass-bg-layer,
-.theme-ios .noise-overlay,
-.theme-ios .diagonal-pattern {
-  display: none !important;
-  background: none !important;
-  background-image: none !important;
-}
-
-/* Mac Core 카드: 은은한 흰색/회색, 그라데이션 X */
-.theme-ios .glass-card {
-  background: #ffffffcc !important;
-  background-image: none !important;
-  border: 1px solid #d7d7dc !important;
-  box-shadow:
-    0 18px 42px rgba(30, 30, 35, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
-  color: #1d1d1f !important;
-  backdrop-filter: blur(20px) saturate(140%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
-}
-
-/* 내부 박스도 배경 그라데이션 제거 */
-.theme-ios .glass-card *,
-.theme-ios .today-mini-main,
-.theme-ios .today-mini-next,
-.theme-ios .today-tasks-progress,
-.theme-ios .today-task-item,
-.theme-ios .calendar-mini-card,
-.theme-ios .career-list-item,
-.theme-ios .memo-list-panel,
-.theme-ios .study-card {
-  background-image: none !important;
-}
-
-/* 내부 섹션은 macOS 설정창 느낌 */
-.theme-ios .today-mini-main,
-.theme-ios .today-mini-next,
-.theme-ios .today-tasks-progress,
-.theme-ios .today-task-item,
-.theme-ios .calendar-mini-card,
-.theme-ios .career-list-item,
-.theme-ios .memo-list-panel,
-.theme-ios .study-card {
-  background: rgba(255, 255, 255, 0.72) !important;
-  border: 1px solid rgba(210, 210, 216, 0.9) !important;
+html[data-theme="mac-core"] .theme-segment-button,
+body[data-theme="mac-core"] .theme-segment-button,
+html.theme-mac-core .theme-segment-button,
+body.theme-mac-core .theme-segment-button,
+html.theme-ios .theme-segment-button,
+body.theme-ios .theme-segment-button {
+  height: 32px !important;
+  padding: 0 16px !important;
+  border-radius: 999px !important;
+  color: rgba(37, 34, 55, 0.58) !important;
+  background: transparent !important;
+  border: 0 !important;
   box-shadow: none !important;
 }
 
-/* 상단바도 단색 */
-.theme-ios .topbar,
-.theme-ios .app-topbar,
-.theme-ios .workspace-topbar {
-  background: rgba(255, 255, 255, 0.72) !important;
-  background-image: none !important;
-  border: 1px solid rgba(215, 215, 220, 0.9) !important;
+html[data-theme="mac-core"] .theme-segment-button.is-active,
+body[data-theme="mac-core"] .theme-segment-button.is-active,
+html.theme-mac-core .theme-segment-button.is-active,
+body.theme-mac-core .theme-segment-button.is-active,
+html.theme-ios .theme-segment-button.is-active,
+body.theme-ios .theme-segment-button.is-active {
+  color: var(--mac-text) !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.96),
+      rgba(255, 255, 255, 0.72)
+    ) !important;
   box-shadow:
-    0 12px 32px rgba(30, 30, 35, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    0 10px 26px rgba(110, 86, 145, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 1) !important;
 }
 
-/* ================================
-   Mac Core / iOS: workspace pill alignment fix
-   ================================ */
-
-/* iOS 테마 상단바 전체 */
-.theme-ios .topbar,
-.theme-ios .app-topbar,
-.theme-ios .workspace-topbar {
-  min-height: 72px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 14px !important;
-}
-
-/* WORKSPACE / Study 들어있는 흰 타원 */
-.theme-ios .workspace-pill,
-.theme-ios .workspace-chip,
-.theme-ios .workspace-current,
-.theme-ios .topbar-workspace,
-.theme-ios .workspace-title-wrap,
-.theme-ios .workspace-label-wrap {
-  min-height: 48px !important;
-  height: 48px !important;
-  padding: 0 18px !important;
+/* Settings / Edit buttons */
+html[data-theme="mac-core"] .topbar-action-button,
+html[data-theme="mac-core"] .topbar .glass-button,
+body[data-theme="mac-core"] .topbar-action-button,
+body[data-theme="mac-core"] .topbar .glass-button,
+html.theme-mac-core .topbar-action-button,
+html.theme-mac-core .topbar .glass-button,
+body.theme-mac-core .topbar-action-button,
+body.theme-mac-core .topbar .glass-button,
+html.theme-ios .topbar-action-button,
+html.theme-ios .topbar .glass-button,
+body.theme-ios .topbar-action-button,
+body.theme-ios .topbar .glass-button {
+  height: 40px !important;
+  padding: 0 15px !important;
   border-radius: 999px !important;
-
-  display: inline-flex !important;
-  flex-direction: column !important;
-  align-items: flex-start !important;
-  justify-content: center !important;
-  gap: 3px !important;
-
-  line-height: 1 !important;
-  background: rgba(255, 255, 255, 0.72) !important;
-  border: 1px solid rgba(215, 215, 220, 0.92) !important;
+  color: rgba(37, 34, 55, 0.72) !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.82),
+      rgba(255, 255, 255, 0.48)
+    ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.74) !important;
   box-shadow:
-    0 8px 22px rgba(30, 30, 35, 0.055),
+    0 10px 24px rgba(110, 86, 145, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
+}
+
+/* Workspace spacing */
+html[data-theme="mac-core"] .dashboard-tab-space,
+body[data-theme="mac-core"] .dashboard-tab-space,
+html.theme-mac-core .dashboard-tab-space,
+body.theme-mac-core .dashboard-tab-space,
+html.theme-ios .dashboard-tab-space,
+body.theme-ios .dashboard-tab-space {
+  padding: 34px 52px 52px !important;
+}
+
+html[data-theme="mac-core"] .dashboard-tab-header,
+body[data-theme="mac-core"] .dashboard-tab-header,
+html.theme-mac-core .dashboard-tab-header,
+body.theme-mac-core .dashboard-tab-header,
+html.theme-ios .dashboard-tab-header,
+body.theme-ios .dashboard-tab-header {
+  display: flex !important;
+  margin-bottom: 28px !important;
+  padding-bottom: 8px !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* main widget cards: Apple widget glass */
+html[data-theme="mac-core"] .glass-card,
+body[data-theme="mac-core"] .glass-card,
+html.theme-mac-core .glass-card,
+body.theme-mac-core .glass-card,
+html.theme-ios .glass-card,
+body.theme-ios .glass-card {
+  border-radius: 32px !important;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.72), transparent 38%),
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.58),
+      rgba(255, 255, 255, 0.26)
+    ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.72) !important;
+  box-shadow:
+    0 24px 72px rgba(98, 75, 125, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 rgba(174, 160, 205, 0.16) !important;
+  backdrop-filter: blur(34px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(160%) !important;
+  color: var(--mac-text) !important;
+}
+
+/* remove fake window bars from Mac Core */
+html[data-theme="mac-core"] .glass-card::before,
+html[data-theme="mac-core"] .glass-card::after,
+body[data-theme="mac-core"] .glass-card::before,
+body[data-theme="mac-core"] .glass-card::after,
+html.theme-mac-core .glass-card::before,
+html.theme-mac-core .glass-card::after,
+body.theme-mac-core .glass-card::before,
+body.theme-mac-core .glass-card::after,
+html.theme-ios .glass-card::before,
+html.theme-ios .glass-card::after,
+body.theme-ios .glass-card::before,
+body.theme-ios .glass-card::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* inner cards: iOS widget modules */
+html[data-theme="mac-core"] .today-focus-hero,
+html[data-theme="mac-core"] .today-focus-section,
+html[data-theme="mac-core"] .today-focus-task,
+html[data-theme="mac-core"] .today-focus-mini-item,
+html[data-theme="mac-core"] .today-focus-career-item,
+html[data-theme="mac-core"] .today-focus-memo,
+html[data-theme="mac-core"] .today-focus-empty,
+html[data-theme="mac-core"] .today-focus-alert,
+html[data-theme="mac-core"] .calendar-mini-card,
+html[data-theme="mac-core"] .career-list-item,
+html[data-theme="mac-core"] .alert-item,
+html[data-theme="mac-core"] .alert-summary-card,
+html[data-theme="mac-core"] .memo-note-item,
+html[data-theme="mac-core"] .memo-list-panel,
+html[data-theme="mac-core"] .memo-workspace,
+html[data-theme="mac-core"] .study-card,
+html[data-theme="mac-core"] .study-subject-card,
+html[data-theme="mac-core"] .study-input-panel,
+html[data-theme="mac-core"] .study-week-panel,
+html[data-theme="mac-core"] .study-goal-panel,
+html[data-theme="mac-core"] .study-task-panel,
+html[data-theme="mac-core"] .journal-section,
+html[data-theme="mac-core"] .journal-task,
+body[data-theme="mac-core"] .today-focus-hero,
+body[data-theme="mac-core"] .today-focus-section,
+body[data-theme="mac-core"] .today-focus-task,
+body[data-theme="mac-core"] .today-focus-mini-item,
+body[data-theme="mac-core"] .today-focus-career-item,
+body[data-theme="mac-core"] .today-focus-memo,
+body[data-theme="mac-core"] .today-focus-empty,
+body[data-theme="mac-core"] .today-focus-alert,
+body[data-theme="mac-core"] .calendar-mini-card,
+body[data-theme="mac-core"] .career-list-item,
+body[data-theme="mac-core"] .alert-item,
+body[data-theme="mac-core"] .alert-summary-card,
+body[data-theme="mac-core"] .memo-note-item,
+body[data-theme="mac-core"] .memo-list-panel,
+body[data-theme="mac-core"] .memo-workspace,
+body[data-theme="mac-core"] .study-card,
+body[data-theme="mac-core"] .study-subject-card,
+body[data-theme="mac-core"] .study-input-panel,
+body[data-theme="mac-core"] .study-week-panel,
+body[data-theme="mac-core"] .study-goal-panel,
+body[data-theme="mac-core"] .study-task-panel,
+body[data-theme="mac-core"] .journal-section,
+body[data-theme="mac-core"] .journal-task,
+html.theme-mac-core .today-focus-hero,
+html.theme-mac-core .today-focus-section,
+html.theme-mac-core .today-focus-task,
+html.theme-mac-core .today-focus-mini-item,
+html.theme-mac-core .today-focus-career-item,
+html.theme-mac-core .today-focus-memo,
+html.theme-mac-core .today-focus-empty,
+html.theme-mac-core .today-focus-alert,
+html.theme-mac-core .calendar-mini-card,
+html.theme-mac-core .career-list-item,
+html.theme-mac-core .alert-item,
+html.theme-mac-core .alert-summary-card,
+html.theme-mac-core .memo-note-item,
+html.theme-mac-core .memo-list-panel,
+html.theme-mac-core .memo-workspace,
+html.theme-mac-core .study-card,
+html.theme-mac-core .study-subject-card,
+html.theme-mac-core .study-input-panel,
+html.theme-mac-core .study-week-panel,
+html.theme-mac-core .study-goal-panel,
+html.theme-mac-core .study-task-panel,
+html.theme-mac-core .journal-section,
+html.theme-mac-core .journal-task,
+body.theme-mac-core .today-focus-hero,
+body.theme-mac-core .today-focus-section,
+body.theme-mac-core .today-focus-task,
+body.theme-mac-core .today-focus-mini-item,
+body.theme-mac-core .today-focus-career-item,
+body.theme-mac-core .today-focus-memo,
+body.theme-mac-core .today-focus-empty,
+body.theme-mac-core .today-focus-alert,
+body.theme-mac-core .calendar-mini-card,
+body.theme-mac-core .career-list-item,
+body.theme-mac-core .alert-item,
+body.theme-mac-core .alert-summary-card,
+body.theme-mac-core .memo-note-item,
+body.theme-mac-core .memo-list-panel,
+body.theme-mac-core .memo-workspace,
+body.theme-mac-core .study-card,
+body.theme-mac-core .study-subject-card,
+body.theme-mac-core .study-input-panel,
+body.theme-mac-core .study-week-panel,
+body.theme-mac-core .study-goal-panel,
+body.theme-mac-core .study-task-panel,
+body.theme-mac-core .journal-section,
+body.theme-mac-core .journal-task {
+  border-radius: 24px !important;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.68),
+      rgba(255, 255, 255, 0.28)
+    ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.66) !important;
+  box-shadow:
+    0 16px 42px rgba(110, 86, 145, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(24px) saturate(155%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(155%) !important;
+}
+
+/* progress ring and purple accents */
+html[data-theme="mac-core"] .today-focus-ring,
+body[data-theme="mac-core"] .today-focus-ring,
+html.theme-mac-core .today-focus-ring,
+body.theme-mac-core .today-focus-ring,
+html.theme-ios .today-focus-ring,
+body.theme-ios .today-focus-ring {
+  background:
+    conic-gradient(
+      from 0deg,
+      rgba(168, 121, 232, 0.82),
+      rgba(190, 216, 255, 0.62),
+      rgba(168, 121, 232, 0.82)
+    ) !important;
+  border-radius: 999px !important;
+  box-shadow:
+    0 10px 28px rgba(168, 121, 232, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
-/* WORKSPACE 글씨 */
-.theme-ios .workspace-label,
-.theme-ios .topbar-workspace-label {
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1 !important;
-  height: auto !important;
-
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.14em !important;
-  text-transform: uppercase !important;
-  color: rgba(29, 29, 31, 0.48) !important;
-
-  transform: translateY(1px) !important;
+html[data-theme="mac-core"] .today-focus-ring span,
+body[data-theme="mac-core"] .today-focus-ring span,
+html.theme-mac-core .today-focus-ring span,
+body.theme-mac-core .today-focus-ring span,
+html.theme-ios .today-focus-ring span,
+body.theme-ios .today-focus-ring span {
+  background: rgba(255, 255, 255, 0.86) !important;
+  border-radius: 999px !important;
 }
 
-/* Study 글씨 */
-.theme-ios .workspace-title,
-.theme-ios .topbar-workspace-title {
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1.05 !important;
-  height: auto !important;
-
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 7px !important;
-
-  font-size: 18px !important;
-  font-weight: 850 !important;
-  letter-spacing: -0.035em !important;
-  color: #1d1d1f !important;
-
-  transform: translateY(0) !important;
-}
-
-/* Study 옆 아이콘 정렬 */
-.theme-ios .workspace-title svg,
-.theme-ios .topbar-workspace-title svg {
-  width: 17px !important;
-  height: 17px !important;
-  flex-shrink: 0 !important;
-  transform: translateY(0.5px) !important;
-}
-
-/* 더 macOS 설정창 느낌: 과한 타원 줄이기 */
-.theme-ios .workspace-pill,
-.theme-ios .workspace-chip,
-.theme-ios .workspace-current,
-.theme-ios .topbar-workspace,
-.theme-ios .workspace-title-wrap,
-.theme-ios .workspace-label-wrap {
+/* inputs */
+html[data-theme="mac-core"] input,
+html[data-theme="mac-core"] textarea,
+html[data-theme="mac-core"] select,
+body[data-theme="mac-core"] input,
+body[data-theme="mac-core"] textarea,
+body[data-theme="mac-core"] select,
+html.theme-mac-core input,
+html.theme-mac-core textarea,
+html.theme-mac-core select,
+body.theme-mac-core input,
+body.theme-mac-core textarea,
+body.theme-mac-core select,
+html.theme-ios input,
+html.theme-ios textarea,
+html.theme-ios select,
+body.theme-ios input,
+body.theme-ios textarea,
+body.theme-ios select {
   border-radius: 18px !important;
-  height: 50px !important;
-  min-height: 50px !important;
-  padding: 0 16px !important;
+  background: rgba(255, 255, 255, 0.64) !important;
+  border: 1px solid rgba(255, 255, 255, 0.72) !important;
+  color: var(--mac-text) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.76),
+    0 8px 20px rgba(110, 86, 145, 0.05) !important;
+}
+
+/* text colors */
+html[data-theme="mac-core"] h1,
+html[data-theme="mac-core"] h2,
+html[data-theme="mac-core"] h3,
+html[data-theme="mac-core"] strong,
+html[data-theme="mac-core"] .font-semibold,
+html[data-theme="mac-core"] .font-bold,
+body[data-theme="mac-core"] h1,
+body[data-theme="mac-core"] h2,
+body[data-theme="mac-core"] h3,
+body[data-theme="mac-core"] strong,
+body[data-theme="mac-core"] .font-semibold,
+body[data-theme="mac-core"] .font-bold,
+html.theme-mac-core h1,
+html.theme-mac-core h2,
+html.theme-mac-core h3,
+html.theme-mac-core strong,
+html.theme-mac-core .font-semibold,
+html.theme-mac-core .font-bold,
+body.theme-mac-core h1,
+body.theme-mac-core h2,
+body.theme-mac-core h3,
+body.theme-mac-core strong,
+body.theme-mac-core .font-semibold,
+body.theme-mac-core .font-bold {
+  color: var(--mac-text) !important;
+  font-weight: 700 !important;
+}
+
+html[data-theme="mac-core"] p,
+html[data-theme="mac-core"] span,
+html[data-theme="mac-core"] small,
+html[data-theme="mac-core"] .text-muted-foreground,
+body[data-theme="mac-core"] p,
+body[data-theme="mac-core"] span,
+body[data-theme="mac-core"] small,
+body[data-theme="mac-core"] .text-muted-foreground,
+html.theme-mac-core p,
+html.theme-mac-core span,
+html.theme-mac-core small,
+html.theme-mac-core .text-muted-foreground,
+body.theme-mac-core p,
+body.theme-mac-core span,
+body.theme-mac-core small,
+body.theme-mac-core .text-muted-foreground {
+  color: var(--mac-subtext) !important;
+}
+
+/* modals/floating windows */
+html[data-theme="mac-core"] .memo-window,
+html[data-theme="mac-core"] .calendar-modal-window,
+html[data-theme="mac-core"] .settings-modal-window,
+html[data-theme="mac-core"] .career-modal-window,
+html[data-theme="mac-core"] .floating-window,
+body[data-theme="mac-core"] .memo-window,
+body[data-theme="mac-core"] .calendar-modal-window,
+body[data-theme="mac-core"] .settings-modal-window,
+body[data-theme="mac-core"] .career-modal-window,
+body[data-theme="mac-core"] .floating-window,
+html.theme-mac-core .memo-window,
+html.theme-mac-core .calendar-modal-window,
+html.theme-mac-core .settings-modal-window,
+html.theme-mac-core .career-modal-window,
+html.theme-mac-core .floating-window,
+body.theme-mac-core .memo-window,
+body.theme-mac-core .calendar-modal-window,
+body.theme-mac-core .settings-modal-window,
+body.theme-mac-core .career-modal-window,
+body.theme-mac-core .floating-window {
+  border-radius: 32px !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.78) !important;
+  box-shadow:
+    0 40px 120px rgba(70, 50, 110, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(38px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(38px) saturate(170%) !important;
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  html[data-theme="mac-core"] .topbar-inner,
+  body[data-theme="mac-core"] .topbar-inner,
+  html.theme-mac-core .topbar-inner,
+  body.theme-mac-core .topbar-inner,
+  html.theme-ios .topbar-inner,
+  body.theme-ios .topbar-inner {
+    padding: 18px 20px !important;
+  }
+
+  html[data-theme="mac-core"] .topbar-actions,
+  body[data-theme="mac-core"] .topbar-actions,
+  html.theme-mac-core .topbar-actions,
+  body.theme-mac-core .topbar-actions,
+  html.theme-ios .topbar-actions,
+  body.theme-ios .topbar-actions {
+    width: 100% !important;
+    max-width: none !important;
+    justify-content: flex-start !important;
+    border-radius: 28px !important;
+  }
+
+  html[data-theme="mac-core"] .dashboard-tab-space,
+  body[data-theme="mac-core"] .dashboard-tab-space,
+  html.theme-mac-core .dashboard-tab-space,
+  body.theme-mac-core .dashboard-tab-space,
+  html.theme-ios .dashboard-tab-space,
+  body.theme-ios .dashboard-tab-space {
+    padding: 22px 20px 34px !important;
+  }
 }

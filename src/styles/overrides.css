@@ -1,78 +1,93 @@
- /* ================================
-   FIX: Remove diagonal stripe / noisy overlay
-   ================================ */
+/* =========================================================
+   GLASSDAY OVERRIDES
+   layout / scroll / modal safety only
+   테마 디자인은 각 themes/*.css에서만 관리
+========================================================= */
 
-.glass-card::before,
-.glass-card::after,
-.today-focus-card::before,
-.today-focus-card::after,
-.today-mini-main::before,
-.today-mini-main::after,
-.today-tasks-progress::before,
-.today-tasks-progress::after {
-  background-image: none !important;
+/* =========================================================
+   0. Global box safety
+========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-/* 만약 decorative overlay가 따로 있으면 숨김 */
+html,
+body,
+#root {
+  min-width: 0;
+  min-height: 100%;
+}
+
+/* =========================================================
+   1. Remove only decorative overlays
+   glass-card pseudo는 테마에서 쓰므로 여기서 건드리지 않음
+========================================================= */
+
 .diagonal-pattern,
 .card-stripe-overlay,
 .glass-card-shine,
 .noise-overlay {
   display: none !important;
+  background-image: none !important;
 }
 
-/* ================================
-   FIX: Prevent widget inner overlap globally
-   ================================ */
+/* =========================================================
+   2. Dashboard grid spacing / width
+========================================================= */
 
-/* 내부 카드형 섹션이 절대 겹쳐 보이지 않도록 */
-.today-focus-main,
-.today-focus-section,
-.today-focus-block,
-.today-mini-main,
-.today-mini-next,
-.today-tasks-progress,
-.calendar-mini-card,
-.career-summary-card,
-.career-list-item,
-.memo-list-panel,
-.study-card {
-  position: relative !important;
-  z-index: auto !important;
+.dashboard-tab-space {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  padding: 28px 32px 40px !important;
+  overflow-x: hidden !important;
 }
 
-/* 너무 낮은 위젯에서는 Today Focus를 스크롤형으로 */
-@media (max-height: 760px) {
-  .today-focus-card .glass-card-body,
-  .today-focus-widget .glass-card-body,
-  .today-mini-card .glass-card-body {
-    max-height: 100% !important;
-    overflow-y: auto !important;
-  }
+.dashboard-edit-canvas {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
 }
 
-/* ================================
-   Global: prevent widget content overlap
-   ================================ */
+.react-grid-layout {
+  width: 100% !important;
+  min-width: 0 !important;
+}
 
+.react-grid-item,
 .dashboard-grid-item,
-.dashboard-grid-item-content,
-.react-grid-item {
+.dashboard-grid-item-content {
+  min-width: 0 !important;
   min-height: 0 !important;
-  overflow: hidden !important;
+  max-width: 100% !important;
 }
 
-.dashboard-grid-item-content {
+.dashboard-grid-item {
+  overflow: visible !important;
+}
+
+.dashboard-grid-item > .glass-card,
+.dashboard-grid-item-content > .glass-card {
+  width: 100% !important;
   height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
 }
 
 .glass-card {
-  height: 100% !important;
+  min-width: 0 !important;
   min-height: 0 !important;
   box-sizing: border-box !important;
 }
 
-/* 카드 내부 body가 있으면 body만 스크롤 */
+/* =========================================================
+   3. Scroll safety
+========================================================= */
+
 .glass-card-body,
 .card-body,
 .widget-body {
@@ -80,323 +95,24 @@
   overflow: auto !important;
 }
 
-/* 위젯 내부 레이아웃은 겹치지 않게 column 구조 */
-.today-focus-card,
-.today-focus-widget,
-.today-mini-card,
-.career-widget,
-.calendar-widget,
-.memo-widget,
-.study-widget,
-.alert-center-widget {
-  height: 100% !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-}
-
-/* 직접 glass-card 안에 내용이 있는 경우도 대비 */
-.today-focus,
-.today-mini,
-.today-tasks,
-.alert-center,
-.calendar-widget-inner,
-.memo-app,
-.study-widget-inner {
-  height: 100% !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-}
-
-/* 내용이 많아지는 영역은 스크롤 */
-.today-focus-list,
-.today-focus-sections,
-.today-task-list,
-.alert-list,
-.career-list,
+.widget-scroll-area,
 .calendar-event-list,
+.alert-center-list,
+.alert-list,
+.journal-main-scroll,
 .memo-note-list,
-.memo-editor,
+.memo-floating-body,
+.today-task-list,
+.career-list,
 .study-list {
   min-height: 0 !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* 섹션끼리 겹치지 않게 */
-.today-focus > *,
-.today-mini > *,
-.today-tasks > *,
-.alert-center > *,
-.career-widget > *,
-.calendar-widget > *,
-.study-widget > * {
-  flex-shrink: 0 !important;
-}
-
-/* 리스트 영역만 줄어들 수 있게 */
-.today-task-list,
-.alert-list,
-.career-list,
-.calendar-event-list,
-.study-list {
-  flex: 1 1 auto !important;
-}
-
-/* =========================================================
-   SAFE THEME RADIUS OVERRIDE
-   - 기본 테마: iOS / Mac 감성 둥근 사각형
-   - Pixel Desk만 각진 레트로 유지
-   - overrides.css 맨 아래에 위치
-========================================================= */
-
-/* 기본값: 모든 테마는 둥글게 */
-:root {
-  --app-radius-shell: 32px;
-  --app-radius-panel: 26px;
-  --app-radius-card: 24px;
-  --app-radius-inner: 22px;
-  --app-radius-button: 16px;
-  --app-radius-chip: 999px;
-}
-
-/* Pixel Desk만 각지게 */
-.theme-pixel-desk,
-.pixel-desk,
-[data-theme="pixel-desk"] {
-  --app-radius-shell: 12px;
-  --app-radius-panel: 8px;
-  --app-radius-card: 6px;
-  --app-radius-inner: 5px;
-  --app-radius-button: 4px;
-  --app-radius-chip: 4px;
-}
-
-/* 앱 큰 껍데기 */
-.app-shell,
-.dashboard-shell,
-.workspace-shell,
-.desktop-shell,
-.main-shell,
-.dashboard-layout,
-.app-layout {
-  border-radius: var(--app-radius-shell) !important;
-  overflow: hidden;
-}
-
-/* 상단바: 너무 커지지 않게 radius만 */
-.topbar,
-.toolbar,
-.header-panel,
-.control-panel,
-.theme-bar,
-.theme-tabs,
-.dashboard-toolbar {
-  border-radius: var(--app-radius-panel) !important;
-  overflow: hidden;
-}
-
-/* 위젯 바깥 카드 */
-.glass-card,
-.widget-card,
-.dashboard-card,
-.grid-card,
-.widget-shell,
-.widget-frame,
-.floating-window,
-.window-card,
-.panel {
-  border-radius: var(--app-radius-card) !important;
-  overflow: hidden;
-}
-
-/* react-grid-layout 안쪽 카드 */
-.react-grid-item,
-.dashboard-grid-item,
-.dashboard-grid-item-content {
-  border-radius: var(--app-radius-card) !important;
-  overflow: hidden;
-}
-
-/* 위젯 내부 카드 */
-.inner-card,
-.soft-card,
-.mini-card,
-.focus-card,
-.alert-item,
-.alert-card,
-.memo-item,
-.memo-list-item,
-.event-item,
-.calendar-item,
-.calendar-event,
-.list-item,
-.todo-item,
-.study-item,
-.career-item,
-.money-item,
-.health-item,
-.mood-item,
-.application-card,
-.focus-summary,
-.today-summary {
-  border-radius: var(--app-radius-inner) !important;
-  overflow: hidden;
-}
-
-/* 버튼: 전체 button을 건드리되 크기/레이아웃은 절대 건드리지 않음 */
-button,
-.button,
-.icon-button,
-.control-button,
-.add-button,
-.tab-button,
-.theme-button,
-.mode-button {
-  border-radius: var(--app-radius-button) !important;
-}
-
-/* 칩/뱃지 */
-.chip,
-.badge,
-.pill,
-.tag,
-.status {
-  border-radius: var(--app-radius-chip) !important;
-}
-
-/* =========================================================
-   TOPBAR MOBILE THEME SELECT RESTORE
-========================================================= */
-
-
-@media (max-width: 768px) {
-  .topbar {
-    height: auto !important;
-    min-height: 76px;
-  }
-
-  .topbar > div {
-    min-height: 76px;
-    align-items: center;
-  }
-
-  .topbar-title {
-    max-width: 46vw;
-  }
-
-  .theme-button-group {
-    display: none !important;
-  }
-
-  .theme-select-mobile {
-    display: inline-flex !important;
-  }
-
-  .topbar-actions {
-    flex-shrink: 0;
-    gap: 6px;
-  }
-
-  .topbar-icon-button {
-    width: 36px;
-    padding-inline: 0 !important;
-    justify-content: center;
-  }
-
-  .topbar-button-text {
-    display: none;
-  }
-}
-
-/* =========================================================
-   PASTEL THEME RESTORE
-   - 연한 글라스모피즘 카드 복구
-   - 위젯 배경 너무 납작해지는 것 방지
-========================================================= */
-
-[data-theme="pastel"] {
-  --background: 330 100% 98%;
-  --foreground: 235 24% 22%;
-  --muted-foreground: 235 12% 48%;
-  --primary: 335 78% 66%;
-  --primary-foreground: 0 0% 100%;
-}
-
-[data-theme="pastel"] body,
-[data-theme="pastel"] .app-shell,
-[data-theme="pastel"] .dashboard-shell,
-[data-theme="pastel"] .dashboard-layout {
-  background:
-    radial-gradient(circle at 12% 12%, hsl(337 100% 88% / 0.72), transparent 34%),
-    radial-gradient(circle at 82% 18%, hsl(216 100% 88% / 0.66), transparent 34%),
-    radial-gradient(circle at 58% 92%, hsl(46 100% 86% / 0.6), transparent 38%),
-    linear-gradient(135deg, hsl(336 100% 97%), hsl(215 100% 97%) 48%, hsl(48 100% 96%));
-}
-
-[data-theme="pastel"] .topbar {
-  background:
-    linear-gradient(
-      135deg,
-      hsl(0 0% 100% / 0.58),
-      hsl(0 0% 100% / 0.24)
-    ) !important;
-  border-color: hsl(0 0% 100% / 0.55) !important;
-  box-shadow:
-    0 18px 48px hsl(330 70% 72% / 0.18),
-    inset 0 1px 0 hsl(0 0% 100% / 0.7) !important;
-  backdrop-filter: blur(26px) saturate(145%) !important;
-}
-
-[data-theme="pastel"] .glass-card {
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.48),
-      hsl(0 0% 100% / 0.2)
-    ) !important;
-  border: 1px solid hsl(0 0% 100% / 0.58) !important;
-  box-shadow:
-    0 22px 58px hsl(330 55% 70% / 0.16),
-    inset 0 1px 0 hsl(0 0% 100% / 0.72),
-    inset 0 -1px 0 hsl(260 60% 90% / 0.22) !important;
-  backdrop-filter: blur(28px) saturate(145%) !important;
-}
-
-[data-theme="pastel"] .glass-card::before,
-[data-theme="pastel"] .glass-card::after {
-  background-image: none !important;
-}
-
-[data-theme="pastel"] .glass-button,
-[data-theme="pastel"] .theme-segmented-control,
-[data-theme="pastel"] .theme-select-mobile,
-[data-theme="pastel"] .calendar-date-input,
-[data-theme="pastel"] .calendar-view-button,
-[data-theme="pastel"] .calendar-nav-button {
-  background: hsl(0 0% 100% / 0.42) !important;
-  border-color: hsl(0 0% 100% / 0.56) !important;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.72),
-    0 8px 22px hsl(330 50% 70% / 0.12) !important;
-}
-
-[data-theme="pastel"] .theme-segment-button.is-active,
-[data-theme="pastel"] .calendar-view-button.is-active,
-[data-theme="pastel"] .glass-button.is-active {
-  background:
-    linear-gradient(
-      135deg,
-      hsl(335 100% 92% / 0.9),
-      hsl(220 100% 94% / 0.86)
-    ) !important;
-  color: hsl(235 28% 24%) !important;
-  border-color: hsl(0 0% 100% / 0.72) !important;
-}
-
-/* =========================================================
-   MOBILE GRID / SCROLL FIX
-========================================================= */
-
+/* 모바일에서 위젯 스크롤하다가 grid가 끌리는 문제 완화 */
 .react-grid-item {
   touch-action: auto;
 }
@@ -415,47 +131,21 @@ button,
   display: none;
 }
 
-.widget-scroll-area,
-.calendar-event-list,
-.alert-center-list,
-.journal-main-scroll,
-.memo-note-list,
-.memo-floating-body {
-  min-height: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-}
-
 /* =========================================================
-   FINAL TOPBAR RESTORE
-   - Topbar left title + right controls
-   - Mobile: theme select + settings/edit visible
-   - Pixel Desk: controls forced visible
-========================================================= */
-
-/* =========================================================
-   FINAL TOPBAR RESTORE
-   - Topbar left title + right controls
-   - Mobile: theme select + settings/edit visible
-   - Pixel Desk: controls forced visible
+   4. Topbar base layout
+   색/테마는 theme css에서 처리
 ========================================================= */
 
 .topbar {
   position: relative !important;
   z-index: 50 !important;
   width: 100% !important;
-  height: 86px !important;
   min-height: 86px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
   overflow: visible !important;
 }
 
 .topbar-inner {
   width: 100% !important;
-  height: 100% !important;
   min-height: 86px !important;
   padding: 0 24px !important;
   display: flex !important;
@@ -480,7 +170,6 @@ button,
   width: 16px !important;
   height: 16px !important;
   flex-shrink: 0 !important;
-  color: hsl(var(--primary)) !important;
 }
 
 .topbar-title h1 {
@@ -489,7 +178,6 @@ button,
   line-height: 1.15 !important;
   font-weight: 750 !important;
   letter-spacing: -0.03em !important;
-  color: hsl(var(--foreground)) !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
@@ -499,7 +187,6 @@ button,
   margin: 6px 0 0 !important;
   font-size: 13px !important;
   line-height: 1.2 !important;
-  color: hsl(var(--muted-foreground)) !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
@@ -514,10 +201,7 @@ button,
   gap: 8px !important;
   visibility: visible !important;
   opacity: 1 !important;
-  transform: none !important;
   position: relative !important;
-  right: auto !important;
-  top: auto !important;
   z-index: 60 !important;
   overflow: visible !important;
 }
@@ -526,7 +210,6 @@ button,
   display: flex !important;
   align-items: center !important;
   gap: 4px !important;
-  max-width: 520px !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
   white-space: nowrap !important;
@@ -539,40 +222,103 @@ button,
   max-width: 150px !important;
   padding: 0 34px 0 12px !important;
   border-radius: 14px !important;
-  border: 1px solid hsl(0 0% 100% / 0.44) !important;
-  background: hsl(0 0% 100% / 0.25) !important;
-  color: hsl(var(--foreground)) !important;
   font-size: 12px !important;
   font-weight: 800 !important;
   outline: none !important;
-  backdrop-filter: blur(18px) !important;
 }
 
 .topbar-action-button {
   height: 36px !important;
-  min-width: 0 !important;
   padding: 0 12px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 6px !important;
   white-space: nowrap !important;
-  visibility: visible !important;
-  opacity: 1 !important;
 }
 
-/* Workspace가 너무 위/왼쪽에 붙는 것 완화 */
-.dashboard-tab-space {
-  padding: 22px 24px 32px !important;
+/* =========================================================
+   5. Calendar modal
+========================================================= */
+
+.calendar-modal-window {
+  width: min(620px, calc(100vw - 48px)) !important;
+  max-height: min(760px, calc(100vh - 48px)) !important;
+  border-radius: 30px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
 }
 
-.dashboard-tab-header {
-  margin-bottom: 18px !important;
-  padding-inline: 0 !important;
+.calendar-modal-header {
+  min-height: 76px !important;
+  padding: 22px 24px 18px 24px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  box-sizing: border-box !important;
 }
 
-/* 모바일 */
+.calendar-modal-header > div {
+  min-width: 0 !important;
+  padding-left: 0 !important;
+}
+
+.calendar-modal-header .glass-button {
+  flex-shrink: 0 !important;
+}
+
+.calendar-modal-body {
+  padding: 18px 24px 24px 24px !important;
+  max-height: calc(min(760px, calc(100vh - 48px)) - 76px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.calendar-detail-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+
+.calendar-field {
+  min-width: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.calendar-field input,
+.calendar-field textarea {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.event-color-picker {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.calendar-modal-actions {
+  padding-top: 2px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+/* =========================================================
+   6. Mobile
+========================================================= */
+
 @media (max-width: 768px) {
+  .dashboard-tab-space {
+    padding: 22px 20px 32px !important;
+  }
+
   .topbar {
     height: auto !important;
     min-height: 112px !important;
@@ -621,17 +367,27 @@ button,
     font-size: 12px !important;
   }
 
-  .dashboard-tab-space {
-    padding: 18px 18px 28px !important;
+  .calendar-detail-grid {
+    grid-template-columns: 1fr !important;
   }
 
-  .dashboard-tab-header {
-    margin-bottom: 16px !important;
+  .calendar-modal-window {
+    width: calc(100vw - 28px) !important;
+    max-height: calc(100vh - 28px) !important;
+    border-radius: 24px !important;
+  }
+
+  .calendar-modal-body {
+    max-height: calc(100vh - 112px) !important;
+    padding: 16px !important;
   }
 }
 
-/* 아주 좁은 모바일 */
 @media (max-width: 430px) {
+  .dashboard-tab-space {
+    padding: 20px 16px 30px !important;
+  }
+
   .topbar-inner {
     padding-inline: 18px !important;
   }
@@ -654,337 +410,4 @@ button,
     width: 38px !important;
     padding-inline: 0 !important;
   }
-}
-
-/* Pixel Desk에서 버튼 사라지는 문제 강제 복구 */
-.theme-pixel-desk .topbar-actions,
-.pixel-desk .topbar-actions,
-[data-theme="pixel-desk"] .topbar-actions {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  z-index: 999 !important;
-}
-
-.theme-pixel-desk .theme-select-mobile,
-.pixel-desk .theme-select-mobile,
-[data-theme="pixel-desk"] .theme-select-mobile {
-  color: #111 !important;
-  background: #c8c8c8 !important;
-  border: 2px solid #f5f5f5 !important;
-  box-shadow:
-    inset -2px -2px 0 #666,
-    inset 2px 2px 0 #fff !important;
-}
-
-.theme-pixel-desk .topbar-action-button,
-.pixel-desk .topbar-action-button,
-[data-theme="pixel-desk"] .topbar-action-button {
-  display: inline-flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  color: #111 !important;
-  background: #c8c8c8 !important;
-  border: 2px solid #f5f5f5 !important;
-  box-shadow:
-    inset -2px -2px 0 #666,
-    inset 2px 2px 0 #fff !important;
-}
-
-/* =========================================================
-   FIX: Mac Core topbar control position + rounded shape
-   - controls should not stick to the very top
-   - remove ugly rectangle panel
-   - keep theme/settings/edit on the right
-========================================================= */
-
-[data-theme="mac-core"] .topbar,
-.theme-mac-core .topbar,
-.mac-core .topbar {
-  height: 96px !important;
-  min-height: 96px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  overflow: visible !important;
-}
-
-[data-theme="mac-core"] .topbar-inner,
-.theme-mac-core .topbar-inner,
-.mac-core .topbar-inner {
-  height: 96px !important;
-  min-height: 96px !important;
-  padding: 22px 36px 14px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 24px !important;
-}
-
-/* Mac Core에서는 왼쪽 인사말이 너무 튀면 자연스럽게 유지 */
-[data-theme="mac-core"] .topbar-title,
-.theme-mac-core .topbar-title,
-.mac-core .topbar-title {
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-}
-
-/* 핵심: 오른쪽 버튼 묶음을 위에 붙은 직사각형이 아니라 둥근 pill 패널로 */
-[data-theme="mac-core"] .topbar-actions,
-.theme-mac-core .topbar-actions,
-.mac-core .topbar-actions {
-  position: relative !important;
-  top: auto !important;
-  right: auto !important;
-  margin-left: auto !important;
-  width: auto !important;
-  max-width: min(680px, 72vw) !important;
-  min-height: 58px !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  gap: 10px !important;
-
-  padding: 10px 12px !important;
-  border-radius: 30px !important;
-
-  background:
-    linear-gradient(
-      135deg,
-      hsl(0 0% 100% / 0.72),
-      hsl(220 30% 98% / 0.46)
-    ) !important;
-  border: 1px solid hsl(220 18% 82% / 0.75) !important;
-  box-shadow:
-    0 18px 45px hsl(220 30% 50% / 0.12),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
-  backdrop-filter: blur(26px) saturate(140%) !important;
-
-  overflow: visible !important;
-  transform: none !important;
-}
-
-/* 이게 직사각형처럼 보이던 원인 중 하나 */
-[data-theme="mac-core"] .theme-segmented-control,
-.theme-mac-core .theme-segmented-control,
-.mac-core .theme-segmented-control {
-  height: 40px !important;
-  padding: 4px !important;
-  border-radius: 999px !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-}
-
-/* 테마 버튼 */
-[data-theme="mac-core"] .theme-segment-button,
-.theme-mac-core .theme-segment-button,
-.mac-core .theme-segment-button {
-  height: 32px !important;
-  padding: 0 14px !important;
-  border-radius: 999px !important;
-  background: transparent !important;
-  border: 0 !important;
-  color: hsl(224 18% 30%) !important;
-  box-shadow: none !important;
-  white-space: nowrap !important;
-}
-
-[data-theme="mac-core"] .theme-segment-button.is-active,
-.theme-mac-core .theme-segment-button.is-active,
-.mac-core .theme-segment-button.is-active {
-  background: hsl(0 0% 100% / 0.86) !important;
-  color: hsl(224 20% 18%) !important;
-  box-shadow:
-    0 8px 22px hsl(220 24% 50% / 0.12),
-    inset 0 1px 0 hsl(0 0% 100% / 0.95) !important;
-}
-
-/* Settings / Edit 버튼도 둥글게 */
-[data-theme="mac-core"] .topbar-action-button,
-.theme-mac-core .topbar-action-button,
-.mac-core .topbar-action-button,
-[data-theme="mac-core"] .topbar .glass-button,
-.theme-mac-core .topbar .glass-button,
-.mac-core .topbar .glass-button {
-  height: 40px !important;
-  padding: 0 14px !important;
-  border-radius: 999px !important;
-  background: hsl(0 0% 100% / 0.62) !important;
-  border: 1px solid hsl(220 18% 78% / 0.75) !important;
-  color: hsl(224 18% 34%) !important;
-  box-shadow:
-    0 8px 20px hsl(220 24% 50% / 0.08),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
-}
-
-/* Workspace가 너무 왼쪽/위쪽에 붙는 것도 완화 */
-[data-theme="mac-core"] .dashboard-tab-space,
-.theme-mac-core .dashboard-tab-space,
-.mac-core .dashboard-tab-space {
-  padding: 34px 42px 44px !important;
-}
-
-[data-theme="mac-core"] .dashboard-tab-header,
-.theme-mac-core .dashboard-tab-header,
-.mac-core .dashboard-tab-header {
-  margin-bottom: 26px !important;
-}
-
-/* 모바일에서는 기존대로 select + 버튼 */
-@media (max-width: 768px) {
-  [data-theme="mac-core"] .topbar,
-  .theme-mac-core .topbar,
-  .mac-core .topbar {
-    height: auto !important;
-    min-height: 118px !important;
-  }
-
-  [data-theme="mac-core"] .topbar-inner,
-  .theme-mac-core .topbar-inner,
-  .mac-core .topbar-inner {
-    min-height: 118px !important;
-    height: auto !important;
-    padding: 18px 20px !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 12px !important;
-  }
-
-  [data-theme="mac-core"] .topbar-actions,
-  .theme-mac-core .topbar-actions,
-  .mac-core .topbar-actions {
-    width: 100% !important;
-    max-width: none !important;
-    min-height: 52px !important;
-    justify-content: flex-start !important;
-    padding: 8px !important;
-    border-radius: 26px !important;
-    overflow-x: auto !important;
-  }
-
-  [data-theme="mac-core"] .theme-button-group,
-  .theme-mac-core .theme-button-group,
-  .mac-core .theme-button-group {
-    display: none !important;
-  }
-
-  [data-theme="mac-core"] .theme-select-mobile,
-  .theme-mac-core .theme-select-mobile,
-  .mac-core .theme-select-mobile {
-    display: inline-flex !important;
-    height: 38px !important;
-    border-radius: 999px !important;
-  }
-
-  [data-theme="mac-core"] .dashboard-tab-space,
-  .theme-mac-core .dashboard-tab-space,
-  .mac-core .dashboard-tab-space {
-    padding: 22px 20px 34px !important;
-  }
-}
-
-/* =========================================================
-   PIXEL DESK RESTORE
-   - Pixel Desk widgets must be rectangular windows
-   - remove rounded glass frame clipping
-========================================================= */
-
-[data-theme="pixel-desk"] {
-  --app-radius-shell: 0px;
-  --app-radius-panel: 0px;
-  --app-radius-card: 0px;
-  --app-radius-inner: 0px;
-  --app-radius-button: 0px;
-  --app-radius-chip: 0px;
-}
-
-/* Pixel Desk: grid item itself should not round/clip the window */
-[data-theme="pixel-desk"] .react-grid-item,
-[data-theme="pixel-desk"] .dashboard-grid-item,
-[data-theme="pixel-desk"] .dashboard-grid-item-content {
-  border-radius: 0 !important;
-  overflow: visible !important;
-  clip-path: none !important;
-}
-
-/* Pixel Desk: widget window body rectangular */
-[data-theme="pixel-desk"] .glass-card,
-[data-theme="pixel-desk"] .widget-card,
-[data-theme="pixel-desk"] .dashboard-card,
-[data-theme="pixel-desk"] .grid-card,
-[data-theme="pixel-desk"] .widget-shell,
-[data-theme="pixel-desk"] .widget-frame,
-[data-theme="pixel-desk"] .panel {
-  border-radius: 0 !important;
-  overflow: hidden !important;
-  clip-path: none !important;
-}
-
-/* Pixel Desk: inner cards also should not look like soft rounded iOS cards */
-[data-theme="pixel-desk"] .inner-card,
-[data-theme="pixel-desk"] .soft-card,
-[data-theme="pixel-desk"] .mini-card,
-[data-theme="pixel-desk"] .focus-card,
-[data-theme="pixel-desk"] .alert-item,
-[data-theme="pixel-desk"] .alert-card,
-[data-theme="pixel-desk"] .memo-item,
-[data-theme="pixel-desk"] .memo-list-item,
-[data-theme="pixel-desk"] .event-item,
-[data-theme="pixel-desk"] .calendar-item,
-[data-theme="pixel-desk"] .calendar-event,
-[data-theme="pixel-desk"] .list-item,
-[data-theme="pixel-desk"] .todo-item,
-[data-theme="pixel-desk"] .study-item,
-[data-theme="pixel-desk"] .career-item,
-[data-theme="pixel-desk"] .money-item,
-[data-theme="pixel-desk"] .health-item,
-[data-theme="pixel-desk"] .mood-item,
-[data-theme="pixel-desk"] .application-card,
-[data-theme="pixel-desk"] .focus-summary,
-[data-theme="pixel-desk"] .today-summary {
-  border-radius: 0 !important;
-  overflow: hidden !important;
-}
-
-/* Pixel Desk buttons: keep retro square buttons */
-[data-theme="pixel-desk"] button,
-[data-theme="pixel-desk"] .button,
-[data-theme="pixel-desk"] .glass-button,
-[data-theme="pixel-desk"] .icon-button,
-[data-theme="pixel-desk"] .control-button,
-[data-theme="pixel-desk"] .add-button,
-[data-theme="pixel-desk"] .tab-button,
-[data-theme="pixel-desk"] .theme-button,
-[data-theme="pixel-desk"] .mode-button,
-[data-theme="pixel-desk"] .theme-segment-button,
-[data-theme="pixel-desk"] .topbar-action-button {
-  border-radius: 0 !important;
-}
-
-/* Pixel Desk topbar controls: square retro group, not pill/glass */
-[data-theme="pixel-desk"] .theme-segmented-control,
-[data-theme="pixel-desk"] .theme-button-group,
-[data-theme="pixel-desk"] .topbar-actions {
-  border-radius: 0 !important;
-}
-
-/* Pixel Desk widget titlebar should stay rectangular */
-[data-theme="pixel-desk"] .glass-card::before,
-[data-theme="pixel-desk"] .glass-card::after {
-  border-radius: 0 !important;
-  clip-path: none !important;
-}
-
-/* Pixel Desk: remove accidental rounded mask on the first/last widget corners */
-[data-theme="pixel-desk"] .react-grid-item > .glass-card,
-[data-theme="pixel-desk"] .dashboard-grid-item > .glass-card {
-  border-radius: 0 !important;
-  clip-path: none !important;
 }
