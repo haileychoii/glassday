@@ -1300,3 +1300,168 @@ body[data-theme="pixel-desk"] .career-cover-strategy-textarea {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* =========================================================
+   Career Cover Letter — stable layout fix
+   질문칸 흔들림 제거 + Limit/삭제 버튼 고정
+========================================================= */
+
+/* 자소서 문항 카드가 타이핑할 때 좌우로 흔들리지 않게 */
+.career-cover-wide-row {
+  width: 100% !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+}
+
+/* 질문 / Limit / Delete 줄 안정화 */
+.career-cover-question-line {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: 24px minmax(0, 1fr) 104px 38px !important;
+  align-items: start !important;
+  gap: 10px !important;
+}
+
+/* 질문 아이콘 위치 고정 */
+.career-cover-icon {
+  margin-top: 38px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Question label + textarea */
+.career-cover-question-field {
+  min-width: 0 !important;
+  width: 100% !important;
+  display: grid !important;
+  gap: 6px !important;
+}
+
+/* 질문 textarea: 자동확장 금지, 대신 충분히 크게 */
+.career-cover-question-input {
+  width: 100% !important;
+  min-width: 0 !important;
+
+  height: 128px !important;
+  min-height: 128px !important;
+  max-height: 128px !important;
+
+  resize: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  padding: 12px 14px !important;
+  border-radius: 14px !important;
+
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  line-height: 1.55 !important;
+
+  white-space: pre-wrap !important;
+  word-break: keep-all !important;
+
+  color: hsl(var(--foreground) / 0.92) !important;
+  background: hsl(0 0% 100% / 0.46) !important;
+  border: 1px solid hsl(0 0% 100% / 0.52) !important;
+
+  field-sizing: initial !important;
+}
+
+/* Limit 위치 고정 */
+.career-cover-limit-field {
+  width: 104px !important;
+  min-width: 104px !important;
+  margin-top: 26px !important;
+  display: grid !important;
+  gap: 6px !important;
+}
+
+.career-cover-limit-field input {
+  width: 100% !important;
+  height: 40px !important;
+}
+
+/* 삭제 버튼 위치 고정 */
+.career-cover-question-line > .career-delete-button {
+  width: 38px !important;
+  height: 38px !important;
+  margin-top: 48px !important;
+  align-self: start !important;
+}
+
+/* Answer / Strategy는 아래에서만 커지게 */
+.career-cover-writing-line {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+}
+
+.career-cover-answer-textarea,
+.career-cover-strategy-textarea {
+  width: 100% !important;
+  min-width: 0 !important;
+  resize: none !important;
+  overflow: hidden !important;
+  field-sizing: initial !important;
+}
+
+.career-cover-answer-textarea {
+  min-height: 132px !important;
+}
+
+.career-cover-strategy-textarea {
+  min-height: 96px !important;
+}
+
+/* 포커스돼도 크기/위치 안 튀게 */
+.career-cover-question-input:focus,
+.career-cover-answer-textarea:focus,
+.career-cover-strategy-textarea:focus,
+.career-cover-limit-field input:focus {
+  outline: none !important;
+  transform: none !important;
+}
+
+/* Pixel Desk에서도 질문칸 고정 */
+html[data-theme="pixel-desk"] .career-cover-question-input,
+body[data-theme="pixel-desk"] .career-cover-question-input,
+html.theme-pixel-desk .career-cover-question-input,
+body.theme-pixel-desk .career-cover-question-input {
+  height: 128px !important;
+  min-height: 128px !important;
+  max-height: 128px !important;
+  overflow-y: auto !important;
+  color: #111111 !important;
+  background: #ffffff !important;
+  border-radius: 0 !important;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .career-cover-question-line {
+    grid-template-columns: 1fr !important;
+  }
+
+  .career-cover-icon {
+    display: none !important;
+  }
+
+  .career-cover-limit-field {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .career-cover-question-line > .career-delete-button {
+    margin-top: 0 !important;
+    justify-self: end !important;
+  }
+
+  .career-cover-question-input {
+    height: 150px !important;
+    min-height: 150px !important;
+    max-height: 150px !important;
+  }
+}

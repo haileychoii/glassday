@@ -254,7 +254,7 @@ export const CareerWidget = () => {
   useEffect(() => {
     window.requestAnimationFrame(() => {
       document
-        .querySelectorAll<HTMLTextAreaElement>(".career-auto-textarea")
+        .querySelectorAll<HTMLTextAreaElement>(".career-auto-textarea, .career-cover-strategy-textarea")
         .forEach((textarea) => autoGrowTextarea(textarea));
     });
   }, [selectedItem?.id, selectedItem?.coverLetterItems]);
@@ -991,7 +991,7 @@ export const CareerWidget = () => {
                       question: event.target.value,
                     })
                   }
-                  className="career-cover-question-input career-auto-textarea"
+                  className="career-cover-question-input"
                   placeholder={`${index + 1}. 자소서 문항 입력`}
                 />
               </label>
