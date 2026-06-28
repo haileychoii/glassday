@@ -1,4 +1,29 @@
-/* 1280 이하: 전체 padding 줄이기 */
+/* =========================================================
+   GLASSDAY RESPONSIVE — CLEAN FINAL
+   layout responsive only
+   테마 색상/배경/그림자/radius는 themes/*.css에서 관리
+========================================================= */
+
+/* =========================================================
+   0. Global responsive safety
+========================================================= */
+
+main {
+  min-width: 0 !important;
+}
+
+.relative.z-10.min-h-screen,
+.glass-panel,
+.liquid-shell,
+.dashboard-layout,
+.app-layout {
+  min-width: 0 !important;
+}
+
+/* =========================================================
+   1. Medium desktop
+========================================================= */
+
 @media (max-width: 1280px) {
   .relative.z-10.min-h-screen {
     padding: 14px !important;
@@ -8,13 +33,126 @@
     padding: 18px !important;
   }
 
-  .glass-panel,
-  .liquid-shell {
-    border-radius: 28px !important;
+  .dashboard-tab-space {
+    padding: 26px 26px 38px !important;
   }
 }
 
-/* 1100 이하: 사이드바 좁히기 */
+/* =========================================================
+   2. 1180 이하: Topbar 테마 pill 숨김
+   Mac Core에서 테마 선택창이 위젯과 겹치는 핵심 방지
+========================================================= */
+
+@media (max-width: 1180px) {
+  .topbar {
+    height: auto !important;
+    min-height: 82px !important;
+    overflow: visible !important;
+  }
+
+  .topbar-inner {
+    min-height: 82px !important;
+    padding: 14px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 14px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .topbar-title {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  .topbar-title h1 {
+    font-size: 21px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .topbar-actions {
+    position: static !important;
+    transform: none !important;
+    inset: auto !important;
+
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin-left: auto !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+
+    overflow: visible !important;
+  }
+
+  .theme-segmented-control,
+  .theme-button-group,
+  .theme-tabs,
+  .theme-pill-group {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .theme-select-mobile {
+    display: inline-flex !important;
+    visibility: visible !important;
+    flex: 0 0 auto !important;
+    width: 136px !important;
+    min-width: 118px !important;
+    max-width: 150px !important;
+    height: 36px !important;
+  }
+
+  html[data-theme="mac-core"] .topbar-actions,
+  body[data-theme="mac-core"] .topbar-actions,
+  html.theme-mac-core .topbar-actions,
+  body.theme-mac-core .topbar-actions {
+    position: static !important;
+    transform: none !important;
+    inset: auto !important;
+    margin-left: auto !important;
+    overflow: visible !important;
+  }
+}
+
+/* 세로가 낮은 화면에서도 긴 pill 버튼 숨김 */
+@media (max-height: 780px) and (max-width: 1400px) {
+  .theme-segmented-control,
+  .theme-button-group,
+  .theme-tabs,
+  .theme-pill-group {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .theme-select-mobile {
+    display: inline-flex !important;
+    visibility: visible !important;
+  }
+}
+
+/* =========================================================
+   3. 1100 이하: Sidebar compact
+========================================================= */
+
 @media (max-width: 1100px) {
   aside {
     width: 210px !important;
@@ -23,17 +161,12 @@
   .sidebar-tab-main {
     font-size: 12px !important;
   }
-
-  .topbar {
-    height: 76px !important;
-  }
-
-  .topbar h1 {
-    font-size: 20px !important;
-  }
 }
 
-/* 920 이하: 사이드바를 위쪽 가로 탭처럼 바꿈 */
+/* =========================================================
+   4. 920 이하: Sidebar를 위쪽 가로 탭으로 변경
+========================================================= */
+
 @media (max-width: 920px) {
   .glass-panel > .flex,
   .liquid-shell > .flex {
@@ -61,7 +194,9 @@
     flex-direction: row !important;
     gap: 8px !important;
     overflow-x: auto !important;
+    overflow-y: hidden !important;
     padding-bottom: 4px !important;
+    -webkit-overflow-scrolling: touch !important;
   }
 
   .sidebar-tab-item {
@@ -79,58 +214,145 @@
     padding: 14px !important;
   }
 
-  .topbar {
-    height: auto !important;
-    min-height: 68px !important;
-  }
-
-  .topbar > div {
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    padding: 14px !important;
+  .dashboard-tab-space {
+    padding: 22px 20px 34px !important;
   }
 }
 
-/* 720 이하: topbar 버튼/테마 선택도 2줄 허용 */
-@media (max-width: 720px) {
+/* =========================================================
+   5. 768 이하: Mobile Topbar
+   절대 가로 테마 pill 안 보이게
+========================================================= */
+
+@media (max-width: 768px) {
   .relative.z-10.min-h-screen {
     padding: 8px !important;
-  }
-
-  .glass-panel,
-  .liquid-shell {
-    border-radius: 22px !important;
-  }
-
-  .topbar > div {
-    gap: 10px !important;
-  }
-
-  .topbar > div > div:first-child {
-    width: 100% !important;
-  }
-
-  .topbar > div > div:last-child {
-    width: 100% !important;
-    display: flex !important;
-    justify-content: flex-start !important;
-    overflow-x: auto !important;
-  }
-
-  .theme-select {
-    min-width: 120px !important;
   }
 
   main {
     padding: 12px !important;
   }
+
+  .dashboard-tab-space {
+    padding: 20px 16px 30px !important;
+  }
+
+  .topbar {
+    height: auto !important;
+    min-height: 108px !important;
+    overflow: visible !important;
+  }
+
+  .topbar-inner {
+    min-height: 108px !important;
+    padding: 16px 18px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+
+  .topbar-title {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .topbar-title h1 {
+    font-size: 20px !important;
+  }
+
+  .topbar-title p {
+    font-size: 12px !important;
+  }
+
+  .topbar-actions {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    overflow: visible !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .topbar .theme-segmented-control,
+  .topbar .theme-button-group,
+  .topbar .theme-tabs,
+  .topbar .theme-pill-group {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .topbar .theme-select-mobile {
+    display: inline-flex !important;
+    visibility: visible !important;
+    flex: 0 0 auto !important;
+    width: 132px !important;
+    min-width: 116px !important;
+    max-width: 142px !important;
+    height: 36px !important;
+  }
+
+  .topbar-action-button {
+    height: 36px !important;
+    padding-inline: 10px !important;
+    font-size: 12px !important;
+  }
+
+  .topbar-action-button span {
+    display: none !important;
+  }
+
+  .topbar-action-button {
+    width: 38px !important;
+    min-width: 38px !important;
+    padding-inline: 0 !important;
+    justify-content: center !important;
+  }
+
+  .calendar-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* =========================================================
-   RESPONSIVE WIDGET INNER LAYOUT
-   ========================================================= */
+   6. 430 이하: Very small mobile
+========================================================= */
 
-/* Today Focus 내부 2열이 좁으면 1열 */
+@media (max-width: 430px) {
+  .dashboard-tab-space {
+    padding: 18px 14px 28px !important;
+  }
+
+  .topbar-inner {
+    padding-inline: 16px !important;
+  }
+
+  .topbar-actions {
+    justify-content: flex-start !important;
+    overflow-x: visible !important;
+    padding-bottom: 0 !important;
+  }
+
+  .theme-select-mobile {
+    width: auto !important;
+    min-width: 112px !important;
+    max-width: 132px !important;
+  }
+}
+
+/* =========================================================
+   7. Widget inner responsive
+========================================================= */
+
 @media (max-width: 1180px) {
   .today-focus-grid {
     grid-template-columns: 1fr !important;
@@ -145,134 +367,11 @@
   }
 }
 
-
-/* 화면 좁아질 때 shell 여백 줄이기 */
-@media (max-width: 1280px) {
-  .relative.z-10.min-h-screen {
-    padding: 14px !important;
-  }
-
-  main {
-    padding: 18px !important;
-  }
-}
-
-@media (max-width: 920px) {
-  .glass-panel > .flex,
-  .liquid-shell > .flex {
-    flex-direction: column !important;
-  }
-
-  aside {
-    width: 100% !important;
-    height: auto !important;
-    min-height: auto !important;
-    border-right: 0 !important;
-    border-bottom: 1px solid hsl(0 0% 100% / 0.32) !important;
-    padding: 14px !important;
-  }
-
-  aside > div:first-child {
-    height: auto !important;
-    padding: 0 4px 10px !important;
-    border-bottom: 0 !important;
-  }
-
-  aside nav,
-  aside .sidebar-workspace-list {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 8px !important;
-    overflow-x: auto !important;
-    padding-bottom: 4px !important;
-  }
-
-  .sidebar-tab-item {
-    flex: 0 0 auto !important;
-    min-width: 112px !important;
-  }
-
-  .sidebar-tab-main {
-    height: 38px !important;
-    padding: 0 12px !important;
-    white-space: nowrap !important;
-  }
-
-  .topbar {
-    height: auto !important;
-    min-height: 68px !important;
-  }
-
-  .topbar > div {
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    padding: 14px !important;
-  }
-
-  main {
-    padding: 14px !important;
-  }
-}
-
-@media (max-width: 720px) {
-  .relative.z-10.min-h-screen {
-    padding: 8px !important;
-  }
-
-  .glass-panel,
-  .liquid-shell {
-    border-radius: 22px !important;
-  }
-
-  .topbar > div > div:first-child {
-    width: 100% !important;
-  }
-
-  .topbar > div > div:last-child {
-    width: 100% !important;
-    justify-content: flex-start !important;
-    overflow-x: auto !important;
-  }
-
-  .theme-select {
-    min-width: 120px !important;
-  }
-
-  main {
-    padding: 12px !important;
-  }
-} 
-
-
-/* 너무 낮은 위젯에서는 Today Focus를 스크롤형으로 */
 @media (max-height: 760px) {
   .today-focus-card .glass-card-body,
   .today-focus-widget .glass-card-body,
   .today-mini-card .glass-card-body {
     max-height: 100% !important;
     overflow-y: auto !important;
-  }
-}
-
-/* 모바일에서는 더 iPhone스럽게 */
-@media (max-width: 768px) {
-  :root {
-    --gd-radius-app: 34px;
-    --gd-radius-panel: 28px;
-    --gd-radius-widget: 26px;
-    --gd-radius-card: 24px;
-    --gd-radius-inner: 24px;
-    --gd-radius-button: 18px;
-  }
-
-  .theme-pixel-desk,
-  .pixel-desk,
-  [data-theme="pixel-desk"] {
-    --gd-radius-app: 10px;
-    --gd-radius-panel: 6px;
-    --gd-radius-widget: 4px;
-    --gd-radius-card: 4px;
-    --gd-radius-inner: 4px;
-    --gd-radius-button: 2px;
   }
 }
