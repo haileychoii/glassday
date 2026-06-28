@@ -1,22 +1,132 @@
 /* =========================================================
-   Theme segmented control
-   select 말고 pill button 방식
-   ========================================================= */
+   GLASSDAY CONTROLS
+   buttons / selects / segmented controls
+   공통 컨트롤 형태만 관리
+   테마별 색감/질감은 themes/*.css에서 덮어씀
+========================================================= */
 
-.theme-segmented-control {
-  height: 38px;
-  padding: 4px;
+/* =========================================================
+   1. Base button reset
+========================================================= */
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* =========================================================
+   2. Glass button base
+   배경은 너무 강하게 고정하지 않음
+========================================================= */
+
+.glass-button,
+.topbar-action-button,
+.icon-button,
+.control-button {
+  min-height: 36px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  color: hsl(var(--foreground) / 0.72);
+  background: hsl(0 0% 100% / 0.34);
+  border: 1px solid hsl(0 0% 100% / 0.48);
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.58),
+    0 12px 30px -24px hsl(245 35% 32% / 0.22);
+
+  backdrop-filter: blur(16px) saturate(145%);
+  -webkit-backdrop-filter: blur(16px) saturate(145%);
+
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.glass-button:hover,
+.topbar-action-button:hover,
+.icon-button:hover,
+.control-button:hover {
+  color: hsl(var(--foreground) / 0.9);
+  background: hsl(0 0% 100% / 0.5);
+}
+
+.glass-button:active,
+.topbar-action-button:active,
+.icon-button:active,
+.control-button:active {
+  transform: translateY(1px);
+}
+
+.glass-button.is-active,
+.topbar-action-button.is-active,
+.icon-button.is-active,
+.control-button.is-active {
+  color: hsl(var(--foreground) / 0.94);
+  background: hsl(0 0% 100% / 0.72);
+  border-color: hsl(0 0% 100% / 0.68);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.78),
+    0 12px 28px -22px hsl(var(--primary) / 0.3);
+}
+
+/* =========================================================
+   3. Theme segmented control
+   desktop pill buttons
+   모바일에서는 layout.css/overrides.css에서 숨김
+========================================================= */
+
+.theme-segmented-control,
+.theme-button-group {
+  height: 38px;
+  padding: 4px;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: 3px;
+
+  flex: 0 0 auto;
+  min-width: max-content;
+  max-width: none;
+
+  overflow: visible;
+  white-space: nowrap;
+  scrollbar-width: none;
+
   background: hsl(0 0% 100% / 0.42);
   border: 1px solid hsl(0 0% 100% / 0.58);
+
   box-shadow:
     inset 0 1px 0 hsl(0 0% 100% / 0.82),
     0 18px 42px -34px hsl(260 34% 34% / 0.28);
+
   backdrop-filter: blur(18px) saturate(150%);
   -webkit-backdrop-filter: blur(18px) saturate(150%);
+}
+
+.theme-segmented-control::-webkit-scrollbar,
+.theme-button-group::-webkit-scrollbar {
+  display: none;
 }
 
 .theme-segment-button {
@@ -24,11 +134,22 @@
   min-width: 68px;
   padding: 0 14px;
   border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
   font-size: 12px;
   font-weight: 750;
-  color: hsl(var(--foreground) / 0.5);
+  letter-spacing: -0.015em;
+
+  color: hsl(var(--foreground) / 0.52);
   background: transparent;
   border: 0;
+  box-shadow: none;
+
   transition:
     background 160ms ease,
     color 160ms ease,
@@ -38,24 +159,313 @@
 
 .theme-segment-button:hover {
   color: hsl(var(--foreground) / 0.78);
+  background: hsl(0 0% 100% / 0.28);
+}
+
+.theme-segment-button:active {
+  transform: translateY(1px);
 }
 
 .theme-segment-button.is-active {
-  color: hsl(var(--foreground) / 0.88);
+  color: hsl(var(--foreground) / 0.9);
   background: hsl(0 0% 100% / 0.78);
+
   box-shadow:
     0 10px 24px -18px hsl(260 32% 36% / 0.34),
     inset 0 1px 0 hsl(0 0% 100% / 0.9);
 }
 
-@media (max-width: 920px) {
-  .theme-segmented-control {
-    max-width: 100%;
-    overflow-x: auto;
+/* =========================================================
+   4. Mobile theme select
+   desktop에서는 숨김, 모바일에서는 layout/overrides에서 표시
+========================================================= */
+
+.theme-select-mobile,
+.theme-mobile-select,
+.theme-select {
+  height: 36px;
+  min-width: 118px;
+  max-width: 150px;
+  padding: 0 34px 0 12px;
+  border-radius: 999px;
+
+  display: none;
+  align-items: center;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+
+  color: hsl(var(--foreground) / 0.78);
+  background: hsl(0 0% 100% / 0.48);
+  border: 1px solid hsl(0 0% 100% / 0.58);
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.78),
+    0 12px 28px -24px hsl(245 35% 32% / 0.2);
+
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 13px) 50%;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+}
+
+.theme-select-mobile:focus,
+.theme-mobile-select:focus,
+.theme-select:focus {
+  border-color: hsl(var(--primary) / 0.42);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.8),
+    0 0 0 3px hsl(var(--primary) / 0.12);
+}
+
+/* =========================================================
+   5. Topbar action button sizing
+   위치/배치는 layout.css에서 관리
+========================================================= */
+
+.topbar-action-button {
+  height: 36px;
+  padding: 0 12px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.topbar-action-button svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   6. Small icon buttons
+========================================================= */
+
+.career-icon-button,
+.memo-mini-button,
+.calendar-nav-button,
+.widget-icon-button {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: hsl(var(--foreground) / 0.72);
+  background: hsl(0 0% 100% / 0.34);
+  border: 1px solid hsl(0 0% 100% / 0.48);
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.58),
+    0 10px 24px -20px hsl(245 35% 32% / 0.18);
+
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.career-icon-button:hover,
+.memo-mini-button:hover,
+.calendar-nav-button:hover,
+.widget-icon-button:hover {
+  color: hsl(var(--foreground) / 0.9);
+  background: hsl(0 0% 100% / 0.52);
+}
+
+.career-icon-button:active,
+.memo-mini-button:active,
+.calendar-nav-button:active,
+.widget-icon-button:active {
+  transform: translateY(1px);
+}
+
+/* =========================================================
+   7. Inputs / selects base
+   테마별 질감은 theme css에서 덮어씀
+========================================================= */
+
+input,
+select,
+textarea {
+  color: hsl(var(--foreground) / 0.86);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: hsl(var(--muted-foreground) / 0.52);
+}
+
+select option {
+  color: #242234;
+  background: #ffffff;
+}
+
+/* =========================================================
+   8. Calendar view toggle
+   Day / Week / Month 공통 형태
+========================================================= */
+
+.calendar-view-toggle {
+  height: 36px;
+  padding: 4px;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  flex: 0 0 auto;
+  white-space: nowrap;
+
+  background: hsl(0 0% 100% / 0.36);
+  border: 1px solid hsl(0 0% 100% / 0.52);
+
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.7),
+    0 10px 24px -22px hsl(245 35% 32% / 0.18);
+
+  backdrop-filter: blur(16px) saturate(145%);
+  -webkit-backdrop-filter: blur(16px) saturate(145%);
+}
+
+.calendar-view-button {
+  height: 28px;
+  min-width: 58px;
+  padding: 0 13px;
+  border-radius: 999px;
+
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+
+  color: hsl(var(--foreground) / 0.55);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.calendar-view-button:hover {
+  color: hsl(var(--foreground) / 0.82);
+  background: hsl(0 0% 100% / 0.28);
+}
+
+.calendar-view-button.is-active {
+  color: hsl(var(--foreground) / 0.92);
+  background: hsl(0 0% 100% / 0.82);
+  box-shadow:
+    0 8px 18px -14px hsl(245 35% 32% / 0.24),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9);
+}
+
+/* =========================================================
+   9. Theme-specific guardrails
+   controls.css가 로드되어도 Pixel/Retro가 둥글게 안 깨지게 최소 보정
+   실제 디자인은 pixel.css / retro.css에서 담당
+========================================================= */
+
+html[data-theme="pixel-desk"] .theme-segmented-control,
+body[data-theme="pixel-desk"] .theme-segmented-control,
+html.theme-pixel-desk .theme-segmented-control,
+body.theme-pixel-desk .theme-segmented-control,
+html[data-theme="pixel-desk"] .theme-button-group,
+body[data-theme="pixel-desk"] .theme-button-group,
+html.theme-pixel-desk .theme-button-group,
+body.theme-pixel-desk .theme-button-group,
+html[data-theme="pixel-desk"] .theme-segment-button,
+body[data-theme="pixel-desk"] .theme-segment-button,
+html.theme-pixel-desk .theme-segment-button,
+body.theme-pixel-desk .theme-segment-button,
+html[data-theme="pixel-desk"] .theme-select-mobile,
+body[data-theme="pixel-desk"] .theme-select-mobile,
+html.theme-pixel-desk .theme-select-mobile,
+body.theme-pixel-desk .theme-select-mobile,
+html[data-theme="pixel-desk"] .calendar-view-toggle,
+body[data-theme="pixel-desk"] .calendar-view-toggle,
+html.theme-pixel-desk .calendar-view-toggle,
+body.theme-pixel-desk .calendar-view-toggle,
+html[data-theme="pixel-desk"] .calendar-view-button,
+body[data-theme="pixel-desk"] .calendar-view-button,
+html.theme-pixel-desk .calendar-view-button,
+body.theme-pixel-desk .calendar-view-button,
+html[data-theme="retro"] .theme-segmented-control,
+body[data-theme="retro"] .theme-segmented-control,
+html.theme-retro .theme-segmented-control,
+body.theme-retro .theme-segmented-control,
+html[data-theme="retro"] .theme-button-group,
+body[data-theme="retro"] .theme-button-group,
+html.theme-retro .theme-button-group,
+body.theme-retro .theme-button-group,
+html[data-theme="retro"] .theme-segment-button,
+body[data-theme="retro"] .theme-segment-button,
+html.theme-retro .theme-segment-button,
+body.theme-retro .theme-segment-button,
+html[data-theme="retro"] .theme-select-mobile,
+body[data-theme="retro"] .theme-select-mobile,
+html.theme-retro .theme-select-mobile,
+body.theme-retro .theme-select-mobile,
+html[data-theme="retro"] .calendar-view-toggle,
+body[data-theme="retro"] .calendar-view-toggle,
+html.theme-retro .calendar-view-toggle,
+body.theme-retro .calendar-view-toggle,
+html[data-theme="retro"] .calendar-view-button,
+body[data-theme="retro"] .calendar-view-button,
+html.theme-retro .calendar-view-button,
+body.theme-retro .calendar-view-button {
+  border-radius: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* =========================================================
+   10. Responsive controls
+========================================================= */
+
+@media (max-width: 980px) {
+  .theme-segmented-control,
+  .theme-button-group {
+    display: none;
   }
 
-  .theme-segment-button {
-    flex: 0 0 auto;
-    min-width: 74px;
+  .theme-select-mobile {
+    display: inline-flex;
   }
-} 
+}
+
+@media (max-width: 640px) {
+  .topbar-action-button span {
+    display: none;
+  }
+
+  .topbar-action-button {
+    width: 38px;
+    min-width: 38px;
+    padding: 0;
+  }
+
+  .theme-select-mobile {
+    min-width: 112px;
+    max-width: 132px;
+    height: 36px;
+  }
+}

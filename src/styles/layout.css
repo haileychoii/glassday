@@ -1,6 +1,75 @@
+/* =========================================================
+   GLASSDAY LAYOUT
+   layout / spacing / alignment only
+   테마의 색, 배경, 그림자, radius는 themes/*.css에서 관리
+========================================================= */
+
+/* ================================
+   App / Main layout safety
+================================ */
+
+main {
+  min-width: 0 !important;
+}
+
+.app-shell,
+.dashboard-shell,
+.workspace-shell,
+.desktop-shell,
+.main-shell,
+.dashboard-layout,
+.app-layout {
+  min-width: 0;
+}
+
+/* ================================
+   Dashboard workspace spacing
+================================ */
+
+.dashboard-tab-space {
+  width: 100%;
+  min-width: 0;
+  padding: 28px 32px 40px;
+  overflow-x: hidden;
+}
+
+.dashboard-tab-header {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.dashboard-edit-canvas {
+  width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+
+.react-grid-layout {
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboard-grid-item,
+.dashboard-grid-item-content,
+.react-grid-item {
+  min-width: 0;
+  min-height: 0;
+}
+
+.dashboard-grid-item > .glass-card,
+.dashboard-grid-item-content > .glass-card {
+  width: 100%;
+  height: 100%;
+}
+
 /* ================================
    Sidebar Workspace Tabs
-   ================================ */
+================================ */
 
 .sidebar-tab-item {
   min-height: 42px;
@@ -71,29 +140,115 @@
   background: hsl(350 100% 96% / 0.52);
 }
 
-/* 카드 내부가 좁아질 때 글자/요소 튀어나오는 것 방지 */
-.glass-card,
-.glass-card * {
-  box-sizing: border-box;
-}
-
-.glass-card {
-  overflow: hidden;
-}
-
-/* 메인 영역이 좁아질 때 너무 답답하지 않게 */
-main {
-  min-width: 0 !important;
-}
-
-
-/* Topbar workspace alignment fix */
+/* ================================
+   Topbar base layout
+================================ */
 
 .topbar,
 .app-topbar,
 .workspace-topbar {
+  position: relative;
+  z-index: 50;
+  width: 100%;
   min-height: 86px;
+  overflow: visible;
 }
+
+.topbar-inner {
+  width: 100%;
+  min-width: 0;
+  min-height: 86px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.topbar-title {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.topbar-title-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-sparkle {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.topbar-title h1 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-title p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-actions {
+  margin-left: auto;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  visibility: visible;
+  opacity: 1;
+  position: relative;
+  z-index: 60;
+  overflow: visible;
+}
+
+.theme-segmented-control.theme-button-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+.theme-select-mobile {
+  display: none;
+  height: 36px;
+  min-width: 118px;
+  max-width: 150px;
+  padding: 0 34px 0 12px;
+  font-size: 12px;
+  font-weight: 800;
+  outline: none;
+}
+
+.topbar-action-button {
+  height: 36px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* ================================
+   Topbar workspace alignment fix
+================================ */
 
 .topbar .workspace,
 .topbar .workspace-label-wrap,
@@ -140,14 +295,92 @@ main {
   transform: translateY(1px);
 }
 
-.topbar,
-.toolbar,
-.theme-bar,
-.theme-tabs,
-.header-panel,
-.control-panel,
-.settings-bar,
-.dashboard-toolbar {
-  border-radius: var(--gd-radius-panel) !important;
-  overflow: hidden;
+/* ================================
+   Mobile / tablet layout
+================================ */
+
+@media (max-width: 980px) {
+  .theme-segmented-control,
+  .theme-button-group {
+    display: none;
+  }
+
+  .theme-select-mobile {
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-tab-space {
+    padding: 22px 20px 32px;
+  }
+
+  .topbar {
+    height: auto;
+    min-height: 112px;
+  }
+
+  .topbar-inner {
+    min-height: 112px;
+    padding: 18px 20px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .topbar-title {
+    width: 100%;
+  }
+
+  .topbar-title h1 {
+    font-size: 21px;
+  }
+
+  .topbar-title p {
+    font-size: 12px;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .topbar-action-button {
+    height: 36px;
+    padding-inline: 11px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 430px) {
+  .dashboard-tab-space {
+    padding: 20px 16px 30px;
+  }
+
+  .topbar-inner {
+    padding-inline: 18px;
+  }
+
+  .topbar-actions {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .theme-select-mobile {
+    min-width: 110px;
+  }
+
+  .topbar-action-button span {
+    display: none;
+  }
+
+  .topbar-action-button {
+    width: 38px;
+    padding-inline: 0;
+  }
 }
