@@ -418,3 +418,71 @@ body.theme-retro .dashboard-grid-item > .glass-card {
 
   overflow: auto !important;
 }
+
+/* =========================================================
+   Emergency widget body restore
+   위젯 내부가 원시 HTML처럼 보이는 문제 복구
+========================================================= */
+
+.glass-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card > div:last-child,
+.glass-card-body {
+  min-height: 0;
+}
+
+.today-focus-card,
+.today-focus-widget,
+.today-mini-card {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.today-focus-card .glass-card-body,
+.today-focus-widget .glass-card-body,
+.today-mini-card .glass-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: auto;
+}
+
+.today-focus-main,
+.today-focus-hero {
+  padding: 18px;
+  border-radius: var(--gd-radius-card, 22px);
+}
+
+.today-focus-section,
+.today-focus-block,
+.today-focus-mini-card,
+.today-task-item,
+.today-focus-task {
+  padding: 12px 14px;
+  border-radius: var(--gd-radius-inner, 18px);
+}
+
+.today-task-list,
+.today-focus-list {
+  display: grid;
+  gap: 8px;
+}
+
+.today-task-item,
+.today-focus-task {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calendar-event-item,
+.career-list-item {
+  padding: 12px 14px;
+  border-radius: var(--gd-radius-inner, 18px);
+  display: grid;
+  gap: 4px;
+}

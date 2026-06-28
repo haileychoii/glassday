@@ -4,9 +4,6 @@
 ========================================================= */
 
 /* Tailwind utilities 복구 — 이거 빠지면 위젯 내부가 원시 HTML처럼 보임 */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* Base / shared structure */
 @import "./base.css";

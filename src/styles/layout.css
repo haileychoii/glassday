@@ -1,299 +1,1094 @@
 /* =========================================================
-   Settings Modal Layout Fix
-   카드가 원형처럼 되는 문제 + 헤더 정렬 문제 해결
+   GLASSDAY LAYOUT
+   역할: app layout / topbar / sidebar / settings modal / workspace spacing
+   금지: theme 색상, glass 질감, box-shadow 강제 덮어쓰기
 ========================================================= */
+
+/* =========================================================
+   0. App layout safety
+========================================================= */
+
+main,
+.app-main,
+.dashboard-main,
+.workspace-main {
+  min-width: 0;
+  min-height: 0;
+}
+
+.app-layout,
+.dashboard-layout,
+.workspace-layout,
+.desktop-layout {
+  min-width: 0;
+  min-height: 100vh;
+}
+
+.app-content,
+.dashboard-content,
+.workspace-content {
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+/* =========================================================
+   1. Topbar layout
+   색/배경/테두리/그림자는 themes/*.css에서 담당
+========================================================= */
+
+.topbar {
+  position: relative;
+  z-index: 50;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 86px;
+
+  flex-shrink: 0;
+
+  overflow: visible;
+}
+
+.topbar-inner {
+  width: 100%;
+  min-width: 0;
+  min-height: 86px;
+
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+
+  overflow: visible;
+}
+
+.topbar-title {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.topbar-title-row {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-sparkle {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.topbar-title h1 {
+  margin: 0;
+
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-title p {
+  margin: 6px 0 0;
+
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 600;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-actions {
+  min-width: 0;
+  max-width: 100%;
+
+  margin-left: auto;
+
+  flex: 0 1 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+
+  overflow: visible;
+}
+
+/* Mac Core 같은 테마에서 이전 absolute topbar가 남아도 겹치지 않게 */
+.topbar .topbar-actions,
+.topbar .theme-segmented-control,
+.topbar .theme-button-group {
+  position: static;
+  inset: auto;
+  transform: none;
+}
+
+.topbar-action-button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.theme-select-mobile {
+  flex: 0 0 auto;
+}
+
+/* =========================================================
+   2. Sidebar layout
+   Sidebar.tsx는 className="app-sidebar sidebar" 기준
+   색/배경/테두리/질감은 themes/*.css에서 담당
+========================================================= */
+
+.app-sidebar,
+.sidebar {
+  flex: 0 0 250px;
+
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+
+  min-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+.sidebar-brand {
+  height: 86px;
+  min-height: 86px;
+
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+
+  flex-shrink: 0;
+}
+
+.sidebar-brand-title {
+  margin: 0;
+
+  font-size: 20px;
+  line-height: 1.1;
+  font-weight: 780;
+  letter-spacing: -0.035em;
+
+  white-space: nowrap;
+}
+
+.sidebar-brand-subtitle {
+  margin-top: 4px;
+
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 650;
+
+  white-space: nowrap;
+}
+
+.sidebar-body {
+  flex: 1 1 auto;
+
+  min-width: 0;
+  min-height: 0;
+
+  padding: 16px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-section-header {
+  min-width: 0;
+
+  margin-bottom: 12px;
+  padding: 0 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sidebar-section-title {
+  min-width: 0;
+
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 760;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sidebar-add-button {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0;
+
+  flex-shrink: 0;
+}
+
+.sidebar-workspace-list {
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  overflow: visible;
+}
+
+.sidebar-tab-item {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  flex: 0 0 auto;
+}
+
+.sidebar-tab-main {
+  flex: 1 1 auto;
+
+  min-width: 0;
+  height: 42px;
+
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  text-align: left;
+
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 720;
+}
+
+.sidebar-tab-icon {
+  width: 20px;
+  min-width: 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+.sidebar-tab-label,
+.sidebar-tab-main span:last-child {
+  min-width: 0;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-tab-input {
+  width: 100%;
+  min-width: 0;
+
+  border: 0;
+  outline: none;
+  background: transparent;
+
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 720;
+}
+
+.sidebar-tab-delete {
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+
+  margin-right: 6px;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+/* 예전 aside 전역 스타일이 남아도 .app-sidebar 기준을 우선 */
+aside.app-sidebar,
+aside.sidebar {
+  flex: 0 0 250px;
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+}
+
+/* =========================================================
+   3. Workspace / dashboard outer spacing
+   react-grid-layout 자체는 dashboard-grid.css에서 담당
+========================================================= */
+
+.dashboard-tab-space {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+
+  padding: 28px 32px 40px;
+
+  overflow-x: hidden;
+}
+
+.dashboard-tab-header {
+  width: 100%;
+  min-width: 0;
+
+  margin-bottom: 18px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dashboard-tab-title-area {
+  min-width: 0;
+}
+
+.dashboard-tab-title {
+  margin: 0;
+
+  font-size: 22px;
+  line-height: 1.15;
+  font-weight: 850;
+  letter-spacing: -0.04em;
+}
+
+.dashboard-tab-subtitle {
+  margin: 6px 0 0;
+
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.dashboard-tab-actions {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.dashboard-edit-canvas {
+  width: 100%;
+  min-width: 0;
+
+  position: relative;
+
+  overflow: visible;
+}
+
+/* =========================================================
+   4. Settings modal layout
+   색/배경/질감은 themes/*.css에서 담당
+========================================================= */
+
+.settings-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482000;
+
+  padding: 16px;
+
+  display: grid;
+  place-items: center;
+
+  overflow: hidden;
+}
 
 .settings-modal-window,
 .settings-window,
 .settings-panel {
-  width: min(980px, calc(100vw - 32px)) !important;
-  max-width: 980px !important;
-  max-height: calc(100vh - 32px) !important;
+  width: min(980px, calc(100vw - 32px));
+  max-width: 980px;
+  min-width: 0;
 
-  display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
+  max-height: calc(100vh - 32px);
 
-  overflow: hidden !important;
-  box-sizing: border-box !important;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-/* Settings 상단 툴바 정리 */
 .settings-modal-header,
 .settings-header,
 .settings-titlebar {
-  min-height: 86px !important;
-  height: auto !important;
+  min-height: 86px;
+  height: auto;
 
-  padding: 18px 24px !important;
+  padding: 18px 24px;
 
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 16px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 
-  flex-shrink: 0 !important;
-  box-sizing: border-box !important;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
-/* 왼쪽 제목 묶음 */
 .settings-modal-title-wrap {
-  min-width: 0 !important;
+  min-width: 0;
 
-  display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-/* 아이콘은 작게, 제목 옆에 붙게 */
 .settings-modal-icon,
 .settings-icon {
-  width: 38px !important;
-  height: 38px !important;
-  min-width: 38px !important;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
 
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-  flex-shrink: 0 !important;
+  flex-shrink: 0;
 }
 
-/* 제목 텍스트 */
 .settings-modal-title-text,
 .settings-modal-title-wrap > div:last-child {
-  min-width: 0 !important;
-  display: grid !important;
-  gap: 4px !important;
+  min-width: 0;
+
+  display: grid;
+  gap: 4px;
 }
 
 .settings-modal-header h2,
 .settings-header h2,
 .settings-titlebar h2 {
-  margin: 0 !important;
-  font-size: 16px !important;
-  line-height: 1.1 !important;
-  font-weight: 850 !important;
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.1;
+  font-weight: 850;
+  letter-spacing: -0.025em;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .settings-modal-header p,
 .settings-header p,
 .settings-titlebar p {
-  margin: 0 !important;
-  font-size: 13px !important;
-  line-height: 1.2 !important;
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 600;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* 닫기 버튼 위치 고정 */
 .settings-close-button,
 .settings-modal-header > button,
 .settings-header > button,
 .settings-titlebar > button {
-  width: 38px !important;
-  height: 38px !important;
-  min-width: 38px !important;
-  padding: 0 !important;
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  padding: 0;
 
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-  flex-shrink: 0 !important;
-  margin-left: auto !important;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
-/* 본문 */
 .settings-modal-body,
 .settings-body,
 .settings-content {
-  min-height: 0 !important;
-  padding: 22px 24px 28px !important;
+  min-width: 0;
+  min-height: 0;
 
-  display: grid !important;
-  align-content: start !important;
-  gap: 18px !important;
+  padding: 22px 24px 28px;
 
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  box-sizing: border-box !important;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
-/* 섹션 박스 */
 .settings-section,
 .settings-card {
-  width: 100% !important;
-  min-width: 0 !important;
+  width: 100%;
+  min-width: 0;
 
-  padding: 22px !important;
-  box-sizing: border-box !important;
+  padding: 22px;
 
-  display: grid !important;
-  gap: 18px !important;
+  display: grid;
+  gap: 18px;
+
+  box-sizing: border-box;
 }
 
-/* 섹션 제목 */
 .settings-section-title,
 .settings-card-title {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 8px !important;
+  margin: 0;
 
-  margin: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
-  font-size: 13px !important;
-  line-height: 1.2 !important;
-  font-weight: 850 !important;
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 850;
 }
 
-/* Theme grid: 카드 크기 균일하게 */
+/* Settings theme grid */
 .settings-theme-grid {
-  width: 100% !important;
+  width: 100%;
+  min-width: 0;
 
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)) !important;
-  gap: 14px !important;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: 14px;
 
-  align-items: stretch !important;
+  align-items: stretch;
 }
 
-/* 핵심: button 전역 radius 때문에 원형처럼 되는 것 방지 */
 .settings-theme-card {
-  width: 100% !important;
-  min-width: 0 !important;
-  min-height: 148px !important;
+  width: 100%;
+  min-width: 0;
+  min-height: 148px;
 
-  padding: 16px !important;
+  padding: 16px;
 
-  display: grid !important;
-  grid-template-rows: 52px auto auto !important;
-  align-content: start !important;
-  gap: 10px !important;
+  display: grid;
+  grid-template-rows: 52px auto auto;
+  align-content: start;
+  gap: 10px;
 
-  text-align: left !important;
+  text-align: left;
 
-  border-radius: 24px !important;
-  overflow: hidden !important;
-  box-sizing: border-box !important;
+  border-radius: 24px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-/* 프리뷰도 카드 안에서 같은 크기 */
 .settings-theme-preview {
-  width: 100% !important;
-  height: 52px !important;
-  min-height: 52px !important;
+  width: 100%;
+  height: 52px;
+  min-height: 52px;
 
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
+  padding: 0 12px;
 
-  padding: 0 12px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-  border-radius: 18px !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
+  border-radius: 18px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-/* 프리뷰 안 점/칩 */
 .settings-theme-preview > span {
-  display: block !important;
-  flex: 1 1 0 !important;
-  height: 18px !important;
-  min-width: 0 !important;
-  border-radius: 999px !important;
+  display: block;
+
+  flex: 1 1 0;
+  min-width: 0;
+  height: 18px;
+
+  border-radius: 999px;
 }
 
-/* 카드 텍스트 */
 .settings-theme-card strong {
-  margin: 0 !important;
-  font-size: 13px !important;
-  line-height: 1.2 !important;
-  font-weight: 850 !important;
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 850;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .settings-theme-card small {
-  margin: 0 !important;
-  font-size: 11px !important;
-  line-height: 1.35 !important;
-  font-weight: 600 !important;
+  margin: 0;
+
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 600;
 }
 
-/* Backup / Reset 카드도 원형 방지 */
+/* Backup / reset layout */
 .settings-action-grid,
 .settings-backup-grid {
-  width: 100% !important;
+  width: 100%;
+  min-width: 0;
 
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
-  gap: 14px !important;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
 }
 
 .settings-reset-grid {
-  width: 100% !important;
+  width: 100%;
+  min-width: 0;
 
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) !important;
-  gap: 12px !important;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
 }
 
 .settings-action-card,
 .settings-backup-button,
 .settings-reset-button {
-  width: 100% !important;
-  min-width: 0 !important;
-  min-height: 72px !important;
+  width: 100%;
+  min-width: 0;
+  min-height: 72px;
 
-  padding: 16px !important;
+  padding: 16px;
 
-  display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-  text-align: left !important;
-  border-radius: 22px !important;
-  box-sizing: border-box !important;
+  text-align: left;
+
+  border-radius: 22px;
+  box-sizing: border-box;
+}
+
+.settings-action-card > svg,
+.settings-backup-button > svg,
+.settings-reset-button > svg {
+  flex-shrink: 0;
 }
 
 .settings-action-card > div,
 .settings-backup-button > div,
 .settings-reset-button > div {
-  min-width: 0 !important;
-  display: grid !important;
-  gap: 3px !important;
+  min-width: 0;
+
+  display: grid;
+  gap: 3px;
 }
 
 .settings-action-card strong,
 .settings-backup-button strong,
 .settings-reset-button strong {
-  font-size: 13px !important;
-  line-height: 1.2 !important;
-  font-weight: 850 !important;
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 850;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .settings-action-card span,
 .settings-backup-button span,
 .settings-reset-button span {
-  font-size: 11px !important;
-  line-height: 1.35 !important;
+  font-size: 11px;
+  line-height: 1.35;
 }
 
-/* Sync box */
 .settings-sync-box {
-  width: 100% !important;
-  min-width: 0 !important;
-  padding: 18px !important;
-  border-radius: 22px !important;
-  box-sizing: border-box !important;
+  width: 100%;
+  min-width: 0;
+
+  padding: 18px;
+
+  border-radius: 22px;
+  box-sizing: border-box;
+}
+
+.settings-sync-box p {
+  margin: 6px 0 0;
 }
 
 .settings-status {
-  width: 100% !important;
-  min-width: 0 !important;
-  padding: 12px 14px !important;
-  border-radius: 18px !important;
-  font-size: 12px !important;
-  font-weight: 750 !important;
+  width: 100%;
+  min-width: 0;
+
+  padding: 12px 14px;
+
+  border-radius: 18px;
+
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 750;
 }
 
-/* Pixel / Retro에서는 각진 설정창 유지 */
+/* =========================================================
+   5. Calendar modal layout safety
+   색/질감은 calendar.css 또는 theme css에서 담당
+========================================================= */
+
+.calendar-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2147481900;
+
+  padding: 24px;
+
+  display: grid;
+  place-items: center;
+
+  overflow: hidden;
+}
+
+.calendar-modal-window {
+  width: min(620px, calc(100vw - 48px));
+  max-height: min(760px, calc(100vh - 48px));
+
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.calendar-modal-header {
+  min-height: 76px;
+
+  padding: 22px 24px 18px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  box-sizing: border-box;
+}
+
+.calendar-modal-header > div {
+  min-width: 0;
+}
+
+.calendar-modal-header h3,
+.calendar-modal-header p {
+  margin: 0;
+}
+
+.calendar-modal-body {
+  min-height: 0;
+
+  padding: 18px 24px 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.calendar-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.calendar-field {
+  min-width: 0;
+  width: 100%;
+
+  display: grid;
+  gap: 6px;
+
+  box-sizing: border-box;
+}
+
+.calendar-field input,
+.calendar-field textarea,
+.calendar-field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.event-color-picker {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.calendar-modal-actions {
+  padding-top: 2px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* =========================================================
+   6. Tablet / mobile layout
+========================================================= */
+
+@media (max-width: 1180px) {
+  .topbar-inner {
+    gap: 14px;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 920px) {
+  .app-sidebar,
+  .sidebar,
+  aside.app-sidebar,
+  aside.sidebar {
+    flex: 0 0 auto;
+
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+
+    min-height: auto;
+  }
+
+  .sidebar-brand {
+    height: auto;
+    min-height: 0;
+
+    padding: 14px 18px 8px;
+  }
+
+  .sidebar-body {
+    padding: 8px 14px 14px;
+
+    overflow: hidden;
+  }
+
+  .sidebar-section-header {
+    display: none;
+  }
+
+  .sidebar-workspace-list {
+    flex-direction: row;
+    gap: 8px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding-bottom: 4px;
+
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar-tab-item {
+    width: auto;
+    min-width: 112px;
+
+    flex: 0 0 auto;
+  }
+
+  .sidebar-tab-main {
+    height: 38px;
+    padding: 0 12px;
+
+    white-space: nowrap;
+  }
+
+  .dashboard-tab-space {
+    padding: 24px 22px 34px;
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    min-height: 108px;
+  }
+
+  .topbar-inner {
+    min-height: 108px;
+
+    padding: 16px 18px;
+
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .topbar-actions {
+    width: 100%;
+
+    margin-left: 0;
+
+    justify-content: flex-end;
+    gap: 8px;
+
+    overflow: visible;
+  }
+
+  .topbar-action-button span {
+    display: none;
+  }
+
+  .topbar-action-button {
+    width: 38px;
+    min-width: 38px;
+    height: 36px;
+
+    padding-inline: 0;
+
+    justify-content: center;
+  }
+
+  .theme-segmented-control,
+  .theme-button-group {
+    display: none;
+  }
+
+  .theme-select-mobile {
+    display: inline-flex;
+    width: 132px;
+    min-width: 118px;
+    max-width: 150px;
+    height: 36px;
+  }
+
+  .dashboard-tab-space {
+    padding: 20px 16px 30px;
+  }
+
+  .dashboard-tab-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dashboard-tab-actions {
+    justify-content: flex-start;
+  }
+
+  .settings-modal-window,
+  .settings-window,
+  .settings-panel {
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 24px);
+  }
+
+  .settings-modal-header,
+  .settings-header,
+  .settings-titlebar {
+    min-height: 78px;
+    padding: 14px 16px;
+  }
+
+  .settings-modal-body,
+  .settings-body,
+  .settings-content {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .settings-section,
+  .settings-card {
+    padding: 18px;
+  }
+
+  .settings-theme-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .calendar-modal-backdrop {
+    padding: 14px;
+  }
+
+  .calendar-modal-window {
+    width: calc(100vw - 28px);
+    max-height: calc(100vh - 28px);
+  }
+
+  .calendar-modal-body {
+    padding: 16px;
+  }
+
+  .calendar-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .topbar {
+    min-height: auto;
+  }
+
+  .topbar-inner {
+    min-height: auto;
+  }
+
+  .topbar-actions {
+    justify-content: flex-start;
+  }
+
+  .topbar-title h1 {
+    font-size: 21px;
+  }
+
+  .settings-theme-grid,
+  .settings-action-grid,
+  .settings-backup-grid,
+  .settings-reset-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 430px) {
+  .dashboard-tab-space {
+    padding: 18px 14px 28px;
+  }
+
+  .sidebar-tab-item {
+    min-width: 104px;
+  }
+}
+
+/* =========================================================
+   7. Pixel / Retro shape exception
+   테마 CSS에 있어도 되지만, 설정창 원형 깨짐 방지용 구조 보정
+========================================================= */
+
 html[data-theme="pixel-desk"] .settings-theme-card,
 body[data-theme="pixel-desk"] .settings-theme-card,
 html.theme-pixel-desk .settings-theme-card,
@@ -334,348 +1129,5 @@ html[data-theme="retro"] .settings-reset-button,
 body[data-theme="retro"] .settings-reset-button,
 html.theme-retro .settings-reset-button,
 body.theme-retro .settings-reset-button {
-  border-radius: 0 !important;
-}
-
-/* 모바일 */
-@media (max-width: 768px) {
-  .settings-modal-window,
-  .settings-window,
-  .settings-panel {
-    width: calc(100vw - 24px) !important;
-    max-height: calc(100vh - 24px) !important;
-  }
-
-  .settings-modal-header,
-  .settings-header,
-  .settings-titlebar {
-    min-height: 78px !important;
-    padding: 14px 16px !important;
-  }
-
-  .settings-modal-body,
-  .settings-body,
-  .settings-content {
-    padding: 16px !important;
-    gap: 14px !important;
-  }
-
-  .settings-section,
-  .settings-card {
-    padding: 18px !important;
-  }
-
-  .settings-theme-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-}
-
-@media (max-width: 520px) {
-  .settings-theme-grid,
-  .settings-action-grid,
-  .settings-backup-grid,
-  .settings-reset-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* =========================================================
-   Sidebar base layout stabilizer
-   테마별 색/배경은 themes/*.css에서 담당
-========================================================= */
-
-aside {
-  flex: 0 0 240px;
-  width: 240px;
-  min-width: 240px;
-  max-width: 240px;
-
-  min-height: 100%;
-  overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-}
-
-aside > div:first-child {
-  flex-shrink: 0;
-}
-
-aside nav,
-aside .sidebar-workspace-list {
-  min-width: 0;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.sidebar-tab-item {
-  width: 100%;
-  min-width: 0;
-  flex: 0 0 auto;
-}
-
-.sidebar-tab-main {
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.sidebar-tab-main span,
-.sidebar-tab-main strong,
-.sidebar-tab-input {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (max-width: 920px) {
-  aside {
-    flex: 0 0 auto;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    min-height: auto;
-  }
-
-  aside nav,
-  aside .sidebar-workspace-list {
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-  .sidebar-tab-item {
-    width: auto;
-    min-width: 112px;
-  }
-}
-
-/* =========================================================
-   Sidebar Base Layout
-   색/배경/테두리/질감은 themes/*.css에서 담당
-========================================================= */
-
-.app-sidebar,
-.sidebar {
-  flex: 0 0 250px;
-  width: 250px;
-  min-width: 250px;
-  max-width: 250px;
-
-  min-height: 100%;
-
-  display: flex;
-  flex-direction: column;
-
-  overflow: hidden;
-}
-
-.sidebar-brand {
-  height: 86px;
-  min-height: 86px;
-  padding: 0 24px;
-
-  display: flex;
-  align-items: center;
-
-  flex-shrink: 0;
-}
-
-.sidebar-brand-title {
-  font-size: 20px;
-  line-height: 1.1;
-  font-weight: 760;
-  letter-spacing: -0.035em;
-}
-
-.sidebar-brand-subtitle {
-  margin-top: 4px;
-
-  font-size: 12px;
-  line-height: 1.2;
-  font-weight: 650;
-}
-
-.sidebar-body {
-  flex: 1 1 auto;
-  min-height: 0;
-
-  padding: 16px;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.sidebar-section-header {
-  min-width: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-
-  margin-bottom: 12px;
-  padding: 0 8px;
-}
-
-.sidebar-section-title {
-  min-width: 0;
-
-  font-size: 12px;
-  line-height: 1.2;
-  font-weight: 760;
-}
-
-.sidebar-add-button {
-  width: 28px;
-  min-width: 28px;
-  height: 28px;
-  padding: 0;
-
-  flex-shrink: 0;
-}
-
-.sidebar-workspace-list {
-  min-width: 0;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  overflow: visible;
-}
-
-.sidebar-tab-item {
-  width: 100%;
-  min-width: 0;
-  min-height: 42px;
-
-  display: flex;
-  align-items: center;
-  gap: 6px;
-
-  flex: 0 0 auto;
-}
-
-.sidebar-tab-main {
-  flex: 1 1 auto;
-  min-width: 0;
-
-  height: 42px;
-  padding: 0 12px;
-
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  text-align: left;
-
-  font-size: 13px;
-  line-height: 1;
-  font-weight: 720;
-}
-
-.sidebar-tab-icon {
-  width: 20px;
-  min-width: 20px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  flex-shrink: 0;
-}
-
-.sidebar-tab-label,
-.sidebar-tab-main span:last-child {
-  min-width: 0;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sidebar-tab-input {
-  min-width: 0;
-  width: 100%;
-
-  background: transparent;
-  outline: none;
-  border: 0;
-
-  font-size: 13px;
-  font-weight: 720;
-}
-
-.sidebar-tab-delete {
-  width: 30px;
-  min-width: 30px;
-  height: 30px;
-
-  margin-right: 6px;
-  padding: 0;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  flex-shrink: 0;
-}
-
-/* tablet/mobile: sidebar becomes horizontal workspace bar */
-@media (max-width: 920px) {
-  .app-sidebar,
-  .sidebar {
-    flex: 0 0 auto;
-    width: 100%;
-    min-width: 0;
-    max-width: none;
-    min-height: auto;
-  }
-
-  .sidebar-brand {
-    height: auto;
-    min-height: 0;
-    padding: 14px 18px 8px;
-  }
-
-  .sidebar-body {
-    padding: 8px 14px 14px;
-    overflow: hidden;
-  }
-
-  .sidebar-section-header {
-    display: none;
-  }
-
-  .sidebar-workspace-list {
-    flex-direction: row;
-    gap: 8px;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    padding-bottom: 4px;
-
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .sidebar-tab-item {
-    width: auto;
-    min-width: 112px;
-    flex: 0 0 auto;
-  }
-
-  .sidebar-tab-main {
-    height: 38px;
-    padding: 0 12px;
-    white-space: nowrap;
-  }
+  border-radius: 0;
 }
