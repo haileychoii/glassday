@@ -1,4 +1,10 @@
-export type ThemeId = "pastel" | "glass" | "mac-core" | "pixel-desk" | "retro";
+export type ThemeId =
+  | "pastel"
+  | "glass-light"
+  | "glass-dark"
+  | "mac-core"
+  | "pixel-desk"
+  | "retro";
 
 export type ThemeOption = {
   id: ThemeId;
@@ -15,9 +21,14 @@ export const themeOptions: ThemeOption[] = [
     description: "Soft pastel glass dashboard",
   },
   {
-    id: "glass",
-    label: "Glass",
-    description: "Holographic glassmorphism",
+    id: "glass-light",
+    label: "Glass Light",
+    description: "Transparent desktop glass, light mode",
+  },
+  {
+    id: "glass-dark",
+    label: "Glass Dark",
+    description: "Transparent desktop glass, dark mode",
   },
   {
     id: "mac-core",
@@ -49,14 +60,17 @@ export const getCurrentTheme = (): ThemeId => {
 
   const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
 
-  if (isThemeId(savedTheme)) {
-    return savedTheme;
+  // 기존 glass 저장값 호환
+  if (savedTheme === "glass") {
+    return "glass-light";
   }
 
-  return "pastel";
+  return isThemeId(savedTheme) ? savedTheme : "pastel";
 };
 
 export const applyTheme = (theme: ThemeId) => {
+  if (typeof document === "undefined") return;
+
   const root = document.documentElement;
   const body = document.body;
 
@@ -65,16 +79,20 @@ export const applyTheme = (theme: ThemeId) => {
     body.classList.remove(`theme-${item.id}`);
   });
 
+  // 예전 glass class 제거
+  root.classList.remove("theme-glass");
+  body.classList.remove("theme-glass");
+
   root.classList.add(`theme-${theme}`);
   body.classList.add(`theme-${theme}`);
 
   root.setAttribute("data-theme", theme);
   body.setAttribute("data-theme", theme);
 
-  localStorage.setItem("glassday.theme", theme);
+  window.localStorage.setItem(THEME_STORAGE_KEY, theme);
 
   window.dispatchEvent(
-    new CustomEvent("glassday-theme-change", {
+    new CustomEvent<ThemeId>("glassday-theme-change", {
       detail: theme,
     })
   );

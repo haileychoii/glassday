@@ -1,24 +1,18 @@
-@import "./base.css";
-@import "./layout.css";
-@import "./dashboard-grid.css";
-@import "./controls.css";
-@import "./overlays.css";
+@import "./styles/base.css";
+@import "./styles/layout.css";
+@import "./styles/controls.css";
+@import "./styles/dashboard-grid.css";
+@import "./styles/responsive.css";
 
-@import "./widgets/today.css";
-@import "./widgets/alerts.css";
-@import "./widgets/alert-center.css";
-@import "./widgets/journal.css";
-@import "./widgets/calendar.css";
-@import "./widgets/memo.css";
-@import "./widgets/study.css";
-@import "./widgets/career.css";
-@import "./widgets/settings.css";
+@import "./styles/themes/pastel.css";
+@import "./styles/themes/glass-light.css";
+@import "./styles/themes/glass-dark.css";
+@import "./styles/themes/mac-core.css";
+@import "./styles/themes/pixel.css";
+@import "./styles/themes/retro.css";
 
-@import "./themes/pastel.css";
-@import "./themes/glass.css";
-@import "./themes/mac-core.css";
-@import "./themes/retro.css";
-@import "./themes/pixel.css";
+@import "./styles/widgets/calendar.css";
+@import "./styles/widgets/career.css";
+@import "./styles/widgets/memo.css";
 
-@import "./responsive.css";
-@import "./overrides.css";
+@import "./styles/overrides.css";

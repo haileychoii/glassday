@@ -23,35 +23,32 @@ export const Sidebar = ({
   onRemoveTab,
 }: SidebarProps) => {
   return (
-    <aside className="hidden lg:flex w-[250px] shrink-0 flex-col border-r border-white/30 bg-white/[0.06] backdrop-blur-3xl">
-      <div className="h-[86px] flex items-center px-6 border-b border-white/25">
+    <aside className="app-sidebar sidebar">
+      <div className="sidebar-brand">
         <div>
-          <div className="text-xl font-semibold tracking-tight">Glassday</div>
-          <div className="text-xs text-muted-foreground mt-1">
-            Personal OS
-          </div>
+          <div className="sidebar-brand-title">Glassday</div>
+          <div className="sidebar-brand-subtitle">Personal OS</div>
         </div>
       </div>
 
-      <div className="flex-1 p-4 overflow-auto">
-        <div className="flex items-center justify-between mb-3 px-2">
-          <span className="text-xs font-semibold text-muted-foreground">
-            Workspaces
-          </span>
+      <div className="sidebar-body">
+        <div className="sidebar-section-header">
+          <span className="sidebar-section-title">Workspaces</span>
 
           {editMode && (
             <button
               type="button"
               onClick={onAddTab}
-              className="glass-button h-7 w-7 flex items-center justify-center"
+              className="glass-button sidebar-add-button"
               title="Add workspace"
+              aria-label="Add workspace"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
 
-        <nav className="space-y-2">
+        <nav className="sidebar-workspace-list" aria-label="Workspaces">
           {tabs.map((tab) => (
             <div
               key={tab.id}
@@ -70,13 +67,16 @@ export const Sidebar = ({
                 {editMode && !tab.locked ? (
                   <input
                     value={tab.label}
-                    onChange={(e) => onRenameTab(tab.id, e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
+                    onChange={(event) =>
+                      onRenameTab(tab.id, event.target.value)
+                    }
+                    onClick={(event) => event.stopPropagation()}
                     className="sidebar-tab-input"
                     spellCheck={false}
+                    aria-label={`${tab.label} workspace name`}
                   />
                 ) : (
-                  <span className="truncate">{tab.label}</span>
+                  <span className="sidebar-tab-label">{tab.label}</span>
                 )}
               </button>
 
@@ -85,6 +85,8 @@ export const Sidebar = ({
                   type="button"
                   onClick={() => onRemoveTab(tab.id)}
                   className="sidebar-tab-delete"
+                  title="Remove workspace"
+                  aria-label={`Remove ${tab.label}`}
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>

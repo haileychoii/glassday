@@ -360,3 +360,61 @@ body.theme-retro .dashboard-grid-item > .glass-card {
     flex: 0 0 auto;
   }
 }
+
+/* =========================================================
+   FINAL WIDGET SIZE STABILIZER
+   모든 테마에서 위젯 높이/내부 스크롤 구조 통일
+========================================================= */
+
+.react-grid-item {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+.react-grid-item > .dashboard-grid-item,
+.react-grid-item > .dashboard-grid-item-content,
+.dashboard-grid-item,
+.dashboard-grid-item-content {
+  width: 100% !important;
+  height: 100% !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item > .glass-card,
+.dashboard-grid-item-content > .glass-card,
+.react-grid-item .dashboard-grid-item > .glass-card,
+.react-grid-item .dashboard-grid-item-content > .glass-card {
+  width: 100% !important;
+  height: 100% !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item > .glass-card > *,
+.dashboard-grid-item-content > .glass-card > * {
+  min-width: 0 !important;
+}
+
+.dashboard-grid-item > .glass-card > div:last-child,
+.dashboard-grid-item-content > .glass-card > div:last-child,
+.dashboard-grid-item .glass-card-body,
+.dashboard-grid-item-content .glass-card-body {
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  overflow: auto !important;
+}

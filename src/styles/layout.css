@@ -378,3 +378,304 @@ body.theme-retro .settings-reset-button {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* =========================================================
+   Sidebar base layout stabilizer
+   테마별 색/배경은 themes/*.css에서 담당
+========================================================= */
+
+aside {
+  flex: 0 0 240px;
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
+
+  min-height: 100%;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+aside > div:first-child {
+  flex-shrink: 0;
+}
+
+aside nav,
+aside .sidebar-workspace-list {
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-tab-item {
+  width: 100%;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+.sidebar-tab-main {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.sidebar-tab-main span,
+.sidebar-tab-main strong,
+.sidebar-tab-input {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 920px) {
+  aside {
+    flex: 0 0 auto;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: auto;
+  }
+
+  aside nav,
+  aside .sidebar-workspace-list {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .sidebar-tab-item {
+    width: auto;
+    min-width: 112px;
+  }
+}
+
+/* =========================================================
+   Sidebar Base Layout
+   색/배경/테두리/질감은 themes/*.css에서 담당
+========================================================= */
+
+.app-sidebar,
+.sidebar {
+  flex: 0 0 250px;
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+
+  min-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+.sidebar-brand {
+  height: 86px;
+  min-height: 86px;
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+
+  flex-shrink: 0;
+}
+
+.sidebar-brand-title {
+  font-size: 20px;
+  line-height: 1.1;
+  font-weight: 760;
+  letter-spacing: -0.035em;
+}
+
+.sidebar-brand-subtitle {
+  margin-top: 4px;
+
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 650;
+}
+
+.sidebar-body {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  padding: 16px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-section-header {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  margin-bottom: 12px;
+  padding: 0 8px;
+}
+
+.sidebar-section-title {
+  min-width: 0;
+
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 760;
+}
+
+.sidebar-add-button {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0;
+
+  flex-shrink: 0;
+}
+
+.sidebar-workspace-list {
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  overflow: visible;
+}
+
+.sidebar-tab-item {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  flex: 0 0 auto;
+}
+
+.sidebar-tab-main {
+  flex: 1 1 auto;
+  min-width: 0;
+
+  height: 42px;
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  text-align: left;
+
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 720;
+}
+
+.sidebar-tab-icon {
+  width: 20px;
+  min-width: 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+.sidebar-tab-label,
+.sidebar-tab-main span:last-child {
+  min-width: 0;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-tab-input {
+  min-width: 0;
+  width: 100%;
+
+  background: transparent;
+  outline: none;
+  border: 0;
+
+  font-size: 13px;
+  font-weight: 720;
+}
+
+.sidebar-tab-delete {
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+
+  margin-right: 6px;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+/* tablet/mobile: sidebar becomes horizontal workspace bar */
+@media (max-width: 920px) {
+  .app-sidebar,
+  .sidebar {
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    min-height: auto;
+  }
+
+  .sidebar-brand {
+    height: auto;
+    min-height: 0;
+    padding: 14px 18px 8px;
+  }
+
+  .sidebar-body {
+    padding: 8px 14px 14px;
+    overflow: hidden;
+  }
+
+  .sidebar-section-header {
+    display: none;
+  }
+
+  .sidebar-workspace-list {
+    flex-direction: row;
+    gap: 8px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding-bottom: 4px;
+
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar-tab-item {
+    width: auto;
+    min-width: 112px;
+    flex: 0 0 auto;
+  }
+
+  .sidebar-tab-main {
+    height: 38px;
+    padding: 0 12px;
+    white-space: nowrap;
+  }
+}

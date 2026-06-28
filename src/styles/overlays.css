@@ -1,47 +1,97 @@
-/* ================================
-   Floating Window System
-   draggable + resizable + no backdrop
-   ================================ */
+/* =========================================================
+   GLASSDAY OVERLAYS
+   Floating windows / no backdrop / draggable / resizable
+   공통 구조 + overlay 전용 theme surface만 관리
+========================================================= */
+
+/* =========================================================
+   0. Floating window layer
+========================================================= */
 
 .floating-window-layer {
   position: fixed;
   inset: 0;
   z-index: 2147482600;
+
   pointer-events: none;
+
   background: transparent;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+
+  overflow: hidden;
+  isolation: isolate;
 }
+
+/* =========================================================
+   1. Floating window base
+========================================================= */
 
 .floating-window {
   position: fixed;
   pointer-events: auto;
+
+  min-width: 340px;
+  min-height: 260px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 24px);
+
+  display: grid;
+  grid-template-rows: 64px minmax(0, 1fr);
+
   overflow: hidden;
   resize: both;
-  border-radius: 30px;
+
+  border-radius: var(--gd-radius-panel, 30px);
+
+  color: hsl(var(--foreground) / 0.88);
+
   background:
     linear-gradient(
       145deg,
       hsl(0 0% 100% / 0.9),
       hsl(0 0% 100% / 0.68)
     );
+
   border: 1px solid hsl(0 0% 100% / 0.82);
+
   box-shadow:
     0 44px 140px -42px hsl(220 35% 8% / 0.52),
     inset 0 1px 0 hsl(0 0% 100% / 0.92);
+
   backdrop-filter: blur(38px) saturate(170%);
   -webkit-backdrop-filter: blur(38px) saturate(170%);
+
+  box-sizing: border-box;
+  isolation: isolate;
 }
 
+.floating-window,
+.floating-window * {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   2. Floating window titlebar
+========================================================= */
+
 .floating-window-titlebar {
+  min-width: 0;
   height: 64px;
+  min-height: 64px;
+
   padding: 0 18px 0 22px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+
   cursor: move;
+  user-select: none;
+
   border-bottom: 1px solid hsl(0 0% 100% / 0.48);
+
   background:
     linear-gradient(
       180deg,
@@ -52,57 +102,97 @@
 
 .floating-window-titlebar button,
 .floating-window-titlebar input,
-.floating-window-titlebar select {
+.floating-window-titlebar select,
+.floating-window-actions,
+.floating-window-actions * {
   cursor: pointer;
 }
 
 .floating-window-title-area {
   min-width: 0;
+  flex: 1 1 auto;
+
+  display: grid;
+  gap: 3px;
 }
 
 .floating-window-title {
+  min-width: 0;
+
   font-size: 14px;
+  line-height: 1.15;
   font-weight: 850;
-  color: hsl(var(--foreground) / 0.82);
+
+  color: hsl(var(--foreground) / 0.84);
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .floating-window-subtitle {
-  margin-top: 3px;
+  min-width: 0;
+
   font-size: 11px;
+  line-height: 1.2;
   font-weight: 650;
-  color: hsl(var(--foreground) / 0.46);
+
+  color: hsl(var(--foreground) / 0.48);
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .floating-window-actions {
+  flex: 0 0 auto;
+
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
 }
 
+/* =========================================================
+   3. Floating window body
+========================================================= */
+
 .floating-window-body {
-  height: calc(100% - 64px);
+  min-width: 0;
   min-height: 0;
+  height: 100%;
+
   overflow: hidden;
 }
 
-/* ================================
-   Memo inside FloatingWindow
-   ================================ */
+/* =========================================================
+   4. Memo inside FloatingWindow
+========================================================= */
 
 .memo-floating-body {
+  width: 100%;
   height: 100%;
+  min-width: 0;
   min-height: 0;
+
   padding: 18px;
+
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
   gap: 18px;
+
   overflow: hidden;
 }
 
 .memo-floating-body .memo-list-panel,
 .memo-floating-body .memo-workspace {
   height: 100%;
+  min-width: 0;
   min-height: 0;
+}
+
+.memo-floating-body .memo-list-panel {
+  overflow: hidden;
 }
 
 .memo-floating-body .memo-workspace {
@@ -112,94 +202,340 @@
 }
 
 .memo-floating-body .memo-editor {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
+  overflow: auto;
 }
 
-/* ================================
-   Floating Window System
-   draggable + resizable + no backdrop
-   ================================ */
+/* =========================================================
+   5. Career / detail floating body safety
+========================================================= */
 
-.floating-window-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 2147482600;
-  pointer-events: none;
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+.career-floating-body,
+.floating-detail-body {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+
+  overflow: auto;
 }
 
-.floating-window {
-  position: fixed;
-  pointer-events: auto;
-  overflow: hidden;
-  resize: both;
-  border-radius: 30px;
+/* =========================================================
+   6. Glass Light floating surface
+========================================================= */
+
+html[data-theme="glass-light"] .floating-window,
+body[data-theme="glass-light"] .floating-window,
+html.theme-glass-light .floating-window,
+body.theme-glass-light .floating-window {
+  color: hsl(238 26% 18% / 0.94) !important;
+
   background:
     linear-gradient(
       145deg,
-      hsl(0 0% 100% / 0.9),
-      hsl(0 0% 100% / 0.68)
-    );
-  border: 1px solid hsl(0 0% 100% / 0.82);
+      rgb(255 255 255 / 0.32),
+      rgb(255 255 255 / 0.14)
+    ) !important;
+
+  border: 1px solid rgb(255 255 255 / 0.38) !important;
+
   box-shadow:
-    0 44px 140px -42px hsl(220 35% 8% / 0.52),
-    inset 0 1px 0 hsl(0 0% 100% / 0.92);
-  backdrop-filter: blur(38px) saturate(170%);
-  -webkit-backdrop-filter: blur(38px) saturate(170%);
+    0 36px 110px -48px rgb(20 20 40 / 0.42),
+    inset 0 1px 0 rgb(255 255 255 / 0.58) !important;
+
+  backdrop-filter: blur(22px) saturate(155%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(155%) !important;
 }
 
-.floating-window-titlebar {
-  height: 64px;
-  padding: 0 18px 0 22px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  cursor: move;
-  border-bottom: 1px solid hsl(0 0% 100% / 0.48);
+html[data-theme="glass-light"] .floating-window-titlebar,
+body[data-theme="glass-light"] .floating-window-titlebar,
+html.theme-glass-light .floating-window-titlebar,
+body.theme-glass-light .floating-window-titlebar {
   background:
     linear-gradient(
       180deg,
-      hsl(0 0% 100% / 0.54),
-      hsl(0 0% 100% / 0.2)
-    );
+      rgb(255 255 255 / 0.32),
+      rgb(255 255 255 / 0.1)
+    ) !important;
+
+  border-bottom: 1px solid rgb(255 255 255 / 0.28) !important;
 }
 
-.floating-window-titlebar button,
-.floating-window-titlebar input,
-.floating-window-titlebar select {
-  cursor: pointer;
+/* =========================================================
+   7. Glass Dark floating surface
+========================================================= */
+
+html[data-theme="glass-dark"] .floating-window,
+body[data-theme="glass-dark"] .floating-window,
+html.theme-glass-dark .floating-window,
+body.theme-glass-dark .floating-window {
+  color: hsl(230 30% 96% / 0.94) !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgb(20 22 32 / 0.58),
+      rgb(255 255 255 / 0.07)
+    ) !important;
+
+  border: 1px solid rgb(255 255 255 / 0.16) !important;
+
+  box-shadow:
+    0 36px 110px -48px rgb(0 0 0 / 0.68),
+    inset 0 1px 0 rgb(255 255 255 / 0.13) !important;
+
+  backdrop-filter: blur(24px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
 }
 
-.floating-window-title-area {
-  min-width: 0;
+html[data-theme="glass-dark"] .floating-window-titlebar,
+body[data-theme="glass-dark"] .floating-window-titlebar,
+html.theme-glass-dark .floating-window-titlebar,
+body.theme-glass-dark .floating-window-titlebar {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      rgb(255 255 255 / 0.04)
+    ) !important;
+
+  border-bottom: 1px solid rgb(255 255 255 / 0.12) !important;
 }
 
-.floating-window-title {
-  font-size: 14px;
-  font-weight: 850;
-  color: hsl(var(--foreground) / 0.82);
+/* =========================================================
+   8. Mac Core floating surface
+========================================================= */
+
+html[data-theme="mac-core"] .floating-window,
+body[data-theme="mac-core"] .floating-window,
+html.theme-mac-core .floating-window,
+body.theme-mac-core .floating-window {
+  grid-template-rows: 54px minmax(0, 1fr);
+
+  border-radius: 18px !important;
+
+  color: #242235 !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.86),
+      rgb(248 249 253 / 0.72)
+    ) !important;
+
+  border: 1px solid rgb(255 255 255 / 0.82) !important;
+
+  box-shadow:
+    0 42px 100px -70px rgb(34 30 70 / 0.52),
+    0 18px 40px -34px rgb(34 30 70 / 0.34),
+    inset 0 1px 0 rgb(255 255 255 / 0.9) !important;
+
+  backdrop-filter: blur(34px) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(175%) !important;
 }
 
-.floating-window-subtitle {
-  margin-top: 3px;
-  font-size: 11px;
-  font-weight: 650;
-  color: hsl(var(--foreground) / 0.46);
+html[data-theme="mac-core"] .floating-window-titlebar,
+body[data-theme="mac-core"] .floating-window-titlebar,
+html.theme-mac-core .floating-window-titlebar,
+body.theme-mac-core .floating-window-titlebar {
+  position: relative;
+
+  height: 54px;
+  min-height: 54px;
+
+  padding: 0 14px 0 76px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.72),
+      rgb(255 255 255 / 0.34)
+    ) !important;
+
+  border-bottom: 1px solid rgb(36 34 53 / 0.08) !important;
 }
 
-.floating-window-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+html[data-theme="mac-core"] .floating-window-titlebar::before,
+body[data-theme="mac-core"] .floating-window-titlebar::before,
+html.theme-mac-core .floating-window-titlebar::before,
+body.theme-mac-core .floating-window-titlebar::before {
+  content: "";
+  position: absolute;
+  top: 21px;
+  left: 20px;
+
+  width: 11px;
+  height: 11px;
+
+  border-radius: 999px;
+  background: #ff5f57;
+  box-shadow:
+    18px 0 0 #ffbd2e,
+    36px 0 0 #28c840;
+
+  pointer-events: none;
 }
 
-.floating-window-body {
-  height: calc(100% - 64px);
-  min-height: 0;
-  overflow: hidden;
+html[data-theme="mac-core"] .floating-window-title,
+body[data-theme="mac-core"] .floating-window-title,
+html.theme-mac-core .floating-window-title,
+body.theme-mac-core .floating-window-title {
+  color: #242235 !important;
 }
 
+html[data-theme="mac-core"] .floating-window-subtitle,
+body[data-theme="mac-core"] .floating-window-subtitle,
+html.theme-mac-core .floating-window-subtitle,
+body.theme-mac-core .floating-window-subtitle {
+  color: rgb(36 34 53 / 0.52) !important;
+}
+
+/* =========================================================
+   9. Pixel Desk floating surface
+========================================================= */
+
+html[data-theme="pixel-desk"] .floating-window,
+body[data-theme="pixel-desk"] .floating-window,
+html.theme-pixel-desk .floating-window,
+body.theme-pixel-desk .floating-window {
+  grid-template-rows: 28px minmax(0, 1fr);
+
+  resize: both;
+
+  border-radius: 0 !important;
+  color: #111111 !important;
+  background: #d7d7c9 !important;
+
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+
+  box-shadow: 5px 5px 0 rgb(0 0 0 / 0.32) !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html[data-theme="pixel-desk"] .floating-window-titlebar,
+body[data-theme="pixel-desk"] .floating-window-titlebar,
+html.theme-pixel-desk .floating-window-titlebar,
+body.theme-pixel-desk .floating-window-titlebar {
+  height: 28px;
+  min-height: 28px;
+
+  padding: 0 6px 0 8px;
+
+  background: #000080 !important;
+  border-bottom: 2px solid #404040 !important;
+
+  color: #ffffff !important;
+}
+
+html[data-theme="pixel-desk"] .floating-window-title,
+body[data-theme="pixel-desk"] .floating-window-title,
+html.theme-pixel-desk .floating-window-title,
+body.theme-pixel-desk .floating-window-title {
+  color: #ffffff !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+html[data-theme="pixel-desk"] .floating-window-subtitle,
+body[data-theme="pixel-desk"] .floating-window-subtitle,
+html.theme-pixel-desk .floating-window-subtitle,
+body.theme-pixel-desk .floating-window-subtitle {
+  display: none !important;
+}
+
+/* =========================================================
+   10. Retro 98 floating surface
+========================================================= */
+
+html[data-theme="retro"] .floating-window,
+body[data-theme="retro"] .floating-window,
+html.theme-retro .floating-window,
+body.theme-retro .floating-window {
+  grid-template-rows: 30px minmax(0, 1fr);
+
+  border-radius: 0 !important;
+  color: #111111 !important;
+  background: #d8d8c8 !important;
+
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+
+  box-shadow: 5px 5px 0 rgb(0 0 0 / 0.3) !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html[data-theme="retro"] .floating-window-titlebar,
+body[data-theme="retro"] .floating-window-titlebar,
+html.theme-retro .floating-window-titlebar,
+body.theme-retro .floating-window-titlebar {
+  height: 30px;
+  min-height: 30px;
+
+  padding: 0 6px 0 8px;
+
+  background: #120078 !important;
+  border-bottom: 2px solid #404040 !important;
+
+  color: #ffffff !important;
+}
+
+html[data-theme="retro"] .floating-window-title,
+body[data-theme="retro"] .floating-window-title,
+html.theme-retro .floating-window-title,
+body.theme-retro .floating-window-title {
+  color: #ffffff !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+html[data-theme="retro"] .floating-window-subtitle,
+body[data-theme="retro"] .floating-window-subtitle,
+html.theme-retro .floating-window-subtitle,
+body.theme-retro .floating-window-subtitle {
+  display: none !important;
+}
+
+/* =========================================================
+   11. Mobile
+========================================================= */
+
+@media (max-width: 768px) {
+  .floating-window {
+    left: 12px !important;
+    right: auto !important;
+
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+
+    min-width: 0;
+    resize: vertical;
+  }
+
+  .memo-floating-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(160px, 34%) minmax(0, 1fr);
+    padding: 14px;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-window {
+    top: 10px !important;
+    left: 10px !important;
+
+    width: calc(100vw - 20px) !important;
+    height: calc(100vh - 20px) !important;
+    max-height: calc(100vh - 20px) !important;
+  }
+}

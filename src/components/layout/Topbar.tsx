@@ -35,14 +35,16 @@ export const Topbar = ({
     applyTheme(theme);
   }, [theme]);
 
-  // SettingsModal에서 테마를 바꿨을 때 Topbar도 같이 따라오게 함
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
       const customEvent = event as CustomEvent<ThemeId>;
+      const nextTheme = customEvent.detail;
 
-      if (!customEvent.detail) return;
+      if (!nextTheme) return;
 
-      setTheme(customEvent.detail);
+      setTheme((prevTheme) => {
+        return prevTheme === nextTheme ? prevTheme : nextTheme;
+      });
     };
 
     window.addEventListener("glassday-theme-change", handleThemeChange);
@@ -53,7 +55,9 @@ export const Topbar = ({
   }, []);
 
   const handleTopbarThemeChange = (nextTheme: ThemeId) => {
-    setTheme(nextTheme);
+    setTheme((prevTheme) => {
+      return prevTheme === nextTheme ? prevTheme : nextTheme;
+    });
   };
 
   return (
