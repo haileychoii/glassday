@@ -1,18 +1,26 @@
-@import "./styles/base.css";
-@import "./styles/layout.css";
-@import "./styles/controls.css";
-@import "./styles/dashboard-grid.css";
-@import "./styles/responsive.css";
+/* =========================================================
+   GLASSDAY STYLE ENTRY
+   이 파일 위치: src/styles/index.css
+   그래서 import 경로는 ./ 로 시작해야 함
+========================================================= */
 
-@import "./styles/themes/pastel.css";
-@import "./styles/themes/glass-light.css";
-@import "./styles/themes/glass-dark.css";
-@import "./styles/themes/mac-core.css";
-@import "./styles/themes/pixel.css";
-@import "./styles/themes/retro.css";
+@import "./base.css";
+@import "./layout.css";
+@import "./controls.css";
+@import "./dashboard-grid.css";
+@import "./responsive.css";
+@import "./overlays.css";
 
-@import "./styles/widgets/calendar.css";
-@import "./styles/widgets/career.css";
-@import "./styles/widgets/memo.css";
+@import "./themes/pastel.css";
+@import "./themes/glass-light.css";
+@import "./themes/glass-dark.css";
+@import "./themes/mac-core.css";
+@import "./themes/pixel.css";
+@import "./themes/retro.css";
 
-@import "./styles/overrides.css";
+@import "./widgets/calendar.css";
+@import "./widgets/career.css";
+@import "./widgets/memo.css";
+
+/* 무조건 마지막 */
+@import "./overrides.css";
