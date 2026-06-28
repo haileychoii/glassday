@@ -35,6 +35,27 @@ export const Topbar = ({
     applyTheme(theme);
   }, [theme]);
 
+  // SettingsModal에서 테마를 바꿨을 때 Topbar도 같이 따라오게 함
+  useEffect(() => {
+    const handleThemeChange = (event: Event) => {
+      const customEvent = event as CustomEvent<ThemeId>;
+
+      if (!customEvent.detail) return;
+
+      setTheme(customEvent.detail);
+    };
+
+    window.addEventListener("glassday-theme-change", handleThemeChange);
+
+    return () => {
+      window.removeEventListener("glassday-theme-change", handleThemeChange);
+    };
+  }, []);
+
+  const handleTopbarThemeChange = (nextTheme: ThemeId) => {
+    setTheme(nextTheme);
+  };
+
   return (
     <header className="topbar">
       <div className="topbar-inner">
@@ -56,7 +77,7 @@ export const Topbar = ({
               <button
                 key={item.id}
                 type="button"
-                onClick={() => setTheme(item.id)}
+                onClick={() => handleTopbarThemeChange(item.id)}
                 className={cn(
                   "theme-segment-button",
                   theme === item.id && "is-active"
@@ -71,7 +92,9 @@ export const Topbar = ({
           <select
             className="theme-select-mobile"
             value={isTopbarTheme ? theme : ""}
-            onChange={(event) => setTheme(event.target.value as ThemeId)}
+            onChange={(event) =>
+              handleTopbarThemeChange(event.target.value as ThemeId)
+            }
             aria-label="Theme selector"
           >
             {!isTopbarTheme && (

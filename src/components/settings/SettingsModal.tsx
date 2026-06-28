@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { ChangeEvent } from "react";
 import { createPortal } from "react-dom";
 import {
   Download,
@@ -30,17 +31,85 @@ type SettingsModalProps = {
   onClose: () => void;
 };
 
+const THEME_STORAGE_KEY = "glassday.theme";
+
+const forceApplyTheme = (nextTheme: ThemeId) => {
+  applyTheme(nextTheme);
+
+  if (typeof document === "undefined") return;
+
+  const root = document.documentElement;
+  const body = document.body;
+
+  themeOptions.forEach((item) => {
+    root.classList.remove(`theme-${item.id}`);
+    body.classList.remove(`theme-${item.id}`);
+  });
+
+  root.classList.add(`theme-${nextTheme}`);
+  body.classList.add(`theme-${nextTheme}`);
+
+  root.setAttribute("data-theme", nextTheme);
+  body.setAttribute("data-theme", nextTheme);
+
+  window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+
+  window.dispatchEvent(
+    new CustomEvent("glassday-theme-change", {
+      detail: nextTheme,
+    })
+  );
+};
+
 export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
   const [status, setStatus] = useState("");
 
+  useEffect(() => {
+    if (!open) return;
+
+    setTheme(getCurrentTheme());
+  }, [open]);
+
+  useEffect(() => {
+    const handleThemeChange = (event: Event) => {
+      const customEvent = event as CustomEvent<ThemeId>;
+
+      if (customEvent.detail) {
+        setTheme(customEvent.detail);
+      }
+    };
+
+    window.addEventListener("glassday-theme-change", handleThemeChange);
+
+    return () => {
+      window.removeEventListener("glassday-theme-change", handleThemeChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open, onClose]);
+
   if (!open) return null;
 
   const handleThemeChange = (nextTheme: ThemeId) => {
     setTheme(nextTheme);
-    applyTheme(nextTheme);
+    forceApplyTheme(nextTheme);
 
     const label =
       themeOptions.find((item) => item.id === nextTheme)?.label ?? nextTheme;
@@ -57,9 +126,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     fileInputRef.current?.click();
   };
 
-  const handleImportFile = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleImportFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -67,6 +134,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     try {
       await importGlassdayBackupFile(file);
       setStatus("Backup imported. Reloading...");
+
       window.setTimeout(() => {
         window.location.reload();
       }, 450);
@@ -90,6 +158,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     localStorage.removeItem("glassday.dashboard.activeTab.v1");
 
     setStatus("Layout reset. Reloading...");
+
     window.setTimeout(() => {
       window.location.reload();
     }, 450);
@@ -103,6 +172,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     resetGlassdaySection(section);
 
     setStatus(`${label} reset. Reloading...`);
+
     window.setTimeout(() => {
       window.location.reload();
     }, 450);
@@ -118,6 +188,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     resetGlassdayData();
 
     setStatus("All data reset. Reloading...");
+
     window.setTimeout(() => {
       window.location.reload();
     }, 450);
@@ -126,16 +197,19 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   return createPortal(
     <div className="settings-modal-backdrop" onMouseDown={onClose}>
       <section
-        className="settings-modal-window"
+        className="settings-modal-window settings-window settings-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Glassday Settings"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <header className="settings-modal-header">
+        <header className="settings-modal-header settings-header settings-titlebar">
           <div className="settings-modal-title-wrap">
-            <div className="settings-modal-icon">
+            <div className="settings-modal-icon settings-icon">
               <Settings className="w-4 h-4" />
             </div>
 
-            <div>
+            <div className="settings-modal-title-text">
               <h2>Settings</h2>
               <p>Theme, backup, sync, reset center</p>
             </div>
@@ -144,18 +218,19 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
           <button
             type="button"
             onClick={onClose}
-            className="glass-button h-9 w-9 flex items-center justify-center"
+            className="glass-button settings-close-button"
             title="Close"
+            aria-label="Close settings"
           >
             <X className="w-4 h-4" />
           </button>
         </header>
 
-        <div className="settings-modal-body">
-          <section className="settings-section">
-            <div className="settings-section-title">
+        <div className="settings-modal-body settings-body settings-content">
+          <section className="settings-section settings-card">
+            <div className="settings-section-title settings-card-title">
               <Palette className="w-4 h-4" />
-              Theme
+              <span>Theme</span>
             </div>
 
             <div className="settings-theme-grid">
@@ -168,8 +243,16 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                     "settings-theme-card",
                     theme === item.id && "is-active"
                   )}
+                  aria-pressed={theme === item.id}
                 >
-                  <span className={`settings-theme-preview theme-${item.id}`}>
+                  <span
+                    className={cn(
+                      "settings-theme-preview",
+                      `settings-theme-preview-${item.id}`,
+                      `theme-${item.id}`
+                    )}
+                    aria-hidden="true"
+                  >
                     <span />
                     <span />
                     <span />
@@ -182,31 +265,37 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
             </div>
           </section>
 
-          <section className="settings-section">
-            <div className="settings-section-title">
+          <section className="settings-section settings-card">
+            <div className="settings-section-title settings-card-title">
               <Download className="w-4 h-4" />
-              Backup
+              <span>Backup</span>
             </div>
 
-            <div className="settings-action-grid">
+            <div className="settings-action-grid settings-backup-grid">
               <button
                 type="button"
                 onClick={handleExport}
-                className="settings-action-card"
+                className="settings-action-card settings-backup-button"
               >
                 <Download className="w-4 h-4" />
-                <strong>Export Backup</strong>
-                <span>현재 Glassday 데이터를 JSON 파일로 저장</span>
+
+                <div>
+                  <strong>Export Backup</strong>
+                  <span>현재 Glassday 데이터를 JSON 파일로 저장</span>
+                </div>
               </button>
 
               <button
                 type="button"
                 onClick={handleImportClick}
-                className="settings-action-card"
+                className="settings-action-card settings-backup-button"
               >
                 <Upload className="w-4 h-4" />
-                <strong>Import Backup</strong>
-                <span>저장해둔 백업 파일 불러오기</span>
+
+                <div>
+                  <strong>Import Backup</strong>
+                  <span>저장해둔 백업 파일 불러오기</span>
+                </div>
               </button>
 
               <input
@@ -219,10 +308,10 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
             </div>
           </section>
 
-          <section className="settings-section">
-            <div className="settings-section-title">
+          <section className="settings-section settings-card">
+            <div className="settings-section-title settings-card-title">
               <RotateCcw className="w-4 h-4" />
-              Reset Center
+              <span>Reset Center</span>
             </div>
 
             <div className="settings-reset-grid">
@@ -232,8 +321,11 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                 className="settings-reset-button"
               >
                 <RotateCcw className="w-4 h-4" />
-                <strong>Reset Layout</strong>
-                <span>위젯 배치 / 탭 초기화</span>
+
+                <div>
+                  <strong>Reset Layout</strong>
+                  <span>위젯 배치 / 탭 초기화</span>
+                </div>
               </button>
 
               <button
@@ -242,8 +334,11 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                 className="settings-reset-button"
               >
                 <Trash2 className="w-4 h-4" />
-                <strong>Reset Memo</strong>
-                <span>메모 데이터 초기화</span>
+
+                <div>
+                  <strong>Reset Memo</strong>
+                  <span>메모 데이터 초기화</span>
+                </div>
               </button>
 
               <button
@@ -252,8 +347,11 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                 className="settings-reset-button"
               >
                 <Trash2 className="w-4 h-4" />
-                <strong>Reset Study</strong>
-                <span>공부 기록 초기화</span>
+
+                <div>
+                  <strong>Reset Study</strong>
+                  <span>공부 기록 초기화</span>
+                </div>
               </button>
 
               <button
@@ -262,8 +360,11 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                 className="settings-reset-button"
               >
                 <Trash2 className="w-4 h-4" />
-                <strong>Reset Journal</strong>
-                <span>저널 기록 초기화</span>
+
+                <div>
+                  <strong>Reset Journal</strong>
+                  <span>저널 기록 초기화</span>
+                </div>
               </button>
 
               <button
@@ -272,8 +373,11 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                 className="settings-reset-button"
               >
                 <Trash2 className="w-4 h-4" />
-                <strong>Reset Calendar</strong>
-                <span>일정 데이터 초기화</span>
+
+                <div>
+                  <strong>Reset Calendar</strong>
+                  <span>일정 데이터 초기화</span>
+                </div>
               </button>
 
               <button
@@ -282,16 +386,19 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                 className="settings-reset-button is-danger"
               >
                 <Trash2 className="w-4 h-4" />
-                <strong>Reset All</strong>
-                <span>전체 데이터 삭제</span>
+
+                <div>
+                  <strong>Reset All</strong>
+                  <span>전체 데이터 삭제</span>
+                </div>
               </button>
             </div>
           </section>
 
-          <section className="settings-section">
-            <div className="settings-section-title">
+          <section className="settings-section settings-card">
+            <div className="settings-section-title settings-card-title">
               <Settings className="w-4 h-4" />
-              Sync
+              <span>Sync</span>
             </div>
 
             <div className="settings-sync-box">

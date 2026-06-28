@@ -1,10 +1,14 @@
 export type ThemeId = "pastel" | "glass" | "mac-core" | "pixel-desk" | "retro";
 
-export const themeOptions: {
+export type ThemeOption = {
   id: ThemeId;
   label: string;
   description: string;
-}[] = [
+};
+
+const THEME_STORAGE_KEY = "glassday.theme";
+
+export const themeOptions: ThemeOption[] = [
   {
     id: "pastel",
     label: "Pastel",
@@ -36,88 +40,42 @@ export const topbarThemeOptions = themeOptions.filter(
   (theme) => theme.id !== "retro"
 );
 
-const THEME_STORAGE_KEY = "glassday-theme";
-
-const allThemeClasses = [
-  "pastel",
-  "glass",
-  "mac-core",
-  "pixel-desk",
-  "ios",
-  "mac",
-  "pixel",
-  "cloud",
-  "night",
-
-  "theme-pastel",
-  "theme-glass",
-  "theme-mac-core",
-  "theme-pixel-desk",
-  "theme-ios",
-  "theme-mac",
-  "theme-pixel",
-  "theme-cloud",
-  "theme-night",
-
-  "theme_pastel",
-  "theme_glass",
-  "theme_mac_core",
-  "theme_pixel_desk",
-  "theme_ios",
-  "theme_mac",
-  "theme_pixel",
-  "theme_cloud",
-  "theme_night",
-];
-
-const normalizeTheme = (theme: unknown): ThemeId => {
-  const value = String(theme ?? "pastel");
-
-  if (value === "pastel") return "pastel";
-  if (value === "glass") return "glass";
-  if (value === "mac-core") return "mac-core";
-  if (value === "pixel-desk") return "pixel-desk";
-
-  if (value === "ios") return "mac-core";
-  if (value === "mac") return "mac-core";
-  if (value === "pixel") return "pixel-desk";
-
-  return "pastel";
+export const isThemeId = (value: unknown): value is ThemeId => {
+  return themeOptions.some((theme) => theme.id === value);
 };
 
 export const getCurrentTheme = (): ThemeId => {
   if (typeof window === "undefined") return "pastel";
 
-  return normalizeTheme(window.localStorage.getItem(THEME_STORAGE_KEY));
+  const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+
+  if (isThemeId(savedTheme)) {
+    return savedTheme;
+  }
+
+  return "pastel";
 };
 
 export const applyTheme = (theme: ThemeId) => {
-  if (typeof document === "undefined") return;
-
-  const nextTheme = normalizeTheme(theme);
   const root = document.documentElement;
   const body = document.body;
 
-  root.classList.remove(...allThemeClasses);
-  body.classList.remove(...allThemeClasses);
+  themeOptions.forEach((item) => {
+    root.classList.remove(`theme-${item.id}`);
+    body.classList.remove(`theme-${item.id}`);
+  });
 
-  root.setAttribute("data-theme", nextTheme);
-  root.setAttribute("data-theme-id", nextTheme);
-  body.setAttribute("data-theme", nextTheme);
-  body.setAttribute("data-theme-id", nextTheme);
+  root.classList.add(`theme-${theme}`);
+  body.classList.add(`theme-${theme}`);
 
-  root.classList.add(nextTheme, `theme-${nextTheme}`);
-  body.classList.add(nextTheme, `theme-${nextTheme}`);
+  root.setAttribute("data-theme", theme);
+  body.setAttribute("data-theme", theme);
 
-  if (nextTheme === "mac-core") {
-    root.classList.add("theme-ios", "ios", "mac");
-    body.classList.add("theme-ios", "ios", "mac");
-  }
+  localStorage.setItem("glassday.theme", theme);
 
-  if (nextTheme === "pixel-desk") {
-    root.classList.add("theme-pixel", "pixel");
-    body.classList.add("theme-pixel", "pixel");
-  }
-
-  window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  window.dispatchEvent(
+    new CustomEvent("glassday-theme-change", {
+      detail: theme,
+    })
+  );
 };

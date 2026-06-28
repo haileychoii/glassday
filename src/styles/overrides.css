@@ -645,3 +645,103 @@ body.theme-pixel-desk .topbar-actions {
     justify-content: flex-start !important;
   }
 }
+
+/* =========================================================
+   Settings Modal Layout Stabilizer
+========================================================= */
+
+.settings-modal-window,
+.settings-window,
+.settings-panel {
+  width: min(980px, calc(100vw - 32px)) !important;
+  max-width: 980px !important;
+  min-width: 0 !important;
+  max-height: calc(100vh - 32px) !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  overflow: hidden !important;
+}
+
+.settings-modal-header,
+.settings-header,
+.settings-titlebar {
+  flex-shrink: 0 !important;
+}
+
+.settings-modal-body,
+.settings-body,
+.settings-content {
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+.settings-section,
+.settings-card {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.settings-theme-grid {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(156px, 1fr)) !important;
+  gap: 14px !important;
+  align-items: stretch !important;
+}
+
+.settings-theme-card {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 142px !important;
+  display: grid !important;
+  grid-template-rows: 52px auto 1fr !important;
+  align-content: start !important;
+  gap: 10px !important;
+  text-align: left !important;
+}
+
+.settings-theme-preview {
+  width: 100% !important;
+  height: 52px !important;
+  min-height: 52px !important;
+}
+
+.settings-action-grid,
+.settings-backup-grid {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+  gap: 14px !important;
+}
+
+.settings-reset-grid {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.settings-action-card,
+.settings-backup-button,
+.settings-reset-button {
+  min-width: 0 !important;
+  text-align: left !important;
+}
+
+@media (max-width: 520px) {
+  .settings-modal-window,
+  .settings-window,
+  .settings-panel {
+    width: calc(100vw - 20px) !important;
+    max-height: calc(100vh - 20px) !important;
+  }
+
+  .settings-theme-grid,
+  .settings-action-grid,
+  .settings-backup-grid,
+  .settings-reset-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
