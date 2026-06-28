@@ -450,3 +450,198 @@ body,
     flex-wrap: nowrap !important;
   }
 }
+
+/* =========================================================
+   FINAL FIX: Topbar action bar position
+   - 모든 테마에서 Theme / Settings / Edit 위치 정상화
+   - desktop: 오른쪽 정렬
+   - mobile: theme buttons 숨기고 select만 표시
+========================================================= */
+
+.topbar {
+  position: relative !important;
+  width: 100% !important;
+  z-index: 30 !important;
+  overflow: visible !important;
+}
+
+.topbar-inner {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 24px !important;
+  overflow: visible !important;
+}
+
+.topbar-title {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+.topbar-title-row {
+  min-width: 0 !important;
+}
+
+.topbar-title h1 {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* 문제 핵심: actions가 가운데 떠 있거나 스크롤 생기는 것 제거 */
+.topbar-actions {
+  position: static !important;
+  inset: auto !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+
+  margin-left: auto !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: fit-content !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  flex: 0 0 auto !important;
+}
+
+/* 테마 버튼 묶음도 스크롤/위치 꼬임 제거 */
+.theme-segmented-control,
+.theme-button-group {
+  position: static !important;
+  transform: none !important;
+
+  width: auto !important;
+  max-width: none !important;
+  min-width: max-content !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+
+  flex: 0 0 auto !important;
+}
+
+/* 이상한 가로 스크롤바 강제 제거 */
+.theme-segmented-control::-webkit-scrollbar,
+.theme-button-group::-webkit-scrollbar,
+.topbar-actions::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* desktop에서는 모바일 select 숨김 */
+.theme-select-mobile {
+  display: none !important;
+}
+
+/* Settings / Edit 버튼 크기 안정화 */
+.topbar-action-button {
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+  min-width: fit-content !important;
+}
+
+/* Mac Core에서만 중앙으로 밀리는 기존 CSS 무력화 */
+html[data-theme="mac-core"] .topbar-actions,
+body[data-theme="mac-core"] .topbar-actions,
+html.theme-mac-core .topbar-actions,
+body.theme-mac-core .topbar-actions,
+html[data-theme="mac-core"] .theme-segmented-control,
+body[data-theme="mac-core"] .theme-segmented-control,
+html.theme-mac-core .theme-segmented-control,
+body.theme-mac-core .theme-segmented-control {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+  margin-left: auto !important;
+  overflow: visible !important;
+}
+
+/* Pastel / Glass / Pixel Desk도 동일하게 고정 */
+html[data-theme="pastel"] .topbar-actions,
+body[data-theme="pastel"] .topbar-actions,
+html[data-theme="glass"] .topbar-actions,
+body[data-theme="glass"] .topbar-actions,
+html[data-theme="pixel-desk"] .topbar-actions,
+body[data-theme="pixel-desk"] .topbar-actions,
+html.theme-pastel .topbar-actions,
+body.theme-pastel .topbar-actions,
+html.theme-glass .topbar-actions,
+body.theme-glass .topbar-actions,
+html.theme-pixel-desk .topbar-actions,
+body.theme-pixel-desk .topbar-actions {
+  position: static !important;
+  transform: none !important;
+  margin-left: auto !important;
+  overflow: visible !important;
+}
+
+/* 모바일: 긴 테마 버튼 묶음 숨기고 select만 */
+@media (max-width: 768px) {
+  .topbar-inner {
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .topbar-actions {
+    gap: 8px !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .theme-segmented-control,
+  .theme-button-group {
+    display: none !important;
+  }
+
+  .theme-select-mobile {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    width: 132px !important;
+    min-width: 118px !important;
+    max-width: 140px !important;
+    height: 36px !important;
+  }
+
+  .topbar-action-button span {
+    display: none !important;
+  }
+
+  .topbar-action-button {
+    width: 38px !important;
+    min-width: 38px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .topbar-inner {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .topbar-actions {
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+}

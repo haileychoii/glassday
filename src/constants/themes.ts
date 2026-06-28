@@ -1,33 +1,40 @@
-export type ThemeId = "pastel" | "glass" | "mac-core" | "pixel-desk";
+export type ThemeId = "pastel" | "glass" | "mac-core" | "pixel-desk" | "retro";
 
-export type ThemeOption = {
+export const themeOptions: {
   id: ThemeId;
   label: string;
   description: string;
-};
-
-export const themeOptions: ThemeOption[] = [
+}[] = [
   {
     id: "pastel",
     label: "Pastel",
-    description: "Soft pastel glass theme",
+    description: "Soft pastel glass dashboard",
   },
   {
     id: "glass",
     label: "Glass",
-    description: "Dark cosmic glass theme",
+    description: "Holographic glassmorphism",
   },
   {
     id: "mac-core",
     label: "Mac Core",
-    description: "Cupertino macOS-inspired theme",
+    description: "Cupertino desktop-inspired interface",
   },
   {
     id: "pixel-desk",
     label: "Pixel Desk",
-    description: "Retro pixel desktop theme",
+    description: "Hard pixel desktop style",
+  },
+  {
+    id: "retro",
+    label: "Retro 98",
+    description: "Win 98 inspired retro theme",
   },
 ];
+
+export const topbarThemeOptions = themeOptions.filter(
+  (theme) => theme.id !== "retro"
+);
 
 const THEME_STORAGE_KEY = "glassday-theme";
 

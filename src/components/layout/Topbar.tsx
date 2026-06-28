@@ -1,11 +1,13 @@
 import { LayoutGrid, Settings, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   applyTheme,
   getCurrentTheme,
   themeOptions,
+  topbarThemeOptions,
   type ThemeId,
 } from "../../constants/themes";
+
 import { cn } from "../../lib/utils";
 
 type TopbarProps = {
@@ -20,6 +22,14 @@ export const Topbar = ({
   onOpenSettings,
 }: TopbarProps) => {
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
+
+  const isTopbarTheme = useMemo(() => {
+    return topbarThemeOptions.some((item) => item.id === theme);
+  }, [theme]);
+
+  const currentThemeLabel = useMemo(() => {
+    return themeOptions.find((item) => item.id === theme)?.label ?? "Theme";
+  }, [theme]);
 
   useEffect(() => {
     applyTheme(theme);
@@ -42,7 +52,7 @@ export const Topbar = ({
             className="theme-segmented-control theme-button-group"
             aria-label="Theme selector"
           >
-            {themeOptions.map((item) => (
+            {topbarThemeOptions.map((item) => (
               <button
                 key={item.id}
                 type="button"
@@ -60,11 +70,17 @@ export const Topbar = ({
 
           <select
             className="theme-select-mobile"
-            value={theme}
+            value={isTopbarTheme ? theme : ""}
             onChange={(event) => setTheme(event.target.value as ThemeId)}
             aria-label="Theme selector"
           >
-            {themeOptions.map((item) => (
+            {!isTopbarTheme && (
+              <option value="" disabled>
+                {currentThemeLabel}
+              </option>
+            )}
+
+            {topbarThemeOptions.map((item) => (
               <option key={item.id} value={item.id}>
                 {item.label}
               </option>
