@@ -1,61 +1,289 @@
 /* =========================================================
-   Theme segmented control
-   select 말고 pill button 방식
-   ========================================================= */
+   GLASSDAY OVERRIDES
+   emergency only
 
-.theme-segmented-control {
-  height: 38px;
-  padding: 4px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  background: hsl(0 0% 100% / 0.42);
-  border: 1px solid hsl(0 0% 100% / 0.58);
+   여기에는 테마 색/배경/카드/버튼 스타일 넣지 말 것.
+   pastel, glass-dark, pixel 같은 테마가 안 먹는 원인이 됨.
+========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-width: 0;
+  min-height: 0;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* 스크롤바 숨김: topbar pill이 넘칠 때만 */
+.theme-segmented-control::-webkit-scrollbar,
+.theme-button-group::-webkit-scrollbar,
+.topbar-actions::-webkit-scrollbar,
+.sidebar-workspace-list::-webkit-scrollbar {
+  display: none;
+}
+
+.theme-segmented-control,
+.theme-button-group,
+.topbar-actions,
+.sidebar-workspace-list {
+  scrollbar-width: none;
+}
+
+/* SVG가 버튼 안에서 찌그러지는 것 방지 */
+button svg {
+  flex-shrink: 0;
+}
+
+/* input 기본 폰트 상속 */
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* 이미지/아이콘 overflow 방지 */
+img,
+svg {
+  max-width: 100%;
+}
+
+/* 모바일 터치 하이라이트 제거 */
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================================
+   EMERGENCY DASHBOARD WIDGET VISIBILITY FIX
+   위젯 데이터는 있는데 화면에 안 뜰 때 강제 복구
+========================================================= */
+
+.dashboard-tab-space {
+  flex: 1 1 auto !important;
+
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  overflow: hidden !important;
+
+  box-sizing: border-box !important;
+}
+
+.dashboard-edit-canvas {
+  flex: 1 1 auto !important;
+
+  width: 100% !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: block !important;
+  position: relative !important;
+
+  overflow: hidden !important;
+
+  box-sizing: border-box !important;
+}
+
+.dashboard-grid-shell,
+.dashboard-grid-wrapper,
+.dashboard-grid-stage,
+.dashboard-grid-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: block !important;
+  position: relative !important;
+
+  overflow: hidden !important;
+
+  box-sizing: border-box !important;
+}
+
+.react-grid-layout {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: calc(100vh - 190px) !important;
+
+  display: block !important;
+  position: relative !important;
+
+  overflow: visible !important;
+
+  box-sizing: border-box !important;
+}
+
+.react-grid-item {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  overflow: visible !important;
+
+  box-sizing: border-box !important;
+}
+
+.react-grid-item > * {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.dashboard-grid-item,
+.dashboard-grid-item-content {
+  width: 100% !important;
+  height: 100% !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  overflow: hidden !important;
+
+  box-sizing: border-box !important;
+}
+
+.dashboard-grid-item > .glass-card,
+.dashboard-grid-item-content > .glass-card {
+  width: 100% !important;
+  height: 100% !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  overflow: hidden !important;
+
+  box-sizing: border-box !important;
+}
+
+/* =========================================================
+   EMERGENCY RGL VISIBLE FIX
+   gridItems는 있는데 화면에 안 보일 때
+========================================================= */
+
+.dashboard-tab-space {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  padding: 24px !important;
+
+  overflow: hidden !important;
+}
+
+.dashboard-edit-canvas {
+  display: block !important;
+  flex: 1 1 auto !important;
+
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  position: relative !important;
+
+  overflow: hidden !important;
+}
+
+.react-grid-layout {
+  display: block !important;
+  position: relative !important;
+
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: calc(100vh - 190px) !important;
+
+  overflow: visible !important;
+}
+
+.react-grid-item {
+  display: block !important;
+  position: absolute !important;
+
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  z-index: 1 !important;
+
+  overflow: visible !important;
+  pointer-events: auto !important;
+}
+
+.react-grid-item > .dashboard-grid-item,
+.react-grid-item > .dashboard-grid-item-content {
+  display: flex !important;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  padding: 8px !important;
+
+  overflow: hidden !important;
+}
+
+.react-grid-item .glass-card {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  background: hsl(0 0% 100% / 0.42) !important;
+  border: 1px solid hsl(0 0% 100% / 0.62) !important;
   box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.82),
-    0 18px 42px -34px hsl(260 34% 34% / 0.28);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
+    inset 0 1px 0 hsl(0 0% 100% / 0.72),
+    0 18px 48px -36px hsl(245 34% 28% / 0.24) !important;
+
+  overflow: hidden !important;
 }
 
-.theme-segment-button {
-  height: 30px;
-  min-width: 68px;
-  padding: 0 14px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 750;
-  color: hsl(var(--foreground) / 0.5);
-  background: transparent;
-  border: 0;
-  transition:
-    background 160ms ease,
-    color 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
+.react-grid-item .glass-card-body {
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
-
-.theme-segment-button:hover {
-  color: hsl(var(--foreground) / 0.78);
-}
-
-.theme-segment-button.is-active {
-  color: hsl(var(--foreground) / 0.88);
-  background: hsl(0 0% 100% / 0.78);
-  box-shadow:
-    0 10px 24px -18px hsl(260 32% 36% / 0.34),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9);
-}
-
-@media (max-width: 920px) {
-  .theme-segmented-control {
-    max-width: 100%;
-    overflow-x: auto;
-  }
-
-  .theme-segment-button {
-    flex: 0 0 auto;
-    min-width: 74px;
-  }
-} 

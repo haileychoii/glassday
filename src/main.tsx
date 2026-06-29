@@ -4,10 +4,12 @@ import { createRoot } from "react-dom/client";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
-import "./index.css";
-import "./styles/index.css";
+import "./styles";
 
 import App from "./App.tsx";
+import { applyTheme, getCurrentTheme } from "./constants/themes";
+
+applyTheme(getCurrentTheme(), { emit: false });
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

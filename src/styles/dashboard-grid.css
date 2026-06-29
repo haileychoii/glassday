@@ -1,69 +1,85 @@
 /* =========================================================
    DASHBOARD GRID
-   React Grid Layout + widget sizing only
+   React Grid Layout + direct glass-card support
+
+   현재 실제 DOM:
+   .react-grid-item > .glass-card
 
    목표:
+   - 위젯 DOM은 있는데 안 보이는 문제 해결
    - 대시보드 전체 스크롤 금지
-   - 위젯 내부 내용이 길 때만 위젯 안에서 스크롤
-   - 위젯끼리 겹쳐 보이지 않게 내부 padding 확보
-   - 테마 색/배경/질감은 themes/*.css에서 담당
+   - 위젯 내부 내용만 스크롤
+   - 위젯 사이 간격 확보
 ========================================================= */
 
 /* =========================================================
-   0. Dashboard stage
+   0. Dashboard outer
 ========================================================= */
 
 .dashboard-tab-space {
-  flex: 1 1 auto;
+  flex: 1 1 auto !important;
 
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  padding: 24px !important;
 
   overflow: hidden !important;
 
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 .dashboard-edit-canvas {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
+  flex: 1 1 auto !important;
 
-  position: relative;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: block !important;
+  position: relative !important;
 
   overflow: hidden !important;
 
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 .dashboard-grid-shell,
 .dashboard-grid-wrapper,
 .dashboard-grid-stage,
 .dashboard-grid-container {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
 
-  overflow: hidden;
+  display: block !important;
+  position: relative !important;
 
-  box-sizing: border-box;
+  overflow: hidden !important;
+
+  box-sizing: border-box !important;
 }
 
 /* =========================================================
-   1. React Grid Layout core
+   1. React Grid Layout
 ========================================================= */
 
 .react-grid-layout {
-  position: relative !important;
-
   width: 100% !important;
   min-width: 0 !important;
+  min-height: calc(100vh - 190px) !important;
 
-  overflow: hidden !important;
+  display: block !important;
+  position: relative !important;
+
+  overflow: visible !important;
 
   box-sizing: border-box !important;
 }
@@ -72,16 +88,12 @@
   min-width: 0 !important;
   min-height: 0 !important;
 
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
   overflow: visible !important;
 
-  box-sizing: border-box !important;
-}
-
-/* 위젯 사이 간격.
-   RGL 좌표는 그대로 두고 내부 카드만 살짝 안쪽으로 넣음 */
-.react-grid-item > .dashboard-grid-item,
-.react-grid-item > .dashboard-grid-item-content {
-  padding: 8px !important;
   box-sizing: border-box !important;
 }
 
@@ -90,7 +102,6 @@
   opacity: 0.22 !important;
 }
 
-/* drag / resize 중 위로 */
 .react-grid-item.react-draggable-dragging {
   z-index: 200 !important;
 }
@@ -104,11 +115,31 @@
 }
 
 /* =========================================================
-   2. Dashboard grid item shell
+   2. IMPORTANT: direct glass-card structure
+   실제 구조: .react-grid-item > .glass-card
 ========================================================= */
 
-.dashboard-grid-item,
-.dashboard-grid-item-content,
+.react-grid-item > .glass-card {
+  width: calc(100% - 16px) !important;
+  height: calc(100% - 16px) !important;
+
+  margin: 8px !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  overflow: hidden !important;
+
+  box-sizing: border-box !important;
+}
+
+/* 혹시 wrapper 구조인 위젯도 같이 대응 */
 .react-grid-item > .dashboard-grid-item,
 .react-grid-item > .dashboard-grid-item-content {
   width: 100% !important;
@@ -117,24 +148,21 @@
   min-width: 0 !important;
   min-height: 0 !important;
 
-  position: relative !important;
-
   display: flex !important;
   flex-direction: column !important;
+
+  padding: 8px !important;
+
+  visibility: visible !important;
+  opacity: 1 !important;
 
   overflow: hidden !important;
 
   box-sizing: border-box !important;
 }
 
-/* =========================================================
-   3. Widget card sizing
-========================================================= */
-
-.dashboard-grid-item > .glass-card,
-.dashboard-grid-item-content > .glass-card,
-.react-grid-item .dashboard-grid-item > .glass-card,
-.react-grid-item .dashboard-grid-item-content > .glass-card {
+.react-grid-item > .dashboard-grid-item > .glass-card,
+.react-grid-item > .dashboard-grid-item-content > .glass-card {
   width: 100% !important;
   height: 100% !important;
 
@@ -144,48 +172,39 @@
   display: grid !important;
   grid-template-rows: auto minmax(0, 1fr) !important;
 
+  visibility: visible !important;
+  opacity: 1 !important;
+
   overflow: hidden !important;
 
   box-sizing: border-box !important;
 }
 
-.dashboard-grid-item > .glass-card > *,
-.dashboard-grid-item-content > .glass-card > *,
+/* =========================================================
+   3. Glass card children
+========================================================= */
+
 .react-grid-item .glass-card > * {
   min-width: 0 !important;
   box-sizing: border-box !important;
 }
 
-/* =========================================================
-   4. Widget body scroll rule
-   대시보드 전체가 아니라 위젯 body만 스크롤
-========================================================= */
-
-.dashboard-grid-item .glass-card-body,
-.dashboard-grid-item-content .glass-card-body,
-.dashboard-grid-item > .glass-card > div:last-child,
-.dashboard-grid-item-content > .glass-card > div:last-child {
+.react-grid-item .glass-card-body,
+.react-grid-item .glass-card > div:last-child {
   min-width: 0 !important;
   min-height: 0 !important;
-  height: 100% !important;
 
   overflow-y: auto !important;
   overflow-x: hidden !important;
 
-  box-sizing: border-box !important;
-
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-}
 
-.dashboard-grid-item .glass-card-body > *,
-.dashboard-grid-item-content .glass-card-body > * {
-  min-width: 0 !important;
   box-sizing: border-box !important;
 }
 
 /* =========================================================
-   5. Widget root safety
+   4. Widget root safety
 ========================================================= */
 
 .today-focus-card,
@@ -209,6 +228,9 @@
   display: flex !important;
   flex-direction: column !important;
 
+  visibility: visible !important;
+  opacity: 1 !important;
+
   overflow: hidden !important;
 
   box-sizing: border-box !important;
@@ -230,7 +252,7 @@
 }
 
 /* =========================================================
-   6. Widget scroll areas
+   5. Scroll areas inside widgets only
 ========================================================= */
 
 .widget-scroll-area,
@@ -255,55 +277,35 @@
 }
 
 /* =========================================================
-   7. Raw-looking widget content emergency normalize
-   class가 부족한 위젯도 최소한 원시 HTML처럼 안 보이게
+   6. Basic content visibility
 ========================================================= */
 
-.dashboard-grid-item .glass-card-body h1,
-.dashboard-grid-item .glass-card-body h2,
-.dashboard-grid-item .glass-card-body h3,
-.dashboard-grid-item .glass-card-body h4,
-.dashboard-grid-item-content .glass-card-body h1,
-.dashboard-grid-item-content .glass-card-body h2,
-.dashboard-grid-item-content .glass-card-body h3,
-.dashboard-grid-item-content .glass-card-body h4 {
-  margin: 0 !important;
-  line-height: 1.2 !important;
-  font-weight: 850 !important;
+.react-grid-item,
+.react-grid-item * {
+  visibility: visible;
 }
 
-.dashboard-grid-item .glass-card-body p,
-.dashboard-grid-item .glass-card-body ul,
-.dashboard-grid-item .glass-card-body ol,
-.dashboard-grid-item-content .glass-card-body p,
-.dashboard-grid-item-content .glass-card-body ul,
-.dashboard-grid-item-content .glass-card-body ol {
-  margin: 0 !important;
+.react-grid-item .glass-card {
+  color: hsl(var(--foreground, 250 36% 20%) / 0.88);
 }
 
-.dashboard-grid-item .glass-card-body button,
-.dashboard-grid-item-content .glass-card-body button {
-  max-width: 100% !important;
-}
-
-.dashboard-grid-item .glass-card-body input,
-.dashboard-grid-item .glass-card-body textarea,
-.dashboard-grid-item .glass-card-body select,
-.dashboard-grid-item-content .glass-card-body input,
-.dashboard-grid-item-content .glass-card-body textarea,
-.dashboard-grid-item-content .glass-card-body select {
-  max-width: 100% !important;
-  min-width: 0 !important;
-}
-
-.dashboard-grid-item .glass-card-body > div,
-.dashboard-grid-item-content .glass-card-body > div {
-  min-width: 0 !important;
-  box-sizing: border-box !important;
+.react-grid-item .glass-card h1,
+.react-grid-item .glass-card h2,
+.react-grid-item .glass-card h3,
+.react-grid-item .glass-card h4,
+.react-grid-item .glass-card p,
+.react-grid-item .glass-card span,
+.react-grid-item .glass-card small,
+.react-grid-item .glass-card strong,
+.react-grid-item .glass-card button,
+.react-grid-item .glass-card input,
+.react-grid-item .glass-card textarea,
+.react-grid-item .glass-card select {
+  opacity: 1;
 }
 
 /* =========================================================
-   8. Edit mode controls
+   7. Edit mode controls
 ========================================================= */
 
 .dashboard-grid-item.is-editing,
@@ -351,16 +353,18 @@
 }
 
 /* =========================================================
-   9. Pixel / Retro spacing
+   8. Pixel / Retro spacing
 ========================================================= */
 
-html[data-theme="pixel-desk"] .react-grid-item > .dashboard-grid-item,
-body[data-theme="pixel-desk"] .react-grid-item > .dashboard-grid-item,
-html[data-theme="pixel-desk"] .react-grid-item > .dashboard-grid-item-content,
-body[data-theme="pixel-desk"] .react-grid-item > .dashboard-grid-item-content,
-html[data-theme="retro"] .react-grid-item > .dashboard-grid-item,
-body[data-theme="retro"] .react-grid-item > .dashboard-grid-item,
-html[data-theme="retro"] .react-grid-item > .dashboard-grid-item-content,
-body[data-theme="retro"] .react-grid-item > .dashboard-grid-item-content {
-  padding: 6px !important;
+html[data-theme="pixel-desk"] .react-grid-item > .glass-card,
+body[data-theme="pixel-desk"] .react-grid-item > .glass-card,
+html.theme-pixel-desk .react-grid-item > .glass-card,
+body.theme-pixel-desk .react-grid-item > .glass-card,
+html[data-theme="retro"] .react-grid-item > .glass-card,
+body[data-theme="retro"] .react-grid-item > .glass-card,
+html.theme-retro .react-grid-item > .glass-card,
+body.theme-retro .react-grid-item > .glass-card {
+  width: calc(100% - 12px) !important;
+  height: calc(100% - 12px) !important;
+  margin: 6px !important;
 }
