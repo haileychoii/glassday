@@ -3,12 +3,13 @@
    역할:
    - app shell / main / sidebar / topbar / settings modal / calendar modal
    - 구조, 크기, 정렬, overflow만 담당
+
    금지:
    - theme 색상
    - glass 질감
    - box-shadow
-   - theme background
-   - responsive 최종 제어
+   - widget 내부 스타일
+   - react-grid-layout 세부 스타일
 ========================================================= */
 
 /* =========================================================
@@ -92,11 +93,13 @@ main,
   box-sizing: border-box;
 }
 
-/* main 내부에 별도 wrapper가 있을 때도 collapse 방지 */
 main > *,
 .app-main > *,
 .dashboard-main > *,
-.workspace-main > * {
+.workspace-main > *,
+.app-content > *,
+.dashboard-content > *,
+.workspace-content > * {
   min-width: 0;
 }
 
@@ -421,20 +424,21 @@ aside.sidebar {
 
 /* =========================================================
    3. Workspace / dashboard outer area
-   react-grid-layout 세부는 dashboard-grid.css에서 담당
+   대시보드 전체 스크롤 금지
+   위젯 내부 스크롤은 dashboard-grid.css에서 담당
 ========================================================= */
 
 .dashboard-tab-space {
   flex: 1 1 auto;
 
   width: 100%;
+  height: 100%;
   min-width: 0;
   min-height: 0;
 
   padding: 28px 32px 40px;
 
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 
   box-sizing: border-box;
 }
@@ -449,6 +453,8 @@ aside.sidebar {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
+
+  flex: 0 0 auto;
 
   box-sizing: border-box;
 }
@@ -488,24 +494,32 @@ aside.sidebar {
 }
 
 .dashboard-edit-canvas {
+  flex: 1 1 auto;
+
   width: 100%;
+  height: 100%;
   min-width: 0;
   min-height: 0;
 
   position: relative;
 
-  overflow: visible;
+  overflow: hidden;
 
   box-sizing: border-box;
 }
 
-/* 대시보드 grid wrapper 후보들: 오른쪽 빈 공간 방지 */
+/* 대시보드 grid wrapper 후보들 */
 .dashboard-grid-shell,
 .dashboard-grid-wrapper,
 .dashboard-grid-stage,
 .dashboard-grid-container {
   width: 100%;
+  height: 100%;
   min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+
   box-sizing: border-box;
 }
 
@@ -971,223 +985,4 @@ aside.sidebar {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-}
-
-/* =========================================================
-   6. Small layout guard only
-   본격 반응형은 responsive.css에서 담당
-========================================================= */
-
-@media (max-width: 980px) {
-  .glass-panel,
-  .liquid-shell,
-  .app-shell,
-  .dashboard-shell,
-  .workspace-shell,
-  .desktop-shell,
-  .main-shell,
-  .app-layout,
-  .dashboard-layout,
-  .workspace-layout,
-  .desktop-layout {
-    flex-direction: column;
-  }
-
-  .app-sidebar,
-  .sidebar,
-  aside.app-sidebar,
-  aside.sidebar {
-    flex: 0 0 auto;
-
-    width: 100%;
-    min-width: 0;
-    max-width: none;
-
-    height: auto;
-    min-height: auto;
-  }
-
-  .sidebar-brand {
-    height: auto;
-    min-height: 0;
-
-    padding: 14px 18px 8px;
-  }
-
-  .sidebar-body {
-    padding: 8px 14px 12px;
-
-    overflow: hidden;
-  }
-
-  .sidebar-section-header {
-    display: none;
-  }
-
-  .sidebar-workspace-list {
-    flex-direction: row;
-    gap: 8px;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    padding-bottom: 4px;
-
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .sidebar-tab-item {
-    width: auto;
-    min-width: 112px;
-
-    flex: 0 0 auto;
-  }
-
-  .sidebar-tab-main {
-    height: 38px;
-    padding: 0 12px;
-
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 768px) {
-  .bg-glass-gradient {
-    padding: 8px;
-  }
-
-  .topbar {
-    min-height: auto;
-  }
-
-  .topbar-inner {
-    min-height: auto;
-
-    padding: 16px 18px;
-
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center;
-    gap: 12px;
-  }
-
-  .topbar-actions {
-    width: 100%;
-
-    margin-left: 0;
-
-    justify-content: flex-end;
-  }
-
-  .dashboard-tab-space {
-    padding: 18px 14px 28px;
-  }
-
-  .settings-modal-window,
-  .settings-window,
-  .settings-panel {
-    width: calc(100vw - 24px);
-    max-height: calc(100vh - 24px);
-  }
-
-  .settings-modal-header,
-  .settings-header,
-  .settings-titlebar {
-    min-height: 78px;
-    padding: 14px 16px;
-  }
-
-  .settings-modal-body,
-  .settings-body,
-  .settings-content {
-    padding: 16px;
-    gap: 14px;
-  }
-
-  .settings-section,
-  .settings-card {
-    padding: 18px;
-  }
-
-  .settings-theme-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .calendar-modal-backdrop {
-    padding: 14px;
-  }
-
-  .calendar-modal-window {
-    width: calc(100vw - 28px);
-    max-height: calc(100vh - 28px);
-  }
-
-  .calendar-modal-body {
-    padding: 16px;
-  }
-
-  .calendar-detail-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 520px) {
-  .topbar-actions {
-    justify-content: flex-start;
-  }
-
-  .settings-theme-grid,
-  .settings-action-grid,
-  .settings-backup-grid,
-  .settings-reset-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =========================================================
-   7. Pixel / Retro shape exception
-   색은 theme css, shape 예외만 여기서 최소 처리
-========================================================= */
-
-html[data-theme="pixel-desk"] .settings-theme-card,
-body[data-theme="pixel-desk"] .settings-theme-card,
-html.theme-pixel-desk .settings-theme-card,
-body.theme-pixel-desk .settings-theme-card,
-html[data-theme="pixel-desk"] .settings-theme-preview,
-body[data-theme="pixel-desk"] .settings-theme-preview,
-html.theme-pixel-desk .settings-theme-preview,
-body.theme-pixel-desk .settings-theme-preview,
-html[data-theme="pixel-desk"] .settings-action-card,
-body[data-theme="pixel-desk"] .settings-action-card,
-html.theme-pixel-desk .settings-action-card,
-body.theme-pixel-desk .settings-action-card,
-html[data-theme="pixel-desk"] .settings-backup-button,
-body[data-theme="pixel-desk"] .settings-backup-button,
-html.theme-pixel-desk .settings-backup-button,
-body.theme-pixel-desk .settings-backup-button,
-html[data-theme="pixel-desk"] .settings-reset-button,
-body[data-theme="pixel-desk"] .settings-reset-button,
-html.theme-pixel-desk .settings-reset-button,
-body.theme-pixel-desk .settings-reset-button,
-html[data-theme="retro"] .settings-theme-card,
-body[data-theme="retro"] .settings-theme-card,
-html.theme-retro .settings-theme-card,
-body.theme-retro .settings-theme-card,
-html[data-theme="retro"] .settings-theme-preview,
-body[data-theme="retro"] .settings-theme-preview,
-html.theme-retro .settings-theme-preview,
-body.theme-retro .settings-theme-preview,
-html[data-theme="retro"] .settings-action-card,
-body[data-theme="retro"] .settings-action-card,
-html.theme-retro .settings-action-card,
-body.theme-retro .settings-action-card,
-html[data-theme="retro"] .settings-backup-button,
-body[data-theme="retro"] .settings-backup-button,
-html.theme-retro .settings-backup-button,
-body.theme-retro .settings-backup-button,
-html[data-theme="retro"] .settings-reset-button,
-body[data-theme="retro"] .settings-reset-button,
-html.theme-retro .settings-reset-button,
-body.theme-retro .settings-reset-button {
-  border-radius: 0;
 }

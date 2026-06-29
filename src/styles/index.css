@@ -1,15 +1,9 @@
-/* =========================================================
-   GLASSDAY CUSTOM STYLE ENTRY
-   file: src/styles/index.css
-========================================================= */
-
 @import "./base.css";
 @import "./layout.css";
 @import "./controls.css";
 @import "./dashboard-grid.css";
 @import "./overlays.css";
 
-/* Theme visual */
 @import "./themes/pastel.css";
 @import "./themes/glass-light.css";
 @import "./themes/glass-dark.css";
@@ -17,14 +11,10 @@
 @import "./themes/pixel.css";
 @import "./themes/retro.css";
 
-/* Widget structure must win over theme broad selectors */
 @import "./widgets/today-focus.css";
 @import "./widgets/calendar.css";
 @import "./widgets/career.css";
 @import "./widgets/memo.css";
 
-/* responsive final */
 @import "./responsive.css";
-
-/* emergency only */
 @import "./overrides.css";
