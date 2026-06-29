@@ -1,21 +1,17 @@
 /* =========================================================
-   Theme: Glass Dark
-   Desktop-transparent glassmorphism dark mode
+   Theme: Glass Light
+   visual only — layout 건드리지 않음
 ========================================================= */
 
-html[data-theme="glass-dark"],
-body[data-theme="glass-dark"],
-html.theme-glass-dark,
-body.theme-glass-dark,
-.theme-glass-dark {
-  --background: 230 32% 8%;
-  --foreground: 230 30% 96%;
-  --muted-foreground: 228 16% 72%;
-  --primary: 258 92% 76%;
-  --primary-foreground: 230 30% 98%;
-  --card: 230 20% 12%;
-  --card-foreground: 230 30% 96%;
-  --border: 0 0% 100%;
+html[data-theme="glass-light"],
+body[data-theme="glass-light"],
+html.theme-glass-light,
+body.theme-glass-light {
+  --background: 220 30% 98%;
+  --foreground: 238 26% 18%;
+  --muted-foreground: 236 12% 48%;
+  --primary: 258 88% 66%;
+  --primary-foreground: 0 0% 100%;
 
   --gd-radius-app: 32px;
   --gd-radius-panel: 28px;
@@ -24,411 +20,216 @@ body.theme-glass-dark,
   --gd-radius-inner: 18px;
   --gd-radius-button: 999px;
 
-  --glass-dark-text: 230 30% 96%;
-  --glass-dark-muted: 228 16% 72%;
-  --glass-dark-shadow: 230 70% 3%;
-
-  --desktop-glass-bg: rgba(18, 20, 28, 0.34);
-  --desktop-glass-bg-strong: rgba(22, 24, 34, 0.44);
-  --desktop-glass-bg-soft: rgba(255, 255, 255, 0.07);
-  --desktop-glass-border: rgba(255, 255, 255, 0.18);
-  --desktop-glass-blur: 13px;
-
-  color: hsl(var(--glass-dark-text) / 0.94) !important;
+  color: hsl(var(--foreground) / 0.94);
 }
 
-/* 개발 중 미리보기용 어두운 데스크탑 배경 */
-html[data-theme="glass-dark"] body,
-body[data-theme="glass-dark"],
-html.theme-glass-dark body,
-body.theme-glass-dark {
-  color: hsl(var(--glass-dark-text) / 0.94) !important;
+html[data-theme="glass-light"] body,
+body[data-theme="glass-light"],
+html.theme-glass-light body,
+body.theme-glass-light {
+  color: hsl(var(--foreground) / 0.94) !important;
   background:
-    radial-gradient(circle at 14% 10%, rgb(105 132 255 / 0.24), transparent 34%),
-    radial-gradient(circle at 84% 16%, rgb(184 115 255 / 0.18), transparent 38%),
-    radial-gradient(circle at 62% 84%, rgb(90 220 255 / 0.12), transparent 42%),
-    linear-gradient(135deg, #090b12, #121421 52%, #080a10) !important;
-  background-attachment: fixed !important;
+    radial-gradient(circle at 12% 8%, rgb(255 255 255 / 0.92), transparent 34%),
+    radial-gradient(circle at 84% 12%, rgb(216 224 255 / 0.72), transparent 38%),
+    radial-gradient(circle at 72% 86%, rgb(255 222 246 / 0.46), transparent 42%),
+    linear-gradient(135deg, #eef1f7, #f8f6fb 48%, #e9edf5) !important;
 }
 
-html[data-theme="glass-dark"] .bg-glass-gradient,
-body[data-theme="glass-dark"] .bg-glass-gradient,
-html.theme-glass-dark .bg-glass-gradient,
-body.theme-glass-dark .bg-glass-gradient,
-.theme-glass-dark .bg-glass-gradient {
-  position: relative !important;
-  overflow: hidden !important;
-  background: transparent !important;
-}
-
-html[data-theme="glass-dark"] .bg-glass-gradient::before,
-body[data-theme="glass-dark"] .bg-glass-gradient::before,
-html.theme-glass-dark .bg-glass-gradient::before,
-body.theme-glass-dark .bg-glass-gradient::before,
-.theme-glass-dark .bg-glass-gradient::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  pointer-events: none !important;
-  z-index: 0 !important;
-
+/* 배경 컨테이너는 배경만. 자식 display/z-index 절대 건드리지 않음 */
+html[data-theme="glass-light"] .bg-glass-gradient,
+body[data-theme="glass-light"] .bg-glass-gradient,
+html.theme-glass-light .bg-glass-gradient,
+body.theme-glass-light .bg-glass-gradient {
   background:
-    radial-gradient(circle at 16% 12%, rgb(140 160 255 / 0.14), transparent 34%),
-    radial-gradient(circle at 84% 18%, rgb(220 160 255 / 0.1), transparent 38%),
-    linear-gradient(180deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.01)) !important;
-
-  backdrop-filter: blur(1.5px) saturate(112%) !important;
-  -webkit-backdrop-filter: blur(1.5px) saturate(112%) !important;
+    radial-gradient(circle at 14% 8%, rgb(255 255 255 / 0.46), transparent 34%),
+    radial-gradient(circle at 86% 12%, rgb(210 220 255 / 0.3), transparent 38%),
+    linear-gradient(135deg, rgb(245 247 252 / 0.68), rgb(255 255 255 / 0.28)) !important;
 }
 
-html[data-theme="glass-dark"] .bg-glass-gradient > *,
-body[data-theme="glass-dark"] .bg-glass-gradient > *,
-html.theme-glass-dark .bg-glass-gradient > *,
-body.theme-glass-dark .bg-glass-gradient > *,
-.theme-glass-dark .bg-glass-gradient > * {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* 전체 앱 껍데기 */
-html[data-theme="glass-dark"] .liquid-shell,
-html[data-theme="glass-dark"] .glass-panel,
-html[data-theme="glass-dark"] .app-shell,
-html[data-theme="glass-dark"] .dashboard-shell,
-html[data-theme="glass-dark"] .workspace-shell,
-html[data-theme="glass-dark"] .desktop-shell,
-html[data-theme="glass-dark"] .main-shell,
-html[data-theme="glass-dark"] .dashboard-layout,
-html[data-theme="glass-dark"] .app-layout,
-body[data-theme="glass-dark"] .liquid-shell,
-body[data-theme="glass-dark"] .glass-panel,
-body[data-theme="glass-dark"] .app-shell,
-body[data-theme="glass-dark"] .dashboard-shell,
-body[data-theme="glass-dark"] .workspace-shell,
-body[data-theme="glass-dark"] .desktop-shell,
-body[data-theme="glass-dark"] .main-shell,
-body[data-theme="glass-dark"] .dashboard-layout,
-body[data-theme="glass-dark"] .app-layout,
-.theme-glass-dark .liquid-shell,
-.theme-glass-dark .glass-panel,
-.theme-glass-dark .app-shell,
-.theme-glass-dark .dashboard-shell,
-.theme-glass-dark .workspace-shell,
-.theme-glass-dark .desktop-shell,
-.theme-glass-dark .main-shell,
-.theme-glass-dark .dashboard-layout,
-.theme-glass-dark .app-layout {
-  background: var(--desktop-glass-bg) !important;
-  border: 1px solid var(--desktop-glass-border) !important;
+/* app shell visual */
+html[data-theme="glass-light"] .glass-panel,
+html[data-theme="glass-light"] .liquid-shell,
+html[data-theme="glass-light"] .app-shell,
+html[data-theme="glass-light"] .dashboard-shell,
+html[data-theme="glass-light"] .workspace-shell,
+html[data-theme="glass-light"] .desktop-shell,
+html[data-theme="glass-light"] .main-shell,
+body[data-theme="glass-light"] .glass-panel,
+body[data-theme="glass-light"] .liquid-shell,
+body[data-theme="glass-light"] .app-shell,
+body[data-theme="glass-light"] .dashboard-shell,
+body[data-theme="glass-light"] .workspace-shell,
+body[data-theme="glass-light"] .desktop-shell,
+body[data-theme="glass-light"] .main-shell {
+  background: rgba(255, 255, 255, 0.19) !important;
+  border: 1px solid rgba(255, 255, 255, 0.32) !important;
   border-radius: var(--gd-radius-app) !important;
-
-  box-shadow:
-    0 4px 30px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgb(255 255 255 / 0.14) !important;
-
-  backdrop-filter: blur(var(--desktop-glass-blur)) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(var(--desktop-glass-blur)) saturate(145%) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(11.9px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(11.9px) saturate(145%) !important;
 }
 
-/* Sidebar / Topbar */
-html[data-theme="glass-dark"] aside,
-body[data-theme="glass-dark"] aside,
-.theme-glass-dark aside,
-html[data-theme="glass-dark"] .topbar,
-body[data-theme="glass-dark"] .topbar,
-.theme-glass-dark .topbar {
-  color: hsl(var(--glass-dark-text) / 0.94) !important;
+/* sidebar */
+html[data-theme="glass-light"] .app-sidebar,
+html[data-theme="glass-light"] .sidebar,
+body[data-theme="glass-light"] .app-sidebar,
+body[data-theme="glass-light"] .sidebar {
+  color: hsl(var(--foreground) / 0.9) !important;
   background:
     linear-gradient(
-      145deg,
-      rgb(18 20 28 / 0.42),
-      rgb(255 255 255 / 0.055)
+      180deg,
+      rgba(255, 255, 255, 0.26),
+      rgba(255, 255, 255, 0.11)
     ) !important;
-  border-color: rgb(255 255 255 / 0.16) !important;
-  box-shadow:
-    0 16px 44px rgb(0 0 0 / 0.2),
-    inset 0 1px 0 rgb(255 255 255 / 0.14) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.32) !important;
   backdrop-filter: blur(18px) saturate(145%) !important;
   -webkit-backdrop-filter: blur(18px) saturate(145%) !important;
 }
 
-html[data-theme="glass-dark"] .topbar-actions,
-body[data-theme="glass-dark"] .topbar-actions,
-.theme-glass-dark .topbar-actions {
-  background: rgb(18 20 28 / 0.28) !important;
-  border: 1px solid rgb(255 255 255 / 0.16) !important;
+/* topbar */
+html[data-theme="glass-light"] .topbar,
+body[data-theme="glass-light"] .topbar {
+  color: hsl(var(--foreground) / 0.92) !important;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.13)
+    ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.34) !important;
+  border-radius: var(--gd-radius-panel) !important;
   box-shadow:
-    0 12px 30px rgb(0 0 0 / 0.2),
-    inset 0 1px 0 rgb(255 255 255 / 0.12) !important;
+    0 16px 44px rgba(40, 40, 80, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
   backdrop-filter: blur(16px) saturate(145%) !important;
   -webkit-backdrop-filter: blur(16px) saturate(145%) !important;
 }
 
-/* Widgets */
-html[data-theme="glass-dark"] .glass-card,
-body[data-theme="glass-dark"] .glass-card,
-.theme-glass-dark .glass-card {
-  color: hsl(var(--glass-dark-text) / 0.94) !important;
+html[data-theme="glass-light"] .topbar-title h1,
+body[data-theme="glass-light"] .topbar-title h1,
+html[data-theme="glass-light"] .sidebar-brand-title,
+body[data-theme="glass-light"] .sidebar-brand-title {
+  color: hsl(var(--foreground) / 0.92) !important;
+}
+
+html[data-theme="glass-light"] .topbar-title p,
+body[data-theme="glass-light"] .topbar-title p,
+html[data-theme="glass-light"] .sidebar-brand-subtitle,
+body[data-theme="glass-light"] .sidebar-brand-subtitle,
+html[data-theme="glass-light"] .sidebar-section-title,
+body[data-theme="glass-light"] .sidebar-section-title {
+  color: hsl(var(--muted-foreground) / 0.72) !important;
+}
+
+/* widgets */
+html[data-theme="glass-light"] .glass-card,
+body[data-theme="glass-light"] .glass-card {
+  color: hsl(var(--foreground) / 0.9) !important;
   background:
     linear-gradient(
       145deg,
-      rgb(24 26 36 / 0.42),
-      rgb(255 255 255 / 0.055)
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.12)
     ) !important;
-  border: 1px solid rgb(255 255 255 / 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.36) !important;
   border-radius: var(--gd-radius-widget) !important;
-
   box-shadow:
-    0 22px 58px rgb(0 0 0 / 0.26),
-    inset 0 1px 0 rgb(255 255 255 / 0.13),
-    inset 0 -1px 0 rgb(255 255 255 / 0.04) !important;
-
-  backdrop-filter: blur(16px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
+    0 18px 46px rgba(40, 40, 80, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.56) !important;
+  backdrop-filter: blur(14px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(150%) !important;
 }
 
-html[data-theme="glass-dark"] .glass-card::before,
-body[data-theme="glass-dark"] .glass-card::before,
-.theme-glass-dark .glass-card::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 14% !important;
-  right: 14% !important;
-  top: 0 !important;
-  height: 1px !important;
-  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.36), transparent) !important;
-  pointer-events: none !important;
-  z-index: 1 !important;
-}
-
-html[data-theme="glass-dark"] .glass-card > *,
-body[data-theme="glass-dark"] .glass-card > *,
-.theme-glass-dark .glass-card > * {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-/* Inner panels */
-html[data-theme="glass-dark"] .today-focus-main,
-html[data-theme="glass-dark"] .today-focus-section,
-html[data-theme="glass-dark"] .calendar-event-item,
-html[data-theme="glass-dark"] .career-list-item,
-html[data-theme="glass-dark"] .memo-note-item,
-html[data-theme="glass-dark"] .alert-item,
-html[data-theme="glass-dark"] .journal-section,
-body[data-theme="glass-dark"] .today-focus-main,
-body[data-theme="glass-dark"] .today-focus-section,
-body[data-theme="glass-dark"] .calendar-event-item,
-body[data-theme="glass-dark"] .career-list-item,
-body[data-theme="glass-dark"] .memo-note-item,
-body[data-theme="glass-dark"] .alert-item,
-body[data-theme="glass-dark"] .journal-section,
-.theme-glass-dark .today-focus-main,
-.theme-glass-dark .today-focus-section,
-.theme-glass-dark .calendar-event-item,
-.theme-glass-dark .career-list-item,
-.theme-glass-dark .memo-note-item,
-.theme-glass-dark .alert-item,
-.theme-glass-dark .journal-section {
-  color: hsl(var(--glass-dark-text) / 0.9) !important;
-  background: rgb(255 255 255 / 0.075) !important;
-  border: 1px solid rgb(255 255 255 / 0.13) !important;
+/* inner panels */
+html[data-theme="glass-light"] .today-focus-main,
+html[data-theme="glass-light"] .today-focus-hero,
+html[data-theme="glass-light"] .today-focus-section,
+html[data-theme="glass-light"] .today-focus-block,
+html[data-theme="glass-light"] .today-mini-main,
+html[data-theme="glass-light"] .today-mini-next,
+html[data-theme="glass-light"] .today-tasks-progress,
+html[data-theme="glass-light"] .calendar-event-item,
+html[data-theme="glass-light"] .calendar-event-card,
+html[data-theme="glass-light"] .calendar-mini-card,
+html[data-theme="glass-light"] .career-list-item,
+html[data-theme="glass-light"] .memo-note-item,
+html[data-theme="glass-light"] .alert-item,
+html[data-theme="glass-light"] .journal-section,
+html[data-theme="glass-light"] .study-card,
+body[data-theme="glass-light"] .today-focus-main,
+body[data-theme="glass-light"] .today-focus-hero,
+body[data-theme="glass-light"] .today-focus-section,
+body[data-theme="glass-light"] .today-focus-block,
+body[data-theme="glass-light"] .today-mini-main,
+body[data-theme="glass-light"] .today-mini-next,
+body[data-theme="glass-light"] .today-tasks-progress,
+body[data-theme="glass-light"] .calendar-event-item,
+body[data-theme="glass-light"] .calendar-event-card,
+body[data-theme="glass-light"] .calendar-mini-card,
+body[data-theme="glass-light"] .career-list-item,
+body[data-theme="glass-light"] .memo-note-item,
+body[data-theme="glass-light"] .alert-item,
+body[data-theme="glass-light"] .journal-section,
+body[data-theme="glass-light"] .study-card {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.1),
-    0 10px 24px rgb(0 0 0 / 0.16) !important;
-  backdrop-filter: blur(12px) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(145%) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    0 10px 24px rgba(40, 40, 80, 0.055) !important;
+  backdrop-filter: blur(10px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(145%) !important;
 }
 
-/* Text */
-html[data-theme="glass-dark"] h1,
-html[data-theme="glass-dark"] h2,
-html[data-theme="glass-dark"] h3,
-html[data-theme="glass-dark"] h4,
-html[data-theme="glass-dark"] strong,
-body[data-theme="glass-dark"] h1,
-body[data-theme="glass-dark"] h2,
-body[data-theme="glass-dark"] h3,
-body[data-theme="glass-dark"] h4,
-body[data-theme="glass-dark"] strong,
-.theme-glass-dark h1,
-.theme-glass-dark h2,
-.theme-glass-dark h3,
-.theme-glass-dark h4,
-.theme-glass-dark strong {
-  color: hsl(var(--glass-dark-text) / 0.96) !important;
+/* buttons / inputs */
+html[data-theme="glass-light"] .glass-button,
+html[data-theme="glass-light"] .theme-segmented-control,
+html[data-theme="glass-light"] .theme-select-mobile,
+html[data-theme="glass-light"] input,
+html[data-theme="glass-light"] textarea,
+html[data-theme="glass-light"] select,
+body[data-theme="glass-light"] .glass-button,
+body[data-theme="glass-light"] .theme-segmented-control,
+body[data-theme="glass-light"] .theme-select-mobile,
+body[data-theme="glass-light"] input,
+body[data-theme="glass-light"] textarea,
+body[data-theme="glass-light"] select {
+  color: hsl(var(--foreground) / 0.86) !important;
+  background: rgba(255, 255, 255, 0.22) !important;
+  border-color: rgba(255, 255, 255, 0.34) !important;
+  backdrop-filter: blur(10px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(145%) !important;
 }
 
-html[data-theme="glass-dark"] p,
-html[data-theme="glass-dark"] span,
-html[data-theme="glass-dark"] small,
-body[data-theme="glass-dark"] p,
-body[data-theme="glass-dark"] span,
-body[data-theme="glass-dark"] small,
-.theme-glass-dark p,
-.theme-glass-dark span,
-.theme-glass-dark small {
-  color: hsl(var(--glass-dark-muted) / 0.74) !important;
+html[data-theme="glass-light"] .theme-segment-button.is-active,
+body[data-theme="glass-light"] .theme-segment-button.is-active,
+html[data-theme="glass-light"] .glass-button.is-active,
+body[data-theme="glass-light"] .glass-button.is-active {
+  color: hsl(var(--foreground) / 0.94) !important;
+  background: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* Buttons / inputs */
-html[data-theme="glass-dark"] button,
-html[data-theme="glass-dark"] .glass-button,
-html[data-theme="glass-dark"] input,
-html[data-theme="glass-dark"] textarea,
-html[data-theme="glass-dark"] select,
-body[data-theme="glass-dark"] button,
-body[data-theme="glass-dark"] .glass-button,
-body[data-theme="glass-dark"] input,
-body[data-theme="glass-dark"] textarea,
-body[data-theme="glass-dark"] select,
-.theme-glass-dark button,
-.theme-glass-dark .glass-button,
-.theme-glass-dark input,
-.theme-glass-dark textarea,
-.theme-glass-dark select {
-  color: hsl(var(--glass-dark-text) / 0.9) !important;
-  background: rgb(255 255 255 / 0.085) !important;
-  border: 1px solid rgb(255 255 255 / 0.16) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.12),
-    0 8px 20px rgb(0 0 0 / 0.14) !important;
-  backdrop-filter: blur(12px) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(145%) !important;
-}
-
-html[data-theme="glass-dark"] .theme-segment-button.is-active,
-body[data-theme="glass-dark"] .theme-segment-button.is-active,
-.theme-glass-dark .theme-segment-button.is-active {
-  color: hsl(var(--glass-dark-text) / 0.98) !important;
-  background: rgb(255 255 255 / 0.18) !important;
-}
-
-/* Settings preview */
-.settings-theme-preview-glass-dark {
+/* settings preview */
+.settings-theme-preview-glass-light {
   background:
     linear-gradient(
       145deg,
-      rgb(24 26 36 / 0.82),
-      rgb(255 255 255 / 0.08)
+      rgba(255, 255, 255, 0.34),
+      rgba(255, 255, 255, 0.12)
     ) !important;
-  border: 1px solid rgb(255 255 255 / 0.2) !important;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16) !important;
+  border: 1px solid rgba(255, 255, 255, 0.44) !important;
 }
 
-.settings-theme-preview-glass-dark > span {
-  background: rgb(255 255 255 / 0.18) !important;
+.settings-theme-preview-glass-light > span {
+  background: rgba(255, 255, 255, 0.52) !important;
 }
 
-/* Glass 계열은 workspace header 숨김 */
-html[data-theme="glass-dark"] .dashboard-tab-header,
-body[data-theme="glass-dark"] .dashboard-tab-header,
-.theme-glass-dark .dashboard-tab-header {
-  display: none !important;
-}
-
-/* 실제 투명 데스크탑 앱 모드용 */
-html.desktop-transparent[data-theme="glass-dark"] body,
-body.desktop-transparent[data-theme="glass-dark"],
-html.desktop-transparent.theme-glass-dark body,
-body.desktop-transparent.theme-glass-dark {
+/* 실제 투명 데스크탑 모드에서만 배경 제거 */
+html.desktop-transparent[data-theme="glass-light"] body,
+body.desktop-transparent[data-theme="glass-light"] {
   background: transparent !important;
 }
 
-html.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient,
-body.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient,
-html.desktop-transparent.theme-glass-dark .bg-glass-gradient,
-body.desktop-transparent.theme-glass-dark .bg-glass-gradient {
+html.desktop-transparent[data-theme="glass-light"] .bg-glass-gradient,
+body.desktop-transparent[data-theme="glass-light"] .bg-glass-gradient {
   background: transparent !important;
-}
-
-html.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient::before,
-body.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient::before {
-  display: none !important;
-}
-
-/* =========================================================
-   Glass Dark visibility / layer fix
-   배경만 보이고 앱이 사라지는 문제 방지
-========================================================= */
-
-html[data-theme="glass-dark"],
-body[data-theme="glass-dark"],
-html.theme-glass-dark,
-body.theme-glass-dark {
-  min-width: 0 !important;
-  min-height: 100% !important;
-}
-
-html[data-theme="glass-dark"] body,
-body[data-theme="glass-dark"],
-html.theme-glass-dark body,
-body.theme-glass-dark {
-  overflow: hidden !important;
-}
-
-/* 배경 pseudo layer는 무조건 뒤 */
-html[data-theme="glass-dark"] .bg-glass-gradient,
-body[data-theme="glass-dark"] .bg-glass-gradient,
-html.theme-glass-dark .bg-glass-gradient,
-body.theme-glass-dark .bg-glass-gradient {
-  position: relative !important;
-  isolation: isolate !important;
-  overflow: hidden !important;
-}
-
-html[data-theme="glass-dark"] .bg-glass-gradient::before,
-html[data-theme="glass-dark"] .bg-glass-gradient::after,
-body[data-theme="glass-dark"] .bg-glass-gradient::before,
-body[data-theme="glass-dark"] .bg-glass-gradient::after,
-html.theme-glass-dark .bg-glass-gradient::before,
-html.theme-glass-dark .bg-glass-gradient::after,
-body.theme-glass-dark .bg-glass-gradient::before,
-body.theme-glass-dark .bg-glass-gradient::after {
-  z-index: 0 !important;
-  pointer-events: none !important;
-}
-
-/* 실제 앱 콘텐츠는 무조건 위 */
-html[data-theme="glass-dark"] .bg-glass-gradient > *,
-body[data-theme="glass-dark"] .bg-glass-gradient > *,
-html.theme-glass-dark .bg-glass-gradient > *,
-body.theme-glass-dark .bg-glass-gradient > * {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-/* shell이 dark에서 collapse되지 않게 */
-html[data-theme="glass-dark"] .glass-panel,
-html[data-theme="glass-dark"] .liquid-shell,
-html[data-theme="glass-dark"] .app-layout,
-html[data-theme="glass-dark"] .dashboard-layout,
-html[data-theme="glass-dark"] .workspace-layout,
-body[data-theme="glass-dark"] .glass-panel,
-body[data-theme="glass-dark"] .liquid-shell,
-body[data-theme="glass-dark"] .app-layout,
-body[data-theme="glass-dark"] .dashboard-layout,
-body[data-theme="glass-dark"] .workspace-layout {
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  display: flex !important;
-  align-items: stretch !important;
-
-  overflow: hidden !important;
-}
-
-/* dark에서 카드/텍스트가 투명해지는 것 방지 */
-html[data-theme="glass-dark"] .topbar,
-html[data-theme="glass-dark"] .app-sidebar,
-html[data-theme="glass-dark"] .sidebar,
-html[data-theme="glass-dark"] .glass-card,
-body[data-theme="glass-dark"] .topbar,
-body[data-theme="glass-dark"] .app-sidebar,
-body[data-theme="glass-dark"] .sidebar,
-body[data-theme="glass-dark"] .glass-card {
-  opacity: 1 !important;
-  visibility: visible !important;
 }

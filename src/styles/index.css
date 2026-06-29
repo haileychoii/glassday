@@ -1,5 +1,6 @@
 /* =========================================================
    GLASSDAY CUSTOM STYLE ENTRY
+   file: src/styles/index.css
 ========================================================= */
 
 @import "./base.css";
@@ -7,12 +8,6 @@
 @import "./controls.css";
 @import "./dashboard-grid.css";
 @import "./overlays.css";
-
-/* Widget structure */
-@import "./widgets/today-focus.css";
-@import "./widgets/calendar.css";
-@import "./widgets/career.css";
-@import "./widgets/memo.css";
 
 /* Theme visual */
 @import "./themes/pastel.css";
@@ -22,8 +17,14 @@
 @import "./themes/pixel.css";
 @import "./themes/retro.css";
 
-/* responsive는 theme 뒤에 와야 함 */
+/* Widget structure must win over theme broad selectors */
+@import "./widgets/today-focus.css";
+@import "./widgets/calendar.css";
+@import "./widgets/career.css";
+@import "./widgets/memo.css";
+
+/* responsive final */
 @import "./responsive.css";
 
-/* 진짜 마지막 */
+/* emergency only */
 @import "./overrides.css";

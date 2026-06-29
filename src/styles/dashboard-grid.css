@@ -600,3 +600,40 @@ body.theme-retro .dashboard-grid-item > .glass-card {
 
   overflow: hidden !important;
 }
+
+/* =========================================================
+   WIDGET CONTENT STRUCTURE LOCK
+   위젯 내부 원시화 방지
+========================================================= */
+
+.dashboard-grid-item > .glass-card,
+.dashboard-grid-item-content > .glass-card,
+.react-grid-item .dashboard-grid-item > .glass-card,
+.react-grid-item .dashboard-grid-item-content > .glass-card {
+  width: 100% !important;
+  height: 100% !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item > .glass-card > *,
+.dashboard-grid-item-content > .glass-card > * {
+  min-width: 0 !important;
+}
+
+.dashboard-grid-item .glass-card-body,
+.dashboard-grid-item-content .glass-card-body,
+.dashboard-grid-item > .glass-card > div:last-child,
+.dashboard-grid-item-content > .glass-card > div:last-child {
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
