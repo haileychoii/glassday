@@ -1,19 +1,20 @@
 /* =========================================================
-   GLASSDAY STYLE ENTRY
-   file: src/styles/index.css
+   GLASSDAY CUSTOM STYLE ENTRY
 ========================================================= */
 
-/* Tailwind utilities 복구 — 이거 빠지면 위젯 내부가 원시 HTML처럼 보임 */
-
-/* Base / shared structure */
 @import "./base.css";
 @import "./layout.css";
 @import "./controls.css";
 @import "./dashboard-grid.css";
-@import "./responsive.css";
 @import "./overlays.css";
 
-/* Themes */
+/* Widget structure */
+@import "./widgets/today-focus.css";
+@import "./widgets/calendar.css";
+@import "./widgets/career.css";
+@import "./widgets/memo.css";
+
+/* Theme visual */
 @import "./themes/pastel.css";
 @import "./themes/glass-light.css";
 @import "./themes/glass-dark.css";
@@ -21,20 +22,8 @@
 @import "./themes/pixel.css";
 @import "./themes/retro.css";
 
-/* Widget styles */
-@import "./widgets/calendar.css";
-@import "./widgets/career.css";
-@import "./widgets/memo.css";
+/* responsive는 theme 뒤에 와야 함 */
+@import "./responsive.css";
 
-/* 기존에 있으면 반드시 추가 */
-@import "./widgets/today.css";
-@import "./widgets/study.css";
-@import "./widgets/journal.css";
-@import "./widgets/alert-center.css";
-@import "./widgets/alerts.css";
-@import "./widgets/money.css";
-@import "./widgets/health.css";
-@import "./widgets/mood.css";
-
-/* 마지막 응급 보정 */
+/* 진짜 마지막 */
 @import "./overrides.css";

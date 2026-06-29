@@ -1,49 +1,98 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 
-type SetValue<T> = T | ((prev: T) => T);
+type UseLocalStorageReturn<T> = {
+  value: T;
+  setValue: Dispatch<SetStateAction<T>>;
+  removeValue: () => void;
+};
 
-export function useLocalStorage<T>(key: string, initialValue: T) {
-  const [value, setValue] = useState<T>(() => {
+const isBrowser = () => typeof window !== "undefined";
+
+const isObject = (value: unknown) => {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+};
+
+const sanitizeValue = <T,>(value: unknown, fallback: T): T => {
+  if (value === undefined || value === null) {
+    return fallback;
+  }
+
+  if (Array.isArray(fallback)) {
+    return Array.isArray(value) ? (value as T) : fallback;
+  }
+
+  if (isObject(fallback)) {
+    return isObject(value) ? ({ ...fallback, ...value } as T) : fallback;
+  }
+
+  return value as T;
+};
+
+export const useLocalStorage = <T,>(
+  key: string,
+  initialValue: T
+): UseLocalStorageReturn<T> => {
+  const readValue = useCallback((): T => {
+    if (!isBrowser()) {
+      return initialValue;
+    }
+
     try {
-      const saved = localStorage.getItem(key);
+      const item = window.localStorage.getItem(key);
 
-      if (saved === null) {
+      if (item === null) {
         return initialValue;
       }
 
-      return JSON.parse(saved) as T;
+      const parsed = JSON.parse(item);
+
+      return sanitizeValue<T>(parsed, initialValue);
     } catch (error) {
-      console.warn(`Failed to read localStorage key: ${key}`, error);
+      console.warn(`useLocalStorage read error: ${key}`, error);
       return initialValue;
     }
-  });
+  }, [key, initialValue]);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.warn(`Failed to save localStorage key: ${key}`, error);
-    }
-  }, [key, value]);
+  const [storedValue, setStoredValue] = useState<T>(() => readValue());
 
-  const updateValue = (newValue: SetValue<T>) => {
-    setValue((prev) => {
-      if (typeof newValue === "function") {
-        return (newValue as (prev: T) => T)(prev);
+  const setValue: Dispatch<SetStateAction<T>> = useCallback(
+    (value) => {
+      setStoredValue((prevValue) => {
+        const nextValue =
+          value instanceof Function ? value(prevValue) : value;
+
+        const safeNextValue = sanitizeValue<T>(nextValue, initialValue);
+
+        if (isBrowser()) {
+          try {
+            window.localStorage.setItem(key, JSON.stringify(safeNextValue));
+          } catch (error) {
+            console.warn(`useLocalStorage write error: ${key}`, error);
+          }
+        }
+
+        return safeNextValue;
+      });
+    },
+    [key, initialValue]
+  );
+
+  const removeValue = useCallback(() => {
+    if (isBrowser()) {
+      try {
+        window.localStorage.removeItem(key);
+      } catch (error) {
+        console.warn(`useLocalStorage remove error: ${key}`, error);
       }
+    }
 
-      return newValue;
-    });
-  };
-
-  const resetValue = () => {
-    setValue(initialValue);
-    localStorage.removeItem(key);
-  };
+    setStoredValue(initialValue);
+  }, [key, initialValue]);
 
   return {
-    value,
-    setValue: updateValue,
-    resetValue,
+    value: storedValue,
+    setValue,
+    removeValue,
   };
-}
+};

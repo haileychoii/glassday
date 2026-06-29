@@ -33,32 +33,36 @@ type SettingsModalProps = {
 
 const THEME_STORAGE_KEY = "glassday.theme";
 
+// const forceApplyTheme = (nextTheme: ThemeId) => {
+//   applyTheme(nextTheme);
+
+//   if (typeof document === "undefined") return;
+
+//   const root = document.documentElement;
+//   const body = document.body;
+
+//   themeOptions.forEach((item) => {
+//     root.classList.remove(`theme-${item.id}`);
+//     body.classList.remove(`theme-${item.id}`);
+//   });
+
+//   root.classList.add(`theme-${nextTheme}`);
+//   body.classList.add(`theme-${nextTheme}`);
+
+//   root.setAttribute("data-theme", nextTheme);
+//   body.setAttribute("data-theme", nextTheme);
+
+//   window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+
+//   window.dispatchEvent(
+//     new CustomEvent("glassday-theme-change", {
+//       detail: nextTheme,
+//     })
+//   );
+// };
+
 const forceApplyTheme = (nextTheme: ThemeId) => {
   applyTheme(nextTheme);
-
-  if (typeof document === "undefined") return;
-
-  const root = document.documentElement;
-  const body = document.body;
-
-  themeOptions.forEach((item) => {
-    root.classList.remove(`theme-${item.id}`);
-    body.classList.remove(`theme-${item.id}`);
-  });
-
-  root.classList.add(`theme-${nextTheme}`);
-  body.classList.add(`theme-${nextTheme}`);
-
-  root.setAttribute("data-theme", nextTheme);
-  body.setAttribute("data-theme", nextTheme);
-
-  window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
-
-  window.dispatchEvent(
-    new CustomEvent("glassday-theme-change", {
-      detail: nextTheme,
-    })
-  );
 };
 
 export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
@@ -109,7 +113,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
   const handleThemeChange = (nextTheme: ThemeId) => {
     setTheme(nextTheme);
-    forceApplyTheme(nextTheme);
+    applyTheme(nextTheme);
 
     const label =
       themeOptions.find((item) => item.id === nextTheme)?.label ?? nextTheme;

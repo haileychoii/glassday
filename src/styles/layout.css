@@ -1,35 +1,103 @@
 /* =========================================================
    GLASSDAY LAYOUT
-   역할: app layout / topbar / sidebar / settings modal / workspace spacing
-   금지: theme 색상, glass 질감, box-shadow 강제 덮어쓰기
+   역할:
+   - app shell / main / sidebar / topbar / settings modal / calendar modal
+   - 구조, 크기, 정렬, overflow만 담당
+   금지:
+   - theme 색상
+   - glass 질감
+   - box-shadow
+   - theme background
+   - responsive 최종 제어
 ========================================================= */
 
 /* =========================================================
-   0. App layout safety
+   0. Root / app shell
 ========================================================= */
 
-main,
-.app-main,
-.dashboard-main,
-.workspace-main {
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
   min-width: 0;
   min-height: 0;
 }
 
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+/* 제일 바깥 배경 컨테이너 */
+.bg-glass-gradient {
+  width: 100vw;
+  height: 100vh;
+  min-width: 0;
+  min-height: 0;
+
+  padding: 18px;
+
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* 실제 앱 껍데기 */
+.glass-panel,
+.liquid-shell,
+.app-shell,
+.dashboard-shell,
+.workspace-shell,
+.desktop-shell,
+.main-shell,
 .app-layout,
 .dashboard-layout,
 .workspace-layout,
 .desktop-layout {
+  width: 100%;
+  height: 100%;
   min-width: 0;
-  min-height: 100vh;
+  min-height: 0;
+
+  display: flex;
+  align-items: stretch;
+
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
+/* sidebar + main 구조 */
+main,
+.app-main,
+.dashboard-main,
+.workspace-main,
 .app-content,
 .dashboard-content,
 .workspace-content {
+  flex: 1 1 auto;
+
+  width: auto;
+  height: 100%;
   min-width: 0;
   min-height: 0;
-  flex: 1 1 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* main 내부에 별도 wrapper가 있을 때도 collapse 방지 */
+main > *,
+.app-main > *,
+.dashboard-main > *,
+.workspace-main > * {
+  min-width: 0;
 }
 
 /* =========================================================
@@ -45,9 +113,10 @@ main,
   min-width: 0;
   min-height: 86px;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   overflow: visible;
+  box-sizing: border-box;
 }
 
 .topbar-inner {
@@ -63,11 +132,12 @@ main,
   gap: 18px;
 
   overflow: visible;
+  box-sizing: border-box;
 }
 
 .topbar-title {
-  min-width: 0;
   flex: 1 1 auto;
+  min-width: 0;
 }
 
 .topbar-title-row {
@@ -110,12 +180,12 @@ main,
 }
 
 .topbar-actions {
+  flex: 0 1 auto;
+
   min-width: 0;
   max-width: 100%;
 
   margin-left: auto;
-
-  flex: 0 1 auto;
 
   display: flex;
   align-items: center;
@@ -125,7 +195,7 @@ main,
   overflow: visible;
 }
 
-/* Mac Core 같은 테마에서 이전 absolute topbar가 남아도 겹치지 않게 */
+/* 예전 absolute topbar CSS가 남아 있어도 겹치지 않게 고정 */
 .topbar .topbar-actions,
 .topbar .theme-segmented-control,
 .topbar .theme-button-group {
@@ -145,24 +215,28 @@ main,
 
 /* =========================================================
    2. Sidebar layout
-   Sidebar.tsx는 className="app-sidebar sidebar" 기준
-   색/배경/테두리/질감은 themes/*.css에서 담당
+   Sidebar.tsx 기준:
+   <aside className="app-sidebar sidebar">
 ========================================================= */
 
 .app-sidebar,
-.sidebar {
+.sidebar,
+aside.app-sidebar,
+aside.sidebar {
   flex: 0 0 250px;
 
   width: 250px;
   min-width: 250px;
   max-width: 250px;
 
-  min-height: 100%;
+  height: 100%;
+  min-height: 0;
 
   display: flex;
   flex-direction: column;
 
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .sidebar-brand {
@@ -174,7 +248,9 @@ main,
   display: flex;
   align-items: center;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
+
+  box-sizing: border-box;
 }
 
 .sidebar-brand-title {
@@ -208,6 +284,8 @@ main,
 
   overflow-y: auto;
   overflow-x: hidden;
+
+  box-sizing: border-box;
 }
 
 .sidebar-section-header {
@@ -220,6 +298,8 @@ main,
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+
+  box-sizing: border-box;
 }
 
 .sidebar-section-title {
@@ -264,6 +344,8 @@ main,
   gap: 6px;
 
   flex: 0 0 auto;
+
+  box-sizing: border-box;
 }
 
 .sidebar-tab-main {
@@ -283,6 +365,8 @@ main,
   font-size: 13px;
   line-height: 1;
   font-weight: 720;
+
+  box-sizing: border-box;
 }
 
 .sidebar-tab-icon {
@@ -331,30 +415,28 @@ main,
   justify-content: center;
 
   flex-shrink: 0;
-}
 
-/* 예전 aside 전역 스타일이 남아도 .app-sidebar 기준을 우선 */
-aside.app-sidebar,
-aside.sidebar {
-  flex: 0 0 250px;
-  width: 250px;
-  min-width: 250px;
-  max-width: 250px;
+  box-sizing: border-box;
 }
 
 /* =========================================================
-   3. Workspace / dashboard outer spacing
-   react-grid-layout 자체는 dashboard-grid.css에서 담당
+   3. Workspace / dashboard outer area
+   react-grid-layout 세부는 dashboard-grid.css에서 담당
 ========================================================= */
 
 .dashboard-tab-space {
+  flex: 1 1 auto;
+
   width: 100%;
   min-width: 0;
-  min-height: 100%;
+  min-height: 0;
 
   padding: 28px 32px 40px;
 
+  overflow-y: auto;
   overflow-x: hidden;
+
+  box-sizing: border-box;
 }
 
 .dashboard-tab-header {
@@ -367,6 +449,8 @@ aside.sidebar {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
+
+  box-sizing: border-box;
 }
 
 .dashboard-tab-title-area {
@@ -380,6 +464,10 @@ aside.sidebar {
   line-height: 1.15;
   font-weight: 850;
   letter-spacing: -0.04em;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dashboard-tab-subtitle {
@@ -402,10 +490,23 @@ aside.sidebar {
 .dashboard-edit-canvas {
   width: 100%;
   min-width: 0;
+  min-height: 0;
 
   position: relative;
 
   overflow: visible;
+
+  box-sizing: border-box;
+}
+
+/* 대시보드 grid wrapper 후보들: 오른쪽 빈 공간 방지 */
+.dashboard-grid-shell,
+.dashboard-grid-wrapper,
+.dashboard-grid-stage,
+.dashboard-grid-container {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* =========================================================
@@ -424,6 +525,8 @@ aside.sidebar {
   place-items: center;
 
   overflow: hidden;
+
+  box-sizing: border-box;
 }
 
 .settings-modal-window,
@@ -456,6 +559,7 @@ aside.sidebar {
   gap: 16px;
 
   flex-shrink: 0;
+
   box-sizing: border-box;
 }
 
@@ -548,6 +652,7 @@ aside.sidebar {
 
   overflow-y: auto;
   overflow-x: hidden;
+
   box-sizing: border-box;
 }
 
@@ -577,7 +682,7 @@ aside.sidebar {
   font-weight: 850;
 }
 
-/* Settings theme grid */
+/* Theme cards */
 .settings-theme-grid {
   width: 100%;
   min-width: 0;
@@ -605,6 +710,7 @@ aside.sidebar {
 
   border-radius: 24px;
   overflow: hidden;
+
   box-sizing: border-box;
 }
 
@@ -621,6 +727,7 @@ aside.sidebar {
 
   border-radius: 18px;
   overflow: hidden;
+
   box-sizing: border-box;
 }
 
@@ -654,7 +761,7 @@ aside.sidebar {
   font-weight: 600;
 }
 
-/* Backup / reset layout */
+/* Backup / reset */
 .settings-action-grid,
 .settings-backup-grid {
   width: 100%;
@@ -690,6 +797,7 @@ aside.sidebar {
   text-align: left;
 
   border-radius: 22px;
+
   box-sizing: border-box;
 }
 
@@ -734,6 +842,7 @@ aside.sidebar {
   padding: 18px;
 
   border-radius: 22px;
+
   box-sizing: border-box;
 }
 
@@ -755,7 +864,7 @@ aside.sidebar {
 }
 
 /* =========================================================
-   5. Calendar modal layout safety
+   5. Calendar modal layout
    색/질감은 calendar.css 또는 theme css에서 담당
 ========================================================= */
 
@@ -770,6 +879,8 @@ aside.sidebar {
   place-items: center;
 
   overflow: hidden;
+
+  box-sizing: border-box;
 }
 
 .calendar-modal-window {
@@ -780,6 +891,7 @@ aside.sidebar {
   grid-template-rows: auto minmax(0, 1fr);
 
   overflow: hidden;
+
   box-sizing: border-box;
 }
 
@@ -816,6 +928,7 @@ aside.sidebar {
 
   overflow-y: auto;
   overflow-x: hidden;
+
   box-sizing: border-box;
 }
 
@@ -826,8 +939,8 @@ aside.sidebar {
 }
 
 .calendar-field {
-  min-width: 0;
   width: 100%;
+  min-width: 0;
 
   display: grid;
   gap: 6px;
@@ -840,12 +953,14 @@ aside.sidebar {
 .calendar-field select {
   width: 100%;
   min-width: 0;
+
   box-sizing: border-box;
 }
 
 .event-color-picker {
   width: 100%;
   min-width: 0;
+
   box-sizing: border-box;
 }
 
@@ -859,20 +974,25 @@ aside.sidebar {
 }
 
 /* =========================================================
-   6. Tablet / mobile layout
+   6. Small layout guard only
+   본격 반응형은 responsive.css에서 담당
 ========================================================= */
 
-@media (max-width: 1180px) {
-  .topbar-inner {
-    gap: 14px;
+@media (max-width: 980px) {
+  .glass-panel,
+  .liquid-shell,
+  .app-shell,
+  .dashboard-shell,
+  .workspace-shell,
+  .desktop-shell,
+  .main-shell,
+  .app-layout,
+  .dashboard-layout,
+  .workspace-layout,
+  .desktop-layout {
+    flex-direction: column;
   }
 
-  .topbar-actions {
-    gap: 8px;
-  }
-}
-
-@media (max-width: 920px) {
   .app-sidebar,
   .sidebar,
   aside.app-sidebar,
@@ -883,6 +1003,7 @@ aside.sidebar {
     min-width: 0;
     max-width: none;
 
+    height: auto;
     min-height: auto;
   }
 
@@ -894,7 +1015,7 @@ aside.sidebar {
   }
 
   .sidebar-body {
-    padding: 8px 14px 14px;
+    padding: 8px 14px 12px;
 
     overflow: hidden;
   }
@@ -928,19 +1049,19 @@ aside.sidebar {
 
     white-space: nowrap;
   }
-
-  .dashboard-tab-space {
-    padding: 24px 22px 34px;
-  }
 }
 
 @media (max-width: 768px) {
+  .bg-glass-gradient {
+    padding: 8px;
+  }
+
   .topbar {
-    min-height: 108px;
+    min-height: auto;
   }
 
   .topbar-inner {
-    min-height: 108px;
+    min-height: auto;
 
     padding: 16px 18px;
 
@@ -956,49 +1077,10 @@ aside.sidebar {
     margin-left: 0;
 
     justify-content: flex-end;
-    gap: 8px;
-
-    overflow: visible;
-  }
-
-  .topbar-action-button span {
-    display: none;
-  }
-
-  .topbar-action-button {
-    width: 38px;
-    min-width: 38px;
-    height: 36px;
-
-    padding-inline: 0;
-
-    justify-content: center;
-  }
-
-  .theme-segmented-control,
-  .theme-button-group {
-    display: none;
-  }
-
-  .theme-select-mobile {
-    display: inline-flex;
-    width: 132px;
-    min-width: 118px;
-    max-width: 150px;
-    height: 36px;
   }
 
   .dashboard-tab-space {
-    padding: 20px 16px 30px;
-  }
-
-  .dashboard-tab-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .dashboard-tab-actions {
-    justify-content: flex-start;
+    padding: 18px 14px 28px;
   }
 
   .settings-modal-window,
@@ -1050,20 +1132,8 @@ aside.sidebar {
 }
 
 @media (max-width: 520px) {
-  .topbar {
-    min-height: auto;
-  }
-
-  .topbar-inner {
-    min-height: auto;
-  }
-
   .topbar-actions {
     justify-content: flex-start;
-  }
-
-  .topbar-title h1 {
-    font-size: 21px;
   }
 
   .settings-theme-grid,
@@ -1074,19 +1144,9 @@ aside.sidebar {
   }
 }
 
-@media (max-width: 430px) {
-  .dashboard-tab-space {
-    padding: 18px 14px 28px;
-  }
-
-  .sidebar-tab-item {
-    min-width: 104px;
-  }
-}
-
 /* =========================================================
    7. Pixel / Retro shape exception
-   테마 CSS에 있어도 되지만, 설정창 원형 깨짐 방지용 구조 보정
+   색은 theme css, shape 예외만 여기서 최소 처리
 ========================================================= */
 
 html[data-theme="pixel-desk"] .settings-theme-card,

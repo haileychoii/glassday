@@ -422,26 +422,34 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
       defaultApplications
     );
 
-  const calendarEvents = rawCalendarEvents.map((event) => ({
-    ...event,
-    color: event.color ?? getPastelColorById(event.id),
-  }));
+  const safeCalendarEvents = Array.isArray(rawCalendarEvents)
+  ? rawCalendarEvents
+  : defaultCalendarEvents;
 
-  const careerApplications = rawCareerApplications.map(normalizeCareerItem);
+const safeCareerApplications = Array.isArray(rawCareerApplications)
+  ? rawCareerApplications
+  : defaultApplications;
+
+const calendarEvents = safeCalendarEvents.map((event) => ({
+  ...event,
+  color: event.color ?? getPastelColorById(event.id),
+}));
+
+const careerApplications = safeCareerApplications.map(normalizeCareerItem);
 
   useEffect(() => {
-    setCalendarEvents((prev) =>
-      rawCareerApplications
-        .map(normalizeCareerItem)
-        .reduce(
-          (events, career) => syncCareerEventIntoCalendar(career, events),
-          prev.map((event) => ({
-            ...event,
-            color: event.color ?? getPastelColorById(event.id),
-          }))
-        )
-    );
-  }, [rawCareerApplications, setCalendarEvents]);
+  setCalendarEvents((prev) =>
+    safeCareerApplications
+      .map(normalizeCareerItem)
+      .reduce(
+        (events, career) => syncCareerEventIntoCalendar(career, events),
+        (Array.isArray(prev) ? prev : defaultCalendarEvents).map((event) => ({
+          ...event,
+          color: event.color ?? getPastelColorById(event.id),
+        }))
+      )
+  );
+}, [safeCareerApplications, setCalendarEvents]);
 
   const openCareerDetail = (id: string) => {
     setActiveCareerDetailId(id);

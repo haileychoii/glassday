@@ -32,8 +32,10 @@ export const Topbar = ({
   }, [theme]);
 
   useEffect(() => {
-    applyTheme(theme);
-  }, [theme]);
+    const currentTheme = getCurrentTheme();
+    setTheme(currentTheme);
+    applyTheme(currentTheme, { emit: false });
+  }, []);
 
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
@@ -58,6 +60,8 @@ export const Topbar = ({
     setTheme((prevTheme) => {
       return prevTheme === nextTheme ? prevTheme : nextTheme;
     });
+
+    applyTheme(nextTheme);
   };
 
   return (

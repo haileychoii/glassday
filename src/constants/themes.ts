@@ -60,7 +60,6 @@ export const getCurrentTheme = (): ThemeId => {
 
   const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
 
-  // 기존 glass 저장값 호환
   if (savedTheme === "glass") {
     return "glass-light";
   }
@@ -68,18 +67,33 @@ export const getCurrentTheme = (): ThemeId => {
   return isThemeId(savedTheme) ? savedTheme : "pastel";
 };
 
-export const applyTheme = (theme: ThemeId) => {
+type ApplyThemeOptions = {
+  emit?: boolean;
+};
+
+export const applyTheme = (
+  theme: ThemeId,
+  options: ApplyThemeOptions = {}
+) => {
   if (typeof document === "undefined") return;
+
+  const { emit = true } = options;
 
   const root = document.documentElement;
   const body = document.body;
+
+  const currentTheme = root.getAttribute("data-theme");
+  const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+
+  if (currentTheme === theme && savedTheme === theme) {
+    return;
+  }
 
   themeOptions.forEach((item) => {
     root.classList.remove(`theme-${item.id}`);
     body.classList.remove(`theme-${item.id}`);
   });
 
-  // 예전 glass class 제거
   root.classList.remove("theme-glass");
   body.classList.remove("theme-glass");
 
@@ -91,9 +105,11 @@ export const applyTheme = (theme: ThemeId) => {
 
   window.localStorage.setItem(THEME_STORAGE_KEY, theme);
 
-  window.dispatchEvent(
-    new CustomEvent<ThemeId>("glassday-theme-change", {
-      detail: theme,
-    })
-  );
+  if (emit) {
+    window.dispatchEvent(
+      new CustomEvent<ThemeId>("glassday-theme-change", {
+        detail: theme,
+      })
+    );
+  }
 };

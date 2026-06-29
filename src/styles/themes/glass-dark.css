@@ -346,3 +346,89 @@ html.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient::before,
 body.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient::before {
   display: none !important;
 }
+
+/* =========================================================
+   Glass Dark visibility / layer fix
+   배경만 보이고 앱이 사라지는 문제 방지
+========================================================= */
+
+html[data-theme="glass-dark"],
+body[data-theme="glass-dark"],
+html.theme-glass-dark,
+body.theme-glass-dark {
+  min-width: 0 !important;
+  min-height: 100% !important;
+}
+
+html[data-theme="glass-dark"] body,
+body[data-theme="glass-dark"],
+html.theme-glass-dark body,
+body.theme-glass-dark {
+  overflow: hidden !important;
+}
+
+/* 배경 pseudo layer는 무조건 뒤 */
+html[data-theme="glass-dark"] .bg-glass-gradient,
+body[data-theme="glass-dark"] .bg-glass-gradient,
+html.theme-glass-dark .bg-glass-gradient,
+body.theme-glass-dark .bg-glass-gradient {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+}
+
+html[data-theme="glass-dark"] .bg-glass-gradient::before,
+html[data-theme="glass-dark"] .bg-glass-gradient::after,
+body[data-theme="glass-dark"] .bg-glass-gradient::before,
+body[data-theme="glass-dark"] .bg-glass-gradient::after,
+html.theme-glass-dark .bg-glass-gradient::before,
+html.theme-glass-dark .bg-glass-gradient::after,
+body.theme-glass-dark .bg-glass-gradient::before,
+body.theme-glass-dark .bg-glass-gradient::after {
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+/* 실제 앱 콘텐츠는 무조건 위 */
+html[data-theme="glass-dark"] .bg-glass-gradient > *,
+body[data-theme="glass-dark"] .bg-glass-gradient > *,
+html.theme-glass-dark .bg-glass-gradient > *,
+body.theme-glass-dark .bg-glass-gradient > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* shell이 dark에서 collapse되지 않게 */
+html[data-theme="glass-dark"] .glass-panel,
+html[data-theme="glass-dark"] .liquid-shell,
+html[data-theme="glass-dark"] .app-layout,
+html[data-theme="glass-dark"] .dashboard-layout,
+html[data-theme="glass-dark"] .workspace-layout,
+body[data-theme="glass-dark"] .glass-panel,
+body[data-theme="glass-dark"] .liquid-shell,
+body[data-theme="glass-dark"] .app-layout,
+body[data-theme="glass-dark"] .dashboard-layout,
+body[data-theme="glass-dark"] .workspace-layout {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: flex !important;
+  align-items: stretch !important;
+
+  overflow: hidden !important;
+}
+
+/* dark에서 카드/텍스트가 투명해지는 것 방지 */
+html[data-theme="glass-dark"] .topbar,
+html[data-theme="glass-dark"] .app-sidebar,
+html[data-theme="glass-dark"] .sidebar,
+html[data-theme="glass-dark"] .glass-card,
+body[data-theme="glass-dark"] .topbar,
+body[data-theme="glass-dark"] .app-sidebar,
+body[data-theme="glass-dark"] .sidebar,
+body[data-theme="glass-dark"] .glass-card {
+  opacity: 1 !important;
+  visibility: visible !important;
+}

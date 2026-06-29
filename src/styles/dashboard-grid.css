@@ -486,3 +486,117 @@ body.theme-retro .dashboard-grid-item > .glass-card {
   display: grid;
   gap: 4px;
 }
+
+/* =========================================================
+   REACT GRID LAYOUT FIX
+   위젯 겹침 / 높이 깨짐 방지
+========================================================= */
+
+.dashboard-tab-space {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dashboard-edit-canvas {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+
+  position: relative;
+
+  overflow: visible;
+}
+
+.react-grid-layout {
+  position: relative !important;
+
+  width: 100% !important;
+  min-width: 0 !important;
+
+  overflow: visible !important;
+}
+
+.react-grid-item {
+  position: absolute !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  overflow: visible !important;
+}
+
+.react-grid-item > .dashboard-grid-item,
+.react-grid-item > .dashboard-grid-item-content,
+.dashboard-grid-item,
+.dashboard-grid-item-content {
+  width: 100% !important;
+  height: 100% !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item > .glass-card,
+.dashboard-grid-item-content > .glass-card {
+  width: 100% !important;
+  height: 100% !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item .glass-card-body,
+.dashboard-grid-item-content .glass-card-body,
+.dashboard-grid-item > .glass-card > div:last-child,
+.dashboard-grid-item-content > .glass-card > div:last-child {
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  overflow: auto !important;
+}
+
+.react-grid-layout {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.react-grid-item {
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+.dashboard-grid-item,
+.dashboard-grid-item-content {
+  width: 100% !important;
+  height: 100% !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item > .glass-card,
+.dashboard-grid-item-content > .glass-card {
+  width: 100% !important;
+  height: 100% !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+
+  overflow: hidden !important;
+}
