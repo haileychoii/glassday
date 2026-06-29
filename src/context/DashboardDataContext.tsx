@@ -438,17 +438,22 @@ const calendarEvents = safeCalendarEvents.map((event) => ({
 const careerApplications = safeCareerApplications.map(normalizeCareerItem);
 
   useEffect(() => {
-  setCalendarEvents((prev) =>
-    safeCareerApplications
+  setCalendarEvents((prev) => {
+    const baseEvents: CalendarEvent[] = (
+      Array.isArray(prev) ? prev : defaultCalendarEvents
+    ).map((event) => ({
+      ...event,
+      color: event.color ?? getPastelColorById(event.id),
+    }));
+
+    const syncedEvents = safeCareerApplications
       .map(normalizeCareerItem)
-      .reduce(
-        (events, career) => syncCareerEventIntoCalendar(career, events),
-        (Array.isArray(prev) ? prev : defaultCalendarEvents).map((event) => ({
-          ...event,
-          color: event.color ?? getPastelColorById(event.id),
-        }))
-      )
-  );
+      .reduce<CalendarEvent[]>((events, career) => {
+        return syncCareerEventIntoCalendar(career, events);
+      }, baseEvents);
+
+    return syncedEvents;
+  });
 }, [safeCareerApplications, setCalendarEvents]);
 
   const openCareerDetail = (id: string) => {

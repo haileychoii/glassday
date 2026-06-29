@@ -363,7 +363,7 @@ export const CalendarWidget = () => {
                   />
                 </label>
 
-                {editingEvent.source === "career" && openCareerDetail && (
+                {editingEvent.source === "career" && (
                   <button
                     type="button"
                     onClick={openCareerFromModal}

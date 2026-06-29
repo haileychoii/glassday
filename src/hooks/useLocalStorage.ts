@@ -4,12 +4,13 @@ import type { Dispatch, SetStateAction } from "react";
 type UseLocalStorageReturn<T> = {
   value: T;
   setValue: Dispatch<SetStateAction<T>>;
+  resetValue: () => void;
   removeValue: () => void;
 };
 
 const isBrowser = () => typeof window !== "undefined";
 
-const isObject = (value: unknown) => {
+const isPlainObject = (value: unknown) => {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 };
 
@@ -22,8 +23,8 @@ const sanitizeValue = <T,>(value: unknown, fallback: T): T => {
     return Array.isArray(value) ? (value as T) : fallback;
   }
 
-  if (isObject(fallback)) {
-    return isObject(value) ? ({ ...fallback, ...value } as T) : fallback;
+  if (isPlainObject(fallback)) {
+    return isPlainObject(value) ? ({ ...fallback, ...value } as T) : fallback;
   }
 
   return value as T;
@@ -46,7 +47,6 @@ export const useLocalStorage = <T,>(
       }
 
       const parsed = JSON.parse(item);
-
       return sanitizeValue<T>(parsed, initialValue);
     } catch (error) {
       console.warn(`useLocalStorage read error: ${key}`, error);
@@ -78,6 +78,18 @@ export const useLocalStorage = <T,>(
     [key, initialValue]
   );
 
+  const resetValue = useCallback(() => {
+    if (isBrowser()) {
+      try {
+        window.localStorage.setItem(key, JSON.stringify(initialValue));
+      } catch (error) {
+        console.warn(`useLocalStorage reset error: ${key}`, error);
+      }
+    }
+
+    setStoredValue(initialValue);
+  }, [key, initialValue]);
+
   const removeValue = useCallback(() => {
     if (isBrowser()) {
       try {
@@ -93,6 +105,7 @@ export const useLocalStorage = <T,>(
   return {
     value: storedValue,
     setValue,
+    resetValue,
     removeValue,
   };
 };
