@@ -10,6 +10,7 @@
 @import "./themes/mac-core.css";
 @import "./themes/pixel.css";
 @import "./themes/retro.css";
+@import "./theme-surfaces.css";
 
 @import "./widgets/today-focus.css";
 @import "./widgets/today.css";

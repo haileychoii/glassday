@@ -35,11 +35,6 @@ export const AppShell = ({
       <div className="fixed inset-0 bg-glass-gradient" />
       {/* <PixelDesktopDecor /> */}
 
-      <div className="fixed inset-0 bg-glass-gradient" />
-      {/* <PixelDesktopDecor /> */}
-      
-
-
       <div className="relative z-10 min-h-screen p-4 md:p-6">
         <div className="glass-panel liquid-shell min-h-[calc(100vh-2rem)] md:min-h-[calc(100vh-3rem)] rounded-[2.2rem] overflow-hidden">
           <div className="flex min-h-[calc(100vh-2rem)] md:min-h-[calc(100vh-3rem)]">
