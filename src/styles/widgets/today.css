@@ -853,6 +853,20 @@
   min-height: 0 !important;
 }
 
+.react-grid-item .today-focus-card .glass-card-body,
+.react-grid-item .today-focus-widget .glass-card-body {
+  overflow: hidden !important;
+}
+
+.react-grid-item .today-focus {
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-right: 2px !important;
+}
+
 .today-focus-main,
 .today-focus-section,
 .today-focus-block,

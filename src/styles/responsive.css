@@ -200,9 +200,25 @@ main {
 ========================================================= */
 
 @media (max-width: 920px) {
+  .glass-panel,
+  .liquid-shell {
+    overflow: auto !important;
+  }
+
   .glass-panel > .flex,
   .liquid-shell > .flex {
     flex-direction: column !important;
+    gap: 10px !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .glass-panel > .flex > .flex-1,
+  .liquid-shell > .flex > .flex-1 {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
   }
 
   .app-sidebar,
@@ -217,6 +233,8 @@ main {
     border-right: 0 !important;
     border-bottom: 1px solid hsl(0 0% 100% / 0.32) !important;
     padding: 14px !important;
+    position: relative !important;
+    z-index: 3 !important;
   }
 
   aside > div:first-child {
@@ -256,6 +274,13 @@ main {
 
   main {
     padding: 14px !important;
+    min-height: 0 !important;
+  }
+
+  .topbar {
+    position: relative !important;
+    z-index: 2 !important;
+    margin-top: 0 !important;
   }
 
   .dashboard-tab-space {

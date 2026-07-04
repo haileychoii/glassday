@@ -190,7 +190,7 @@ export const CalendarWidget = () => {
           </button>
         }
       >
-        <div className="h-full flex flex-col gap-3">
+        <div className="calendar-widget-frame">
           <div className="calendar-widget-toolbar">
             <div className="flex items-center gap-1">
               <button
@@ -238,72 +238,74 @@ export const CalendarWidget = () => {
             {formatHeaderLabel(selectedDate, view)}
           </div>
 
-          {view === "month" ? (
-            <MonthCalendar
-              selectedDate={selectedDate}
-              events={visibleEvents}
-              onSelectDate={(date) => {
-                setSelectedDate(date);
-              }}
-              onDateSelect={(date) => {
-                setSelectedDate(date);
-              }}
-              onEventClick={openEvent}
-              onSelectEvent={openEvent}
-            />
-          ) : view === "week" ? (
-            <WeekTimeline
-              selectedDate={selectedDate}
-              events={visibleEvents}
-              onSelectDate={setSelectedDate}
-              onEventClick={openEvent}
-              onSelectEvent={openEvent}
-            />
-          ) : (
-            <div className="calendar-event-list">
-              {dayEvents.length === 0 && (
-                <div className="calendar-empty-state">No events today.</div>
-              )}
+          <div className="calendar-view-body">
+            {view === "month" ? (
+              <MonthCalendar
+                selectedDate={selectedDate}
+                events={visibleEvents}
+                onSelectDate={(date) => {
+                  setSelectedDate(date);
+                }}
+                onDateSelect={(date) => {
+                  setSelectedDate(date);
+                }}
+                onEventClick={openEvent}
+                onSelectEvent={openEvent}
+              />
+            ) : view === "week" ? (
+              <WeekTimeline
+                selectedDate={selectedDate}
+                events={visibleEvents}
+                onSelectDate={setSelectedDate}
+                onEventClick={openEvent}
+                onSelectEvent={openEvent}
+              />
+            ) : (
+              <div className="calendar-event-list">
+                {dayEvents.length === 0 && (
+                  <div className="calendar-empty-state">No events today.</div>
+                )}
 
-              {dayEvents.map((event) => (
-                <button
-                  key={event.id}
-                  type="button"
-                  onClick={() => openEvent(event)}
-                  className="calendar-event-item"
-                  style={{
-                    borderLeft: `6px solid ${getEventColor(event)}aa`,
-                  }}
-                >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="calendar-event-title">
-                        {event.title}
-                      </span>
+                {dayEvents.map((event) => (
+                  <button
+                    key={event.id}
+                    type="button"
+                    onClick={() => openEvent(event)}
+                    className="calendar-event-item"
+                    style={{
+                      borderLeft: `6px solid ${getEventColor(event)}aa`,
+                    }}
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="calendar-event-title">
+                          {event.title}
+                        </span>
 
-                      {event.source === "career" && (
-                        <span className="calendar-career-badge">Career</span>
-                      )}
+                        {event.source === "career" && (
+                          <span className="calendar-career-badge">Career</span>
+                        )}
 
-                      {event.googleSyncStatus === "pending" && (
-                        <span className="calendar-pending-badge">Pending</span>
-                      )}
-                    </div>
-
-                    <div className="calendar-event-time">
-                      {formatEventTime(event)}
-                    </div>
-
-                    {event.location && (
-                      <div className="calendar-event-location">
-                        {event.location}
+                        {event.googleSyncStatus === "pending" && (
+                          <span className="calendar-pending-badge">Pending</span>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+
+                      <div className="calendar-event-time">
+                        {formatEventTime(event)}
+                      </div>
+
+                      {event.location && (
+                        <div className="calendar-event-location">
+                          {event.location}
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           <div className="calendar-google-preview">
             <div>

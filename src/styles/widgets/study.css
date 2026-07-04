@@ -620,8 +620,28 @@
   overflow: auto;
 }
 
+.react-grid-item .study-widget .glass-card-body {
+  overflow: hidden !important;
+}
+
+.react-grid-item .study-planner {
+  grid-template-rows: auto auto auto auto auto !important;
+  align-content: start !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-right: 2px !important;
+}
+
+.react-grid-item .study-task-list,
+.react-grid-item .study-record-list {
+  max-height: 220px;
+}
+
 @media (max-width: 760px){  
-.today-focus-hero {
+  .today-focus-hero {
     flex-direction: column !important;
   }
 
