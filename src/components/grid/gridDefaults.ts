@@ -2,52 +2,49 @@ import type { Layouts } from "../../types/workspace";
 
 export const defaultLayouts: Layouts = {
   lg: [
-    { i: "today", x: 0, y: 0, w: 4, h: 4 },
-    { i: "alerts", x: 4, y: 0, w: 4, h: 4 },
-    { i: "calendar", x: 8, y: 0, w: 8, h: 6 },
+    { i: "today", x: 0, y: 0, w: 8, h: 8 },
+    { i: "alerts", x: 8, y: 0, w: 8, h: 8 },
 
-    { i: "career", x: 0, y: 4, w: 8, h: 7 },
-    { i: "study", x: 8, y: 6, w: 8, h: 7 },
+    { i: "journal", x: 0, y: 8, w: 8, h: 26 },
+    { i: "calendar", x: 8, y: 8, w: 8, h: 10 },
 
-    { i: "memo", x: 0, y: 11, w: 8, h: 6 },
-    { i: "journal", x: 8, y: 13, w: 8, h: 7 },
+    { i: "career", x: 8, y: 18, w: 8, h: 8 },
+    { i: "memo", x: 0, y: 26, w: 8, h: 12 },
 
-    { i: "health", x: 0, y: 17, w: 5, h: 5 },
-    { i: "money", x: 5, y: 17, w: 5, h: 5 },
-    { i: "mood", x: 10, y: 20, w: 6, h: 5 },
+    { i: "study", x: 8, y: 26, w: 8, h: 12 },
+
+    { i: "health", x: 0, y: 37, w: 4, h: 6 },
+    { i: "money", x: 4, y: 37, w: 4, h: 6 },
+    { i: "mood", x: 8, y: 38, w: 4, h: 6 },
   ],
 
   md: [
-    { i: "today", x: 0, y: 0, w: 8, h: 4 },
-    { i: "alerts", x: 8, y: 0, w: 8, h: 4 },
+    { i: "today", x: 0, y: 0, w: 8, h: 8 },
+    { i: "alerts", x: 8, y: 0, w: 8, h: 8 },
 
-    { i: "calendar", x: 0, y: 4, w: 16, h: 6 },
+    { i: "journal", x: 0, y: 8, w: 8, h: 26 },
+    { i: "calendar", x: 8, y: 8, w: 8, h: 10 },
 
-    { i: "career", x: 0, y: 10, w: 8, h: 7 },
-    { i: "study", x: 8, y: 10, w: 8, h: 7 },
+    { i: "career", x: 8, y: 18, w: 8, h: 8 },
+    { i: "memo", x: 0, y: 26, w: 8, h: 12 },
 
-    { i: "memo", x: 0, y: 17, w: 8, h: 6 },
-    { i: "journal", x: 8, y: 17, w: 8, h: 7 },
+    { i: "study", x: 8, y: 26, w: 8, h: 12 },
 
-    { i: "health", x: 0, y: 24, w: 8, h: 5 },
-    { i: "money", x: 8, y: 24, w: 8, h: 5 },
-    { i: "mood", x: 0, y: 29, w: 16, h: 5 },
+    { i: "health", x: 0, y: 37, w: 4, h: 6 },
+    { i: "money", x: 4, y: 37, w: 4, h: 6 },
+    { i: "mood", x: 8, y: 38, w: 4, h: 6 },
   ],
 
   sm: [
-    { i: "today", x: 0, y: 0, w: 16, h: 4 },
-    { i: "alerts", x: 0, y: 4, w: 16, h: 4 },
-
-    { i: "calendar", x: 0, y: 8, w: 16, h: 6 },
-
-    { i: "career", x: 0, y: 14, w: 16, h: 7 },
-    { i: "study", x: 0, y: 21, w: 16, h: 7 },
-
-    { i: "memo", x: 0, y: 28, w: 16, h: 6 },
-    { i: "journal", x: 0, y: 34, w: 16, h: 8 },
-
-    { i: "health", x: 0, y: 42, w: 16, h: 5 },
-    { i: "money", x: 0, y: 47, w: 16, h: 5 },
-    { i: "mood", x: 0, y: 52, w: 16, h: 5 },
-  ],
+  { i: "today", x: 0, y: 0, w: 16, h: 10 },
+  { i: "alerts", x: 0, y: 10, w: 16, h: 10 },
+  { i: "journal", x: 0, y: 20, w: 16, h: 26 },
+  { i: "calendar", x: 0, y: 46, w: 16, h: 12 },
+  { i: "career", x: 0, y: 58, w: 16, h: 10 },
+  { i: "memo", x: 0, y: 68, w: 16, h: 14 },
+  { i: "study", x: 0, y: 82, w: 16, h: 14 },
+  { i: "health", x: 0, y: 96, w: 16, h: 8 },
+  { i: "money", x: 0, y: 104, w: 16, h: 8 },
+  { i: "mood", x: 0, y: 112, w: 16, h: 8 },
+],
 };

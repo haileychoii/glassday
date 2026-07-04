@@ -52,77 +52,48 @@ export const topbarThemeOptions = themeOptions.filter(
 );
 
 export const isThemeId = (value: unknown): value is ThemeId => {
-  return (
-    typeof value === "string" &&
-    themeOptions.some((theme) => theme.id === value)
-  );
-};
-
-const normalizeThemeId = (value: unknown): ThemeId => {
-  if (value === "glass") return "glass-light";
-  if (value === "pixel") return "pixel-desk";
-  if (value === "mac") return "mac-core";
-
-  return isThemeId(value) ? value : "pastel";
+  return themeOptions.some((theme) => theme.id === value);
 };
 
 export const getCurrentTheme = (): ThemeId => {
   if (typeof window === "undefined") return "pastel";
 
   const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
-  return normalizeThemeId(savedTheme);
+
+  // 기존 glass 저장값 호환
+  if (savedTheme === "glass") {
+    return "glass-light";
+  }
+
+  return isThemeId(savedTheme) ? savedTheme : "pastel";
 };
 
-type ApplyThemeOptions = {
-  emit?: boolean;
-};
-
-const removeThemeClasses = (element: HTMLElement) => {
-  themeOptions.forEach((theme) => {
-    element.classList.remove(`theme-${theme.id}`);
-  });
-
-  element.classList.remove("theme-glass");
-  element.classList.remove("theme-pixel");
-  element.classList.remove("theme-mac");
-};
-
-export const applyTheme = (
-  nextThemeInput: ThemeId,
-  options: ApplyThemeOptions = {}
-) => {
+export const applyTheme = (theme: ThemeId) => {
   if (typeof document === "undefined") return;
-
-  const { emit = true } = options;
-  const nextTheme = normalizeThemeId(nextThemeInput);
 
   const root = document.documentElement;
   const body = document.body;
 
-  removeThemeClasses(root);
-  removeThemeClasses(body);
+  themeOptions.forEach((item) => {
+    root.classList.remove(`theme-${item.id}`);
+    body.classList.remove(`theme-${item.id}`);
+  });
 
-  root.classList.add(`theme-${nextTheme}`);
-  body.classList.add(`theme-${nextTheme}`);
+  // 예전 glass class 제거
+  root.classList.remove("theme-glass");
+  body.classList.remove("theme-glass");
 
-  root.setAttribute("data-theme", nextTheme);
-  body.setAttribute("data-theme", nextTheme);
+  root.classList.add(`theme-${theme}`);
+  body.classList.add(`theme-${theme}`);
 
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  root.setAttribute("data-theme", theme);
+  body.setAttribute("data-theme", theme);
 
-    if (emit) {
-      window.dispatchEvent(
-        new CustomEvent<ThemeId>("glassday-theme-change", {
-          detail: nextTheme,
-        })
-      );
-    }
-  }
+  window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+
+  window.dispatchEvent(
+    new CustomEvent<ThemeId>("glassday-theme-change", {
+      detail: theme,
+    })
+  );
 };
-
-export const resetTheme = () => {
-  applyTheme("pastel");
-};
-
-export const getThemeStorageKey = () => THEME_STORAGE_KEY;

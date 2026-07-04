@@ -1,10 +1,8 @@
 import { LayoutGrid, Settings, Sparkles } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-
+import { useEffect, useMemo, useState } from "react";
 import {
   applyTheme,
   getCurrentTheme,
-  isThemeId,
   themeOptions,
   topbarThemeOptions,
   type ThemeId,
@@ -33,32 +31,18 @@ export const Topbar = ({
     return themeOptions.find((item) => item.id === theme)?.label ?? "Theme";
   }, [theme]);
 
-  /**
-   * 앱 최초 진입 시 저장된 테마를 한 번만 적용.
-   * 여기서는 이벤트 emit 금지.
-   */
   useEffect(() => {
-    const savedTheme = getCurrentTheme();
+    applyTheme(theme);
+  }, [theme]);
 
-    setTheme(savedTheme);
-    applyTheme(savedTheme, { emit: false });
-  }, []);
-
-  /**
-   * SettingsModal 등 다른 곳에서 테마를 바꿨을 때
-   * Topbar active 상태만 동기화.
-   * 여기서 applyTheme 다시 호출하면 루프 생길 수 있음.
-   */
+  // SettingsModal에서 테마를 바꿨을 때 Topbar도 같이 따라오게 함
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
       const customEvent = event as CustomEvent<ThemeId>;
-      const nextTheme = customEvent.detail;
 
-      if (!isThemeId(nextTheme)) return;
+      if (!customEvent.detail) return;
 
-      setTheme((prevTheme) => {
-        return prevTheme === nextTheme ? prevTheme : nextTheme;
-      });
+      setTheme(customEvent.detail);
     };
 
     window.addEventListener("glassday-theme-change", handleThemeChange);
@@ -68,41 +52,9 @@ export const Topbar = ({
     };
   }, []);
 
-  /**
-   * 다른 탭/localStorage 변경까지 반영하고 싶을 때 대비.
-   */
-  useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key !== "glassday.theme") return;
-
-      const nextTheme = event.newValue;
-
-      if (!isThemeId(nextTheme)) return;
-
-      setTheme(nextTheme);
-      applyTheme(nextTheme, { emit: false });
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
-  const handleTopbarThemeChange = useCallback((nextTheme: ThemeId) => {
+  const handleTopbarThemeChange = (nextTheme: ThemeId) => {
     setTheme(nextTheme);
-    applyTheme(nextTheme);
-  }, []);
-
-  const handleMobileThemeChange = useCallback(
-    (value: string) => {
-      if (!isThemeId(value)) return;
-
-      handleTopbarThemeChange(value);
-    },
-    [handleTopbarThemeChange]
-  );
+  };
 
   return (
     <header className="topbar">
@@ -131,7 +83,6 @@ export const Topbar = ({
                   theme === item.id && "is-active"
                 )}
                 title={item.description}
-                aria-pressed={theme === item.id}
               >
                 {item.label}
               </button>
@@ -141,7 +92,9 @@ export const Topbar = ({
           <select
             className="theme-select-mobile"
             value={isTopbarTheme ? theme : ""}
-            onChange={(event) => handleMobileThemeChange(event.target.value)}
+            onChange={(event) =>
+              handleTopbarThemeChange(event.target.value as ThemeId)
+            }
             aria-label="Theme selector"
           >
             {!isTopbarTheme && (

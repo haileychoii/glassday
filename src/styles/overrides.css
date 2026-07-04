@@ -1,9 +1,11 @@
 /* =========================================================
    GLASSDAY OVERRIDES
-   emergency only
+   layout / scroll / modal safety only
+   테마 디자인은 각 themes/*.css에서만 관리
+========================================================= */
 
-   여기에는 테마 색/배경/카드/버튼 스타일 넣지 말 것.
-   pastel, glass-dark, pixel 같은 테마가 안 먹는 원인이 됨.
+/* =========================================================
+   0. Global box safety
 ========================================================= */
 
 *,
@@ -16,274 +18,435 @@ html,
 body,
 #root {
   min-width: 0;
-  min-height: 0;
-}
-
-body {
-  overflow-x: hidden;
-}
-
-/* 스크롤바 숨김: topbar pill이 넘칠 때만 */
-.theme-segmented-control::-webkit-scrollbar,
-.theme-button-group::-webkit-scrollbar,
-.topbar-actions::-webkit-scrollbar,
-.sidebar-workspace-list::-webkit-scrollbar {
-  display: none;
-}
-
-.theme-segmented-control,
-.theme-button-group,
-.topbar-actions,
-.sidebar-workspace-list {
-  scrollbar-width: none;
-}
-
-/* SVG가 버튼 안에서 찌그러지는 것 방지 */
-button svg {
-  flex-shrink: 0;
-}
-
-/* input 기본 폰트 상속 */
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-/* 이미지/아이콘 overflow 방지 */
-img,
-svg {
-  max-width: 100%;
-}
-
-/* 모바일 터치 하이라이트 제거 */
-button,
-a,
-input,
-textarea,
-select {
-  -webkit-tap-highlight-color: transparent;
+  min-height: 100%;
 }
 
 /* =========================================================
-   EMERGENCY DASHBOARD WIDGET VISIBILITY FIX
-   위젯 데이터는 있는데 화면에 안 뜰 때 강제 복구
+   1. Remove only decorative overlays
+   glass-card pseudo는 테마에서 쓰므로 여기서 건드리지 않음
+========================================================= */
+
+.diagonal-pattern,
+.card-stripe-overlay,
+.glass-card-shine,
+.noise-overlay {
+  display: none !important;
+  background-image: none !important;
+}
+
+/* =========================================================
+   2. Dashboard grid spacing / width
 ========================================================= */
 
 .dashboard-tab-space {
-  flex: 1 1 auto !important;
-
   width: 100% !important;
-  height: 100% !important;
   min-width: 0 !important;
-  min-height: 0 !important;
-
-  display: flex !important;
-  flex-direction: column !important;
-
-  overflow: hidden !important;
-
   box-sizing: border-box !important;
+  padding: 28px 32px 40px !important;
+  overflow-x: hidden !important;
 }
 
 .dashboard-edit-canvas {
-  flex: 1 1 auto !important;
-
   width: 100% !important;
-  height: auto !important;
   min-width: 0 !important;
-  min-height: 0 !important;
-
-  display: block !important;
-  position: relative !important;
-
-  overflow: hidden !important;
-
   box-sizing: border-box !important;
-}
-
-.dashboard-grid-shell,
-.dashboard-grid-wrapper,
-.dashboard-grid-stage,
-.dashboard-grid-container {
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  display: block !important;
-  position: relative !important;
-
-  overflow: hidden !important;
-
-  box-sizing: border-box !important;
+  overflow: visible !important;
 }
 
 .react-grid-layout {
   width: 100% !important;
   min-width: 0 !important;
-  min-height: calc(100vh - 190px) !important;
-
-  display: block !important;
-  position: relative !important;
-
-  overflow: visible !important;
-
-  box-sizing: border-box !important;
 }
 
-.react-grid-item {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  overflow: visible !important;
-
-  box-sizing: border-box !important;
-}
-
-.react-grid-item > * {
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
+.react-grid-item,
 .dashboard-grid-item,
 .dashboard-grid-item-content {
-  width: 100% !important;
-  height: 100% !important;
-
   min-width: 0 !important;
   min-height: 0 !important;
+  max-width: 100% !important;
+}
 
-  display: flex !important;
-  flex-direction: column !important;
-
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  overflow: hidden !important;
-
-  box-sizing: border-box !important;
+.dashboard-grid-item {
+  overflow: visible !important;
 }
 
 .dashboard-grid-item > .glass-card,
 .dashboard-grid-item-content > .glass-card {
   width: 100% !important;
   height: 100% !important;
-
   min-width: 0 !important;
   min-height: 0 !important;
+}
 
-  display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
-
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  overflow: hidden !important;
-
+.glass-card {
+  min-width: 0 !important;
+  min-height: 0 !important;
   box-sizing: border-box !important;
 }
 
 /* =========================================================
-   EMERGENCY RGL VISIBLE FIX
-   gridItems는 있는데 화면에 안 보일 때
+   3. Scroll safety
 ========================================================= */
 
-.dashboard-tab-space {
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 1 1 auto !important;
-
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0 !important;
+.glass-card-body,
+.card-body,
+.widget-body {
   min-height: 0 !important;
-
-  padding: 24px !important;
-
-  overflow: hidden !important;
+  overflow: auto !important;
 }
 
-.dashboard-edit-canvas {
-  display: block !important;
-  flex: 1 1 auto !important;
-
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  position: relative !important;
-
-  overflow: hidden !important;
-}
-
-.react-grid-layout {
-  display: block !important;
-  position: relative !important;
-
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  min-height: calc(100vh - 190px) !important;
-
-  overflow: visible !important;
-}
-
-.react-grid-item {
-  display: block !important;
-  position: absolute !important;
-
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  z-index: 1 !important;
-
-  overflow: visible !important;
-  pointer-events: auto !important;
-}
-
-.react-grid-item > .dashboard-grid-item,
-.react-grid-item > .dashboard-grid-item-content {
-  display: flex !important;
-
-  width: 100% !important;
-  height: 100% !important;
-
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  padding: 8px !important;
-
-  overflow: hidden !important;
-}
-
-.react-grid-item .glass-card {
-  display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
-
-  width: 100% !important;
-  height: 100% !important;
-
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  background: hsl(0 0% 100% / 0.42) !important;
-  border: 1px solid hsl(0 0% 100% / 0.62) !important;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.72),
-    0 18px 48px -36px hsl(245 34% 28% / 0.24) !important;
-
-  overflow: hidden !important;
-}
-
-.react-grid-item .glass-card-body {
+.widget-scroll-area,
+.calendar-event-list,
+.alert-center-list,
+.alert-list,
+.journal-main-scroll,
+.memo-note-list,
+.memo-floating-body,
+.today-task-list,
+.career-list,
+.study-list {
   min-height: 0 !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 모바일에서 위젯 스크롤하다가 grid가 끌리는 문제 완화 */
+.react-grid-item {
+  touch-action: auto;
+}
+
+.widget-drag-handle {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.widget-drag-handle:active {
+  cursor: grabbing;
+}
+
+.dashboard-grid-item:not(.is-editing) .widget-drag-handle {
+  display: none;
+}
+
+/* =========================================================
+   4. Topbar base layout
+   색/테마는 theme css에서 처리
+========================================================= */
+
+.topbar {
+  position: relative !important;
+  z-index: 50 !important;
+  width: 100% !important;
+  min-height: 86px !important;
+  overflow: visible !important;
+}
+
+.topbar-inner {
+  width: 100% !important;
+  min-height: 86px !important;
+  padding: 0 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+}
+
+.topbar-title {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+.topbar-title-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+
+.topbar-sparkle {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+.topbar-title h1 {
+  margin: 0 !important;
+  font-size: 24px !important;
+  line-height: 1.15 !important;
+  font-weight: 750 !important;
+  letter-spacing: -0.03em !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.topbar-title p {
+  margin: 6px 0 0 !important;
+  font-size: 13px !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.topbar-actions {
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 60 !important;
+  overflow: visible !important;
+}
+
+.theme-segmented-control.theme-button-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  white-space: nowrap !important;
+}
+
+.theme-select-mobile {
+  display: none !important;
+  height: 36px !important;
+  min-width: 118px !important;
+  max-width: 150px !important;
+  padding: 0 34px 0 12px !important;
+  border-radius: 14px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  outline: none !important;
+}
+
+.topbar-action-button {
+  height: 36px !important;
+  padding: 0 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+}
+
+/* =========================================================
+   5. Calendar modal
+========================================================= */
+
+.calendar-modal-window {
+  width: min(620px, calc(100vw - 48px)) !important;
+  max-height: min(760px, calc(100vh - 48px)) !important;
+  border-radius: 30px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.calendar-modal-header {
+  min-height: 76px !important;
+  padding: 22px 24px 18px 24px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  box-sizing: border-box !important;
+}
+
+.calendar-modal-header > div {
+  min-width: 0 !important;
+  padding-left: 0 !important;
+}
+
+.calendar-modal-header .glass-button {
+  flex-shrink: 0 !important;
+}
+
+.calendar-modal-body {
+  padding: 18px 24px 24px 24px !important;
+  max-height: calc(min(760px, calc(100vh - 48px)) - 76px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.calendar-detail-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+
+.calendar-field {
+  min-width: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.calendar-field input,
+.calendar-field textarea {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.event-color-picker {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.calendar-modal-actions {
+  padding-top: 2px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+/* =========================================================
+   6. Mobile
+========================================================= */
+
+@media (max-width: 768px) {
+  .dashboard-tab-space {
+    padding: 22px 20px 32px !important;
+  }
+
+  .topbar {
+    height: auto !important;
+    min-height: 112px !important;
+  }
+
+  .topbar-inner {
+    min-height: 112px !important;
+    padding: 18px 20px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+
+  .topbar-title {
+    width: 100% !important;
+  }
+
+  .topbar-title h1 {
+    font-size: 21px !important;
+  }
+
+  .topbar-title p {
+    font-size: 12px !important;
+  }
+
+  .topbar-actions {
+    width: 100% !important;
+    margin-left: 0 !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+  }
+
+  .theme-button-group {
+    display: none !important;
+  }
+
+  .theme-select-mobile {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+  }
+
+  .topbar-action-button {
+    height: 36px !important;
+    padding-inline: 11px !important;
+    font-size: 12px !important;
+  }
+
+  .calendar-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .calendar-modal-window {
+    width: calc(100vw - 28px) !important;
+    max-height: calc(100vh - 28px) !important;
+    border-radius: 24px !important;
+  }
+
+  .calendar-modal-body {
+    max-height: calc(100vh - 112px) !important;
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .dashboard-tab-space {
+    padding: 20px 16px 30px !important;
+  }
+
+  .topbar-inner {
+    padding-inline: 18px !important;
+  }
+
+  .topbar-actions {
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    padding-bottom: 2px !important;
+  }
+
+  .theme-select-mobile {
+    min-width: 110px !important;
+  }
+
+  .topbar-action-button span {
+    display: none !important;
+  }
+
+  .topbar-action-button {
+    width: 38px !important;
+    padding-inline: 0 !important;
+  }
+}
+
+/* =========================================================
+   Mobile Topbar: hide long theme segmented buttons
+   모바일에서는 테마 버튼 묶음 숨기고 select만 사용
+========================================================= */
+
+@media (max-width: 768px) {
+  .topbar .theme-segmented-control,
+  .topbar .theme-tabs,
+  .topbar .theme-button-group,
+  .topbar .theme-pill-group {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    max-width: 0 !important;
+    min-width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* 모바일에서는 select만 보이게 */
+  .topbar select,
+  .topbar .theme-mobile-select,
+  .topbar .theme-select {
+    display: inline-flex !important;
+    visibility: visible !important;
+    width: auto !important;
+    min-width: 118px !important;
+    max-width: 150px !important;
+    height: 34px !important;
+  }
+
+  .topbar-actions {
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+  }
 }

@@ -21,6 +21,7 @@ import type {
   CareerItem,
   CareerStatus,
   CoverLetterItem,
+  CoverLetterStatus,
 } from "../../types/dashboard";
 
 type CareerWindowState = {
@@ -47,6 +48,19 @@ const statusOptions: CareerStatus[] = [
   "Completed",
 ];
 
+const coverLetterStatusOptions: CoverLetterStatus[] = [
+  "todo",
+  "drafting",
+  "done",
+];
+
+const getCoverLetterStatusLabel = (status: CoverLetterStatus) => {
+  if (status === "todo") return "To do";
+  if (status === "drafting") return "Drafting";
+  if (status === "done") return "Done";
+
+  return status;
+};
 
 const createCoverLetterId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -75,12 +89,8 @@ const parseAnswerLimit = (value: string) => {
 const autoGrowTextarea = (element: HTMLTextAreaElement | null) => {
   if (!element) return;
 
-  const minHeight = element.classList.contains("career-cover-question-input")
-    ? 76
-    : 42;
-
   element.style.height = "auto";
-  element.style.height = `${Math.max(element.scrollHeight, minHeight)}px`;
+  element.style.height = `${Math.max(element.scrollHeight, 42)}px`;
 };
 
 const handleAutoGrowTextarea = (
@@ -254,7 +264,7 @@ export const CareerWidget = () => {
   useEffect(() => {
     window.requestAnimationFrame(() => {
       document
-        .querySelectorAll<HTMLTextAreaElement>(".career-auto-textarea, .career-cover-strategy-textarea")
+        .querySelectorAll<HTMLTextAreaElement>(".career-auto-textarea")
         .forEach((textarea) => autoGrowTextarea(textarea));
     });
   }, [selectedItem?.id, selectedItem?.coverLetterItems]);
@@ -933,160 +943,185 @@ export const CareerWidget = () => {
 
                 <section className="career-detail-section career-cover-section">
                   <div className="career-section-row">
-    <div>
-      <div className="career-section-title">
-        Cover Letter Questions
-      </div>
-      <p className="career-section-subtitle">
-        질문을 누르면 바로 수정 가능 · 답변은 공백 포함 글자수 기준
-      </p>
-    </div>
+                    <div>
+                      <div className="career-section-title">
+                        Cover Letter Questions
+                      </div>
+                      <p className="career-section-subtitle">
+                        질문을 누르면 바로 수정 가능 · 답변은 공백 포함
+                        글자수 기준
+                      </p>
+                    </div>
 
-    <button
-      type="button"
-      onClick={addCoverLetterItem}
-      className="career-small-button"
-    >
-      <Plus className="w-3.5 h-3.5" />
-      Add Question
-    </button>
-  </div>
-
-  <div className="career-cover-wide-list">
-    {getCoverLetterItems(selectedItem).length === 0 ? (
-      <div className="career-empty-box">
-        아직 자소서 문항이 없어.
-      </div>
-    ) : (
-      getCoverLetterItems(selectedItem).map((item, index) => {
-        const answerCount = countWithSpaces(item.answer ?? "");
-        const answerLimit = item.answerLimit;
-        const isOverLimit =
-          typeof answerLimit === "number" &&
-          answerCount > answerLimit;
-
-        return (
-          <article
-            key={item.id}
-            className={[
-              "career-cover-wide-row",
-              isOverLimit ? "is-over-limit" : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            <div className="career-cover-question-line">
-              <FileText className="career-cover-icon" />
-
-              <label className="career-cover-question-field">
-                <span>Question {index + 1}</span>
-
-                <textarea
-                  value={item.question}
-                  rows={5}
-                  
-                  
-                  onChange={(event) =>
-                    updateCoverLetterItem(item.id, {
-                      question: event.target.value,
-                    })
-                  }
-                  className="career-cover-question-input"
-                  placeholder={`${index + 1}. 자소서 문항 입력`}
-                />
-              </label>
-
-              <label className="career-cover-limit-field">
-                <span>Limit</span>
-                <input
-                  type="number"
-                  min={0}
-                  value={item.answerLimit ?? ""}
-                  onChange={(event) =>
-                    updateCoverLetterItem(item.id, {
-                      answerLimit: parseAnswerLimit(event.target.value),
-                    })
-                  }
-                  placeholder="600"
-                />
-              </label>
-
-              <button
-                type="button"
-                onClick={() => removeCoverLetterItem(item.id)}
-                className="career-delete-button"
-                title="Delete question"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            <div className="career-cover-writing-line">
-              <label className="career-cover-writing-field">
-                <div className="career-cover-writing-header">
-                  <span>Answer</span>
-
-                  <strong className={isOverLimit ? "is-over" : ""}>
-                    {answerCount}
-                    {typeof answerLimit === "number"
-                      ? ` / ${answerLimit}`
-                      : " chars"}
-                  </strong>
-                </div>
-
-                <textarea
-                  value={item.answer ?? ""}
-                  rows={4}
-                  onInput={handleAutoGrowTextarea}
-                  onFocus={(event) =>
-                    autoGrowTextarea(event.currentTarget)
-                  }
-                  onChange={(event) =>
-                    updateCoverLetterItem(item.id, {
-                      answer: event.target.value,
-                    })
-                  }
-                  className="career-cover-answer-textarea career-auto-textarea"
-                  placeholder="여기에 실제 답변 초안 작성"
-                />
-
-                {isOverLimit && (
-                  <div className="career-cover-limit-warning">
-                    공백 포함 {answerCount - (answerLimit ?? 0)}자 초과
+                    <button
+                      type="button"
+                      onClick={addCoverLetterItem}
+                      className="career-small-button"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      Add Question
+                    </button>
                   </div>
-                )}
-              </label>
 
-              <label className="career-cover-writing-field">
-                <div className="career-cover-writing-header">
-                  <span>Strategy</span>
-                  <strong>Memo</strong>
-                </div>
+                  <div className="career-cover-wide-list">
+                    {getCoverLetterItems(selectedItem).length === 0 ? (
+                      <div className="career-empty-box">
+                        아직 자소서 문항이 없어.
+                      </div>
+                    ) : (
+                      getCoverLetterItems(selectedItem).map((item, index) => {
+                        const answerCount = countWithSpaces(
+                          item.answer ?? ""
+                        );
+                        const answerLimit = item.answerLimit;
+                        const isOverLimit =
+                          typeof answerLimit === "number" &&
+                          answerCount > answerLimit;
 
-                <textarea
-                  value={item.strategy ?? item.memo ?? ""}
-                  rows={3}
-                  onInput={handleAutoGrowTextarea}
-                  onFocus={(event) =>
-                    autoGrowTextarea(event.currentTarget)
-                  }
-                  onChange={(event) =>
-                    updateCoverLetterItem(item.id, {
-                      strategy: event.target.value,
-                      memo: event.target.value,
-                    })
-                  }
-                  className="career-cover-strategy-textarea career-auto-textarea"
-                  placeholder="키워드, 구조, 강조할 경험, 분량 전략"
-                />
-              </label>
-            </div>
-          </article>
-        );
-      })
-    )}
-  </div>
-</section>
+                        return (
+                          <article
+                            key={item.id}
+                            className={[
+                              "career-cover-wide-row",
+                              isOverLimit ? "is-over-limit" : "",
+                            ]
+                              .filter(Boolean)
+                              .join(" ")}
+                          >
+                            <div className="career-cover-question-line">
+                              <FileText className="career-cover-icon" />
+
+                              <textarea
+                                value={item.question}
+                                rows={1}
+                                onInput={handleAutoGrowTextarea}
+                                onFocus={(event) =>
+                                  autoGrowTextarea(event.currentTarget)
+                                }
+                                onChange={(event) =>
+                                  updateCoverLetterItem(item.id, {
+                                    question: event.target.value,
+                                  })
+                                }
+                                className="career-cover-question-input career-auto-textarea"
+                                placeholder={`${index + 1}. 자소서 문항 입력`}
+                              />
+
+                              <select
+                                value={item.status}
+                                onChange={(event) =>
+                                  updateCoverLetterItem(item.id, {
+                                    status: event.target
+                                      .value as CoverLetterStatus,
+                                  })
+                                }
+                                className="career-cover-status-select"
+                              >
+                                {coverLetterStatusOptions.map((status) => (
+                                  <option key={status} value={status}>
+                                    {getCoverLetterStatusLabel(status)}
+                                  </option>
+                                ))}
+                              </select>
+
+                              <label className="career-cover-limit-field">
+                                <span>Limit</span>
+                                <input
+                                  type="number"
+                                  min={0}
+                                  value={item.answerLimit ?? ""}
+                                  onChange={(event) =>
+                                    updateCoverLetterItem(item.id, {
+                                      answerLimit: parseAnswerLimit(
+                                        event.target.value
+                                      ),
+                                    })
+                                  }
+                                  placeholder="600"
+                                />
+                              </label>
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  removeCoverLetterItem(item.id)
+                                }
+                                className="career-delete-button"
+                                title="Delete question"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+
+                            <div className="career-cover-writing-line">
+                              <label className="career-cover-writing-field">
+                                <div className="career-cover-writing-header">
+                                  <span>Answer</span>
+
+                                  <strong
+                                    className={isOverLimit ? "is-over" : ""}
+                                  >
+                                    {answerCount}
+                                    {typeof answerLimit === "number"
+                                      ? ` / ${answerLimit}`
+                                      : " chars"}
+                                  </strong>
+                                </div>
+
+                                <textarea
+                                  value={item.answer ?? ""}
+                                  rows={4}
+                                  onInput={handleAutoGrowTextarea}
+                                  onFocus={(event) =>
+                                    autoGrowTextarea(event.currentTarget)
+                                  }
+                                  onChange={(event) =>
+                                    updateCoverLetterItem(item.id, {
+                                      answer: event.target.value,
+                                    })
+                                  }
+                                  className="career-cover-answer-textarea career-auto-textarea"
+                                  placeholder="여기에 실제 답변 초안 작성"
+                                />
+
+                                {isOverLimit && (
+                                  <div className="career-cover-limit-warning">
+                                    공백 포함{" "}
+                                    {answerCount - (answerLimit ?? 0)}자 초과
+                                  </div>
+                                )}
+                              </label>
+
+                              <label className="career-cover-writing-field">
+                                <div className="career-cover-writing-header">
+                                  <span>Strategy</span>
+                                  <strong>Memo</strong>
+                                </div>
+
+                                <textarea
+                                  value={item.strategy ?? item.memo ?? ""}
+                                  rows={3}
+                                  onInput={handleAutoGrowTextarea}
+                                  onFocus={(event) =>
+                                    autoGrowTextarea(event.currentTarget)
+                                  }
+                                  onChange={(event) =>
+                                    updateCoverLetterItem(item.id, {
+                                      strategy: event.target.value,
+                                      memo: event.target.value,
+                                    })
+                                  }
+                                  className="career-cover-strategy-textarea career-auto-textarea"
+                                  placeholder="키워드, 구조, 강조할 경험, 분량 전략"
+                                />
+                              </label>
+                            </div>
+                          </article>
+                        );
+                      })
+                    )}
+                  </div>
+                </section>
 
                 <section className="career-detail-section">
                   <div className="career-section-title">Notes</div>
