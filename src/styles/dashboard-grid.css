@@ -137,41 +137,57 @@
    5. Edit mode visual state
 ========================================================= */
 
-/* 편집 진입 시 전체를 살짝 연하게 */
+/* =========================================================
+   EDIT MODE SELECTION
+   위젯 내부 구조는 전혀 건드리지 않음
+========================================================= */
+
+/* 편집 모드: 모든 위젯을 살짝 연하게 */
 .dashboard-tab-space.is-editing .dashboard-grid-item {
-  opacity: 0.48;
+  opacity: 0.52;
+  filter: saturate(0.72);
 
-  filter:
-    saturate(0.72)
-    brightness(1.05);
+  transition:
+    opacity 160ms ease,
+    filter 160ms ease;
 }
 
-/* 현재 선택한 위젯만 선명 */
+/* 선택한 위젯 */
 .dashboard-tab-space.is-editing
-.dashboard-grid-item.is-selected {
+  .dashboard-grid-item.is-selected {
   opacity: 1;
-
-  filter: none;
-
-  outline:
-    2px solid
-    hsl(var(--primary) / 0.62);
-
-  outline-offset: -9px;
-}
-
-/* 실제 이동 / resize 중인 위젯 */
-.dashboard-tab-space.is-editing
-.react-grid-item.react-draggable-dragging
-.dashboard-grid-item,
-.dashboard-tab-space.is-editing
-.react-grid-item.react-resizable-resizing
-.dashboard-grid-item {
-  opacity: 1;
-
   filter: none;
 }
 
+/* 선택 테두리 전용 레이어 */
+.dashboard-tab-space.is-editing
+  .dashboard-grid-item.is-selected::after {
+  content: "";
+
+  position: absolute;
+  inset: 5px;
+
+  z-index: 80;
+
+  border: 2px solid hsl(var(--primary) / 0.72);
+  border-radius: var(--gd-radius-widget, 28px);
+
+  box-shadow:
+    0 0 0 4px hsl(var(--primary) / 0.1);
+
+  pointer-events: none;
+}
+
+/* 이동/resize 중에도 선명 */
+.dashboard-tab-space.is-editing
+  .react-grid-item.react-draggable-dragging
+  .dashboard-grid-item,
+.dashboard-tab-space.is-editing
+  .react-grid-item.react-resizable-resizing
+  .dashboard-grid-item {
+  opacity: 1;
+  filter: none;
+}
 /* =========================================================
    6. Invisible move surface
 
