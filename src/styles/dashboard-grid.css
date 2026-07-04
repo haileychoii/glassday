@@ -682,3 +682,44 @@
   border-radius:
     var(--gd-radius-widget, 28px);
 }
+
+/* =========================================================
+   Final edit interaction overrides
+========================================================= */
+
+.dashboard-tab-space.is-editing .dashboard-grid-item {
+  cursor: grab;
+}
+
+.dashboard-tab-space.is-editing
+  .react-grid-item.react-draggable-dragging
+  .dashboard-grid-item {
+  cursor: grabbing;
+}
+
+.dashboard-tab-space.is-editing .dashboard-grid-item :is(button, input, textarea, select, a) {
+  cursor: auto;
+}
+
+.dashboard-tab-space.is-editing .dashboard-grid-item.is-selected::after {
+  border-color: hsl(var(--primary) / 0.9);
+  box-shadow:
+    0 0 0 4px hsl(var(--primary) / 0.14),
+    0 18px 42px -30px hsl(var(--primary) / 0.7);
+}
+
+.dashboard-tab-space.is-editing .react-resizable-handle {
+  pointer-events: auto !important;
+}
+
+.dashboard-tab-space.is-editing
+  .react-grid-item:has(.dashboard-grid-item.is-selected)
+  .react-resizable-handle {
+  opacity: 1;
+}
+
+.dashboard-tab-space.is-editing
+  .react-grid-item.dashboard-grid-item.is-selected
+  .react-resizable-handle {
+  opacity: 1;
+}
