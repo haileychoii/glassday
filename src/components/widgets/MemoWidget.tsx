@@ -1034,6 +1034,7 @@ export const MemoWidget = () => {
   return (
     <>
       <GlassCard
+        className="memo-widget"
         title="Memo"
         subtitle={
           editing

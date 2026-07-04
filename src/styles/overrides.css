@@ -460,3 +460,387 @@ body,
     flex-wrap: nowrap !important;
   }
 }
+
+/* =========================================================
+   7. Widget-width responsive behavior
+   These rules react to the grid item width, not only viewport width.
+========================================================= */
+
+.dashboard-grid-item {
+  container-type: inline-size;
+  container-name: gd-widget;
+}
+
+.dashboard-grid-item > .glass-card,
+.dashboard-grid-item > .memo-widget {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+.dashboard-grid-item > .glass-card > div:first-child {
+  min-width: 0 !important;
+}
+
+.dashboard-grid-item > .glass-card > div:last-child {
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+@container gd-widget (max-width: 620px) {
+  .glass-card > div:first-child {
+    padding: 16px 16px 10px !important;
+    gap: 10px !important;
+    align-items: flex-start !important;
+  }
+
+  .glass-card > div:first-child > .shrink-0 {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  .glass-card > div:last-child {
+    padding: 0 16px 16px !important;
+  }
+
+  .today-focus-hero,
+  .study-hero {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .today-focus-grid,
+  .study-subject-grid,
+  .career-summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .study-record-form {
+    grid-template-columns: 1fr !important;
+  }
+
+  .calendar-widget-toolbar {
+    align-items: stretch !important;
+  }
+
+  .calendar-widget-toolbar > div,
+  .calendar-view-toggle,
+  .calendar-date-input {
+    width: 100% !important;
+  }
+
+  .calendar-view-toggle {
+    justify-content: space-between !important;
+  }
+
+  .calendar-view-button {
+    flex: 1 1 0 !important;
+  }
+
+  .calendar-google-preview {
+    margin-top: 8px !important;
+    align-items: stretch !important;
+    flex-direction: column !important;
+  }
+
+  .career-list-item,
+  .career-list-title-row,
+  .career-list-meta {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+
+  .career-list-side {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+}
+
+@container gd-widget (max-width: 440px) {
+  .glass-card > div:first-child {
+    padding: 14px 14px 8px !important;
+  }
+
+  .glass-card > div:last-child {
+    padding: 0 14px 14px !important;
+  }
+
+  .glass-card h3,
+  .career-widget h3 {
+    font-size: 13px !important;
+  }
+
+  .glass-card p,
+  .career-widget p {
+    font-size: 11px !important;
+  }
+
+  .today-focus-ring,
+  .study-progress-ring {
+    width: 54px !important;
+    height: 54px !important;
+  }
+
+  .calendar-event-item,
+  .career-list-item,
+  .today-focus-section,
+  .study-input-panel,
+  .study-week-panel,
+  .study-goal-panel,
+  .study-task-panel,
+  .study-record-list-panel {
+    border-radius: 16px !important;
+    padding: 10px !important;
+  }
+}
+
+/* =========================================================
+   8. Memo responsive layout
+========================================================= */
+
+.memo-widget {
+  container-type: inline-size;
+  container-name: memo-widget;
+}
+
+.memo-widget > div:last-child {
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.memo-widget .memo-app {
+  height: 100% !important;
+  min-height: 0 !important;
+  display: grid !important;
+  grid-template-columns: clamp(190px, 29%, 280px) minmax(0, 1fr) !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+}
+
+.memo-widget .memo-list-panel,
+.memo-floating-body .memo-list-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.memo-widget .memo-note-list,
+.memo-floating-body .memo-note-list {
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+.memo-widget .memo-workspace {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding: clamp(12px, 2.4cqw, 24px) !important;
+}
+
+.memo-widget .memo-title-input,
+.memo-widget .memo-title-view,
+.memo-widget .memo-toolbar,
+.memo-widget .memo-editor {
+  width: 100% !important;
+  max-width: 860px !important;
+}
+
+.memo-widget .memo-editor {
+  min-height: 0 !important;
+  padding: clamp(16px, 4cqw, 36px) clamp(14px, 5cqw, 48px) !important;
+}
+
+@container memo-widget (max-width: 760px) {
+  .memo-app {
+    grid-template-columns: clamp(150px, 34%, 210px) minmax(0, 1fr) !important;
+  }
+
+  .memo-list-panel {
+    padding: 12px 10px !important;
+  }
+
+  .memo-note-item {
+    min-height: 52px !important;
+    padding: 9px !important;
+    gap: 7px !important;
+  }
+
+  .memo-note-preview {
+    display: none !important;
+  }
+
+  .memo-toolbar {
+    gap: 6px !important;
+  }
+
+  .memo-select {
+    max-width: 118px !important;
+  }
+}
+
+@container memo-widget (max-width: 560px) {
+  .memo-app {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(116px, 30%) minmax(0, 1fr) !important;
+  }
+
+  .memo-list-panel {
+    max-height: none !important;
+    padding: 10px !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid hsl(220 18% 82% / 0.45) !important;
+    box-shadow: inset 0 -1px 0 hsl(0 0% 100% / 0.64) !important;
+  }
+
+  .memo-list-header {
+    min-height: 28px !important;
+    padding-bottom: 6px !important;
+  }
+
+  .memo-note-list {
+    display: grid !important;
+    grid-auto-flow: column !important;
+    grid-auto-columns: minmax(132px, 54%) !important;
+    grid-template-columns: none !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding-bottom: 2px !important;
+    scrollbar-width: none !important;
+  }
+
+  .memo-note-list::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .memo-note-item {
+    min-height: 58px !important;
+    align-items: flex-start !important;
+  }
+
+  .memo-note-color-dot {
+    height: 30px !important;
+  }
+
+  .memo-workspace {
+    padding: 12px !important;
+    gap: 9px !important;
+  }
+
+  .memo-title-input,
+  .memo-title-view {
+    min-height: 32px !important;
+    height: 32px !important;
+    line-height: 32px !important;
+    font-size: 17px !important;
+  }
+
+  .memo-toolbar {
+    min-height: 34px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    flex-wrap: nowrap !important;
+    scrollbar-width: none !important;
+  }
+
+  .memo-toolbar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .memo-editor {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 15px 13px !important;
+    border-radius: 16px !important;
+  }
+}
+
+@container memo-widget (max-width: 390px) {
+  .memo-app {
+    grid-template-rows: minmax(104px, 26%) minmax(0, 1fr) !important;
+  }
+
+  .memo-note-list {
+    grid-auto-columns: minmax(118px, 64%) !important;
+  }
+
+  .memo-list-panel {
+    padding: 8px !important;
+  }
+
+  .memo-workspace {
+    padding: 8px !important;
+  }
+
+  .memo-select {
+    max-width: 102px !important;
+  }
+
+  .memo-tool-button,
+  .memo-mini-button {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .memo-floating-body {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(130px, 28%) minmax(0, 1fr) !important;
+  }
+
+  .memo-floating-body .memo-list-panel {
+    max-height: none !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid hsl(220 18% 82% / 0.45) !important;
+  }
+
+  .memo-floating-body .memo-note-list {
+    display: grid !important;
+    grid-auto-flow: column !important;
+    grid-auto-columns: minmax(150px, 40%) !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+}
+
+/* Keep memo container queries stronger than earlier memo-widget rules. */
+@container memo-widget (max-width: 760px) {
+  .memo-widget .memo-app {
+    grid-template-columns: clamp(150px, 34%, 210px) minmax(0, 1fr) !important;
+  }
+}
+
+@container memo-widget (max-width: 560px) {
+  .memo-widget .memo-app {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(116px, 30%) minmax(0, 1fr) !important;
+  }
+
+  .memo-widget .memo-list-panel {
+    grid-row: 1 !important;
+    grid-column: 1 !important;
+  }
+
+  .memo-widget .memo-workspace {
+    grid-row: 2 !important;
+    grid-column: 1 !important;
+  }
+}
+
+@container memo-widget (max-width: 390px) {
+  .memo-widget .memo-app {
+    grid-template-rows: minmax(104px, 26%) minmax(0, 1fr) !important;
+  }
+}
