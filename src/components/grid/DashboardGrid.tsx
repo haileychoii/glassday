@@ -48,8 +48,8 @@ type DashboardGridProps = {
 };
 
 const BREAKPOINTS: Record<Breakpoint, number> = {
-  lg: 1200,
-  md: 900,
+  lg: 980,
+  md: 620,
   sm: 0,
 };
 
@@ -209,6 +209,41 @@ const getCollidingWidgetIds = (layout: GridLayoutItem[]): WidgetId[] => {
   return [...collided];
 };
 
+const stackCollidingLayout = (layout: GridLayoutItem[]): GridLayoutItem[] => {
+  const placed: GridLayoutItem[] = [];
+  const orderedLayout = [...layout].sort((a, b) => {
+    if (a.y !== b.y) return a.y - b.y;
+    if (a.x !== b.x) return a.x - b.x;
+    return a.i.localeCompare(b.i);
+  });
+
+  orderedLayout.forEach((sourceItem) => {
+    const item = { ...sourceItem };
+    let moved = true;
+
+    while (moved) {
+      moved = false;
+
+      placed.forEach((placedItem) => {
+        if (isOverlapping(item, placedItem)) {
+          item.y = placedItem.y + placedItem.h;
+          moved = true;
+        }
+      });
+    }
+
+    placed.push(item);
+  });
+
+  return placed;
+};
+
+const stackResponsiveLayouts = (layouts: Layouts): Layouts => ({
+  lg: stackCollidingLayout(layouts.lg),
+  md: stackCollidingLayout(layouts.md),
+  sm: stackCollidingLayout(layouts.sm),
+});
+
 export const DashboardGrid = ({
   editMode,
   activeTab,
@@ -257,13 +292,19 @@ export const DashboardGrid = ({
     return ensureResponsiveLayouts(activeTab.layouts, activeWidgetIds);
   }, [activeTab.layouts, activeWidgetIds]);
 
-  const currentLayout = useMemo<GridLayoutItem[]>(() => {
+  const displayedLayouts = useMemo<Layouts>(() => {
+    return editMode
+      ? responsiveLayouts
+      : stackResponsiveLayouts(responsiveLayouts);
+  }, [editMode, responsiveLayouts]);
+
+  const editLayout = useMemo<GridLayoutItem[]>(() => {
     return responsiveLayouts[currentBreakpoint] ?? responsiveLayouts.lg ?? [];
   }, [responsiveLayouts, currentBreakpoint]);
 
   const collidingWidgetIds = useMemo<WidgetId[]>(() => {
-    return editMode ? getCollidingWidgetIds(currentLayout) : [];
-  }, [editMode, currentLayout]);
+    return editMode ? getCollidingWidgetIds(editLayout) : [];
+  }, [editMode, editLayout]);
 
   const collidingSet = useMemo(
     () => new Set<WidgetId>(collidingWidgetIds),
@@ -282,10 +323,6 @@ export const DashboardGrid = ({
       collidingWidgetIds,
     });
   }, [collidingWidgetIds, onEditValidationChange]);
-
-  useEffect(() => {
-    if (!editMode) setSelectedWidgetId(null);
-  }, [editMode]);
 
   const handleLayoutChange = (_layout: unknown, allLayouts: unknown) => {
     const nextLayouts = ensureResponsiveLayouts(allLayouts, activeWidgetIds);
@@ -368,7 +405,7 @@ export const DashboardGrid = ({
       <div ref={gridWidthRef} className="dashboard-edit-canvas">
         <ResponsiveGridLayout
           className="layout"
-          layouts={responsiveLayouts}
+          layouts={displayedLayouts}
           breakpoints={BREAKPOINTS}
           cols={GRID_COLS}
           rowHeight={ROW_HEIGHT}
@@ -394,7 +431,7 @@ export const DashboardGrid = ({
           onLayoutChange={handleLayoutChange}
         >
           {activeWidgetIds.map((widgetId) => {
-            const isSelected = selectedWidgetId === widgetId;
+            const isSelected = editMode && selectedWidgetId === widgetId;
             const isColliding = collidingSet.has(widgetId);
             const widget = safeWidgetRegistry[widgetId];
 

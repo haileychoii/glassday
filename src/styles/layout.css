@@ -385,10 +385,12 @@ body.theme-retro .settings-reset-button {
 ========================================================= */
 
 aside {
-  flex: 0 0 240px;
-  width: 240px;
-  min-width: 240px;
-  max-width: 240px;
+  --sidebar-width: clamp(198px, 17vw, 258px);
+
+  flex: 0 0 var(--sidebar-width);
+  width: var(--sidebar-width);
+  min-width: 190px;
+  max-width: 258px;
 
   min-height: 100%;
   overflow: hidden;
@@ -463,10 +465,12 @@ aside .sidebar-workspace-list {
 
 .app-sidebar,
 .sidebar {
-  flex: 0 0 250px;
-  width: 250px;
-  min-width: 250px;
-  max-width: 250px;
+  --sidebar-width: clamp(198px, 17vw, 258px);
+
+  flex: 0 0 var(--sidebar-width);
+  width: var(--sidebar-width);
+  min-width: 190px;
+  max-width: 258px;
 
   min-height: 100%;
 
@@ -488,7 +492,7 @@ aside .sidebar-workspace-list {
 }
 
 .sidebar-brand-title {
-  font-size: 20px;
+  font-size: 21px;
   line-height: 1.1;
   font-weight: 760;
   letter-spacing: -0.035em;
@@ -497,7 +501,7 @@ aside .sidebar-workspace-list {
 .sidebar-brand-subtitle {
   margin-top: 4px;
 
-  font-size: 12px;
+  font-size: 12.5px;
   line-height: 1.2;
   font-weight: 650;
 }
@@ -527,7 +531,7 @@ aside .sidebar-workspace-list {
 .sidebar-section-title {
   min-width: 0;
 
-  font-size: 12px;
+  font-size: 12.5px;
   line-height: 1.2;
   font-weight: 760;
 }
@@ -577,7 +581,7 @@ aside .sidebar-workspace-list {
 
   text-align: left;
 
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
   font-weight: 720;
 }
@@ -610,7 +614,7 @@ aside .sidebar-workspace-list {
   outline: none;
   border: 0;
 
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 720;
 }
 
@@ -676,6 +680,7 @@ aside .sidebar-workspace-list {
   .sidebar-tab-main {
     height: 38px;
     padding: 0 12px;
+    font-size: 13.5px;
     white-space: nowrap;
   }
 }

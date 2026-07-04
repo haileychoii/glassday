@@ -154,12 +154,44 @@ main {
 ========================================================= */
 
 @media (max-width: 1100px) {
+  .app-sidebar,
+  .sidebar,
   aside {
-    width: 210px !important;
+    --sidebar-width: 208px !important;
+    flex-basis: 208px !important;
+    width: 208px !important;
+    min-width: 190px !important;
+    max-width: 208px !important;
   }
 
   .sidebar-tab-main {
-    font-size: 12px !important;
+    gap: 8px !important;
+    padding-inline: 10px !important;
+    font-size: 13.5px !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  .app-sidebar,
+  .sidebar,
+  aside {
+    --sidebar-width: 190px !important;
+    flex-basis: 190px !important;
+    width: 190px !important;
+    min-width: 176px !important;
+    max-width: 190px !important;
+  }
+
+  .sidebar-brand {
+    padding-inline: 18px !important;
+  }
+
+  .sidebar-body {
+    padding: 14px !important;
+  }
+
+  .sidebar-tab-main {
+    font-size: 13px !important;
   }
 }
 
@@ -173,8 +205,13 @@ main {
     flex-direction: column !important;
   }
 
+  .app-sidebar,
+  .sidebar,
   aside {
+    flex: 0 0 auto !important;
     width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
     height: auto !important;
     min-height: auto !important;
     border-right: 0 !important;
@@ -213,6 +250,7 @@ main {
   .sidebar-tab-main {
     height: 38px !important;
     padding: 0 12px !important;
+    font-size: 13.5px !important;
     white-space: nowrap !important;
   }
 
