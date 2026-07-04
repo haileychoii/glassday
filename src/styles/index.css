@@ -12,9 +12,15 @@
 @import "./themes/retro.css";
 
 @import "./widgets/today-focus.css";
+@import "./widgets/today.css";
+@import "./widgets/alert-center.css";
+@import "./widgets/alerts.css";
 @import "./widgets/calendar.css";
 @import "./widgets/career.css";
+@import "./widgets/journal.css";
 @import "./widgets/memo.css";
+@import "./widgets/settings.css";
+@import "./widgets/study.css";
 
 @import "./responsive.css";
 @import "./overrides.css";

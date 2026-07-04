@@ -197,6 +197,12 @@ main {
     overflow-y: hidden !important;
     padding-bottom: 4px !important;
     -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+
+  aside nav::-webkit-scrollbar,
+  aside .sidebar-workspace-list::-webkit-scrollbar {
+    display: none !important;
   }
 
   .sidebar-tab-item {
@@ -275,6 +281,12 @@ main {
     flex-wrap: nowrap !important;
   }
 
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
   .topbar .theme-segmented-control,
   .topbar .theme-button-group,
   .topbar .theme-tabs,
@@ -299,6 +311,7 @@ main {
     min-width: 116px !important;
     max-width: 142px !important;
     height: 36px !important;
+    font-size: 13px !important;
   }
 
   .topbar-action-button {
@@ -330,6 +343,40 @@ main {
 @media (max-width: 430px) {
   .dashboard-tab-space {
     padding: 18px 14px 28px !important;
+  }
+
+  .react-grid-item > .dashboard-grid-item,
+  .react-grid-item > .dashboard-grid-item-content {
+    padding: 4px !important;
+  }
+
+  .react-grid-item .glass-card > div:first-child {
+    padding: 16px 14px 10px !important;
+  }
+
+  .react-grid-item .glass-card > div:last-child {
+    padding: 0 14px 14px !important;
+  }
+
+  .today-focus-main,
+  .today-focus-hero,
+  .today-focus-section,
+  .today-focus-block {
+    padding: 10px !important;
+  }
+
+  .today-focus-task {
+    gap: 5px !important;
+    padding: 7px 8px !important;
+  }
+
+  .today-focus-task-input {
+    font-size: 11px !important;
+  }
+
+  .today-focus-delete {
+    width: 18px !important;
+    min-width: 18px !important;
   }
 
   .topbar-inner {

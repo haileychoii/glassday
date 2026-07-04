@@ -350,6 +350,11 @@ body,
     margin-left: 0 !important;
     justify-content: flex-end !important;
     gap: 8px !important;
+    scrollbar-width: none !important;
+  }
+
+  .topbar-actions::-webkit-scrollbar {
+    display: none !important;
   }
 
   .theme-button-group {
@@ -396,6 +401,11 @@ body,
     justify-content: flex-start !important;
     overflow-x: auto !important;
     padding-bottom: 2px !important;
+    scrollbar-width: none !important;
+  }
+
+  .topbar-actions::-webkit-scrollbar {
+    display: none !important;
   }
 
   .theme-select-mobile {
