@@ -55,7 +55,7 @@ export const AppShell = ({
                 onOpenSettings={onOpenSettings}
               />
 
-              <main className="flex-1 p-4 md:p-6 overflow-auto bg-transparent">
+              <main className="flex-1 p-4 md:p-6 !overflow-y-auto !overflow-x-hidden bg-transparent">
                 {children}
               </main>
             </div>

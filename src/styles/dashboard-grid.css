@@ -1,370 +1,668 @@
 /* =========================================================
    DASHBOARD GRID
-   React Grid Layout + direct glass-card support
+   ONLY React Grid Layout / edit interaction
 
-   현재 실제 DOM:
-   .react-grid-item > .glass-card
-
-   목표:
-   - 위젯 DOM은 있는데 안 보이는 문제 해결
-   - 대시보드 전체 스크롤 금지
-   - 위젯 내부 내용만 스크롤
-   - 위젯 사이 간격 확보
+   절대 건드리지 않음:
+   - .glass-card
+   - widget 내부 div
+   - widget 내부 display
+   - widget 내부 overflow
+   - typography
+   - calendar / memo / today / study 내부 구조
 ========================================================= */
 
 /* =========================================================
-   0. Dashboard outer
+   1. Dashboard canvas
 ========================================================= */
 
 .dashboard-tab-space {
-  flex: 1 1 auto !important;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
 
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
+  position: relative;
 
-  display: flex !important;
-  flex-direction: column !important;
-
-  padding: 24px !important;
-
-  overflow: hidden !important;
-
-  box-sizing: border-box !important;
+  box-sizing: border-box;
 }
 
 .dashboard-edit-canvas {
-  flex: 1 1 auto !important;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
 
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
+  position: relative;
 
-  display: block !important;
-  position: relative !important;
+  overflow: visible;
 
-  overflow: hidden !important;
-
-  box-sizing: border-box !important;
+  box-sizing: border-box;
 }
 
-.dashboard-grid-shell,
-.dashboard-grid-wrapper,
-.dashboard-grid-stage,
-.dashboard-grid-container {
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  display: block !important;
-  position: relative !important;
-
-  overflow: hidden !important;
-
-  box-sizing: border-box !important;
+/* 편집 모드에서만 최소 16행 표시 */
+.dashboard-edit-canvas.is-editing {
+  min-height: calc(16 * 52px + 15 * 14px);
 }
 
 /* =========================================================
-   1. React Grid Layout
+   2. 16-column visual grid
 ========================================================= */
 
+.dashboard-edit-canvas.is-editing::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  z-index: 0;
+
+  min-height: 100%;
+
+  pointer-events: none;
+
+  border-radius: 24px;
+
+  background-image:
+    linear-gradient(
+      to right,
+      hsl(var(--foreground) / 0.09) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      hsl(var(--foreground) / 0.09) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    6.25% 100%,
+    100% 66px;
+
+  background-position: 0 0;
+}
+
+/* =========================================================
+   3. React Grid Layout
+========================================================= */
+
+.dashboard-rgl,
 .react-grid-layout {
   width: 100% !important;
   min-width: 0 !important;
-  min-height: calc(100vh - 190px) !important;
 
-  display: block !important;
   position: relative !important;
+
+  z-index: 1;
 
   overflow: visible !important;
 
   box-sizing: border-box !important;
 }
 
+/* RGL이 직접 넣는 position / transform 절대 수정 금지 */
 .react-grid-item {
   min-width: 0 !important;
   min-height: 0 !important;
 
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-
   overflow: visible !important;
 
   box-sizing: border-box !important;
 }
 
-.react-grid-item.react-grid-placeholder {
-  border-radius: var(--gd-radius-widget, 28px) !important;
-  opacity: 0.22 !important;
-}
+/* =========================================================
+   4. Widget wrapper only
+   내부 위젯은 전혀 건드리지 않음
+========================================================= */
 
-.react-grid-item.react-draggable-dragging {
-  z-index: 200 !important;
-}
+.dashboard-grid-item {
+  width: 100%;
+  height: 100%;
 
-.react-grid-item.react-resizable-resizing {
-  z-index: 201 !important;
-}
+  min-width: 0;
+  min-height: 0;
 
-.react-resizable-handle {
-  z-index: 30 !important;
+  position: relative;
+
+  padding: 7px;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+
+  transition:
+    opacity 160ms ease,
+    filter 160ms ease,
+    transform 160ms ease;
 }
 
 /* =========================================================
-   2. IMPORTANT: direct glass-card structure
-   실제 구조: .react-grid-item > .glass-card
+   5. Edit mode visual state
 ========================================================= */
 
-.react-grid-item > .glass-card {
-  width: calc(100% - 16px) !important;
-  height: calc(100% - 16px) !important;
+/* 편집 진입 시 전체를 살짝 연하게 */
+.dashboard-tab-space.is-editing .dashboard-grid-item {
+  opacity: 0.48;
 
-  margin: 8px !important;
-
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
-
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  overflow: hidden !important;
-
-  box-sizing: border-box !important;
+  filter:
+    saturate(0.72)
+    brightness(1.05);
 }
 
-/* 혹시 wrapper 구조인 위젯도 같이 대응 */
-.react-grid-item > .dashboard-grid-item,
-.react-grid-item > .dashboard-grid-item-content {
-  width: 100% !important;
-  height: 100% !important;
-
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  display: flex !important;
-  flex-direction: column !important;
-
-  padding: 8px !important;
-
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  overflow: hidden !important;
-
-  box-sizing: border-box !important;
-}
-
-.react-grid-item > .dashboard-grid-item > .glass-card,
-.react-grid-item > .dashboard-grid-item-content > .glass-card {
-  width: 100% !important;
-  height: 100% !important;
-
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
-
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  overflow: hidden !important;
-
-  box-sizing: border-box !important;
-}
-
-/* =========================================================
-   3. Glass card children
-========================================================= */
-
-.react-grid-item .glass-card > * {
-  min-width: 0 !important;
-  box-sizing: border-box !important;
-}
-
-.react-grid-item .glass-card-body,
-.react-grid-item .glass-card > div:last-child {
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-
-  box-sizing: border-box !important;
-}
-
-/* =========================================================
-   4. Widget root safety
-========================================================= */
-
-.today-focus-card,
-.today-focus-widget,
-.today-mini-card,
-.alert-center-widget,
-.calendar-widget,
-.career-widget,
-.memo-widget,
-.study-widget,
-.daily-journal-widget,
-.health-widget,
-.money-widget,
-.mood-widget {
-  width: 100% !important;
-  height: 100% !important;
-
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  display: flex !important;
-  flex-direction: column !important;
-
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  overflow: hidden !important;
-
-  box-sizing: border-box !important;
-}
-
-.today-focus-card > *,
-.today-focus-widget > *,
-.today-mini-card > *,
-.alert-center-widget > *,
-.calendar-widget > *,
-.career-widget > *,
-.memo-widget > *,
-.study-widget > *,
-.daily-journal-widget > *,
-.health-widget > *,
-.money-widget > *,
-.mood-widget > * {
-  min-width: 0 !important;
-}
-
-/* =========================================================
-   5. Scroll areas inside widgets only
-========================================================= */
-
-.widget-scroll-area,
-.calendar-event-list,
-.alert-center-list,
-.alert-list,
-.journal-main-scroll,
-.memo-note-list,
-.memo-floating-body,
-.today-task-list,
-.today-focus-list,
-.career-list,
-.study-list {
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* =========================================================
-   6. Basic content visibility
-========================================================= */
-
-.react-grid-item,
-.react-grid-item * {
-  visibility: visible;
-}
-
-.react-grid-item .glass-card {
-  color: hsl(var(--foreground, 250 36% 20%) / 0.88);
-}
-
-.react-grid-item .glass-card h1,
-.react-grid-item .glass-card h2,
-.react-grid-item .glass-card h3,
-.react-grid-item .glass-card h4,
-.react-grid-item .glass-card p,
-.react-grid-item .glass-card span,
-.react-grid-item .glass-card small,
-.react-grid-item .glass-card strong,
-.react-grid-item .glass-card button,
-.react-grid-item .glass-card input,
-.react-grid-item .glass-card textarea,
-.react-grid-item .glass-card select {
+/* 현재 선택한 위젯만 선명 */
+.dashboard-tab-space.is-editing
+.dashboard-grid-item.is-selected {
   opacity: 1;
+
+  filter: none;
+
+  outline:
+    2px solid
+    hsl(var(--primary) / 0.62);
+
+  outline-offset: -9px;
+}
+
+/* 실제 이동 / resize 중인 위젯 */
+.dashboard-tab-space.is-editing
+.react-grid-item.react-draggable-dragging
+.dashboard-grid-item,
+.dashboard-tab-space.is-editing
+.react-grid-item.react-resizable-resizing
+.dashboard-grid-item {
+  opacity: 1;
+
+  filter: none;
 }
 
 /* =========================================================
-   7. Edit mode controls
+   6. Invisible move surface
+
+   위젯 내부 디자인을 직접 draggable로 만들지 않음.
+   Edit 모드에서만 투명 레이어를 올림.
+
+   가장자리 14px는 resize를 위해 비워둠.
 ========================================================= */
 
-.dashboard-grid-item.is-editing,
-.dashboard-grid-item-content.is-editing {
-  cursor: move;
-}
+.widget-move-surface {
+  position: absolute;
 
-.dashboard-grid-item:not(.is-editing),
-.dashboard-grid-item-content:not(.is-editing) {
-  cursor: default;
-}
+  top: 14px;
+  right: 14px;
+  bottom: 14px;
+  left: 14px;
 
-.widget-drag-handle {
+  z-index: 30;
+
   cursor: grab;
+
+  background: transparent;
+
   touch-action: none;
+
   user-select: none;
+  -webkit-user-select: none;
 }
 
-.widget-drag-handle:active {
+.widget-move-surface:active {
   cursor: grabbing;
 }
 
-.dashboard-grid-item:not(.is-editing) .widget-drag-handle,
-.dashboard-grid-item-content:not(.is-editing) .widget-drag-handle {
-  display: none !important;
+/* =========================================================
+   7. Edit label
+========================================================= */
+
+.widget-edit-label {
+  position: absolute;
+
+  top: 16px;
+  left: 18px;
+
+  z-index: 45;
+
+  max-width: calc(100% - 82px);
+
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  pointer-events: none;
+
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 850;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  color: hsl(var(--foreground) / 0.82);
+
+  background: hsl(var(--background) / 0.76);
+
+  border:
+    1px solid
+    hsl(var(--foreground) / 0.12);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.widget-remove-button,
-.dashboard-widget-remove,
-.widget-delete-button {
-  position: absolute;
-  top: 18px;
-  right: 18px;
+/* =========================================================
+   8. Remove button
+========================================================= */
 
-  z-index: 40;
+.widget-remove-button {
+  position: absolute;
+
+  top: 14px;
+  right: 16px;
+
+  z-index: 50;
 
   width: 28px;
   height: 28px;
   min-width: 28px;
+
   padding: 0;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
+  border-radius: 999px;
 }
 
 /* =========================================================
-   8. Pixel / Retro spacing
+   9. Dragging / resizing layer
 ========================================================= */
 
-html[data-theme="pixel-desk"] .react-grid-item > .glass-card,
-body[data-theme="pixel-desk"] .react-grid-item > .glass-card,
-html.theme-pixel-desk .react-grid-item > .glass-card,
-body.theme-pixel-desk .react-grid-item > .glass-card,
-html[data-theme="retro"] .react-grid-item > .glass-card,
-body[data-theme="retro"] .react-grid-item > .glass-card,
-html.theme-retro .react-grid-item > .glass-card,
-body.theme-retro .react-grid-item > .glass-card {
-  width: calc(100% - 12px) !important;
-  height: calc(100% - 12px) !important;
-  margin: 6px !important;
+.react-grid-item.react-draggable-dragging,
+.react-grid-item.react-resizable-resizing {
+  z-index: 100 !important;
+}
+
+/* =========================================================
+   10. Placeholder
+
+   이동 중 들어갈 자리 표시.
+   다른 위젯과 실제로 겹치지 않게 RGL이 재배치.
+========================================================= */
+
+.react-grid-item.react-grid-placeholder {
+  z-index: 2 !important;
+
+  opacity: 1 !important;
+
+  border:
+    1px solid
+    hsl(var(--primary) / 0.42);
+
+  border-radius:
+    var(--gd-radius-widget, 28px);
+
+  background:
+    hsl(var(--primary) / 0.12);
+}
+
+/* =========================================================
+   11. Resize handles
+========================================================= */
+
+.dashboard-tab-space.is-editing
+.react-resizable-handle {
+  position: absolute !important;
+
+  z-index: 70 !important;
+
+  display: block !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  transform: none !important;
+
+  background-image: none !important;
+  background-color: transparent !important;
+
+  opacity: 0;
+
+  transition: opacity 120ms ease;
+}
+
+/* hover / selected / resizing일 때만 edge 표시 */
+.dashboard-tab-space.is-editing
+.react-grid-item:hover
+.react-resizable-handle,
+.dashboard-tab-space.is-editing
+.react-grid-item:has(.dashboard-grid-item.is-selected)
+.react-resizable-handle,
+.dashboard-tab-space.is-editing
+.react-grid-item.react-resizable-resizing
+.react-resizable-handle {
+  opacity: 1;
+}
+
+/* library 기본 삼각형 제거 */
+.dashboard-tab-space.is-editing
+.react-resizable-handle::after {
+  content: "";
+
+  position: absolute;
+
+  border: 0 !important;
+}
+
+/* =========================================================
+   12. Top edge
+========================================================= */
+
+.react-resizable-handle-n {
+  top: -6px !important;
+  left: 18px !important;
+  right: 18px !important;
+
+  width: auto !important;
+  height: 14px !important;
+
+  cursor: ns-resize;
+}
+
+.react-resizable-handle-n::after {
+  left: 0;
+  right: 0;
+  top: 6px;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    hsl(var(--primary) / 0.72);
+}
+
+/* =========================================================
+   13. Bottom edge
+========================================================= */
+
+.react-resizable-handle-s {
+  bottom: -6px !important;
+  left: 18px !important;
+  right: 18px !important;
+
+  width: auto !important;
+  height: 14px !important;
+
+  cursor: ns-resize;
+}
+
+.react-resizable-handle-s::after {
+  left: 0;
+  right: 0;
+  bottom: 6px;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    hsl(var(--primary) / 0.72);
+}
+
+/* =========================================================
+   14. Left edge
+========================================================= */
+
+.react-resizable-handle-w {
+  left: -6px !important;
+  top: 18px !important;
+  bottom: 18px !important;
+
+  width: 14px !important;
+  height: auto !important;
+
+  cursor: ew-resize;
+}
+
+.react-resizable-handle-w::after {
+  top: 0;
+  bottom: 0;
+  left: 6px;
+
+  width: 2px;
+
+  border-radius: 999px;
+
+  background:
+    hsl(var(--primary) / 0.72);
+}
+
+/* =========================================================
+   15. Right edge
+========================================================= */
+
+.react-resizable-handle-e {
+  right: -6px !important;
+  top: 18px !important;
+  bottom: 18px !important;
+
+  width: 14px !important;
+  height: auto !important;
+
+  cursor: ew-resize;
+}
+
+.react-resizable-handle-e::after {
+  top: 0;
+  bottom: 0;
+  right: 6px;
+
+  width: 2px;
+
+  border-radius: 999px;
+
+  background:
+    hsl(var(--primary) / 0.72);
+}
+
+/* =========================================================
+   16. Corner handles
+========================================================= */
+
+.react-resizable-handle-nw,
+.react-resizable-handle-ne,
+.react-resizable-handle-sw,
+.react-resizable-handle-se {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.react-resizable-handle-nw {
+  top: -7px !important;
+  left: -7px !important;
+
+  cursor: nwse-resize;
+}
+
+.react-resizable-handle-ne {
+  top: -7px !important;
+  right: -7px !important;
+
+  cursor: nesw-resize;
+}
+
+.react-resizable-handle-sw {
+  bottom: -7px !important;
+  left: -7px !important;
+
+  cursor: nesw-resize;
+}
+
+.react-resizable-handle-se {
+  right: -7px !important;
+  bottom: -7px !important;
+
+  cursor: nwse-resize;
+}
+
+.react-resizable-handle-nw::after,
+.react-resizable-handle-ne::after,
+.react-resizable-handle-sw::after,
+.react-resizable-handle-se::after {
+  inset: 5px;
+
+  border-radius: 4px;
+
+  background:
+    hsl(var(--primary) / 0.78);
+}
+
+/* =========================================================
+   17. Reflow animation
+========================================================= */
+
+/* 밀려나는 다른 위젯들만 부드럽게 */
+.react-grid-item.cssTransforms {
+  transition: transform 180ms ease;
+}
+
+.react-grid-item.react-draggable-dragging,
+.react-grid-item.react-resizable-resizing {
+  transition: none !important;
+}
+
+/* =========================================================
+   EDIT MODE RESIZE HANDLES
+   widget 내부 스타일은 건드리지 않음
+========================================================= */
+
+.dashboard-tab-space.is-editing .react-grid-item {
+  overflow: visible !important;
+}
+
+/* 모든 resize handle 공통 */
+.dashboard-tab-space.is-editing .react-resizable-handle {
+  position: absolute !important;
+
+  z-index: 999 !important;
+
+  display: block !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  opacity: 0;
+
+  background: transparent !important;
+  background-image: none !important;
+
+  pointer-events: auto !important;
+}
+
+/* 마우스 올리면 보임 */
+.dashboard-tab-space.is-editing
+  .react-grid-item:hover
+  .react-resizable-handle,
+.dashboard-tab-space.is-editing
+  .react-grid-item.react-resizable-resizing
+  .react-resizable-handle {
+  opacity: 1;
+}
+
+/* 위 */
+.dashboard-tab-space.is-editing .react-resizable-handle-n {
+  top: -7px !important;
+  left: 18px !important;
+  right: 18px !important;
+
+  width: auto !important;
+  height: 14px !important;
+
+  cursor: ns-resize !important;
+}
+
+/* 아래 */
+.dashboard-tab-space.is-editing .react-resizable-handle-s {
+  bottom: -7px !important;
+  left: 18px !important;
+  right: 18px !important;
+
+  width: auto !important;
+  height: 14px !important;
+
+  cursor: ns-resize !important;
+}
+
+/* 왼쪽 */
+.dashboard-tab-space.is-editing .react-resizable-handle-w {
+  left: -7px !important;
+  top: 18px !important;
+  bottom: 18px !important;
+
+  width: 14px !important;
+  height: auto !important;
+
+  cursor: ew-resize !important;
+}
+
+/* 오른쪽 */
+.dashboard-tab-space.is-editing .react-resizable-handle-e {
+  right: -7px !important;
+  top: 18px !important;
+  bottom: 18px !important;
+
+  width: 14px !important;
+  height: auto !important;
+
+  cursor: ew-resize !important;
+}
+
+/* 모서리 */
+.dashboard-tab-space.is-editing .react-resizable-handle-nw,
+.dashboard-tab-space.is-editing .react-resizable-handle-ne,
+.dashboard-tab-space.is-editing .react-resizable-handle-sw,
+.dashboard-tab-space.is-editing .react-resizable-handle-se {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.dashboard-tab-space.is-editing .react-resizable-handle-nw {
+  top: -8px !important;
+  left: -8px !important;
+  cursor: nwse-resize !important;
+}
+
+.dashboard-tab-space.is-editing .react-resizable-handle-ne {
+  top: -8px !important;
+  right: -8px !important;
+  cursor: nesw-resize !important;
+}
+
+.dashboard-tab-space.is-editing .react-resizable-handle-sw {
+  bottom: -8px !important;
+  left: -8px !important;
+  cursor: nesw-resize !important;
+}
+
+.dashboard-tab-space.is-editing .react-resizable-handle-se {
+  right: -8px !important;
+  bottom: -8px !important;
+  cursor: nwse-resize !important;
+}
+
+/* resize 중인 위젯 위로 */
+.react-grid-item.react-resizable-resizing,
+.react-grid-item.react-draggable-dragging {
+  z-index: 1000 !important;
+}
+
+/* 겹칠 자리를 보여주는 placeholder */
+.react-grid-item.react-grid-placeholder {
+  opacity: 1 !important;
+
+  background: hsl(var(--primary) / 0.12) !important;
+
+  border:
+    1px solid
+    hsl(var(--primary) / 0.42) !important;
+
+  border-radius:
+    var(--gd-radius-widget, 28px);
 }

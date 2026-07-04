@@ -475,3 +475,23 @@
     font-size: 19px;
   }
 }
+
+/* =========================================================
+   TODAY FOCUS HEIGHT RESTORE
+========================================================= */
+
+.today-focus-card,
+.today-focus-widget,
+.today-mini-card {
+  min-height: 0;
+}
+
+.today-focus-card .glass-card-body,
+.today-focus-widget .glass-card-body,
+.today-mini-card .glass-card-body {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}

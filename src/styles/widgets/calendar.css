@@ -53,7 +53,7 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   overflow: hidden;
 }
 
@@ -196,11 +196,13 @@
 
 .calendar-google-preview {
   flex: 0 0 auto;
-  margin-top: auto;
+  /* margin-top: auto; */
   border-radius: 20px;
   padding: 12px;
-  background: hsl(0 0% 100% / 0.18);
-  border: 1px solid hsl(0 0% 100% / 0.32);
+  /* 아래에 위치시키기 */
+  margin-top: 25px;
+  /* background: hsl(0 0% 100% / 0.18); */
+  /* border: 1px solid hsl(0 0% 100% / 0.32); */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -208,7 +210,7 @@
 }
 
 .calendar-google-button {
-  height: 30px;
+  height: 25px;
   border-radius: 999px;
   padding: 0 10px;
   background: hsl(0 0% 100% / 0.32);
