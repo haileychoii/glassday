@@ -6,10 +6,11 @@
   height: 100%;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto auto auto 1fr;
+  grid-template-columns: 1fr;
+  grid-template-rows: none;
   gap: 12px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .study-hero {
@@ -118,11 +119,12 @@
 .study-subject-grid {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
   gap: 8px;
 }
 
 .study-subject-card {
+  min-width: 0;
   min-height: 58px;
   border-radius: 18px;
   padding: 9px;
@@ -149,6 +151,7 @@
 }
 
 .study-subject-card strong {
+  min-width: 0;
   display: block;
   font-size: 11px;
   font-weight: 900;
@@ -156,6 +159,7 @@
 }
 
 .study-subject-card span {
+  min-width: 0;
   display: block;
   margin-top: 3px;
   font-size: 9.5px;
@@ -164,6 +168,7 @@
 }
 
 .study-subject-percent {
+  flex: 0 0 auto;
   font-size: 11px;
   font-weight: 900;
   color: hsl(var(--primary));
@@ -185,6 +190,27 @@
 
 .study-input-panel {
   grid-column: 1 / -1;
+  min-height: 112px;
+}
+
+.study-week-panel {
+  grid-column: 1 / -1;
+  min-height: 214px;
+}
+
+.study-goal-panel {
+  grid-column: 1 / -1;
+  min-height: 222px;
+}
+
+.study-task-panel {
+  grid-column: 1 / -1;
+  min-height: 96px;
+}
+
+.study-record-list-panel {
+  grid-column: 1 / -1;
+  min-height: 96px;
 }
 
 .study-section-title {
@@ -625,7 +651,8 @@
 }
 
 .react-grid-item .study-planner {
-  grid-template-rows: auto auto auto auto auto !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: none !important;
   align-content: start !important;
   min-height: 0 !important;
   overflow-y: auto !important;
@@ -635,9 +662,57 @@
   padding-right: 2px !important;
 }
 
+.react-grid-item .study-hero,
+.react-grid-item .study-date-row,
+.react-grid-item .study-subject-grid,
+.react-grid-item .study-input-panel {
+  grid-column: 1 / -1 !important;
+}
+
+.react-grid-item .study-week-panel {
+  grid-column: 1 / -1 !important;
+  grid-row: auto !important;
+}
+
+.react-grid-item .study-goal-panel {
+  grid-column: 1 / -1 !important;
+  grid-row: auto !important;
+}
+
+.react-grid-item .study-task-panel {
+  grid-column: 1 / -1 !important;
+  grid-row: auto !important;
+}
+
+.react-grid-item .study-record-list-panel {
+  grid-column: 1 / -1 !important;
+  grid-row: auto !important;
+}
+
+.react-grid-item .study-input-panel,
+.react-grid-item .study-goal-panel,
+.react-grid-item .study-week-panel,
+.react-grid-item .study-task-panel,
+.react-grid-item .study-record-list-panel {
+  min-width: 0 !important;
+  overflow: visible !important;
+}
+
 .react-grid-item .study-task-list,
 .react-grid-item .study-record-list {
   max-height: 220px;
+}
+
+.study-record-form {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.study-note-field {
+  grid-column: 1 / -1;
+}
+
+.study-record-form button {
+  grid-column: 1 / -1;
 }
 
 @media (max-width: 760px){  
