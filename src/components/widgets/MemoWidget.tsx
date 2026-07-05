@@ -11,12 +11,15 @@ import {
   ListOrdered,
   Lock,
   Maximize2,
+  Minus,
   Palette,
   PanelLeft,
   Pencil,
   Pin,
   Plus,
+  Rows2,
   Send,
+  StretchHorizontal,
   StickyNote,
   Table2,
   Trash2,
@@ -46,6 +49,12 @@ type MemoNote = {
   pinned: boolean;
   createdAt: number;
   updatedAt: number;
+};
+
+type TableContextMenuState = {
+  x: number;
+  y: number;
+  editor: "widget" | "window";
 };
 
 const getDefaultMemoFont = () => getSavedDefaultMemoFont() || DEFAULT_MEMO_FONT;
@@ -376,6 +385,8 @@ export const MemoWidget = () => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [saveFileName, setSaveFileName] = useState("");
   const [isDraggingWindowSidebar, setIsDraggingWindowSidebar] = useState(false);
+  const [tableContextMenu, setTableContextMenu] =
+    useState<TableContextMenuState | null>(null);
 
   const editorRef = useRef<HTMLDivElement | null>(null);
   const windowEditorRef = useRef<HTMLDivElement | null>(null);
@@ -502,6 +513,30 @@ export const MemoWidget = () => {
     });
   }, [saveDialogOpen]);
 
+  useEffect(() => {
+    if (!tableContextMenu) {
+      return;
+    }
+
+    const handlePointerDown = () => {
+      setTableContextMenu(null);
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setTableContextMenu(null);
+      }
+    };
+
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [tableContextMenu]);
+
   const updateActiveNote = (patch: Partial<MemoNote>) => {
     if (!activeNote) return;
 
@@ -594,6 +629,20 @@ export const MemoWidget = () => {
     runCommand("insertHTML", tableHtml);
   };
 
+  const getEditorElement = (editor: "widget" | "window") =>
+    editor === "window" ? windowEditorRef.current : editorRef.current;
+
+  const getTableCellFromNode = (node: EventTarget | Node | null) => {
+    const baseNode =
+      node instanceof HTMLElement
+        ? node
+        : node instanceof Node
+          ? node.parentElement
+          : null;
+
+    return baseNode?.closest("td, th") as HTMLTableCellElement | null;
+  };
+
   const getSelectedTableCell = () => {
     const selection = window.getSelection();
     const anchorNode = selection?.anchorNode;
@@ -624,6 +673,7 @@ export const MemoWidget = () => {
 
     action(cell, row, table);
     syncFromEditor(activeEditor);
+    setTableContextMenu(null);
   };
 
   const insertTableRow = (after = true) => {
@@ -761,6 +811,53 @@ export const MemoWidget = () => {
     event.preventDefault();
   };
 
+  const openTableContextMenu = (
+    event: ReactMouseEvent<HTMLDivElement>,
+    editor: "widget" | "window"
+  ) => {
+    if (!editing) {
+      return;
+    }
+
+    const editorElement = getEditorElement(editor);
+    const cell = getTableCellFromNode(event.target);
+
+    if (!editorElement || !cell || !editorElement.contains(cell)) {
+      setTableContextMenu(null);
+      return;
+    }
+
+    event.preventDefault();
+
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(cell);
+    range.collapse(true);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+
+    if (activeEditor !== editorElement) {
+      editorElement.focus();
+    }
+
+    setTableContextMenu({
+      x: event.clientX,
+      y: event.clientY,
+      editor,
+    });
+  };
+
+  const handleTableMenuAction = (action: () => void) => {
+    const menuEditor = tableContextMenu?.editor;
+
+    if (!menuEditor) {
+      return;
+    }
+
+    getEditorElement(menuEditor)?.focus();
+    action();
+  };
+
   const renderToolbar = () => (
     <div className="memo-toolbar">
       <select
@@ -853,72 +950,6 @@ export const MemoWidget = () => {
         disabled={!editing}
       >
         <Table2 className="w-3.5 h-3.5" />
-      </button>
-
-      <button
-        type="button"
-        onMouseDown={handleToolbarMouseDown}
-        onClick={() => insertTableRow(true)}
-        className="memo-tool-button memo-table-tool"
-        disabled={!editing}
-        title="Add row"
-      >
-        R+
-      </button>
-
-      <button
-        type="button"
-        onMouseDown={handleToolbarMouseDown}
-        onClick={() => insertTableColumn(true)}
-        className="memo-tool-button memo-table-tool"
-        disabled={!editing}
-        title="Add column"
-      >
-        C+
-      </button>
-
-      <button
-        type="button"
-        onMouseDown={handleToolbarMouseDown}
-        onClick={deleteTableRow}
-        className="memo-tool-button memo-table-tool"
-        disabled={!editing}
-        title="Delete row"
-      >
-        R-
-      </button>
-
-      <button
-        type="button"
-        onMouseDown={handleToolbarMouseDown}
-        onClick={deleteTableColumn}
-        className="memo-tool-button memo-table-tool"
-        disabled={!editing}
-        title="Delete column"
-      >
-        C-
-      </button>
-
-      <button
-        type="button"
-        onMouseDown={handleToolbarMouseDown}
-        onClick={() => adjustSelectedColumnWidth(-24)}
-        className="memo-tool-button memo-table-tool"
-        disabled={!editing}
-        title="Narrow column"
-      >
-        W-
-      </button>
-
-      <button
-        type="button"
-        onMouseDown={handleToolbarMouseDown}
-        onClick={() => adjustSelectedColumnWidth(24)}
-        className="memo-tool-button memo-table-tool"
-        disabled={!editing}
-        title="Widen column"
-      >
-        W+
       </button>
 
       <button
@@ -1128,6 +1159,9 @@ export const MemoWidget = () => {
           suppressContentEditableWarning
           spellCheck={false}
           lang="ko"
+          onContextMenu={(event) =>
+            openTableContextMenu(event, windowMode ? "window" : "widget")
+          }
           onInput={() => syncFromEditor(ref.current)}
           className={cn(
             "memo-editor",
@@ -1336,6 +1370,80 @@ export const MemoWidget = () => {
         )
       : null;
 
+  const tableContextMenuPortal = tableContextMenu
+    ? createPortal(
+        <div
+          className="memo-table-context-menu"
+          style={{
+            left: tableContextMenu.x,
+            top: tableContextMenu.y,
+          }}
+          onPointerDown={(event) => event.stopPropagation()}
+        >
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(() => insertTableRow(true))}
+          >
+            <Rows2 className="w-3.5 h-3.5" />
+            Add row below
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(() => insertTableColumn(true))}
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Add column right
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(deleteTableRow)}
+          >
+            <Minus className="w-3.5 h-3.5" />
+            Delete row
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(deleteTableColumn)}
+          >
+            <X className="w-3.5 h-3.5" />
+            Delete column
+          </button>
+
+          <div className="memo-table-context-divider" />
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() =>
+              handleTableMenuAction(() => adjustSelectedColumnWidth(-24))
+            }
+          >
+            <StretchHorizontal className="w-3.5 h-3.5" />
+            Narrow column
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() =>
+              handleTableMenuAction(() => adjustSelectedColumnWidth(24))
+            }
+          >
+            <StretchHorizontal className="w-3.5 h-3.5" />
+            Widen column
+          </button>
+        </div>,
+        document.body
+      )
+    : null;
+
   return (
     <>
       <GlassCard
@@ -1423,6 +1531,7 @@ export const MemoWidget = () => {
 
       {memoWindow}
       {saveDialog}
+      {tableContextMenuPortal}
     </>
   );
 };

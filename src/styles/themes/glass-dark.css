@@ -529,6 +529,43 @@ body.theme-glass-dark .memo-color-area {
   border-color: rgba(152, 171, 222, 0.14) !important;
 }
 
+html[data-theme="glass-dark"] .memo-table-context-menu,
+body[data-theme="glass-dark"] .memo-table-context-menu,
+html.theme-glass-dark .memo-table-context-menu,
+body.theme-glass-dark .memo-table-context-menu {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(29, 35, 55, 0.92),
+      rgba(16, 21, 35, 0.88)
+    ) !important;
+  border-color: rgba(166, 184, 233, 0.18) !important;
+  box-shadow:
+    0 22px 44px -18px rgba(2, 4, 12, 0.54),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme="glass-dark"] .memo-table-context-item,
+body[data-theme="glass-dark"] .memo-table-context-item,
+html.theme-glass-dark .memo-table-context-item,
+body.theme-glass-dark .memo-table-context-item {
+  color: rgba(240, 244, 255, 0.92) !important;
+}
+
+html[data-theme="glass-dark"] .memo-table-context-item:hover,
+body[data-theme="glass-dark"] .memo-table-context-item:hover,
+html.theme-glass-dark .memo-table-context-item:hover,
+body.theme-glass-dark .memo-table-context-item:hover {
+  background: rgba(71, 84, 125, 0.34) !important;
+}
+
+html[data-theme="glass-dark"] .memo-table-context-divider,
+body[data-theme="glass-dark"] .memo-table-context-divider,
+html.theme-glass-dark .memo-table-context-divider,
+body.theme-glass-dark .memo-table-context-divider {
+  background: rgba(167, 184, 233, 0.16) !important;
+}
+
 html[data-theme="glass-dark"] .memo-editor,
 body[data-theme="glass-dark"] .memo-editor,
 html.theme-glass-dark .memo-editor,
