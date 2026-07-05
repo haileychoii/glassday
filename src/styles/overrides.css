@@ -42,7 +42,7 @@ body,
   width: 100% !important;
   min-width: 0 !important;
   box-sizing: border-box !important;
-  padding: 28px 32px 40px !important;
+  padding: 18px 32px 40px !important;
   overflow-x: hidden !important;
 }
 
@@ -140,18 +140,18 @@ body,
   position: relative !important;
   z-index: 50 !important;
   width: 100% !important;
-  min-height: 86px !important;
+  min-height: 74px !important;
   overflow: visible !important;
 }
 
 .topbar-inner {
   width: 100% !important;
-  min-height: 86px !important;
+  min-height: 74px !important;
   padding: 0 24px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  gap: 18px !important;
+  gap: 16px !important;
 }
 
 .topbar-title {
@@ -184,7 +184,7 @@ body,
 }
 
 .topbar-title p {
-  margin: 6px 0 0 !important;
+  margin: 3px 0 0 !important;
   font-size: 13px !important;
   line-height: 1.2 !important;
   white-space: nowrap !important;
@@ -316,17 +316,17 @@ body,
 
 @media (max-width: 768px) {
   .dashboard-tab-space {
-    padding: 22px 20px 32px !important;
+    padding: 18px 20px 32px !important;
   }
 
   .topbar {
     height: auto !important;
-    min-height: 112px !important;
+    min-height: 100px !important;
   }
 
   .topbar-inner {
-    min-height: 112px !important;
-    padding: 18px 20px !important;
+    min-height: 100px !important;
+    padding: 14px 20px !important;
     flex-direction: column !important;
     align-items: stretch !important;
     justify-content: center !important;
@@ -390,11 +390,11 @@ body,
 
 @media (max-width: 430px) {
   .dashboard-tab-space {
-    padding: 20px 16px 30px !important;
+    padding: 16px 16px 30px !important;
   }
 
   .topbar-inner {
-    padding-inline: 18px !important;
+    padding-inline: 16px !important;
   }
 
   .topbar-actions {
