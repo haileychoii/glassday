@@ -727,6 +727,52 @@ export const MemoWidget = () => {
     });
   };
 
+  const mergeSelectedCellWithRight = () => {
+    updateTableFromSelection((cell, row) => {
+      const cells = Array.from(row.cells);
+      const columnIndex = cells.indexOf(cell);
+      const nextCell = cells[columnIndex + 1];
+
+      if (!nextCell) {
+        return;
+      }
+
+      const currentSpan = cell.colSpan || 1;
+      const nextSpan = nextCell.colSpan || 1;
+      const nextHtml = nextCell.innerHTML.trim();
+      const currentHtml = cell.innerHTML.trim();
+
+      cell.colSpan = currentSpan + nextSpan;
+
+      if (nextHtml) {
+        cell.innerHTML = currentHtml
+          ? `${cell.innerHTML}<br />${nextCell.innerHTML}`
+          : nextCell.innerHTML;
+      }
+
+      nextCell.remove();
+    });
+  };
+
+  const splitSelectedCell = () => {
+    updateTableFromSelection((cell, row) => {
+      const span = cell.colSpan || 1;
+
+      if (span <= 1) {
+        return;
+      }
+
+      const tagName = cell.tagName.toLowerCase();
+      cell.colSpan = 1;
+
+      for (let index = 1; index < span; index += 1) {
+        const newCell = document.createElement(tagName);
+        newCell.innerHTML = "<br />";
+        row.insertBefore(newCell, cell.nextSibling);
+      }
+    });
+  };
+
   const adjustSelectedColumnWidth = (delta: number) => {
     updateTableFromSelection((cell, row, table) => {
       const columnIndex = Array.from(row.cells).indexOf(cell);
@@ -1383,10 +1429,28 @@ export const MemoWidget = () => {
           <button
             type="button"
             className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(() => insertTableRow(false))}
+          >
+            <Rows2 className="w-3.5 h-3.5" />
+            Add row above
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
             onClick={() => handleTableMenuAction(() => insertTableRow(true))}
           >
             <Rows2 className="w-3.5 h-3.5" />
             Add row below
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(() => insertTableColumn(false))}
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Add column left
           </button>
 
           <button
@@ -1414,6 +1478,26 @@ export const MemoWidget = () => {
           >
             <X className="w-3.5 h-3.5" />
             Delete column
+          </button>
+
+          <div className="memo-table-context-divider" />
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(mergeSelectedCellWithRight)}
+          >
+            <StretchHorizontal className="w-3.5 h-3.5" />
+            Merge with right
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(splitSelectedCell)}
+          >
+            <Rows2 className="w-3.5 h-3.5" />
+            Split merged cell
           </button>
 
           <div className="memo-table-context-divider" />
