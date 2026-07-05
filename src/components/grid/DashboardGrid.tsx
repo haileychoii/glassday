@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ComponentType, CSSProperties, ReactNode } from "react";
+import type {
+  ComponentType,
+  CSSProperties,
+  MouseEvent as ReactMouseEvent,
+  PointerEvent as ReactPointerEvent,
+  ReactNode,
+} from "react";
 import { Responsive } from "react-grid-layout/legacy";
 
 import type {
@@ -63,20 +69,22 @@ const ROW_HEIGHT = 52;
 const GRID_GAP = 14;
 const INITIAL_VISIBLE_ROWS = 16;
 
-const DRAGGABLE_CANCEL_SELECTOR = [
-  "button",
-  "input",
-  "textarea",
-  "select",
-  "option",
-  "a",
-  "label",
-  "[contenteditable='true']",
-  ".widget-remove-button",
-  ".react-resizable-handle",
-].join(", ");
+const RESIZE_HANDLES = ["n", "s", "e", "w", "ne", "nw", "se", "sw"] as const;
 
-const RESIZE_HANDLES = ["n", "s", "e", "w", "ne", "nw", "se", "sw"];
+type ResizeHandle = (typeof RESIZE_HANDLES)[number];
+
+type EditInteraction = {
+  mode: "move" | "resize";
+  inputKind: "pointer" | "mouse";
+  widgetId: WidgetId;
+  breakpoint: Breakpoint;
+  handle?: ResizeHandle;
+  startClientX: number;
+  startClientY: number;
+  startItem: GridLayoutItem;
+  startLayouts: Layouts;
+  lastLayouts: Layouts;
+};
 
 const widgetMap: Partial<Record<WidgetId, ReactNode>> = {
   today: <TodayFocusWidget />,
@@ -256,9 +264,72 @@ const stackResponsiveLayouts = (layouts: Layouts): Layouts => ({
   sm: stackCollidingLayout(layouts.sm),
 });
 
-const getWidgetIdFromLayoutItem = (item: unknown): WidgetId | null => {
-  if (!isRecord(item) || typeof item.i !== "string") return null;
-  return item.i as WidgetId;
+const stackLayoutWithPriority = (
+  layout: GridLayoutItem[],
+  priorityItemId: string
+): GridLayoutItem[] => {
+  const placed: GridLayoutItem[] = [];
+  const priorityItem = layout.find((item) => item.i === priorityItemId);
+  const remainingItems = layout
+    .filter((item) => item.i !== priorityItemId)
+    .sort((a, b) => {
+      if (a.y !== b.y) return a.y - b.y;
+      if (a.x !== b.x) return a.x - b.x;
+      return a.i.localeCompare(b.i);
+    });
+  const orderedItems = priorityItem ? [priorityItem, ...remainingItems] : remainingItems;
+
+  orderedItems.forEach((sourceItem) => {
+    const item = { ...sourceItem };
+    let moved = true;
+
+    while (moved) {
+      moved = false;
+
+      placed.forEach((placedItem) => {
+        if (isOverlapping(item, placedItem)) {
+          item.y = placedItem.y + placedItem.h;
+          moved = true;
+        }
+      });
+    }
+
+    placed.push(item);
+  });
+
+  return placed;
+};
+
+const clamp = (value: number, min: number, max: number) => {
+  return Math.max(min, Math.min(value, max));
+};
+
+const normalizeLayoutItemForCols = (
+  item: GridLayoutItem,
+  cols: number
+): GridLayoutItem => {
+  const safeWidth = clamp(item.w, 2, cols);
+  const safeX = clamp(item.x, 0, cols - safeWidth);
+
+  return {
+    ...item,
+    x: safeX,
+    y: Math.max(0, item.y),
+    w: safeWidth,
+    h: Math.max(3, item.h),
+  };
+};
+
+const replaceLayoutItem = (
+  layout: GridLayoutItem[],
+  nextItem: GridLayoutItem,
+  cols: number
+) => {
+  const normalizedItem = normalizeLayoutItemForCols(nextItem, cols);
+
+  return layout.map((item) =>
+    item.i === normalizedItem.i ? normalizedItem : item
+  );
 };
 
 export const DashboardGrid = ({
@@ -270,12 +341,14 @@ export const DashboardGrid = ({
   onEditValidationChange,
 }: DashboardGridProps) => {
   const gridWidthRef = useRef<HTMLDivElement | null>(null);
+  const interactionRef = useRef<EditInteraction | null>(null);
   const [width, setWidth] = useState(1200);
   const [currentBreakpoint, setCurrentBreakpoint] =
     useState<Breakpoint>("lg");
   const [selectedWidgetId, setSelectedWidgetId] = useState<WidgetId | null>(
     null
   );
+  const [draftLayouts, setDraftLayouts] = useState<Layouts | null>(null);
 
   useEffect(() => {
     if (!gridWidthRef.current) return;
@@ -307,10 +380,14 @@ export const DashboardGrid = ({
   }, [activeTab.layouts, activeWidgetIds]);
 
   const displayedLayouts = useMemo<Layouts>(() => {
+    if (editMode && draftLayouts) {
+      return draftLayouts;
+    }
+
     return editMode
       ? responsiveLayouts
       : stackResponsiveLayouts(responsiveLayouts);
-  }, [editMode, responsiveLayouts]);
+  }, [draftLayouts, editMode, responsiveLayouts]);
 
   const editLayout = useMemo<GridLayoutItem[]>(() => {
     return responsiveLayouts[currentBreakpoint] ?? responsiveLayouts.lg ?? [];
@@ -338,19 +415,250 @@ export const DashboardGrid = ({
     });
   }, [collidingWidgetIds, onEditValidationChange]);
 
-  const handleLayoutChange = (_layout: unknown, allLayouts: unknown) => {
-    const nextLayouts = ensureResponsiveLayouts(allLayouts, activeWidgetIds);
+  const getGridMetrics = (breakpoint: Breakpoint) => {
+    const cols = GRID_COLS[breakpoint];
+    const columnWidth = (width - GRID_GAP * (cols - 1)) / cols;
 
-    onLayoutsChange({
-      lg: ensureLayoutForWidgets(nextLayouts.lg, activeWidgetIds, "lg"),
-      md: ensureLayoutForWidgets(nextLayouts.md, activeWidgetIds, "md"),
-      sm: ensureLayoutForWidgets(nextLayouts.sm, activeWidgetIds, "sm"),
-    });
+    return {
+      cols,
+      columnStep: columnWidth + GRID_GAP,
+      rowStep: ROW_HEIGHT + GRID_GAP,
+    };
   };
 
-  const selectLayoutItem = (item: unknown) => {
-    const widgetId = getWidgetIdFromLayoutItem(item);
-    if (widgetId) setSelectedWidgetId(widgetId);
+  const commitInteractionLayout = (
+    session: EditInteraction,
+    clientX: number,
+    clientY: number
+  ) => {
+    const { cols, columnStep, rowStep } = getGridMetrics(session.breakpoint);
+    const deltaColumns = Math.round(
+      (clientX - session.startClientX) / columnStep
+    );
+    const deltaRows = Math.round(
+      (clientY - session.startClientY) / rowStep
+    );
+    const startItem = session.startItem;
+    let nextItem: GridLayoutItem = { ...startItem };
+
+    if (session.mode === "move") {
+      nextItem = {
+        ...nextItem,
+        x: clamp(startItem.x + deltaColumns, 0, cols - startItem.w),
+        y: Math.max(0, startItem.y + deltaRows),
+      };
+    } else {
+      const handle = session.handle ?? "se";
+      let nextX = startItem.x;
+      let nextY = startItem.y;
+      let nextW = startItem.w;
+      let nextH = startItem.h;
+
+      if (handle.includes("e")) {
+        nextW = clamp(startItem.w + deltaColumns, 2, cols - startItem.x);
+      }
+
+      if (handle.includes("s")) {
+        nextH = Math.max(3, startItem.h + deltaRows);
+      }
+
+      if (handle.includes("w")) {
+        const maxLeftDelta = startItem.x;
+        const maxRightDelta = startItem.w - 2;
+        const leftDelta = clamp(deltaColumns, -maxLeftDelta, maxRightDelta);
+
+        nextX = startItem.x + leftDelta;
+        nextW = startItem.w - leftDelta;
+      }
+
+      if (handle.includes("n")) {
+        const maxUpDelta = startItem.y;
+        const maxDownDelta = startItem.h - 3;
+        const topDelta = clamp(deltaRows, -maxUpDelta, maxDownDelta);
+
+        nextY = startItem.y + topDelta;
+        nextH = startItem.h - topDelta;
+      }
+
+      nextItem = {
+        ...nextItem,
+        x: nextX,
+        y: nextY,
+        w: nextW,
+        h: nextH,
+      };
+    }
+
+    const sourceLayout =
+      session.startLayouts[session.breakpoint] ?? session.startLayouts.lg;
+    const nextLayout = stackLayoutWithPriority(
+      replaceLayoutItem(sourceLayout, nextItem, cols),
+      session.widgetId
+    );
+
+    const nextLayouts = {
+      ...session.startLayouts,
+      [session.breakpoint]: nextLayout,
+    };
+
+    session.lastLayouts = nextLayouts;
+    setDraftLayouts(nextLayouts);
+  };
+
+  useEffect(() => {
+    const handlePointerMove = (event: PointerEvent) => {
+      const session = interactionRef.current;
+      if (!session || session.inputKind !== "pointer") return;
+
+      event.preventDefault();
+      commitInteractionLayout(session, event.clientX, event.clientY);
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const session = interactionRef.current;
+      if (!session || session.inputKind !== "mouse") return;
+
+      event.preventDefault();
+      commitInteractionLayout(session, event.clientX, event.clientY);
+    };
+
+    const finishInteraction = () => {
+      const session = interactionRef.current;
+      if (session) {
+        onLayoutsChange(session.lastLayouts);
+      }
+
+      interactionRef.current = null;
+      setDraftLayouts(null);
+    };
+
+    const handlePointerUp = () => {
+      const session = interactionRef.current;
+      if (!session || session.inputKind !== "pointer") return;
+      finishInteraction();
+    };
+
+    const handleMouseUp = () => {
+      const session = interactionRef.current;
+      if (!session || session.inputKind !== "mouse") return;
+      finishInteraction();
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerUp);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerUp);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [onLayoutsChange, width]);
+
+  const continuePointerInteraction = (event: ReactPointerEvent<HTMLElement>) => {
+    const session = interactionRef.current;
+    if (!session || session.inputKind !== "pointer") return;
+
+    event.preventDefault();
+    commitInteractionLayout(session, event.clientX, event.clientY);
+  };
+
+  const continueMouseInteraction = (event: ReactMouseEvent<HTMLElement>) => {
+    const session = interactionRef.current;
+    if (!session || session.inputKind !== "mouse") return;
+
+    event.preventDefault();
+    commitInteractionLayout(session, event.clientX, event.clientY);
+  };
+
+  const startEditInteraction = (
+    mode: EditInteraction["mode"],
+    inputKind: EditInteraction["inputKind"],
+    widgetId: WidgetId,
+    clientX: number,
+    clientY: number,
+    handle?: ResizeHandle
+  ) => {
+    const layout = responsiveLayouts[currentBreakpoint] ?? responsiveLayouts.lg;
+    const startItem = layout.find((item) => item.i === widgetId);
+    if (!startItem) return;
+
+    setSelectedWidgetId(widgetId);
+
+    interactionRef.current = {
+      mode,
+      inputKind,
+      widgetId,
+      breakpoint: currentBreakpoint,
+      handle,
+      startClientX: clientX,
+      startClientY: clientY,
+      startItem: { ...startItem },
+      startLayouts: responsiveLayouts,
+      lastLayouts: responsiveLayouts,
+    };
+
+    setDraftLayouts(responsiveLayouts);
+  };
+
+  const beginEditInteraction = (
+    mode: EditInteraction["mode"],
+    widgetId: WidgetId,
+    event: ReactPointerEvent<HTMLElement>,
+    handle?: ResizeHandle
+  ) => {
+    if (!editMode) return;
+    if (interactionRef.current) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    const layout = responsiveLayouts[currentBreakpoint] ?? responsiveLayouts.lg;
+    const startItem = layout.find((item) => item.i === widgetId);
+    if (!startItem) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    startEditInteraction(
+      mode,
+      "pointer",
+      widgetId,
+      event.clientX,
+      event.clientY,
+      handle
+    );
+  };
+
+  const beginMouseEditInteraction = (
+    mode: EditInteraction["mode"],
+    widgetId: WidgetId,
+    event: ReactMouseEvent<HTMLElement>,
+    handle?: ResizeHandle
+  ) => {
+    if (!editMode) return;
+    if (interactionRef.current) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    startEditInteraction(
+      mode,
+      "mouse",
+      widgetId,
+      event.clientX,
+      event.clientY,
+      handle
+    );
   };
 
   const canvasStyle = {
@@ -434,6 +742,8 @@ export const DashboardGrid = ({
           .filter(Boolean)
           .join(" ")}
         style={canvasStyle}
+        onPointerMove={continuePointerInteraction}
+        onMouseMove={continueMouseInteraction}
       >
         <ResponsiveGridLayout
           className="layout dashboard-rgl"
@@ -445,28 +755,15 @@ export const DashboardGrid = ({
           margin={[GRID_GAP, GRID_GAP]}
           containerPadding={[0, 0]}
           autoSize={true}
-          isDraggable={editMode}
-          isResizable={editMode}
+          isDraggable={false}
+          isResizable={false}
           isBounded={false}
           compactType="vertical"
           preventCollision={false}
           allowOverlap={false}
-          draggableCancel={DRAGGABLE_CANCEL_SELECTOR}
-          resizeHandles={RESIZE_HANDLES}
           onBreakpointChange={(breakpoint: unknown) => {
             setCurrentBreakpoint(breakpoint as Breakpoint);
           }}
-          onDragStart={(
-            _layout: unknown,
-            _oldItem: unknown,
-            newItem: unknown
-          ) => selectLayoutItem(newItem)}
-          onResizeStart={(
-            _layout: unknown,
-            _oldItem: unknown,
-            newItem: unknown
-          ) => selectLayoutItem(newItem)}
-          onLayoutChange={handleLayoutChange}
         >
           {activeWidgetIds.map((widgetId) => {
             const isSelected = editMode && selectedWidgetId === widgetId;
@@ -500,6 +797,40 @@ export const DashboardGrid = ({
               >
                 {editMode && (
                   <>
+                    <div
+                      className="widget-move-surface"
+                      aria-hidden="true"
+                      onPointerDown={(event) =>
+                        beginEditInteraction("move", widgetId, event)
+                      }
+                      onPointerMove={continuePointerInteraction}
+                      onMouseDown={(event) =>
+                        beginMouseEditInteraction("move", widgetId, event)
+                      }
+                      onMouseMove={continueMouseInteraction}
+                    />
+
+                    {RESIZE_HANDLES.map((handle) => (
+                      <span
+                        key={handle}
+                        className={`react-resizable-handle react-resizable-handle-${handle}`}
+                        aria-hidden="true"
+                        onPointerDown={(event) =>
+                          beginEditInteraction("resize", widgetId, event, handle)
+                        }
+                        onPointerMove={continuePointerInteraction}
+                        onMouseDown={(event) =>
+                          beginMouseEditInteraction(
+                            "resize",
+                            widgetId,
+                            event,
+                            handle
+                          )
+                        }
+                        onMouseMove={continueMouseInteraction}
+                      />
+                    ))}
+
                     <div className="widget-edit-label">
                       {widget?.label ?? widgetId}
                     </div>

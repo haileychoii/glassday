@@ -466,17 +466,18 @@ body,
    These rules react to the grid item width, not only viewport width.
 ========================================================= */
 
-.dashboard-grid-item {
-  container-type: inline-size;
-  container-name: gd-widget;
-}
-
 .dashboard-grid-item > .glass-card,
 .dashboard-grid-item > .memo-widget {
   width: 100% !important;
   height: 100% !important;
   min-width: 0 !important;
   min-height: 0 !important;
+}
+
+.dashboard-grid-item > .glass-card,
+.dashboard-grid-item > .career-widget {
+  container-type: inline-size;
+  container-name: gd-widget;
 }
 
 .dashboard-grid-item > .glass-card > div:first-child {
@@ -605,7 +606,7 @@ body,
 
 .memo-widget {
   container-type: inline-size;
-  container-name: memo-widget;
+  container-name: gd-widget memo-widget;
 }
 
 .memo-widget > div:last-child {
