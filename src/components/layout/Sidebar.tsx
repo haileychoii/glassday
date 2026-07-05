@@ -1,7 +1,7 @@
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 
-import { cn } from "../../lib/utils";
 import type { DashboardTab } from "../../types/workspace";
+import { WorkspaceTabsNav } from "./WorkspaceTabsNav";
 
 type SidebarProps = {
   tabs: DashboardTab[];
@@ -48,52 +48,14 @@ export const Sidebar = ({
           )}
         </div>
 
-        <nav className="sidebar-workspace-list" aria-label="Workspaces">
-          {tabs.map((tab) => (
-            <div
-              key={tab.id}
-              className={cn(
-                "sidebar-tab-item",
-                activeTabId === tab.id && "is-active"
-              )}
-            >
-              <button
-                type="button"
-                onClick={() => onSelectTab(tab.id)}
-                className="sidebar-tab-main"
-              >
-                <span className="sidebar-tab-icon">{tab.icon}</span>
-
-                {editMode && !tab.locked ? (
-                  <input
-                    value={tab.label}
-                    onChange={(event) =>
-                      onRenameTab(tab.id, event.target.value)
-                    }
-                    onClick={(event) => event.stopPropagation()}
-                    className="sidebar-tab-input"
-                    spellCheck={false}
-                    aria-label={`${tab.label} workspace name`}
-                  />
-                ) : (
-                  <span className="sidebar-tab-label">{tab.label}</span>
-                )}
-              </button>
-
-              {editMode && !tab.locked && (
-                <button
-                  type="button"
-                  onClick={() => onRemoveTab(tab.id)}
-                  className="sidebar-tab-delete"
-                  title="Remove workspace"
-                  aria-label={`Remove ${tab.label}`}
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
-          ))}
-        </nav>
+        <WorkspaceTabsNav
+          tabs={tabs}
+          activeTabId={activeTabId}
+          editMode={editMode}
+          onSelectTab={onSelectTab}
+          onRenameTab={onRenameTab}
+          onRemoveTab={onRemoveTab}
+        />
       </div>
     </aside>
   );

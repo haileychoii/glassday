@@ -51,8 +51,14 @@ export const AppShell = ({
             <div className="flex-1 min-w-0 flex flex-col">
               <Topbar
                 editMode={editMode}
+                tabs={tabs}
+                activeTabId={activeTabId}
                 onToggleEditMode={onToggleEditMode}
                 onOpenSettings={onOpenSettings}
+                onSelectTab={onSelectTab}
+                onAddTab={onAddTab}
+                onRenameTab={onRenameTab}
+                onRemoveTab={onRemoveTab}
               />
 
               <main className="flex-1 p-4 md:p-6 !overflow-y-auto !overflow-x-hidden bg-transparent">

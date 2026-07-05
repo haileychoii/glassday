@@ -208,7 +208,7 @@ main {
   .glass-panel > .flex,
   .liquid-shell > .flex {
     flex-direction: column !important;
-    gap: 10px !important;
+    gap: 0 !important;
     height: auto !important;
     min-height: 0 !important;
   }
@@ -224,52 +224,7 @@ main {
   .app-sidebar,
   .sidebar,
   aside {
-    flex: 0 0 auto !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    height: auto !important;
-    min-height: auto !important;
-    border-right: 0 !important;
-    border-bottom: 1px solid hsl(0 0% 100% / 0.32) !important;
-    padding: 14px !important;
-    position: relative !important;
-    z-index: 3 !important;
-  }
-
-  aside > div:first-child {
-    height: auto !important;
-    padding: 0 4px 10px !important;
-    border-bottom: 0 !important;
-  }
-
-  aside nav,
-  aside .sidebar-workspace-list {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 8px !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    padding-bottom: 4px !important;
-    -webkit-overflow-scrolling: touch !important;
-    scrollbar-width: none !important;
-  }
-
-  aside nav::-webkit-scrollbar,
-  aside .sidebar-workspace-list::-webkit-scrollbar {
     display: none !important;
-  }
-
-  .sidebar-tab-item {
-    flex: 0 0 auto !important;
-    min-width: 112px !important;
-  }
-
-  .sidebar-tab-main {
-    height: 38px !important;
-    padding: 0 12px !important;
-    font-size: 13.5px !important;
-    white-space: nowrap !important;
   }
 
   main {
@@ -281,6 +236,59 @@ main {
     position: relative !important;
     z-index: 2 !important;
     margin-top: 0 !important;
+  }
+
+  .topbar-inner {
+    min-height: auto !important;
+    padding: 14px 18px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .topbar-heading {
+    align-items: flex-start !important;
+  }
+
+  .topbar-mobile-workspaces {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-width: 0 !important;
+  }
+
+  .topbar-mobile-workspace-list {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding-bottom: 4px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+
+  .topbar-mobile-workspace-list::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .topbar-mobile-workspaces .sidebar-tab-item {
+    flex: 0 0 auto !important;
+    min-width: 112px !important;
+    width: auto !important;
+  }
+
+  .topbar-mobile-workspaces .sidebar-tab-main {
+    height: 38px !important;
+    padding: 0 12px !important;
+    font-size: 13.5px !important;
+    white-space: nowrap !important;
+  }
+
+  .topbar-mobile-workspaces .sidebar-tab-delete {
+    width: 28px !important;
+    min-width: 28px !important;
+    height: 28px !important;
   }
 
   .dashboard-tab-space {
@@ -326,6 +334,11 @@ main {
     min-width: 0 !important;
   }
 
+  .topbar-heading {
+    gap: 12px !important;
+    align-items: flex-start !important;
+  }
+
   .topbar-title h1 {
     font-size: 20px !important;
   }
@@ -335,7 +348,7 @@ main {
   }
 
   .topbar-actions {
-    width: 100% !important;
+    width: auto !important;
     min-width: 0 !important;
     margin-left: 0 !important;
     justify-content: flex-end !important;
@@ -447,7 +460,7 @@ main {
   }
 
   .topbar-actions {
-    justify-content: flex-start !important;
+    justify-content: flex-end !important;
     overflow-x: visible !important;
     padding-bottom: 0 !important;
   }

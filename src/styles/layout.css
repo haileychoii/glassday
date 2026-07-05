@@ -664,50 +664,6 @@ aside .sidebar-workspace-list {
 @media (max-width: 920px) {
   .app-sidebar,
   .sidebar {
-    flex: 0 0 auto;
-    width: 100%;
-    min-width: 0;
-    max-width: none;
-    min-height: auto;
-  }
-
-  .sidebar-brand {
-    height: auto;
-    min-height: 0;
-    padding: 14px 18px 8px;
-  }
-
-  .sidebar-body {
-    padding: 8px 14px 14px;
-    overflow: hidden;
-  }
-
-  .sidebar-section-header {
     display: none;
-  }
-
-  .sidebar-workspace-list {
-    flex-direction: row;
-    gap: 8px;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    padding-bottom: 4px;
-
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .sidebar-tab-item {
-    width: auto;
-    min-width: 112px;
-    flex: 0 0 auto;
-  }
-
-  .sidebar-tab-main {
-    height: 38px;
-    padding: 0 12px;
-    font-size: 13.5px;
-    white-space: nowrap;
   }
 }
