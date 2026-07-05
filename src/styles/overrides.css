@@ -376,7 +376,7 @@ body,
 
   .topbar-inner {
     min-height: 100px !important;
-    padding: 14px 20px !important;
+    padding: 18px 20px 14px !important;
     flex-direction: column !important;
     align-items: stretch !important;
     justify-content: center !important;
@@ -563,6 +563,24 @@ body,
     padding: 0 16px 16px !important;
   }
 
+  .glass-card > div:first-child h3 {
+    color: hsl(var(--foreground) / 0.92) !important;
+    font-size: 13px !important;
+    line-height: 1.22 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  .glass-card > div:first-child p {
+    color: hsl(var(--muted-foreground) / 0.8) !important;
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
   .today-focus-hero,
   .study-hero {
     flex-direction: column !important;
@@ -571,8 +589,7 @@ body,
   }
 
   .today-focus-grid,
-  .study-subject-grid,
-  .career-summary-grid {
+  .study-subject-grid {
     grid-template-columns: 1fr !important;
   }
 
@@ -898,5 +915,216 @@ body,
 @container memo-widget (max-width: 390px) {
   .memo-widget .memo-app {
     grid-template-rows: minmax(104px, 26%) minmax(0, 1fr) !important;
+  }
+}
+
+/* =========================================================
+   Final compact widget overrides
+   Keep these at the end so earlier generic/container rules
+   cannot flatten the mobile-friendly layouts again.
+========================================================= */
+
+@container gd-widget (max-width: 620px) {
+  .glass-card > div:first-child {
+    align-items: flex-start !important;
+    gap: 10px !important;
+    padding: 16px 14px 10px !important;
+  }
+
+  .glass-card > div:first-child > div:first-child {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  .glass-card > div:first-child > div:last-child,
+  .glass-card > div:first-child > .shrink-0 {
+    align-self: flex-start !important;
+  }
+
+  .glass-card > div:first-child h3 {
+    color: hsl(var(--foreground) / 0.92) !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  .glass-card > div:first-child p {
+    color: hsl(var(--muted-foreground) / 0.8) !important;
+  }
+}
+
+@container gd-widget (max-width: 760px) {
+  .memo-widget .memo-compact-toggle,
+  .memo-widget .memo-list-close {
+    display: inline-flex !important;
+  }
+
+  .memo-widget .memo-app {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    position: relative !important;
+  }
+
+  .memo-widget .memo-list-panel {
+    position: absolute !important;
+    inset: 0 auto 0 0 !important;
+    width: min(236px, calc(100% - 28px)) !important;
+    max-width: 82% !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 12px 10px !important;
+    border-right: 1px solid hsl(220 18% 82% / 0.45) !important;
+    border-bottom: 0 !important;
+    border-radius: 20px !important;
+    background: hsl(220 35% 97% / 0.82) !important;
+    box-shadow:
+      0 14px 36px hsl(220 30% 22% / 0.16),
+      inset -1px 0 0 hsl(0 0% 100% / 0.62) !important;
+    transform: translateX(calc(-100% - 12px)) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: 7 !important;
+  }
+
+  .memo-widget .memo-app.is-compact-list-open .memo-list-panel {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .memo-widget .memo-note-list {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-auto-flow: initial !important;
+    grid-auto-columns: initial !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .memo-widget .memo-workspace {
+    grid-row: 1 !important;
+    grid-column: 1 !important;
+    padding: 12px !important;
+  }
+
+  .memo-widget .memo-list-panel strong,
+  .memo-widget .memo-list-panel small,
+  .memo-widget .memo-title-view,
+  .memo-widget .memo-title-input,
+  .memo-widget .memo-editor {
+    color: hsl(var(--foreground) / 0.9) !important;
+  }
+
+  .career-widget .career-summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .career-widget .career-summary-card {
+    min-height: 64px !important;
+    aspect-ratio: 1 / 1 !important;
+    padding: 8px 6px !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .career-widget .career-summary-card strong {
+    font-size: 18px !important;
+  }
+
+  .career-widget .career-summary-card span {
+    margin-top: 4px !important;
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+  }
+
+  .career-widget .career-list-item {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .career-widget .career-list-meta {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  .career-widget .career-list-side {
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+
+  .daily-journal-widget .journal-summary-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .daily-journal-widget .journal-summary-card {
+    min-height: 0 !important;
+    padding: 8px 6px !important;
+    border-radius: 14px !important;
+  }
+
+  .daily-journal-widget .journal-summary-card strong {
+    margin-top: 4px !important;
+    font-size: 15px !important;
+  }
+
+  .daily-journal-widget .journal-summary-card span {
+    font-size: 9px !important;
+  }
+
+  .daily-journal-widget .journal-score-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .daily-journal-widget .journal-score-grid label {
+    min-height: 0 !important;
+    padding: 9px !important;
+  }
+
+  .daily-journal-widget .journal-add-row,
+  .daily-journal-widget .journal-clip-row,
+  .study-widget .study-record-form {
+    grid-template-columns: 1fr !important;
+  }
+
+  .study-subject-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@container gd-widget (max-width: 600px) {
+  .career-widget .career-header,
+  .daily-journal-widget .journal-header {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .career-widget .career-actions,
+  .daily-journal-widget .journal-date-nav {
+    width: 100% !important;
+  }
+
+  .daily-journal-widget .journal-date-nav input {
+    flex: 1 1 auto !important;
+    width: auto !important;
+  }
+
+  .daily-journal-widget .journal-summary-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .daily-journal-widget .journal-summary-card:last-child {
+    grid-column: 1 / -1 !important;
+  }
+
+  .daily-journal-widget .journal-score-grid {
+    grid-template-columns: 1fr !important;
   }
 }
