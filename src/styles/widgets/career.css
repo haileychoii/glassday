@@ -234,12 +234,17 @@
   background: hsl(0 0% 100% / 0.24);
   border: 1px solid hsl(0 0% 100% / 0.38);
   padding: 13px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  display: grid;
+  gap: 10px;
   cursor: pointer;
   transition: 160ms ease;
+}
+
+.career-list-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
 }
 
 .career-list-item:hover {
@@ -328,7 +333,6 @@
 }
 
 .career-list-meta {
-  margin-top: 10px;
   flex-wrap: wrap;
   gap: 6px;
 }
@@ -349,9 +353,9 @@
 
 .career-list-side {
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
 }
 
@@ -983,16 +987,13 @@
     align-items: stretch !important;
   }
 
-  /* .career-list-meta {
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-  } */
+  .career-list-top {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+  }
 
   .career-list-side {
-    width: 100% !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: space-between !important;
+    width: auto !important;
+    justify-content: flex-end !important;
   }
 }
 

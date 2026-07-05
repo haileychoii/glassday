@@ -572,54 +572,56 @@ export const CareerWidget = () => {
           .join(" ")}
         onClick={() => openCareerWindow(item)}
       >
-        <div className="career-list-main">
-          <div className="career-list-title-row">
-            <div className="career-list-title">
-              <strong>{item.company}</strong>
-              <span>{item.role}</span>
+        <div className="career-list-top">
+          <div className="career-list-main">
+            <div className="career-list-title-row">
+              <div className="career-list-title">
+                <strong>{item.company}</strong>
+                <span>{item.role}</span>
+              </div>
             </div>
           </div>
 
-          <div className="career-list-meta">
-            <span className={`career-status-pill status-${item.status.toLowerCase()}`}>
-              {item.status}
+          <div className="career-list-side">
+            <span className={`career-dday-pill ${ddayTone}`}>
+              {getDdayLabel(item.deadline)}
             </span>
 
-            {item.postingUrl && (
-              <span>
-                <Link2 className="w-3 h-3" />
-                Posting
-              </span>
-            )}
-
-            <span>
-              <FileText className="w-3 h-3" />
-              CL {coverLetterCount}
-            </span>
-
-            <span>
-              <CalendarDays className="w-3 h-3" />
-              {item.applicationEndDate ? "Synced" : "No date"}
-            </span>
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                deleteCareerItem(item.id);
+              }}
+              className="career-delete-button"
+              title="Delete"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
 
-        <div className="career-list-side">
-          <span className={`career-dday-pill ${ddayTone}`}>
-            {getDdayLabel(item.deadline)}
+        <div className="career-list-meta">
+          <span className={`career-status-pill status-${item.status.toLowerCase()}`}>
+            {item.status}
           </span>
 
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              deleteCareerItem(item.id);
-            }}
-            className="career-delete-button"
-            title="Delete"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-          </button>
+          {item.postingUrl && (
+            <span>
+              <Link2 className="w-3 h-3" />
+              Posting
+            </span>
+          )}
+
+          <span>
+            <FileText className="w-3 h-3" />
+            CL {coverLetterCount}
+          </span>
+
+          <span>
+            <CalendarDays className="w-3 h-3" />
+            {item.applicationEndDate ? "Synced" : "No date"}
+          </span>
         </div>
       </article>
     );

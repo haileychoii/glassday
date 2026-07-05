@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent, RefObject } from "react";
+import type { CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import {
   Bold,
@@ -732,8 +733,18 @@ export const MemoWidget = () => {
       );
     }
 
+    const workspaceStyle = {
+      "--memo-paper-color": activeNote.color || defaultMemoColor,
+      "--memo-title-font": activeNote.fontFamily,
+      "--memo-title-color": "hsl(var(--foreground) / 0.94)",
+      "--memo-editor-color": "hsl(var(--foreground) / 0.88)",
+    } as CSSProperties;
+
     return (
-      <div className={cn("memo-workspace", windowMode && "is-window-mode")}>
+      <div
+        className={cn("memo-workspace", windowMode && "is-window-mode")}
+        style={workspaceStyle}
+      >
         {editing ? (
           <input
             value={activeNote.title}
@@ -745,9 +756,19 @@ export const MemoWidget = () => {
             className="memo-title-input"
             spellCheck={false}
             placeholder="Untitled Memo"
+            style={{
+              fontFamily: activeNote.fontFamily,
+            }}
           />
         ) : (
-          <div className="memo-title-view">{getDisplayTitle(activeNote)}</div>
+          <div
+            className="memo-title-view"
+            style={{
+              fontFamily: activeNote.fontFamily,
+            }}
+          >
+            {getDisplayTitle(activeNote)}
+          </div>
         )}
 
         {renderToolbar()}
@@ -769,7 +790,6 @@ export const MemoWidget = () => {
           style={{
             fontFamily: activeNote.fontFamily,
             fontSize: activeNote.fontSize,
-            background: activeNote.color || defaultMemoColor,
           }}
         />
       </div>

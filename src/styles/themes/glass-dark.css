@@ -351,6 +351,95 @@ body.theme-glass-dark .journal-score-grid label {
     0 10px 20px rgba(4, 8, 22, 0.18) !important;
 }
 
+html[data-theme="glass-dark"] .memo-workspace,
+html[data-theme="glass-dark"] .memo-list-panel,
+html[data-theme="glass-dark"] .memo-title-input,
+html[data-theme="glass-dark"] .memo-title-view,
+html[data-theme="glass-dark"] .memo-editor,
+html[data-theme="glass-dark"] .memo-tool-button,
+html[data-theme="glass-dark"] .memo-mini-button,
+html[data-theme="glass-dark"] .memo-select,
+body[data-theme="glass-dark"] .memo-workspace,
+body[data-theme="glass-dark"] .memo-list-panel,
+body[data-theme="glass-dark"] .memo-title-input,
+body[data-theme="glass-dark"] .memo-title-view,
+body[data-theme="glass-dark"] .memo-editor,
+body[data-theme="glass-dark"] .memo-tool-button,
+body[data-theme="glass-dark"] .memo-mini-button,
+body[data-theme="glass-dark"] .memo-select,
+html.theme-glass-dark .memo-workspace,
+html.theme-glass-dark .memo-list-panel,
+html.theme-glass-dark .memo-title-input,
+html.theme-glass-dark .memo-title-view,
+html.theme-glass-dark .memo-editor,
+html.theme-glass-dark .memo-tool-button,
+html.theme-glass-dark .memo-mini-button,
+html.theme-glass-dark .memo-select,
+body.theme-glass-dark .memo-workspace,
+body.theme-glass-dark .memo-list-panel,
+body.theme-glass-dark .memo-title-input,
+body.theme-glass-dark .memo-title-view,
+body.theme-glass-dark .memo-editor,
+body.theme-glass-dark .memo-tool-button,
+body.theme-glass-dark .memo-mini-button,
+body.theme-glass-dark .memo-select {
+  color: rgba(239, 243, 255, 0.92) !important;
+}
+
+html[data-theme="glass-dark"] .memo-workspace,
+body[data-theme="glass-dark"] .memo-workspace,
+html.theme-glass-dark .memo-workspace,
+body.theme-glass-dark .memo-workspace {
+  background: rgba(14, 18, 31, 0.18) !important;
+}
+
+html[data-theme="glass-dark"] .memo-list-panel,
+body[data-theme="glass-dark"] .memo-list-panel,
+html.theme-glass-dark .memo-list-panel,
+body.theme-glass-dark .memo-list-panel {
+  background: rgba(18, 23, 39, 0.42) !important;
+  border-right-color: rgba(164, 180, 232, 0.18) !important;
+}
+
+html[data-theme="glass-dark"] .memo-note-item:hover,
+body[data-theme="glass-dark"] .memo-note-item:hover,
+html.theme-glass-dark .memo-note-item:hover,
+body.theme-glass-dark .memo-note-item:hover {
+  background: rgba(73, 88, 133, 0.18) !important;
+}
+
+html[data-theme="glass-dark"] .memo-note-item.is-active,
+body[data-theme="glass-dark"] .memo-note-item.is-active,
+html.theme-glass-dark .memo-note-item.is-active,
+body.theme-glass-dark .memo-note-item.is-active {
+  background: rgba(88, 103, 153, 0.3) !important;
+  border-color: rgba(169, 186, 239, 0.24) !important;
+}
+
+html[data-theme="glass-dark"] .memo-tool-button,
+html[data-theme="glass-dark"] .memo-mini-button,
+html[data-theme="glass-dark"] .memo-select,
+body[data-theme="glass-dark"] .memo-tool-button,
+body[data-theme="glass-dark"] .memo-mini-button,
+body[data-theme="glass-dark"] .memo-select,
+html.theme-glass-dark .memo-tool-button,
+html.theme-glass-dark .memo-mini-button,
+html.theme-glass-dark .memo-select,
+body.theme-glass-dark .memo-tool-button,
+body.theme-glass-dark .memo-mini-button,
+body.theme-glass-dark .memo-select {
+  background: rgba(31, 37, 60, 0.58) !important;
+  border-color: rgba(170, 187, 236, 0.18) !important;
+}
+
+html[data-theme="glass-dark"] .memo-color-area,
+body[data-theme="glass-dark"] .memo-color-area,
+html.theme-glass-dark .memo-color-area,
+body.theme-glass-dark .memo-color-area {
+  background: linear-gradient(135deg, rgba(31, 37, 58, 0.58), rgba(17, 21, 34, 0.28)) !important;
+  border-color: rgba(165, 182, 233, 0.2) !important;
+}
+
 html[data-theme="glass-dark"] .journal-score-grid label:nth-child(1),
 body[data-theme="glass-dark"] .journal-score-grid label:nth-child(1),
 html.theme-glass-dark .journal-score-grid label:nth-child(1),
