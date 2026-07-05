@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { createPortal } from "react-dom";
 import {
   Download,
+  Globe,
   Palette,
   RotateCcw,
   Settings,
@@ -12,6 +13,20 @@ import {
 } from "lucide-react";
 
 import { cn } from "../../lib/utils";
+import {
+  addCustomFont,
+  applyAppFont,
+  FONT_CHANGE_EVENT,
+  getAppFontOptions,
+  getMemoFontGroups,
+  getSavedAppFont,
+  getSavedCustomFonts,
+  getSavedDefaultMemoFont,
+  loadSavedCustomFonts,
+  removeCustomFont,
+  saveDefaultMemoFont,
+  type CustomFontSourceType,
+} from "../../constants/fonts";
 import {
   applyTheme,
   getCurrentTheme,
@@ -99,12 +114,26 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
+  const [appFont, setAppFont] = useState(() => getSavedAppFont());
+  const [defaultMemoFont, setDefaultMemoFont] = useState(() =>
+    getSavedDefaultMemoFont()
+  );
+  const [customFonts, setCustomFonts] = useState(() => getSavedCustomFonts());
+  const [customFontLabel, setCustomFontLabel] = useState("");
+  const [customFontFamily, setCustomFontFamily] = useState("");
+  const [customFontUrl, setCustomFontUrl] = useState("");
+  const [customFontType, setCustomFontType] =
+    useState<CustomFontSourceType>("stylesheet");
   const [status, setStatus] = useState("");
+  const appFontOptions = useMemo(() => getAppFontOptions(), [customFonts]);
 
   useEffect(() => {
     if (!open) return;
 
     setTheme(getCurrentTheme());
+    setAppFont(getSavedAppFont());
+    setDefaultMemoFont(getSavedDefaultMemoFont());
+    setCustomFonts(getSavedCustomFonts());
   }, [open]);
 
   useEffect(() => {
@@ -120,6 +149,20 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
     return () => {
       window.removeEventListener("glassday-theme-change", handleThemeChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    const syncFonts = () => {
+      setAppFont(getSavedAppFont());
+      setDefaultMemoFont(getSavedDefaultMemoFont());
+      setCustomFonts(getSavedCustomFonts());
+    };
+
+    window.addEventListener(FONT_CHANGE_EVENT, syncFonts);
+
+    return () => {
+      window.removeEventListener(FONT_CHANGE_EVENT, syncFonts);
     };
   }, []);
 
@@ -149,6 +192,54 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       themeOptions.find((item) => item.id === nextTheme)?.label ?? nextTheme;
 
     setStatus(`Theme changed to ${label}.`);
+  };
+
+  const handleAppFontChange = (nextFont: string) => {
+    setAppFont(nextFont);
+    applyAppFont(nextFont);
+    setStatus("Interface font updated.");
+  };
+
+  const handleDefaultMemoFontChange = (nextFont: string) => {
+    setDefaultMemoFont(nextFont);
+    saveDefaultMemoFont(nextFont);
+    setStatus("Default memo font updated.");
+  };
+
+  const handleAddCustomFont = async () => {
+    const trimmedLabel = customFontLabel.trim();
+    const trimmedFamily = customFontFamily.trim();
+    const trimmedUrl = customFontUrl.trim();
+
+    if (!trimmedLabel || !trimmedFamily || !trimmedUrl) {
+      setStatus("Add a label, family name, and font URL first.");
+      return;
+    }
+
+    const entry = await addCustomFont({
+      label: trimmedLabel,
+      family: trimmedFamily,
+      sourceUrl: trimmedUrl,
+      sourceType: customFontType,
+    });
+
+    if (!entry) {
+      setStatus("That font could not be loaded. Check the URL or type.");
+      return;
+    }
+
+    await loadSavedCustomFonts();
+    setCustomFonts(getSavedCustomFonts());
+    setCustomFontLabel("");
+    setCustomFontFamily("");
+    setCustomFontUrl("");
+    setStatus(`${trimmedLabel} added to the font library.`);
+  };
+
+  const handleRemoveCustomFont = (id: string, label: string) => {
+    removeCustomFont(id);
+    setCustomFonts(getSavedCustomFonts());
+    setStatus(`${label} removed from the font library.`);
   };
 
   const handleExport = () => {
@@ -286,6 +377,144 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                 </button>
               ))}
             </div>
+          </section>
+
+          <section className="settings-section settings-card">
+            <div className="settings-section-title settings-card-title">
+              <Globe className="w-4 h-4" />
+              <span>Fonts</span>
+            </div>
+
+            <div className="settings-font-stack">
+              <label className="settings-field">
+                <span>Interface Font</span>
+                <select
+                  value={appFont}
+                  onChange={(event) => handleAppFontChange(event.target.value)}
+                  className="settings-input"
+                >
+                  {appFontOptions.map((option) => (
+                    <option
+                      key={`${option.label}-${option.value}`}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="settings-field">
+                <span>Default Memo Font</span>
+                <select
+                  value={defaultMemoFont}
+                  onChange={(event) =>
+                    handleDefaultMemoFontChange(event.target.value)
+                  }
+                  className="settings-input"
+                >
+                  {getMemoFontGroups().map((group) => (
+                    <optgroup key={group.label} label={group.label}>
+                      {group.fonts.map((font) => (
+                        <option key={`${group.label}-${font.label}`} value={font.value}>
+                          {font.label}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <div className="settings-font-helper">
+              `public/fonts`에 넣은 로컬 폰트와 메모 폰트 목록을 같이 묶어뒀고,
+              여기서 웹폰트 URL도 추가할 수 있어.
+            </div>
+
+            <div className="settings-webfont-grid">
+              <label className="settings-field">
+                <span>Label</span>
+                <input
+                  value={customFontLabel}
+                  onChange={(event) => setCustomFontLabel(event.target.value)}
+                  className="settings-input"
+                  placeholder="e.g. My Study Font"
+                />
+              </label>
+
+              <label className="settings-field">
+                <span>Font Family</span>
+                <input
+                  value={customFontFamily}
+                  onChange={(event) => setCustomFontFamily(event.target.value)}
+                  className="settings-input"
+                  placeholder="e.g. OngleipStudyWell"
+                />
+              </label>
+
+              <label className="settings-field">
+                <span>Source Type</span>
+                <select
+                  value={customFontType}
+                  onChange={(event) =>
+                    setCustomFontType(event.target.value as CustomFontSourceType)
+                  }
+                  className="settings-input"
+                >
+                  <option value="stylesheet">Stylesheet URL</option>
+                  <option value="woff2">WOFF2 File</option>
+                  <option value="woff">WOFF File</option>
+                  <option value="ttf">TTF File</option>
+                  <option value="otf">OTF File</option>
+                </select>
+              </label>
+
+              <label className="settings-field settings-field-wide">
+                <span>Source URL</span>
+                <input
+                  value={customFontUrl}
+                  onChange={(event) => setCustomFontUrl(event.target.value)}
+                  className="settings-input"
+                  placeholder="https://... or /fonts/..."
+                />
+              </label>
+            </div>
+
+            <div className="settings-font-actions">
+              <button
+                type="button"
+                onClick={() => void handleAddCustomFont()}
+                className="settings-action-card settings-font-add-button"
+              >
+                <Globe className="w-4 h-4" />
+                <div>
+                  <strong>Add Web Font</strong>
+                  <span>Load it for settings and memo font selectors</span>
+                </div>
+              </button>
+            </div>
+
+            {customFonts.length > 0 && (
+              <div className="settings-custom-font-list">
+                {customFonts.map((font) => (
+                  <div key={font.id} className="settings-custom-font-item">
+                    <div>
+                      <strong>{font.label}</strong>
+                      <span>{font.family}</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCustomFont(font.id, font.label)}
+                      className="settings-reset-button"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      <span>Remove</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
 
           <section className="settings-section settings-card">

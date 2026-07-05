@@ -24,6 +24,13 @@ import {
 } from "lucide-react";
 
 import { GlassCard } from "../glass/GlassCard";
+import {
+  DEFAULT_MEMO_FONT,
+  FONT_CHANGE_EVENT,
+  getMemoFontGroups,
+  getSavedDefaultMemoFont,
+  type FontGroup as MemoFontGroup,
+} from "../../constants/fonts";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
 import { FloatingWindow } from "../common/FloatingWindow";
@@ -40,18 +47,7 @@ type MemoNote = {
   updatedAt: number;
 };
 
-type MemoFontOption = {
-  label: string;
-  value: string;
-};
-
-type MemoFontGroup = {
-  label: string;
-  fonts: MemoFontOption[];
-};
-
-const defaultMemoFont =
-  "Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif";
+const getDefaultMemoFont = () => getSavedDefaultMemoFont() || DEFAULT_MEMO_FONT;
 
 const defaultMemoColor = "#FFF7CF";
 
@@ -70,189 +66,7 @@ const memoColors = [
   "#EEF2FF",
 ];
 
-const fontGroups: MemoFontGroup[] = [
-  {
-    label: "Korean Fonts",
-    fonts: [
-      {
-        label: "Pretendard",
-        value:
-          "Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif",
-      },
-      {
-        label: "Apple SD Gothic Neo",
-        value:
-          "'Apple SD Gothic Neo', Pretendard, 'Noto Sans KR', 'Malgun Gothic', sans-serif",
-      },
-      {
-        label: "Noto Sans KR",
-        value: "'Noto Sans KR', Pretendard, sans-serif",
-      },
-      {
-        label: "Noto Serif KR",
-        value: "'Noto Serif KR', serif",
-      },
-      {
-        label: "RIDIBatang",
-        value: "'RIDIBatang', 'Noto Serif KR', serif",
-      },
-      {
-        label: "Gmarket Sans",
-        value: "'Gmarket Sans', Pretendard, sans-serif",
-      },
-      {
-        label: "The Jamsil",
-        value: "'TheJamsil', Pretendard, sans-serif",
-      },
-      {
-        label: "NeoDunggeunmo",
-        value: "'NeoDunggeunmo', 'D2Coding', monospace",
-      },
-      {
-        label: "Kyobo Handwriting 2019",
-        value: "'Kyobo Handwriting 2019', Gaegu, cursive",
-      },
-      {
-        label: "Kyobo Handwriting 2020",
-        value: "'Kyobo Handwriting 2020', Gaegu, cursive",
-      },
-      {
-        label: "Kyobo Handwriting 2025",
-        value: "'Kyobo Handwriting 2025', Gaegu, cursive",
-      },
-      {
-        label: "Cafe24 Ssurround",
-        value: "'Cafe24Ssurround', Pretendard, sans-serif",
-      },
-      {
-        label: "Cafe24 Ssurround Air",
-        value: "'Cafe24SsurroundAir', Pretendard, sans-serif",
-      },
-      {
-        label: "Cafe24 Oneprettynight",
-        value: "'Cafe24Oneprettynight', Gaegu, cursive",
-      },
-      {
-        label: "Cafe24 Dangdanghae",
-        value: "'Cafe24Dangdanghae', Jua, sans-serif",
-      },
-      {
-        label: "Cafe24 Simplehae",
-        value: "'Cafe24Simplehae', Pretendard, sans-serif",
-      },
-      {
-        label: "Cafe24 Dongdong",
-        value: "'Cafe24Dongdong', Gaegu, cursive",
-      },
-      {
-        label: "Cafe24 ClassicType",
-        value: "'Cafe24ClassicType', 'Noto Serif KR', serif",
-      },
-      {
-        label: "Cafe24 Ohsquare",
-        value: "'Cafe24Ohsquare', Pretendard, sans-serif",
-      },
-      {
-        label: "UhBee Sehyun",
-        value: "'UhBee Se_hyun', Gaegu, cursive",
-      },
-      {
-        label: "UhBee Mimi",
-        value: "'UhBeeMiMi', Gaegu, cursive",
-      },
-      {
-        label: "UhBee Chaeeun",
-        value: "'UhBeechae-eun', Gaegu, cursive",
-      },
-      {
-        label: "UhBee MySen",
-        value: "'UhBee MySen', Gaegu, cursive",
-      },
-      {
-        label: "Gowun Dodum",
-        value: "'Gowun Dodum', sans-serif",
-      },
-      {
-        label: "Gowun Batang",
-        value: "'Gowun Batang', serif",
-      },
-      {
-        label: "Hahmlet",
-        value: "Hahmlet, serif",
-      },
-      {
-        label: "Nanum Gothic",
-        value: "'Nanum Gothic', sans-serif",
-      },
-      {
-        label: "Nanum Myeongjo",
-        value: "'Nanum Myeongjo', serif",
-      },
-      {
-        label: "Do Hyeon",
-        value: "'Do Hyeon', sans-serif",
-      },
-      {
-        label: "Jua",
-        value: "Jua, sans-serif",
-      },
-      {
-        label: "Poor Story",
-        value: "'Poor Story', cursive",
-      },
-      {
-        label: "Gaegu",
-        value: "Gaegu, cursive",
-      },
-    ],
-  },
-  {
-    label: "English Fonts",
-    fonts: [
-      {
-        label: "Inter",
-        value: "Inter, Pretendard, sans-serif",
-      },
-      {
-        label: "SF Pro / System",
-        value:
-          "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
-      },
-      {
-        label: "Arial",
-        value: "Arial, sans-serif",
-      },
-      {
-        label: "Helvetica",
-        value: "Helvetica, Arial, sans-serif",
-      },
-      {
-        label: "Georgia",
-        value: "Georgia, serif",
-      },
-      {
-        label: "Times New Roman",
-        value: "'Times New Roman', serif",
-      },
-      {
-        label: "Courier New",
-        value: "'Courier New', monospace",
-      },
-      {
-        label: "Verdana",
-        value: "Verdana, sans-serif",
-      },
-      {
-        label: "Trebuchet MS",
-        value: "'Trebuchet MS', sans-serif",
-      },
-      {
-        label: "Impact",
-        value: "Impact, sans-serif",
-      },
-    ],
-  },
-];
+const fontGroups = getMemoFontGroups();
 
 const fontSizeOptions = Array.from({ length: 25 }, (_, index) => {
   const size = index + 8;
@@ -274,7 +88,7 @@ const createMemoNote = (): MemoNote => {
     id: createId(),
     title: "새 메모",
     html: "",
-    fontFamily: defaultMemoFont,
+    fontFamily: getDefaultMemoFont(),
     fontSize: "14px",
     color: defaultMemoColor,
     pinned: false,
@@ -288,7 +102,7 @@ const defaultNotes: MemoNote[] = [
     id: "default-memo",
     title: "Portfolio Memo",
     html: "Portfolio: Add LCF and ER Grouping project details.",
-    fontFamily: defaultMemoFont,
+    fontFamily: getDefaultMemoFont(),
     fontSize: "14px",
     color: defaultMemoColor,
     pinned: false,
@@ -351,7 +165,7 @@ const normalizeNote = (note: Partial<MemoNote>): MemoNote => {
     id: note.id || createId(),
     title: note.title ?? "새 메모",
     html: note.html ?? "",
-    fontFamily: note.fontFamily || defaultMemoFont,
+    fontFamily: note.fontFamily || getDefaultMemoFont(),
     fontSize: note.fontSize || "14px",
     color: note.color || defaultMemoColor,
     pinned: note.pinned ?? false,
@@ -371,6 +185,8 @@ const sortMemos = (notes: MemoNote[]) => {
 };
 
 export const MemoWidget = () => {
+  const [availableFontGroups, setAvailableFontGroups] =
+    useState<MemoFontGroup[]>(fontGroups);
   const [editing, setEditing] = useState(false);
   const [memoWindowOpen, setMemoWindowOpen] = useState(false);
   const [isCompactListOpen, setIsCompactListOpen] = useState(false);
@@ -408,6 +224,18 @@ export const MemoWidget = () => {
   const activeEditor = memoWindowOpen
     ? windowEditorRef.current
     : editorRef.current;
+
+  useEffect(() => {
+    const syncFonts = () => {
+      setAvailableFontGroups(getMemoFontGroups());
+    };
+
+    window.addEventListener(FONT_CHANGE_EVENT, syncFonts);
+
+    return () => {
+      window.removeEventListener(FONT_CHANGE_EVENT, syncFonts);
+    };
+  }, []);
 
   useEffect(() => {
     const shouldNormalize = notes.some((note) => {
@@ -618,7 +446,7 @@ export const MemoWidget = () => {
   const renderToolbar = () => (
     <div className="memo-toolbar">
       <select
-        value={activeNote?.fontFamily ?? defaultMemoFont}
+        value={activeNote?.fontFamily ?? getDefaultMemoFont()}
         onChange={(event) =>
           updateActiveNote({
             fontFamily: event.target.value,
@@ -627,7 +455,7 @@ export const MemoWidget = () => {
         className="memo-select memo-font-select"
         disabled={!editing}
       >
-        {fontGroups.map((group) => (
+        {availableFontGroups.map((group) => (
           <optgroup key={group.label} label={group.label}>
             {group.fonts.map((font) => (
               <option

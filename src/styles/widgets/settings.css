@@ -110,6 +110,11 @@
     grid-template-columns: 1fr;
   }
 
+  .settings-font-stack,
+  .settings-webfont-grid {
+    grid-template-columns: 1fr;
+  }
+
   .settings-modal-header {
     height: auto;
     min-height: 72px;
@@ -259,6 +264,89 @@
 }
 
 .settings-theme-card small {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  color: hsl(var(--foreground) / 0.48);
+}
+
+.settings-font-stack,
+.settings-webfont-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.settings-webfont-grid {
+  margin-top: 12px;
+}
+
+.settings-field {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.settings-field span {
+  font-size: 11px;
+  font-weight: 800;
+  color: hsl(var(--foreground) / 0.58);
+}
+
+.settings-field-wide {
+  grid-column: 1 / -1;
+}
+
+.settings-input {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 14px;
+  background: hsl(0 0% 100% / 0.36);
+  border: 1px solid hsl(0 0% 100% / 0.56);
+  color: hsl(var(--foreground) / 0.8);
+  outline: none;
+}
+
+.settings-font-helper {
+  margin-top: 10px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: hsl(var(--foreground) / 0.52);
+}
+
+.settings-font-actions {
+  margin-top: 12px;
+}
+
+.settings-font-add-button {
+  width: 100%;
+}
+
+.settings-custom-font-list {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.settings-custom-font-item {
+  border-radius: 18px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: hsl(0 0% 100% / 0.24);
+  border: 1px solid hsl(0 0% 100% / 0.5);
+}
+
+.settings-custom-font-item strong {
+  display: block;
+  font-size: 12px;
+}
+
+.settings-custom-font-item span {
   display: block;
   margin-top: 3px;
   font-size: 11px;

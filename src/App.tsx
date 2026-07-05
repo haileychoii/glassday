@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AppShell } from "./components/layout/AppShell";
 import { DashboardGrid } from "./components/grid/DashboardGrid";
 import { DashboardDataProvider } from "./context/DashboardDataContext";
 import { SettingsModal } from "./components/settings/SettingsModal";
+import { applyAppFont, getSavedAppFont, loadSavedCustomFonts } from "./constants/fonts";
 import { useDashboardTabs } from "./hooks/useDashboardTabs";
 
 function App() {
@@ -22,6 +23,11 @@ function App() {
     renameTab,
     removeTab,
   } = useDashboardTabs();
+
+  useEffect(() => {
+    void loadSavedCustomFonts();
+    applyAppFont(getSavedAppFont());
+  }, []);
 
   if (!activeTab) {
     return null;
