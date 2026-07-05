@@ -533,17 +533,19 @@ html[data-theme="glass-dark"] .memo-editor,
 body[data-theme="glass-dark"] .memo-editor,
 html.theme-glass-dark .memo-editor,
 body.theme-glass-dark .memo-editor {
-  color: rgba(241, 244, 255, 0.94) !important;
+  color: var(--memo-dark-text, rgba(241, 244, 255, 0.94)) !important;
   font-weight: 380 !important;
   line-height: 1.68 !important;
-  background:
+  background: var(
+    --memo-dark-paper,
     linear-gradient(
       180deg,
       rgba(71, 64, 89, 0.84),
       rgba(53, 63, 92, 0.78) 38%,
       rgba(46, 73, 89, 0.72) 100%
-    ) !important;
-  border-color: rgba(214, 224, 255, 0.2) !important;
+    )
+  ) !important;
+  border-color: var(--memo-dark-border, rgba(214, 224, 255, 0.2)) !important;
   box-shadow:
     0 16px 42px rgba(2, 4, 12, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
@@ -569,8 +571,8 @@ html.theme-glass-dark .memo-editor td,
 html.theme-glass-dark .memo-editor th,
 body.theme-glass-dark .memo-editor td,
 body.theme-glass-dark .memo-editor th {
-  color: rgba(243, 246, 255, 0.94) !important;
-  border-color: rgba(232, 238, 255, 0.52) !important;
+  color: var(--memo-table-ink, rgba(243, 246, 255, 0.94)) !important;
+  border-color: color-mix(in srgb, var(--memo-table-ink, rgba(243, 246, 255, 0.94)) 68%, transparent) !important;
   background: rgba(255, 255, 255, 0.04) !important;
 }
 
@@ -578,7 +580,7 @@ html[data-theme="glass-dark"] .memo-editor table,
 body[data-theme="glass-dark"] .memo-editor table,
 html.theme-glass-dark .memo-editor table,
 body.theme-glass-dark .memo-editor table {
-  border-color: rgba(232, 238, 255, 0.52) !important;
+  border-color: color-mix(in srgb, var(--memo-table-ink, rgba(243, 246, 255, 0.94)) 68%, transparent) !important;
 }
 
 html[data-theme="glass-dark"] .journal-summary-card,

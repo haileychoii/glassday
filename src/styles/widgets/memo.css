@@ -196,6 +196,14 @@
   transform: translateY(-1px);
 }
 
+.memo-table-tool {
+  width: auto;
+  min-width: 34px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
 .memo-editor {
   width: min(100%, 860px);
   max-width: 860px;
@@ -213,25 +221,33 @@
   word-break: break-word;
   outline: none;
   color: var(--memo-editor-color, hsl(var(--foreground) / 0.84));
-  background:
+  background: var(
+    --memo-paper-surface,
     linear-gradient(
       180deg,
       color-mix(in srgb, var(--memo-paper-color, #FFF7CF) 90%, white 10%),
       color-mix(in srgb, var(--memo-paper-color, #FFF7CF) 76%, rgb(255 255 255 / 0.22) 24%)
+    )
+  );
+  border: 1px solid
+    var(
+      --memo-paper-border,
+      color-mix(in srgb, var(--memo-paper-color, #FFF7CF) 62%, rgb(255 255 255 / 0.38) 38%)
     );
-  border: 1px solid color-mix(in srgb, var(--memo-paper-color, #FFF7CF) 62%, rgb(255 255 255 / 0.38) 38%);
   box-shadow:
     0 24px 70px -58px hsl(330 40% 38% / 0.5),
     inset 0 1px 0 hsl(0 0% 100% / 0.86);
 }
 
 .memo-editor-editing {
-  background:
+  background: var(
+    --memo-paper-surface,
     linear-gradient(
       180deg,
       color-mix(in srgb, var(--memo-paper-color, #FFF7CF) 94%, white 6%),
       color-mix(in srgb, var(--memo-paper-color, #FFF7CF) 80%, rgb(255 255 255 / 0.2) 20%)
-    );
+    )
+  );
 }
 
 

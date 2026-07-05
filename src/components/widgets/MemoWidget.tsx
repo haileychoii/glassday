@@ -50,22 +50,191 @@ type MemoNote = {
 
 const getDefaultMemoFont = () => getSavedDefaultMemoFont() || DEFAULT_MEMO_FONT;
 
-const defaultMemoColor = "#FFF7CF";
+const defaultMemoColor = "plum-night";
 
-const memoColors = [
-  "#FFF7CF",
-  "#FFE1E1",
-  "#FFE6F2",
-  "#E9D8FF",
-  "#DDE7FF",
-  "#DDF4FF",
-  "#DDF8EA",
-  "#EAF7D8",
-  "#F4E7D3",
-  "#F2F2F2",
-  "#FFFFFF",
-  "#EEF2FF",
-];
+const memoPalettes = [
+  {
+    id: "plum-night",
+    lightSurface:
+      "linear-gradient(180deg, rgba(246, 238, 247, 0.96), rgba(234, 224, 239, 0.88))",
+    lightBorder: "rgba(212, 190, 222, 0.62)",
+    lightText: "rgba(61, 45, 74, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(88, 72, 109, 0.9), rgba(67, 55, 90, 0.84))",
+    darkBorder: "rgba(226, 213, 246, 0.28)",
+    darkText: "rgba(248, 245, 255, 0.94)",
+    tableInk: "rgba(244, 239, 255, 0.88)",
+    swatch: "linear-gradient(135deg, #8f78ae, #5f4d7d)",
+    legacy: ["#FFF7CF"],
+  },
+  {
+    id: "rose-dusk",
+    lightSurface:
+      "linear-gradient(180deg, rgba(248, 236, 240, 0.96), rgba(238, 221, 228, 0.88))",
+    lightBorder: "rgba(225, 190, 204, 0.62)",
+    lightText: "rgba(76, 44, 57, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(103, 70, 86, 0.9), rgba(77, 53, 68, 0.84))",
+    darkBorder: "rgba(244, 214, 225, 0.26)",
+    darkText: "rgba(255, 244, 248, 0.94)",
+    tableInk: "rgba(255, 239, 245, 0.88)",
+    swatch: "linear-gradient(135deg, #b58ca0, #7a596a)",
+    legacy: ["#FFE1E1"],
+  },
+  {
+    id: "mauve-cloud",
+    lightSurface:
+      "linear-gradient(180deg, rgba(246, 235, 244, 0.96), rgba(233, 220, 234, 0.88))",
+    lightBorder: "rgba(216, 190, 220, 0.62)",
+    lightText: "rgba(70, 46, 76, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(93, 71, 103, 0.9), rgba(69, 54, 80, 0.84))",
+    darkBorder: "rgba(231, 214, 240, 0.26)",
+    darkText: "rgba(251, 244, 255, 0.94)",
+    tableInk: "rgba(245, 236, 252, 0.88)",
+    swatch: "linear-gradient(135deg, #b58bb5, #6d587b)",
+    legacy: ["#FFE6F2"],
+  },
+  {
+    id: "violet-mist",
+    lightSurface:
+      "linear-gradient(180deg, rgba(239, 235, 248, 0.96), rgba(226, 219, 241, 0.88))",
+    lightBorder: "rgba(197, 189, 228, 0.62)",
+    lightText: "rgba(58, 47, 82, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(79, 71, 112, 0.9), rgba(60, 54, 88, 0.84))",
+    darkBorder: "rgba(219, 215, 247, 0.26)",
+    darkText: "rgba(245, 245, 255, 0.94)",
+    tableInk: "rgba(236, 239, 255, 0.88)",
+    swatch: "linear-gradient(135deg, #9a91c8, #595684)",
+    legacy: ["#E9D8FF"],
+  },
+  {
+    id: "indigo-fog",
+    lightSurface:
+      "linear-gradient(180deg, rgba(235, 239, 250, 0.96), rgba(220, 228, 244, 0.88))",
+    lightBorder: "rgba(188, 197, 229, 0.62)",
+    lightText: "rgba(45, 52, 82, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(67, 76, 112, 0.9), rgba(52, 60, 86, 0.84))",
+    darkBorder: "rgba(212, 222, 248, 0.26)",
+    darkText: "rgba(244, 248, 255, 0.94)",
+    tableInk: "rgba(234, 243, 255, 0.88)",
+    swatch: "linear-gradient(135deg, #86a0d1, #536180)",
+    legacy: ["#DDE7FF"],
+  },
+  {
+    id: "storm-blue",
+    lightSurface:
+      "linear-gradient(180deg, rgba(233, 241, 248, 0.96), rgba(219, 231, 240, 0.88))",
+    lightBorder: "rgba(186, 203, 219, 0.62)",
+    lightText: "rgba(41, 58, 70, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(59, 81, 97, 0.9), rgba(47, 64, 78, 0.84))",
+    darkBorder: "rgba(210, 229, 239, 0.24)",
+    darkText: "rgba(242, 250, 255, 0.94)",
+    tableInk: "rgba(232, 244, 250, 0.88)",
+    swatch: "linear-gradient(135deg, #89b1c2, #486373)",
+    legacy: ["#DDF4FF"],
+  },
+  {
+    id: "sage-night",
+    lightSurface:
+      "linear-gradient(180deg, rgba(236, 246, 241, 0.96), rgba(221, 236, 229, 0.88))",
+    lightBorder: "rgba(190, 216, 204, 0.62)",
+    lightText: "rgba(42, 66, 55, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(63, 91, 82, 0.9), rgba(49, 71, 64, 0.84))",
+    darkBorder: "rgba(210, 233, 223, 0.24)",
+    darkText: "rgba(242, 252, 247, 0.94)",
+    tableInk: "rgba(232, 246, 239, 0.88)",
+    swatch: "linear-gradient(135deg, #8eb9a8, #4f6d62)",
+    legacy: ["#DDF8EA"],
+  },
+  {
+    id: "olive-haze",
+    lightSurface:
+      "linear-gradient(180deg, rgba(243, 246, 235, 0.96), rgba(230, 236, 219, 0.88))",
+    lightBorder: "rgba(209, 217, 186, 0.62)",
+    lightText: "rgba(68, 74, 42, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(88, 93, 60, 0.9), rgba(67, 70, 48, 0.84))",
+    darkBorder: "rgba(230, 234, 205, 0.24)",
+    darkText: "rgba(251, 252, 242, 0.94)",
+    tableInk: "rgba(243, 245, 228, 0.88)",
+    swatch: "linear-gradient(135deg, #b1bc83, #676d46)",
+    legacy: ["#EAF7D8"],
+  },
+  {
+    id: "cocoa-dust",
+    lightSurface:
+      "linear-gradient(180deg, rgba(247, 239, 231, 0.96), rgba(237, 226, 214, 0.88))",
+    lightBorder: "rgba(225, 202, 181, 0.62)",
+    lightText: "rgba(78, 56, 42, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(102, 78, 64, 0.9), rgba(78, 60, 49, 0.84))",
+    darkBorder: "rgba(240, 220, 205, 0.24)",
+    darkText: "rgba(255, 248, 244, 0.94)",
+    tableInk: "rgba(248, 237, 229, 0.88)",
+    swatch: "linear-gradient(135deg, #c7a58f, #7a5d4d)",
+    legacy: ["#F4E7D3"],
+  },
+  {
+    id: "graphite-lilac",
+    lightSurface:
+      "linear-gradient(180deg, rgba(241, 241, 245, 0.96), rgba(228, 229, 236, 0.88))",
+    lightBorder: "rgba(202, 204, 220, 0.62)",
+    lightText: "rgba(59, 60, 74, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(78, 80, 100, 0.9), rgba(61, 63, 80, 0.84))",
+    darkBorder: "rgba(223, 226, 243, 0.24)",
+    darkText: "rgba(244, 246, 255, 0.94)",
+    tableInk: "rgba(235, 239, 248, 0.88)",
+    swatch: "linear-gradient(135deg, #9fa3ba, #5f6378)",
+    legacy: ["#F2F2F2"],
+  },
+  {
+    id: "moon-ivory",
+    lightSurface:
+      "linear-gradient(180deg, rgba(252, 252, 251, 0.96), rgba(243, 243, 240, 0.88))",
+    lightBorder: "rgba(223, 223, 216, 0.62)",
+    lightText: "rgba(72, 72, 67, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(96, 94, 86, 0.9), rgba(72, 70, 64, 0.84))",
+    darkBorder: "rgba(239, 238, 228, 0.22)",
+    darkText: "rgba(255, 255, 248, 0.94)",
+    tableInk: "rgba(248, 248, 238, 0.88)",
+    swatch: "linear-gradient(135deg, #d8d0bc, #767061)",
+    legacy: ["#FFFFFF"],
+  },
+  {
+    id: "mist-sky",
+    lightSurface:
+      "linear-gradient(180deg, rgba(238, 242, 250, 0.96), rgba(225, 231, 244, 0.88))",
+    lightBorder: "rgba(191, 202, 227, 0.62)",
+    lightText: "rgba(50, 58, 82, 0.92)",
+    darkSurface:
+      "linear-gradient(180deg, rgba(74, 87, 109, 0.9), rgba(57, 68, 84, 0.84))",
+    darkBorder: "rgba(217, 227, 247, 0.24)",
+    darkText: "rgba(244, 248, 255, 0.94)",
+    tableInk: "rgba(236, 242, 252, 0.88)",
+    swatch: "linear-gradient(135deg, #9caeca, #59687d)",
+    legacy: ["#EEF2FF"],
+  },
+] as const;
+
+const resolveMemoPalette = (color?: string | null) =>
+  memoPalettes.find(
+    (palette) => palette.id === color || palette.legacy.includes(color as never)
+  ) ?? memoPalettes[0];
+
+const getMemoPaletteDotStyle = (color?: string | null) => {
+  const palette = resolveMemoPalette(color);
+
+  return {
+    background: palette.swatch,
+  };
+};
 
 const fontGroups = getMemoFontGroups();
 
@@ -407,7 +576,7 @@ export const MemoWidget = () => {
 
   const insertTable = () => {
     const tableHtml = `
-      <table>
+      <table style="width: 100%; table-layout: fixed;">
         <tbody>
           <tr>
             <td>항목</td>
@@ -423,6 +592,108 @@ export const MemoWidget = () => {
     `;
 
     runCommand("insertHTML", tableHtml);
+  };
+
+  const getSelectedTableCell = () => {
+    const selection = window.getSelection();
+    const anchorNode = selection?.anchorNode;
+    const baseNode =
+      anchorNode instanceof HTMLElement ? anchorNode : anchorNode?.parentElement;
+
+    if (!baseNode || !activeEditor?.contains(baseNode)) {
+      return null;
+    }
+
+    return baseNode.closest("td, th") as HTMLTableCellElement | null;
+  };
+
+  const updateTableFromSelection = (
+    action: (
+      cell: HTMLTableCellElement,
+      row: HTMLTableRowElement,
+      table: HTMLTableElement
+    ) => void
+  ) => {
+    if (!editing || !activeEditor) return;
+
+    const cell = getSelectedTableCell();
+    const row = cell?.parentElement as HTMLTableRowElement | null;
+    const table = row?.closest("table") as HTMLTableElement | null;
+
+    if (!cell || !row || !table) return;
+
+    action(cell, row, table);
+    syncFromEditor(activeEditor);
+  };
+
+  const insertTableRow = (after = true) => {
+    updateTableFromSelection((_, row) => {
+      const nextRow = row.cloneNode(true) as HTMLTableRowElement;
+      Array.from(nextRow.cells).forEach((nextCell) => {
+        nextCell.innerHTML = "<br />";
+      });
+
+      if (after) {
+        row.insertAdjacentElement("afterend", nextRow);
+      } else {
+        row.insertAdjacentElement("beforebegin", nextRow);
+      }
+    });
+  };
+
+  const insertTableColumn = (after = true) => {
+    updateTableFromSelection((cell, row, table) => {
+      const columnIndex = Array.from(row.cells).indexOf(cell);
+      const targetIndex = after ? columnIndex + 1 : columnIndex;
+
+      Array.from(table.rows).forEach((tableRow) => {
+        const newCell = document.createElement(tableRow.rowIndex === 0 ? "th" : "td");
+        newCell.innerHTML = "<br />";
+
+        if (targetIndex >= tableRow.cells.length) {
+          tableRow.appendChild(newCell);
+        } else {
+          tableRow.insertBefore(newCell, tableRow.cells[targetIndex]);
+        }
+      });
+    });
+  };
+
+  const deleteTableRow = () => {
+    updateTableFromSelection((_, row, table) => {
+      if (table.rows.length <= 1) return;
+      row.remove();
+    });
+  };
+
+  const deleteTableColumn = () => {
+    updateTableFromSelection((cell, row, table) => {
+      if (row.cells.length <= 1) return;
+      const columnIndex = Array.from(row.cells).indexOf(cell);
+
+      Array.from(table.rows).forEach((tableRow) => {
+        tableRow.cells[columnIndex]?.remove();
+      });
+    });
+  };
+
+  const adjustSelectedColumnWidth = (delta: number) => {
+    updateTableFromSelection((cell, row, table) => {
+      const columnIndex = Array.from(row.cells).indexOf(cell);
+      table.style.width = "100%";
+      table.style.tableLayout = "fixed";
+
+      Array.from(table.rows).forEach((tableRow) => {
+        const targetCell = tableRow.cells[columnIndex];
+        if (!targetCell) return;
+
+        const currentWidth =
+          Number.parseFloat(targetCell.style.width) ||
+          targetCell.getBoundingClientRect().width;
+        const nextWidth = Math.max(72, currentWidth + delta);
+        targetCell.style.width = `${nextWidth}px`;
+      });
+    });
   };
 
   const openSaveDialog = () => {
@@ -586,6 +857,72 @@ export const MemoWidget = () => {
 
       <button
         type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => insertTableRow(true)}
+        className="memo-tool-button memo-table-tool"
+        disabled={!editing}
+        title="Add row"
+      >
+        R+
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => insertTableColumn(true)}
+        className="memo-tool-button memo-table-tool"
+        disabled={!editing}
+        title="Add column"
+      >
+        C+
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={deleteTableRow}
+        className="memo-tool-button memo-table-tool"
+        disabled={!editing}
+        title="Delete row"
+      >
+        R-
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={deleteTableColumn}
+        className="memo-tool-button memo-table-tool"
+        disabled={!editing}
+        title="Delete column"
+      >
+        C-
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => adjustSelectedColumnWidth(-24)}
+        className="memo-tool-button memo-table-tool"
+        disabled={!editing}
+        title="Narrow column"
+      >
+        W-
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => adjustSelectedColumnWidth(24)}
+        className="memo-tool-button memo-table-tool"
+        disabled={!editing}
+        title="Widen column"
+      >
+        W+
+      </button>
+
+      <button
+        type="button"
         onClick={openSaveDialog}
         className="memo-tool-button"
       >
@@ -602,24 +939,26 @@ export const MemoWidget = () => {
       </div>
 
       <div className="memo-color-picker">
-        {memoColors.map((color) => (
+        {memoPalettes.map((palette) => (
           <button
-            key={color}
+            key={palette.id}
             type="button"
             onClick={() =>
               updateActiveNote({
-                color,
+                color: palette.id,
               })
             }
             className={cn(
               "memo-color-chip",
-              activeNote?.color === color && "is-active"
+              resolveMemoPalette(activeNote?.color).id === palette.id && "is-active"
             )}
-            style={{ backgroundColor: color }}
-            title={color}
+            style={{ background: palette.swatch }}
+            title={palette.id}
             disabled={!editing}
           >
-            {activeNote?.color === color && <Check className="w-3 h-3" />}
+            {resolveMemoPalette(activeNote?.color).id === palette.id && (
+              <Check className="w-3 h-3" />
+            )}
           </button>
         ))}
       </div>
@@ -661,6 +1000,7 @@ export const MemoWidget = () => {
       <div className="memo-note-list">
         {sortedNotes.map((note) => {
           const preview = stripHtml(note.html) || "Empty memo";
+          const palette = resolveMemoPalette(note.color);
 
           return (
             <article
@@ -689,7 +1029,7 @@ export const MemoWidget = () => {
             >
               <div
                 className="memo-note-color-dot"
-                style={{ backgroundColor: note.color || defaultMemoColor }}
+                style={getMemoPaletteDotStyle(palette.id)}
               />
 
               <div className="min-w-0 flex-1 text-left">
@@ -733,11 +1073,18 @@ export const MemoWidget = () => {
       );
     }
 
+    const palette = resolveMemoPalette(activeNote.color);
     const workspaceStyle = {
-      "--memo-paper-color": activeNote.color || defaultMemoColor,
+      "--memo-paper-color": palette.lightSurface,
+      "--memo-paper-surface": palette.lightSurface,
+      "--memo-paper-border": palette.lightBorder,
       "--memo-title-font": activeNote.fontFamily,
-      "--memo-title-color": "hsl(var(--foreground) / 0.94)",
-      "--memo-editor-color": "hsl(var(--foreground) / 0.88)",
+      "--memo-title-color": palette.lightText,
+      "--memo-editor-color": palette.lightText,
+      "--memo-dark-paper": palette.darkSurface,
+      "--memo-dark-border": palette.darkBorder,
+      "--memo-dark-text": palette.darkText,
+      "--memo-table-ink": palette.tableInk,
     } as CSSProperties;
 
     return (
