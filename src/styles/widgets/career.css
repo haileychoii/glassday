@@ -2655,3 +2655,26 @@ body.theme-pixel-desk .career-cover-question-input {
     grid-column: auto !important;
   }
 }
+
+/* =========================================================
+   CAREER FLOATING WINDOW — VISIBILITY FIX
+========================================================= */
+
+/* 데스크탑 */
+.career-floating-window {
+  background:
+    linear-gradient(
+      145deg,
+      hsl(var(--background) / 0.94),
+      hsl(var(--background) / 0.88)
+    ) !important;
+
+  border: 1px solid hsl(0 0% 100% / 0.72) !important;
+
+  box-shadow:
+    0 38px 120px hsl(240 40% 10% / 0.34),
+    inset 0 1px 0 hsl(0 0% 100% / 0.76) !important;
+
+  backdrop-filter: blur(44px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(44px) saturate(150%) !important;
+}
