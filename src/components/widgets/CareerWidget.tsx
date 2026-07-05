@@ -5,7 +5,9 @@ import {
   ExternalLink,
   FileText,
   GripHorizontal,
+  LayoutGrid,
   Link2,
+  List,
   Plus,
   Trash2,
   X,
@@ -37,6 +39,8 @@ type DragState = {
   startY: number;
   startWindow: CareerWindowState;
 };
+
+type CareerViewMode = "list" | "board";
 
 const statusOptions: CareerStatus[] = [
   "Saved",
@@ -229,6 +233,8 @@ export const CareerWidget = () => {
 
   const [optimisticSelectedItem, setOptimisticSelectedItem] =
     useState<CareerItem | null>(null);
+  const [viewMode, setViewMode] = useState<CareerViewMode>("list");
+  const [statusFilter, setStatusFilter] = useState<CareerStatus | "All">("All");
 
   const [windowState, setWindowState] = useState<CareerWindowState>(() =>
     getInitialWindowState()
@@ -329,6 +335,21 @@ export const CareerWidget = () => {
       return toneScore(bTone) - toneScore(aTone);
     });
   }, [normalizedItems]);
+
+  const filteredItems = useMemo(() => {
+    if (statusFilter === "All") return sortedItems;
+
+    return sortedItems.filter((item) => item.status === statusFilter);
+  }, [sortedItems, statusFilter]);
+
+  const boardColumns = useMemo(() => {
+    return statusOptions
+      .map((status) => ({
+        status,
+        items: filteredItems.filter((item) => item.status === status),
+      }))
+      .filter((column) => statusFilter === "All" || column.status === statusFilter);
+  }, [filteredItems, statusFilter]);
 
   const summary = useMemo(() => {
     const preparing = normalizedItems.filter(
@@ -533,6 +554,77 @@ export const CareerWidget = () => {
     });
   };
 
+  const renderCareerCard = (item: CareerItem, compact = false) => {
+    const ddayTone = getDdayTone(item.deadline);
+    const coverLetterCount =
+      item.coverLetterItems?.length ?? item.coverLetterQuestions?.length ?? 0;
+
+    return (
+      <article
+        key={item.id}
+        className={[
+          compact ? "career-board-card" : "career-list-item",
+          ddayTone === "urgent" ? "is-urgent" : "",
+          ddayTone === "soon" ? "is-soon" : "",
+          ddayTone === "closed" ? "is-closed" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        onClick={() => openCareerWindow(item)}
+      >
+        <div className="career-list-main">
+          <div className="career-list-title-row">
+            <div className="career-list-title">
+              <strong>{item.company}</strong>
+              <span>{item.role}</span>
+            </div>
+          </div>
+
+          <div className="career-list-meta">
+            <span className={`career-status-pill status-${item.status.toLowerCase()}`}>
+              {item.status}
+            </span>
+
+            {item.postingUrl && (
+              <span>
+                <Link2 className="w-3 h-3" />
+                Posting
+              </span>
+            )}
+
+            <span>
+              <FileText className="w-3 h-3" />
+              CL {coverLetterCount}
+            </span>
+
+            <span>
+              <CalendarDays className="w-3 h-3" />
+              {item.applicationEndDate ? "Synced" : "No date"}
+            </span>
+          </div>
+        </div>
+
+        <div className="career-list-side">
+          <span className={`career-dday-pill ${ddayTone}`}>
+            {getDdayLabel(item.deadline)}
+          </span>
+
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              deleteCareerItem(item.id);
+            }}
+            className="career-delete-button"
+            title="Delete"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </article>
+    );
+  };
+
   return (
     <>
       <section className="glass-card career-widget">
@@ -577,88 +669,69 @@ export const CareerWidget = () => {
           </div>
         </div>
 
-        <div className="career-list">
-          {sortedItems.length === 0 ? (
+        <div className="career-filter-row">
+          <div className="career-view-toggle">
+            <button
+              type="button"
+              onClick={() => setViewMode("list")}
+              className={`career-filter-pill ${viewMode === "list" ? "is-active" : ""}`}
+            >
+              <List className="w-3.5 h-3.5" />
+              List
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewMode("board")}
+              className={`career-filter-pill ${viewMode === "board" ? "is-active" : ""}`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              Board
+            </button>
+          </div>
+
+          {(["All", ...statusOptions] as const).map((status) => (
+            <button
+              key={status}
+              type="button"
+              onClick={() => setStatusFilter(status)}
+              className={`career-filter-pill ${statusFilter === status ? "is-active" : ""}`}
+            >
+              {status}
+            </button>
+          ))}
+        </div>
+
+        <div className={viewMode === "board" ? "career-list career-list-hidden" : "career-list"}>
+          {filteredItems.length === 0 ? (
             <div className="career-empty-box">
               아직 지원 회사가 없어. + 눌러서 추가해.
             </div>
           ) : (
-            sortedItems.map((item) => {
-              const ddayTone = getDdayTone(item.deadline);
-              const coverLetterCount =
-                item.coverLetterItems?.length ??
-                item.coverLetterQuestions?.length ??
-                0;
-
-              return (
-                <article
-                  key={item.id}
-                  className={[
-                    "career-list-item",
-                    ddayTone === "urgent" ? "is-urgent" : "",
-                    ddayTone === "soon" ? "is-soon" : "",
-                    ddayTone === "closed" ? "is-closed" : "",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => openCareerWindow(item)}
-                >
-                  <div className="career-list-main">
-                    <div className="career-list-title-row">
-                      <div className="career-list-title">
-                        <strong>{item.company}</strong>
-                        <span>{item.role}</span>
-                      </div>
-                    </div>
-
-                    <div className="career-list-meta">
-                      <span
-                        className={`career-status-pill status-${item.status.toLowerCase()}`}
-                      >
-                        {item.status}
-                      </span>
-
-                      {item.postingUrl && (
-                        <span>
-                          <Link2 className="w-3 h-3" />
-                          Posting
-                        </span>
-                      )}
-
-                      <span>
-                        <FileText className="w-3 h-3" />
-                        CL {coverLetterCount}
-                      </span>
-
-                      <span>
-                        <CalendarDays className="w-3 h-3" />
-                        {item.applicationEndDate ? "Synced" : "No date"}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="career-list-side">
-                    <span className={`career-dday-pill ${ddayTone}`}>
-                      {getDdayLabel(item.deadline)}
-                    </span>
-
-                    <button
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        deleteCareerItem(item.id);
-                      }}
-                      className="career-delete-button"
-                      title="Delete"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </article>
-              );
-            })
+            filteredItems.map((item) => renderCareerCard(item))
           )}
         </div>
+
+        {viewMode === "board" && (
+          <div className="career-board">
+            {boardColumns.map((column) => (
+              <section key={column.status} className="career-board-column">
+                <header className="career-board-column-header">
+                  <strong>{column.status}</strong>
+                  <span>{column.items.length}</span>
+                </header>
+
+                <div className="career-board-column-body">
+                  {column.items.length === 0 ? (
+                    <div className="career-empty-box career-board-empty">No cards</div>
+                  ) : (
+                    column.items.map((item) => renderCareerCard(item, true))
+                  )}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
       </section>
 
       {selectedItem &&

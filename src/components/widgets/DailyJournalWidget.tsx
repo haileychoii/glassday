@@ -62,6 +62,17 @@ export const DailyJournalWidget = () => {
   const hashtags = getEntryHashtags(entry);
   const hashtagLibrary = collectHashtagLibrary(entries);
 
+  const adjustScore = (
+    key: "energy" | "focus" | "sleepy" | "stress",
+    delta: number
+  ) => {
+    const nextValue = Math.min(5, Math.max(1, entry[key] + delta));
+
+    updateEntry({
+      [key]: nextValue,
+    } as Partial<JournalEntry>);
+  };
+
   const updateEntry = (patch: Partial<JournalEntry>) => {
     setEntries((prev) => updateJournalEntry(prev, selectedDate, patch));
   };
@@ -235,72 +246,36 @@ export const DailyJournalWidget = () => {
           <span>Clips</span>
           <strong>{entry.clips.length}</strong>
         </div>
-      </div>
 
-      <div className="journal-score-grid">
-        <label>
-          <span>Energy</span>
-          <input
-            type="range"
-            min={1}
-            max={5}
-            value={entry.energy}
-            onChange={(event) =>
-              updateEntry({
-                energy: Number(event.target.value),
-              })
-            }
-          />
-          <b>{entry.energy}</b>
-        </label>
-
-        <label>
-          <span>Focus</span>
-          <input
-            type="range"
-            min={1}
-            max={5}
-            value={entry.focus}
-            onChange={(event) =>
-              updateEntry({
-                focus: Number(event.target.value),
-              })
-            }
-          />
-          <b>{entry.focus}</b>
-        </label>
-
-        <label>
-          <span>Sleepy</span>
-          <input
-            type="range"
-            min={1}
-            max={5}
-            value={entry.sleepy}
-            onChange={(event) =>
-              updateEntry({
-                sleepy: Number(event.target.value),
-              })
-            }
-          />
-          <b>{entry.sleepy}</b>
-        </label>
-
-        <label>
-          <span>Stress</span>
-          <input
-            type="range"
-            min={1}
-            max={5}
-            value={entry.stress}
-            onChange={(event) =>
-              updateEntry({
-                stress: Number(event.target.value),
-              })
-            }
-          />
-          <b>{entry.stress}</b>
-        </label>
+        {(
+          [
+            ["Energy", "energy", entry.energy],
+            ["Focus", "focus", entry.focus],
+            ["Sleepy", "sleepy", entry.sleepy],
+            ["Stress", "stress", entry.stress],
+          ] as const
+        ).map(([label, key, value]) => (
+          <div key={key} className={`journal-score-chip score-${key}`}>
+            <span>{label}</span>
+            <div className="journal-score-stepper">
+              <button
+                type="button"
+                onClick={() => adjustScore(key, -1)}
+                aria-label={`${label} down`}
+              >
+                -
+              </button>
+              <b>{value}</b>
+              <button
+                type="button"
+                onClick={() => adjustScore(key, 1)}
+                aria-label={`${label} up`}
+              >
+                +
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="journal-main-scroll">

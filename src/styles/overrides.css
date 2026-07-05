@@ -1021,9 +1021,8 @@ body,
   }
 
   .career-widget .career-summary-card {
-    min-height: 64px !important;
-    aspect-ratio: 1 / 1 !important;
-    padding: 8px 6px !important;
+    min-height: 56px !important;
+    padding: 8px 10px !important;
     border-radius: 14px !important;
     display: flex !important;
     flex-direction: column !important;
@@ -1044,6 +1043,7 @@ body,
   .career-widget .career-list-item {
     flex-direction: column !important;
     align-items: stretch !important;
+    align-self: start !important;
   }
 
   .career-widget .career-list-meta {
