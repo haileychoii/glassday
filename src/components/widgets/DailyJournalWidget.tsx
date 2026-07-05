@@ -235,6 +235,41 @@ export const DailyJournalWidget = () => {
           <strong>{progress}%</strong>
         </div>
 
+        <div className="journal-summary-card journal-score-strip-card">
+          <span>Condition</span>
+          <div className="journal-score-strip">
+            {(
+              [
+                ["Energy", "energy", entry.energy],
+                ["Focus", "focus", entry.focus],
+                ["Sleepy", "sleepy", entry.sleepy],
+                ["Stress", "stress", entry.stress],
+              ] as const
+            ).map(([label, key, value]) => (
+              <div key={key} className={`journal-score-inline score-${key}`}>
+                <small>{label}</small>
+                <div className="journal-score-stepper">
+                  <button
+                    type="button"
+                    onClick={() => adjustScore(key, -1)}
+                    aria-label={`${label} down`}
+                  >
+                    -
+                  </button>
+                  <b>{value}</b>
+                  <button
+                    type="button"
+                    onClick={() => adjustScore(key, 1)}
+                    aria-label={`${label} up`}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="journal-summary-card">
           <span>Tasks</span>
           <strong>
@@ -246,36 +281,6 @@ export const DailyJournalWidget = () => {
           <span>Clips</span>
           <strong>{entry.clips.length}</strong>
         </div>
-
-        {(
-          [
-            ["Energy", "energy", entry.energy],
-            ["Focus", "focus", entry.focus],
-            ["Sleepy", "sleepy", entry.sleepy],
-            ["Stress", "stress", entry.stress],
-          ] as const
-        ).map(([label, key, value]) => (
-          <div key={key} className={`journal-score-chip score-${key}`}>
-            <span>{label}</span>
-            <div className="journal-score-stepper">
-              <button
-                type="button"
-                onClick={() => adjustScore(key, -1)}
-                aria-label={`${label} down`}
-              >
-                -
-              </button>
-              <b>{value}</b>
-              <button
-                type="button"
-                onClick={() => adjustScore(key, 1)}
-                aria-label={`${label} up`}
-              >
-                +
-              </button>
-            </div>
-          </div>
-        ))}
       </div>
 
       <div className="journal-main-scroll">

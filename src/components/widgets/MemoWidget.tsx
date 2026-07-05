@@ -190,13 +190,27 @@ export const MemoWidget = () => {
   const [editing, setEditing] = useState(false);
   const [memoWindowOpen, setMemoWindowOpen] = useState(false);
   const [isCompactListOpen, setIsCompactListOpen] = useState(false);
+  const { value: isListHidden, setValue: setIsListHidden } = useLocalStorage(
+    "glassday.memo.listHidden.v1",
+    false
+  );
+  const {
+    value: isWindowListHidden,
+    setValue: setIsWindowListHidden,
+  } = useLocalStorage("glassday.memo.windowListHidden.v1", false);
+  const {
+    value: windowSidebarWidth,
+    setValue: setWindowSidebarWidth,
+  } = useLocalStorage("glassday.memo.windowSidebarWidth.v1", 280);
 
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [saveFileName, setSaveFileName] = useState("");
+  const [isDraggingWindowSidebar, setIsDraggingWindowSidebar] = useState(false);
 
   const editorRef = useRef<HTMLDivElement | null>(null);
   const windowEditorRef = useRef<HTMLDivElement | null>(null);
   const saveInputRef = useRef<HTMLInputElement | null>(null);
+  const floatingBodyRef = useRef<HTMLDivElement | null>(null);
 
   const { value: notes, setValue: setNotes } = useLocalStorage<MemoNote[]>(
     "glassday.memo.notes.v2",
@@ -236,6 +250,38 @@ export const MemoWidget = () => {
       window.removeEventListener(FONT_CHANGE_EVENT, syncFonts);
     };
   }, []);
+
+  useEffect(() => {
+    if (!isDraggingWindowSidebar) {
+      return;
+    }
+
+    const handleMove = (event: MouseEvent) => {
+      const container = floatingBodyRef.current;
+      if (!container) {
+        return;
+      }
+
+      const bounds = container.getBoundingClientRect();
+      const nextWidth = Math.min(
+        420,
+        Math.max(180, event.clientX - bounds.left - 18)
+      );
+      setWindowSidebarWidth(nextWidth);
+    };
+
+    const handleUp = () => {
+      setIsDraggingWindowSidebar(false);
+    };
+
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("mouseup", handleUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("mouseup", handleUp);
+    };
+  }, [isDraggingWindowSidebar, setWindowSidebarWidth]);
 
   useEffect(() => {
     const shouldNormalize = notes.some((note) => {
@@ -579,7 +625,7 @@ export const MemoWidget = () => {
     </div>
   );
 
-  const renderNoteList = () => (
+  const renderNoteList = (windowMode = false) => (
     <div className={cn("memo-list-panel", isCompactListOpen && "is-compact-open")}>
       <div className="memo-list-header">
         <span>Memos</span>
@@ -595,9 +641,16 @@ export const MemoWidget = () => {
 
           <button
             type="button"
-            onClick={() => setIsCompactListOpen(false)}
+            onClick={() => {
+              if (windowMode) {
+                setIsWindowListHidden(true);
+              } else {
+                setIsListHidden(true);
+                setIsCompactListOpen(false);
+              }
+            }}
             className="memo-mini-button memo-list-close"
-            title="Close memo list"
+            title="Hide memo list"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -615,12 +668,16 @@ export const MemoWidget = () => {
               tabIndex={0}
               onClick={() => {
                 setSelectedNoteId(note.id);
-                setIsCompactListOpen(false);
+                if (!windowMode) {
+                  setIsCompactListOpen(false);
+                }
               }}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   setSelectedNoteId(note.id);
-                  setIsCompactListOpen(false);
+                  if (!windowMode) {
+                    setIsCompactListOpen(false);
+                  }
                 }
               }}
               className={cn(
@@ -738,6 +795,18 @@ export const MemoWidget = () => {
         <>
           <button
             type="button"
+            onClick={() => setIsWindowListHidden((prev) => !prev)}
+            className={cn(
+              "glass-button h-8 w-8 flex items-center justify-center",
+              !isWindowListHidden && "is-active"
+            )}
+            title={isWindowListHidden ? "Show memo list" : "Hide memo list"}
+          >
+            <PanelLeft className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            type="button"
             onClick={addNewMemo}
             className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
           >
@@ -779,8 +848,33 @@ export const MemoWidget = () => {
         </>
       }
     >
-      <div className="memo-floating-body">
-        {renderNoteList()}
+      <div
+        ref={floatingBodyRef}
+        className={cn(
+          "memo-floating-body",
+          isWindowListHidden && "is-window-list-hidden"
+        )}
+        style={
+          {
+            "--memo-window-sidebar-width": `${windowSidebarWidth}px`,
+          } as React.CSSProperties
+        }
+      >
+        {!isWindowListHidden && renderNoteList(true)}
+        {!isWindowListHidden && (
+          <div
+            className={cn(
+              "memo-window-resizer",
+              isDraggingWindowSidebar && "is-dragging"
+            )}
+            role="separator"
+            aria-orientation="vertical"
+            onMouseDown={(event: ReactMouseEvent<HTMLDivElement>) => {
+              event.preventDefault();
+              setIsDraggingWindowSidebar(true);
+            }}
+          />
+        )}
         {renderWorkspace(windowEditorRef, true)}
       </div>
     </FloatingWindow>
@@ -892,12 +986,20 @@ export const MemoWidget = () => {
           <div className="flex items-center gap-1.5">
             <button
               type="button"
-              onClick={() => setIsCompactListOpen((prev) => !prev)}
+              onClick={() => {
+                if (isListHidden) {
+                  setIsListHidden(false);
+                  setIsCompactListOpen(true);
+                  return;
+                }
+
+                setIsCompactListOpen((prev) => !prev);
+              }}
               className={cn(
                 "glass-button h-8 w-8 flex items-center justify-center memo-compact-toggle",
-                isCompactListOpen && "is-active"
+                (isCompactListOpen || !isListHidden) && "is-active"
               )}
-              title={isCompactListOpen ? "Hide memo list" : "Show memo list"}
+              title={isListHidden ? "Show memo list" : "Hide memo list"}
             >
               <PanelLeft className="w-3.5 h-3.5" />
             </button>
@@ -940,9 +1042,13 @@ export const MemoWidget = () => {
         }
       >
         <div
-          className={cn("memo-app", isCompactListOpen && "is-compact-list-open")}
+          className={cn(
+            "memo-app",
+            isCompactListOpen && "is-compact-list-open",
+            isListHidden && "is-list-hidden"
+          )}
         >
-          {renderNoteList()}
+          {!isListHidden && renderNoteList()}
           {renderWorkspace(editorRef)}
         </div>
       </GlassCard>
