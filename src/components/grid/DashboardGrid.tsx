@@ -71,6 +71,15 @@ const INITIAL_VISIBLE_ROWS = 16;
 
 const RESIZE_HANDLES = ["n", "s", "e", "w", "ne", "nw", "se", "sw"] as const;
 
+const WIDGET_LAYOUT_CONSTRAINTS: Partial<
+  Record<WidgetId, Pick<GridLayoutItem, "minH" | "minW">>
+> = {
+  calendar: {
+    minH: 16,
+    minW: 5,
+  },
+};
+
 type ResizeHandle = (typeof RESIZE_HANDLES)[number];
 
 type EditInteraction = {
@@ -117,16 +126,20 @@ const isGridLayoutItem = (value: unknown): value is GridLayoutItem => {
 };
 
 const normalizeLayoutItem = (item: GridLayoutItem): GridLayoutItem => {
-  const safeWidth = Math.max(2, Math.min(item.w || 4, 16));
+  const constraints = WIDGET_LAYOUT_CONSTRAINTS[item.i as WidgetId] ?? {};
+  const minWidth = Math.max(2, constraints.minW ?? item.minW ?? 2);
+  const minHeight = Math.max(3, constraints.minH ?? item.minH ?? 3);
+  const safeWidth = Math.max(minWidth, Math.min(item.w || 4, 16));
   const safeX = Math.max(0, Math.min(item.x || 0, 16 - safeWidth));
 
   return {
     ...item,
+    ...constraints,
     i: item.i,
     x: safeX,
     y: Number.isFinite(item.y) ? Math.max(0, item.y) : item.y,
     w: safeWidth,
-    h: Math.max(3, item.h || 5),
+    h: Math.max(minHeight, item.h || 5),
   };
 };
 
@@ -308,15 +321,19 @@ const normalizeLayoutItemForCols = (
   item: GridLayoutItem,
   cols: number
 ): GridLayoutItem => {
-  const safeWidth = clamp(item.w, 2, cols);
+  const constraints = WIDGET_LAYOUT_CONSTRAINTS[item.i as WidgetId] ?? {};
+  const minWidth = Math.max(2, constraints.minW ?? item.minW ?? 2);
+  const minHeight = Math.max(3, constraints.minH ?? item.minH ?? 3);
+  const safeWidth = clamp(item.w, Math.min(minWidth, cols), cols);
   const safeX = clamp(item.x, 0, cols - safeWidth);
 
   return {
     ...item,
+    ...constraints,
     x: safeX,
     y: Math.max(0, item.y),
     w: safeWidth,
-    h: Math.max(3, item.h),
+    h: Math.max(minHeight, item.h),
   };
 };
 
@@ -453,18 +470,24 @@ export const DashboardGrid = ({
       let nextY = startItem.y;
       let nextW = startItem.w;
       let nextH = startItem.h;
+      const minWidth = startItem.minW ?? 2;
+      const minHeight = startItem.minH ?? 3;
 
       if (handle.includes("e")) {
-        nextW = clamp(startItem.w + deltaColumns, 2, cols - startItem.x);
+        nextW = clamp(
+          startItem.w + deltaColumns,
+          Math.min(minWidth, cols - startItem.x),
+          cols - startItem.x
+        );
       }
 
       if (handle.includes("s")) {
-        nextH = Math.max(3, startItem.h + deltaRows);
+        nextH = Math.max(minHeight, startItem.h + deltaRows);
       }
 
       if (handle.includes("w")) {
         const maxLeftDelta = startItem.x;
-        const maxRightDelta = startItem.w - 2;
+        const maxRightDelta = startItem.w - minWidth;
         const leftDelta = clamp(deltaColumns, -maxLeftDelta, maxRightDelta);
 
         nextX = startItem.x + leftDelta;
@@ -473,7 +496,7 @@ export const DashboardGrid = ({
 
       if (handle.includes("n")) {
         const maxUpDelta = startItem.y;
-        const maxDownDelta = startItem.h - 3;
+        const maxDownDelta = startItem.h - minHeight;
         const topDelta = clamp(deltaRows, -maxUpDelta, maxDownDelta);
 
         nextY = startItem.y + topDelta;
