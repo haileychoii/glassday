@@ -432,70 +432,70 @@
   padding-right: 2px !important;
 }
 
-@container journal-widget (max-width: 720px) {
+@container journal-widget (max-width: 860px) {
   .daily-journal-widget {
-    padding: 14px;
-    gap: 12px;
+    padding: 14px !important;
+    gap: 12px !important;
   }
 
   .journal-header {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: flex-start !important;
+    flex-direction: column !important;
   }
 
   .journal-date-nav {
-    width: 100%;
+    width: 100% !important;
   }
 
   .journal-date-nav input {
-    flex: 1;
+    flex: 1 !important;
   }
 
   .journal-summary-row {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
   }
 
   .journal-summary-card {
-    min-height: 0;
-    padding: 9px 8px;
-    border-radius: 16px;
+    min-height: 0 !important;
+    padding: 9px 8px !important;
+    border-radius: 16px !important;
   }
 
   .journal-score-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
-@container journal-widget (max-width: 520px) {
+@container journal-widget (max-width: 680px) {
   .journal-summary-card span {
-    font-size: 9px;
+    font-size: 9px !important;
   }
 
   .journal-summary-card strong {
-    margin-top: 4px;
-    font-size: 16px;
+    margin-top: 4px !important;
+    font-size: 16px !important;
   }
 
   .journal-section {
-    padding: 12px;
-    border-radius: 18px;
+    padding: 12px !important;
+    border-radius: 18px !important;
   }
 
   .journal-add-row,
   .journal-clip-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 
   .journal-add-row button,
   .journal-clip-row button {
-    width: 100%;
+    width: 100% !important;
   }
 
   .journal-tag-tools,
   .journal-hashtag-row,
   .journal-library-list {
-    gap: 6px;
+    gap: 6px !important;
   }
 }

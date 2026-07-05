@@ -1111,9 +1111,9 @@
   display: none !important;
 }
 
-@container memo-widget (max-width: 720px) {
+@container memo-widget (max-width: 860px) {
   .memo-app {
-    grid-template-columns: 220px minmax(0, 1fr) !important;
+    grid-template-columns: 200px minmax(0, 1fr) !important;
   }
 
   .memo-workspace {
@@ -1126,7 +1126,7 @@
   }
 }
 
-@container memo-widget (max-width: 580px) {
+@container memo-widget (max-width: 700px) {
   .memo-compact-toggle {
     display: inline-flex !important;
   }
@@ -1193,7 +1193,7 @@
   }
 }
 
-@container memo-widget (max-width: 460px) {
+@container memo-widget (max-width: 540px) {
   .memo-list-panel {
     width: min(224px, calc(100% - 24px)) !important;
   }
