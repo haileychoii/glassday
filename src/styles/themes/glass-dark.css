@@ -771,13 +771,15 @@ body.theme-glass-dark .settings-modal-window {
   background:
     linear-gradient(
       145deg,
-      rgba(22, 28, 46, 0.9),
-      rgba(14, 18, 31, 0.76)
+      rgba(20, 27, 44, 0.62),
+      rgba(11, 16, 28, 0.38)
     ) !important;
-  border-color: rgba(169, 186, 236, 0.22) !important;
+  border-color: rgba(176, 194, 241, 0.18) !important;
   box-shadow:
-    0 44px 140px -34px rgba(3, 6, 16, 0.72),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    0 44px 140px -34px rgba(3, 6, 16, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(18px) saturate(132%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(132%) !important;
 }
 
 html[data-theme="glass-dark"] .settings-modal-header,
@@ -785,6 +787,12 @@ body[data-theme="glass-dark"] .settings-modal-header,
 html.theme-glass-dark .settings-modal-header,
 body.theme-glass-dark .settings-modal-header {
   border-bottom-color: rgba(167, 184, 233, 0.16) !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.01)
+    ) !important;
 }
 
 html[data-theme="glass-dark"] .settings-modal-icon,
@@ -807,13 +815,15 @@ body.theme-glass-dark .settings-section {
   background:
     linear-gradient(
       145deg,
-      rgba(36, 43, 68, 0.56),
-      rgba(17, 22, 35, 0.3)
+      rgba(39, 47, 73, 0.34),
+      rgba(17, 22, 35, 0.14)
     ) !important;
-  border-color: rgba(172, 189, 237, 0.18) !important;
+  border-color: rgba(176, 193, 239, 0.14) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 16px 36px -32px rgba(0, 0, 0, 0.48) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 36px -32px rgba(0, 0, 0, 0.28) !important;
+  backdrop-filter: blur(10px) saturate(124%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(124%) !important;
 }
 
 html[data-theme="glass-dark"] .settings-modal-header h2,
@@ -850,16 +860,19 @@ html[data-theme="glass-dark"] .settings-theme-card,
 body[data-theme="glass-dark"] .settings-theme-card,
 html.theme-glass-dark .settings-theme-card,
 body.theme-glass-dark .settings-theme-card {
-  background: rgba(34, 40, 63, 0.48) !important;
-  border-color: rgba(173, 190, 239, 0.16) !important;
+  background: rgba(34, 40, 63, 0.28) !important;
+  border-color: rgba(173, 190, 239, 0.14) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 24px -20px rgba(0, 0, 0, 0.22) !important;
 }
 
 html[data-theme="glass-dark"] .settings-theme-card.is-active,
 body[data-theme="glass-dark"] .settings-theme-card.is-active,
 html.theme-glass-dark .settings-theme-card.is-active,
 body.theme-glass-dark .settings-theme-card.is-active {
-  background: rgba(66, 84, 132, 0.4) !important;
-  border-color: rgba(154, 187, 255, 0.44) !important;
+  background: rgba(74, 96, 152, 0.26) !important;
+  border-color: rgba(154, 187, 255, 0.34) !important;
 }
 
 html[data-theme="glass-dark"] .settings-modal-window input,
