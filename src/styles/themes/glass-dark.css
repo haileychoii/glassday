@@ -263,10 +263,10 @@ body.theme-glass-dark .dashboard-shell,
 body.theme-glass-dark .workspace-shell,
 body.theme-glass-dark .desktop-shell,
 body.theme-glass-dark .main-shell {
-  background: rgba(20, 24, 40, 0.16) !important;
-  border-color: rgba(168, 186, 235, 0.18) !important;
-  backdrop-filter: blur(4px) saturate(122%) !important;
-  -webkit-backdrop-filter: blur(4px) saturate(122%) !important;
+  background: rgba(10, 14, 24, 0.1) !important;
+  border-color: rgba(155, 174, 228, 0.14) !important;
+  backdrop-filter: blur(2px) saturate(116%) !important;
+  -webkit-backdrop-filter: blur(2px) saturate(116%) !important;
 }
 
 html[data-theme="glass-dark"] .app-sidebar,
@@ -280,11 +280,12 @@ body.theme-glass-dark .sidebar {
   background:
     linear-gradient(
       180deg,
-      rgba(30, 38, 66, 0.2),
-      rgba(20, 24, 40, 0.1)
+      rgba(18, 24, 42, 0.18),
+      rgba(9, 13, 24, 0.08)
     ) !important;
-  backdrop-filter: blur(6px) saturate(124%) !important;
-  -webkit-backdrop-filter: blur(6px) saturate(124%) !important;
+  border-right-color: rgba(150, 170, 224, 0.12) !important;
+  backdrop-filter: blur(3px) saturate(118%) !important;
+  -webkit-backdrop-filter: blur(3px) saturate(118%) !important;
 }
 
 html[data-theme="glass-dark"] .topbar,
@@ -294,16 +295,104 @@ body.theme-glass-dark .topbar {
   background:
     linear-gradient(
       180deg,
-      rgba(38, 46, 77, 0.26),
-      rgba(25, 30, 52, 0.13)
+      rgba(22, 29, 49, 0.2),
+      rgba(10, 14, 24, 0.09)
     ) !important;
-  border-color: rgba(173, 193, 240, 0.18) !important;
+  border-color: rgba(162, 181, 232, 0.14) !important;
   border-radius: 20px 20px 0 0 !important;
   box-shadow:
-    0 10px 28px rgba(5, 8, 20, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(5px) saturate(121%) !important;
-  -webkit-backdrop-filter: blur(5px) saturate(121%) !important;
+    0 10px 28px rgba(5, 8, 20, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(3px) saturate(117%) !important;
+  -webkit-backdrop-filter: blur(3px) saturate(117%) !important;
+}
+
+html[data-theme="glass-dark"] .glass-card,
+body[data-theme="glass-dark"] .glass-card,
+html.theme-glass-dark .glass-card,
+body.theme-glass-dark .glass-card {
+  color: rgba(235, 241, 255, 0.92) !important;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18, 24, 40, 0.2),
+      rgba(10, 14, 24, 0.08)
+    ) !important;
+  border-color: rgba(153, 173, 227, 0.14) !important;
+  box-shadow:
+    0 18px 46px rgba(3, 6, 16, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(3px) saturate(118%) !important;
+  -webkit-backdrop-filter: blur(3px) saturate(118%) !important;
+}
+
+html[data-theme="glass-dark"] .today-focus-main,
+html[data-theme="glass-dark"] .today-focus-hero,
+html[data-theme="glass-dark"] .today-focus-section,
+html[data-theme="glass-dark"] .today-focus-block,
+html[data-theme="glass-dark"] .today-mini-main,
+html[data-theme="glass-dark"] .today-mini-next,
+html[data-theme="glass-dark"] .today-tasks-progress,
+html[data-theme="glass-dark"] .calendar-event-item,
+html[data-theme="glass-dark"] .calendar-event-card,
+html[data-theme="glass-dark"] .calendar-mini-card,
+html[data-theme="glass-dark"] .career-list-item,
+html[data-theme="glass-dark"] .memo-note-item,
+html[data-theme="glass-dark"] .alert-item,
+html[data-theme="glass-dark"] .journal-section,
+html[data-theme="glass-dark"] .study-card,
+body[data-theme="glass-dark"] .today-focus-main,
+body[data-theme="glass-dark"] .today-focus-hero,
+body[data-theme="glass-dark"] .today-focus-section,
+body[data-theme="glass-dark"] .today-focus-block,
+body[data-theme="glass-dark"] .today-mini-main,
+body[data-theme="glass-dark"] .today-mini-next,
+body[data-theme="glass-dark"] .today-tasks-progress,
+body[data-theme="glass-dark"] .calendar-event-item,
+body[data-theme="glass-dark"] .calendar-event-card,
+body[data-theme="glass-dark"] .calendar-mini-card,
+body[data-theme="glass-dark"] .career-list-item,
+body[data-theme="glass-dark"] .memo-note-item,
+body[data-theme="glass-dark"] .alert-item,
+body[data-theme="glass-dark"] .journal-section,
+body[data-theme="glass-dark"] .study-card,
+html.theme-glass-dark .today-focus-main,
+html.theme-glass-dark .today-focus-hero,
+html.theme-glass-dark .today-focus-section,
+html.theme-glass-dark .today-focus-block,
+html.theme-glass-dark .today-mini-main,
+html.theme-glass-dark .today-mini-next,
+html.theme-glass-dark .today-tasks-progress,
+html.theme-glass-dark .calendar-event-item,
+html.theme-glass-dark .calendar-event-card,
+html.theme-glass-dark .calendar-mini-card,
+html.theme-glass-dark .career-list-item,
+html.theme-glass-dark .memo-note-item,
+html.theme-glass-dark .alert-item,
+html.theme-glass-dark .journal-section,
+html.theme-glass-dark .study-card,
+body.theme-glass-dark .today-focus-main,
+body.theme-glass-dark .today-focus-hero,
+body.theme-glass-dark .today-focus-section,
+body.theme-glass-dark .today-focus-block,
+body.theme-glass-dark .today-mini-main,
+body.theme-glass-dark .today-mini-next,
+body.theme-glass-dark .today-tasks-progress,
+body.theme-glass-dark .calendar-event-item,
+body.theme-glass-dark .calendar-event-card,
+body.theme-glass-dark .calendar-mini-card,
+body.theme-glass-dark .career-list-item,
+body.theme-glass-dark .memo-note-item,
+body.theme-glass-dark .alert-item,
+body.theme-glass-dark .journal-section,
+body.theme-glass-dark .study-card {
+  background: rgba(20, 26, 42, 0.16) !important;
+  border-color: rgba(151, 172, 226, 0.12) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 24px rgba(3, 6, 16, 0.1) !important;
+  backdrop-filter: blur(2px) saturate(116%) !important;
+  -webkit-backdrop-filter: blur(2px) saturate(116%) !important;
 }
 
 html[data-theme="glass-dark"] .sidebar-tab-item.is-active .sidebar-tab-main,
@@ -390,15 +479,15 @@ html[data-theme="glass-dark"] .memo-workspace,
 body[data-theme="glass-dark"] .memo-workspace,
 html.theme-glass-dark .memo-workspace,
 body.theme-glass-dark .memo-workspace {
-  background: rgba(14, 18, 31, 0.18) !important;
+  background: rgba(9, 13, 22, 0.12) !important;
 }
 
 html[data-theme="glass-dark"] .memo-list-panel,
 body[data-theme="glass-dark"] .memo-list-panel,
 html.theme-glass-dark .memo-list-panel,
 body.theme-glass-dark .memo-list-panel {
-  background: rgba(18, 23, 39, 0.42) !important;
-  border-right-color: rgba(164, 180, 232, 0.18) !important;
+  background: rgba(13, 18, 31, 0.22) !important;
+  border-right-color: rgba(150, 169, 221, 0.12) !important;
 }
 
 html[data-theme="glass-dark"] .memo-note-item:hover,
@@ -412,8 +501,8 @@ html[data-theme="glass-dark"] .memo-note-item.is-active,
 body[data-theme="glass-dark"] .memo-note-item.is-active,
 html.theme-glass-dark .memo-note-item.is-active,
 body.theme-glass-dark .memo-note-item.is-active {
-  background: rgba(88, 103, 153, 0.3) !important;
-  border-color: rgba(169, 186, 239, 0.24) !important;
+  background: rgba(74, 89, 138, 0.22) !important;
+  border-color: rgba(158, 178, 235, 0.18) !important;
 }
 
 html[data-theme="glass-dark"] .memo-tool-button,
@@ -436,8 +525,39 @@ html[data-theme="glass-dark"] .memo-color-area,
 body[data-theme="glass-dark"] .memo-color-area,
 html.theme-glass-dark .memo-color-area,
 body.theme-glass-dark .memo-color-area {
-  background: linear-gradient(135deg, rgba(31, 37, 58, 0.58), rgba(17, 21, 34, 0.28)) !important;
-  border-color: rgba(165, 182, 233, 0.2) !important;
+  background: linear-gradient(135deg, rgba(22, 27, 43, 0.34), rgba(10, 14, 24, 0.14)) !important;
+  border-color: rgba(152, 171, 222, 0.14) !important;
+}
+
+html[data-theme="glass-dark"] .memo-editor,
+body[data-theme="glass-dark"] .memo-editor,
+html.theme-glass-dark .memo-editor,
+body.theme-glass-dark .memo-editor {
+  color: rgba(44, 50, 66, 0.92) !important;
+  font-weight: 400 !important;
+  line-height: 1.66 !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(244, 240, 245, 0.88),
+      rgba(233, 228, 236, 0.78)
+    ) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow:
+    0 16px 42px rgba(2, 4, 12, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.44) !important;
+}
+
+html[data-theme="glass-dark"] .memo-title-input,
+html[data-theme="glass-dark"] .memo-title-view,
+body[data-theme="glass-dark"] .memo-title-input,
+body[data-theme="glass-dark"] .memo-title-view,
+html.theme-glass-dark .memo-title-input,
+html.theme-glass-dark .memo-title-view,
+body.theme-glass-dark .memo-title-input,
+body.theme-glass-dark .memo-title-view {
+  color: rgba(228, 235, 252, 0.88) !important;
+  font-weight: 600 !important;
 }
 
 html[data-theme="glass-dark"] .settings-modal-window,
