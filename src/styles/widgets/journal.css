@@ -72,7 +72,7 @@
 
 .journal-summary-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 0.64fr)) minmax(0, 1.45fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
 }
 
@@ -104,6 +104,7 @@
 .journal-score-strip-card {
   display: grid;
   gap: 8px;
+  grid-column: 1 / -1;
 }
 
 .journal-score-strip {
@@ -490,7 +491,7 @@
 
   .journal-summary-row {
     display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 0.62fr)) minmax(0, 1.35fr) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     gap: 6px !important;
   }
 
