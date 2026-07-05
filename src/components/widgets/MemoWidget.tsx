@@ -11,6 +11,7 @@ import {
   Lock,
   Maximize2,
   Palette,
+  PanelLeft,
   Pencil,
   Pin,
   Plus,
@@ -372,6 +373,7 @@ const sortMemos = (notes: MemoNote[]) => {
 export const MemoWidget = () => {
   const [editing, setEditing] = useState(false);
   const [memoWindowOpen, setMemoWindowOpen] = useState(false);
+  const [isCompactListOpen, setIsCompactListOpen] = useState(false);
 
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [saveFileName, setSaveFileName] = useState("");
@@ -750,18 +752,28 @@ export const MemoWidget = () => {
   );
 
   const renderNoteList = () => (
-    <div className="memo-list-panel">
+    <div className={cn("memo-list-panel", isCompactListOpen && "is-compact-open")}>
       <div className="memo-list-header">
         <span>Memos</span>
+        <div className="memo-list-header-actions">
+          <button
+            type="button"
+            onClick={addNewMemo}
+            className="memo-mini-button"
+            title="New memo"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
 
-        <button
-          type="button"
-          onClick={addNewMemo}
-          className="memo-mini-button"
-          title="New memo"
-        >
-          <Plus className="w-3.5 h-3.5" />
-        </button>
+          <button
+            type="button"
+            onClick={() => setIsCompactListOpen(false)}
+            className="memo-mini-button memo-list-close"
+            title="Close memo list"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </div>
 
       <div className="memo-note-list">
@@ -773,10 +785,14 @@ export const MemoWidget = () => {
               key={note.id}
               role="button"
               tabIndex={0}
-              onClick={() => setSelectedNoteId(note.id)}
+              onClick={() => {
+                setSelectedNoteId(note.id);
+                setIsCompactListOpen(false);
+              }}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   setSelectedNoteId(note.id);
+                  setIsCompactListOpen(false);
                 }
               }}
               className={cn(
@@ -1048,6 +1064,18 @@ export const MemoWidget = () => {
           <div className="flex items-center gap-1.5">
             <button
               type="button"
+              onClick={() => setIsCompactListOpen((prev) => !prev)}
+              className={cn(
+                "glass-button h-8 w-8 flex items-center justify-center memo-compact-toggle",
+                isCompactListOpen && "is-active"
+              )}
+              title={isCompactListOpen ? "Hide memo list" : "Show memo list"}
+            >
+              <PanelLeft className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              type="button"
               onClick={addNewMemo}
               className="glass-button h-8 w-8 flex items-center justify-center"
               title="New memo"
@@ -1083,7 +1111,9 @@ export const MemoWidget = () => {
           </div>
         }
       >
-        <div className="memo-app">
+        <div
+          className={cn("memo-app", isCompactListOpen && "is-compact-list-open")}
+        >
           {renderNoteList()}
           {renderWorkspace(editorRef)}
         </div>

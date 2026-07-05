@@ -232,6 +232,30 @@ body,
   flex: 0 0 auto !important;
 }
 
+@media (max-width: 920px) {
+  .topbar-mobile-workspaces {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-width: 0 !important;
+  }
+
+  .topbar-mobile-workspace-list {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    min-width: 0 !important;
+    padding-bottom: 2px !important;
+    scrollbar-width: none !important;
+  }
+
+  .topbar-mobile-workspace-list::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
 .theme-segmented-control.theme-button-group {
   display: flex !important;
   align-items: center !important;
