@@ -235,6 +235,18 @@ export const DailyJournalWidget = () => {
           <strong>{progress}%</strong>
         </div>
 
+        <div className="journal-summary-card">
+          <span>Tasks</span>
+          <strong>
+            {doneTaskCount}/{entry.todayTasks.length}
+          </strong>
+        </div>
+
+        <div className="journal-summary-card">
+          <span>Clips</span>
+          <strong>{entry.clips.length}</strong>
+        </div>
+
         <div className="journal-summary-card journal-score-strip-card">
           <span>Condition</span>
           <div className="journal-score-strip">
@@ -268,18 +280,6 @@ export const DailyJournalWidget = () => {
               </div>
             ))}
           </div>
-        </div>
-
-        <div className="journal-summary-card">
-          <span>Tasks</span>
-          <strong>
-            {doneTaskCount}/{entry.todayTasks.length}
-          </strong>
-        </div>
-
-        <div className="journal-summary-card">
-          <span>Clips</span>
-          <strong>{entry.clips.length}</strong>
         </div>
       </div>
 
