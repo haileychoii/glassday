@@ -1106,9 +1106,12 @@
   gap: 6px;
 }
 
-.memo-compact-toggle,
+.memo-compact-toggle {
+  display: inline-flex !important;
+}
+
 .memo-list-close {
-  display: none !important;
+  display: inline-flex !important;
 }
 
 @container memo-widget (max-width: 860px) {
@@ -1262,6 +1265,28 @@
 .memo-floating-body.is-window-list-hidden .memo-workspace {
   width: 100% !important;
   max-width: 100% !important;
+}
+
+.memo-app.is-list-hidden .memo-title-input,
+.memo-app.is-list-hidden .memo-title-view,
+.memo-app.is-list-hidden .memo-toolbar,
+.memo-app.is-list-hidden .memo-editor-toolbar,
+.memo-app.is-list-hidden .memo-tag-tools,
+.memo-app.is-list-hidden .memo-tag-library,
+.memo-app.is-list-hidden .memo-editor,
+.memo-app.is-list-hidden [contenteditable="true"].memo-editor,
+.memo-floating-body.is-window-list-hidden .memo-title-input,
+.memo-floating-body.is-window-list-hidden .memo-title-view,
+.memo-floating-body.is-window-list-hidden .memo-toolbar,
+.memo-floating-body.is-window-list-hidden .memo-editor-toolbar,
+.memo-floating-body.is-window-list-hidden .memo-tag-tools,
+.memo-floating-body.is-window-list-hidden .memo-tag-library,
+.memo-floating-body.is-window-list-hidden .memo-editor,
+.memo-floating-body.is-window-list-hidden [contenteditable="true"].memo-editor {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 @container memo-widget (max-width: 700px) {

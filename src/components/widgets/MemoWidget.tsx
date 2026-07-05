@@ -1009,15 +1009,16 @@ export const MemoWidget = () => {
               onClick={() => {
                 if (isListHidden) {
                   setIsListHidden(false);
-                  setIsCompactListOpen(true);
+                  setIsCompactListOpen(false);
                   return;
                 }
 
-                setIsCompactListOpen((prev) => !prev);
+                setIsListHidden(true);
+                setIsCompactListOpen(false);
               }}
               className={cn(
                 "glass-button h-8 w-8 flex items-center justify-center memo-compact-toggle",
-                (isCompactListOpen || !isListHidden) && "is-active"
+                !isListHidden && "is-active"
               )}
               title={isListHidden ? "Show memo list" : "Hide memo list"}
             >
