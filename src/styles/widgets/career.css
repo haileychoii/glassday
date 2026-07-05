@@ -189,6 +189,7 @@
   min-height: 0;
   overflow-y: auto;
   display: grid;
+  grid-auto-rows: max-content;
   align-content: start;
   gap: 10px;
 }
@@ -214,10 +215,28 @@
 }
 
 .career-board-card .career-list-side {
-  width: 100%;
+  width: auto;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+}
+
+.career-board-card .career-list-top {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+.career-board-card .career-list-title strong,
+.career-board-card .career-list-title span {
+  white-space: normal;
+}
+
+.career-board-card .career-list-meta {
+  gap: 5px;
+}
+
+.career-board-card .career-list-meta span {
+  min-width: 0;
 }
 
 .career-board-empty {

@@ -1130,6 +1130,34 @@
 }
 
 @container memo-widget (max-width: 700px) {
+  .memo-app {
+    grid-template-columns: 188px minmax(0, 1fr) !important;
+  }
+
+  .memo-workspace {
+    padding: 12px !important;
+    gap: 10px !important;
+  }
+
+  .memo-title-input,
+  .memo-title-view,
+  .memo-toolbar,
+  .memo-editor-toolbar,
+  .memo-tag-tools,
+  .memo-tag-library {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .memo-editor,
+  [contenteditable="true"].memo-editor {
+    min-height: 220px !important;
+    padding: 16px 14px !important;
+    border-radius: 14px !important;
+  }
+}
+
+@container memo-widget (max-width: 560px) {
   .memo-compact-toggle {
     display: inline-flex !important;
   }
@@ -1171,28 +1199,6 @@
 
   .memo-list-close {
     display: inline-flex !important;
-  }
-
-  .memo-workspace {
-    padding: 12px !important;
-    gap: 10px !important;
-  }
-
-  .memo-title-input,
-  .memo-title-view,
-  .memo-toolbar,
-  .memo-editor-toolbar,
-  .memo-tag-tools,
-  .memo-tag-library {
-    width: 100% !important;
-    max-width: none !important;
-  }
-
-  .memo-editor,
-  [contenteditable="true"].memo-editor {
-    min-height: 220px !important;
-    padding: 16px 14px !important;
-    border-radius: 14px !important;
   }
 }
 
@@ -1289,7 +1295,7 @@
   margin-right: 0 !important;
 }
 
-@container memo-widget (max-width: 700px) {
+@container memo-widget (max-width: 560px) {
   .memo-app {
     grid-template-columns: minmax(0, 1fr) !important;
   }
