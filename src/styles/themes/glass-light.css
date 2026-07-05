@@ -235,6 +235,57 @@ body.desktop-transparent[data-theme="glass-light"] .bg-glass-gradient {
 }
 
 /* final theme overrides: active sidebar + journal accents */
+html[data-theme="glass-light"] .glass-panel,
+html[data-theme="glass-light"] .liquid-shell,
+html[data-theme="glass-light"] .app-shell,
+html[data-theme="glass-light"] .dashboard-shell,
+html[data-theme="glass-light"] .workspace-shell,
+html[data-theme="glass-light"] .desktop-shell,
+html[data-theme="glass-light"] .main-shell,
+body[data-theme="glass-light"] .glass-panel,
+body[data-theme="glass-light"] .liquid-shell,
+body[data-theme="glass-light"] .app-shell,
+body[data-theme="glass-light"] .dashboard-shell,
+body[data-theme="glass-light"] .workspace-shell,
+body[data-theme="glass-light"] .desktop-shell,
+body[data-theme="glass-light"] .main-shell {
+  background: rgba(255, 255, 255, 0.13) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  backdrop-filter: blur(7px) saturate(132%) !important;
+  -webkit-backdrop-filter: blur(7px) saturate(132%) !important;
+}
+
+html[data-theme="glass-light"] .app-sidebar,
+html[data-theme="glass-light"] .sidebar,
+body[data-theme="glass-light"] .app-sidebar,
+body[data-theme="glass-light"] .sidebar {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.16),
+      rgba(255, 255, 255, 0.07)
+    ) !important;
+  backdrop-filter: blur(11px) saturate(134%) !important;
+  -webkit-backdrop-filter: blur(11px) saturate(134%) !important;
+}
+
+html[data-theme="glass-light"] .topbar,
+body[data-theme="glass-light"] .topbar {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.22),
+      rgba(255, 255, 255, 0.1)
+    ) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  border-radius: 20px 20px 0 0 !important;
+  box-shadow:
+    0 10px 28px rgba(82, 95, 150, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42) !important;
+  backdrop-filter: blur(9px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(9px) saturate(130%) !important;
+}
+
 html[data-theme="glass-light"] .sidebar-tab-item.is-active .sidebar-tab-main,
 body[data-theme="glass-light"] .sidebar-tab-item.is-active .sidebar-tab-main {
   color: hsl(var(--foreground) / 0.98) !important;
@@ -263,68 +314,69 @@ body[data-theme="glass-light"] .sidebar-tab-item.is-active .sidebar-tab-main spa
 
 html[data-theme="glass-light"] .journal-score-grid label,
 body[data-theme="glass-light"] .journal-score-grid label {
-  border-color: rgba(255, 255, 255, 0.44) !important;
+  border-color: rgba(255, 255, 255, 0.38) !important;
+  background: rgba(255, 255, 255, 0.18) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.56),
-    0 10px 24px rgba(118, 134, 196, 0.1) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.48),
+    0 8px 18px rgba(118, 134, 196, 0.06) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(1),
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(1) {
-  background: linear-gradient(135deg, rgba(255, 240, 250, 0.72), rgba(216, 222, 255, 0.54), rgba(189, 244, 255, 0.44)) !important;
+  background: linear-gradient(135deg, rgba(255, 247, 251, 0.38), rgba(227, 230, 247, 0.22), rgba(221, 242, 245, 0.16)) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(2),
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(2) {
-  background: linear-gradient(135deg, rgba(230, 247, 255, 0.72), rgba(205, 221, 255, 0.52), rgba(242, 219, 255, 0.4)) !important;
+  background: linear-gradient(135deg, rgba(241, 248, 255, 0.34), rgba(220, 228, 247, 0.2), rgba(235, 228, 243, 0.14)) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(3),
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(3) {
-  background: linear-gradient(135deg, rgba(255, 243, 214, 0.74), rgba(255, 214, 239, 0.42), rgba(222, 235, 255, 0.52)) !important;
+  background: linear-gradient(135deg, rgba(252, 247, 233, 0.34), rgba(245, 229, 237, 0.18), rgba(226, 235, 246, 0.18)) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(4),
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(4) {
-  background: linear-gradient(135deg, rgba(225, 255, 244, 0.72), rgba(196, 234, 255, 0.48), rgba(230, 219, 255, 0.42)) !important;
+  background: linear-gradient(135deg, rgba(236, 249, 245, 0.34), rgba(221, 236, 244, 0.18), rgba(234, 229, 245, 0.14)) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(1) input,
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(1) input {
-  accent-color: rgb(203, 108, 182) !important;
+  accent-color: rgb(175, 145, 171) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(2) input,
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(2) input {
-  accent-color: rgb(101, 145, 216) !important;
+  accent-color: rgb(132, 151, 180) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(3) input,
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(3) input {
-  accent-color: rgb(215, 145, 92) !important;
+  accent-color: rgb(183, 156, 130) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(4) input,
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(4) input {
-  accent-color: rgb(95, 176, 165) !important;
+  accent-color: rgb(121, 166, 158) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(1) b,
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(1) b {
-  color: rgb(175, 93, 160) !important;
+  color: rgb(142, 121, 140) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(2) b,
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(2) b {
-  color: rgb(85, 126, 198) !important;
+  color: rgb(112, 129, 154) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(3) b,
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(3) b {
-  color: rgb(194, 128, 81) !important;
+  color: rgb(152, 129, 106) !important;
 }
 
 html[data-theme="glass-light"] .journal-score-grid label:nth-child(4) b,
 body[data-theme="glass-light"] .journal-score-grid label:nth-child(4) b {
-  color: rgb(76, 156, 146) !important;
+  color: rgb(101, 142, 136) !important;
 }
