@@ -265,8 +265,8 @@ body.theme-glass-dark .desktop-shell,
 body.theme-glass-dark .main-shell {
   background: rgba(20, 24, 40, 0.16) !important;
   border-color: rgba(168, 186, 235, 0.18) !important;
-  backdrop-filter: blur(7px) saturate(126%) !important;
-  -webkit-backdrop-filter: blur(7px) saturate(126%) !important;
+  backdrop-filter: blur(4px) saturate(122%) !important;
+  -webkit-backdrop-filter: blur(4px) saturate(122%) !important;
 }
 
 html[data-theme="glass-dark"] .app-sidebar,
@@ -283,8 +283,8 @@ body.theme-glass-dark .sidebar {
       rgba(30, 38, 66, 0.2),
       rgba(20, 24, 40, 0.1)
     ) !important;
-  backdrop-filter: blur(11px) saturate(128%) !important;
-  -webkit-backdrop-filter: blur(11px) saturate(128%) !important;
+  backdrop-filter: blur(6px) saturate(124%) !important;
+  -webkit-backdrop-filter: blur(6px) saturate(124%) !important;
 }
 
 html[data-theme="glass-dark"] .topbar,
@@ -302,8 +302,8 @@ body.theme-glass-dark .topbar {
   box-shadow:
     0 10px 28px rgba(5, 8, 20, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(9px) saturate(124%) !important;
-  -webkit-backdrop-filter: blur(9px) saturate(124%) !important;
+  backdrop-filter: blur(5px) saturate(121%) !important;
+  -webkit-backdrop-filter: blur(5px) saturate(121%) !important;
 }
 
 html[data-theme="glass-dark"] .sidebar-tab-item.is-active .sidebar-tab-main,
