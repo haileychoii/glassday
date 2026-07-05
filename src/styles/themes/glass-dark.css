@@ -533,19 +533,20 @@ html[data-theme="glass-dark"] .memo-editor,
 body[data-theme="glass-dark"] .memo-editor,
 html.theme-glass-dark .memo-editor,
 body.theme-glass-dark .memo-editor {
-  color: rgba(44, 50, 66, 0.92) !important;
-  font-weight: 400 !important;
-  line-height: 1.66 !important;
+  color: rgba(241, 244, 255, 0.94) !important;
+  font-weight: 380 !important;
+  line-height: 1.68 !important;
   background:
     linear-gradient(
       180deg,
-      rgba(244, 240, 245, 0.88),
-      rgba(233, 228, 236, 0.78)
+      rgba(71, 64, 89, 0.84),
+      rgba(53, 63, 92, 0.78) 38%,
+      rgba(46, 73, 89, 0.72) 100%
     ) !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(214, 224, 255, 0.2) !important;
   box-shadow:
-    0 16px 42px rgba(2, 4, 12, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.44) !important;
+    0 16px 42px rgba(2, 4, 12, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
 }
 
 html[data-theme="glass-dark"] .memo-title-input,
@@ -556,8 +557,28 @@ html.theme-glass-dark .memo-title-input,
 html.theme-glass-dark .memo-title-view,
 body.theme-glass-dark .memo-title-input,
 body.theme-glass-dark .memo-title-view {
-  color: rgba(228, 235, 252, 0.88) !important;
+  color: rgba(236, 241, 255, 0.92) !important;
   font-weight: 600 !important;
+}
+
+html[data-theme="glass-dark"] .memo-editor td,
+html[data-theme="glass-dark"] .memo-editor th,
+body[data-theme="glass-dark"] .memo-editor td,
+body[data-theme="glass-dark"] .memo-editor th,
+html.theme-glass-dark .memo-editor td,
+html.theme-glass-dark .memo-editor th,
+body.theme-glass-dark .memo-editor td,
+body.theme-glass-dark .memo-editor th {
+  color: rgba(243, 246, 255, 0.94) !important;
+  border-color: rgba(232, 238, 255, 0.52) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+html[data-theme="glass-dark"] .memo-editor table,
+body[data-theme="glass-dark"] .memo-editor table,
+html.theme-glass-dark .memo-editor table,
+body.theme-glass-dark .memo-editor table {
+  border-color: rgba(232, 238, 255, 0.52) !important;
 }
 
 html[data-theme="glass-dark"] .journal-summary-card,
