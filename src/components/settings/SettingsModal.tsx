@@ -65,6 +65,36 @@ const forceApplyTheme = (nextTheme: ThemeId) => {
   applyTheme(nextTheme);
 };
 
+const renderThemePreview = (themeId: ThemeId) => (
+  <span
+    className={cn("settings-theme-preview", `settings-theme-preview-${themeId}`)}
+    aria-hidden="true"
+  >
+    <span className="settings-preview-window">
+      <span className="settings-preview-titlebar">
+        <span className="settings-preview-lights">
+          <span />
+          <span />
+          <span />
+        </span>
+        <span className="settings-preview-title-chip" />
+      </span>
+
+      <span className="settings-preview-body">
+        <span className="settings-preview-sidebar" />
+
+        <span className="settings-preview-content">
+          <span className="settings-preview-panel settings-preview-panel-wide" />
+          <span className="settings-preview-panel-row">
+            <span className="settings-preview-panel settings-preview-panel-small" />
+            <span className="settings-preview-panel settings-preview-panel-tall" />
+          </span>
+        </span>
+      </span>
+    </span>
+  </span>
+);
+
 export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -249,18 +279,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                   )}
                   aria-pressed={theme === item.id}
                 >
-                  <span
-                    className={cn(
-                      "settings-theme-preview",
-                      `settings-theme-preview-${item.id}`,
-                      `theme-${item.id}`
-                    )}
-                    aria-hidden="true"
-                  >
-                    <span />
-                    <span />
-                    <span />
-                  </span>
+                  {renderThemePreview(item.id)}
 
                   <strong>{item.label}</strong>
                   <small>{item.description}</small>
