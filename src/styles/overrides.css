@@ -943,9 +943,11 @@ body,
 
   .glass-card > div:first-child h3 {
     color: hsl(var(--foreground) / 0.92) !important;
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-size: 13px !important;
+    line-height: 1.1 !important;
   }
 
   .glass-card > div:first-child p {
@@ -953,7 +955,7 @@ body,
   }
 }
 
-@container gd-widget (max-width: 760px) {
+@container gd-widget (max-width: 560px) {
   .memo-widget .memo-compact-toggle,
   .memo-widget .memo-list-close {
     display: inline-flex !important;
