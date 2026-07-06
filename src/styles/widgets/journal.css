@@ -52,7 +52,7 @@
 
 .journal-date-nav button,
 .journal-date-nav input {
-  height: 32px;
+  height: 22px;
   border-radius: 999px;
   background: hsl(0 0% 100% / 0.32);
   border: 1px solid hsl(0 0% 100% / 0.46);
@@ -192,7 +192,7 @@
   height: 38px;
   padding: 0 12px;
   font-size: 12px;
-  font-weight: 750;
+  font-weight: 500;
 }
 
 .journal-add-row button,
@@ -244,8 +244,8 @@
 
 .journal-task-check,
 .journal-task-delete {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   border-radius: 999px;
   display: grid;
   place-items: center;
@@ -267,11 +267,11 @@
 .journal-task-item input {
   min-width: 0;
   background: transparent;
-  border: 5;
+  border: 5px ;
   outline: none;
   font-size: 12px;
-  font-weight: 750;
-  color: hsl(var(--foreground) / 0.72);
+  font-weight: 500;
+  /* color: hsl(var(--foreground) / 0.72); */
 }
 
 .journal-tag-tools,
