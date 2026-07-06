@@ -35,6 +35,7 @@ import {
   getSavedDefaultMemoFont,
   type FontGroup as MemoFontGroup,
 } from "../../constants/fonts";
+import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
 import { FloatingWindow } from "../common/FloatingWindow";
@@ -237,11 +238,22 @@ const resolveMemoPalette = (color?: string | null) =>
     (palette) => palette.id === color || palette.legacy.includes(color as never)
   ) ?? memoPalettes[0];
 
-const getMemoPaletteDotStyle = (color?: string | null) => {
+const isDarkMemoTheme = (theme: ThemeId) => {
+  return theme === "glass-dark";
+};
+
+const getMemoPaletteDotStyle = (color: string | null | undefined, theme: ThemeId) => {
   const palette = resolveMemoPalette(color);
+  const darkTheme = isDarkMemoTheme(theme);
 
   return {
-    background: palette.swatch,
+    background: darkTheme ? palette.darkSurface : palette.lightSurface,
+    border: darkTheme
+      ? `1px solid ${palette.darkBorder}`
+      : `1px solid ${palette.lightBorder}`,
+    boxShadow: darkTheme
+      ? "inset 0 1px 0 rgba(255, 255, 255, 0.08)"
+      : "inset 0 1px 0 rgba(255, 255, 255, 0.72)",
   };
 };
 
@@ -364,6 +376,7 @@ const sortMemos = (notes: MemoNote[]) => {
 };
 
 export const MemoWidget = () => {
+  const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
   const [availableFontGroups, setAvailableFontGroups] =
     useState<MemoFontGroup[]>(fontGroups);
   const [editing, setEditing] = useState(false);
@@ -429,6 +442,19 @@ export const MemoWidget = () => {
 
     return () => {
       window.removeEventListener(FONT_CHANGE_EVENT, syncFonts);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleThemeChange = (event: Event) => {
+      const customEvent = event as CustomEvent<ThemeId>;
+      setTheme(customEvent.detail ?? getCurrentTheme());
+    };
+
+    window.addEventListener("glassday-theme-change", handleThemeChange);
+
+    return () => {
+      window.removeEventListener("glassday-theme-change", handleThemeChange);
     };
   }, []);
 
@@ -1029,7 +1055,7 @@ export const MemoWidget = () => {
               "memo-color-chip",
               resolveMemoPalette(activeNote?.color).id === palette.id && "is-active"
             )}
-            style={{ background: palette.swatch }}
+            style={getMemoPaletteDotStyle(palette.id, theme)}
             title={palette.id}
             disabled={!editing}
           >
@@ -1106,7 +1132,7 @@ export const MemoWidget = () => {
             >
               <div
                 className="memo-note-color-dot"
-                style={getMemoPaletteDotStyle(palette.id)}
+                style={getMemoPaletteDotStyle(palette.id, theme)}
               />
 
               <div className="min-w-0 flex-1 text-left">
