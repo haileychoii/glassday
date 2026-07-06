@@ -29,6 +29,9 @@ html.theme-glass-light body,
 body.theme-glass-light {
   color: hsl(var(--foreground) / 0.94) !important;
   background:
+    radial-gradient(circle at 16% 14%, rgb(177 233 255 / 0.42), transparent 24%),
+    radial-gradient(circle at 82% 16%, rgb(224 190 255 / 0.34), transparent 24%),
+    radial-gradient(circle at 70% 84%, rgb(255 204 230 / 0.28), transparent 28%),
     radial-gradient(circle at 12% 8%, rgb(255 255 255 / 0.92), transparent 34%),
     radial-gradient(circle at 84% 12%, rgb(216 224 255 / 0.72), transparent 38%),
     radial-gradient(circle at 72% 86%, rgb(255 222 246 / 0.46), transparent 42%),
@@ -41,6 +44,9 @@ body[data-theme="glass-light"] .bg-glass-gradient,
 html.theme-glass-light .bg-glass-gradient,
 body.theme-glass-light .bg-glass-gradient {
   background:
+    radial-gradient(circle at 18% 14%, rgb(176 229 255 / 0.24), transparent 24%),
+    radial-gradient(circle at 82% 18%, rgb(223 192 255 / 0.2), transparent 22%),
+    radial-gradient(circle at 72% 82%, rgb(255 210 232 / 0.16), transparent 26%),
     radial-gradient(circle at 14% 8%, rgb(255 255 255 / 0.46), transparent 34%),
     radial-gradient(circle at 86% 12%, rgb(210 220 255 / 0.3), transparent 38%),
     linear-gradient(135deg, rgb(245 247 252 / 0.68), rgb(255 255 255 / 0.28)) !important;
