@@ -917,12 +917,34 @@
 .react-grid-item .study-task-panel,
 .react-grid-item .study-record-list-panel {
   min-width: 0 !important;
-  overflow: visible !important;
+  overflow: hidden !important;
+}
+
+.react-grid-item .study-input-panel {
+  min-height: 112px !important;
+}
+
+.react-grid-item .study-week-panel {
+  min-height: 214px !important;
+}
+
+.react-grid-item .study-goal-panel {
+  min-height: 180px !important;
+}
+
+.react-grid-item .study-task-panel {
+  min-height: 110px !important;
+}
+
+.react-grid-item .study-record-list-panel {
+  min-height: 112px !important;
 }
 
 .react-grid-item .study-task-list,
 .react-grid-item .study-record-list {
   max-height: 220px;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 
 .study-record-form {
