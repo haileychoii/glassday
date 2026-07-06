@@ -1162,11 +1162,13 @@
   padding: 16px;
   border-radius: 24px;
   background:
-    linear-gradient(145deg, hsl(0 0% 100% / 0.38), hsl(0 0% 100% / 0.15));
-  border: 1px solid hsl(0 0% 100% / 0.48);
+    linear-gradient(145deg, hsl(0 0% 100% / 0.5), hsl(0 0% 100% / 0.24));
+  border: 1px solid hsl(0 0% 100% / 0.54);
   box-shadow:
     inset 0 1px 0 hsl(0 0% 100% / 0.58),
-    0 14px 32px hsl(240 30% 20% / 0.06);
+    0 14px 32px hsl(240 30% 20% / 0.08);
+  backdrop-filter: blur(26px) saturate(140%);
+  -webkit-backdrop-filter: blur(26px) saturate(140%);
 }
 
 .career-section-title {
@@ -1226,11 +1228,13 @@
   width: 100%;
   min-width: 0;
   border-radius: 16px;
-  border: 1px solid hsl(0 0% 100% / 0.46);
-  background: hsl(0 0% 100% / 0.28);
+  border: 1px solid hsl(0 0% 100% / 0.5);
+  background: hsl(0 0% 100% / 0.36);
   padding: 10px 12px;
   font-size: 12px;
   outline: none;
+  backdrop-filter: blur(22px) saturate(132%);
+  -webkit-backdrop-filter: blur(22px) saturate(132%);
 }
 
 .career-textarea {
@@ -1251,8 +1255,10 @@
   font-size: 12px;
   line-height: 1.45;
   color: hsl(var(--foreground) / 0.68);
-  background: hsl(0 0% 100% / 0.22);
-  border: 1px solid hsl(0 0% 100% / 0.38);
+  background: hsl(0 0% 100% / 0.34);
+  border: 1px solid hsl(0 0% 100% / 0.42);
+  backdrop-filter: blur(24px) saturate(136%);
+  -webkit-backdrop-filter: blur(24px) saturate(136%);
 }
 
 .career-window-preview {
@@ -1285,8 +1291,10 @@
   gap: 8px;
   padding: 12px;
   border-radius: 20px;
-  background: hsl(0 0% 100% / 0.2);
-  border: 1px solid hsl(0 0% 100% / 0.34);
+  background: hsl(0 0% 100% / 0.28);
+  border: 1px solid hsl(0 0% 100% / 0.4);
+  backdrop-filter: blur(24px) saturate(136%);
+  -webkit-backdrop-filter: blur(24px) saturate(136%);
 }
 
 .career-cl-header,
@@ -1319,13 +1327,15 @@
 .career-delete-button,
 .career-danger-button {
   border-radius: 999px;
-  border: 1px solid hsl(0 0% 100% / 0.46);
-  background: hsl(0 0% 100% / 0.28);
+  border: 1px solid hsl(0 0% 100% / 0.5);
+  background: hsl(0 0% 100% / 0.34);
   color: hsl(var(--foreground) / 0.78);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
 }
 
 .career-small-button {
@@ -2665,16 +2675,106 @@ body.theme-pixel-desk .career-cover-question-input {
   background:
     linear-gradient(
       145deg,
-      hsl(var(--background) / 0.94),
-      hsl(var(--background) / 0.88)
+      hsl(var(--background) / 0.38),
+      hsl(var(--background) / 0.22)
     ) !important;
 
-  border: 1px solid hsl(0 0% 100% / 0.72) !important;
+  border: 1px solid hsl(0 0% 100% / 0.42) !important;
 
   box-shadow:
-    0 38px 120px hsl(240 40% 10% / 0.34),
-    inset 0 1px 0 hsl(0 0% 100% / 0.76) !important;
+    0 38px 120px hsl(240 40% 10% / 0.24),
+    inset 0 1px 0 hsl(0 0% 100% / 0.48) !important;
 
-  backdrop-filter: blur(44px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(44px) saturate(150%) !important;
+  backdrop-filter: blur(24px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(145%) !important;
+}
+
+html[data-theme="glass-dark"] .career-detail-section,
+body[data-theme="glass-dark"] .career-detail-section,
+html.theme-glass-dark .career-detail-section,
+body.theme-glass-dark .career-detail-section {
+  background:
+    linear-gradient(145deg, rgb(30 34 48 / 0.64), rgb(46 52 72 / 0.38)) !important;
+  border-color: rgb(255 255 255 / 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    0 18px 34px rgb(0 0 0 / 0.14) !important;
+}
+
+html[data-theme="glass-dark"] .career-field input,
+html[data-theme="glass-dark"] .career-field select,
+html[data-theme="glass-dark"] .career-field textarea,
+html[data-theme="glass-dark"] .career-stage-row input,
+html[data-theme="glass-dark"] .career-stage-row select,
+html[data-theme="glass-dark"] .career-cl-item input,
+html[data-theme="glass-dark"] .career-cl-item select,
+html[data-theme="glass-dark"] .career-cl-item textarea,
+html[data-theme="glass-dark"] .career-link-row input,
+html[data-theme="glass-dark"] .career-review-header input,
+html[data-theme="glass-dark"] .career-review-item textarea,
+body[data-theme="glass-dark"] .career-field input,
+body[data-theme="glass-dark"] .career-field select,
+body[data-theme="glass-dark"] .career-field textarea,
+body[data-theme="glass-dark"] .career-stage-row input,
+body[data-theme="glass-dark"] .career-stage-row select,
+body[data-theme="glass-dark"] .career-cl-item input,
+body[data-theme="glass-dark"] .career-cl-item select,
+body[data-theme="glass-dark"] .career-cl-item textarea,
+body[data-theme="glass-dark"] .career-link-row input,
+body[data-theme="glass-dark"] .career-review-header input,
+body[data-theme="glass-dark"] .career-review-item textarea,
+html.theme-glass-dark .career-field input,
+html.theme-glass-dark .career-field select,
+html.theme-glass-dark .career-field textarea,
+html.theme-glass-dark .career-stage-row input,
+html.theme-glass-dark .career-stage-row select,
+html.theme-glass-dark .career-cl-item input,
+html.theme-glass-dark .career-cl-item select,
+html.theme-glass-dark .career-cl-item textarea,
+html.theme-glass-dark .career-link-row input,
+html.theme-glass-dark .career-review-header input,
+html.theme-glass-dark .career-review-item textarea,
+body.theme-glass-dark .career-field input,
+body.theme-glass-dark .career-field select,
+body.theme-glass-dark .career-field textarea,
+body.theme-glass-dark .career-stage-row input,
+body.theme-glass-dark .career-stage-row select,
+body.theme-glass-dark .career-cl-item input,
+body.theme-glass-dark .career-cl-item select,
+body.theme-glass-dark .career-cl-item textarea,
+body.theme-glass-dark .career-link-row input,
+body.theme-glass-dark .career-review-header input,
+body.theme-glass-dark .career-review-item textarea {
+  background: rgb(24 28 40 / 0.62) !important;
+  border-color: rgb(255 255 255 / 0.2) !important;
+  color: rgb(243 245 255 / 0.94) !important;
+}
+
+html[data-theme="glass-dark"] .career-sync-note,
+html[data-theme="glass-dark"] .career-window-preview,
+html[data-theme="glass-dark"] .career-cl-item,
+html[data-theme="glass-dark"] .career-review-item,
+body[data-theme="glass-dark"] .career-sync-note,
+body[data-theme="glass-dark"] .career-window-preview,
+body[data-theme="glass-dark"] .career-cl-item,
+body[data-theme="glass-dark"] .career-review-item,
+html.theme-glass-dark .career-sync-note,
+html.theme-glass-dark .career-window-preview,
+html.theme-glass-dark .career-cl-item,
+html.theme-glass-dark .career-review-item,
+body.theme-glass-dark .career-sync-note,
+body.theme-glass-dark .career-window-preview,
+body.theme-glass-dark .career-cl-item,
+body.theme-glass-dark .career-review-item {
+  background: rgb(28 32 46 / 0.58) !important;
+  border-color: rgb(255 255 255 / 0.18) !important;
+}
+
+html[data-theme="glass-light"] .career-detail-section,
+body[data-theme="glass-light"] .career-detail-section,
+html.theme-glass-light .career-detail-section,
+body.theme-glass-light .career-detail-section {
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.58), rgb(255 255 255 / 0.3)) !important;
+  border-color: rgb(255 255 255 / 0.48) !important;
 }
