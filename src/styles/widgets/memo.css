@@ -1295,8 +1295,23 @@
   grid-template-columns: clamp(220px, 26%, 300px) minmax(0, 1fr) !important;
 }
 
+.memo-app > .memo-list-panel {
+  grid-column: 1 !important;
+}
+
+.memo-app > .memo-workspace {
+  grid-column: 2 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
 .memo-app.is-list-hidden {
   grid-template-columns: minmax(0, 1fr) !important;
+}
+
+.memo-app.is-list-hidden > .memo-workspace {
+  grid-column: 1 / -1 !important;
 }
 
 .memo-list-close {
@@ -1310,8 +1325,23 @@
   align-items: stretch !important;
 }
 
+.memo-floating-body > .memo-list-panel {
+  grid-column: 1 !important;
+}
+
+.memo-floating-body > .memo-workspace {
+  grid-column: 3 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
 .memo-floating-body.is-window-list-hidden {
   grid-template-columns: minmax(0, 1fr) !important;
+}
+
+.memo-floating-body.is-window-list-hidden > .memo-workspace {
+  grid-column: 1 / -1 !important;
 }
 
 .memo-window-resizer {

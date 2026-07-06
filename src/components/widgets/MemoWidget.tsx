@@ -6,6 +6,7 @@ import {
   Bold,
   Check,
   Download,
+  Highlighter,
   Italic,
   List,
   ListOrdered,
@@ -23,6 +24,7 @@ import {
   StickyNote,
   Table2,
   Trash2,
+  Underline,
   UploadCloud,
   X,
 } from "lucide-react";
@@ -598,6 +600,18 @@ export const MemoWidget = () => {
     }, 0);
   };
 
+  const applyHighlight = (color = "#fff1a8") => {
+    if (!editing) return;
+
+    activeEditor?.focus();
+    document.execCommand("styleWithCSS", false, "true");
+    document.execCommand("hiliteColor", false, color);
+
+    setTimeout(() => {
+      syncFromEditor(activeEditor);
+    }, 0);
+  };
+
   const addNewMemo = () => {
     const newNote = createMemoNote();
 
@@ -992,6 +1006,28 @@ export const MemoWidget = () => {
         disabled={!editing}
       >
         <Italic className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => runCommand("underline")}
+        className="memo-tool-button"
+        disabled={!editing}
+        title="Underline"
+      >
+        <Underline className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => applyHighlight()}
+        className="memo-tool-button"
+        disabled={!editing}
+        title="Highlight"
+      >
+        <Highlighter className="w-3.5 h-3.5" />
       </button>
 
       <button
