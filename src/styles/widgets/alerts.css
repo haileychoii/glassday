@@ -45,7 +45,7 @@
   margin-top: 7px;
   font-size: 11px;
   font-weight: 800;
-  color: hsl(var(--foreground) / 0.45);
+  color: hsl(var(--foreground) / 0.66);
 }
 
 .alert-summary-card.is-danger strong {
@@ -119,7 +119,7 @@
   justify-content: center;
   background: hsl(0 0% 100% / 0.44);
   border: 1px solid hsl(0 0% 100% / 0.5);
-  color: hsl(var(--foreground) / 0.58);
+  color: hsl(var(--foreground) / 0.74);
 }
 
 .alert-item.is-danger .alert-icon {
@@ -149,7 +149,7 @@
   display: block;
   font-size: 12.5px;
   font-weight: 900;
-  color: hsl(var(--foreground) / 0.78);
+  color: hsl(var(--foreground) / 0.94);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -159,7 +159,7 @@
   margin-top: 5px;
   font-size: 11px;
   line-height: 1.4;
-  color: hsl(var(--foreground) / 0.52);
+  color: hsl(var(--foreground) / 0.72);
 }
 
 .alert-severity-pill {

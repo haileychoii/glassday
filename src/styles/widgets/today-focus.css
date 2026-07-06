@@ -31,6 +31,18 @@
   box-sizing: border-box;
 }
 
+.today-focus-card .glass-card-title,
+.today-focus-widget .glass-card-title,
+.alert-center-widget .glass-card-title {
+  color: hsl(var(--foreground) / 0.96) !important;
+}
+
+.today-focus-card .glass-card-subtitle,
+.today-focus-widget .glass-card-subtitle,
+.alert-center-widget .glass-card-subtitle {
+  color: hsl(var(--muted-foreground) / 0.82) !important;
+}
+
 .today-focus-card .glass-card-body,
 .today-focus-widget .glass-card-body,
 .today-mini-card .glass-card-body,
