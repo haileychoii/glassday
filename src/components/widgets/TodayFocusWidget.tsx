@@ -182,6 +182,7 @@ export const TodayFocusWidget = () => {
 
   return (
     <GlassCard
+      className="today-focus-widget"
       title="Today Focus"
       subtitle={`${today} · ${taskProgress}% clear`}
       icon={<Sparkles className="w-4 h-4" />}

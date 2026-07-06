@@ -349,6 +349,7 @@ export const AlertCenterWidget = () => {
 
   return (
     <GlassCard
+      className="alert-center-widget"
       title="Alert Center"
       subtitle={
         urgentCount > 0

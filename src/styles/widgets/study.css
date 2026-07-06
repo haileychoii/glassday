@@ -446,14 +446,18 @@
   height: 100%;
   min-width: 0;
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: 1fr auto auto;
   gap: 6px;
   text-align: center;
+  justify-items: center;
 }
 
 .study-week-bar-track {
   height: 100%;
-  border-radius: 999px;
+  width: min(52px, 100%);
+  max-width: 52px;
+  justify-self: center;
+  border-radius: 24px;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -463,7 +467,7 @@
 
 .study-week-bar {
   width: 100%;
-  border-radius: 999px;
+  border-radius: 18px 18px 24px 24px;
   background:
     linear-gradient(
       180deg,
@@ -659,6 +663,12 @@
   .study-week-bars {
     height: 114px !important;
     gap: 6px !important;
+  }
+
+  .study-week-bar-track {
+    width: min(42px, 100%) !important;
+    max-width: 42px !important;
+    border-radius: 20px !important;
   }
 
   .study-week-day strong {
