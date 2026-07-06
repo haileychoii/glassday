@@ -171,6 +171,7 @@ export const StudyWidget = () => {
   return (
     <>
       <GlassCard
+        className="study-widget"
         title="Study Planner"
         subtitle={`${formatMinutes(todayTotalMinutes)} / ${formatMinutes(
           todayGoalMinutes

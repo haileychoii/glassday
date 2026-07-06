@@ -2,9 +2,23 @@
    Study Planner Widget
    ================================ */
 
+.study-widget {
+  min-width: 0;
+  min-height: 0;
+  container-type: inline-size;
+  container-name: study-card;
+}
+
+.study-widget .glass-card-body {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .study-planner {
   height: 100%;
   min-height: 0;
+  min-width: 0;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: none;
@@ -14,6 +28,10 @@
   align-content: start;
   container-type: inline-size;
   container-name: study-widget;
+}
+
+.study-planner > section {
+  min-width: 0;
 }
 
 .study-hero {
@@ -93,6 +111,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .study-date-button,
@@ -112,6 +131,7 @@
 .study-date-input {
   height: 34px;
   flex: 1;
+  min-width: 0;
   border-radius: 999px;
   padding: 0 12px;
   font-size: 12px;
@@ -238,7 +258,7 @@
 
 .study-record-form {
   display: grid;
-  grid-template-columns: 100px 100px minmax(0, 1fr) 64px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -266,6 +286,7 @@
 }
 
 .study-record-form button {
+  grid-column: 1 / -1;
   align-self: end;
   height: 34px;
   border-radius: 14px;
@@ -459,7 +480,9 @@
 
 .study-task-list,
 .study-record-list {
+  width: 100%;
   min-height: 0;
+  min-width: 0;
   overflow: auto;
   display: grid;
   align-content: start;
@@ -471,12 +494,14 @@
   min-height: 36px;
   border-radius: 15px;
   padding: 0 8px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 20px 7px minmax(0, 1fr) 20px;
   align-items: center;
   gap: 7px;
   min-width: 0;
   background: hsl(0 0% 100% / 0.28);
   border: 1px solid hsl(0 0% 100% / 0.38);
+  overflow: hidden;
 }
 
 .study-task.is-done {
@@ -501,7 +526,6 @@
 
 .study-task-delete,
 .study-record-delete {
-  margin-left: auto;
   color: hsl(350 70% 46% / 0.68);
   opacity: 0;
   transition: opacity 160ms ease;
@@ -545,6 +569,12 @@
 .study-record-item > .min-w-0 {
   min-width: 0;
   flex: 1 1 auto;
+}
+
+.study-task input,
+.study-record-item strong,
+.study-record-item span {
+  min-width: 0;
 }
 
 .study-record-item strong {
@@ -637,6 +667,16 @@
 
   .study-week-day span {
     font-size: 8px !important;
+  }
+
+  .study-date-row {
+    display: grid !important;
+    grid-template-columns: 34px minmax(0, 1fr) 34px !important;
+  }
+
+  .study-task,
+  .study-record-item {
+    gap: 6px !important;
   }
 }
 
