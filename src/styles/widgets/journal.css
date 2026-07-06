@@ -71,6 +71,8 @@
 }
 
 .journal-summary-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 0.82fr)) minmax(280px, 1.54fr);
   gap: 10px;
 }
 
@@ -104,6 +106,60 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
+}
+
+.journal-score-strip-card {
+  min-width: 0;
+}
+
+.journal-score-strip {
+  margin-top: 6px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.journal-score-inline {
+  min-width: 0;
+  border-radius: 16px;
+  padding: 8px 9px;
+  background: hsl(0 0% 100% / 0.18);
+  border: 1px solid hsl(0 0% 100% / 0.3);
+  display: grid;
+  gap: 6px;
+}
+
+.journal-score-inline small {
+  font-size: 9px;
+  font-weight: 850;
+  color: hsl(var(--foreground) / 0.42);
+}
+
+.journal-score-stepper {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) 22px;
+  align-items: center;
+  gap: 4px;
+}
+
+.journal-score-stepper button {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: hsl(0 0% 100% / 0.34);
+  border: 1px solid hsl(0 0% 100% / 0.44);
+  color: hsl(var(--foreground) / 0.56);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.journal-score-stepper b {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .journal-score-grid label {
@@ -392,8 +448,15 @@
 
   .journal-summary-row,
   .journal-score-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     display: grid;
+  }
+
+  .journal-summary-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .journal-score-strip-card {
+    grid-column: 1 / -1;
   }
 
   .journal-date-nav {
@@ -463,8 +526,8 @@
     border-radius: 16px !important;
   }
 
-  .journal-score-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  .journal-score-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   }
 }
 
@@ -499,7 +562,25 @@
     gap: 6px !important;
   }
 
-  .journal-summary-row{
+  .journal-summary-row {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .journal-score-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@container journal-widget (max-width: 560px) {
+  .journal-summary-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .journal-score-strip-card {
+    grid-column: 1 / -1 !important;
+  }
+
+  .journal-score-strip {
+    grid-template-columns: 1fr !important;
   }
 }
