@@ -706,12 +706,15 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
               <div className="settings-font-helper">
                 {isConfigured
-                  ? user?.email ?? syncMessage
+                  ? user?.email
+                    ? `Signed in as ${user.email}.`
+                    : syncMessage
                   : "Add Supabase env values first."}
                 {lastSyncedAt
                   ? ` Last sync: ${new Date(lastSyncedAt).toLocaleString()}.`
                   : ""}
                 {` Status: ${syncStatus}.`}
+                {syncMessage ? ` ${syncMessage}` : ""}
               </div>
 
               {isConfigured ? (
