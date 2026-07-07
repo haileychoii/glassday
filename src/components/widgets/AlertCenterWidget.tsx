@@ -351,6 +351,8 @@ export const AlertCenterWidget = () => {
     <GlassCard
       className="alert-center-widget"
       title="Alert Center"
+      titleStyle={{ color: "hsl(var(--foreground) / 0.96)" }}
+      subtitleStyle={{ color: "hsl(var(--muted-foreground) / 0.82)" }}
       subtitle={
         urgentCount > 0
           ? `${urgentCount} urgent alert${urgentCount > 1 ? "s" : ""}`

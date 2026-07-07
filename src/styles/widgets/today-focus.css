@@ -34,13 +34,61 @@
 .today-focus-card .glass-card-title,
 .today-focus-widget .glass-card-title,
 .alert-center-widget .glass-card-title {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   color: hsl(var(--foreground) / 0.96) !important;
 }
 
 .today-focus-card .glass-card-subtitle,
 .today-focus-widget .glass-card-subtitle,
 .alert-center-widget .glass-card-subtitle {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   color: hsl(var(--muted-foreground) / 0.82) !important;
+}
+
+.today-focus-widget .glass-card-copy,
+.alert-center-widget .glass-card-copy {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  gap: 2px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+  z-index: 3 !important;
+  isolation: isolate !important;
+  transform: translateZ(0) !important;
+}
+
+.today-focus-widget .glass-card-header,
+.alert-center-widget .glass-card-header,
+.today-focus-widget .glass-card-title-group,
+.alert-center-widget .glass-card-title-group {
+  position: relative !important;
+  z-index: 3 !important;
+  isolation: isolate !important;
+}
+
+.today-focus-widget .glass-card-title,
+.alert-center-widget .glass-card-title {
+  font-size: 15px !important;
+  line-height: 1.15 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  text-shadow: 0 1px 0 hsl(0 0% 100% / 0.24) !important;
+}
+
+.today-focus-widget .glass-card-subtitle,
+.alert-center-widget .glass-card-subtitle {
+  font-size: 11.5px !important;
+  line-height: 1.25 !important;
+  font-weight: 650 !important;
 }
 
 .today-focus-card .glass-card-body,

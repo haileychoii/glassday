@@ -184,6 +184,8 @@ export const TodayFocusWidget = () => {
     <GlassCard
       className="today-focus-widget"
       title="Today Focus"
+      titleStyle={{ color: "hsl(var(--foreground) / 0.96)" }}
+      subtitleStyle={{ color: "hsl(var(--muted-foreground) / 0.82)" }}
       subtitle={`${today} · ${taskProgress}% clear`}
       icon={<Sparkles className="w-4 h-4" />}
       actions={
