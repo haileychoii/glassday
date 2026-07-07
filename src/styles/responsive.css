@@ -347,7 +347,7 @@ main {
   .topbar-heading {
     gap: 12px !important;
     align-items: flex-start !important;
-    padding-bottom: 12px !important;
+    padding-bottom: 2px !important;
   }
 
   .topbar-title h1 {
