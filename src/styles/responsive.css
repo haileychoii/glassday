@@ -252,7 +252,7 @@ main {
   }
 
   .topbar-title {
-    padding-top: 14px !important;
+    padding-top: 15px !important;
   }
 
   .topbar-mobile-workspaces {
@@ -341,7 +341,7 @@ main {
   .topbar-title {
     width: 100% !important;
     min-width: 0 !important;
-    padding-top: 14px !important;
+    padding-top: 15px !important;
   }
 
   .topbar-heading {
@@ -366,7 +366,7 @@ main {
     gap: 8px !important;
     overflow: visible !important;
     flex-wrap: nowrap !important;
-    padding-top: 14px !important;
+    padding-top: 15px !important;
   }
 
   .topbar-mobile-workspaces {
@@ -455,11 +455,11 @@ main {
   }
 
   .topbar-title {
-    padding-top: 14px !important;
+    padding-top: 15px !important;
   }
 
   .topbar-actions {
-    padding-top: 14px !important;
+    padding-top: 15px !important;
   }
 
   .today-focus-main,
