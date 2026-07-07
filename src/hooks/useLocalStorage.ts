@@ -1,5 +1,9 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
+import {
+  GLASSDAY_STORAGE_EVENT,
+  type GlassdayStorageChangeDetail,
+} from "../lib/glassdayStorage";
 
 type UseLocalStorageReturn<T> = {
   value: T;
@@ -55,6 +59,37 @@ export const useLocalStorage = <T,>(
   }, [key, initialValue]);
 
   const [storedValue, setStoredValue] = useState<T>(() => readValue());
+
+  useEffect(() => {
+    if (!isBrowser()) return;
+
+    const handleStorageChange = (event: Event) => {
+      const customEvent = event as CustomEvent<GlassdayStorageChangeDetail>;
+      const changedKey = customEvent.detail?.key;
+
+      if (
+        customEvent.detail?.type === "bulk" ||
+        changedKey === undefined ||
+        changedKey === key
+      ) {
+        setStoredValue(readValue());
+      }
+    };
+
+    const handleNativeStorage = (event: StorageEvent) => {
+      if (event.key === null || event.key === key) {
+        setStoredValue(readValue());
+      }
+    };
+
+    window.addEventListener(GLASSDAY_STORAGE_EVENT, handleStorageChange);
+    window.addEventListener("storage", handleNativeStorage);
+
+    return () => {
+      window.removeEventListener(GLASSDAY_STORAGE_EVENT, handleStorageChange);
+      window.removeEventListener("storage", handleNativeStorage);
+    };
+  }, [key, readValue]);
 
   const setValue: Dispatch<SetStateAction<T>> = useCallback(
     (value) => {

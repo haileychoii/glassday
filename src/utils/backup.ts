@@ -1,36 +1,15 @@
-type GlassdayBackup = {
-  app: "Glassday";
-  version: 1;
-  exportedAt: string;
-  data: Record<string, string>;
-};
+import {
+  applyGlassdayStorageSnapshot,
+  createGlassdayStorageSnapshot,
+  getGlassdayLocalStorageKeys,
+  GLASSDAY_STORAGE_PREFIX,
+  type GlassdayStorageSnapshot,
+} from "../lib/glassdayStorage";
 
-const GLASSDAY_PREFIX = "glassday.";
+type GlassdayBackup = GlassdayStorageSnapshot;
 
-export const getGlassdayLocalStorageKeys = () => {
-  return Object.keys(localStorage).filter((key) =>
-    key.startsWith(GLASSDAY_PREFIX)
-  );
-};
-
-export const createGlassdayBackup = (): GlassdayBackup => {
-  const data: Record<string, string> = {};
-
-  getGlassdayLocalStorageKeys().forEach((key) => {
-    const value = localStorage.getItem(key);
-
-    if (value !== null) {
-      data[key] = value;
-    }
-  });
-
-  return {
-    app: "Glassday",
-    version: 1,
-    exportedAt: new Date().toISOString(),
-    data,
-  };
-};
+export const createGlassdayBackup = (): GlassdayBackup =>
+  createGlassdayStorageSnapshot();
 
 export const downloadGlassdayBackup = () => {
   const backup = createGlassdayBackup();
@@ -62,11 +41,7 @@ export const importGlassdayBackupFile = async (file: File) => {
     throw new Error("This is not a valid Glassday backup file.");
   }
 
-  Object.entries(parsed.data).forEach(([key, value]) => {
-    if (key.startsWith(GLASSDAY_PREFIX)) {
-      localStorage.setItem(key, value);
-    }
-  });
+  applyGlassdayStorageSnapshot(parsed);
 };
 
 export const resetGlassdayData = () => {

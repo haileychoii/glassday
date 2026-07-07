@@ -2,8 +2,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { createPortal } from "react-dom";
 import {
+  Cloud,
   Download,
   Globe,
+  LogIn,
+  LogOut,
+  Mail,
   Palette,
   RotateCcw,
   Settings,
@@ -40,6 +44,7 @@ import {
   resetGlassdayLayout,
   resetGlassdaySection,
 } from "../../utils/backup";
+import { useCloudSync } from "../../context/CloudSyncContext";
 
 type SettingsModalProps = {
   open: boolean;
@@ -112,6 +117,17 @@ const renderThemePreview = (themeId: ThemeId) => (
 
 export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const {
+    isConfigured,
+    user,
+    syncStatus,
+    syncMessage,
+    lastSyncedAt,
+    signInWithGoogle,
+    signInWithMagicLink,
+    signOut,
+    syncNow,
+  } = useCloudSync();
 
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
   const [appFont, setAppFont] = useState(() => getSavedAppFont());
@@ -125,6 +141,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const [customFontType, setCustomFontType] =
     useState<CustomFontSourceType>("stylesheet");
   const [status, setStatus] = useState("");
+  const [syncEmail, setSyncEmail] = useState("");
   const appFontOptions = useMemo(() => getAppFontOptions(), [customFonts]);
 
   useEffect(() => {
@@ -317,6 +334,18 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     window.setTimeout(() => {
       window.location.reload();
     }, 450);
+  };
+
+  const handleMagicLinkLogin = async () => {
+    const email = syncEmail.trim();
+
+    if (!email) {
+      setStatus("Enter your email first.");
+      return;
+    }
+
+    await signInWithMagicLink(email);
+    setStatus(`Magic link sent to ${email}.`);
   };
 
   return createPortal(
@@ -649,16 +678,119 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
           <section className="settings-section settings-card">
             <div className="settings-section-title settings-card-title">
-              <Settings className="w-4 h-4" />
+              <Cloud className="w-4 h-4" />
               <span>Sync</span>
             </div>
 
-            <div className="settings-sync-box">
+            <div className="settings-sync-box hidden">
               <strong>Google Sync 준비 중</strong>
               <p>
                 Calendar, Gmail, Drive 연동은 나중에 OAuth 붙이면서 연결하면 돼.
                 지금은 localStorage 기반 개인용 저장 구조야.
               </p>
+            </div>
+          </section>
+
+          <section className="settings-section settings-card">
+            <div className="settings-section-title settings-card-title">
+              <Cloud className="w-4 h-4" />
+              <span>Supabase Sync</span>
+            </div>
+
+            <div className="settings-sync-box">
+              <strong>Supabase Cloud Save</strong>
+              <p>
+                Sign in and keep your Glassday dashboard saved across devices
+                with one cloud snapshot per user.
+              </p>
+
+              <div className="settings-font-helper">
+                {isConfigured
+                  ? user?.email ?? syncMessage
+                  : "Add Supabase env values first."}
+                {lastSyncedAt
+                  ? ` Last sync: ${new Date(lastSyncedAt).toLocaleString()}.`
+                  : ""}
+                {` Status: ${syncStatus}.`}
+              </div>
+
+              {isConfigured ? (
+                user ? (
+                  <div className="settings-action-grid settings-backup-grid">
+                    <button
+                      type="button"
+                      onClick={() => void syncNow()}
+                      className="settings-action-card settings-backup-button"
+                    >
+                      <Cloud className="w-4 h-4" />
+
+                      <div>
+                        <strong>Sync Now</strong>
+                        <span>Upload the latest dashboard snapshot</span>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => void signOut()}
+                      className="settings-action-card settings-backup-button"
+                    >
+                      <LogOut className="w-4 h-4" />
+
+                      <div>
+                        <strong>Sign Out</strong>
+                        <span>Disconnect this browser session</span>
+                      </div>
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <label className="settings-field">
+                      <span>Email Magic Link</span>
+                      <input
+                        value={syncEmail}
+                        onChange={(event) => setSyncEmail(event.target.value)}
+                        className="settings-input"
+                        placeholder="you@example.com"
+                      />
+                    </label>
+
+                    <div className="settings-action-grid settings-backup-grid">
+                      <button
+                        type="button"
+                        onClick={() => void handleMagicLinkLogin()}
+                        className="settings-action-card settings-backup-button"
+                      >
+                        <Mail className="w-4 h-4" />
+
+                        <div>
+                          <strong>Send Magic Link</strong>
+                          <span>Login from any device with email</span>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => void signInWithGoogle()}
+                        className="settings-action-card settings-backup-button"
+                      >
+                        <LogIn className="w-4 h-4" />
+
+                        <div>
+                          <strong>Continue with Google</strong>
+                          <span>Use Supabase OAuth after provider setup</span>
+                        </div>
+                      </button>
+                    </div>
+                  </>
+                )
+              ) : (
+                <div className="settings-font-helper">
+                  Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in your
+                  Vercel project, then create the `user_storage_snapshots`
+                  table in Supabase.
+                </div>
+              )}
             </div>
           </section>
 
