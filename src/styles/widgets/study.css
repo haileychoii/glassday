@@ -2,36 +2,15 @@
    Study Planner Widget
    ================================ */
 
-.study-widget {
-  min-width: 0;
-  min-height: 0;
-  container-type: inline-size;
-  container-name: study-card;
-}
-
-.study-widget .glass-card-body {
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-}
-
 .study-planner {
   height: 100%;
   min-height: 0;
-  min-width: 0;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: none;
   gap: 12px;
   overflow-y: auto;
   overflow-x: hidden;
-  align-content: start;
-  container-type: inline-size;
-  container-name: study-widget;
-}
-
-.study-planner > section {
-  min-width: 0;
 }
 
 .study-hero {
@@ -49,7 +28,6 @@
   box-shadow:
     inset 0 1px 0 hsl(0 0% 100% / 0.68),
     0 18px 40px -32px hsl(var(--primary) / 0.36);
-  container-type: inline-size;
 }
 
 .study-kicker {
@@ -111,7 +89,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  min-width: 0;
 }
 
 .study-date-button,
@@ -131,7 +108,6 @@
 .study-date-input {
   height: 34px;
   flex: 1;
-  min-width: 0;
   border-radius: 999px;
   padding: 0 12px;
   font-size: 12px;
@@ -152,8 +128,7 @@
   min-height: 58px;
   border-radius: 18px;
   padding: 9px;
-  display: grid;
-  grid-template-columns: 8px minmax(0, 1fr) auto;
+  display: flex;
   align-items: center;
   gap: 8px;
   background: hsl(0 0% 100% / 0.28);
@@ -194,14 +169,6 @@
 
 .study-subject-percent {
   flex: 0 0 auto;
-  font-size: 11px;
-  font-weight: 900;
-  color: hsl(var(--primary));
-}
-
-.study-subject-card em {
-  font-style: normal;
-  justify-self: end;
   font-size: 11px;
   font-weight: 900;
   color: hsl(var(--primary));
@@ -258,7 +225,7 @@
 
 .study-record-form {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 100px 100px minmax(0, 1fr) 64px;
   gap: 8px;
 }
 
@@ -286,7 +253,6 @@
 }
 
 .study-record-form button {
-  grid-column: 1 / -1;
   align-self: end;
   height: 34px;
   border-radius: 14px;
@@ -295,105 +261,6 @@
   color: hsl(var(--primary));
   background: hsl(var(--primary) / 0.12);
   border: 1px solid hsl(var(--primary) / 0.18);
-}
-
-@container gd-widget (max-width: 760px) {
-  .study-hero {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 10px !important;
-  }
-
-  .study-progress-ring {
-    width: 54px !important;
-    height: 54px !important;
-  }
-
-  .study-progress-ring span {
-    width: 42px !important;
-    height: 42px !important;
-    font-size: 12px !important;
-  }
-
-  .study-subject-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 7px !important;
-  }
-
-  .study-subject-card {
-    min-height: 54px !important;
-    padding: 8px !important;
-  }
-
-  .study-record-form {
-    grid-template-columns: 1fr !important;
-  }
-
-  .study-week-panel {
-    min-height: 174px !important;
-  }
-
-  .study-week-bars {
-    height: 124px !important;
-    gap: 6px !important;
-  }
-
-  .study-goal-panel {
-    min-height: 0 !important;
-  }
-
-  .study-task-list,
-  .study-record-list {
-    max-height: 180px !important;
-  }
-}
-
-@container gd-widget (max-width: 560px) {
-  .study-planner {
-    gap: 10px !important;
-  }
-
-  .study-main {
-    font-size: 22px !important;
-  }
-
-  .study-sub {
-    line-height: 1.4 !important;
-  }
-
-  .study-subject-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .study-subject-card {
-    min-height: 50px !important;
-  }
-
-  .study-goal-item {
-    grid-template-columns: minmax(0, 1fr) 48px 20px !important;
-  }
-
-  .study-week-panel {
-    min-height: 156px !important;
-  }
-
-  .study-week-bars {
-    height: 102px !important;
-  }
-
-  .study-week-day strong {
-    font-size: 9px !important;
-  }
-
-  .study-week-day span {
-    font-size: 8px !important;
-  }
-
-  .study-task,
-  .study-record-item {
-    min-height: 34px !important;
-    padding: 0 7px !important;
-  }
 }
 
 .study-goal-list {
@@ -446,18 +313,14 @@
   height: 100%;
   min-width: 0;
   display: grid;
-  grid-template-rows: 1fr auto auto;
+  grid-template-rows: 1fr auto;
   gap: 6px;
   text-align: center;
-  justify-items: center;
 }
 
 .study-week-bar-track {
   height: 100%;
-  width: min(52px, 100%);
-  max-width: 52px;
-  justify-self: center;
-  border-radius: 24px;
+  border-radius: 999px;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -467,7 +330,7 @@
 
 .study-week-bar {
   width: 100%;
-  border-radius: 18px 18px 24px 24px;
+  border-radius: 999px;
   background:
     linear-gradient(
       180deg,
@@ -484,9 +347,7 @@
 
 .study-task-list,
 .study-record-list {
-  width: 100%;
   min-height: 0;
-  min-width: 0;
   overflow: auto;
   display: grid;
   align-content: start;
@@ -498,14 +359,11 @@
   min-height: 36px;
   border-radius: 15px;
   padding: 0 8px;
-  display: grid;
-  grid-template-columns: 20px 7px minmax(0, 1fr) 20px;
+  display: flex;
   align-items: center;
   gap: 7px;
-  min-width: 0;
   background: hsl(0 0% 100% / 0.28);
   border: 1px solid hsl(0 0% 100% / 0.38);
-  overflow: hidden;
 }
 
 .study-task.is-done {
@@ -530,6 +388,7 @@
 
 .study-task-delete,
 .study-record-delete {
+  margin-left: auto;
   color: hsl(350 70% 46% / 0.68);
   opacity: 0;
   transition: opacity 160ms ease;
@@ -570,17 +429,6 @@
   padding: 8px;
 }
 
-.study-record-item > .min-w-0 {
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.study-task input,
-.study-record-item strong,
-.study-record-item span {
-  min-width: 0;
-}
-
 .study-record-item strong {
   display: block;
   font-size: 11.5px;
@@ -609,86 +457,6 @@
   background: hsl(0 0% 100% / 0.2);
   border: 1px dashed hsl(0 0% 100% / 0.36);
 } 
-
-@container study-widget (max-width: 860px) {
-  .study-record-form {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-
-  .study-note-field,
-  .study-record-form button {
-    grid-column: 1 / -1 !important;
-  }
-
-  .study-week-panel,
-  .study-goal-panel,
-  .study-task-panel,
-  .study-record-list-panel {
-    min-height: 0 !important;
-  }
-}
-
-@container study-widget (max-width: 680px) {
-  .study-subject-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .study-record-form {
-    grid-template-columns: 1fr !important;
-  }
-
-  .study-hero {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 10px !important;
-  }
-
-  .study-task,
-  .study-record-item {
-    min-height: 0 !important;
-    padding: 8px !important;
-  }
-}
-
-@container study-widget (max-width: 560px) {
-  .study-subject-card {
-    grid-template-columns: 8px minmax(0, 1fr) auto !important;
-    padding: 8px !important;
-  }
-
-  .study-goal-item {
-    grid-template-columns: minmax(0, 1fr) 48px 20px !important;
-  }
-
-  .study-week-bars {
-    height: 114px !important;
-    gap: 6px !important;
-  }
-
-  .study-week-bar-track {
-    width: min(42px, 100%) !important;
-    max-width: 42px !important;
-    border-radius: 20px !important;
-  }
-
-  .study-week-day strong {
-    font-size: 9px !important;
-  }
-
-  .study-week-day span {
-    font-size: 8px !important;
-  }
-
-  .study-date-row {
-    display: grid !important;
-    grid-template-columns: 34px minmax(0, 1fr) 34px !important;
-  }
-
-  .study-task,
-  .study-record-item {
-    gap: 6px !important;
-  }
-}
 
 /* ================================
    Study Detail Floating Window
@@ -927,34 +695,12 @@
 .react-grid-item .study-task-panel,
 .react-grid-item .study-record-list-panel {
   min-width: 0 !important;
-  overflow: hidden !important;
-}
-
-.react-grid-item .study-input-panel {
-  min-height: 112px !important;
-}
-
-.react-grid-item .study-week-panel {
-  min-height: 214px !important;
-}
-
-.react-grid-item .study-goal-panel {
-  min-height: 180px !important;
-}
-
-.react-grid-item .study-task-panel {
-  min-height: 110px !important;
-}
-
-.react-grid-item .study-record-list-panel {
-  min-height: 112px !important;
+  overflow: visible !important;
 }
 
 .react-grid-item .study-task-list,
 .react-grid-item .study-record-list {
   max-height: 220px;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
 }
 
 .study-record-form {
@@ -975,7 +721,7 @@
   }
 
   .today-focus-ring {
-    width: 20px !important;
-    height: 20px !important;
+    width: 52px !important;
+    height: 52px !important;
   }
 }
