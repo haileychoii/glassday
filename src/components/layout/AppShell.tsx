@@ -1,9 +1,10 @@
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import type { DashboardTab } from "../../types/workspace";
 // import { PixelDesktopDecor } from "./PixelDesktopDecor";
 
+const SIDEBAR_COLLAPSED_STORAGE_KEY = "glassday.sidebar.collapsed";
 
 type AppShellProps = {
   children: ReactNode;
@@ -30,6 +31,21 @@ export const AppShell = ({
   onRenameTab,
   onRemoveTab,
 }: AppShellProps) => {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+
+    return window.localStorage.getItem(SIDEBAR_COLLAPSED_STORAGE_KEY) === "true";
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    window.localStorage.setItem(
+      SIDEBAR_COLLAPSED_STORAGE_KEY,
+      String(sidebarCollapsed)
+    );
+  }, [sidebarCollapsed]);
+
   return (
     <div className="min-h-screen relative overflow-hidden bg-background text-foreground">
       <div className="fixed inset-0 bg-glass-gradient" />
@@ -42,6 +58,10 @@ export const AppShell = ({
               tabs={tabs}
               activeTabId={activeTabId}
               editMode={editMode}
+              collapsed={sidebarCollapsed}
+              onToggleCollapsed={() =>
+                setSidebarCollapsed((current) => !current)
+              }
               onSelectTab={onSelectTab}
               onAddTab={onAddTab}
               onRenameTab={onRenameTab}

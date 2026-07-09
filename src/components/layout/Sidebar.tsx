@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen, Plus } from "lucide-react";
 
 import type { DashboardTab } from "../../types/workspace";
 import { WorkspaceTabsNav } from "./WorkspaceTabsNav";
@@ -7,6 +7,8 @@ type SidebarProps = {
   tabs: DashboardTab[];
   activeTabId: string;
   editMode: boolean;
+  collapsed: boolean;
+  onToggleCollapsed: () => void;
   onSelectTab: (tabId: string) => void;
   onAddTab: () => void;
   onRenameTab: (tabId: string, label: string) => void;
@@ -17,18 +19,37 @@ export const Sidebar = ({
   tabs,
   activeTabId,
   editMode,
+  collapsed,
+  onToggleCollapsed,
   onSelectTab,
   onAddTab,
   onRenameTab,
   onRemoveTab,
 }: SidebarProps) => {
   return (
-    <aside className="app-sidebar sidebar">
+    <aside
+      className="app-sidebar sidebar"
+      data-collapsed={collapsed ? "true" : "false"}
+    >
       <div className="sidebar-brand">
-        <div>
+        <div className="sidebar-brand-copy">
           <div className="sidebar-brand-title">Glassday</div>
           <div className="sidebar-brand-subtitle">Personal OS</div>
         </div>
+
+        <button
+          type="button"
+          onClick={onToggleCollapsed}
+          className="glass-button sidebar-collapse-button"
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {collapsed ? (
+            <PanelLeftOpen className="w-4 h-4" />
+          ) : (
+            <PanelLeftClose className="w-4 h-4" />
+          )}
+        </button>
       </div>
 
       <div className="sidebar-body">
@@ -52,6 +73,7 @@ export const Sidebar = ({
           tabs={tabs}
           activeTabId={activeTabId}
           editMode={editMode}
+          collapsed={collapsed}
           onSelectTab={onSelectTab}
           onRenameTab={onRenameTab}
           onRemoveTab={onRemoveTab}
