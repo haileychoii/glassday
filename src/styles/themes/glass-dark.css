@@ -809,15 +809,27 @@ body.theme-glass-dark .settings-modal-window {
     ),
     linear-gradient(
       145deg,
-      rgba(20, 27, 44, 0.62),
-      rgba(11, 16, 28, 0.38)
+      rgba(16, 22, 37, 0.9),
+      rgba(8, 12, 22, 0.78)
     ) !important;
-  border-color: rgba(176, 194, 241, 0.18) !important;
+  border-color: rgba(182, 201, 247, 0.24) !important;
   box-shadow:
-    0 44px 140px -34px rgba(3, 6, 16, 0.52),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
-  backdrop-filter: blur(24px) saturate(138%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(138%) !important;
+    0 44px 140px -34px rgba(2, 4, 12, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(28px) saturate(144%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(144%) !important;
+}
+
+html[data-theme="glass-dark"] .settings-modal-backdrop,
+body[data-theme="glass-dark"] .settings-modal-backdrop,
+html.theme-glass-dark .settings-modal-backdrop,
+body.theme-glass-dark .settings-modal-backdrop {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(96, 183, 255, 0.12), transparent 28%),
+    radial-gradient(circle at 82% 18%, rgba(198, 133, 255, 0.12), transparent 26%),
+    linear-gradient(180deg, rgba(8, 12, 22, 0.4), rgba(5, 8, 16, 0.54)) !important;
+  backdrop-filter: blur(34px) saturate(138%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(138%) !important;
 }
 
 html[data-theme="glass-dark"] .settings-modal-header,
@@ -863,15 +875,15 @@ body.theme-glass-dark .settings-section {
     ),
     linear-gradient(
       145deg,
-      rgba(39, 47, 73, 0.34),
-      rgba(17, 22, 35, 0.14)
+      rgba(34, 42, 66, 0.62),
+      rgba(14, 19, 31, 0.42)
     ) !important;
-  border-color: rgba(176, 193, 239, 0.14) !important;
+  border-color: rgba(176, 193, 239, 0.2) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 16px 36px -32px rgba(0, 0, 0, 0.28) !important;
-  backdrop-filter: blur(14px) saturate(130%) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(130%) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 16px 36px -32px rgba(0, 0, 0, 0.42) !important;
+  backdrop-filter: blur(18px) saturate(134%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(134%) !important;
 }
 
 html[data-theme="glass-dark"] .settings-modal-header h2,
@@ -919,11 +931,11 @@ body.theme-glass-dark .settings-theme-card {
       rgba(198, 133, 255, 0.08),
       transparent 22%
     ),
-    rgba(34, 40, 63, 0.28) !important;
-  border-color: rgba(173, 190, 239, 0.14) !important;
+    rgba(31, 38, 59, 0.52) !important;
+  border-color: rgba(173, 190, 239, 0.2) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 12px 24px -20px rgba(0, 0, 0, 0.22) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 12px 24px -20px rgba(0, 0, 0, 0.32) !important;
 }
 
 html[data-theme="glass-dark"] .settings-theme-card.is-active,
@@ -962,6 +974,36 @@ body.theme-glass-dark .settings-modal-window select,
 body.theme-glass-dark .settings-modal-window textarea,
 body.theme-glass-dark .settings-modal-window button {
   color: rgba(239, 244, 255, 0.92) !important;
+  background: rgba(28, 35, 56, 0.72) !important;
+  border-color: rgba(182, 199, 242, 0.22) !important;
+  backdrop-filter: blur(12px) saturate(132%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(132%) !important;
+}
+
+html[data-theme="glass-dark"] .settings-action-card,
+html[data-theme="glass-dark"] .settings-sync-box,
+html[data-theme="glass-dark"] .settings-custom-font-item,
+html[data-theme="glass-dark"] .settings-status,
+body[data-theme="glass-dark"] .settings-action-card,
+body[data-theme="glass-dark"] .settings-sync-box,
+body[data-theme="glass-dark"] .settings-custom-font-item,
+body[data-theme="glass-dark"] .settings-status,
+html.theme-glass-dark .settings-action-card,
+html.theme-glass-dark .settings-sync-box,
+html.theme-glass-dark .settings-custom-font-item,
+html.theme-glass-dark .settings-status,
+body.theme-glass-dark .settings-action-card,
+body.theme-glass-dark .settings-sync-box,
+body.theme-glass-dark .settings-custom-font-item,
+body.theme-glass-dark .settings-status {
+  background:
+    linear-gradient(145deg, rgba(33, 41, 64, 0.74), rgba(15, 20, 32, 0.5)) !important;
+  border-color: rgba(176, 194, 239, 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 28px rgba(0, 0, 0, 0.28) !important;
+  backdrop-filter: blur(16px) saturate(134%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(134%) !important;
 }
 
 html[data-theme="glass-dark"] .journal-score-grid label:nth-child(1),
