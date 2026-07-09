@@ -776,7 +776,7 @@
   min-height: 360px !important;
   height: 100% !important;
   margin: 0 auto !important;
-  padding: 28px 32px !important;
+  padding: 18px 22px !important;
   overflow: auto !important;
   border-radius: 28px !important;
   line-height: 1.7 !important;
@@ -1287,6 +1287,144 @@
     padding: 14px 12px !important;
     border-radius: 12px !important;
   }
+}
+
+/* memo floating window contrast + paper color fidelity */
+.memo-floating-window {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.46),
+      rgb(255 255 255 / 0.24)
+    ) !important;
+  border-color: rgb(255 255 255 / 0.44) !important;
+  backdrop-filter: blur(28px) saturate(158%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(158%) !important;
+  box-shadow:
+    0 42px 120px -46px rgb(20 20 40 / 0.36),
+    inset 0 1px 0 rgb(255 255 255 / 0.74) !important;
+}
+
+.memo-floating-window-titlebar {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.36),
+      rgb(255 255 255 / 0.18)
+    ) !important;
+  border-bottom-color: rgb(255 255 255 / 0.28) !important;
+}
+
+.memo-floating-window .floating-window-body,
+.memo-floating-window .memo-floating-body {
+  background: transparent !important;
+}
+
+.memo-floating-window .memo-floating-body {
+  padding: 14px !important;
+}
+
+.memo-floating-window .memo-list-panel,
+.memo-floating-window .memo-workspace {
+  backdrop-filter: blur(20px) saturate(138%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(138%) !important;
+}
+
+.memo-floating-window .memo-list-panel {
+  background: rgb(255 255 255 / 0.22) !important;
+  border-color: rgb(255 255 255 / 0.24) !important;
+}
+
+.memo-floating-window .memo-workspace {
+  background: rgb(255 255 255 / 0.16) !important;
+}
+
+.memo-workspace .memo-title-input,
+.memo-workspace .memo-title-view {
+  color: var(--memo-title-color, hsl(var(--foreground) / 0.9)) !important;
+}
+
+.memo-workspace .memo-editor,
+.memo-floating-window .memo-editor,
+[contenteditable="true"].memo-editor {
+  background: var(--memo-paper-surface) !important;
+  border-color: var(--memo-paper-border) !important;
+  color: var(--memo-editor-color, hsl(var(--foreground) / 0.84)) !important;
+}
+
+html[data-theme="glass-light"] .memo-floating-window,
+body[data-theme="glass-light"] .memo-floating-window,
+html.theme-glass-light .memo-floating-window,
+body.theme-glass-light .memo-floating-window {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.54),
+      rgb(255 255 255 / 0.3)
+    ) !important;
+}
+
+html[data-theme="glass-light"] .memo-floating-window .memo-list-panel,
+html[data-theme="glass-light"] .memo-floating-window .memo-workspace,
+body[data-theme="glass-light"] .memo-floating-window .memo-list-panel,
+body[data-theme="glass-light"] .memo-floating-window .memo-workspace,
+html.theme-glass-light .memo-floating-window .memo-list-panel,
+html.theme-glass-light .memo-floating-window .memo-workspace,
+body.theme-glass-light .memo-floating-window .memo-list-panel,
+body.theme-glass-light .memo-floating-window .memo-workspace {
+  background: rgb(255 255 255 / 0.18) !important;
+}
+
+html[data-theme="glass-dark"] .memo-floating-window,
+body[data-theme="glass-dark"] .memo-floating-window,
+html.theme-glass-dark .memo-floating-window,
+body.theme-glass-dark .memo-floating-window {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(24 27 39 / 0.66),
+      rgb(13 17 28 / 0.42)
+    ) !important;
+  border-color: rgb(194 210 255 / 0.16) !important;
+  backdrop-filter: blur(24px) saturate(142%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(142%) !important;
+}
+
+html[data-theme="glass-dark"] .memo-floating-window-titlebar,
+body[data-theme="glass-dark"] .memo-floating-window-titlebar,
+html.theme-glass-dark .memo-floating-window-titlebar,
+body.theme-glass-dark .memo-floating-window-titlebar {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      rgb(255 255 255 / 0.05)
+    ) !important;
+  border-bottom-color: rgb(194 210 255 / 0.12) !important;
+}
+
+html[data-theme="glass-dark"] .memo-floating-window .memo-list-panel,
+html[data-theme="glass-dark"] .memo-floating-window .memo-workspace,
+body[data-theme="glass-dark"] .memo-floating-window .memo-list-panel,
+body[data-theme="glass-dark"] .memo-floating-window .memo-workspace,
+html.theme-glass-dark .memo-floating-window .memo-list-panel,
+html.theme-glass-dark .memo-floating-window .memo-workspace,
+body.theme-glass-dark .memo-floating-window .memo-list-panel,
+body.theme-glass-dark .memo-floating-window .memo-workspace {
+  background: rgb(18 23 36 / 0.28) !important;
+}
+
+html[data-theme="glass-dark"] .memo-workspace .memo-editor,
+html[data-theme="glass-dark"] .memo-floating-window .memo-editor,
+body[data-theme="glass-dark"] .memo-workspace .memo-editor,
+body[data-theme="glass-dark"] .memo-floating-window .memo-editor,
+html.theme-glass-dark .memo-workspace .memo-editor,
+html.theme-glass-dark .memo-floating-window .memo-editor,
+body.theme-glass-dark .memo-workspace .memo-editor,
+body.theme-glass-dark .memo-floating-window .memo-editor {
+  background: var(--memo-dark-paper) !important;
+  border-color: var(--memo-dark-border) !important;
+  color: var(--memo-dark-text, rgba(241, 244, 255, 0.94)) !important;
 }
 
 /* current responsive interaction overrides */

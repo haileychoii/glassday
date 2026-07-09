@@ -1291,6 +1291,8 @@ export const MemoWidget = () => {
       title="Memo Window"
       subtitle="Resizable floating memo"
       storageKey="glassday.memo.floatingWindow.rect.v1"
+      className="memo-floating-window"
+      titlebarClassName="memo-floating-window-titlebar"
       defaultRect={{
         x: 120,
         y: 72,
