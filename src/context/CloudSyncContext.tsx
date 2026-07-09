@@ -36,6 +36,9 @@ type CloudSyncContextValue = {
   lastSyncedAt: string | null;
   signInWithGoogle: () => Promise<void>;
   signInWithMagicLink: (email: string) => Promise<void>;
+  signInWithPassword: (email: string, password: string) => Promise<void>;
+  signUpWithPassword: (email: string, password: string) => Promise<void>;
+  sendPasswordReset: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   syncNow: () => Promise<void>;
 };
@@ -192,6 +195,77 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
     [setSyncState]
   );
 
+  const signInWithPassword = useCallback(
+    async (email: string, password: string) => {
+      if (!supabase) return;
+
+      setSyncState("authenticating");
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error(error);
+        setSyncState("error", error.message);
+        return;
+      }
+
+      setSyncState("synced", "Signed in successfully.");
+    },
+    [setSyncState]
+  );
+
+  const signUpWithPassword = useCallback(
+    async (email: string, password: string) => {
+      if (!supabase) return;
+
+      setSyncState("authenticating");
+
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: window.location.origin,
+        },
+      });
+
+      if (error) {
+        console.error(error);
+        setSyncState("error", error.message);
+        return;
+      }
+
+      setSyncState(
+        "idle",
+        `Account created for ${email}. Check your email if confirmation is enabled.`
+      );
+    },
+    [setSyncState]
+  );
+
+  const sendPasswordReset = useCallback(
+    async (email: string) => {
+      if (!supabase) return;
+
+      setSyncState("authenticating");
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin,
+      });
+
+      if (error) {
+        console.error(error);
+        setSyncState("error", error.message);
+        return;
+      }
+
+      setSyncState("idle", `Password reset email sent to ${email}.`);
+    },
+    [setSyncState]
+  );
+
   const signOut = useCallback(async () => {
     if (!supabase) return;
 
@@ -284,6 +358,9 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       lastSyncedAt,
       signInWithGoogle,
       signInWithMagicLink,
+      signInWithPassword,
+      signUpWithPassword,
+      sendPasswordReset,
       signOut,
       syncNow,
     }),
@@ -292,6 +369,9 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       session,
       signInWithGoogle,
       signInWithMagicLink,
+      signInWithPassword,
+      signUpWithPassword,
+      sendPasswordReset,
       signOut,
       syncMessage,
       syncNow,

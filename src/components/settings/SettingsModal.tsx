@@ -5,6 +5,7 @@ import {
   Cloud,
   Download,
   Globe,
+  KeyRound,
   LogIn,
   LogOut,
   Mail,
@@ -125,6 +126,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     lastSyncedAt,
     signInWithGoogle,
     signInWithMagicLink,
+    signInWithPassword,
+    signUpWithPassword,
+    sendPasswordReset,
     signOut,
     syncNow,
   } = useCloudSync();
@@ -142,6 +146,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     useState<CustomFontSourceType>("stylesheet");
   const [status, setStatus] = useState("");
   const [syncEmail, setSyncEmail] = useState("");
+  const [syncPassword, setSyncPassword] = useState("");
   const appFontOptions = useMemo(() => getAppFontOptions(), [customFonts]);
 
   useEffect(() => {
@@ -345,7 +350,39 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     }
 
     await signInWithMagicLink(email);
-    setStatus(`Magic link sent to ${email}.`);
+  };
+
+  const handlePasswordLogin = async () => {
+    const email = syncEmail.trim();
+
+    if (!email || !syncPassword) {
+      setStatus("Enter both your email and password first.");
+      return;
+    }
+
+    await signInWithPassword(email, syncPassword);
+  };
+
+  const handlePasswordSignup = async () => {
+    const email = syncEmail.trim();
+
+    if (!email || !syncPassword) {
+      setStatus("Enter both your email and password first.");
+      return;
+    }
+
+    await signUpWithPassword(email, syncPassword);
+  };
+
+  const handlePasswordReset = async () => {
+    const email = syncEmail.trim();
+
+    if (!email) {
+      setStatus("Enter your email first.");
+      return;
+    }
+
+    await sendPasswordReset(email);
   };
 
   return createPortal(
@@ -748,30 +785,34 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                   </div>
                 ) : (
                   <>
-                    <label className="settings-field">
-                      <span>Email Magic Link</span>
-                      <input
-                        value={syncEmail}
-                        onChange={(event) => setSyncEmail(event.target.value)}
-                        className="settings-input"
-                        placeholder="you@example.com"
-                      />
-                    </label>
+                    <div className="settings-auth-stack">
+                      <label className="settings-field">
+                        <span>Email</span>
+                        <input
+                          value={syncEmail}
+                          onChange={(event) => setSyncEmail(event.target.value)}
+                          className="settings-input"
+                          placeholder="you@example.com"
+                          autoComplete="email"
+                        />
+                      </label>
+
+                      <label className="settings-field">
+                        <span>Password</span>
+                        <input
+                          type="password"
+                          value={syncPassword}
+                          onChange={(event) =>
+                            setSyncPassword(event.target.value)
+                          }
+                          className="settings-input"
+                          placeholder="At least 6 characters"
+                          autoComplete="current-password"
+                        />
+                      </label>
+                    </div>
 
                     <div className="settings-action-grid settings-backup-grid">
-                      <button
-                        type="button"
-                        onClick={() => void handleMagicLinkLogin()}
-                        className="settings-action-card settings-backup-button"
-                      >
-                        <Mail className="w-4 h-4" />
-
-                        <div>
-                          <strong>Send Magic Link</strong>
-                          <span>Login from any device with email</span>
-                        </div>
-                      </button>
-
                       <button
                         type="button"
                         onClick={() => void signInWithGoogle()}
@@ -781,7 +822,59 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
                         <div>
                           <strong>Continue with Google</strong>
-                          <span>Use Supabase OAuth after provider setup</span>
+                          <span>Use your Google account across devices</span>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => void handlePasswordLogin()}
+                        className="settings-action-card settings-backup-button"
+                      >
+                        <KeyRound className="w-4 h-4" />
+
+                        <div>
+                          <strong>Sign In with Password</strong>
+                          <span>Use your email and password directly</span>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => void handlePasswordSignup()}
+                        className="settings-action-card settings-backup-button"
+                      >
+                        <Mail className="w-4 h-4" />
+
+                        <div>
+                          <strong>Create Account</strong>
+                          <span>Register this email for cloud save</span>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => void handleMagicLinkLogin()}
+                        className="settings-action-card settings-backup-button"
+                      >
+                        <Mail className="w-4 h-4" />
+
+                        <div>
+                          <strong>Send Magic Link</strong>
+                          <span>Sign in by email without a password</span>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => void handlePasswordReset()}
+                        className="settings-action-card settings-backup-button"
+                      >
+                        <RotateCcw className="w-4 h-4" />
+
+                        <div>
+                          <strong>Reset Password</strong>
+                          <span>Send a reset email to this address</span>
                         </div>
                       </button>
                     </div>

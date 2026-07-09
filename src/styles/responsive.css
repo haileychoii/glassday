@@ -228,7 +228,7 @@ main {
   }
 
   main {
-    padding: 14px !important;
+    padding: 0px !important;
     min-height: 0 !important;
   }
 
@@ -240,7 +240,7 @@ main {
 
   .topbar-inner {
     min-height: auto !important;
-    padding: 14px 18px 0 !important;
+    padding: 10px 10px 0 !important;
     flex-direction: column !important;
     align-items: stretch !important;
     gap: 0 !important;
@@ -248,7 +248,7 @@ main {
 
   .topbar-heading {
     align-items: flex-start !important;
-    padding-bottom: 12px !important;
+    padding-bottom: 1px !important;
   }
 
   .topbar-title {
@@ -260,8 +260,8 @@ main {
     align-items: center !important;
     gap: 10px !important;
     min-width: 0 !important;
-    margin: 0 -18px !important;
-    padding: 10px 18px 0 !important;
+    margin: 0 -2px !important;
+    padding: 5px 18px 3px !important;
     border-top: 1px solid hsl(var(--foreground) / 0.08) !important;
     border-radius: 0 !important;
   }
@@ -290,7 +290,7 @@ main {
   .topbar-mobile-workspaces .sidebar-tab-main {
     height: 38px !important;
     padding: 0 12px !important;
-    font-size: 13.5px !important;
+    font-size: 14px !important;
     white-space: nowrap !important;
   }
 
@@ -312,11 +312,11 @@ main {
 
 @media (max-width: 768px) {
   .relative.z-10.min-h-screen {
-    padding: 8px !important;
+    padding: 3px !important;
   }
 
   main {
-    padding: 12px !important;
+    padding: 0px !important;
   }
 
   .dashboard-tab-space {
@@ -325,12 +325,12 @@ main {
 
   .topbar {
     height: auto !important;
-    min-height: 96px !important;
+    min-height: 80px !important;
     overflow: visible !important;
   }
 
   .topbar-inner {
-    min-height: 96px !important;
+    min-height: 80px !important;
     padding: 14px 18px 0 !important;
     flex-direction: column !important;
     align-items: stretch !important;
@@ -341,13 +341,13 @@ main {
   .topbar-title {
     width: 100% !important;
     min-width: 0 !important;
-    padding-top: 15px !important;
+    padding-top: 0px !important;
   }
 
   .topbar-heading {
-    gap: 12px !important;
+    gap: 10px !important;
     align-items: flex-start !important;
-    padding-bottom: 2px !important;
+    padding-bottom: 0px !important;
   }
 
   .topbar-title h1 {
@@ -363,15 +363,15 @@ main {
     min-width: 0 !important;
     margin-left: 0 !important;
     justify-content: flex-end !important;
-    gap: 8px !important;
+    gap: 5px !important;
     overflow: visible !important;
     flex-wrap: nowrap !important;
-    padding-top: 15px !important;
+    padding-top: 0px !important;
   }
 
   .topbar-mobile-workspaces {
     margin: 0 -18px !important;
-    padding: 10px 18px 0 !important;
+    padding: 1px 18px   !important;
     border-top: 1px solid hsl(var(--foreground) / 0.08) !important;
     border-radius: 0 !important;
   }
@@ -455,7 +455,7 @@ main {
   }
 
   .topbar-title {
-    padding-top: 15px !important;
+    padding-top: 5px !important;
   }
 
   .topbar-actions {
@@ -466,7 +466,7 @@ main {
   .today-focus-hero,
   .today-focus-section,
   .today-focus-block {
-    padding: 10px !important;
+    padding: 8px !important;
   }
 
   .today-focus-task {
@@ -484,7 +484,7 @@ main {
   }
 
   .topbar-inner {
-    padding-inline: 16px !important;
+    border-top: 10px !important;
   }
 
   .topbar-actions {

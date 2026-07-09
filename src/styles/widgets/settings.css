@@ -138,7 +138,8 @@
   }
 
   .settings-font-stack,
-  .settings-webfont-grid {
+  .settings-webfont-grid,
+  .settings-auth-stack {
     grid-template-columns: 1fr;
   }
 
@@ -334,6 +335,13 @@
 
 .settings-field-wide {
   grid-column: 1 / -1;
+}
+
+.settings-auth-stack {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .settings-input {
