@@ -688,59 +688,34 @@ aside .sidebar-workspace-list {
   justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: 10px;
   font-size: 18px;
   line-height: 1;
+  background: transparent;
+  box-shadow: none;
 }
 
 .workspace-theme-icon-pastel,
 .workspace-theme-icon-glass-light {
   color: hsl(var(--foreground) / 0.82);
-  background: linear-gradient(
-    135deg,
-    hsl(0 0% 100% / 0.58),
-    hsl(var(--primary) / 0.14)
-  );
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.62),
-    0 8px 16px hsl(var(--primary) / 0.12);
 }
 
 .workspace-theme-icon-glass-dark {
   color: hsl(0 0% 100% / 0.92);
-  background: linear-gradient(
-    135deg,
-    rgb(126 216 255 / 0.28),
-    rgb(214 151 255 / 0.2),
-    rgb(255 255 255 / 0.08)
-  );
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.26),
-    0 10px 18px rgb(0 0 0 / 0.22);
+  filter: drop-shadow(0 0 10px rgb(180 220 255 / 0.18));
 }
 
 .workspace-theme-icon-mac-core {
   width: 26px;
   height: 26px;
   font-size: 19px;
-  background: rgb(255 255 255 / 0.82);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.92),
-    0 4px 12px rgb(120 128 150 / 0.14);
 }
 
 .workspace-theme-icon-pixel-desk,
 .workspace-theme-icon-retro {
   width: 26px;
   height: 26px;
-  border-radius: 0;
-  background: #ffffff;
-  border-top: 1px solid #dfdfdf;
-  border-left: 1px solid #dfdfdf;
-  border-right: 1px solid #707070;
-  border-bottom: 1px solid #707070;
   color: #111111;
-  box-shadow: inset 1px 1px 0 #f4f4f4;
+  image-rendering: pixelated;
 }
 
 .sidebar-tab-item.is-active .sidebar-tab-main {
