@@ -969,5 +969,4 @@ export const MemoWidget = () => {
       normalizedNotes.length > 0
     ) {
       setSelectedNoteId(
-        normalizedNotes[0].id
-      );
+       ) };
