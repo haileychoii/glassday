@@ -1,13 +1,13 @@
 /* =========================================================
-   TODAY FOCUS / ALERT / BASIC WIDGET CONTENT RESTORE
-   역할:
-   - Today Focus / Alert / Calendar / Career / Study 일부 원시화 방지
-   - 위젯 내부 구조만 담당
-   - 색감/질감은 themes/*.css에서 담당
+   TODAY FOCUS
+   Widget-local styles for:
+   - Today Focus content blocks
+   - shared title visibility repairs used by linked focus widgets
+   - compact mini sections inside the focus surface
 ========================================================= */
 
 /* =========================================================
-   0. Widget roots
+   1. Widget roots and header visibility safety
 ========================================================= */
 
 .today-focus-card,

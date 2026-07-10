@@ -1,6 +1,13 @@
-/* ================================
-   Today Mini Widget
-   ================================ */
+/* =========================================================
+   TODAY WIDGETS
+   Widget-local styles for:
+   - Today mini dashboard blocks
+   - Today task list and quick-add controls
+========================================================= */
+
+/* =========================================================
+   1. Today mini summary widget
+========================================================= */
 
 .today-mini-card .px-5.pb-5 {
   overflow: hidden;

@@ -1,6 +1,14 @@
-/* ================================
-   Settings Modal
-   ================================ */
+/* =========================================================
+   SETTINGS MODAL
+   Widget-local styles for:
+   - modal surface and backdrop
+   - settings sections, preview cards, and action grids
+   - sync and backup related controls
+========================================================= */
+
+/* =========================================================
+   1. Modal shell and backdrop
+========================================================= */
 
 .settings-modal-backdrop {
   position: fixed;

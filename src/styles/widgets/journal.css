@@ -1,3 +1,15 @@
+/* =========================================================
+   DAILY JOURNAL
+   Widget-local styles for:
+   - date navigation
+   - summary cards and condition controls
+   - task, clip, and journal entry layouts
+========================================================= */
+
+/* =========================================================
+   1. Widget shell and shared inline rows
+========================================================= */
+
 .daily-journal-widget {
   height: 100%;
   min-height: 0;

@@ -1,3 +1,15 @@
+/* =========================================================
+   CAREER
+   Widget-local styles for:
+   - summary cards
+   - filters and list layouts
+   - board/list states and career detail surfaces
+========================================================= */
+
+/* =========================================================
+   1. Widget shell and shared row helpers
+========================================================= */
+
 .career-widget {
   height: 100%;
   min-height: 0;

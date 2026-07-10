@@ -1,6 +1,14 @@
-/* ================================
-   Study Planner Widget
-   ================================ */
+/* =========================================================
+   STUDY PLANNER
+   Widget-local styles for:
+   - study summary panels
+   - subject, goal, and task sections
+   - recent record and progress layouts
+========================================================= */
+
+/* =========================================================
+   1. Main study planner layout
+========================================================= */
 
 .study-planner {
   height: 100%;

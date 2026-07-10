@@ -1,11 +1,20 @@
+/* =========================================================
+   CALENDAR
+   Widget-local styles for:
+   - day / week / month views
+   - calendar cells, labels, and event rows
+   - calendar-specific content density
+========================================================= */
+
+/* =========================================================
+   1. Shared labels and month-grid primitives
+========================================================= */
+
 .calendar-current-label {
   font-size: 12px;
   font-weight: 700;
   color: hsl(var(--foreground) / 0.72);
 }
-
-/* -------- */
-
 
 .calendar-month-weekday {
   height: 22px;
