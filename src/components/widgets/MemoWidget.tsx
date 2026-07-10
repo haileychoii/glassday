@@ -396,10 +396,15 @@ export const MemoWidget = () => {
     value: windowSidebarWidth,
     setValue: setWindowSidebarWidth,
   } = useLocalStorage("glassday.memo.windowSidebarWidth.v1", 280);
+  const {
+    value: widgetSidebarWidth,
+    setValue: setWidgetSidebarWidth,
+  } = useLocalStorage("glassday.memo.widgetSidebarWidth.v1", 232);
 
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [saveFileName, setSaveFileName] = useState("");
   const [isDraggingWindowSidebar, setIsDraggingWindowSidebar] = useState(false);
+  const [isDraggingWidgetSidebar, setIsDraggingWidgetSidebar] = useState(false);
   const [tableContextMenu, setTableContextMenu] =
     useState<TableContextMenuState | null>(null);
 
@@ -407,6 +412,7 @@ export const MemoWidget = () => {
   const windowEditorRef = useRef<HTMLDivElement | null>(null);
   const saveInputRef = useRef<HTMLInputElement | null>(null);
   const floatingBodyRef = useRef<HTMLDivElement | null>(null);
+  const widgetBodyRef = useRef<HTMLDivElement | null>(null);
 
   const { value: notes, setValue: setNotes } = useLocalStorage<MemoNote[]>(
     "glassday.memo.notes.v2",
@@ -491,6 +497,35 @@ export const MemoWidget = () => {
       window.removeEventListener("mouseup", handleUp);
     };
   }, [isDraggingWindowSidebar, setWindowSidebarWidth]);
+
+  useEffect(() => {
+    if (!isDraggingWidgetSidebar) {
+      return;
+    }
+
+    const handleMove = (event: MouseEvent) => {
+      const container = widgetBodyRef.current;
+      if (!container) {
+        return;
+      }
+
+      const bounds = container.getBoundingClientRect();
+      const nextWidth = Math.min(320, Math.max(160, event.clientX - bounds.left - 12));
+      setWidgetSidebarWidth(nextWidth);
+    };
+
+    const handleUp = () => {
+      setIsDraggingWidgetSidebar(false);
+    };
+
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("mouseup", handleUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("mouseup", handleUp);
+    };
+  }, [isDraggingWidgetSidebar, setWidgetSidebarWidth]);
 
   useEffect(() => {
     const shouldNormalize = notes.some((note) => {
@@ -1107,7 +1142,7 @@ export const MemoWidget = () => {
   const renderNoteList = (windowMode = false) => (
     <div className={cn("memo-list-panel", isCompactListOpen && "is-compact-open")}>
       <div className="memo-list-header">
-        <span>Memos</span>
+        <span className="memo-list-header-spacer" aria-hidden="true" />
         <div className="memo-list-header-actions">
           <button
             type="button"
@@ -1666,13 +1701,33 @@ export const MemoWidget = () => {
         }
       >
         <div
+          ref={widgetBodyRef}
           className={cn(
             "memo-app",
             isCompactListOpen && "is-compact-list-open",
             isListHidden && "is-list-hidden"
           )}
+          style={
+            {
+              "--memo-widget-sidebar-width": `${widgetSidebarWidth}px`,
+            } as React.CSSProperties
+          }
         >
           {!isListHidden && renderNoteList()}
+          {!isListHidden && (
+            <div
+              className={cn(
+                "memo-widget-resizer",
+                isDraggingWidgetSidebar && "is-dragging"
+              )}
+              role="separator"
+              aria-orientation="vertical"
+              onMouseDown={(event: ReactMouseEvent<HTMLDivElement>) => {
+                event.preventDefault();
+                setIsDraggingWidgetSidebar(true);
+              }}
+            />
+          )}
           {renderWorkspace(editorRef)}
         </div>
       </GlassCard>

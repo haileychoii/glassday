@@ -51,9 +51,9 @@ export const AppShell = ({
       <div className="fixed inset-0 bg-glass-gradient" />
       {/* <PixelDesktopDecor /> */}
 
-      <div className="relative z-10 min-h-screen p-2.5 md:p-3.5">
-        <div className="glass-panel liquid-shell min-h-[calc(100vh-1.25rem)] md:min-h-[calc(100vh-1.75rem)] rounded-[2.2rem] overflow-hidden">
-          <div className="flex min-h-[calc(100vh-1.25rem)] md:min-h-[calc(100vh-1.75rem)]">
+      <div className="relative z-10 min-h-screen p-2 md:p-3">
+        <div className="glass-panel liquid-shell min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)] rounded-[2.2rem] overflow-hidden">
+          <div className="flex min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]">
             <Sidebar
               tabs={tabs}
               activeTabId={activeTabId}
@@ -81,7 +81,7 @@ export const AppShell = ({
                 onRemoveTab={onRemoveTab}
               />
 
-              <main className="flex-1 px-2.5 py-2 md:px-3 md:py-2.5 !overflow-y-auto !overflow-x-hidden bg-transparent">
+              <main className="flex-1 px-2 py-1.5 md:px-2.5 md:py-2 !overflow-y-auto !overflow-x-hidden bg-transparent">
                 {children}
               </main>
             </div>

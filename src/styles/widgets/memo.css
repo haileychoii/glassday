@@ -27,10 +27,10 @@
 
   display: grid;
   grid-template-columns:
-    clamp(220px, 26%, 300px)
+    var(--memo-widget-sidebar-width, clamp(210px, 24%, 280px))
+    10px
     minmax(0, 1fr);
   grid-template-rows:
-    auto
     minmax(0, 1fr);
 
   gap: 0;
@@ -44,26 +44,8 @@
    ========================================================= */
 
 .memo-app::before {
-  content: "Memo";
-
-  grid-column: 1 / -1;
-  grid-row: 1;
-
-  min-height: 38px;
-
-  padding: 2px 10px 8px;
-
-  display: flex;
-  align-items: center;
-
-  font-size: clamp(13px, 1.5cqi, 15px);
-  line-height: 1;
-  font-weight: 850;
-  letter-spacing: -0.03em;
-
-  color: hsl(var(--foreground) / 0.86);
-
-  pointer-events: none;
+  content: none;
+  display: none;
 }
 
 
@@ -74,7 +56,7 @@
 .memo-app > .memo-list-panel,
 .memo-layout > .memo-list-panel {
   grid-column: 1;
-  grid-row: 2;
+  grid-row: 1;
 }
 
 .memo-list-panel {
@@ -85,7 +67,7 @@
   height: 100%;
   min-height: 0;
 
-  padding: 14px 12px;
+  padding: 10px 10px;
 
   display: flex;
   flex-direction: column;
@@ -115,9 +97,9 @@
 .memo-list-header {
   flex: 0 0 auto;
 
-  min-height: 32px;
+  min-height: 24px;
 
-  padding: 0 4px 8px;
+  padding: 0 2px 6px;
 
   display: flex;
   align-items: center;
@@ -125,8 +107,8 @@
 
   gap: 8px;
 
-  font-size: 11px;
-  font-weight: 650;
+  font-size: 10px;
+  font-weight: 600;
 
   color:
     hsl(var(--foreground) / 0.58);
@@ -137,6 +119,12 @@
   align-items: center;
 
   gap: 6px;
+}
+
+.memo-list-header-spacer {
+  display: block;
+  width: 1px;
+  height: 1px;
 }
 
 .memo-mini-button,
@@ -197,9 +185,9 @@
 
 .memo-note-item {
   width: 100%;
-  min-height: 58px;
+  min-height: 50px;
 
-  padding: 10px 11px;
+  padding: 8px 9px;
 
   display: flex;
   align-items: center;
@@ -256,9 +244,9 @@
 
   gap: 5px;
 
-  font-size: 13px;
+  font-size: 11.5px;
   line-height: 1.25;
-  font-weight: 550;
+  font-weight: 500;
 
   letter-spacing: -0.025em;
 
@@ -273,7 +261,7 @@
 .memo-note-preview {
   margin-top: 3px;
 
-  font-size: 11px;
+  font-size: 10px;
   line-height: 1.3;
   font-weight: 400;
 
@@ -338,8 +326,8 @@
 
 .memo-app > .memo-workspace,
 .memo-layout > .memo-workspace {
-  grid-column: 2;
-  grid-row: 2;
+  grid-column: 3;
+  grid-row: 1;
 }
 
 .memo-workspace {
@@ -350,12 +338,12 @@
   min-height: 0;
 
   padding:
-    clamp(14px, 2vw, 28px);
+    clamp(8px, 1.2vw, 14px);
 
   display: flex;
   flex-direction: column;
 
-  gap: 10px;
+  gap: 8px;
 
   overflow: hidden;
 
@@ -408,8 +396,8 @@
   max-width: 860px;
   min-width: 0;
 
-  height: 38px;
-  min-height: 38px;
+  height: 28px;
+  min-height: 28px;
 
   margin: 0 auto;
   padding: 0 2px;
@@ -423,9 +411,9 @@
   outline: none;
 
   font-size:
-    clamp(17px, 2.2cqi, 20px);
+    clamp(14px, 1.8cqi, 17px);
 
-  line-height: 38px;
+  line-height: 28px;
   font-weight: 650;
 
   letter-spacing: -0.035em;
@@ -453,7 +441,7 @@
   width: min(100%, 860px);
   max-width: 860px;
 
-  min-height: 40px;
+  min-height: 34px;
 
   margin: 0 auto;
   padding: 0;
@@ -461,7 +449,7 @@
   display: flex;
   align-items: center;
 
-  gap: 7px;
+  gap: 6px;
 
   flex-wrap: wrap;
 }
@@ -707,8 +695,8 @@
   margin: 0;
 
   padding:
-    clamp(20px, 3.2vw, 42px)
-    clamp(20px, 4vw, 56px);
+    clamp(14px, 2vw, 22px)
+    clamp(14px, 2.4vw, 24px);
 
   display: block;
 
@@ -720,7 +708,7 @@
 
   -webkit-overflow-scrolling: touch;
 
-  border-radius: 26px;
+  border-radius: 18px;
 
   outline: none;
 
@@ -1365,6 +1353,31 @@
     hsl(var(--primary) / 0.48);
 }
 
+.memo-widget-resizer {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  cursor: col-resize;
+  user-select: none;
+}
+
+.memo-widget-resizer::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: hsl(var(--foreground) / 0.12);
+}
+
+.memo-widget-resizer:hover::before,
+.memo-widget-resizer.is-dragging::before {
+  background: hsl(var(--primary) / 0.48);
+}
+
 
 /* =========================================================
    24. GLASS LIGHT
@@ -1939,5 +1952,35 @@ body.theme-glass-dark
     padding: 15px 13px;
 
     font-size: 13px;
+  }
+}
+
+/* =========================================================
+   28. WIDGET FINAL OVERRIDES
+   ========================================================= */
+
+.memo-app {
+  grid-template-columns:
+    var(--memo-widget-sidebar-width, clamp(210px, 24%, 280px))
+    10px
+    minmax(0, 1fr) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+}
+
+.memo-app.is-list-hidden {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+.memo-app.is-list-hidden > .memo-workspace {
+  grid-column: 1 / -1 !important;
+}
+
+@container memo-widget (max-width: 560px) {
+  .memo-app {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .memo-widget-resizer {
+    display: none !important;
   }
 }

@@ -239,12 +239,21 @@ textarea {
   padding: 0 12px;
   white-space: nowrap;
   flex: 0 0 auto;
+  gap: 7px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 760;
+  letter-spacing: -0.01em;
 }
 
 .topbar-action-button svg {
   width: 14px;
   height: 14px;
   flex-shrink: 0;
+}
+
+.topbar-action-button span {
+  font: inherit;
 }
 
 /* =========================================================

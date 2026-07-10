@@ -140,18 +140,18 @@ body,
   position: relative !important;
   z-index: 50 !important;
   width: 100% !important;
-  min-height: 74px !important;
+  min-height: 70px !important;
   overflow: visible !important;
 }
 
 .topbar-inner {
   width: 100% !important;
-  min-height: 74px !important;
-  padding: 0 24px !important;
+  min-height: 70px !important;
+  padding: 0 20px !important;
   display: flex !important;
   align-items: stretch !important;
   justify-content: center !important;
-  gap: 16px !important;
+  gap: 12px !important;
 }
 
 .topbar-heading {
@@ -160,7 +160,7 @@ body,
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  gap: 18px !important;
+  gap: 14px !important;
 }
 
 .topbar-title {
@@ -207,12 +207,20 @@ body,
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  gap: 8px !important;
+  gap: 6px !important;
   visibility: visible !important;
   opacity: 1 !important;
   position: relative !important;
   z-index: 60 !important;
   overflow: visible !important;
+}
+
+@media (min-width: 921px) {
+  .topbar {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-left-width: 0 !important;
+  }
 }
 
 .topbar-mobile-workspaces {

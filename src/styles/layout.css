@@ -482,9 +482,9 @@ aside .sidebar-workspace-list {
 
 .app-sidebar[data-collapsed="true"],
 .sidebar[data-collapsed="true"] {
-  --sidebar-width: 78px;
-  min-width: 78px;
-  max-width: 78px;
+  --sidebar-width: 72px;
+  min-width: 72px;
+  max-width: 72px;
 }
 
 .sidebar-brand {
@@ -531,7 +531,7 @@ aside .sidebar-workspace-list {
   flex: 1 1 auto;
   min-height: 0;
 
-  padding: 16px;
+  padding: 12px;
 
   overflow-y: auto;
   overflow-x: hidden;
@@ -553,7 +553,7 @@ aside .sidebar-workspace-list {
 
 .app-sidebar[data-collapsed="true"] .sidebar-body,
 .sidebar[data-collapsed="true"] .sidebar-body {
-  padding: 12px 8px 16px;
+  padding: 10px 6px 12px;
 }
 
 .app-sidebar[data-collapsed="true"] .sidebar-section-header,
@@ -650,16 +650,16 @@ aside .sidebar-workspace-list {
 }
 
 .sidebar-tab-item.is-collapsed .sidebar-tab-main {
-  width: 52px;
-  height: 52px;
+  width: 46px;
+  height: 46px;
   padding: 0;
   justify-content: center;
-  border-radius: 18px;
+  border-radius: 16px;
 }
 
 .sidebar-tab-icon {
-  width: 20px;
-  min-width: 20px;
+  width: 18px;
+  min-width: 18px;
 
   display: inline-flex;
   align-items: center;
@@ -671,6 +671,16 @@ aside .sidebar-workspace-list {
 .sidebar-tab-item.is-collapsed .sidebar-tab-icon {
   width: 100%;
   min-width: 0;
+}
+
+.sidebar-tab-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar-tab-item.is-collapsed .sidebar-tab-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 .sidebar-tab-label,
@@ -686,9 +696,9 @@ aside .sidebar-workspace-list {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  font-size: 18px;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
   line-height: 1;
   background: transparent;
   box-shadow: none;
@@ -705,15 +715,15 @@ aside .sidebar-workspace-list {
 }
 
 .workspace-theme-icon-mac-core {
-  width: 26px;
-  height: 26px;
-  font-size: 19px;
+  width: 22px;
+  height: 22px;
+  font-size: 16px;
 }
 
 .workspace-theme-icon-pixel-desk,
 .workspace-theme-icon-retro {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   color: #111111;
   image-rendering: pixelated;
 }
