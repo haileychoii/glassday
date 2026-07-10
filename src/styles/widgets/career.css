@@ -9,24 +9,12 @@
   container-name: career-widget;
 }
 
-.career-widget-header,
-.career-widget-title-wrap,
 .career-list-title-row,
 .career-list-meta,
 .career-list-side,
 .career-modal-actions {
   display: flex;
   align-items: center;
-}
-
-.career-widget-header {
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.career-widget-title-wrap {
-  gap: 10px;
-  min-width: 0;
 }
 
 .career-icon-button {

@@ -1,9 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type {
-  CSSProperties,
-  MouseEvent as ReactMouseEvent,
-  RefObject,
-} from "react";
+import type { MouseEvent as ReactMouseEvent, RefObject } from "react";
+import type { CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import {
   Bold,
@@ -40,10 +37,7 @@ import {
   getSavedDefaultMemoFont,
   type FontGroup as MemoFontGroup,
 } from "../../constants/fonts";
-import {
-  getCurrentTheme,
-  type ThemeId,
-} from "../../constants/themes";
+import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
 import { FloatingWindow } from "../common/FloatingWindow";
@@ -60,28 +54,13 @@ type MemoNote = {
   updatedAt: number;
 };
 
-type EditorMode = "widget" | "window";
-
 type TableContextMenuState = {
   x: number;
   y: number;
-  editor: EditorMode;
+  editor: "widget" | "window";
 };
 
-type SavedSelection = {
-  range: Range;
-  editor: EditorMode;
-};
-
-const HIGHLIGHT_COLOR = "#fff1a8";
-
-const LEGACY_DEFAULT_TITLE = "Portfolio Memo";
-
-const LEGACY_DEFAULT_HTML =
-  "Portfolio: Add LCF and ER Grouping project details.";
-
-const getDefaultMemoFont = () =>
-  getSavedDefaultMemoFont() || DEFAULT_MEMO_FONT;
+const getDefaultMemoFont = () => getSavedDefaultMemoFont() || DEFAULT_MEMO_FONT;
 
 const defaultMemoColor = "plum-night";
 
@@ -256,35 +235,24 @@ const memoPalettes = [
   },
 ] as const;
 
-const resolveMemoPalette = (
-  color?: string | null
-) =>
+const resolveMemoPalette = (color?: string | null) =>
   memoPalettes.find(
-    (palette) =>
-      palette.id === color ||
-      palette.legacy.includes(color as never)
+    (palette) => palette.id === color || palette.legacy.includes(color as never)
   ) ?? memoPalettes[0];
 
-const isDarkMemoTheme = (
-  theme: ThemeId
-) => theme === "glass-dark";
+const isDarkMemoTheme = (theme: ThemeId) => {
+  return theme === "glass-dark";
+};
 
-const getMemoPaletteDotStyle = (
-  color: string | null | undefined,
-  theme: ThemeId
-) => {
+const getMemoPaletteDotStyle = (color: string | null | undefined, theme: ThemeId) => {
   const palette = resolveMemoPalette(color);
   const darkTheme = isDarkMemoTheme(theme);
 
   return {
-    background: darkTheme
-      ? palette.darkSurface
-      : palette.lightSurface,
-
+    background: darkTheme ? palette.darkSurface : palette.lightSurface,
     border: darkTheme
       ? `1px solid ${palette.darkBorder}`
       : `1px solid ${palette.lightBorder}`,
-
     boxShadow: darkTheme
       ? "inset 0 1px 0 rgba(255, 255, 255, 0.08)"
       : "inset 0 1px 0 rgba(255, 255, 255, 0.72)",
@@ -293,31 +261,24 @@ const getMemoPaletteDotStyle = (
 
 const fontGroups = getMemoFontGroups();
 
-const fontSizeOptions = Array.from(
-  { length: 25 },
-  (_, index) => `${index + 8}px`
-);
+const fontSizeOptions = Array.from({ length: 25 }, (_, index) => {
+  const size = index + 8;
+  return `${size}px`;
+});
 
 const createId = () => {
-  if (
-    typeof crypto !== "undefined" &&
-    "randomUUID" in crypto
-  ) {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
   }
 
-  return `memo-${Date.now()}-${Math.random()
-    .toString(16)
-    .slice(2)}`;
+  return `memo-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
-const createMemoNote = (
-  id?: string
-): MemoNote => {
+const createMemoNote = (): MemoNote => {
   const now = Date.now();
 
   return {
-    id: id ?? createId(),
+    id: createId(),
     title: "새 메모",
     html: "",
     fontFamily: getDefaultMemoFont(),
@@ -330,24 +291,30 @@ const createMemoNote = (
 };
 
 const defaultNotes: MemoNote[] = [
-  createMemoNote("default-memo"),
+  {
+    id: "default-memo",
+    title: "Portfolio Memo",
+    html: "Portfolio: Add LCF and ER Grouping project details.",
+    fontFamily: getDefaultMemoFont(),
+    fontSize: "14px",
+    color: defaultMemoColor,
+    pinned: false,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
 ];
 
 const htmlToPlainText = (html: string) => {
   const temp = document.createElement("div");
   temp.innerHTML = html;
-
   return temp.innerText;
 };
 
-const stripHtml = (html: string) =>
-  htmlToPlainText(html)
-    .replace(/\s+/g, " ")
-    .trim();
+const stripHtml = (html: string) => {
+  return htmlToPlainText(html).replace(/\s+/g, " ").trim();
+};
 
-const getFirstLineTitle = (
-  html: string
-) => {
+const getFirstLineTitle = (html: string) => {
   const plainText = htmlToPlainText(html);
 
   const firstLine = plainText
@@ -358,220 +325,99 @@ const getFirstLineTitle = (
   return firstLine || "";
 };
 
-const sanitizeFileName = (
-  name: string
-) =>
-  name
+const sanitizeFileName = (name: string) => {
+  return name
     .replace(/[\\/:*?"<>|]/g, "")
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 80);
+};
 
-const normalizeTxtFileName = (
-  name: string
-) => {
-  const withoutExtension =
-    name.replace(/\.txt$/i, "");
-
-  const cleaned =
-    sanitizeFileName(withoutExtension) ||
-    "새 메모";
+const normalizeTxtFileName = (name: string) => {
+  const withoutExtension = name.replace(/\.txt$/i, "");
+  const cleaned = sanitizeFileName(withoutExtension) || "새 메모";
 
   return `${cleaned}.txt`;
 };
 
-const getSuggestedFileName = (
-  note: MemoNote
-) => {
-  const firstLine =
-    getFirstLineTitle(note.html);
-
-  const baseName =
-    firstLine ||
-    note.title ||
-    "새 메모";
+const getSuggestedFileName = (note: MemoNote) => {
+  const firstLine = getFirstLineTitle(note.html);
+  const baseName = firstLine || note.title || "새 메모";
 
   return normalizeTxtFileName(baseName);
 };
 
-const getDisplayTitle = (
-  note: MemoNote
-) =>
-  note.title ||
-  getFirstLineTitle(note.html) ||
-  "새 메모";
+const getDisplayTitle = (note: MemoNote) => {
+  return note.title || getFirstLineTitle(note.html) || "새 메모";
+};
 
-const normalizeNote = (
-  note: Partial<MemoNote>
-): MemoNote => {
+const normalizeNote = (note: Partial<MemoNote>): MemoNote => {
   const now = Date.now();
 
   return {
     id: note.id || createId(),
     title: note.title ?? "새 메모",
     html: note.html ?? "",
-    fontFamily:
-      note.fontFamily ||
-      getDefaultMemoFont(),
+    fontFamily: note.fontFamily || getDefaultMemoFont(),
     fontSize: note.fontSize || "14px",
-    color:
-      note.color || defaultMemoColor,
+    color: note.color || defaultMemoColor,
     pinned: note.pinned ?? false,
-    createdAt:
-      note.createdAt ?? now,
-    updatedAt:
-      note.updatedAt ?? now,
+    createdAt: note.createdAt ?? now,
+    updatedAt: note.updatedAt ?? now,
   };
 };
 
-const sortMemos = (
-  notes: MemoNote[]
-) =>
-  [...notes].sort((a, b) => {
+const sortMemos = (notes: MemoNote[]) => {
+  return [...notes].sort((a, b) => {
     if (a.pinned !== b.pinned) {
       return a.pinned ? -1 : 1;
     }
 
     return b.updatedAt - a.updatedAt;
   });
-
-const compactColor = (
-  value: string
-) =>
-  value
-    .toLowerCase()
-    .replace(/\s+/g, "");
+};
 
 export const MemoWidget = () => {
-  const [theme, setTheme] =
-    useState<ThemeId>(
-      () => getCurrentTheme()
-    );
-
-  const [
-    availableFontGroups,
-    setAvailableFontGroups,
-  ] = useState<MemoFontGroup[]>(
-    fontGroups
-  );
-
-  const [editing, setEditing] =
-    useState(false);
-
-  const [
-    memoWindowOpen,
-    setMemoWindowOpen,
-  ] = useState(false);
-
-  const [
-    isCompactWidget,
-    setIsCompactWidget,
-  ] = useState(false);
-
-  const [
-    isCompactWindow,
-    setIsCompactWindow,
-  ] = useState(false);
-
-  const [
-    isCompactListOpen,
-    setIsCompactListOpen,
-  ] = useState(false);
-
-  const [
-    isWindowCompactListOpen,
-    setIsWindowCompactListOpen,
-  ] = useState(false);
-
-  const {
-    value: isListHidden,
-    setValue: setIsListHidden,
-  } = useLocalStorage(
+  const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
+  const [availableFontGroups, setAvailableFontGroups] =
+    useState<MemoFontGroup[]>(fontGroups);
+  const [editing, setEditing] = useState(false);
+  const [memoWindowOpen, setMemoWindowOpen] = useState(false);
+  const [isCompactListOpen, setIsCompactListOpen] = useState(false);
+  const { value: isListHidden, setValue: setIsListHidden } = useLocalStorage(
     "glassday.memo.listHidden.v1",
     false
   );
-
   const {
     value: isWindowListHidden,
     setValue: setIsWindowListHidden,
-  } = useLocalStorage(
-    "glassday.memo.windowListHidden.v1",
-    false
-  );
-
+  } = useLocalStorage("glassday.memo.windowListHidden.v1", false);
   const {
     value: windowSidebarWidth,
     setValue: setWindowSidebarWidth,
-  } = useLocalStorage(
-    "glassday.memo.windowSidebarWidth.v1",
-    280
-  );
+  } = useLocalStorage("glassday.memo.windowSidebarWidth.v1", 280);
 
-  const [
-    saveDialogOpen,
-    setSaveDialogOpen,
-  ] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [saveFileName, setSaveFileName] = useState("");
+  const [isDraggingWindowSidebar, setIsDraggingWindowSidebar] = useState(false);
+  const [tableContextMenu, setTableContextMenu] =
+    useState<TableContextMenuState | null>(null);
 
-  const [
-    saveFileName,
-    setSaveFileName,
-  ] = useState("");
+  const editorRef = useRef<HTMLDivElement | null>(null);
+  const windowEditorRef = useRef<HTMLDivElement | null>(null);
+  const saveInputRef = useRef<HTMLInputElement | null>(null);
+  const floatingBodyRef = useRef<HTMLDivElement | null>(null);
 
-  const [
-    isDraggingWindowSidebar,
-    setIsDraggingWindowSidebar,
-  ] = useState(false);
-
-  const [
-    tableContextMenu,
-    setTableContextMenu,
-  ] =
-    useState<TableContextMenuState | null>(
-      null
-    );
-
-  const editorRef =
-    useRef<HTMLDivElement | null>(null);
-
-  const windowEditorRef =
-    useRef<HTMLDivElement | null>(null);
-
-  const saveInputRef =
-    useRef<HTMLInputElement | null>(null);
-
-  const floatingBodyRef =
-    useRef<HTMLDivElement | null>(null);
-
-  const memoAppRef =
-    useRef<HTMLDivElement | null>(null);
-
-  const savedSelectionRef =
-    useRef<SavedSelection | null>(null);
-
-  const migratedLegacyDefaultRef =
-    useRef(false);
-
-  const {
-    value: notes,
-    setValue: setNotes,
-  } = useLocalStorage<MemoNote[]>(
+  const { value: notes, setValue: setNotes } = useLocalStorage<MemoNote[]>(
     "glassday.memo.notes.v2",
     defaultNotes
   );
 
-  const {
-    value: selectedNoteId,
-    setValue: setSelectedNoteId,
-  } = useLocalStorage<string>(
-    "glassday.memo.selected.v2",
-    "default-memo"
-  );
+  const { value: selectedNoteId, setValue: setSelectedNoteId } =
+    useLocalStorage<string>("glassday.memo.selected.v2", "default-memo");
 
   const normalizedNotes = useMemo(
-    () =>
-      notes.map((note) =>
-        normalizeNote(note)
-      ),
+    () => notes.map((note) => normalizeNote(note)),
     [notes]
   );
 
@@ -581,324 +427,55 @@ export const MemoWidget = () => {
   );
 
   const activeNote =
-    normalizedNotes.find(
-      (note) =>
-        note.id === selectedNoteId
-    ) ??
+    normalizedNotes.find((note) => note.id === selectedNoteId) ??
     normalizedNotes[0] ??
     null;
 
-  const getEditorElement = (
-    editor: EditorMode
-  ) =>
-    editor === "window"
-      ? windowEditorRef.current
-      : editorRef.current;
-
-  const getActiveEditorMode =
-    (): EditorMode =>
-      memoWindowOpen
-        ? "window"
-        : "widget";
-
-  const getActiveEditorElement = () =>
-    getEditorElement(
-      getActiveEditorMode()
-    );
-
-  const saveSelection = (
-    editorMode: EditorMode
-  ) => {
-    const editor =
-      getEditorElement(editorMode);
-
-    const selection =
-      window.getSelection();
-
-    if (
-      !editor ||
-      !selection ||
-      selection.rangeCount === 0
-    ) {
-      return false;
-    }
-
-    const range =
-      selection.getRangeAt(0);
-
-    if (
-      !editor.contains(
-        range.commonAncestorContainer
-      )
-    ) {
-      return false;
-    }
-
-    savedSelectionRef.current = {
-      range: range.cloneRange(),
-      editor: editorMode,
-    };
-
-    return true;
-  };
-
-  const restoreSelection = (
-    editorMode: EditorMode
-  ) => {
-    const editor =
-      getEditorElement(editorMode);
-
-    const saved =
-      savedSelectionRef.current;
-
-    if (
-      !editor ||
-      !saved ||
-      saved.editor !== editorMode
-    ) {
-      return false;
-    }
-
-    try {
-      if (
-        !editor.contains(
-          saved.range
-            .commonAncestorContainer
-        )
-      ) {
-        return false;
-      }
-
-      const selection =
-        window.getSelection();
-
-      if (!selection) {
-        return false;
-      }
-
-      selection.removeAllRanges();
-      selection.addRange(saved.range);
-
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const hasTextSelection = (
-    editorMode: EditorMode
-  ) => {
-    const editor =
-      getEditorElement(editorMode);
-
-    const selection =
-      window.getSelection();
-
-    if (
-      !editor ||
-      !selection ||
-      selection.rangeCount === 0 ||
-      selection.isCollapsed
-    ) {
-      return false;
-    }
-
-    const range =
-      selection.getRangeAt(0);
-
-    return editor.contains(
-      range.commonAncestorContainer
-    );
-  };
+  const activeEditor = memoWindowOpen
+    ? windowEditorRef.current
+    : editorRef.current;
 
   useEffect(() => {
     const syncFonts = () => {
-      setAvailableFontGroups(
-        getMemoFontGroups()
-      );
+      setAvailableFontGroups(getMemoFontGroups());
     };
 
-    window.addEventListener(
-      FONT_CHANGE_EVENT,
-      syncFonts
-    );
+    window.addEventListener(FONT_CHANGE_EVENT, syncFonts);
 
     return () => {
-      window.removeEventListener(
-        FONT_CHANGE_EVENT,
-        syncFonts
-      );
+      window.removeEventListener(FONT_CHANGE_EVENT, syncFonts);
     };
   }, []);
 
   useEffect(() => {
-    const handleThemeChange = (
-      event: Event
-    ) => {
-      const customEvent =
-        event as CustomEvent<ThemeId>;
-
-      setTheme(
-        customEvent.detail ??
-          getCurrentTheme()
-      );
+    const handleThemeChange = (event: Event) => {
+      const customEvent = event as CustomEvent<ThemeId>;
+      setTheme(customEvent.detail ?? getCurrentTheme());
     };
 
-    window.addEventListener(
-      "glassday-theme-change",
-      handleThemeChange
-    );
+    window.addEventListener("glassday-theme-change", handleThemeChange);
 
     return () => {
-      window.removeEventListener(
-        "glassday-theme-change",
-        handleThemeChange
-      );
+      window.removeEventListener("glassday-theme-change", handleThemeChange);
     };
   }, []);
-
-  useEffect(() => {
-    if (
-      migratedLegacyDefaultRef.current
-    ) {
-      return;
-    }
-
-    migratedLegacyDefaultRef.current =
-      true;
-
-    const shouldReplaceLegacyDefault =
-      notes.length === 1 &&
-      notes[0]?.id === "default-memo" &&
-      notes[0]?.title ===
-        LEGACY_DEFAULT_TITLE &&
-      notes[0]?.html ===
-        LEGACY_DEFAULT_HTML;
-
-    if (!shouldReplaceLegacyDefault) {
-      return;
-    }
-
-    const replacement =
-      createMemoNote("default-memo");
-
-    setNotes([replacement]);
-
-    setSelectedNoteId(
-      replacement.id
-    );
-  }, [
-    notes,
-    setNotes,
-    setSelectedNoteId,
-  ]);
-
-  useEffect(() => {
-    const target = memoAppRef.current;
-
-    if (
-      !target ||
-      typeof ResizeObserver ===
-        "undefined"
-    ) {
-      return;
-    }
-
-    const updateSize = () => {
-      const compact =
-        target.getBoundingClientRect()
-          .width <= 560;
-
-      setIsCompactWidget(compact);
-
-      if (!compact) {
-        setIsCompactListOpen(false);
-      }
-    };
-
-    updateSize();
-
-    const observer =
-      new ResizeObserver(updateSize);
-
-    observer.observe(target);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!memoWindowOpen) {
-      setIsWindowCompactListOpen(false);
-      return;
-    }
-
-    const target =
-      floatingBodyRef.current;
-
-    if (
-      !target ||
-      typeof ResizeObserver ===
-        "undefined"
-    ) {
-      return;
-    }
-
-    const updateSize = () => {
-      const compact =
-        target.getBoundingClientRect()
-          .width <= 760;
-
-      setIsCompactWindow(compact);
-
-      if (!compact) {
-        setIsWindowCompactListOpen(
-          false
-        );
-      }
-    };
-
-    updateSize();
-
-    const observer =
-      new ResizeObserver(updateSize);
-
-    observer.observe(target);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [memoWindowOpen]);
 
   useEffect(() => {
     if (!isDraggingWindowSidebar) {
       return;
     }
 
-    const handleMove = (
-      event: MouseEvent
-    ) => {
-      const container =
-        floatingBodyRef.current;
-
+    const handleMove = (event: MouseEvent) => {
+      const container = floatingBodyRef.current;
       if (!container) {
         return;
       }
 
-      const bounds =
-        container.getBoundingClientRect();
-
+      const bounds = container.getBoundingClientRect();
       const nextWidth = Math.min(
         420,
-        Math.max(
-          180,
-          event.clientX -
-            bounds.left -
-            18
-        )
+        Math.max(180, event.clientX - bounds.left - 18)
       );
-
       setWindowSidebarWidth(nextWidth);
     };
 
@@ -906,67 +483,1203 @@ export const MemoWidget = () => {
       setIsDraggingWindowSidebar(false);
     };
 
-    window.addEventListener(
-      "mousemove",
-      handleMove
-    );
-
-    window.addEventListener(
-      "mouseup",
-      handleUp
-    );
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("mouseup", handleUp);
 
     return () => {
-      window.removeEventListener(
-        "mousemove",
-        handleMove
-      );
-
-      window.removeEventListener(
-        "mouseup",
-        handleUp
-      );
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("mouseup", handleUp);
     };
-  }, [
-    isDraggingWindowSidebar,
-    setWindowSidebarWidth,
-  ]);
+  }, [isDraggingWindowSidebar, setWindowSidebarWidth]);
 
   useEffect(() => {
-    const shouldNormalize =
-      notes.some((note) => {
-        const normalized =
-          normalizeNote(note);
+    const shouldNormalize = notes.some((note) => {
+      const normalized = normalizeNote(note);
 
-        return (
-          note.fontFamily !==
-            normalized.fontFamily ||
-          note.fontSize !==
-            normalized.fontSize ||
-          note.color !==
-            normalized.color ||
-          note.pinned !==
-            normalized.pinned ||
-          note.createdAt !==
-            normalized.createdAt ||
-          note.updatedAt !==
-            normalized.updatedAt
-        );
-      });
+      return (
+        note.fontFamily !== normalized.fontFamily ||
+        note.fontSize !== normalized.fontSize ||
+        note.color !== normalized.color ||
+        note.pinned !== normalized.pinned ||
+        note.createdAt !== normalized.createdAt ||
+        note.updatedAt !== normalized.updatedAt
+      );
+    });
 
     if (shouldNormalize) {
-      setNotes(
-        notes.map((note) =>
-          normalizeNote(note)
-        )
-      );
+      setNotes(notes.map((note) => normalizeNote(note)));
     }
   }, [notes, setNotes]);
 
   useEffect(() => {
+    if (!activeNote && normalizedNotes.length > 0) {
+      setSelectedNoteId(normalizedNotes[0].id);
+    }
+  }, [activeNote, normalizedNotes, setSelectedNoteId]);
+
+  useEffect(() => {
+    if (!activeNote) return;
+
+    if (editorRef.current && editorRef.current.innerHTML !== activeNote.html) {
+      editorRef.current.innerHTML = activeNote.html;
+    }
+
     if (
-      !activeNote &&
-      normalizedNotes.length > 0
+      windowEditorRef.current &&
+      windowEditorRef.current.innerHTML !== activeNote.html
     ) {
-      setSelectedNoteId(
-       ) };
+      windowEditorRef.current.innerHTML = activeNote.html;
+    }
+  }, [activeNote?.id, activeNote?.html, memoWindowOpen]);
+
+  useEffect(() => {
+    if (!saveDialogOpen) return;
+
+    requestAnimationFrame(() => {
+      saveInputRef.current?.focus();
+      saveInputRef.current?.select();
+    });
+  }, [saveDialogOpen]);
+
+  useEffect(() => {
+    if (!tableContextMenu) {
+      return;
+    }
+
+    const handlePointerDown = () => {
+      setTableContextMenu(null);
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setTableContextMenu(null);
+      }
+    };
+
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [tableContextMenu]);
+
+  const updateActiveNote = (patch: Partial<MemoNote>) => {
+    if (!activeNote) return;
+
+    setNotes((prev) =>
+      prev.map((note) =>
+        note.id === activeNote.id
+          ? {
+              ...normalizeNote(note),
+              ...patch,
+              updatedAt: Date.now(),
+            }
+          : normalizeNote(note)
+      )
+    );
+  };
+
+  const syncFromEditor = (target: HTMLDivElement | null) => {
+    if (!target) return;
+
+    updateActiveNote({
+      html: target.innerHTML,
+    });
+  };
+
+  const runCommand = (command: string, value?: string) => {
+    if (!editing) return;
+
+    activeEditor?.focus();
+    document.execCommand(command, false, value);
+
+    setTimeout(() => {
+      syncFromEditor(activeEditor);
+    }, 0);
+  };
+
+  const applyHighlight = (color = "#fff1a8") => {
+    if (!editing) return;
+
+    activeEditor?.focus();
+    document.execCommand("styleWithCSS", false, "true");
+    document.execCommand("hiliteColor", false, color);
+
+    setTimeout(() => {
+      syncFromEditor(activeEditor);
+    }, 0);
+  };
+
+  const addNewMemo = () => {
+    const newNote = createMemoNote();
+
+    setNotes((prev) => [newNote, ...prev.map((note) => normalizeNote(note))]);
+    setSelectedNoteId(newNote.id);
+    setEditing(true);
+    setMemoWindowOpen(true);
+  };
+
+  const deleteMemo = (id: string) => {
+    const nextNotes = normalizedNotes.filter((note) => note.id !== id);
+
+    if (nextNotes.length === 0) {
+      const replacement = createMemoNote();
+
+      setNotes([replacement]);
+      setSelectedNoteId(replacement.id);
+      setEditing(true);
+
+      return;
+    }
+
+    setNotes(nextNotes);
+
+    if (selectedNoteId === id) {
+      setSelectedNoteId(nextNotes[0].id);
+    }
+  };
+
+  const togglePinnedNote = () => {
+    if (!activeNote) return;
+
+    updateActiveNote({
+      pinned: !activeNote.pinned,
+    });
+  };
+
+  const insertTable = () => {
+    const tableHtml = `
+      <table style="width: 100%; table-layout: fixed;">
+        <tbody>
+          <tr>
+            <td>항목</td>
+            <td>내용</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><br /></p>
+    `;
+
+    runCommand("insertHTML", tableHtml);
+  };
+
+  const getEditorElement = (editor: "widget" | "window") =>
+    editor === "window" ? windowEditorRef.current : editorRef.current;
+
+  const getTableCellFromNode = (node: EventTarget | Node | null) => {
+    const baseNode =
+      node instanceof HTMLElement
+        ? node
+        : node instanceof Node
+          ? node.parentElement
+          : null;
+
+    return baseNode?.closest("td, th") as HTMLTableCellElement | null;
+  };
+
+  const getSelectedTableCell = () => {
+    const selection = window.getSelection();
+    const anchorNode = selection?.anchorNode;
+    const baseNode =
+      anchorNode instanceof HTMLElement ? anchorNode : anchorNode?.parentElement;
+
+    if (!baseNode || !activeEditor?.contains(baseNode)) {
+      return null;
+    }
+
+    return baseNode.closest("td, th") as HTMLTableCellElement | null;
+  };
+
+  const updateTableFromSelection = (
+    action: (
+      cell: HTMLTableCellElement,
+      row: HTMLTableRowElement,
+      table: HTMLTableElement
+    ) => void
+  ) => {
+    if (!editing || !activeEditor) return;
+
+    const cell = getSelectedTableCell();
+    const row = cell?.parentElement as HTMLTableRowElement | null;
+    const table = row?.closest("table") as HTMLTableElement | null;
+
+    if (!cell || !row || !table) return;
+
+    action(cell, row, table);
+    syncFromEditor(activeEditor);
+    setTableContextMenu(null);
+  };
+
+  const insertTableRow = (after = true) => {
+    updateTableFromSelection((_, row) => {
+      const nextRow = row.cloneNode(true) as HTMLTableRowElement;
+      Array.from(nextRow.cells).forEach((nextCell) => {
+        nextCell.innerHTML = "<br />";
+      });
+
+      if (after) {
+        row.insertAdjacentElement("afterend", nextRow);
+      } else {
+        row.insertAdjacentElement("beforebegin", nextRow);
+      }
+    });
+  };
+
+  const insertTableColumn = (after = true) => {
+    updateTableFromSelection((cell, row, table) => {
+      const columnIndex = Array.from(row.cells).indexOf(cell);
+      const targetIndex = after ? columnIndex + 1 : columnIndex;
+
+      Array.from(table.rows).forEach((tableRow) => {
+        const newCell = document.createElement(tableRow.rowIndex === 0 ? "th" : "td");
+        newCell.innerHTML = "<br />";
+
+        if (targetIndex >= tableRow.cells.length) {
+          tableRow.appendChild(newCell);
+        } else {
+          tableRow.insertBefore(newCell, tableRow.cells[targetIndex]);
+        }
+      });
+    });
+  };
+
+  const deleteTableRow = () => {
+    updateTableFromSelection((_, row, table) => {
+      if (table.rows.length <= 1) return;
+      row.remove();
+    });
+  };
+
+  const deleteTableColumn = () => {
+    updateTableFromSelection((cell, row, table) => {
+      if (row.cells.length <= 1) return;
+      const columnIndex = Array.from(row.cells).indexOf(cell);
+
+      Array.from(table.rows).forEach((tableRow) => {
+        tableRow.cells[columnIndex]?.remove();
+      });
+    });
+  };
+
+  const mergeSelectedCellWithRight = () => {
+    updateTableFromSelection((cell, row) => {
+      const cells = Array.from(row.cells);
+      const columnIndex = cells.indexOf(cell);
+      const nextCell = cells[columnIndex + 1];
+
+      if (!nextCell) {
+        return;
+      }
+
+      const currentSpan = cell.colSpan || 1;
+      const nextSpan = nextCell.colSpan || 1;
+      const nextHtml = nextCell.innerHTML.trim();
+      const currentHtml = cell.innerHTML.trim();
+
+      cell.colSpan = currentSpan + nextSpan;
+
+      if (nextHtml) {
+        cell.innerHTML = currentHtml
+          ? `${cell.innerHTML}<br />${nextCell.innerHTML}`
+          : nextCell.innerHTML;
+      }
+
+      nextCell.remove();
+    });
+  };
+
+  const splitSelectedCell = () => {
+    updateTableFromSelection((cell, row) => {
+      const span = cell.colSpan || 1;
+
+      if (span <= 1) {
+        return;
+      }
+
+      const tagName = cell.tagName.toLowerCase();
+      cell.colSpan = 1;
+
+      for (let index = 1; index < span; index += 1) {
+        const newCell = document.createElement(tagName);
+        newCell.innerHTML = "<br />";
+        row.insertBefore(newCell, cell.nextSibling);
+      }
+    });
+  };
+
+  const adjustSelectedColumnWidth = (delta: number) => {
+    updateTableFromSelection((cell, row, table) => {
+      const columnIndex = Array.from(row.cells).indexOf(cell);
+      table.style.width = "100%";
+      table.style.tableLayout = "fixed";
+
+      Array.from(table.rows).forEach((tableRow) => {
+        const targetCell = tableRow.cells[columnIndex];
+        if (!targetCell) return;
+
+        const currentWidth =
+          Number.parseFloat(targetCell.style.width) ||
+          targetCell.getBoundingClientRect().width;
+        const nextWidth = Math.max(72, currentWidth + delta);
+        targetCell.style.width = `${nextWidth}px`;
+      });
+    });
+  };
+
+  const openSaveDialog = () => {
+    if (!activeNote) return;
+
+    setSaveFileName(getSuggestedFileName(activeNote));
+    setSaveDialogOpen(true);
+  };
+
+  const saveToLocal = () => {
+    if (!activeNote) return;
+
+    const fileName = normalizeTxtFileName(saveFileName);
+    const plainText = htmlToPlainText(activeNote.html);
+
+    const blob = new Blob([plainText], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+
+    anchor.href = url;
+    anchor.download = fileName;
+
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+
+    URL.revokeObjectURL(url);
+    setSaveDialogOpen(false);
+  };
+
+  const sendByEmail = () => {
+    if (!activeNote) return;
+
+    const fileName = normalizeTxtFileName(saveFileName);
+    const plainText = htmlToPlainText(activeNote.html);
+
+    const subject = encodeURIComponent(fileName);
+    const body = encodeURIComponent(`[${fileName}]\n\n${plainText}`);
+
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    setSaveDialogOpen(false);
+  };
+
+  const saveToGoogleDrive = () => {
+    if (!activeNote) return;
+
+    const fileName = normalizeTxtFileName(saveFileName);
+    const plainText = htmlToPlainText(activeNote.html);
+
+    const file = new File([plainText], fileName, {
+      type: "text/plain;charset=utf-8",
+    });
+
+    console.log("Google Drive upload-ready file:", file);
+
+    alert(
+      "Google Drive 저장은 Google OAuth 연결 후 활성화할 수 있어. 지금은 UI와 파일 준비 구조만 만들어둔 상태야."
+    );
+  };
+
+  const handleToolbarMouseDown = (event: ReactMouseEvent) => {
+    event.preventDefault();
+  };
+
+  const openTableContextMenu = (
+    event: ReactMouseEvent<HTMLDivElement>,
+    editor: "widget" | "window"
+  ) => {
+    if (!editing) {
+      return;
+    }
+
+    const editorElement = getEditorElement(editor);
+    const cell = getTableCellFromNode(event.target);
+
+    if (!editorElement || !cell || !editorElement.contains(cell)) {
+      setTableContextMenu(null);
+      return;
+    }
+
+    event.preventDefault();
+
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(cell);
+    range.collapse(true);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+
+    if (activeEditor !== editorElement) {
+      editorElement.focus();
+    }
+
+    setTableContextMenu({
+      x: event.clientX,
+      y: event.clientY,
+      editor,
+    });
+  };
+
+  const handleTableMenuAction = (action: () => void) => {
+    const menuEditor = tableContextMenu?.editor;
+
+    if (!menuEditor) {
+      return;
+    }
+
+    getEditorElement(menuEditor)?.focus();
+    action();
+  };
+
+  const renderToolbar = () => (
+    <div className="memo-toolbar">
+      <select
+        value={activeNote?.fontFamily ?? getDefaultMemoFont()}
+        onChange={(event) =>
+          updateActiveNote({
+            fontFamily: event.target.value,
+          })
+        }
+        className="memo-select memo-font-select"
+        disabled={!editing}
+      >
+        {availableFontGroups.map((group) => (
+          <optgroup key={group.label} label={group.label}>
+            {group.fonts.map((font) => (
+              <option
+                key={font.label}
+                value={font.value}
+                style={{ fontFamily: font.value }}
+              >
+                {font.label}
+              </option>
+            ))}
+          </optgroup>
+        ))}
+      </select>
+
+      <select
+        value={activeNote?.fontSize ?? "14px"}
+        onChange={(event) =>
+          updateActiveNote({
+            fontSize: event.target.value,
+          })
+        }
+        className="memo-select memo-size-select"
+        disabled={!editing}
+      >
+        {fontSizeOptions.map((size) => (
+          <option key={size} value={size}>
+            {size}
+          </option>
+        ))}
+      </select>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => runCommand("bold")}
+        className="memo-tool-button"
+        disabled={!editing}
+      >
+        <Bold className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => runCommand("italic")}
+        className="memo-tool-button"
+        disabled={!editing}
+      >
+        <Italic className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => runCommand("underline")}
+        className="memo-tool-button"
+        disabled={!editing}
+        title="Underline"
+      >
+        <Underline className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => applyHighlight()}
+        className="memo-tool-button"
+        disabled={!editing}
+        title="Highlight"
+      >
+        <Highlighter className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => runCommand("insertUnorderedList")}
+        className="memo-tool-button"
+        disabled={!editing}
+      >
+        <List className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={() => runCommand("insertOrderedList")}
+        className="memo-tool-button"
+        disabled={!editing}
+      >
+        <ListOrdered className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={handleToolbarMouseDown}
+        onClick={insertTable}
+        className="memo-tool-button"
+        disabled={!editing}
+      >
+        <Table2 className="w-3.5 h-3.5" />
+      </button>
+
+      <button
+        type="button"
+        onClick={openSaveDialog}
+        className="memo-tool-button"
+      >
+        <Download className="w-3.5 h-3.5" />
+      </button>
+    </div>
+  );
+
+  const renderColorPicker = () => (
+    <div className="memo-color-area">
+      <div className="memo-color-label">
+        <Palette className="w-3.5 h-3.5" />
+        Paper
+      </div>
+
+      <div className="memo-color-picker">
+        {memoPalettes.map((palette) => (
+          <button
+            key={palette.id}
+            type="button"
+            onClick={() =>
+              updateActiveNote({
+                color: palette.id,
+              })
+            }
+            className={cn(
+              "memo-color-chip",
+              resolveMemoPalette(activeNote?.color).id === palette.id && "is-active"
+            )}
+            style={getMemoPaletteDotStyle(palette.id, theme)}
+            title={palette.id}
+            disabled={!editing}
+          >
+            {resolveMemoPalette(activeNote?.color).id === palette.id && (
+              <Check className="w-3 h-3" />
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderNoteList = (windowMode = false) => (
+    <div className={cn("memo-list-panel", isCompactListOpen && "is-compact-open")}>
+      <div className="memo-list-header">
+        <span>Memos</span>
+        <div className="memo-list-header-actions">
+          <button
+            type="button"
+            onClick={addNewMemo}
+            className="memo-mini-button"
+            title="New memo"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (windowMode) {
+                setIsWindowListHidden(true);
+              } else {
+                setIsListHidden(true);
+                setIsCompactListOpen(false);
+              }
+            }}
+            className="memo-mini-button memo-list-close"
+            title="Hide memo list"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+
+      <div className="memo-note-list">
+        {sortedNotes.map((note) => {
+          const preview = stripHtml(note.html) || "Empty memo";
+          const palette = resolveMemoPalette(note.color);
+
+          return (
+            <article
+              key={note.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => {
+                setSelectedNoteId(note.id);
+                if (!windowMode) {
+                  setIsCompactListOpen(false);
+                }
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  setSelectedNoteId(note.id);
+                  if (!windowMode) {
+                    setIsCompactListOpen(false);
+                  }
+                }
+              }}
+              className={cn(
+                "memo-note-item",
+                note.id === activeNote?.id && "is-active",
+                note.pinned && "is-pinned"
+              )}
+            >
+              <div
+                className="memo-note-color-dot"
+                style={getMemoPaletteDotStyle(palette.id, theme)}
+              />
+
+              <div className="min-w-0 flex-1 text-left">
+                <div className="memo-note-title">
+                  {note.pinned && <Pin className="w-3 h-3" />}
+                  <span>{getDisplayTitle(note)}</span>
+                </div>
+
+                <div className="memo-note-preview">{preview}</div>
+              </div>
+
+              {editing && (
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    deleteMemo(note.id);
+                  }}
+                  className="memo-note-delete"
+                  title="Delete memo"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const renderWorkspace = (
+    ref: RefObject<HTMLDivElement | null>,
+    windowMode = false
+  ) => {
+    if (!activeNote) {
+      return (
+        <div className="memo-workspace">
+          <div className="memo-title-view">No memo</div>
+        </div>
+      );
+    }
+
+    const palette = resolveMemoPalette(activeNote.color);
+    const workspaceStyle = {
+      "--memo-paper-color": palette.lightSurface,
+      "--memo-paper-surface": palette.lightSurface,
+      "--memo-paper-border": palette.lightBorder,
+      "--memo-title-font": activeNote.fontFamily,
+      "--memo-title-color": palette.lightText,
+      "--memo-editor-color": palette.lightText,
+      "--memo-dark-paper": palette.darkSurface,
+      "--memo-dark-border": palette.darkBorder,
+      "--memo-dark-text": palette.darkText,
+      "--memo-table-ink": palette.tableInk,
+    } as CSSProperties;
+
+    return (
+      <div
+        className={cn("memo-workspace", windowMode && "is-window-mode")}
+        style={workspaceStyle}
+      >
+        {editing ? (
+          <input
+            value={activeNote.title}
+            onChange={(event) =>
+              updateActiveNote({
+                title: event.target.value,
+              })
+            }
+            className="memo-title-input"
+            spellCheck={false}
+            placeholder="Untitled Memo"
+            style={{
+              fontFamily: activeNote.fontFamily,
+            }}
+          />
+        ) : (
+          <div
+            className="memo-title-view"
+            style={{
+              fontFamily: activeNote.fontFamily,
+            }}
+          >
+            {getDisplayTitle(activeNote)}
+          </div>
+        )}
+
+        {renderToolbar()}
+
+        {windowMode && renderColorPicker()}
+
+        <div
+          ref={ref}
+          contentEditable={editing}
+          suppressContentEditableWarning
+          spellCheck={false}
+          lang="ko"
+          onContextMenu={(event) =>
+            openTableContextMenu(event, windowMode ? "window" : "widget")
+          }
+          onInput={() => syncFromEditor(ref.current)}
+          className={cn(
+            "memo-editor",
+            windowMode && "memo-window-editor",
+            editing ? "memo-editor-editing" : "memo-editor-locked"
+          )}
+          style={{
+            fontFamily: activeNote.fontFamily,
+            fontSize: activeNote.fontSize,
+          }}
+        />
+      </div>
+    );
+  };
+
+  const memoWindow = (
+    <FloatingWindow
+      open={memoWindowOpen}
+      title="Memo Window"
+      subtitle="Resizable floating memo"
+      storageKey="glassday.memo.floatingWindow.rect.v1"
+      className="memo-floating-window"
+      titlebarClassName="memo-floating-window-titlebar"
+      defaultRect={{
+        x: 120,
+        y: 72,
+        w: 1120,
+        h: 760,
+      }}
+      minWidth={720}
+      minHeight={480}
+      onClose={() => setMemoWindowOpen(false)}
+      actions={
+        <>
+          <button
+            type="button"
+            onClick={() => setIsWindowListHidden((prev) => !prev)}
+            className={cn(
+              "glass-button h-8 w-8 flex items-center justify-center",
+              !isWindowListHidden && "is-active"
+            )}
+            title={isWindowListHidden ? "Show memo list" : "Hide memo list"}
+          >
+            <PanelLeft className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            type="button"
+            onClick={addNewMemo}
+            className="glass-button h-8 px-3 text-xs flex items-center gap-1.5"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            New
+          </button>
+
+          <button
+            type="button"
+            onClick={openSaveDialog}
+            className="glass-button glass-tint-blue h-8 px-3 text-xs flex items-center gap-1.5"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Save
+          </button>
+
+          <button
+            type="button"
+            onClick={togglePinnedNote}
+            className={cn(
+              "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+              activeNote?.pinned && "is-active"
+            )}
+          >
+            <Pin className="w-3.5 h-3.5" />
+            Note
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setEditing((prev) => !prev)}
+            className={cn(
+              "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+              editing && "is-active"
+            )}
+          >
+            {editing ? "Done" : "Edit"}
+          </button>
+        </>
+      }
+    >
+      <div
+        ref={floatingBodyRef}
+        className={cn(
+          "memo-floating-body",
+          isWindowListHidden && "is-window-list-hidden"
+        )}
+        style={
+          {
+            "--memo-window-sidebar-width": `${windowSidebarWidth}px`,
+          } as React.CSSProperties
+        }
+      >
+        {!isWindowListHidden && renderNoteList(true)}
+        {!isWindowListHidden && (
+          <div
+            className={cn(
+              "memo-window-resizer",
+              isDraggingWindowSidebar && "is-dragging"
+            )}
+            role="separator"
+            aria-orientation="vertical"
+            onMouseDown={(event: ReactMouseEvent<HTMLDivElement>) => {
+              event.preventDefault();
+              setIsDraggingWindowSidebar(true);
+            }}
+          />
+        )}
+        {renderWorkspace(windowEditorRef, true)}
+      </div>
+    </FloatingWindow>
+  );
+
+  const saveDialog =
+    saveDialogOpen && activeNote
+      ? createPortal(
+          <div className="memo-save-backdrop">
+            <div className="memo-save-dialog">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-sm font-semibold">Save Memo as TXT</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Filename is suggested from the first line. You can edit it
+                    before saving.
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setSaveDialogOpen(false)}
+                  className="glass-button h-8 w-8 flex items-center justify-center"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="mt-4">
+                <label className="text-xs text-muted-foreground">
+                  File name
+                </label>
+
+                <input
+                  ref={saveInputRef}
+                  value={saveFileName}
+                  onChange={(event) => setSaveFileName(event.target.value)}
+                  spellCheck={false}
+                  className="memo-save-input"
+                />
+              </div>
+
+              <div className="memo-save-options">
+                <button
+                  type="button"
+                  onClick={saveToLocal}
+                  className="memo-save-option glass-tint-blue"
+                >
+                  <Download className="w-4 h-4" />
+
+                  <div>
+                    <div className="font-semibold">Local</div>
+                    <div className="text-[11px] text-muted-foreground">
+                      Download to this computer
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={saveToGoogleDrive}
+                  className="memo-save-option glass-tint-mint"
+                >
+                  <UploadCloud className="w-4 h-4" />
+
+                  <div>
+                    <div className="font-semibold">Google Drive</div>
+                    <div className="text-[11px] text-muted-foreground">
+                      Save after Google login setup
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={sendByEmail}
+                  className="memo-save-option glass-tint-peach"
+                >
+                  <Send className="w-4 h-4" />
+
+                  <div>
+                    <div className="font-semibold">Email</div>
+                    <div className="text-[11px] text-muted-foreground">
+                      Open email with memo text
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )
+      : null;
+
+  const tableContextMenuPortal = tableContextMenu
+    ? createPortal(
+        <div
+          className="memo-table-context-menu"
+          style={{
+            left: tableContextMenu.x,
+            top: tableContextMenu.y,
+          }}
+          onPointerDown={(event) => event.stopPropagation()}
+        >
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(() => insertTableRow(false))}
+          >
+            <Rows2 className="w-3.5 h-3.5" />
+            Add row above
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(() => insertTableRow(true))}
+          >
+            <Rows2 className="w-3.5 h-3.5" />
+            Add row below
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(() => insertTableColumn(false))}
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Add column left
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(() => insertTableColumn(true))}
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Add column right
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(deleteTableRow)}
+          >
+            <Minus className="w-3.5 h-3.5" />
+            Delete row
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(deleteTableColumn)}
+          >
+            <X className="w-3.5 h-3.5" />
+            Delete column
+          </button>
+
+          <div className="memo-table-context-divider" />
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(mergeSelectedCellWithRight)}
+          >
+            <StretchHorizontal className="w-3.5 h-3.5" />
+            Merge with right
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() => handleTableMenuAction(splitSelectedCell)}
+          >
+            <Rows2 className="w-3.5 h-3.5" />
+            Split merged cell
+          </button>
+
+          <div className="memo-table-context-divider" />
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() =>
+              handleTableMenuAction(() => adjustSelectedColumnWidth(-24))
+            }
+          >
+            <StretchHorizontal className="w-3.5 h-3.5" />
+            Narrow column
+          </button>
+
+          <button
+            type="button"
+            className="memo-table-context-item"
+            onClick={() =>
+              handleTableMenuAction(() => adjustSelectedColumnWidth(24))
+            }
+          >
+            <StretchHorizontal className="w-3.5 h-3.5" />
+            Widen column
+          </button>
+        </div>,
+        document.body
+      )
+    : null;
+
+  return (
+    <>
+      <GlassCard
+        className="memo-widget"
+        title="Memo"
+        subtitle={
+          editing
+            ? "Editing memo library"
+            : `${normalizedNotes.length} saved memo${
+                normalizedNotes.length > 1 ? "s" : ""
+              }`
+        }
+        icon={<StickyNote className="w-4 h-4" />}
+        actions={
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => {
+                if (isListHidden) {
+                  setIsListHidden(false);
+                  setIsCompactListOpen(false);
+                  return;
+                }
+
+                setIsListHidden(true);
+                setIsCompactListOpen(false);
+              }}
+              className={cn(
+                "glass-button h-8 w-8 flex items-center justify-center memo-compact-toggle",
+                !isListHidden && "is-active"
+              )}
+              title={isListHidden ? "Show memo list" : "Hide memo list"}
+            >
+              <PanelLeft className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={addNewMemo}
+              className="glass-button h-8 w-8 flex items-center justify-center"
+              title="New memo"
+            >
+              <Plus className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMemoWindowOpen(true)}
+              className="glass-button h-8 w-8 flex items-center justify-center"
+              title="Open memo window"
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setEditing((prev) => !prev)}
+              className={cn(
+                "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
+                editing && "is-active"
+              )}
+            >
+              {editing ? (
+                <Lock className="w-3.5 h-3.5" />
+              ) : (
+                <Pencil className="w-3.5 h-3.5" />
+              )}
+
+              {editing ? "Done" : "Edit"}
+            </button>
+          </div>
+        }
+      >
+        <div
+          className={cn(
+            "memo-app",
+            isCompactListOpen && "is-compact-list-open",
+            isListHidden && "is-list-hidden"
+          )}
+        >
+          {!isListHidden && renderNoteList()}
+          {renderWorkspace(editorRef)}
+        </div>
+      </GlassCard>
+
+      {memoWindow}
+      {saveDialog}
+      {tableContextMenuPortal}
+    </>
+  );
+};

@@ -10,8 +10,6 @@
   container-name: journal-widget;
 }
 
-.journal-header,
-.journal-title-group,
 .journal-date-nav,
 .journal-summary-row,
 .journal-section-title,
@@ -20,16 +18,6 @@
 .journal-library-item {
   display: flex;
   align-items: center;
-}
-
-.journal-header {
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.journal-title-group {
-  min-width: 0;
-  gap: 10px;
 }
 
 .journal-date-nav {
