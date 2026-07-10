@@ -2400,8 +2400,8 @@ body.theme-pixel-desk .career-cover-status-select option {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
-  padding-top: 8px !important;
-  gap: 12px !important;
+  padding-top: 4px !important;
+  gap: 10px !important;
   overflow-x: hidden !important;
 }
 
@@ -2421,14 +2421,14 @@ body.theme-pixel-desk .career-cover-status-select option {
 
 .calendar-view-body {
   flex: 1 1 0 !important;
-  padding-top: 4px !important;
+  padding-top: 2px !important;
   overflow-x: hidden !important;
   overflow-y: hidden !important;
 }
 
 .calendar-google-preview {
   margin-top: auto !important;
-  padding-top: 14px !important;
+  padding-top: 10px !important;
 }
 
 .calendar-month-board {

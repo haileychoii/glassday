@@ -132,11 +132,11 @@ main {
 
 .glass-card-header {
   min-width: 0;
-  padding: 22px 24px 12px;
+  padding: 18px 20px 10px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 12px;
 }
 
 .glass-card-title {
@@ -147,8 +147,8 @@ main {
 }
 
 .glass-card-subtitle {
-  margin-top: 4px;
-  font-size: 12px;
+  margin-top: 3px;
+  font-size: 11px;
   font-weight: 650;
   line-height: 1.25;
   color: hsl(var(--muted-foreground) / 0.68);
@@ -156,6 +156,55 @@ main {
 
 .glass-card-body {
   min-height: 0;
-  padding: 12px 24px 24px;
+  padding: 8px 18px 18px;
   overflow: auto;
+}
+
+.glass-card-title-group,
+.widget-card-title-group {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.glass-card-copy,
+.widget-card-copy {
+  min-width: 0;
+}
+
+.glass-icon-box,
+.glass-card-icon,
+.widget-card-icon {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  flex: 0 0 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--foreground) / 0.72);
+}
+
+.glass-icon-box svg,
+.glass-card-icon svg,
+.widget-card-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.widget-card-copy h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 850;
+  line-height: 1.2;
+  color: hsl(var(--foreground) / 0.86);
+}
+
+.widget-card-copy p {
+  margin: 3px 0 0;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.25;
+  color: hsl(var(--muted-foreground) / 0.68);
 }

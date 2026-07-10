@@ -188,13 +188,13 @@ export const DailyJournalWidget = () => {
 
   return (
     <section className="glass-card daily-journal-widget">
-      <div className="journal-header">
-        <div className="journal-title-group">
-          <div className="glass-card-icon">
+      <div className="journal-header widget-card-header">
+        <div className="journal-title-group widget-card-title-group">
+          <div className="glass-card-icon widget-card-icon">
             <BookOpen className="w-4 h-4" />
           </div>
 
-          <div>
+          <div className="widget-card-copy">
             <h3>Daily Journal</h3>
             <p>
               {entry.date} · {progress}% filled

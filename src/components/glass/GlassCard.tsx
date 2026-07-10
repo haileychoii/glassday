@@ -23,16 +23,16 @@ export const GlassCard = ({
 }: GlassCardProps) => {
   return (
     <section className={`glass-card h-full overflow-hidden ${className}`}>
-      <div className="glass-card-header flex items-start justify-between gap-3 px-5 pt-5 pb-3 relative z-[2]">
-        <div className="glass-card-title-group flex flex-1 items-start gap-3 min-w-0">
+      <div className="glass-card-header widget-card-header flex items-start justify-between gap-3 px-5 pt-5 pb-3 relative z-[2]">
+        <div className="glass-card-title-group widget-card-title-group flex flex-1 items-start gap-3 min-w-0">
           {icon && (
-            <div className="glass-icon-box">
+            <div className="glass-icon-box glass-card-icon widget-card-icon">
               {icon}
             </div>
           )}
 
           <div
-            className="glass-card-copy min-w-0 flex-1"
+            className="glass-card-copy widget-card-copy min-w-0 flex-1"
             style={{ opacity: 1, visibility: "visible" }}
           >
             <h3

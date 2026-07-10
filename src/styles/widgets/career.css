@@ -1,10 +1,10 @@
 .career-widget {
   height: 100%;
   min-height: 0;
-  padding: 18px;
+  padding: 16px;
   display: grid;
   grid-template-rows: auto auto auto minmax(0, 1fr);
-  gap: 14px;
+  gap: 12px;
   container-type: inline-size;
   container-name: career-widget;
 }
@@ -21,24 +21,12 @@
 
 .career-widget-header {
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
 }
 
 .career-widget-title-wrap {
-  gap: 12px;
+  gap: 10px;
   min-width: 0;
-}
-
-.career-widget h3 {
-  font-size: 15px;
-  font-weight: 850;
-  color: hsl(var(--foreground) / 0.86);
-}
-
-.career-widget p {
-  margin-top: 2px;
-  font-size: 11px;
-  color: hsl(var(--foreground) / 0.46);
 }
 
 .career-icon-button {
@@ -56,7 +44,7 @@
 .career-summary-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
 .career-summary-card {

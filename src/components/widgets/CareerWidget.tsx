@@ -630,13 +630,13 @@ export const CareerWidget = () => {
   return (
     <>
       <section className="glass-card career-widget">
-        <div className="career-widget-header">
-          <div className="career-widget-title-wrap">
-            <div className="glass-card-icon">
+        <div className="career-widget-header widget-card-header">
+          <div className="career-widget-title-wrap widget-card-title-group">
+            <div className="glass-card-icon widget-card-icon">
               <BriefcaseBusiness className="w-4 h-4" />
             </div>
 
-            <div>
+            <div className="widget-card-copy">
               <h3>Career</h3>
               <p>
                 {summary.total} applications · {summary.urgent} urgent
