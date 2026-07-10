@@ -1,7 +1,7 @@
 /* =========================================================
    GLASSDAY OVERRIDES
-   layout / scroll / modal safety only
-   테마 디자인은 각 themes/*.css에서만 관리
+   Final guardrails for layout, scrolling, and modal safety.
+   Theme visuals still belong in the dedicated theme files.
 ========================================================= */
 
 /* =========================================================
@@ -22,8 +22,8 @@ body,
 }
 
 /* =========================================================
-   1. Remove only decorative overlays
-   glass-card pseudo는 테마에서 쓰므로 여기서 건드리지 않음
+   1. Remove decorative overlay layers only
+   Keep structure intact and strip purely visual noise layers
 ========================================================= */
 
 .diagonal-pattern,
@@ -112,7 +112,7 @@ body,
   -webkit-overflow-scrolling: touch;
 }
 
-/* 모바일에서 위젯 스크롤하다가 grid가 끌리는 문제 완화 */
+/* Let widgets scroll naturally on touch devices without breaking the grid. */
 .react-grid-item {
   touch-action: auto;
 }
@@ -133,7 +133,7 @@ body,
 
 /* =========================================================
    4. Topbar base layout
-   색/테마는 theme css에서 처리
+   Shared structure lives here; theme look stays in theme CSS
 ========================================================= */
 
 .topbar {

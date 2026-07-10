@@ -1,14 +1,12 @@
 /* =========================================================
    DASHBOARD GRID
-   ONLY React Grid Layout / edit interaction
+   React Grid Layout and edit-mode interaction only.
 
-   절대 건드리지 않음:
-   - .glass-card
-   - widget 내부 div
-   - widget 내부 display
-   - widget 내부 overflow
-   - typography
-   - calendar / memo / today / study 내부 구조
+   This file should not style widget internals such as:
+   - card typography
+   - widget body layout
+   - widget-specific overflow
+   - calendar, memo, journal, or study content structure
 ========================================================= */
 
 /* =========================================================
@@ -37,7 +35,7 @@
   box-sizing: border-box;
 }
 
-/* 편집 모드에서만 최소 16행 표시 */
+/* Keep enough canvas height visible to show the 16-row edit grid. */
 .dashboard-edit-canvas.is-editing {
   min-height: calc(16 * 52px + 15 * 14px);
 }
@@ -142,7 +140,7 @@
    위젯 내부 구조는 전혀 건드리지 않음
 ========================================================= */
 
-/* 편집 모드: 모든 위젯을 살짝 연하게 */
+/* Dim all widgets first so the active one stands out. */
 .dashboard-tab-space.is-editing .dashboard-grid-item {
   opacity: 0.52;
   filter: saturate(0.72);
@@ -152,14 +150,14 @@
     filter 160ms ease;
 }
 
-/* 선택한 위젯 */
+/* Restore full emphasis on the selected widget. */
 .dashboard-tab-space.is-editing
   .dashboard-grid-item.is-selected {
   opacity: 1;
   filter: none;
 }
 
-/* 선택 테두리 전용 레이어 */
+/* Visual emphasis ring for the selected widget in edit mode. */
 .dashboard-tab-space.is-editing
   .dashboard-grid-item.is-selected::after {
   content: "";
@@ -191,10 +189,10 @@
 /* =========================================================
    6. Invisible move surface
 
-   위젯 내부 디자인을 직접 draggable로 만들지 않음.
-   Edit 모드에서만 투명 레이어를 올림.
+   Widgets are not draggable by their live UI directly.
+   In edit mode we lay a transparent drag surface over the card.
 
-   가장자리 14px는 resize를 위해 비워둠.
+   The outer 14px stays free so resize handles remain easy to grab.
 ========================================================= */
 
 .widget-move-surface {
@@ -298,8 +296,8 @@
 /* =========================================================
    10. Placeholder
 
-   이동 중 들어갈 자리 표시.
-   다른 위젯과 실제로 겹치지 않게 RGL이 재배치.
+   Shows the target slot while moving or resizing.
+   Real collision handling still belongs to React Grid Layout.
 ========================================================= */
 
 .react-grid-item.react-grid-placeholder {

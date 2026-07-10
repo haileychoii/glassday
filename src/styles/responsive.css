@@ -1,7 +1,7 @@
 /* =========================================================
-   GLASSDAY RESPONSIVE — CLEAN FINAL
-   layout responsive only
-   테마 색상/배경/그림자/radius는 themes/*.css에서 관리
+   GLASSDAY RESPONSIVE RULES
+   Breakpoint-only layout adjustments live here.
+   Theme color, blur, border, and radius stay in theme files.
 ========================================================= */
 
 /* =========================================================
@@ -39,8 +39,8 @@ main {
 }
 
 /* =========================================================
-   2. 1180 이하: Topbar 테마 pill 숨김
-   Mac Core에서 테마 선택창이 위젯과 겹치는 핵심 방지
+   2. <= 1180px
+   Hide the desktop theme pills and switch to the compact selector
 ========================================================= */
 
 @media (max-width: 1180px) {
@@ -129,7 +129,7 @@ main {
   }
 }
 
-/* 세로가 낮은 화면에서도 긴 pill 버튼 숨김 */
+/* Short-height desktops also fall back to the compact theme selector. */
 @media (max-height: 780px) and (max-width: 1400px) {
   .theme-segmented-control,
   .theme-button-group,
@@ -150,7 +150,8 @@ main {
 }
 
 /* =========================================================
-   3. 1100 이하: Sidebar compact
+   3. <= 1100px
+   Gradually tighten the desktop sidebar
 ========================================================= */
 
 @media (max-width: 1100px) {
@@ -196,7 +197,8 @@ main {
 }
 
 /* =========================================================
-   4. 920 이하: Sidebar를 위쪽 가로 탭으로 변경
+   4. <= 920px
+   Replace the desktop sidebar with the horizontal mobile workspace bar
 ========================================================= */
 
 @media (max-width: 920px) {
@@ -306,8 +308,8 @@ main {
 }
 
 /* =========================================================
-   5. 768 이하: Mobile Topbar
-   절대 가로 테마 pill 안 보이게
+   5. <= 768px
+   Mobile header spacing and compact actions
 ========================================================= */
 
 @media (max-width: 768px) {

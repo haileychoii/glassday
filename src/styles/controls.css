@@ -1,8 +1,7 @@
 /* =========================================================
    GLASSDAY CONTROLS
-   buttons / selects / segmented controls
-   공통 컨트롤 형태만 관리
-   테마별 색감/질감은 themes/*.css에서 덮어씀
+   Shared buttons, selects, segmented controls, and inputs.
+   This file defines structure and interaction, not theme palettes.
 ========================================================= */
 
 /* =========================================================
@@ -28,7 +27,7 @@ textarea {
 
 /* =========================================================
    2. Glass button base
-   배경은 너무 강하게 고정하지 않음
+   Shared pill-button shell used across widgets and app chrome
 ========================================================= */
 
 .glass-button,
@@ -90,8 +89,7 @@ textarea {
 
 /* =========================================================
    3. Theme segmented control
-   desktop pill buttons
-   모바일에서는 layout.css/overrides.css에서 숨김
+   Desktop theme picker pills
 ========================================================= */
 
 .theme-segmented-control,
@@ -177,7 +175,7 @@ textarea {
 
 /* =========================================================
    4. Mobile theme select
-   desktop에서는 숨김, 모바일에서는 layout/overrides에서 표시
+   Hidden on desktop and revealed by responsive rules
 ========================================================= */
 
 .theme-select-mobile,
@@ -231,7 +229,7 @@ textarea {
 
 /* =========================================================
    5. Topbar action button sizing
-   위치/배치는 layout.css에서 관리
+   Layout position is handled in layout.css / overrides.css
 ========================================================= */
 
 .topbar-action-button {
@@ -305,7 +303,7 @@ textarea {
 
 /* =========================================================
    7. Inputs / selects base
-   테마별 질감은 theme css에서 덮어씀
+   Shared text color and placeholder treatment
 ========================================================= */
 
 input,
@@ -326,7 +324,7 @@ select option {
 
 /* =========================================================
    8. Calendar view toggle
-   Day / Week / Month 공통 형태
+   Shared pill control for day / week / month mode
 ========================================================= */
 
 .calendar-view-toggle {
@@ -389,8 +387,7 @@ select option {
 
 /* =========================================================
    9. Theme-specific guardrails
-   controls.css가 로드되어도 Pixel/Retro가 둥글게 안 깨지게 최소 보정
-   실제 디자인은 pixel.css / retro.css에서 담당
+   Pixel and Retro strip glass effects from shared controls
 ========================================================= */
 
 html[data-theme="pixel-desk"] .theme-segmented-control,

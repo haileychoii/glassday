@@ -1,7 +1,7 @@
 /* =========================================================
    GLASSDAY OVERLAYS
-   Floating windows / no backdrop / draggable / resizable
-   공통 구조 + overlay 전용 theme surface만 관리
+   Floating windows, drag layers, and resize-safe modal shells.
+   Shared structure lives here; each theme can restyle the surface below.
 ========================================================= */
 
 /* =========================================================

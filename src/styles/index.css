@@ -1,10 +1,24 @@
+/* =========================================================
+   GLASSDAY STYLE ENTRY
+   Import order matters:
+   1) tokens and primitives
+   2) shared layout and controls
+   3) themes
+   4) widget styles
+   5) responsive rules and final overrides
+========================================================= */
+
+/* 1. Global tokens and primitives */
 @import "./fonts.css";
 @import "./base.css";
+
+/* 2. Shared layout, controls, grid, and overlays */
 @import "./layout.css";
 @import "./controls.css";
 @import "./dashboard-grid.css";
 @import "./overlays.css";
 
+/* 3. Theme palettes and cross-theme surface variables */
 @import "./themes/pastel.css";
 @import "./themes/glass-light.css";
 @import "./themes/glass-dark.css";
@@ -13,10 +27,10 @@
 @import "./themes/retro.css";
 @import "./theme-surfaces.css";
 
+/* 4. Widget-level styles */
 @import "./widgets/today-focus.css";
 @import "./widgets/today.css";
 @import "./widgets/alert-center.css";
-@import "./widgets/alerts.css";
 @import "./widgets/calendar.css";
 @import "./widgets/career.css";
 @import "./widgets/journal.css";
@@ -24,6 +38,7 @@
 @import "./widgets/settings.css";
 @import "./widgets/study.css";
 
+/* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";
 @import "./overrides.css";
 

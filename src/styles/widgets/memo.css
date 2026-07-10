@@ -1,7 +1,10 @@
 /* =========================================================
    MEMO
-   Clean unified stylesheet
-   ========================================================= */
+   Unified memo stylesheet for:
+   - dashboard widget mode
+   - floating window mode
+   - note list, toolbar, editor, and memo dialogs
+========================================================= */
 
 
 /* =========================================================
@@ -40,7 +43,7 @@
 
 /* =========================================================
    2. WIDGET TITLE
-   Memo 제목 표시
+   Disabled because the real widget header is rendered in TSX
    ========================================================= */
 
 .memo-app::before {
