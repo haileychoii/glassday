@@ -486,8 +486,8 @@ body,
 }
 
 /* =========================================================
-   Mobile Topbar: hide long theme segmented buttons
-   모바일에서는 테마 버튼 묶음 숨기고 select만 사용
+   7. Mobile theme picker fallback
+   Hide long segmented controls and keep only the compact select
 ========================================================= */
 
 @media (max-width: 768px) {
@@ -503,19 +503,19 @@ body,
     height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
-    overflow: hidden !important;
+    overflow: hidden;
   }
 
-  /* 모바일에서는 select만 보이게 */
+  /* Keep the compact theme picker visible on small screens. */
   .topbar select,
   .topbar .theme-mobile-select,
   .topbar .theme-select {
-    display: inline-flex !important;
-    visibility: visible !important;
-    width: auto !important;
-    min-width: 118px !important;
-    max-width: 150px !important;
-    height: 34px !important;
+    display: inline-flex;
+    visibility: visible;
+    width: auto;
+    min-width: 118px;
+    max-width: 150px;
+    height: 34px;
   }
 
   .topbar-actions {

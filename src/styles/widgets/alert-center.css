@@ -29,6 +29,10 @@
   border: 1px solid hsl(0 0% 100% / 0.38);
 }
 
+/* =========================================================
+   2. Alert tone variants
+========================================================= */
+
 .alert-center-item.tone-danger {
   background:
     linear-gradient(

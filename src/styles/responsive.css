@@ -45,50 +45,50 @@ main {
 
 @media (max-width: 1180px) {
   .topbar {
-    height: auto !important;
-    min-height: 74px !important;
-    overflow: visible !important;
+    height: auto;
+    min-height: 74px;
+    overflow: visible;
   }
 
   .topbar-inner {
-    min-height: 74px !important;
-    padding: 12px 20px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 14px !important;
-    flex-wrap: nowrap !important;
+    min-height: 74px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: nowrap;
   }
 
   .topbar-title {
-    min-width: 0 !important;
-    flex: 1 1 auto !important;
+    min-width: 0;
+    flex: 1 1 auto;
   }
 
   .topbar-title h1 {
-    font-size: 21px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    font-size: 21px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .topbar-actions {
-    position: static !important;
-    transform: none !important;
-    inset: auto !important;
+    position: static;
+    transform: none;
+    inset: auto;
 
-    width: auto !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    margin-left: auto !important;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    margin-left: auto;
 
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    gap: 8px !important;
-    flex-wrap: nowrap !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: nowrap;
 
-    overflow: visible !important;
+    overflow: visible;
   }
 
   .theme-segmented-control,
@@ -204,23 +204,23 @@ main {
 @media (max-width: 920px) {
   .glass-panel,
   .liquid-shell {
-    overflow: auto !important;
+    overflow: auto;
   }
 
   .glass-panel > .flex,
   .liquid-shell > .flex {
-    flex-direction: column !important;
-    gap: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
+    flex-direction: column;
+    gap: 0;
+    height: auto;
+    min-height: 0;
   }
 
   .glass-panel > .flex > .flex-1,
   .liquid-shell > .flex > .flex-1 {
-    flex: 0 0 auto !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
   }
 
   .app-sidebar,
@@ -230,53 +230,53 @@ main {
   }
 
   main {
-    padding: 0px !important;
-    min-height: 0 !important;
+    padding: 0;
+    min-height: 0;
   }
 
   .topbar {
-    position: relative !important;
-    z-index: 2 !important;
-    margin-top: 0 !important;
+    position: relative;
+    z-index: 2;
+    margin-top: 0;
   }
 
   .topbar-inner {
-    min-height: auto !important;
-    padding: 10px 10px 0 !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 0 !important;
+    min-height: auto;
+    padding: 10px 10px 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
   }
 
   .topbar-heading {
-    align-items: flex-start !important;
-    padding-bottom: 1px !important;
+    align-items: flex-start;
+    padding-bottom: 1px;
   }
 
   .topbar-title {
-    padding-top: 15px !important;
+    padding-top: 15px;
   }
 
   .topbar-mobile-workspaces {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    min-width: 0 !important;
-    margin: 0 -2px !important;
-    padding: 5px 18px 3px !important;
-    border-top: 1px solid hsl(var(--foreground) / 0.08) !important;
-    border-radius: 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    margin: 0 -2px;
+    padding: 5px 18px 3px;
+    border-top: 1px solid hsl(var(--foreground) / 0.08);
+    border-radius: 0;
   }
 
   .topbar-mobile-workspace-list {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 8px !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    padding-bottom: 4px !important;
-    -webkit-overflow-scrolling: touch !important;
-    scrollbar-width: none !important;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
 
   .topbar-mobile-workspace-list::-webkit-scrollbar {
@@ -284,26 +284,26 @@ main {
   }
 
   .topbar-mobile-workspaces .sidebar-tab-item {
-    flex: 0 0 auto !important;
-    min-width: 112px !important;
-    width: auto !important;
+    flex: 0 0 auto;
+    min-width: 112px;
+    width: auto;
   }
 
   .topbar-mobile-workspaces .sidebar-tab-main {
-    height: 38px !important;
-    padding: 0 12px !important;
-    font-size: 14px !important;
-    white-space: nowrap !important;
+    height: 38px;
+    padding: 0 12px;
+    font-size: 14px;
+    white-space: nowrap;
   }
 
   .topbar-mobile-workspaces .sidebar-tab-delete {
-    width: 28px !important;
-    min-width: 28px !important;
-    height: 28px !important;
+    width: 28px;
+    min-width: 28px;
+    height: 28px;
   }
 
   .dashboard-tab-space {
-    padding: 18px 20px 34px !important;
+    padding: 18px 20px 34px;
   }
 }
 
