@@ -1,1002 +1,11 @@
-.memo-app,
-.memo-layout,
-.memo-floating-body {
-  height: 100%;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: clamp(220px, 24%, 280px) minmax(0, 1fr);
-  gap: 0;
-  overflow: hidden;
-}
+/* =========================================================
+   MEMO
+   Clean unified stylesheet
+   ========================================================= */
 
-.memo-list-panel {
-  min-width: 0;
-  min-height: 0;
-  height: 100%;
-  padding: 14px 12px;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  border-radius: 0;
-  background: hsl(220 35% 97% / 0.62);
-  border: 0;
-  border-right: 1px solid hsl(220 18% 82% / 0.5);
-  box-shadow: inset -1px 0 0 hsl(0 0% 100% / 0.72);
-} 
-
-.memo-list-header {
-  min-height: 32px;
-  padding: 0 4px 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 11px;
-  font-weight: 650;
-  color: hsl(var(--foreground) / 0.58);
-}
-
-.memo-mini-button {
-  width: 26px;
-  height: 26px;
-  border-radius: 999px;
-  background: hsl(0 0% 100% / 0.56);
-  border: 1px solid hsl(220 18% 82% / 0.48);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
-.memo-note-list {
-  min-height: 0;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.memo-note-item {
-  width: 100%;
-  min-height: 58px;
-  border-radius: 16px;
-  padding: 10px 11px;
-  border: 1px solid transparent;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: 160ms ease;
-}
-
-.memo-note-item:hover {
-  background: hsl(0 0% 100% / 0.42);
-}
-
-.memo-note-item.is-active {
-  background: hsl(0 0% 100% / 0.72);
-  border-color: hsl(220 18% 82% / 0.58);
-  box-shadow:
-    0 12px 30px -26px hsl(220 28% 36% / 0.38),
-    inset 0 1px 0 hsl(0 0% 100% / 0.82);
-}
-
-
-
-.memo-note-preview {
-  margin-top: 3px;
-  font-size: 11px;
-  line-height: 1.3;
-  font-weight: 400;
-  color: hsl(var(--foreground) / 0.42);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.memo-note-delete {
-  width: 24px;
-  height: 24px;
-  border-radius: 999px;
-  background: hsl(0 0% 100% / 0.48);
-  border: 1px solid hsl(220 18% 82% / 0.48);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: hsl(var(--foreground) / 0.46);
-}
-
-.memo-note-delete:hover {
-  background: hsl(0 80% 96% / 0.72);
-  color: hsl(0 70% 45%);
-}
-
-.memo-workspace {
-  min-width: 0;
-  min-height: 0;
-  height: 100%;
-  padding: clamp(14px, 2vw, 28px);
-  display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
-  gap: 14px;
-  overflow: hidden;
-  background: hsl(0 0% 100% / 0.36);
-}
-
-.memo-title-input {
-  width: min(100%, 860px);
-  max-width: 860px;
-  height: 38px;
-  margin: 0 auto;
-  padding: 0 2px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  outline: none;
-  font-size: 20px;
-  font-weight: 650;
-  letter-spacing: -0.035em;
-  color: var(--memo-title-color, hsl(var(--foreground) / 0.9));
-}
-
-.memo-title-view {
-  width: min(100%, 860px);
-  max-width: 860px;
-  min-height: 38px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  font-size: 20px;
-  font-weight: 650;
-  letter-spacing: -0.035em;
-  color: var(--memo-title-color, hsl(var(--foreground) / 0.9));
-}
-
-.memo-toolbar {
-  width: min(100%, 860px);
-  max-width: 860px;
-  min-height: 42px;
-  margin: 0 auto;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  border-radius: 0;
-  background: transparent;
-  border: 0;
-}
-
-
-.memo-select {
-  height: 30px;
-  max-width: 150px;
-  border-radius: 999px;
-  padding: 0 10px;
-  font-size: 12px;
-  background: hsl(0 0% 100% / 0.68);
-  border: 1px solid hsl(220 18% 82% / 0.54);
-  outline: none;
-}
-
-.memo-tool-button {
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  background: hsl(0 0% 100% / 0.56);
-  border: 1px solid hsl(220 18% 82% / 0.5);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: 160ms ease;
-}
-
-.memo-tool-button:hover {
-  background: hsl(0 0% 100% / 0.82);
-  transform: translateY(-1px);
-}
-
-.memo-tool-button:disabled {
-  opacity: 0.56;
-  transform: none;
-}
-
-.memo-table-tool {
-  width: auto;
-  min-width: 34px;
-  padding: 0 8px;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.memo-editor {
-  width: min(100%, 860px);
-  max-width: 860px;
-  height: 100%;
-  min-height: 260px;
-  margin: 0 auto;
-  padding: clamp(20px, 3.2vw, 42px) clamp(20px, 4vw, 56px);
-  overflow: auto;
-  border-radius: 26px;
-  line-height: 1.72;
-  font-size: 15px;
-  font-weight: 450;
-  letter-spacing: -0.015em;
-  white-space: pre-wrap;
-  word-break: break-word;
-  outline: none;
-  color: var(--memo-editor-color, hsl(var(--foreground) / 0.84));
-  background: var(
-    --memo-paper-surface,
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--memo-paper-color, #FFF7CF) 90%, white 10%),
-      color-mix(in srgb, var(--memo-paper-color, #FFF7CF) 76%, rgb(255 255 255 / 0.22) 24%)
-    )
-  );
-  border: 1px solid
-    var(
-      --memo-paper-border,
-      color-mix(in srgb, var(--memo-paper-color, #FFF7CF) 62%, rgb(255 255 255 / 0.38) 38%)
-    );
-  box-shadow:
-    0 24px 70px -58px hsl(330 40% 38% / 0.5),
-    inset 0 1px 0 hsl(0 0% 100% / 0.86);
-}
-
-.memo-editor-editing {
-  background: var(
-    --memo-paper-surface,
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--memo-paper-color, #FFF7CF) 94%, white 6%),
-      color-mix(in srgb, var(--memo-paper-color, #FFF7CF) 80%, rgb(255 255 255 / 0.2) 20%)
-    )
-  );
-}
-
-
-
-.memo-editor-locked {
-  cursor: default;
-}
-
-.memo-editor table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 10px 0;
-}
-
-.memo-editor td,
-.memo-editor th {
-  border: 1px solid hsl(var(--foreground) / 0.18);
-  padding: 6px 8px;
-  min-width: 60px;
-}
-
-.memo-editor ul,
-.memo-editor ol {
-  padding-left: 22px;
-}
-
-.memo-table-context-menu {
-  position: fixed;
-  z-index: 2147483600;
-  min-width: 200px;
-  padding: 8px;
-  display: grid;
-  gap: 4px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, hsl(0 0% 100% / 0.96), hsl(220 28% 96% / 0.92));
-  border: 1px solid hsl(220 18% 82% / 0.78);
-  box-shadow:
-    0 22px 44px -20px hsl(220 28% 18% / 0.32),
-    inset 0 1px 0 hsl(0 0% 100% / 0.92);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-}
-
-.memo-table-context-item {
-  min-height: 34px;
-  padding: 0 10px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  color: hsl(var(--foreground) / 0.82);
-  background: transparent;
-  border: 0;
-  text-align: left;
-}
-
-.memo-table-context-item:hover {
-  background: hsl(220 30% 92% / 0.88);
-}
-
-.memo-table-context-divider {
-  height: 1px;
-  margin: 4px 2px;
-  background: hsl(220 18% 82% / 0.58);
-}
-
-
-
-.memo-save-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 999999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 28px;
-  background:
-    radial-gradient(
-      circle at 50% 30%,
-      hsl(0 0% 100% / 0.16),
-      hsl(225 20% 18% / 0.2)
-    );
-  backdrop-filter: blur(18px) saturate(120%);
-  -webkit-backdrop-filter: blur(18px) saturate(120%);
-}
-
-.memo-save-dialog {
-  position: relative;
-  z-index: 1000000;
-  width: min(460px, 92vw);
-  border-radius: 30px;
-  padding: 18px;
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.74),
-      hsl(0 0% 100% / 0.34)
-    );
-  border: 1px solid hsl(0 0% 100% / 0.78);
-  backdrop-filter: blur(38px) saturate(190%);
-  -webkit-backdrop-filter: blur(38px) saturate(190%);
-  box-shadow:
-    0 34px 100px -32px hsl(220 35% 18% / 0.42),
-    inset 0 1px 0 hsl(0 0% 100% / 0.88),
-    inset 0 -1px 0 hsl(220 25% 40% / 0.06);
-}
-
-.memo-save-input {
-  width: 100%;
-  height: 44px;
-  margin-top: 8px;
-  border-radius: 18px;
-  padding: 0 14px;
-  background: hsl(0 0% 100% / 0.42);
-  border: 1px solid hsl(0 0% 100% / 0.58);
-  outline: none;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.memo-save-input:focus {
-  background: hsl(0 0% 100% / 0.62);
-  border-color: hsl(var(--primary) / 0.45);
-}
-
-.memo-save-options {
-  display: grid;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-.memo-save-option {
-  width: 100%;
-  border-radius: 20px;
-  padding: 12px;
-  background: hsl(0 0% 100% / 0.32);
-  border: 1px solid hsl(0 0% 100% / 0.45);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-align: left;
-  transition: 160ms ease;
-}
-
-.memo-save-option:hover {
-  background: hsl(0 0% 100% / 0.55);
-  transform: translateY(-1px);
-}
-
-.memo-window-titlebar {
-  height: 68px;
-  padding: 0 22px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  cursor: move;
-  border-bottom: 1px solid hsl(0 0% 100% / 0.48);
-}
-
-.memo-window-titlebar button {
-  cursor: pointer;
-}
-
-.memo-window-body {
-  height: calc(100% - 68px);
-  padding: 18px;
-  display: grid;
-  grid-template-columns: clamp(220px, 24%, 280px) minmax(0, 1fr);
-  gap: 18px;
-  overflow: hidden;
-}
-
-.memo-window-body .memo-list-panel,
-.memo-workspace.is-window-mode {
-  height: 100%;
-  min-height: 0;
-}
-
-.memo-workspace.is-window-mode {
-  height: 100%;
-  min-height: 0;
-  display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
-  gap: 14px;
-  overflow: hidden;
-}
-
-.memo-window-editor {
-  width: min(100%, 860px);
-  max-width: 860px;
-  height: 100%;
-  min-height: 0;
-  margin: 0 auto;
-  overflow: auto;
-  border-radius: 26px;
-  padding: clamp(20px, 3vw, 38px) clamp(20px, 4vw, 52px);
-  line-height: 1.72;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.78),
-    0 14px 36px -28px hsl(220 35% 20% / 0.24);
-}
-
-.memo-color-area {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 10px 12px;
-  border-radius: 20px;
-  background:
-    linear-gradient(
-      135deg,
-      hsl(0 0% 100% / 0.38),
-      hsl(0 0% 100% / 0.16)
-    );
-  border: 1px solid hsl(0 0% 100% / 0.46);
-}
-
-.memo-color-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  color: hsl(var(--foreground) / 0.54);
-}
-
-.memo-color-picker {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.memo-color-chip {
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  border: 2px solid hsl(0 0% 100% / 0.82);
-  box-shadow:
-    0 4px 12px hsl(220 20% 20% / 0.14),
-    inset 0 1px 0 hsl(0 0% 100% / 0.88);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: hsl(220 24% 18% / 0.72);
-}
-
-.memo-color-chip.is-active {
-  outline: 2px solid hsl(var(--primary) / 0.52);
-  outline-offset: 2px;
-}
-
-.memo-note-title {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  min-width: 0;
-  font-size: 13px;
-  font-weight: 550;
-  letter-spacing: -0.025em;
-  color: hsl(var(--foreground) / 0.76);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.memo-note-color-dot {
-  width: 9px;
-  height: 34px;
-  border-radius: 999px;
-  flex-shrink: 0;
-  border: 1px solid hsl(0 0% 100% / 0.72);
-}
-
-.memo-note-item.is-pinned {
-  border-color: hsl(var(--primary) / 0.26);
-}
-
-/* ================================
-   Memo Floating Window Layer
-   배경 작업 막지 않는 플로팅 창
-   ================================ */
-
-.memo-window-backdrop {
-  display: contents !important;
-  background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  pointer-events: none !important;
-}
-
-.memo-window-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 2147482500;
-  pointer-events: none;
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-.memo-window {
-  pointer-events: auto;
-  position: fixed;
-  width: min(1180px, calc(100vw - 48px));
-  height: min(780px, calc(100vh - 48px));
-  max-width: calc(100vw - 24px);
-  max-height: calc(100vh - 24px);
-  border-radius: 30px;
-  overflow: hidden;
-
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.86),
-      hsl(0 0% 100% / 0.64)
-    );
-
-  border: 1px solid hsl(0 0% 100% / 0.82);
-
-  backdrop-filter: blur(38px) saturate(170%);
-  -webkit-backdrop-filter: blur(38px) saturate(170%);
-
-  box-shadow:
-    0 40px 130px -42px hsl(220 35% 8% / 0.5),
-    inset 0 1px 0 hsl(0 0% 100% / 0.92);
-}
-
-@media (max-width: 760px) {
-  .memo-window {
-    width: calc(100vw - 16px);
-    height: calc(100vh - 16px);
-    border-radius: 22px;
-  }
-}
-
-/* ================================
-   Memo inside FloatingWindow
-   ================================ */
-
-.memo-floating-body {
-  height: 100%;
-  min-height: 0;
-  padding: 18px;
-  display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
-  gap: 18px;
-  overflow: hidden;
-}
-
-.memo-floating-body .memo-list-panel,
-.memo-floating-body .memo-workspace {
-  height: 100%;
-  min-height: 0;
-}
-
-.memo-floating-body .memo-workspace {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.memo-floating-body .memo-editor {
-  flex: 1;
-  min-height: 0;
-}
-
-
-
-
-
-
-   
-@container memo-widget (max-width: 860px) {
-  .memo-app {
-    grid-template-columns: 200px minmax(0, 1fr) !important;
-  }
-
-  .memo-workspace {
-    padding: 14px !important;
-  }
-
-  .memo-toolbar,
-  .memo-editor-toolbar {
-    gap: 6px !important;
-  }
-}
-
-@container memo-widget (max-width: 700px) {
-  .memo-app {
-    grid-template-columns: 188px minmax(0, 1fr) !important;
-  }
-
-  .memo-workspace {
-    padding: 12px !important;
-    gap: 10px !important;
-  }
-
-  .memo-title-input,
-  .memo-title-view,
-  .memo-toolbar,
-  .memo-editor-toolbar,
-  .memo-tag-tools,
-  .memo-tag-library {
-    width: 100% !important;
-    max-width: none !important;
-  }
-
-  .memo-editor,
-  [contenteditable="true"].memo-editor {
-    min-height: 220px !important;
-    padding: 16px 14px !important;
-    border-radius: 14px !important;
-  }
-}
-
-@container memo-widget (max-width: 560px) {
-  .memo-compact-toggle {
-    display: inline-flex !important;
-  }
-
-  .memo-app {
-    grid-template-columns: minmax(0, 1fr) !important;
-  }
-
-  .memo-list-panel {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    bottom: 0 !important;
-    width: min(248px, calc(100% - 32px)) !important;
-    min-width: 0 !important;
-    max-width: 82% !important;
-    height: auto !important;
-    max-height: none !important;
-    border-right: 1px solid hsl(220 18% 82% / 0.45) !important;
-    border-bottom: 0 !important;
-    border-radius: 22px !important;
-    box-shadow:
-      0 16px 40px hsl(220 28% 24% / 0.14),
-      inset -1px 0 0 hsl(0 0% 100% / 0.62) !important;
-    transform: translateX(calc(-100% - 12px)) !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transition:
-      transform 180ms ease,
-      opacity 180ms ease !important;
-    z-index: 5 !important;
-  }
-
-  .memo-app.is-compact-list-open .memo-list-panel {
-    transform: translateX(0) !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  .memo-list-close {
-    display: inline-flex !important;
-  }
-}
-
-@container memo-widget (max-width: 540px) {
-  .memo-list-panel {
-    width: min(224px, calc(100% - 24px)) !important;
-  }
-
-  .memo-workspace {
-    padding: 10px !important;
-  }
-
-  .memo-editor,
-  [contenteditable="true"].memo-editor {
-    min-height: 200px !important;
-    padding: 14px 12px !important;
-    border-radius: 12px !important;
-  }
-}
-
-/* memo floating window contrast + paper color fidelity */
-.memo-floating-window {
-  background:
-    linear-gradient(
-      145deg,
-      rgb(255 255 255 / 0.46),
-      rgb(255 255 255 / 0.24)
-    ) !important;
-  border-color: rgb(255 255 255 / 0.44) !important;
-  backdrop-filter: blur(28px) saturate(158%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(158%) !important;
-  box-shadow:
-    0 42px 120px -46px rgb(20 20 40 / 0.36),
-    inset 0 1px 0 rgb(255 255 255 / 0.74) !important;
-}
-
-.memo-floating-window-titlebar {
-  background:
-    linear-gradient(
-      180deg,
-      rgb(255 255 255 / 0.36),
-      rgb(255 255 255 / 0.18)
-    ) !important;
-  border-bottom-color: rgb(255 255 255 / 0.28) !important;
-}
-
-.memo-floating-window .floating-window-body,
-.memo-floating-window .memo-floating-body {
-  background: transparent !important;
-}
-
-.memo-floating-window .memo-floating-body {
-  padding: 14px !important;
-}
-
-.memo-floating-window .memo-list-panel,
-.memo-floating-window .memo-workspace {
-  backdrop-filter: blur(20px) saturate(138%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(138%) !important;
-}
-
-.memo-floating-window .memo-list-panel {
-  background: rgb(255 255 255 / 0.22) !important;
-  border-color: rgb(255 255 255 / 0.24) !important;
-}
-
-.memo-floating-window .memo-workspace {
-  background: rgb(255 255 255 / 0.16) !important;
-}
-
-.memo-workspace .memo-title-input,
-.memo-workspace .memo-title-view {
-  color: var(--memo-title-color, hsl(var(--foreground) / 0.9)) !important;
-}
-
-.memo-workspace .memo-editor,
-.memo-floating-window .memo-editor,
-[contenteditable="true"].memo-editor {
-  background: var(--memo-paper-surface) !important;
-  border-color: var(--memo-paper-border) !important;
-  color: var(--memo-editor-color, hsl(var(--foreground) / 0.84)) !important;
-}
-
-html[data-theme="glass-light"] .memo-floating-window,
-body[data-theme="glass-light"] .memo-floating-window,
-html.theme-glass-light .memo-floating-window,
-body.theme-glass-light .memo-floating-window {
-  background:
-    linear-gradient(
-      145deg,
-      rgb(255 255 255 / 0.54),
-      rgb(255 255 255 / 0.3)
-    ) !important;
-}
-
-html[data-theme="glass-light"] .memo-floating-window .memo-list-panel,
-html[data-theme="glass-light"] .memo-floating-window .memo-workspace,
-body[data-theme="glass-light"] .memo-floating-window .memo-list-panel,
-body[data-theme="glass-light"] .memo-floating-window .memo-workspace,
-html.theme-glass-light .memo-floating-window .memo-list-panel,
-html.theme-glass-light .memo-floating-window .memo-workspace,
-body.theme-glass-light .memo-floating-window .memo-list-panel,
-body.theme-glass-light .memo-floating-window .memo-workspace {
-  background: rgb(255 255 255 / 0.18) !important;
-}
-
-html[data-theme="glass-dark"] .memo-floating-window,
-body[data-theme="glass-dark"] .memo-floating-window,
-html.theme-glass-dark .memo-floating-window,
-body.theme-glass-dark .memo-floating-window {
-  background:
-    linear-gradient(
-      145deg,
-      rgb(24 27 39 / 0.66),
-      rgb(13 17 28 / 0.42)
-    ) !important;
-  border-color: rgb(194 210 255 / 0.16) !important;
-  backdrop-filter: blur(24px) saturate(142%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(142%) !important;
-}
-
-html[data-theme="glass-dark"] .memo-floating-window-titlebar,
-body[data-theme="glass-dark"] .memo-floating-window-titlebar,
-html.theme-glass-dark .memo-floating-window-titlebar,
-body.theme-glass-dark .memo-floating-window-titlebar {
-  background:
-    linear-gradient(
-      180deg,
-      rgb(255 255 255 / 0.12),
-      rgb(255 255 255 / 0.05)
-    ) !important;
-  border-bottom-color: rgb(194 210 255 / 0.12) !important;
-}
-
-html[data-theme="glass-dark"] .memo-floating-window .memo-list-panel,
-html[data-theme="glass-dark"] .memo-floating-window .memo-workspace,
-body[data-theme="glass-dark"] .memo-floating-window .memo-list-panel,
-body[data-theme="glass-dark"] .memo-floating-window .memo-workspace,
-html.theme-glass-dark .memo-floating-window .memo-list-panel,
-html.theme-glass-dark .memo-floating-window .memo-workspace,
-body.theme-glass-dark .memo-floating-window .memo-list-panel,
-body.theme-glass-dark .memo-floating-window .memo-workspace {
-  background: rgb(18 23 36 / 0.28) !important;
-}
-
-html[data-theme="glass-dark"] .memo-workspace .memo-editor,
-html[data-theme="glass-dark"] .memo-floating-window .memo-editor,
-body[data-theme="glass-dark"] .memo-workspace .memo-editor,
-body[data-theme="glass-dark"] .memo-floating-window .memo-editor,
-html.theme-glass-dark .memo-workspace .memo-editor,
-html.theme-glass-dark .memo-floating-window .memo-editor,
-body.theme-glass-dark .memo-workspace .memo-editor,
-body.theme-glass-dark .memo-floating-window .memo-editor {
-  background: var(--memo-dark-paper) !important;
-  border-color: var(--memo-dark-border) !important;
-  color: var(--memo-dark-text, rgba(241, 244, 255, 0.94)) !important;
-}
-
-/* current responsive interaction overrides */
-.memo-app {
-  display: grid !important;
-  grid-template-columns: clamp(220px, 26%, 300px) minmax(0, 1fr) !important;
-}
-
-.memo-app > .memo-list-panel {
-  grid-column: 1 !important;
-}
-
-.memo-app > .memo-workspace {
-  grid-column: 2 !important;
-  min-width: 0 !important;
-  width: 100% !important;
-  max-width: none !important;
-}
-
-.memo-app.is-list-hidden {
-  grid-template-columns: minmax(0, 1fr) !important;
-}
-
-.memo-app.is-list-hidden > .memo-workspace {
-  grid-column: 1 / -1 !important;
-}
-
-.memo-list-close {
-  display: inline-flex !important;
-}
-
-.memo-floating-body {
-  display: grid !important;
-  grid-template-columns: var(--memo-window-sidebar-width, 280px) 10px minmax(0, 1fr) !important;
-  gap: 0 !important;
-  align-items: stretch !important;
-}
-
-.memo-floating-body > .memo-list-panel {
-  grid-column: 1 !important;
-}
-
-.memo-floating-body > .memo-workspace {
-  grid-column: 3 !important;
-  min-width: 0 !important;
-  width: 100% !important;
-  max-width: none !important;
-}
-
-.memo-floating-body.is-window-list-hidden {
-  grid-template-columns: minmax(0, 1fr) !important;
-}
-
-.memo-floating-body.is-window-list-hidden > .memo-workspace {
-  grid-column: 1 / -1 !important;
-}
-
-.memo-window-resizer {
-  position: relative;
-  cursor: col-resize;
-  user-select: none;
-}
-
-.memo-window-resizer::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 18px;
-  bottom: 18px;
-  width: 2px;
-  transform: translateX(-50%);
-  border-radius: 999px;
-  background: hsl(var(--foreground) / 0.14);
-}
-
-.memo-window-resizer:hover::before,
-.memo-window-resizer.is-dragging::before {
-  background: hsl(var(--primary) / 0.48);
-}
-
-.memo-app.is-list-hidden .memo-workspace,
-.memo-floating-body.is-window-list-hidden .memo-workspace {
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-.memo-app.is-list-hidden .memo-title-input,
-.memo-app.is-list-hidden .memo-title-view,
-.memo-app.is-list-hidden .memo-toolbar,
-.memo-app.is-list-hidden .memo-editor-toolbar,
-.memo-app.is-list-hidden .memo-tag-tools,
-.memo-app.is-list-hidden .memo-tag-library,
-.memo-app.is-list-hidden .memo-editor,
-.memo-app.is-list-hidden [contenteditable="true"].memo-editor,
-.memo-floating-body.is-window-list-hidden .memo-title-input,
-.memo-floating-body.is-window-list-hidden .memo-title-view,
-.memo-floating-body.is-window-list-hidden .memo-toolbar,
-.memo-floating-body.is-window-list-hidden .memo-editor-toolbar,
-.memo-floating-body.is-window-list-hidden .memo-tag-tools,
-.memo-floating-body.is-window-list-hidden .memo-tag-library,
-.memo-floating-body.is-window-list-hidden .memo-editor,
-.memo-floating-body.is-window-list-hidden [contenteditable="true"].memo-editor {
-  width: 100% !important;
-  max-width: none !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-
-@container memo-widget (max-width: 560px) {
-  .memo-app {
-    grid-template-columns: minmax(0, 1fr) !important;
-  }
-
-  .memo-app:not(.is-list-hidden) .memo-list-panel {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    bottom: 0 !important;
-    z-index: 5 !important;
-  }
-}
 
 /* =========================================================
-   MEMO FINAL LAYOUT
-   widget + responsive + floating window
+   1. ROOT / APP LAYOUT
    ========================================================= */
 
 .memo-widget {
@@ -1008,35 +17,31 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
   overflow: hidden;
 }
 
-
-/* ---------------------------------------------------------
-   WIDGET APP
-   --------------------------------------------------------- */
-
-.memo-app {
+.memo-app,
+.memo-layout {
   position: relative;
 
+  width: 100%;
   height: 100%;
   min-height: 0;
 
-  display: grid !important;
+  display: grid;
   grid-template-columns:
     clamp(220px, 26%, 300px)
-    minmax(0, 1fr) !important;
-
+    minmax(0, 1fr);
   grid-template-rows:
     auto
-    minmax(0, 1fr) !important;
+    minmax(0, 1fr);
 
-  gap: 0 !important;
-  overflow: hidden !important;
+  gap: 0;
+  overflow: hidden;
 }
 
 
-/* ---------------------------------------------------------
-   WIDGET TITLE
-   실제 TSX를 수정하지 않아도 Memo 제목 표시
-   --------------------------------------------------------- */
+/* =========================================================
+   2. WIDGET TITLE
+   Memo 제목 표시
+   ========================================================= */
 
 .memo-app::before {
   content: "Memo";
@@ -1044,13 +49,15 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
   grid-column: 1 / -1;
   grid-row: 1;
 
+  min-height: 38px;
+
+  padding: 2px 10px 8px;
+
   display: flex;
   align-items: center;
 
-  min-height: 34px;
-  padding: 0 6px 8px;
-
-  font-size: clamp(13px, 1.4cqi, 15px);
+  font-size: clamp(13px, 1.5cqi, 15px);
+  line-height: 1;
   font-weight: 850;
   letter-spacing: -0.03em;
 
@@ -1060,44 +67,56 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 }
 
 
-/* ---------------------------------------------------------
-   SIDEBAR
-   --------------------------------------------------------- */
+/* =========================================================
+   3. MEMO LIST SIDEBAR
+   ========================================================= */
 
-.memo-app > .memo-list-panel {
+.memo-app > .memo-list-panel,
+.memo-layout > .memo-list-panel {
   grid-column: 1;
   grid-row: 2;
 }
 
 .memo-list-panel {
-  width: auto !important;
-  min-width: 0 !important;
-  max-width: none !important;
+  width: auto;
+  min-width: 0;
+  max-width: none;
 
-  height: 100% !important;
-  min-height: 0 !important;
+  height: 100%;
+  min-height: 0;
 
-  padding: 14px 12px !important;
+  padding: 14px 12px;
 
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  display: flex;
+  flex-direction: column;
 
-  border: 0 !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  border: 0;
   border-right:
-    1px solid hsl(220 18% 82% / 0.5) !important;
+    1px solid hsl(220 18% 82% / 0.5);
 
-  border-radius: 0 !important;
+  border-radius: 0;
 
   background:
-    hsl(220 35% 97% / 0.62) !important;
+    hsl(220 35% 97% / 0.62);
 
   box-shadow:
     inset -1px 0 0
-    hsl(0 0% 100% / 0.72) !important;
+      hsl(0 0% 100% / 0.72);
 }
 
+
+/* =========================================================
+   4. LIST HEADER
+   ========================================================= */
+
 .memo-list-header {
+  flex: 0 0 auto;
+
   min-height: 32px;
+
   padding: 0 4px 8px;
 
   display: flex;
@@ -1116,15 +135,55 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 .memo-list-header-actions {
   display: flex;
   align-items: center;
+
   gap: 6px;
 }
 
+.memo-mini-button,
+.memo-compact-toggle,
+.memo-list-close {
+  width: 26px;
+  height: 26px;
 
-/* ---------------------------------------------------------
-   NOTE LIST
-   --------------------------------------------------------- */
+  flex: 0 0 auto;
+
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    hsl(0 0% 100% / 0.56);
+
+  border:
+    1px solid hsl(220 18% 82% / 0.48);
+
+  color:
+    hsl(var(--foreground) / 0.62);
+
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.memo-mini-button:hover,
+.memo-compact-toggle:hover,
+.memo-list-close:hover {
+  background:
+    hsl(0 0% 100% / 0.82);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   5. NOTE LIST
+   ========================================================= */
 
 .memo-note-list {
+  flex: 1 1 auto;
+
   min-height: 0;
 
   display: flex;
@@ -1132,8 +191,8 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 
   gap: 8px;
 
-  overflow-y: auto;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .memo-note-item {
@@ -1179,10 +238,15 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
       hsl(0 0% 100% / 0.82);
 }
 
+.memo-note-item.is-pinned {
+  border-color:
+    hsl(var(--primary) / 0.26);
+}
 
-/* 중요:
-   memo-note-title을 workspace 제목 스타일과 절대 묶지 않음
-*/
+
+/* =========================================================
+   6. NOTE TEXT
+   ========================================================= */
 
 .memo-note-title {
   min-width: 0;
@@ -1192,14 +256,14 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 
   gap: 5px;
 
-  font-size: 13px !important;
-  line-height: 1.25 !important;
-  font-weight: 550 !important;
+  font-size: 13px;
+  line-height: 1.25;
+  font-weight: 550;
 
-  letter-spacing: -0.025em !important;
+  letter-spacing: -0.025em;
 
   color:
-    hsl(var(--foreground) / 0.76) !important;
+    hsl(var(--foreground) / 0.76);
 
   white-space: nowrap;
   overflow: hidden;
@@ -1221,56 +285,111 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
   text-overflow: ellipsis;
 }
 
+.memo-note-color-dot {
+  width: 9px;
+  height: 34px;
 
-/* ---------------------------------------------------------
-   WORKSPACE
-   --------------------------------------------------------- */
+  flex: 0 0 auto;
 
-.memo-app > .memo-workspace {
+  border-radius: 999px;
+
+  border:
+    1px solid hsl(0 0% 100% / 0.72);
+}
+
+.memo-note-delete {
+  width: 24px;
+  height: 24px;
+
+  flex: 0 0 auto;
+
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    hsl(0 0% 100% / 0.48);
+
+  border:
+    1px solid hsl(220 18% 82% / 0.48);
+
+  color:
+    hsl(var(--foreground) / 0.46);
+
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.memo-note-delete:hover {
+  background:
+    hsl(0 80% 96% / 0.72);
+
+  color:
+    hsl(0 70% 45%);
+}
+
+
+/* =========================================================
+   7. WORKSPACE
+   ========================================================= */
+
+.memo-app > .memo-workspace,
+.memo-layout > .memo-workspace {
   grid-column: 2;
   grid-row: 2;
 }
 
 .memo-workspace {
-  width: 100% !important;
-  min-width: 0 !important;
+  width: 100%;
+  min-width: 0;
 
-  height: 100% !important;
-  min-height: 0 !important;
+  height: 100%;
+  min-height: 0;
 
   padding:
-    clamp(14px, 2vw, 28px) !important;
+    clamp(14px, 2vw, 28px);
 
-  display: flex !important;
-  flex-direction: column !important;
+  display: flex;
+  flex-direction: column;
 
-  gap: 10px !important;
+  gap: 10px;
 
-  overflow: hidden !important;
+  overflow: hidden;
 
   background:
-    hsl(0 0% 100% / 0.36) !important;
+    hsl(0 0% 100% / 0.36);
+}
+
+.memo-workspace.is-window-mode {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+
+  overflow: hidden;
 }
 
 
-/* ---------------------------------------------------------
-   WORKSPACE HEADER
-   --------------------------------------------------------- */
+/* =========================================================
+   8. WORKSPACE HEADER
+   ========================================================= */
 
 .memo-workspace-header {
   flex: 0 0 auto;
+
+  min-width: 0;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   gap: 12px;
-
-  min-width: 0;
 }
 
 .memo-workspace-actions {
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   display: flex;
   align-items: center;
@@ -1279,69 +398,72 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 }
 
 
-/* ---------------------------------------------------------
-   MEMO TITLE
-   --------------------------------------------------------- */
+/* =========================================================
+   9. TITLE
+   ========================================================= */
 
 .memo-title-input,
 .memo-title-view {
-  width: min(100%, 860px) !important;
-  max-width: 860px !important;
-
+  width: min(100%, 860px);
+  max-width: 860px;
   min-width: 0;
 
-  height: 38px !important;
-  min-height: 38px !important;
+  height: 38px;
+  min-height: 38px;
 
-  margin: 0 auto !important;
-  padding: 0 2px !important;
+  margin: 0 auto;
+  padding: 0 2px;
 
-  border: 0 !important;
-  border-radius: 0 !important;
+  border: 0;
+  border-radius: 0;
 
-  background: transparent !important;
-  box-shadow: none !important;
-  outline: none !important;
+  background: transparent;
 
-  font-size: clamp(17px, 2.2cqi, 20px) !important;
-  line-height: 38px !important;
-  font-weight: 650 !important;
+  box-shadow: none;
+  outline: none;
 
-  letter-spacing: -0.035em !important;
+  font-size:
+    clamp(17px, 2.2cqi, 20px);
+
+  line-height: 38px;
+  font-weight: 650;
+
+  letter-spacing: -0.035em;
 
   color:
     var(
       --memo-title-color,
       hsl(var(--foreground) / 0.9)
-    ) !important;
+    );
 
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 
-/* ---------------------------------------------------------
-   TOOLBAR
-   --------------------------------------------------------- */
+/* =========================================================
+   10. TOOLBAR
+   ========================================================= */
 
 .memo-toolbar,
 .memo-editor-toolbar {
   flex: 0 0 auto;
 
-  width: min(100%, 860px) !important;
-  max-width: 860px !important;
+  width: min(100%, 860px);
+  max-width: 860px;
 
   min-height: 40px;
 
-  margin: 0 auto !important;
-  padding: 0 !important;
+  margin: 0 auto;
+  padding: 0;
 
-  display: flex !important;
-  align-items: center !important;
+  display: flex;
+  align-items: center;
 
-  gap: 7px !important;
-  flex-wrap: wrap !important;
+  gap: 7px;
+
+  flex-wrap: wrap;
 }
 
 .memo-select {
@@ -1358,35 +480,101 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
     hsl(0 0% 100% / 0.68);
 
   border:
-    1px solid
-    hsl(220 18% 82% / 0.54);
+    1px solid hsl(220 18% 82% / 0.54);
+
+  outline: none;
 }
 
 .memo-tool-button {
   width: 30px;
   height: 30px;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
+
+  border-radius: 999px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 999px;
-
   background:
     hsl(0 0% 100% / 0.56);
 
   border:
-    1px solid
-    hsl(220 18% 82% / 0.5);
+    1px solid hsl(220 18% 82% / 0.5);
+
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.memo-tool-button:hover {
+  background:
+    hsl(0 0% 100% / 0.82);
+
+  transform: translateY(-1px);
+}
+
+.memo-tool-button:disabled {
+  opacity: 0.56;
+
+  transform: none;
+}
+
+.memo-table-tool {
+  width: auto;
+
+  min-width: 34px;
+
+  padding: 0 8px;
+
+  font-size: 11px;
+  font-weight: 800;
 }
 
 
-/* ---------------------------------------------------------
-   COLOR PALETTE
-   --------------------------------------------------------- */
+/* =========================================================
+   11. COLOR AREA
+   ========================================================= */
 
+.memo-color-area {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 14px;
+
+  padding: 10px 12px;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      hsl(0 0% 100% / 0.38),
+      hsl(0 0% 100% / 0.16)
+    );
+
+  border:
+    1px solid hsl(0 0% 100% / 0.46);
+}
+
+.memo-color-label {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  color:
+    hsl(var(--foreground) / 0.54);
+}
+
+.memo-color-picker,
 .memo-color-palette {
   flex: 0 0 auto;
 
@@ -1395,36 +583,77 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 
   gap: 6px;
 
-  padding: 4px 0;
-
   overflow-x: auto;
 }
 
-.memo-color-swatch {
-  width: 16px !important;
-  height: 16px !important;
+.memo-color-picker {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
 
-  min-width: 16px !important;
+.memo-color-palette {
+  width: min(100%, 860px);
 
-  border-radius: 4px !important;
+  margin: 0 auto;
+
+  padding: 4px 0;
+}
+
+.memo-color-chip {
+  width: 20px;
+  height: 20px;
+
+  flex: 0 0 auto;
+
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color:
+    hsl(220 24% 18% / 0.72);
 
   border:
-    1px solid
-    hsl(var(--foreground) / 0.22) !important;
+    2px solid hsl(0 0% 100% / 0.82);
+
+  box-shadow:
+    0 4px 12px
+      hsl(220 20% 20% / 0.14),
+    inset 0 1px 0
+      hsl(0 0% 100% / 0.88);
+}
+
+.memo-color-chip.is-active {
+  outline:
+    2px solid hsl(var(--primary) / 0.52);
+
+  outline-offset: 2px;
+}
+
+.memo-color-swatch {
+  width: 16px;
+  height: 16px;
+
+  min-width: 16px;
+
+  border-radius: 4px;
+
+  border:
+    1px solid hsl(var(--foreground) / 0.22);
 }
 
 .memo-color-swatch.is-active {
   outline:
-    2px solid
-    hsl(var(--primary) / 0.7) !important;
+    2px solid hsl(var(--primary) / 0.7);
 
-  outline-offset: 2px !important;
+  outline-offset: 2px;
 }
 
 
-/* ---------------------------------------------------------
-   EDITOR SHELL
-   --------------------------------------------------------- */
+/* =========================================================
+   12. EDITOR SHELL
+   ========================================================= */
 
 .memo-editor-shell {
   flex: 1 1 auto;
@@ -1437,7 +666,6 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
   margin: 0 auto;
 
   display: grid;
-
   grid-template-rows:
     auto
     minmax(0, 1fr);
@@ -1448,12 +676,12 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 .memo-editor-label {
   min-height: 24px;
 
-  display: flex;
+  padding: 0 4px;
+
+  display: inline-flex;
   align-items: center;
 
   gap: 5px;
-
-  padding: 0 4px;
 
   font-size: 11px;
   font-weight: 750;
@@ -1463,61 +691,114 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 }
 
 
-/* ---------------------------------------------------------
-   EDITOR
-   --------------------------------------------------------- */
+/* =========================================================
+   13. EDITOR
+   ========================================================= */
 
 .memo-editor,
+.memo-window-editor,
 [contenteditable="true"].memo-editor {
-  width: 100% !important;
-  max-width: none !important;
+  width: 100%;
+  max-width: none;
 
-  height: 100% !important;
-  min-height: 0 !important;
+  height: 100%;
+  min-height: 0;
 
-  margin: 0 !important;
+  margin: 0;
 
   padding:
     clamp(20px, 3.2vw, 42px)
-    clamp(20px, 4vw, 56px) !important;
+    clamp(20px, 4vw, 56px);
 
-  display: block !important;
+  display: block;
 
-  box-sizing: border-box !important;
+  box-sizing: border-box;
 
-  overflow: auto !important;
+  overflow: auto;
 
-  border-radius: 26px !important;
+  overscroll-behavior: contain;
 
-  outline: none !important;
+  -webkit-overflow-scrolling: touch;
 
-  font-size: clamp(13.5px, 1.7cqi, 15px) !important;
-  line-height: 1.7 !important;
-  font-weight: 450 !important;
+  border-radius: 26px;
 
-  letter-spacing: -0.015em !important;
+  outline: none;
 
-  white-space: pre-wrap !important;
-  word-break: break-word !important;
+  font-size:
+    clamp(13.5px, 1.7cqi, 15px);
+
+  line-height: 1.72;
+  font-weight: 450;
+
+  letter-spacing: -0.015em;
+
+  white-space: pre-wrap;
+  word-break: break-word;
 
   color:
     var(
       --memo-editor-color,
       hsl(var(--foreground) / 0.84)
-    ) !important;
+    );
 
   background:
-    var(--memo-paper-surface) !important;
+    var(
+      --memo-paper-surface,
+      linear-gradient(
+        180deg,
+        color-mix(
+          in srgb,
+          var(--memo-paper-color, #fff7cf) 90%,
+          white 10%
+        ),
+        color-mix(
+          in srgb,
+          var(--memo-paper-color, #fff7cf) 76%,
+          rgb(255 255 255 / 0.22) 24%
+        )
+      )
+    );
 
   border:
     1px solid
-    var(--memo-paper-border) !important;
+    var(
+      --memo-paper-border,
+      color-mix(
+        in srgb,
+        var(--memo-paper-color, #fff7cf) 62%,
+        rgb(255 255 255 / 0.38) 38%
+      )
+    );
 
   box-shadow:
     0 24px 70px -58px
       hsl(330 40% 38% / 0.5),
     inset 0 1px 0
-      hsl(0 0% 100% / 0.86) !important;
+      hsl(0 0% 100% / 0.86);
+}
+
+.memo-editor-editing {
+  background:
+    var(
+      --memo-paper-surface,
+      linear-gradient(
+        180deg,
+        color-mix(
+          in srgb,
+          var(--memo-paper-color, #fff7cf) 94%,
+          white 6%
+        ),
+        color-mix(
+          in srgb,
+          var(--memo-paper-color, #fff7cf) 80%,
+          rgb(255 255 255 / 0.2) 20%
+        )
+      )
+    );
+}
+
+.memo-editor-locked {
+  cursor: default;
 }
 
 .memo-editor:empty::before {
@@ -1530,31 +811,61 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 }
 
 
-/* ---------------------------------------------------------
-   TAGS
-   --------------------------------------------------------- */
+/* =========================================================
+   14. EDITOR CONTENT
+   ========================================================= */
+
+.memo-editor table {
+  width: 100%;
+
+  margin: 10px 0;
+
+  border-collapse: collapse;
+}
+
+.memo-editor td,
+.memo-editor th {
+  min-width: 60px;
+
+  padding: 6px 8px;
+
+  border:
+    1px solid hsl(var(--foreground) / 0.18);
+}
+
+.memo-editor ul,
+.memo-editor ol {
+  padding-left: 22px;
+}
+
+
+/* =========================================================
+   15. TAG TOOLS
+   ========================================================= */
 
 .memo-tag-tools,
 .memo-tag-library {
   flex: 0 0 auto;
 
-  width: min(100%, 860px) !important;
-  max-width: 860px !important;
+  width: min(100%, 860px);
+  max-width: 860px;
 
-  margin-left: auto !important;
-  margin-right: auto !important;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .memo-tag-tools {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+  margin-top: 0;
+  margin-bottom: 0;
 
   grid-template-columns:
     minmax(120px, 180px)
     auto
-    minmax(0, 1fr) !important;
+    minmax(0, 1fr);
 
-  gap: 8px !important;
+  align-items: center;
+
+  gap: 8px;
 }
 
 .memo-tag-library {
@@ -1570,81 +881,415 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 }
 
 
-/* ---------------------------------------------------------
-   SIDEBAR HIDDEN
-   --------------------------------------------------------- */
+/* =========================================================
+   16. TABLE CONTEXT MENU
+   ========================================================= */
 
-.memo-app.is-list-hidden {
-  grid-template-columns:
-    minmax(0, 1fr) !important;
+.memo-table-context-menu {
+  position: fixed;
+
+  z-index: 2147483600;
+
+  min-width: 200px;
+
+  padding: 8px;
+
+  display: grid;
+
+  gap: 4px;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.96),
+      hsl(220 28% 96% / 0.92)
+    );
+
+  border:
+    1px solid hsl(220 18% 82% / 0.78);
+
+  box-shadow:
+    0 22px 44px -20px
+      hsl(220 28% 18% / 0.32),
+    inset 0 1px 0
+      hsl(0 0% 100% / 0.92);
+
+  backdrop-filter:
+    blur(16px)
+    saturate(150%);
+
+  -webkit-backdrop-filter:
+    blur(16px)
+    saturate(150%);
 }
 
-.memo-app.is-list-hidden
-> .memo-workspace {
+.memo-table-context-item {
+  min-height: 34px;
+
+  padding: 0 10px;
+
+  border: 0;
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  text-align: left;
+
+  color:
+    hsl(var(--foreground) / 0.82);
+
+  background: transparent;
+}
+
+.memo-table-context-item:hover {
+  background:
+    hsl(220 30% 92% / 0.88);
+}
+
+.memo-table-context-divider {
+  height: 1px;
+
+  margin: 4px 2px;
+
+  background:
+    hsl(220 18% 82% / 0.58);
+}
+
+
+/* =========================================================
+   17. SAVE DIALOG
+   ========================================================= */
+
+.memo-save-backdrop {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 999999;
+
+  padding: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at 50% 30%,
+      hsl(0 0% 100% / 0.16),
+      hsl(225 20% 18% / 0.2)
+    );
+
+  backdrop-filter:
+    blur(18px)
+    saturate(120%);
+
+  -webkit-backdrop-filter:
+    blur(18px)
+    saturate(120%);
+}
+
+.memo-save-dialog {
+  position: relative;
+
+  z-index: 1000000;
+
+  width: min(460px, 92vw);
+
+  padding: 18px;
+
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.74),
+      hsl(0 0% 100% / 0.34)
+    );
+
+  border:
+    1px solid hsl(0 0% 100% / 0.78);
+
+  backdrop-filter:
+    blur(38px)
+    saturate(190%);
+
+  -webkit-backdrop-filter:
+    blur(38px)
+    saturate(190%);
+
+  box-shadow:
+    0 34px 100px -32px
+      hsl(220 35% 18% / 0.42),
+    inset 0 1px 0
+      hsl(0 0% 100% / 0.88),
+    inset 0 -1px 0
+      hsl(220 25% 40% / 0.06);
+}
+
+.memo-save-input {
+  width: 100%;
+  height: 44px;
+
+  margin-top: 8px;
+  padding: 0 14px;
+
+  border-radius: 18px;
+
+  background:
+    hsl(0 0% 100% / 0.42);
+
+  border:
+    1px solid hsl(0 0% 100% / 0.58);
+
+  outline: none;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.memo-save-input:focus {
+  background:
+    hsl(0 0% 100% / 0.62);
+
+  border-color:
+    hsl(var(--primary) / 0.45);
+}
+
+.memo-save-options {
+  margin-top: 16px;
+
+  display: grid;
+
+  gap: 10px;
+}
+
+.memo-save-option {
+  width: 100%;
+
+  padding: 12px;
+
+  border-radius: 20px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  text-align: left;
+
+  background:
+    hsl(0 0% 100% / 0.32);
+
+  border:
+    1px solid hsl(0 0% 100% / 0.45);
+
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.memo-save-option:hover {
+  background:
+    hsl(0 0% 100% / 0.55);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   18. LIST HIDDEN
+   ========================================================= */
+
+.memo-app.is-list-hidden,
+.memo-layout.is-list-hidden {
+  grid-template-columns:
+    minmax(0, 1fr);
+}
+
+.memo-app.is-list-hidden > .memo-workspace,
+.memo-layout.is-list-hidden > .memo-workspace {
   grid-column: 1 / -1;
 }
 
-.memo-app.is-list-hidden
-.memo-title-input,
-
-.memo-app.is-list-hidden
-.memo-title-view,
-
-.memo-app.is-list-hidden
-.memo-toolbar,
-
-.memo-app.is-list-hidden
-.memo-editor-toolbar,
-
-.memo-app.is-list-hidden
-.memo-tag-tools,
-
-.memo-app.is-list-hidden
-.memo-tag-library,
-
-.memo-app.is-list-hidden
-.memo-editor-shell {
-  width: 100% !important;
-  max-width: none !important;
+.memo-app.is-list-hidden .memo-title-input,
+.memo-app.is-list-hidden .memo-title-view,
+.memo-app.is-list-hidden .memo-toolbar,
+.memo-app.is-list-hidden .memo-editor-toolbar,
+.memo-app.is-list-hidden .memo-tag-tools,
+.memo-app.is-list-hidden .memo-tag-library,
+.memo-app.is-list-hidden .memo-editor-shell {
+  width: 100%;
+  max-width: none;
 }
 
 
-/* ---------------------------------------------------------
-   FLOATING WINDOW BODY
-   --------------------------------------------------------- */
+/* =========================================================
+   19. FLOATING WINDOW LAYER
+   ========================================================= */
+
+.memo-window-backdrop {
+  display: contents !important;
+
+  background: transparent !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+
+  pointer-events: none !important;
+}
+
+.memo-window-layer {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 2147482500;
+
+  pointer-events: none;
+
+  background: transparent;
+
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+
+/* =========================================================
+   20. FLOATING WINDOW
+   ========================================================= */
+
+.memo-window,
+.memo-floating-window {
+  pointer-events: auto;
+
+  position: fixed;
+
+  width:
+    min(1180px, calc(100vw - 48px));
+
+  height:
+    min(780px, calc(100vh - 48px));
+
+  max-width:
+    calc(100vw - 24px);
+
+  max-height:
+    calc(100vh - 24px);
+
+  border-radius: 30px;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.46),
+      rgb(255 255 255 / 0.24)
+    );
+
+  border:
+    1px solid rgb(255 255 255 / 0.44);
+
+  backdrop-filter:
+    blur(48px)
+    saturate(158%);
+
+  -webkit-backdrop-filter:
+    blur(48px)
+    saturate(158%);
+
+  box-shadow:
+    0 42px 120px -46px
+      rgb(20 20 40 / 0.36),
+    inset 0 1px 0
+      rgb(255 255 255 / 0.74);
+}
+
+
+/* =========================================================
+   21. FLOATING WINDOW TITLEBAR
+   ========================================================= */
+
+.memo-window-titlebar,
+.memo-floating-window-titlebar {
+  height: 68px;
+
+  padding: 0 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  cursor: move;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.36),
+      rgb(255 255 255 / 0.18)
+    );
+
+  border-bottom:
+    1px solid rgb(255 255 255 / 0.28);
+}
+
+.memo-window-titlebar button,
+.memo-floating-window-titlebar button {
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   22. FLOATING BODY
+   ========================================================= */
 
 .memo-floating-body {
+  width: 100%;
+
   height: 100%;
   min-height: 0;
 
-  display: grid !important;
+  padding: 14px;
+
+  display: grid;
 
   grid-template-columns:
     var(--memo-window-sidebar-width, 280px)
     10px
-    minmax(0, 1fr) !important;
+    minmax(0, 1fr);
 
-  gap: 0 !important;
+  gap: 0;
 
-  overflow: hidden !important;
+  align-items: stretch;
+
+  overflow: hidden;
 }
 
-.memo-floating-body
-> .memo-list-panel {
+.memo-floating-body > .memo-list-panel {
   grid-column: 1;
 }
 
-.memo-floating-body
-> .memo-workspace {
+.memo-floating-body > .memo-workspace {
   grid-column: 3;
 
-  width: 100% !important;
-  min-width: 0 !important;
+  width: 100%;
+  min-width: 0;
 }
 
 .memo-floating-body.is-window-list-hidden {
   grid-template-columns:
-    minmax(0, 1fr) !important;
+    minmax(0, 1fr);
 }
 
 .memo-floating-body.is-window-list-hidden
@@ -1652,10 +1297,39 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
   grid-column: 1 / -1;
 }
 
+.memo-floating-window .floating-window-body,
+.memo-floating-window .memo-floating-body {
+  background: transparent;
+}
 
-/* ---------------------------------------------------------
-   WINDOW RESIZER
-   --------------------------------------------------------- */
+.memo-floating-window .memo-list-panel,
+.memo-floating-window .memo-workspace {
+  backdrop-filter:
+    blur(26px)
+    saturate(138%);
+
+  -webkit-backdrop-filter:
+    blur(26px)
+    saturate(138%);
+}
+
+.memo-floating-window .memo-list-panel {
+  background:
+    rgb(255 255 255 / 0.22);
+
+  border-color:
+    rgb(255 255 255 / 0.24);
+}
+
+.memo-floating-window .memo-workspace {
+  background:
+    rgb(255 255 255 / 0.16);
+}
+
+
+/* =========================================================
+   23. WINDOW RESIZER
+   ========================================================= */
 
 .memo-window-resizer {
   position: relative;
@@ -1693,162 +1367,406 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 
 
 /* =========================================================
-   CONTAINER RESPONSIVE
-   위젯 실제 너비 기준
+   24. GLASS LIGHT
    ========================================================= */
 
+html[data-theme="glass-light"]
+.memo-floating-window,
 
-/* 중간 크기 */
-@container memo-widget (max-width: 860px) {
+body[data-theme="glass-light"]
+.memo-floating-window,
 
-  .memo-app {
-    grid-template-columns:
-      200px
-      minmax(0, 1fr) !important;
-  }
+html.theme-glass-light
+.memo-floating-window,
 
-  .memo-workspace {
-    padding: 14px !important;
-  }
+body.theme-glass-light
+.memo-floating-window {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.54),
+      rgb(255 255 255 / 0.3)
+    );
 
-  .memo-app::before {
-    font-size: 14px;
-  }
+  backdrop-filter:
+    blur(52px)
+    saturate(160%);
 
-  .memo-title-input,
-  .memo-title-view {
-    font-size: 18px !important;
-  }
+  -webkit-backdrop-filter:
+    blur(52px)
+    saturate(160%);
+}
 
-  .memo-editor,
-  [contenteditable="true"].memo-editor {
-    font-size: 14px !important;
+html[data-theme="glass-light"]
+.memo-floating-window .memo-list-panel,
 
-    padding:
-      22px 24px !important;
-  }
+html[data-theme="glass-light"]
+.memo-floating-window .memo-workspace,
+
+body[data-theme="glass-light"]
+.memo-floating-window .memo-list-panel,
+
+body[data-theme="glass-light"]
+.memo-floating-window .memo-workspace,
+
+html.theme-glass-light
+.memo-floating-window .memo-list-panel,
+
+html.theme-glass-light
+.memo-floating-window .memo-workspace,
+
+body.theme-glass-light
+.memo-floating-window .memo-list-panel,
+
+body.theme-glass-light
+.memo-floating-window .memo-workspace {
+  background:
+    rgb(255 255 255 / 0.18);
 }
 
 
-/* 좁은 크기 */
-@container memo-widget (max-width: 700px) {
+/* =========================================================
+   25. GLASS DARK
+   ========================================================= */
 
-  .memo-app {
+html[data-theme="glass-dark"]
+.memo-floating-window,
+
+body[data-theme="glass-dark"]
+.memo-floating-window,
+
+html.theme-glass-dark
+.memo-floating-window,
+
+body.theme-glass-dark
+.memo-floating-window {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(24 27 39 / 0.66),
+      rgb(13 17 28 / 0.42)
+    );
+
+  border-color:
+    rgb(194 210 255 / 0.16);
+
+  backdrop-filter:
+    blur(48px)
+    saturate(142%);
+
+  -webkit-backdrop-filter:
+    blur(48px)
+    saturate(142%);
+}
+
+html[data-theme="glass-dark"]
+.memo-floating-window-titlebar,
+
+body[data-theme="glass-dark"]
+.memo-floating-window-titlebar,
+
+html.theme-glass-dark
+.memo-floating-window-titlebar,
+
+body.theme-glass-dark
+.memo-floating-window-titlebar {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      rgb(255 255 255 / 0.05)
+    );
+
+  border-bottom-color:
+    rgb(194 210 255 / 0.12);
+}
+
+html[data-theme="glass-dark"]
+.memo-floating-window .memo-list-panel,
+
+html[data-theme="glass-dark"]
+.memo-floating-window .memo-workspace,
+
+body[data-theme="glass-dark"]
+.memo-floating-window .memo-list-panel,
+
+body[data-theme="glass-dark"]
+.memo-floating-window .memo-workspace,
+
+html.theme-glass-dark
+.memo-floating-window .memo-list-panel,
+
+html.theme-glass-dark
+.memo-floating-window .memo-workspace,
+
+body.theme-glass-dark
+.memo-floating-window .memo-list-panel,
+
+body.theme-glass-dark
+.memo-floating-window .memo-workspace {
+  background:
+    rgb(18 23 36 / 0.28);
+}
+
+html[data-theme="glass-dark"]
+.memo-workspace .memo-editor,
+
+html[data-theme="glass-dark"]
+.memo-floating-window .memo-editor,
+
+body[data-theme="glass-dark"]
+.memo-workspace .memo-editor,
+
+body[data-theme="glass-dark"]
+.memo-floating-window .memo-editor,
+
+html.theme-glass-dark
+.memo-workspace .memo-editor,
+
+html.theme-glass-dark
+.memo-floating-window .memo-editor,
+
+body.theme-glass-dark
+.memo-workspace .memo-editor,
+
+body.theme-glass-dark
+.memo-floating-window .memo-editor {
+  background:
+    var(--memo-dark-paper);
+
+  border-color:
+    var(--memo-dark-border);
+
+  color:
+    var(
+      --memo-dark-text,
+      rgba(241, 244, 255, 0.94)
+    );
+}
+
+
+/* =========================================================
+   26. RESPONSIVE
+   Widget actual width based
+   ========================================================= */
+
+
+/* ---------- medium ---------- */
+
+@container memo-widget (max-width: 860px) {
+  .memo-app,
+  .memo-layout {
     grid-template-columns:
-      180px
-      minmax(0, 1fr) !important;
-  }
-
-  .memo-workspace {
-    padding: 11px !important;
-
-    gap: 8px !important;
+      200px
+      minmax(0, 1fr);
   }
 
   .memo-app::before {
-    min-height: 30px;
+    min-height: 34px;
 
-    padding-bottom: 6px;
-
-    font-size: 13.5px;
+    font-size: 14px;
   }
 
-  .memo-note-title {
-    font-size: 12px !important;
-  }
+  .memo-workspace {
+    padding: 14px;
 
-  .memo-note-preview {
-    font-size: 10px;
+    gap: 9px;
   }
 
   .memo-title-input,
   .memo-title-view {
-    height: 34px !important;
-    min-height: 34px !important;
-
-    font-size: 16px !important;
-    line-height: 34px !important;
+    font-size: 18px;
   }
 
   .memo-toolbar,
   .memo-editor-toolbar {
-    gap: 5px !important;
-  }
-
-  .memo-tool-button {
-    width: 28px;
-    height: 28px;
-  }
-
-  .memo-select {
-    height: 28px;
-
-    font-size: 11px;
-  }
-
-  .memo-editor-label {
-    font-size: 10px;
+    gap: 6px;
   }
 
   .memo-editor,
+  .memo-window-editor,
   [contenteditable="true"].memo-editor {
-    font-size: 13.5px !important;
+    padding: 22px 24px;
 
-    line-height: 1.62 !important;
-
-    padding:
-      16px 14px !important;
-
-    border-radius: 16px !important;
+    font-size: 14px;
   }
 }
 
 
-/* 아주 좁은 위젯:
-   sidebar를 overlay drawer로 전환
-*/
+/* ---------- narrow ---------- */
 
-@container memo-widget (max-width: 560px) {
-
-  .memo-app {
+@container memo-widget (max-width: 700px) {
+  .memo-app,
+  .memo-layout {
     grid-template-columns:
-      minmax(0, 1fr) !important;
+      180px
+      minmax(0, 1fr);
   }
 
-  .memo-app > .memo-workspace {
+  .memo-app::before {
+    min-height: 32px;
+
+    padding:
+      2px 8px 6px;
+
+    font-size: 13px;
+  }
+
+  .memo-list-panel {
+    padding: 10px 9px;
+  }
+
+  .memo-list-header {
+    font-size: 10px;
+  }
+
+  .memo-note-item {
+    min-height: 52px;
+
+    padding: 8px 9px;
+
+    border-radius: 13px;
+  }
+
+  .memo-note-title {
+    font-size: 11.5px;
+  }
+
+  .memo-note-preview {
+    font-size: 9.5px;
+  }
+
+  .memo-note-color-dot {
+    width: 7px;
+    height: 28px;
+  }
+
+  .memo-workspace {
+    padding: 10px;
+
+    gap: 7px;
+  }
+
+  .memo-title-input,
+  .memo-title-view {
+    height: 32px;
+    min-height: 32px;
+
+    font-size: 15px;
+
+    line-height: 32px;
+  }
+
+  .memo-toolbar,
+  .memo-editor-toolbar {
+    min-height: 34px;
+
+    gap: 5px;
+  }
+
+  .memo-tool-button {
+    width: 27px;
+    height: 27px;
+  }
+
+  .memo-mini-button,
+  .memo-compact-toggle,
+  .memo-list-close {
+    width: 24px;
+    height: 24px;
+  }
+
+  .memo-select {
+    height: 27px;
+
+    max-width: 120px;
+
+    padding: 0 8px;
+
+    font-size: 10.5px;
+  }
+
+  .memo-color-swatch {
+    width: 14px;
+    height: 14px;
+
+    min-width: 14px;
+  }
+
+  .memo-editor-label {
+    min-height: 20px;
+
+    font-size: 9.5px;
+  }
+
+  .memo-editor,
+  .memo-window-editor,
+  [contenteditable="true"].memo-editor {
+    padding: 15px 13px;
+
+    border-radius: 15px;
+
+    font-size: 13px;
+
+    line-height: 1.62;
+  }
+
+  .memo-tag-tools {
+    grid-template-columns:
+      minmax(100px, 140px)
+      auto
+      minmax(0, 1fr);
+
+    gap: 5px;
+  }
+}
+
+
+/* ---------- compact ---------- */
+
+@container memo-widget (max-width: 560px) {
+  .memo-app,
+  .memo-layout {
+    grid-template-columns:
+      minmax(0, 1fr);
+  }
+
+  .memo-app > .memo-workspace,
+  .memo-layout > .memo-workspace {
     grid-column: 1;
   }
 
   .memo-list-panel {
-    position: absolute !important;
+    position: absolute;
 
-    top: 34px !important;
-    left: 0 !important;
-    bottom: 0 !important;
+    top: 32px;
+    left: 0;
+    bottom: 0;
 
-    z-index: 10 !important;
+    z-index: 10;
 
     width:
       min(
         230px,
         calc(100% - 24px)
-      ) !important;
+      );
 
-    max-width: 82% !important;
+    max-width: 82%;
+
+    border-right:
+      1px solid hsl(220 18% 82% / 0.45);
 
     border-radius:
-      0 20px 20px 0 !important;
+      0 20px 20px 0;
 
     box-shadow:
       16px 0 40px
         hsl(220 28% 24% / 0.16),
       inset -1px 0 0
-        hsl(0 0% 100% / 0.62) !important;
+        hsl(0 0% 100% / 0.62);
 
     transform:
-      translateX(
-        calc(-100% - 12px)
-      );
+      translateX(calc(-100% - 12px));
 
     opacity: 0;
 
@@ -1860,6 +1778,9 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
   }
 
   .memo-app.is-compact-list-open
+  .memo-list-panel,
+
+  .memo-layout.is-compact-list-open
   .memo-list-panel {
     transform: translateX(0);
 
@@ -1869,45 +1790,127 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
   }
 
   .memo-workspace {
-    padding: 9px !important;
+    padding: 8px;
+
+    gap: 6px;
   }
 
   .memo-title-input,
   .memo-title-view {
-    font-size: 15px !important;
+    height: 30px;
+    min-height: 30px;
+
+    font-size: 14px;
+
+    line-height: 30px;
   }
 
-  .memo-note-title {
-    font-size: 11.5px !important;
+  .memo-toolbar,
+  .memo-editor-toolbar {
+    gap: 4px;
   }
 
-  .memo-note-preview {
-    font-size: 9.5px;
+  .memo-tool-button {
+    width: 25px;
+    height: 25px;
+  }
+
+  .memo-select {
+    height: 25px;
+
+    font-size: 10px;
   }
 
   .memo-editor,
+  .memo-window-editor,
   [contenteditable="true"].memo-editor {
-    font-size: 13px !important;
+    padding: 13px 11px;
 
-    line-height: 1.58 !important;
+    border-radius: 12px;
+
+    font-size: 12.5px;
+
+    line-height: 1.58;
+  }
+}
+
+
+/* ---------- very compact ---------- */
+
+@container memo-widget (max-width: 420px) {
+  .memo-app::before {
+    min-height: 29px;
 
     padding:
-      14px 12px !important;
+      0 7px 5px;
 
-    border-radius: 12px !important;
+    font-size: 12px;
+  }
+
+  .memo-list-panel {
+    top: 29px;
+  }
+
+  .memo-workspace {
+    padding: 6px;
+  }
+
+  .memo-title-input,
+  .memo-title-view {
+    font-size: 13px;
+  }
+
+  .memo-tool-button {
+    width: 24px;
+    height: 24px;
+  }
+
+  .memo-editor,
+  .memo-window-editor,
+  [contenteditable="true"].memo-editor {
+    padding: 11px 10px;
+
+    font-size: 12px;
+
+    line-height: 1.55;
   }
 }
 
 
 /* =========================================================
-   FLOATING WINDOW RESPONSIVE
+   27. FLOATING WINDOW MOBILE
    ========================================================= */
 
 @media (max-width: 760px) {
+  .memo-window,
+  .memo-floating-window {
+    width:
+      calc(100vw - 16px);
+
+    height:
+      calc(100vh - 16px);
+
+    max-width:
+      calc(100vw - 16px);
+
+    max-height:
+      calc(100vh - 16px);
+
+    border-radius: 22px;
+  }
+
+  .memo-window-titlebar,
+  .memo-floating-window-titlebar {
+    height: 56px;
+
+    padding: 0 14px;
+  }
 
   .memo-floating-body {
     grid-template-columns:
-      minmax(0, 1fr) !important;
+      minmax(0, 1fr);
+
+    padding: 10px;
   }
 
   .memo-floating-body
@@ -1920,7 +1923,7 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 
   .memo-floating-body
   > .memo-window-resizer {
-    display: none !important;
+    display: none;
   }
 
   .memo-floating-window
@@ -1928,14 +1931,13 @@ body.theme-glass-dark .memo-floating-window .memo-editor {
 
   .memo-floating-window
   .memo-title-view {
-    font-size: 16px !important;
+    font-size: 15px;
   }
 
   .memo-floating-window
   .memo-editor {
-    font-size: 13.5px !important;
+    padding: 15px 13px;
 
-    padding:
-      16px 14px !important;
+    font-size: 13px;
   }
 }
