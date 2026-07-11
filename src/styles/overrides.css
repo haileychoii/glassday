@@ -411,9 +411,26 @@ body,
   gap: 10px !important;
 }
 
+.app-mode-stage.is-laptop-mode .today-focus-card,
+.app-mode-stage.is-laptop-mode .today-focus-widget,
+.app-mode-stage.is-laptop-mode .today-mini-card {
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-card .glass-card-body,
+.app-mode-stage.is-laptop-mode .today-focus-widget .glass-card-body,
+.app-mode-stage.is-laptop-mode .today-mini-card .glass-card-body {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
 .app-mode-stage.is-laptop-mode .today-focus-hero {
   padding: 12px !important;
   grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
   gap: 12px !important;
 }
 
