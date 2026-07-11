@@ -165,6 +165,18 @@ main {
     max-width: 208px !important;
   }
 
+  /* Keep the manual collapsed desktop rail functional even after the
+     responsive desktop width clamp kicks in. Without this override, the
+     breakpoint rule above forces the sidebar back to full width. */
+  .app-sidebar[data-collapsed="true"],
+  .sidebar[data-collapsed="true"] {
+    --sidebar-width: 72px !important;
+    flex-basis: 72px !important;
+    width: 72px !important;
+    min-width: 72px !important;
+    max-width: 72px !important;
+  }
+
   .sidebar-tab-main {
     gap: 8px !important;
     padding-inline: 10px !important;
@@ -181,6 +193,17 @@ main {
     width: 190px !important;
     min-width: 176px !important;
     max-width: 190px !important;
+  }
+
+  /* Same fix for the tighter desktop breakpoint: collapsed state must still
+     win over the viewport-based width rule. */
+  .app-sidebar[data-collapsed="true"],
+  .sidebar[data-collapsed="true"] {
+    --sidebar-width: 72px !important;
+    flex-basis: 72px !important;
+    width: 72px !important;
+    min-width: 72px !important;
+    max-width: 72px !important;
   }
 
   .sidebar-brand {
