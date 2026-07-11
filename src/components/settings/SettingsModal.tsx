@@ -53,6 +53,7 @@ type SettingsModalProps = {
 };
 
 const THEME_STORAGE_KEY = "glassday.theme";
+const SETTINGS_WINDOW_POSITION_STORAGE_KEY = "glassday.settingsWindow.position.v1";
 
 // const forceApplyTheme = (nextTheme: ThemeId) => {
 //   applyTheme(nextTheme);
@@ -118,6 +119,14 @@ const renderThemePreview = (themeId: ThemeId) => (
 
 export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const windowRef = useRef<HTMLElement | null>(null);
+  const dragStateRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
+  } | null>(null);
   const {
     isConfigured,
     user,
@@ -147,6 +156,30 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const [status, setStatus] = useState("");
   const [syncEmail, setSyncEmail] = useState("");
   const [syncPassword, setSyncPassword] = useState("");
+  const [windowPosition, setWindowPosition] = useState(() => {
+    if (typeof window === "undefined") {
+      return { x: 0, y: 0 };
+    }
+
+    try {
+      const raw = window.localStorage.getItem(
+        SETTINGS_WINDOW_POSITION_STORAGE_KEY
+      );
+
+      if (!raw) {
+        return { x: 0, y: 0 };
+      }
+
+      const parsed = JSON.parse(raw) as { x?: number; y?: number };
+
+      return {
+        x: typeof parsed.x === "number" ? parsed.x : 0,
+        y: typeof parsed.y === "number" ? parsed.y : 0,
+      };
+    } catch {
+      return { x: 0, y: 0 };
+    }
+  });
   const appFontOptions = useMemo(() => getAppFontOptions(), [customFonts]);
 
   useEffect(() => {
@@ -204,7 +237,64 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     };
   }, [open, onClose]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    window.localStorage.setItem(
+      SETTINGS_WINDOW_POSITION_STORAGE_KEY,
+      JSON.stringify(windowPosition)
+    );
+  }, [windowPosition]);
+
   if (!open) return null;
+
+  const startWindowDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement | null;
+
+    if (target?.closest("button")) return;
+
+    dragStateRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: windowPosition.x,
+      originY: windowPosition.y,
+    };
+
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const moveWindowDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    const dragState = dragStateRef.current;
+
+    if (!dragState || dragState.pointerId !== event.pointerId) return;
+
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const modalWidth = windowRef.current?.offsetWidth ?? 820;
+    const modalHeight = windowRef.current?.offsetHeight ?? 720;
+    const padding = 20;
+
+    const nextX = dragState.originX + (event.clientX - dragState.startX);
+    const nextY = dragState.originY + (event.clientY - dragState.startY);
+
+    const minX = padding - (viewportWidth - modalWidth) / 2;
+    const maxX = (viewportWidth - modalWidth) / 2 - padding;
+    const minY = padding - (viewportHeight - modalHeight) / 2;
+    const maxY = (viewportHeight - modalHeight) / 2 - padding;
+
+    setWindowPosition({
+      x: Math.min(Math.max(nextX, minX), maxX),
+      y: Math.min(Math.max(nextY, minY), maxY),
+    });
+  };
+
+  const finishWindowDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (dragStateRef.current?.pointerId !== event.pointerId) return;
+
+    dragStateRef.current = null;
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  };
 
   const handleThemeChange = (nextTheme: ThemeId) => {
     setTheme(nextTheme);
@@ -388,13 +478,23 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   return createPortal(
     <div className="settings-modal-backdrop" onMouseDown={onClose}>
       <section
+        ref={windowRef}
         className="settings-modal-window settings-window settings-panel"
         role="dialog"
         aria-modal="true"
         aria-label="Glassday Settings"
+        style={{
+          transform: `translate(${windowPosition.x}px, ${windowPosition.y}px)`,
+        }}
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <header className="settings-modal-header settings-header settings-titlebar">
+        <header
+          className="settings-modal-header settings-header settings-titlebar"
+          onPointerDown={startWindowDrag}
+          onPointerMove={moveWindowDrag}
+          onPointerUp={finishWindowDrag}
+          onPointerCancel={finishWindowDrag}
+        >
           <div className="settings-modal-title-wrap">
             <div className="settings-modal-icon settings-icon">
               <Settings className="w-4 h-4" />
