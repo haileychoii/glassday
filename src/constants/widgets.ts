@@ -59,7 +59,7 @@ export const widgetRegistry: Record<WidgetId, WidgetMeta> = {
   },
   money: {
     id: "money",
-    label: "Wealth",
+    label: "Money",
     description: "수입과 목표",
     category: "money",
     defaultSize: "small",

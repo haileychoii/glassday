@@ -195,8 +195,8 @@ export const DailyJournalWidget = () => {
           </div>
 
           <div className="widget-card-copy">
-            <h3>Daily Journal</h3>
-            <p>
+            <h3 className="glass-card-title">Daily Journal</h3>
+            <p className="glass-card-subtitle">
               {entry.date} · {progress}% filled
             </p>
           </div>

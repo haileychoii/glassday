@@ -38,7 +38,7 @@ export const MoodWidget = () => {
 
   return (
     <GlassCard
-      title="Energy Insights"
+      title="Mood"
       subtitle={editing ? "Editing signals" : "Feelings as signals"}
       icon={<Heart className="w-4 h-4" />}
       className="mood-widget"

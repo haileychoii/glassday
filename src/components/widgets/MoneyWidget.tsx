@@ -51,9 +51,10 @@ export const MoneyWidget = () => {
 
   return (
     <GlassCard
-      title="Wealth Tracker"
+      title="Money"
       subtitle={editing ? "Editing money goals" : "Monthly & asset goals"}
       icon={<Wallet className="w-4 h-4" />}
+      className="money-widget"
       actions={
         <button
           type="button"
