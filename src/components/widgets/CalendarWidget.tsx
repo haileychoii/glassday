@@ -176,8 +176,13 @@ export const CalendarWidget = () => {
   return (
     <>
       <GlassCard
+        className="calendar-widget-card"
         title="Calendar"
         subtitle="Manual events + career application windows"
+        // Keep the calendar title/subtitle explicit so theme-specific overrides
+        // cannot accidentally wash out the header when the widget gets narrow.
+        titleStyle={{ color: "hsl(var(--foreground) / 0.96)" }}
+        subtitleStyle={{ color: "hsl(var(--muted-foreground) / 0.82)" }}
         icon={<CalendarDays className="w-4 h-4" />}
         actions={
           <button
@@ -238,7 +243,12 @@ export const CalendarWidget = () => {
             {formatHeaderLabel(selectedDate, view)}
           </div>
 
-          <div className="calendar-view-body">
+          <div
+            className={cn(
+              "calendar-view-body",
+              view === "month" && "calendar-view-body--month"
+            )}
+          >
             {view === "month" ? (
               <MonthCalendar
                 selectedDate={selectedDate}

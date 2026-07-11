@@ -2404,6 +2404,11 @@ body.theme-pixel-desk .career-cover-status-select option {
    Calendar widget final fit
 ========================================================= */
 
+/* This final section intentionally wins over older month-calendar patches in
+   this file. The goal is to keep the calendar header readable at small sizes
+   and let month rows shrink with the widget height instead of forcing a tall
+   card all the time. */
+
 .calendar-widget-frame {
   box-sizing: border-box !important;
   width: 100% !important;
@@ -2440,6 +2445,20 @@ body.theme-pixel-desk .career-cover-status-select option {
   padding-top: 10px !important;
 }
 
+/* Keep the real widget title visible even when the card gets narrow. The
+   subtitle is the first thing we sacrifice; the title should survive longer. */
+.calendar-widget-card .glass-card-copy {
+  min-width: 0 !important;
+}
+
+.calendar-widget-card .glass-card-title {
+  color: hsl(var(--foreground) / 0.96) !important;
+}
+
+.calendar-widget-card .glass-card-subtitle {
+  color: hsl(var(--muted-foreground) / 0.82) !important;
+}
+
 .calendar-month-board {
   box-sizing: border-box !important;
   width: 100% !important;
@@ -2449,6 +2468,17 @@ body.theme-pixel-desk .career-cover-status-select option {
   overflow-x: hidden !important;
   overflow-y: auto !important;
   scrollbar-gutter: stable;
+}
+
+/* Month view should consume the available body height first, and only scroll
+   after the rows have already compressed as much as the content allows. */
+.calendar-view-body--month {
+  overflow-y: auto !important;
+}
+
+.calendar-view-body--month .calendar-month-board {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
 }
 
 .calendar-month-weekdays,
@@ -2467,16 +2497,18 @@ body.theme-pixel-desk .career-cover-status-select option {
 }
 
 .calendar-month-weeks {
-  grid-template-rows: none !important;
-  grid-auto-rows: minmax(0, auto) !important;
+  height: 100% !important;
+  grid-template-rows: repeat(6, minmax(0, 1fr)) !important;
+  grid-auto-rows: minmax(0, 1fr) !important;
   gap: clamp(4px, 0.8vw, 7px) !important;
   overflow: visible !important;
+  align-content: stretch !important;
 }
 
 .calendar-month-week-row {
   grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
   gap: clamp(4px, 0.8vw, 7px) !important;
-  min-height: calc(96px + (var(--range-lanes, 0) * 12px)) !important;
+  min-height: calc(56px + (var(--range-lanes, 0) * 10px)) !important;
   height: auto !important;
   overflow: hidden !important;
 }
@@ -2484,7 +2516,7 @@ body.theme-pixel-desk .career-cover-status-select option {
 .calendar-month-week-row > .calendar-month-day-cell {
   box-sizing: border-box !important;
   min-width: 0 !important;
-  min-height: calc(96px + (var(--range-lanes, 0) * 12px)) !important;
+  min-height: calc(56px + (var(--range-lanes, 0) * 10px)) !important;
   height: auto !important;
   padding: 8px clamp(4px, 0.8vw, 8px) 7px !important;
 }
@@ -2519,6 +2551,16 @@ body.theme-pixel-desk .career-cover-status-select option {
 }
 
 @container gd-widget (max-width: 560px) {
+  .calendar-widget-card .glass-card-subtitle {
+    display: none !important;
+  }
+
+  .calendar-widget-card .glass-card-header > .shrink-0 {
+    width: auto !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+  }
+
   .calendar-widget-frame {
     padding-top: 10px !important;
     gap: 10px !important;
@@ -2534,11 +2576,11 @@ body.theme-pixel-desk .career-cover-status-select option {
   }
 
   .calendar-month-week-row {
-    min-height: calc(86px + (var(--range-lanes, 0) * 10px)) !important;
+    min-height: calc(52px + (var(--range-lanes, 0) * 9px)) !important;
   }
 
   .calendar-month-week-row > .calendar-month-day-cell {
-    min-height: calc(86px + (var(--range-lanes, 0) * 10px)) !important;
+    min-height: calc(52px + (var(--range-lanes, 0) * 9px)) !important;
     padding: 7px 4px 6px !important;
     border-radius: 13px !important;
   }
@@ -2554,11 +2596,11 @@ body.theme-pixel-desk .career-cover-status-select option {
 
 @container gd-widget (max-width: 860px) {
   .calendar-month-week-row {
-    min-height: calc(82px + (var(--range-lanes, 0) * 10px)) !important;
+    min-height: calc(54px + (var(--range-lanes, 0) * 9px)) !important;
   }
 
   .calendar-month-week-row > .calendar-month-day-cell {
-    min-height: calc(82px + (var(--range-lanes, 0) * 10px)) !important;
+    min-height: calc(54px + (var(--range-lanes, 0) * 9px)) !important;
     padding: 7px 4px 6px !important;
   }
 
@@ -2578,11 +2620,11 @@ body.theme-pixel-desk .career-cover-status-select option {
   }
 
   .calendar-month-week-row {
-    min-height: calc(70px + (var(--range-lanes, 0) * 8px)) !important;
+    min-height: calc(48px + (var(--range-lanes, 0) * 8px)) !important;
   }
 
   .calendar-month-week-row > .calendar-month-day-cell {
-    min-height: calc(70px + (var(--range-lanes, 0) * 8px)) !important;
+    min-height: calc(48px + (var(--range-lanes, 0) * 8px)) !important;
     padding: 6px 3px 5px !important;
     border-radius: 12px !important;
   }
