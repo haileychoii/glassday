@@ -242,57 +242,57 @@ body,
 
 @media (max-width: 920px) {
   .topbar-mobile-workspaces {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    min-width: 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
   }
 
   .topbar-mobile-workspace-list {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 8px !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    min-width: 0 !important;
-    padding-bottom: 2px !important;
-    scrollbar-width: none !important;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-width: 0;
+    padding-bottom: 2px;
+    scrollbar-width: none;
   }
 
   .topbar-mobile-workspace-list::-webkit-scrollbar {
-    display: none !important;
+    display: none;
   }
 }
 
 .theme-segmented-control.theme-button-group {
-  display: flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  white-space: nowrap !important;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
 }
 
 .theme-select-mobile {
-  display: none !important;
-  height: 36px !important;
-  min-width: 118px !important;
-  max-width: 150px !important;
-  padding: 0 34px 0 12px !important;
-  border-radius: 14px !important;
-  font-size: 12px !important;
-  font-weight: 800 !important;
-  outline: none !important;
+  display: none;
+  height: 36px;
+  min-width: 118px;
+  max-width: 150px;
+  padding: 0 34px 0 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 800;
+  outline: none;
 }
 
 .topbar-action-button {
-  height: 36px !important;
-  padding: 0 12px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  white-space: nowrap !important;
+  height: 36px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 /* =========================================================
@@ -385,19 +385,19 @@ body,
   .topbar-inner {
     min-height: 100px !important;
     padding: 18px 20px 14px !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    justify-content: center !important;
-    gap: 12px !important;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 12px;
   }
 
   .topbar-title {
-    width: 100% !important;
+    width: 100%;
   }
 
   .topbar-heading {
-    align-items: flex-start !important;
-    gap: 12px !important;
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .topbar-title h1 {
@@ -409,15 +409,15 @@ body,
   }
 
   .topbar-actions {
-    width: auto !important;
-    margin-left: 0 !important;
-    justify-content: flex-end !important;
-    gap: 8px !important;
-    scrollbar-width: none !important;
+    width: auto;
+    margin-left: 0;
+    justify-content: flex-end;
+    gap: 8px;
+    scrollbar-width: none;
   }
 
   .topbar-actions::-webkit-scrollbar {
-    display: none !important;
+    display: none;
   }
 
   .theme-button-group {
@@ -425,14 +425,14 @@ body,
   }
 
   .theme-select-mobile {
-    display: inline-flex !important;
-    flex: 0 0 auto !important;
+    display: inline-flex;
+    flex: 0 0 auto;
   }
 
   .topbar-action-button {
-    height: 36px !important;
-    padding-inline: 11px !important;
-    font-size: 12px !important;
+    height: 36px;
+    padding-inline: 11px;
+    font-size: 12px;
   }
 
   .calendar-detail-grid {
@@ -468,7 +468,7 @@ body,
   }
 
   .topbar-actions::-webkit-scrollbar {
-    display: block !important;
+    display: block;
   }
 
   .theme-select-mobile {
@@ -476,12 +476,12 @@ body,
   }
 
   .topbar-action-button span {
-    display: none !important;
+    display: none;
   }
 
   .topbar-action-button {
-    width: 38px !important;
-    padding-inline: 0 !important;
+    width: 38px;
+    padding-inline: 0;
   }
 }
 
