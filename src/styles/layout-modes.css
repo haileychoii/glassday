@@ -59,22 +59,22 @@
 }
 
 .app-shell-surface.is-laptop {
-  --gd-radius-app: 26px;
-  --gd-radius-panel: 22px;
-  --gd-radius-widget: 22px;
-  --gd-radius-card: 18px;
-  --gd-radius-inner: 16px;
+  --gd-radius-app: 20px;
+  --gd-radius-panel: 0px 0px 20px 0px;
+  /* 위젯의 radious */
+  --gd-radius-widget: 22px; 
+  --gd-radius-card: 20px;
   --gd-space-sm: 6px;
   --gd-space-md: 8px;
   --gd-space-lg: 10px;
   --gd-space-xl: 12px;
   --gd-space-2xl: 16px;
-  --gd-widget-pad-x: 12px;
-  --gd-widget-pad-y: 12px;
-  --gd-widget-header-pad-top: 12px;
+  --gd-widget-pad-x: 6px;
+  --gd-widget-pad-y: 6px;
+  --gd-widget-header-pad-top: 6px;
   --gd-widget-header-pad-bottom: 6px;
-  --gd-widget-header-gap: 10px;
-  --gd-widget-title-gap: 8px;
+  --gd-widget-header-gap: 5px;
+  --gd-widget-title-gap: 4px;
   --gd-control-height-sm: 28px;
   --gd-control-height-md: 30px;
   --gd-shell-pad-x: 18px;
@@ -85,7 +85,7 @@
   --gd-topbar-min-height: 56px;
   --gd-topbar-pad-x: 10px;
   --gd-topbar-gap: 8px;
-  --gd-sidebar-width-expanded: 156px;
+  --gd-sidebar-width-expanded: 150px;
   --gd-sidebar-width-collapsed: 56px;
   --gd-sidebar-brand-height: 64px;
   --gd-sidebar-body-pad: 6px;
@@ -138,7 +138,7 @@
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-item {
-  min-height: 38px;
+  min-height: 36px;
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-main {
@@ -146,11 +146,11 @@
   padding: 0 8px;
   gap: 7px;
   font-size: 12px;
-  border-radius: 12px;
+  border-radius: 15px;
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-item.is-collapsed .sidebar-tab-main {
-  width: 36px;
+  width: 15px;
   height: 36px;
   border-radius: 12px;
 }
@@ -175,12 +175,13 @@
 }
 
 .app-shell-surface.is-laptop .topbar-title h1 {
-  font-size: 20px;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .app-shell-surface.is-laptop .topbar-title p {
   margin-top: 2px;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .app-shell-surface.is-laptop .topbar-sparkle {
@@ -194,7 +195,7 @@
 
 .app-shell-surface.is-laptop .topbar-action-button,
 .app-shell-surface.is-laptop .layout-mode-button {
-  height: 32px;
+  height: 24px;
 }
 
 .app-shell-surface.is-laptop .topbar-action-button {
@@ -240,7 +241,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 5px;
   cursor: grab;
   user-select: none;
   border-radius: 18px 18px 0 0;

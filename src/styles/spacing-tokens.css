@@ -21,19 +21,19 @@
   /* 2. Widget shell spacing
      Change these first to tighten or loosen most widgets at once. */
   --gd-widget-gap-tight: var(--gd-space-sm);
-  --gd-widget-gap: var(--gd-space-lg);
-  --gd-widget-pad-x: var(--gd-space-xl);
-  --gd-widget-pad-y: var(--gd-space-xl);
-  --gd-widget-header-pad-top: var(--gd-space-xl);
+  --gd-widget-gap: var(--gd-space-md);
+  --gd-widget-pad-x: var(--gd-space-lg);
+  --gd-widget-pad-y: var(--gd-space-lg);
+  --gd-widget-header-pad-top: var(--gd-space-lg);
   --gd-widget-header-pad-bottom: var(--gd-space-sm);
-  --gd-widget-header-gap: var(--gd-space-lg);
-  --gd-widget-title-gap: var(--gd-space-md);
+  --gd-widget-header-gap: var(--gd-space-md);
+  --gd-widget-title-gap: var(--gd-space-xs);
 
   /* 2b. Shell spacing
      These map directly to Figma frame paddings and widths. */
-  --gd-shell-pad-x: 32px;
+  --gd-shell-pad-x: 24px;
   --gd-shell-pad-top: 18px;
-  --gd-shell-pad-bottom: 40px;
+  --gd-shell-pad-bottom: 30px;
   --gd-main-pad-x: 10px;
   --gd-main-pad-y: 8px;
   --gd-topbar-min-height: 70px;
