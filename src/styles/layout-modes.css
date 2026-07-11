@@ -77,6 +77,19 @@
   --gd-widget-title-gap: 8px;
   --gd-control-height-sm: 28px;
   --gd-control-height-md: 30px;
+  --gd-shell-pad-x: 18px;
+  --gd-shell-pad-top: 10px;
+  --gd-shell-pad-bottom: 18px;
+  --gd-main-pad-x: 4px;
+  --gd-main-pad-y: 4px;
+  --gd-topbar-min-height: 56px;
+  --gd-topbar-pad-x: 10px;
+  --gd-topbar-gap: 8px;
+  --gd-sidebar-width-expanded: 156px;
+  --gd-sidebar-width-collapsed: 56px;
+  --gd-sidebar-brand-height: 64px;
+  --gd-sidebar-body-pad: 6px;
+  --gd-sidebar-section-gap: 5px;
   width: 100%;
   height: 100%;
   min-height: var(--gd-laptop-frame-height);
@@ -84,22 +97,22 @@
 
 .app-shell-surface.is-laptop .app-sidebar,
 .app-shell-surface.is-laptop .sidebar {
-  --sidebar-width: 176px;
-  min-width: 176px;
-  max-width: 176px;
+  --sidebar-width: var(--gd-sidebar-width-expanded);
+  min-width: var(--gd-sidebar-width-expanded);
+  max-width: var(--gd-sidebar-width-expanded);
 }
 
 .app-shell-surface.is-laptop .app-sidebar[data-collapsed="true"],
 .app-shell-surface.is-laptop .sidebar[data-collapsed="true"] {
-  --sidebar-width: 60px;
-  min-width: 60px;
-  max-width: 60px;
+  --sidebar-width: var(--gd-sidebar-width-collapsed);
+  min-width: var(--gd-sidebar-width-collapsed);
+  max-width: var(--gd-sidebar-width-collapsed);
 }
 
 .app-shell-surface.is-laptop .sidebar-brand {
-  height: 72px;
-  min-height: 72px;
-  padding: 0 14px;
+  height: var(--gd-sidebar-brand-height);
+  min-height: var(--gd-sidebar-brand-height);
+  padding: 0 10px;
 }
 
 .app-shell-surface.is-laptop .sidebar-brand-title {
@@ -112,16 +125,16 @@
 }
 
 .app-shell-surface.is-laptop .sidebar-body {
-  padding: 8px;
+  padding: var(--gd-sidebar-body-pad);
 }
 
 .app-shell-surface.is-laptop .sidebar-section-header {
-  margin-bottom: 10px;
-  padding: 0 6px;
+  margin-bottom: 8px;
+  padding: 0 4px;
 }
 
 .app-shell-surface.is-laptop .sidebar-workspace-list {
-  gap: 6px;
+  gap: var(--gd-sidebar-section-gap);
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-item {
@@ -129,17 +142,17 @@
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-main {
-  height: 38px;
-  padding: 0 10px;
-  gap: 8px;
-  font-size: 12.5px;
-  border-radius: 14px;
+  height: 36px;
+  padding: 0 8px;
+  gap: 7px;
+  font-size: 12px;
+  border-radius: 12px;
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-item.is-collapsed .sidebar-tab-main {
-  width: 40px;
-  height: 40px;
-  border-radius: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-icon svg {
@@ -149,12 +162,12 @@
 
 .app-shell-surface.is-laptop .topbar,
 .app-shell-surface.is-laptop .topbar-inner {
-  min-height: 60px;
+  min-height: var(--gd-topbar-min-height);
 }
 
 .app-shell-surface.is-laptop .topbar-inner {
-  padding: 0 14px;
-  gap: 10px;
+  padding: 0 var(--gd-topbar-pad-x);
+  gap: var(--gd-topbar-gap);
 }
 
 .app-shell-surface.is-laptop .topbar-heading {
@@ -194,11 +207,16 @@
 }
 
 .app-shell-surface.is-laptop .app-shell-main {
-  padding-top: 4px;
+  padding-top: 0;
 }
 
 .app-shell-surface.is-laptop .dashboard-tab-header {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+}
+
+.app-shell-surface.is-laptop .calendar-widget-card {
+  --gd-calendar-month-row-min: 42px;
+  --gd-calendar-range-lane-size: 8px;
 }
 
 .laptop-preview-stage {

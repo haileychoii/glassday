@@ -75,9 +75,9 @@ const WIDGET_LAYOUT_CONSTRAINTS: Partial<
   Record<WidgetId, Pick<GridLayoutItem, "minH" | "minW">>
 > = {
   calendar: {
-    // Calendar month cells now scale down more gracefully, so the widget
-    // no longer needs an unusually tall minimum height to stay readable.
-    minH: 12,
+    // Calendar rows now compress further, so the widget can stay usable
+    // even when the user shortens it in laptop mode.
+    minH: 9,
     minW: 5,
   },
 };

@@ -16,6 +16,11 @@
   color: hsl(var(--foreground) / 0.72);
 }
 
+.calendar-widget-card {
+  --gd-calendar-month-row-min: 48px;
+  --gd-calendar-range-lane-size: 9px;
+}
+
 .calendar-month-weekday {
   height: 22px;
   font-size: 10px;
@@ -2504,7 +2509,10 @@ body.theme-pixel-desk .career-cover-status-select option {
 .calendar-month-week-row {
   grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
   gap: clamp(4px, 0.8vw, 7px) !important;
-  min-height: calc(56px + (var(--range-lanes, 0) * 10px)) !important;
+  min-height: calc(
+    var(--gd-calendar-month-row-min) +
+      (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
+  ) !important;
   height: auto !important;
   overflow: hidden !important;
 }
@@ -2512,7 +2520,10 @@ body.theme-pixel-desk .career-cover-status-select option {
 .calendar-month-week-row > .calendar-month-day-cell {
   box-sizing: border-box !important;
   min-width: 0 !important;
-  min-height: calc(56px + (var(--range-lanes, 0) * 10px)) !important;
+  min-height: calc(
+    var(--gd-calendar-month-row-min) +
+      (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
+  ) !important;
   height: auto !important;
   padding: 8px clamp(4px, 0.8vw, 8px) 7px !important;
 }
@@ -2572,11 +2583,17 @@ body.theme-pixel-desk .career-cover-status-select option {
   }
 
   .calendar-month-week-row {
-    min-height: calc(52px + (var(--range-lanes, 0) * 9px)) !important;
+    min-height: calc(
+      max(40px, var(--gd-calendar-month-row-min) - 4px) +
+        (var(--range-lanes, 0) * max(7px, var(--gd-calendar-range-lane-size) - 1px))
+    ) !important;
   }
 
   .calendar-month-week-row > .calendar-month-day-cell {
-    min-height: calc(52px + (var(--range-lanes, 0) * 9px)) !important;
+    min-height: calc(
+      max(40px, var(--gd-calendar-month-row-min) - 4px) +
+        (var(--range-lanes, 0) * max(7px, var(--gd-calendar-range-lane-size) - 1px))
+    ) !important;
     padding: 7px 4px 6px !important;
     border-radius: 13px !important;
   }
@@ -2592,11 +2609,17 @@ body.theme-pixel-desk .career-cover-status-select option {
 
 @container gd-widget (max-width: 860px) {
   .calendar-month-week-row {
-    min-height: calc(54px + (var(--range-lanes, 0) * 9px)) !important;
+    min-height: calc(
+      max(42px, var(--gd-calendar-month-row-min) - 2px) +
+        (var(--range-lanes, 0) * max(7px, var(--gd-calendar-range-lane-size)))
+    ) !important;
   }
 
   .calendar-month-week-row > .calendar-month-day-cell {
-    min-height: calc(54px + (var(--range-lanes, 0) * 9px)) !important;
+    min-height: calc(
+      max(42px, var(--gd-calendar-month-row-min) - 2px) +
+        (var(--range-lanes, 0) * max(7px, var(--gd-calendar-range-lane-size)))
+    ) !important;
     padding: 7px 4px 6px !important;
   }
 
@@ -2616,11 +2639,17 @@ body.theme-pixel-desk .career-cover-status-select option {
   }
 
   .calendar-month-week-row {
-    min-height: calc(48px + (var(--range-lanes, 0) * 8px)) !important;
+    min-height: calc(
+      max(38px, var(--gd-calendar-month-row-min) - 8px) +
+        (var(--range-lanes, 0) * max(6px, var(--gd-calendar-range-lane-size) - 1px))
+    ) !important;
   }
 
   .calendar-month-week-row > .calendar-month-day-cell {
-    min-height: calc(48px + (var(--range-lanes, 0) * 8px)) !important;
+    min-height: calc(
+      max(38px, var(--gd-calendar-month-row-min) - 8px) +
+        (var(--range-lanes, 0) * max(6px, var(--gd-calendar-range-lane-size) - 1px))
+    ) !important;
     padding: 6px 3px 5px !important;
     border-radius: 12px !important;
   }

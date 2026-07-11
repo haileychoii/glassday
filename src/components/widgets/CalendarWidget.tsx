@@ -176,7 +176,7 @@ export const CalendarWidget = () => {
   return (
     <>
       <GlassCard
-        className="calendar-widget-card"
+        className="calendar-widget calendar-widget-card"
         title="Calendar"
         subtitle="Manual events + career application windows"
         // Keep the calendar title/subtitle explicit so theme-specific overrides

@@ -33,7 +33,8 @@
    that can accidentally hide widget headers. */
 .today-focus-card .glass-card-title,
 .today-focus-widget .glass-card-title,
-.alert-center-widget .glass-card-title {
+.alert-center-widget .glass-card-title,
+.calendar-widget .glass-card-title {
   display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
@@ -42,7 +43,8 @@
 
 .today-focus-card .glass-card-subtitle,
 .today-focus-widget .glass-card-subtitle,
-.alert-center-widget .glass-card-subtitle {
+.alert-center-widget .glass-card-subtitle,
+.calendar-widget .glass-card-subtitle {
   display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
@@ -50,7 +52,8 @@
 }
 
 .today-focus-widget .glass-card-copy,
-.alert-center-widget .glass-card-copy {
+.alert-center-widget .glass-card-copy,
+.calendar-widget .glass-card-copy {
   min-width: 0 !important;
   flex: 1 1 auto !important;
   display: flex !important;
@@ -68,15 +71,18 @@
 
 .today-focus-widget .glass-card-header,
 .alert-center-widget .glass-card-header,
+.calendar-widget .glass-card-header,
 .today-focus-widget .glass-card-title-group,
-.alert-center-widget .glass-card-title-group {
+.alert-center-widget .glass-card-title-group,
+.calendar-widget .glass-card-title-group {
   position: relative !important;
   z-index: 3 !important;
   isolation: isolate !important;
 }
 
 .today-focus-widget .glass-card-subtitle,
-.alert-center-widget .glass-card-subtitle {
+.alert-center-widget .glass-card-subtitle,
+.calendar-widget .glass-card-subtitle {
   font-size: 11.5px !important;
   line-height: 1.25 !important;
   font-weight: 650 !important;

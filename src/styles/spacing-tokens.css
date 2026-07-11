@@ -29,6 +29,22 @@
   --gd-widget-header-gap: var(--gd-space-lg);
   --gd-widget-title-gap: var(--gd-space-md);
 
+  /* 2b. Shell spacing
+     These map directly to Figma frame paddings and widths. */
+  --gd-shell-pad-x: 32px;
+  --gd-shell-pad-top: 18px;
+  --gd-shell-pad-bottom: 40px;
+  --gd-main-pad-x: 10px;
+  --gd-main-pad-y: 8px;
+  --gd-topbar-min-height: 70px;
+  --gd-topbar-pad-x: 20px;
+  --gd-topbar-gap: 12px;
+  --gd-sidebar-width-expanded: clamp(198px, 17vw, 200px);
+  --gd-sidebar-width-collapsed: 72px;
+  --gd-sidebar-brand-height: 86px;
+  --gd-sidebar-body-pad: 12px;
+  --gd-sidebar-section-gap: 8px;
+
   /* 3. Shared control sizing */
   --gd-control-height-sm: 30px;
   --gd-control-height-md: 32px;

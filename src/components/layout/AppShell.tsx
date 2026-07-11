@@ -168,12 +168,7 @@ export const AppShell = ({
           />
 
           <main
-            className={[
-              "app-shell-main flex-1 !overflow-y-auto !overflow-x-hidden bg-transparent",
-              layoutMode === "laptop"
-                ? "px-1.5 py-1.5 md:px-1.5 md:py-1.5"
-                : "px-2 py-1.5 md:px-2.5 md:py-2",
-            ].join(" ")}
+            className="app-shell-main flex-1 !overflow-y-auto !overflow-x-hidden bg-transparent"
           >
             {children}
           </main>

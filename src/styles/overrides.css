@@ -42,7 +42,10 @@ body,
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  padding: 18px 32px 40px;
+  padding:
+    var(--gd-shell-pad-top)
+    var(--gd-shell-pad-x)
+    var(--gd-shell-pad-bottom);
   overflow-x: hidden;
 }
 
@@ -140,18 +143,18 @@ body,
   position: relative;
   z-index: 50;
   width: 100%;
-  min-height: 70px;
+  min-height: var(--gd-topbar-min-height);
   overflow: visible;
 }
 
 .topbar-inner {
   width: 100%;
-  min-height: 70px;
-  padding: 0 20px;
+  min-height: var(--gd-topbar-min-height);
+  padding: 0 var(--gd-topbar-pad-x);
   display: flex;
   align-items: stretch;
   justify-content: center;
-  gap: 12px;
+  gap: var(--gd-topbar-gap);
 }
 
 .topbar-heading {
@@ -213,6 +216,10 @@ body,
   position: relative;
   z-index: 60;
   overflow: visible;
+}
+
+.app-shell-main {
+  padding: var(--gd-main-pad-y) var(--gd-main-pad-x);
 }
 
 @media (min-width: 921px) {

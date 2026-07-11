@@ -485,6 +485,45 @@
   body.pixel-desk,
   html.theme-pixel,
   body.theme-pixel
+) .layout-mode-toggle {
+  gap: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    1px 1px 0 #dfdfdf inset,
+    -1px -1px 0 #808080 inset !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .layout-mode-button {
+  height: 26px !important;
+  padding: 0 8px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
 ) .theme-segmented-control {
   border-radius: 0 !important;
   background: #c0c0c0 !important;

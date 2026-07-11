@@ -468,12 +468,12 @@ aside .sidebar-workspace-list {
 
 .app-sidebar,
 .sidebar {
-  --sidebar-width: clamp(198px, 17vw, 200px);
+  --sidebar-width: var(--gd-sidebar-width-expanded);
 
   flex: 0 0 var(--sidebar-width);
   width: var(--sidebar-width);
-  min-width: 190px;
-  max-width: 200px;
+  min-width: var(--sidebar-width);
+  max-width: var(--sidebar-width);
 
   min-height: 100%;
 
@@ -485,14 +485,14 @@ aside .sidebar-workspace-list {
 
 .app-sidebar[data-collapsed="true"],
 .sidebar[data-collapsed="true"] {
-  --sidebar-width: 72px;
-  min-width: 72px;
-  max-width: 72px;
+  --sidebar-width: var(--gd-sidebar-width-collapsed);
+  min-width: var(--gd-sidebar-width-collapsed);
+  max-width: var(--gd-sidebar-width-collapsed);
 }
 
 .sidebar-brand {
-  height: 86px;
-  min-height: 86px;
+  height: var(--gd-sidebar-brand-height);
+  min-height: var(--gd-sidebar-brand-height);
   padding: 0 24px;
 
   display: flex;
@@ -534,7 +534,7 @@ aside .sidebar-workspace-list {
   flex: 1 1 auto;
   min-height: 0;
 
-  padding: 12px;
+  padding: var(--gd-sidebar-body-pad);
 
   overflow-y: auto;
   overflow-x: hidden;
@@ -601,7 +601,7 @@ aside .sidebar-workspace-list {
 
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--gd-sidebar-section-gap);
 
   overflow: visible;
 }
