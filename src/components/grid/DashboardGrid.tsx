@@ -28,7 +28,7 @@ import { HealthWidget } from "../widgets/HealthWidget";
 import { MoneyWidget } from "../widgets/MoneyWidget";
 import { MoodWidget } from "../widgets/MoodWidget";
 
-import { defaultLayouts } from "./gridDefaults";
+import { defaultLayoutsByMode } from "./gridDefaults";
 import { allWidgetIds, widgetRegistry } from "../../constants/widgets";
 
 import "react-grid-layout/css/styles.css";
@@ -154,11 +154,12 @@ const toLayoutArray = (value: unknown): GridLayoutItem[] => {
 };
 
 const getDefaultLayoutForWidget = (
+  layoutMode: DashboardLayoutMode,
   widgetId: WidgetId,
   breakpoint: Breakpoint,
   index: number
 ): GridLayoutItem => {
-  const layouts = defaultLayouts as Partial<Layouts>;
+  const layouts = defaultLayoutsByMode[layoutMode] as Partial<Layouts>;
 
   const defaultItem =
     layouts[breakpoint]?.find((item) => item.i === widgetId) ??
@@ -180,7 +181,8 @@ const getDefaultLayoutForWidget = (
 const ensureLayoutForWidgets = (
   layout: unknown,
   widgetIds: WidgetId[],
-  breakpoint: Breakpoint
+  breakpoint: Breakpoint,
+  layoutMode: DashboardLayoutMode
 ): GridLayoutItem[] => {
   const safeLayout = toLayoutArray(layout);
   const filteredLayout = safeLayout.filter((item) =>
@@ -191,7 +193,7 @@ const ensureLayoutForWidgets = (
   const missingLayout = widgetIds
     .filter((widgetId) => !existingIds.has(widgetId))
     .map((widgetId, index) =>
-      getDefaultLayoutForWidget(widgetId, breakpoint, index)
+      getDefaultLayoutForWidget(layoutMode, widgetId, breakpoint, index)
     );
 
   return [...filteredLayout, ...missingLayout];
@@ -199,15 +201,16 @@ const ensureLayoutForWidgets = (
 
 const ensureResponsiveLayouts = (
   layouts: unknown,
-  widgetIds: WidgetId[]
+  widgetIds: WidgetId[],
+  layoutMode: DashboardLayoutMode
 ): Layouts => {
   const source = layouts && typeof layouts === "object" ? layouts : {};
   const sourceLayouts = source as Partial<Layouts>;
 
   return {
-    lg: ensureLayoutForWidgets(sourceLayouts.lg, widgetIds, "lg"),
-    md: ensureLayoutForWidgets(sourceLayouts.md, widgetIds, "md"),
-    sm: ensureLayoutForWidgets(sourceLayouts.sm, widgetIds, "sm"),
+    lg: ensureLayoutForWidgets(sourceLayouts.lg, widgetIds, "lg", layoutMode),
+    md: ensureLayoutForWidgets(sourceLayouts.md, widgetIds, "md", layoutMode),
+    sm: ensureLayoutForWidgets(sourceLayouts.sm, widgetIds, "sm", layoutMode),
   };
 };
 
@@ -398,7 +401,11 @@ export const DashboardGrid = ({
   const gridGap = layoutMode === "laptop" ? 10 : 14;
 
   const responsiveLayouts = useMemo<Layouts>(() => {
-    return ensureResponsiveLayouts(activeTab.layouts[layoutMode], activeWidgetIds);
+    return ensureResponsiveLayouts(
+      activeTab.layouts[layoutMode],
+      activeWidgetIds,
+      layoutMode
+    );
   }, [activeTab.layouts, activeWidgetIds, layoutMode]);
 
   const displayedLayouts = useMemo<Layouts>(() => {

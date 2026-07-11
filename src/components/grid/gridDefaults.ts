@@ -1,6 +1,6 @@
-import type { Layouts } from "../../types/workspace";
+import type { DashboardLayoutMode, Layouts } from "../../types/workspace";
 
-export const defaultLayouts: Layouts = {
+export const wideDefaultLayouts: Layouts = {
   lg: [
     {
       i: "today",
@@ -251,3 +251,49 @@ export const defaultLayouts: Layouts = {
     },
   ],
 };
+
+export const laptopDefaultLayouts: Layouts = {
+  lg: [
+    { i: "today", x: 0, y: 0, w: 7, h: 9 },
+    { i: "alerts", x: 7, y: 0, w: 9, h: 9 },
+    { i: "journal", x: 0, y: 9, w: 8, h: 23 },
+    { i: "calendar", x: 8, y: 9, w: 8, h: 13, minW: 4, minH: 6 },
+    { i: "study", x: 8, y: 22, w: 8, h: 13 },
+    { i: "career", x: 0, y: 32, w: 8, h: 11 },
+    { i: "memo", x: 8, y: 35, w: 8, h: 14 },
+    { i: "health", x: 0, y: 43, w: 4, h: 7 },
+    { i: "money", x: 4, y: 43, w: 4, h: 7 },
+    { i: "mood", x: 0, y: 50, w: 8, h: 7 },
+  ],
+  md: [
+    { i: "today", x: 0, y: 0, w: 8, h: 9 },
+    { i: "alerts", x: 8, y: 0, w: 8, h: 9 },
+    { i: "journal", x: 0, y: 9, w: 8, h: 23 },
+    { i: "calendar", x: 8, y: 9, w: 8, h: 13, minW: 4, minH: 6 },
+    { i: "study", x: 8, y: 22, w: 8, h: 13 },
+    { i: "career", x: 0, y: 32, w: 8, h: 11 },
+    { i: "memo", x: 8, y: 35, w: 8, h: 14 },
+    { i: "health", x: 0, y: 43, w: 8, h: 7 },
+    { i: "money", x: 8, y: 49, w: 8, h: 7 },
+    { i: "mood", x: 0, y: 50, w: 8, h: 7 },
+  ],
+  sm: [
+    { i: "today", x: 0, y: 0, w: 16, h: 10 },
+    { i: "alerts", x: 0, y: 10, w: 16, h: 10 },
+    { i: "journal", x: 0, y: 20, w: 16, h: 28 },
+    { i: "calendar", x: 0, y: 48, w: 16, h: 14, minW: 4, minH: 6 },
+    { i: "study", x: 0, y: 62, w: 16, h: 15 },
+    { i: "career", x: 0, y: 77, w: 16, h: 11 },
+    { i: "memo", x: 0, y: 88, w: 16, h: 15 },
+    { i: "health", x: 0, y: 103, w: 16, h: 8 },
+    { i: "money", x: 0, y: 111, w: 16, h: 8 },
+    { i: "mood", x: 0, y: 119, w: 16, h: 8 },
+  ],
+};
+
+export const defaultLayoutsByMode: Record<DashboardLayoutMode, Layouts> = {
+  wide: wideDefaultLayouts,
+  laptop: laptopDefaultLayouts,
+};
+
+export const defaultLayouts = wideDefaultLayouts;

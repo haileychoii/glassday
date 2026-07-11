@@ -1,18 +1,22 @@
 import type {
   DashboardModeLayouts,
+  DashboardLayoutMode,
   DashboardTab,
   GridLayoutItem,
   Layouts,
   WidgetId,
 } from "../types/workspace";
-import { defaultLayouts } from "../components/grid/gridDefaults";
+import { defaultLayoutsByMode } from "../components/grid/gridDefaults";
 
 const cloneLayoutItem = (item: GridLayoutItem): GridLayoutItem => ({
   ...item,
 });
 
-const pickLayouts = (widgetIds: WidgetId[]): Layouts => {
-  const pickedLayouts = Object.entries(defaultLayouts).map(
+const pickLayouts = (
+  layoutMode: DashboardLayoutMode,
+  widgetIds: WidgetId[]
+): Layouts => {
+  const pickedLayouts = Object.entries(defaultLayoutsByMode[layoutMode]).map(
     ([breakpoint, layouts]) => {
       const pickedItems = layouts
         .filter((item: GridLayoutItem) => widgetIds.includes(item.i))
@@ -35,11 +39,12 @@ const cloneLayouts = (layouts: Layouts): Layouts => {
 };
 
 const buildModeLayouts = (widgetIds: WidgetId[]): DashboardModeLayouts => {
-  const wideLayouts = pickLayouts(widgetIds);
+  const wideLayouts = pickLayouts("wide", widgetIds);
+  const laptopLayouts = pickLayouts("laptop", widgetIds);
 
   return {
     wide: wideLayouts,
-    laptop: cloneLayouts(wideLayouts),
+    laptop: cloneLayouts(laptopLayouts),
   };
 };
 
