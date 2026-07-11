@@ -11,11 +11,23 @@ import type { DashboardLayoutMode } from "./types/workspace";
 
 const DASHBOARD_LAYOUT_MODE_KEY = "glassday.dashboard.layoutMode.v1";
 
+const readLayoutModeFromUrl = (): DashboardLayoutMode | null => {
+  if (typeof window === "undefined") return null;
+
+  const params = new URLSearchParams(window.location.search);
+  const mode = params.get("layout");
+
+  return mode === "laptop" || mode === "wide" ? mode : null;
+};
+
 function App() {
   const [editMode, setEditMode] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [layoutMode, setLayoutMode] = useState<DashboardLayoutMode>(() => {
     if (typeof window === "undefined") return "wide";
+
+    const urlMode = readLayoutModeFromUrl();
+    if (urlMode) return urlMode;
 
     const savedMode = window.localStorage.getItem(DASHBOARD_LAYOUT_MODE_KEY);
     return savedMode === "laptop" ? "laptop" : "wide";
@@ -43,6 +55,10 @@ function App() {
     if (typeof window === "undefined") return;
 
     window.localStorage.setItem(DASHBOARD_LAYOUT_MODE_KEY, layoutMode);
+
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.set("layout", layoutMode);
+    window.history.replaceState({}, "", nextUrl);
   }, [layoutMode]);
 
   if (!activeTab) {
