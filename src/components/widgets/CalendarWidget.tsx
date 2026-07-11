@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   CalendarDays,
@@ -14,6 +14,10 @@ import {
 import { GlassCard } from "../glass/GlassCard";
 import { cn } from "../../lib/utils";
 import { useDashboardData } from "../../context/DashboardDataContext";
+import {
+  OPEN_CALENDAR_EVENT,
+  type OpenCalendarEventDetail,
+} from "../../constants/widgetNavigation";
 import type { CalendarEvent, CalendarView } from "../../types/dashboard";
 import { getEventColor, getPastelColorById } from "../../constants/colors";
 import { EventColorPicker } from "./calendar/EventColorPicker";
@@ -66,6 +70,27 @@ export const CalendarWidget = () => {
   const editingEvent = editingId
     ? calendarEvents.find((event) => event.id === editingId) ?? null
     : null;
+
+  useEffect(() => {
+    const handleOpenCalendarEvent = (event: Event) => {
+      const customEvent = event as CustomEvent<OpenCalendarEventDetail>;
+      const eventId = customEvent.detail?.eventId;
+
+      if (!eventId) return;
+
+      const targetEvent = calendarEvents.find((item) => item.id === eventId);
+      if (!targetEvent) return;
+
+      setSelectedDate(targetEvent.startDate);
+      setEditingId(targetEvent.id);
+    };
+
+    window.addEventListener(OPEN_CALENDAR_EVENT, handleOpenCalendarEvent);
+
+    return () => {
+      window.removeEventListener(OPEN_CALENDAR_EVENT, handleOpenCalendarEvent);
+    };
+  }, [calendarEvents]);
 
   const visibleEvents = useMemo(() => {
     const normalizedEvents = calendarEvents.map((event) => ({

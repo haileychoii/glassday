@@ -38,6 +38,10 @@ import {
   type FontGroup as MemoFontGroup,
 } from "../../constants/fonts";
 import { getCurrentTheme, type ThemeId } from "../../constants/themes";
+import {
+  OPEN_MEMO_EVENT,
+  type OpenMemoEventDetail,
+} from "../../constants/widgetNavigation";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
 import { FloatingWindow } from "../common/FloatingWindow";
@@ -465,6 +469,25 @@ export const MemoWidget = () => {
       window.removeEventListener("glassday-theme-change", handleThemeChange);
     };
   }, []);
+
+  useEffect(() => {
+    const handleOpenMemoNote = (event: Event) => {
+      const customEvent = event as CustomEvent<OpenMemoEventDetail>;
+      const noteId = customEvent.detail?.noteId;
+
+      if (!noteId) return;
+      if (!normalizedNotes.some((note) => note.id === noteId)) return;
+
+      setSelectedNoteId(noteId);
+      setMemoWindowOpen(true);
+    };
+
+    window.addEventListener(OPEN_MEMO_EVENT, handleOpenMemoNote);
+
+    return () => {
+      window.removeEventListener(OPEN_MEMO_EVENT, handleOpenMemoNote);
+    };
+  }, [normalizedNotes, setSelectedNoteId]);
 
   useEffect(() => {
     if (!isDraggingWindowSidebar) {

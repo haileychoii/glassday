@@ -1960,25 +1960,31 @@ body.theme-pastel .calendar-range-chip:hover {
    FINAL FIX: Month calendar range overlap + Pixel event color
 ========================================================= */
 
-/* week row 높이가 range lane 수만큼 늘어나게 */
+/* Keep month rows compact and predictable even when the widget gets shorter. */
 .calendar-month-week-row {
-  min-height: calc(106px + (var(--range-lanes, 0) * 12px)) !important;
+  min-height: calc(
+    var(--gd-calendar-month-row-min, 48px) +
+      (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size, 9px))
+  ) !important;
   height: auto !important;
   align-items: stretch !important;
 }
 
-/* 각 날짜 셀도 week row 높이와 같이 늘어남 */
+/* Day cells should follow the same compact height budget. */
 .calendar-month-week-row > .calendar-month-day-cell {
-  min-height: calc(106px + (var(--range-lanes, 0) * 12px)) !important;
+  min-height: calc(
+    var(--gd-calendar-month-row-min, 48px) +
+      (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size, 9px))
+  ) !important;
   height: auto !important;
 }
 
-/* 연속 일정 레이어는 얇고 뒤쪽에 깔림 */
+/* Range bars stay inside the cell instead of bleeding into the next row. */
 .calendar-month-range-layer {
-  top: 34px !important;
+  top: 24px !important;
   z-index: 3 !important;
-  grid-auto-rows: 8px !important;
-  gap: 3px 8px !important;
+  grid-auto-rows: var(--gd-calendar-range-lane-size, 9px) !important;
+  gap: 2px 8px !important;
   pointer-events: none !important;
 }
 
@@ -2010,7 +2016,10 @@ body.theme-pastel .calendar-range-chip:hover {
 .calendar-month-single-events {
   position: relative !important;
   z-index: 10 !important;
-  margin-top: calc((var(--range-lanes, 0) * 11px) + 8px) !important;
+  margin-top: calc(
+    (var(--range-lanes, 0) * (var(--gd-calendar-range-lane-size, 9px) + 1px)) +
+      6px
+  ) !important;
 }
 
 /* 단일 일정 chip 색상도 CSS 변수로 강제 */

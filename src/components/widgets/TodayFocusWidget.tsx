@@ -14,6 +14,11 @@ import {
 
 import { GlassCard } from "../glass/GlassCard";
 import { useDashboardData } from "../../context/DashboardDataContext";
+import {
+  openCalendarEvent,
+  openMemoNote,
+  openWidget,
+} from "../../constants/widgetNavigation";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
 
@@ -111,7 +116,8 @@ const readPinnedMemos = (): MemoNotePreview[] => {
 };
 
 export const TodayFocusWidget = () => {
-  const { calendarEvents, careerApplications } = useDashboardData();
+  const { calendarEvents, careerApplications, openCareerDetail } =
+    useDashboardData();
 
   const today = toLocalDateInput();
 
@@ -178,6 +184,21 @@ export const TodayFocusWidget = () => {
 
   const removeTask = (id: string) => {
     setFocusTasks((prev) => prev.filter((task) => task.id !== id));
+  };
+
+  const handleOpenCalendarItem = (eventId: string) => {
+    openWidget({ widgetId: "calendar" });
+    openCalendarEvent({ eventId });
+  };
+
+  const handleOpenCareerItem = (careerId: string) => {
+    openCareerDetail(careerId);
+    openWidget({ widgetId: "career", preferredTabId: "career" });
+  };
+
+  const handleOpenMemoItem = (noteId: string) => {
+    openWidget({ widgetId: "memo", preferredTabId: "memo" });
+    openMemoNote({ noteId });
   };
 
   return (
@@ -278,7 +299,12 @@ export const TodayFocusWidget = () => {
                 <div className="today-focus-empty">No events today.</div>
               ) : (
                 todayEvents.map((event) => (
-                  <div key={event.id} className="today-focus-mini-item">
+                  <button
+                    key={event.id}
+                    type="button"
+                    onClick={() => handleOpenCalendarItem(event.id)}
+                    className="today-focus-mini-item is-clickable"
+                  >
                     <span
                       className="today-focus-color"
                       style={{
@@ -291,7 +317,7 @@ export const TodayFocusWidget = () => {
                         {event.startTime}–{event.endTime}
                       </span>
                     </div>
-                  </div>
+                  </button>
                 ))
               )}
             </div>
@@ -308,7 +334,12 @@ export const TodayFocusWidget = () => {
                 <div className="today-focus-empty">No urgent deadline.</div>
               ) : (
                 urgentCareers.map((item) => (
-                  <div key={item.id} className="today-focus-career-item">
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => handleOpenCareerItem(item.id)}
+                    className="today-focus-career-item is-clickable"
+                  >
                     <div className="min-w-0">
                       <strong>{item.company}</strong>
                       <span>{item.role}</span>
@@ -322,7 +353,7 @@ export const TodayFocusWidget = () => {
                     >
                       {item.dDay === 0 ? "D-Day" : `D-${item.dDay}`}
                     </div>
-                  </div>
+                  </button>
                 ))
               )}
             </div>
@@ -342,13 +373,18 @@ export const TodayFocusWidget = () => {
               </div>
             ) : (
               pinnedMemos.map((memo) => (
-                <div key={memo.id} className="today-focus-memo">
+                <button
+                  key={memo.id}
+                  type="button"
+                  onClick={() => handleOpenMemoItem(memo.id)}
+                  className="today-focus-memo is-clickable"
+                >
                   <StickyNote className="w-3.5 h-3.5" />
                   <div className="min-w-0">
                     <strong>{getMemoTitle(memo)}</strong>
                     <span>{getMemoPreview(memo)}</span>
                   </div>
-                </div>
+                </button>
               ))
             )}
           </div>
