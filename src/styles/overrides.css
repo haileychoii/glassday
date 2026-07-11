@@ -233,6 +233,12 @@ body,
   overflow: hidden !important;
 }
 
+.app-mode-stage.is-laptop-mode .app-sidebar,
+.app-mode-stage.is-laptop-mode .sidebar,
+.app-mode-stage.is-laptop-mode aside {
+  display: flex !important;
+}
+
 .app-mode-stage.is-laptop-mode .glass-panel > .app-shell-columns,
 .app-mode-stage.is-laptop-mode .liquid-shell > .app-shell-columns {
   flex-direction: row !important;
@@ -259,6 +265,14 @@ body,
   width: var(--gd-sidebar-width-collapsed) !important;
   min-width: var(--gd-sidebar-width-collapsed) !important;
   max-width: var(--gd-sidebar-width-collapsed) !important;
+}
+
+.app-mode-stage.is-laptop-mode .glass-panel > .app-shell-columns > .app-shell-main-column,
+.app-mode-stage.is-laptop-mode .liquid-shell > .app-shell-columns > .app-shell-main-column {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
 }
 
 .app-mode-stage.is-laptop-mode .topbar {
@@ -299,6 +313,15 @@ body,
 
 .app-mode-stage.is-laptop-mode .topbar-mobile-workspaces {
   display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
 }
 
 .app-mode-stage.is-laptop-mode .topbar-actions {
@@ -343,6 +366,25 @@ body,
 .app-mode-stage.is-laptop-mode .app-shell-main {
   padding: var(--gd-main-pad-y) var(--gd-main-pad-x) !important;
   min-height: 0 !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-workspace-list,
+.app-mode-stage.is-laptop-mode .sidebar-workspace-list-collapsed {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-tab-item {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-tab-item.is-collapsed {
+  width: auto !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-tab-main {
+  white-space: nowrap !important;
 }
 
 @media (min-width: 921px) {
