@@ -13,13 +13,23 @@
 .daily-journal-widget {
   height: 100%;
   min-height: 0;
-  padding: 16px;
   display: grid;
-  grid-template-rows: auto auto auto minmax(0, 1fr);
-  gap: 12px;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0;
   overflow: hidden;
   container-type: inline-size;
   container-name: journal-widget;
+}
+
+.journal-content {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--gd-widget-stack-gap);
+  padding:
+    var(--gd-widget-content-gap-top)
+    var(--gd-widget-pad-x)
+    var(--gd-widget-pad-y);
 }
 
 .journal-date-nav,
@@ -184,13 +194,13 @@
   overflow: auto;
   display: grid;
   align-content: start;
-  gap: 12px;
+  gap: var(--gd-widget-stack-gap);
   padding-right: 2px;
 }
 
 .journal-section {
   border-radius: 24px;
-  padding: 14px;
+  padding: var(--gd-widget-panel-pad);
   background:
     linear-gradient(
       180deg,
@@ -463,15 +473,14 @@
 .react-grid-item > .dashboard-grid-item-content > .daily-journal-widget,
 .react-grid-item > .daily-journal-widget {
   display: grid !important;
-  grid-template-rows: auto auto auto minmax(0, 1fr) !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
   align-content: stretch !important;
-  gap: 14px !important;
+  gap: 0 !important;
   overflow: hidden !important;
 }
 
 .react-grid-item .daily-journal-widget > .journal-header,
-.react-grid-item .daily-journal-widget > .journal-summary-row,
-.react-grid-item .daily-journal-widget > .journal-score-grid {
+.react-grid-item .daily-journal-widget > .journal-content {
   min-height: 0 !important;
   flex: 0 0 auto !important;
 }

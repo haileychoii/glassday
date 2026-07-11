@@ -340,13 +340,12 @@
   height: 100%;
   min-height: 0;
 
-  padding:
-    clamp(8px, 1.2vw, 14px);
+  padding: var(--gd-widget-panel-pad);
 
   display: flex;
   flex-direction: column;
 
-  gap: 8px;
+  gap: var(--gd-widget-stack-gap);
 
   overflow: hidden;
 

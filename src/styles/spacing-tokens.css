@@ -34,6 +34,8 @@
   --gd-widget-header-pad-bottom: var(--gd-widget-content-gap-top);
   --gd-widget-header-gap: var(--gd-space-md);
   --gd-widget-title-gap: var(--gd-space-xs);
+  --gd-widget-stack-gap: var(--gd-space-md);
+  --gd-widget-panel-pad: var(--gd-space-lg);
 
   /* 2b. Shell spacing
      These map directly to Figma frame paddings and widths. */

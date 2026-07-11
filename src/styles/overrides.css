@@ -1106,7 +1106,7 @@ body,
   min-width: 0 !important;
   min-height: 0 !important;
   overflow: hidden !important;
-  padding: clamp(12px, 2.4cqw, 24px) !important;
+  padding: var(--gd-widget-panel-pad) !important;
 }
 
 .memo-widget .memo-title-input,

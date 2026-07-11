@@ -16,7 +16,7 @@
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: none;
-  gap: 10px;
+  gap: var(--gd-widget-stack-gap);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -24,7 +24,7 @@
 .study-hero {
   grid-column: 1 / -1;
   min-height: 84px;
-  padding: 14px;
+  padding: var(--gd-widget-panel-pad);
   border-radius: 26px;
   display: flex;
   align-items: center;

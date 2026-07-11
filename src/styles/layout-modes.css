@@ -80,6 +80,8 @@
   --gd-widget-header-pad-bottom: var(--gd-widget-content-gap-top);
   --gd-widget-header-gap: 5px;
   --gd-widget-title-gap: 4px;
+  --gd-widget-stack-gap: 8px;
+  --gd-widget-panel-pad: 9px;
   --gd-control-height-sm: 28px;
   --gd-control-height-md: 30px;
   --gd-shell-pad-x: 18px;
