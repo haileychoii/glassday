@@ -1196,17 +1196,17 @@ html[data-theme="glass-dark"] .calendar-empty-state,
 body[data-theme="glass-dark"] .calendar-empty-state,
 html.theme-glass-dark .calendar-empty-state,
 body.theme-glass-dark .calendar-empty-state,
-html[data-theme="glass-dark"] .calendar-google-preview .text-muted-foreground,
-body[data-theme="glass-dark"] .calendar-google-preview .text-muted-foreground,
-html.theme-glass-dark .calendar-google-preview .text-muted-foreground,
-body.theme-glass-dark .calendar-google-preview .text-muted-foreground {
+html[data-theme="glass-dark"] .calendar-sync-preview .text-muted-foreground,
+body[data-theme="glass-dark"] .calendar-sync-preview .text-muted-foreground,
+html.theme-glass-dark .calendar-sync-preview .text-muted-foreground,
+body.theme-glass-dark .calendar-sync-preview .text-muted-foreground {
   color: rgba(191, 202, 230, 0.76) !important;
 }
 
-html[data-theme="glass-dark"] .calendar-google-preview,
-body[data-theme="glass-dark"] .calendar-google-preview,
-html.theme-glass-dark .calendar-google-preview,
-body.theme-glass-dark .calendar-google-preview {
+html[data-theme="glass-dark"] .calendar-sync-preview,
+body[data-theme="glass-dark"] .calendar-sync-preview,
+html.theme-glass-dark .calendar-sync-preview,
+body.theme-glass-dark .calendar-sync-preview {
   color: rgba(239, 244, 255, 0.92) !important;
 }
 

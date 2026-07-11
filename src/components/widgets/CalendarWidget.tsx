@@ -246,7 +246,7 @@ export const CalendarWidget = () => {
           <div
             className={cn(
               "calendar-view-body",
-              view === "month" && "calendar-view-body--month"
+              view === "month" && "is-month-view"
             )}
           >
             {view === "month" ? (
@@ -317,7 +317,7 @@ export const CalendarWidget = () => {
             )}
           </div>
 
-          <div className="calendar-google-preview">
+          <div className="calendar-sync-preview">
             <div>
               <div className="text-xs font-semibold">Google Calendar Sync</div>
               <div className="text-[11px] text-muted-foreground mt-0.5">
@@ -325,7 +325,7 @@ export const CalendarWidget = () => {
               </div>
             </div>
 
-            <button type="button" className="calendar-google-button">
+            <button type="button" className="calendar-sync-button">
               Connect later
             </button>
           </div>

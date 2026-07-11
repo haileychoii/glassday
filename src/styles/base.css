@@ -104,8 +104,8 @@ main {
   background: hsl(0 0% 100% / 0.19);
   border: 1px solid hsl(0 0% 100% / 0.32);
   box-shadow: 0 4px 30px rgb(0 0 0 / 0.1);
-  backdrop-filter: blur(11.9px) saturate(145%);
-  -webkit-backdrop-filter: blur(11.9px) saturate(145%);
+  backdrop-filter: blur(11px) saturate(145%);
+  -webkit-backdrop-filter: blur(11px) saturate(145%);
   overflow: hidden;
 }
 
@@ -133,16 +133,19 @@ main {
 .glass-card-header,
 .widget-card-header {
   min-width: 0;
-  padding: 18px 20px 10px;
+  padding:
+    var(--gd-widget-header-pad-top)
+    var(--gd-widget-pad-x)
+    var(--gd-widget-header-pad-bottom);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--gd-widget-header-gap);
 }
 
 .glass-card-title {
-  font-size: 14px;
-  font-weight: 850;
+  font-size: 12px;
+  font-weight: 800;
   line-height: 1.2;
   color: hsl(var(--foreground) / 0.86);
 }
@@ -157,7 +160,10 @@ main {
 
 .glass-card-body {
   min-height: 0;
-  padding: 8px 18px 18px;
+  padding:
+    var(--gd-space-sm)
+    var(--gd-widget-pad-x)
+    var(--gd-widget-pad-y);
   overflow: auto;
 }
 
@@ -166,12 +172,17 @@ main {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--gd-widget-title-gap);
 }
 
 .glass-card-copy,
 .widget-card-copy {
   min-width: 0;
+}
+
+.glass-card-actions {
+  min-width: 0;
+  flex: 0 0 auto;
 }
 
 .glass-icon-box,
@@ -196,8 +207,8 @@ main {
 
 .widget-card-copy h3 {
   margin: 0;
-  font-size: 14px;
-  font-weight: 850;
+  font-size: 12px;
+  font-weight: 800;
   line-height: 1.2;
   color: hsl(var(--foreground) / 0.86);
 }

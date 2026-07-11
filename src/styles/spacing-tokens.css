@@ -1,0 +1,35 @@
+/* =========================================================
+   GLASSDAY SPACING TOKENS
+   These are the first numbers to tweak when you want the
+   whole dashboard to feel denser or airier.
+
+   1) Primitive spacing scale
+   2) Widget shell spacing
+   3) Shared control sizing
+========================================================= */
+
+:root {
+  /* 1. Primitive spacing scale */
+  --gd-space-2xs: 4px;
+  --gd-space-xs: 6px;
+  --gd-space-sm: 8px;
+  --gd-space-md: 10px;
+  --gd-space-lg: 12px;
+  --gd-space-xl: 16px;
+  --gd-space-2xl: 20px;
+
+  /* 2. Widget shell spacing
+     Change these first to tighten or loosen most widgets at once. */
+  --gd-widget-gap-tight: var(--gd-space-sm);
+  --gd-widget-gap: var(--gd-space-lg);
+  --gd-widget-pad-x: var(--gd-space-xl);
+  --gd-widget-pad-y: var(--gd-space-xl);
+  --gd-widget-header-pad-top: var(--gd-space-xl);
+  --gd-widget-header-pad-bottom: var(--gd-space-sm);
+  --gd-widget-header-gap: var(--gd-space-lg);
+  --gd-widget-title-gap: var(--gd-space-md);
+
+  /* 3. Shared control sizing */
+  --gd-control-height-sm: 30px;
+  --gd-control-height-md: 32px;
+}

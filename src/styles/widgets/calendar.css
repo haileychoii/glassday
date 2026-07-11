@@ -54,7 +54,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--gd-widget-gap-tight);
 }
 
 .calendar-widget-frame {
@@ -62,7 +62,7 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--gd-widget-gap);
   overflow: hidden;
 }
 
@@ -75,7 +75,7 @@
 }
 
 .calendar-date-input {
-  height: 32px;
+  height: var(--gd-control-height-md);
   border-radius: 999px;
   padding: 0 10px;
   font-size: 12px;
@@ -86,7 +86,7 @@
 
 .calendar-nav-button {
   width: 32px;
-  height: 32px;
+  height: var(--gd-control-height-md);
   border-radius: 999px;
   background: hsl(0 0% 100% / 0.34);
   border: 1px solid hsl(0 0% 100% / 0.46);
@@ -125,13 +125,13 @@
   overflow: auto;
   display: grid;
   align-content: start;
-  gap: 8px;
+  gap: var(--gd-widget-gap-tight);
 }
 
 .calendar-event-item {
   width: 100%;
   border-radius: 20px;
-  padding: 12px;
+  padding: var(--gd-space-lg);
   background: hsl(0 0% 100% / 0.25);
   border: 1px solid hsl(0 0% 100% / 0.38);
   text-align: left;
@@ -203,22 +203,18 @@
   color: hsl(var(--foreground) / 0.44);
 }
 
-.calendar-google-preview {
+.calendar-sync-preview {
   flex: 0 0 auto;
-  /* margin-top: auto; */
   border-radius: 20px;
-  padding: 12px;
-  /* 아래에 위치시키기 */
+  padding: var(--gd-space-lg);
   margin-top: 25px;
-  /* background: hsl(0 0% 100% / 0.18); */
-  /* border: 1px solid hsl(0 0% 100% / 0.32); */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--gd-widget-gap);
 }
 
-.calendar-google-button {
+.calendar-sync-button {
   height: 25px;
   border-radius: 999px;
   padding: 0 10px;
@@ -2422,7 +2418,7 @@ body.theme-pixel-desk .career-cover-status-select option {
 .calendar-widget-toolbar,
 .calendar-current-label,
 .calendar-view-body,
-.calendar-google-preview {
+.calendar-sync-preview {
   box-sizing: border-box !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -2440,7 +2436,7 @@ body.theme-pixel-desk .career-cover-status-select option {
   overflow-y: hidden !important;
 }
 
-.calendar-google-preview {
+.calendar-sync-preview {
   margin-top: auto !important;
   padding-top: 10px !important;
 }
@@ -2472,11 +2468,11 @@ body.theme-pixel-desk .career-cover-status-select option {
 
 /* Month view should consume the available body height first, and only scroll
    after the rows have already compressed as much as the content allows. */
-.calendar-view-body--month {
+.calendar-view-body.is-month-view {
   overflow-y: auto !important;
 }
 
-.calendar-view-body--month .calendar-month-board {
+.calendar-view-body.is-month-view .calendar-month-board {
   flex: 1 1 auto !important;
   min-height: 0 !important;
 }
@@ -2555,7 +2551,7 @@ body.theme-pixel-desk .career-cover-status-select option {
     display: none !important;
   }
 
-  .calendar-widget-card .glass-card-header > .shrink-0 {
+  .calendar-widget-card .glass-card-header > .glass-card-actions {
     width: auto !important;
     display: flex !important;
     justify-content: flex-end !important;

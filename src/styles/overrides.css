@@ -559,7 +559,7 @@ body,
     align-items: flex-start !important;
   }
 
-  .glass-card > div:first-child > .shrink-0 {
+  .glass-card > div:first-child > .glass-card-actions {
     width: 100% !important;
     display: flex !important;
     justify-content: flex-end !important;
@@ -623,7 +623,7 @@ body,
     flex: 1 1 0 !important;
   }
 
-  .calendar-google-preview {
+  .calendar-sync-preview {
     margin-top: 8px !important;
     align-items: stretch !important;
     flex-direction: column !important;
@@ -945,7 +945,7 @@ body,
   }
 
   .glass-card > div:first-child > div:last-child,
-  .glass-card > div:first-child > .shrink-0 {
+  .glass-card > div:first-child > .glass-card-actions {
     align-self: flex-start !important;
   }
 

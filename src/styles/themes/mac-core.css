@@ -1185,16 +1185,16 @@ html[data-theme="mac-core"] .topbar-action-button,
 body[data-theme="mac-core"] .topbar-action-button,
 html[data-theme="mac-core"] .calendar-nav-button,
 body[data-theme="mac-core"] .calendar-nav-button,
-html[data-theme="mac-core"] .calendar-google-button,
-body[data-theme="mac-core"] .calendar-google-button,
+html[data-theme="mac-core"] .calendar-sync-button,
+body[data-theme="mac-core"] .calendar-sync-button,
 html.theme-mac-core .glass-button,
 body.theme-mac-core .glass-button,
 html.theme-mac-core .topbar-action-button,
 body.theme-mac-core .topbar-action-button,
 html.theme-mac-core .calendar-nav-button,
 body.theme-mac-core .calendar-nav-button,
-html.theme-mac-core .calendar-google-button,
-body.theme-mac-core .calendar-google-button {
+html.theme-mac-core .calendar-sync-button,
+body.theme-mac-core .calendar-sync-button {
   border-radius: 8px !important;
   color: var(--mac-text) !important;
   background: var(--mac-control-fill) !important;
@@ -1210,16 +1210,16 @@ html[data-theme="mac-core"] .topbar-action-button:hover,
 body[data-theme="mac-core"] .topbar-action-button:hover,
 html[data-theme="mac-core"] .calendar-nav-button:hover,
 body[data-theme="mac-core"] .calendar-nav-button:hover,
-html[data-theme="mac-core"] .calendar-google-button:hover,
-body[data-theme="mac-core"] .calendar-google-button:hover,
+html[data-theme="mac-core"] .calendar-sync-button:hover,
+body[data-theme="mac-core"] .calendar-sync-button:hover,
 html.theme-mac-core .glass-button:hover,
 body.theme-mac-core .glass-button:hover,
 html.theme-mac-core .topbar-action-button:hover,
 body.theme-mac-core .topbar-action-button:hover,
 html.theme-mac-core .calendar-nav-button:hover,
 body.theme-mac-core .calendar-nav-button:hover,
-html.theme-mac-core .calendar-google-button:hover,
-body.theme-mac-core .calendar-google-button:hover {
+html.theme-mac-core .calendar-sync-button:hover,
+body.theme-mac-core .calendar-sync-button:hover {
   background: var(--mac-control-fill-hover) !important;
 }
 
