@@ -20,7 +20,7 @@
   background: transparent;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .settings-modal-window {

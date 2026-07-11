@@ -359,8 +359,14 @@ export const CalendarWidget = () => {
 
       {editingEvent &&
         createPortal(
-          <div className="calendar-modal-backdrop">
-            <div className="calendar-modal-window">
+          <div
+            className="calendar-modal-backdrop"
+            onMouseDown={() => setEditingId(null)}
+          >
+            <div
+              className="calendar-modal-window"
+              onMouseDown={(event) => event.stopPropagation()}
+            >
               <div className="calendar-modal-header">
                 <div>
                   <div className="text-sm font-semibold">

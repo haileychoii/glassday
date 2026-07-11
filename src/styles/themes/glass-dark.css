@@ -824,12 +824,9 @@ html[data-theme="glass-dark"] .settings-modal-backdrop,
 body[data-theme="glass-dark"] .settings-modal-backdrop,
 html.theme-glass-dark .settings-modal-backdrop,
 body.theme-glass-dark .settings-modal-backdrop {
-  background:
-    radial-gradient(circle at 18% 16%, rgba(96, 183, 255, 0.12), transparent 28%),
-    radial-gradient(circle at 82% 18%, rgba(198, 133, 255, 0.12), transparent 26%),
-    linear-gradient(180deg, rgba(8, 12, 22, 0.4), rgba(5, 8, 16, 0.54)) !important;
-  backdrop-filter: blur(34px) saturate(138%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(138%) !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 html[data-theme="glass-dark"] .settings-modal-header,

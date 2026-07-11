@@ -476,7 +476,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   };
 
   return createPortal(
-    <div className="settings-modal-backdrop">
+    <div className="settings-modal-backdrop" onMouseDown={onClose}>
       <section
         ref={windowRef}
         className="settings-modal-window settings-window settings-panel"
