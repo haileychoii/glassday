@@ -133,12 +133,13 @@ main {
 .glass-card-header,
 .widget-card-header {
   min-width: 0;
+  min-height: var(--gd-widget-header-row-min-height);
   padding:
     var(--gd-widget-header-pad-top)
     var(--gd-widget-pad-x)
     var(--gd-widget-header-pad-bottom);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--gd-widget-header-gap);
   position: relative;
@@ -170,7 +171,7 @@ main {
 .glass-card-body {
   min-height: 0;
   padding:
-    var(--gd-space-sm)
+    var(--gd-widget-content-gap-top)
     var(--gd-widget-pad-x)
     var(--gd-widget-pad-y);
   overflow: auto;
@@ -187,6 +188,9 @@ main {
 .glass-card-copy,
 .widget-card-copy {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   position: relative;
   z-index: 2;
   opacity: 1;
@@ -196,6 +200,8 @@ main {
 .glass-card-actions {
   min-width: 0;
   flex: 0 0 auto;
+  display: flex;
+  align-items: center;
 }
 
 .glass-icon-box,

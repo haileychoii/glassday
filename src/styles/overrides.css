@@ -924,9 +924,12 @@ body,
 
 @container gd-widget (max-width: 620px) {
   .glass-card > div:first-child {
-    padding: 16px 16px 10px !important;
+    padding:
+      var(--gd-widget-header-pad-top)
+      var(--gd-widget-pad-x)
+      var(--gd-widget-header-pad-bottom) !important;
     gap: 10px !important;
-    align-items: flex-start !important;
+    align-items: center !important;
   }
 
   .glass-card > div:first-child > .glass-card-actions {
@@ -938,7 +941,10 @@ body,
   }
 
   .glass-card > div:last-child {
-    padding: 0 16px 16px !important;
+    padding:
+      var(--gd-widget-content-gap-top)
+      var(--gd-widget-pad-x)
+      var(--gd-widget-pad-y) !important;
   }
 
   .glass-card > div:first-child h3 {
@@ -1014,11 +1020,17 @@ body,
 
 @container gd-widget (max-width: 440px) {
   .glass-card > div:first-child {
-    padding: 14px 14px 8px !important;
+    padding:
+      var(--gd-widget-header-pad-top)
+      var(--gd-widget-pad-x)
+      var(--gd-widget-header-pad-bottom) !important;
   }
 
   .glass-card > div:last-child {
-    padding: 0 14px 14px !important;
+    padding:
+      var(--gd-widget-content-gap-top)
+      var(--gd-widget-pad-x)
+      var(--gd-widget-pad-y) !important;
   }
 
   .glass-card h3,

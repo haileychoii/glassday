@@ -1767,7 +1767,7 @@ body.theme-pixel-desk .career-cover-question-input {
     align-items: center !important;
     justify-content: space-between !important;
 
-    gap: 10px !important;
+    gap: var(--gd-widget-header-gap) !important;
   }
 
   .career-widget-title-wrap {
@@ -1776,46 +1776,46 @@ body.theme-pixel-desk .career-cover-question-input {
     display: flex !important;
     align-items: center !important;
 
-    gap: 9px !important;
+    gap: var(--gd-widget-title-gap) !important;
   }
 
   .career-widget-title-wrap .glass-card-icon {
-    width: 32px !important;
-    height: 32px !important;
+    width: 28px !important;
+    height: 28px !important;
 
-    min-width: 32px !important;
+    min-width: 28px !important;
 
-    flex: 0 0 32px !important;
+    flex: 0 0 28px !important;
   }
 
   .career-widget-title-wrap .glass-card-icon svg {
-    width: 14px !important;
-    height: 14px !important;
+    width: 15px !important;
+    height: 15px !important;
   }
 
   .career-widget h3 {
     margin: 0 !important;
 
-    font-size: 14px !important;
-    line-height: 1.15 !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
 
-    font-weight: 850 !important;
+    font-weight: 800 !important;
   }
 
   .career-widget p {
     margin: 3px 0 0 !important;
 
-    font-size: 9.5px !important;
-    line-height: 1.2 !important;
+    font-size: 11px !important;
+    line-height: 1.25 !important;
   }
 
   .career-widget-header > .career-icon-button {
-    width: 34px !important;
-    height: 34px !important;
+    width: 30px !important;
+    height: 30px !important;
 
-    min-width: 34px !important;
+    min-width: 30px !important;
 
-    flex: 0 0 34px !important;
+    flex: 0 0 30px !important;
   }
 
   .career-widget-header > .career-icon-button svg {
