@@ -403,6 +403,92 @@ body,
   white-space: nowrap !important;
 }
 
+/* Keep Today Focus stable inside laptop preview even when the outer browser
+   viewport crosses responsive breakpoints. In laptop mode this widget should
+   react only to its own container size. */
+.app-mode-stage.is-laptop-mode .today-focus,
+.app-mode-stage.is-laptop-mode .today-mini {
+  gap: 10px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-hero {
+  padding: 12px !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 12px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-main {
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-kicker {
+  font-size: 10px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-ring {
+  width: 64px !important;
+  height: 64px !important;
+  min-width: 64px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-ring span {
+  font-size: 15px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-section,
+.app-mode-stage.is-laptop-mode .today-focus-block,
+.app-mode-stage.is-laptop-mode .today-mini-main,
+.app-mode-stage.is-laptop-mode .today-mini-next,
+.app-mode-stage.is-laptop-mode .today-tasks-progress {
+  padding: 12px !important;
+  border-radius: 16px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-section-title {
+  font-size: 12px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-task {
+  min-height: 34px !important;
+  padding: 8px 10px !important;
+  border-radius: 14px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-task-input {
+  font-size: 11px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-mini-item,
+.app-mode-stage.is-laptop-mode .today-focus-career-item,
+.app-mode-stage.is-laptop-mode .today-focus-memo {
+  min-height: 40px !important;
+  padding: 8px !important;
+  border-radius: 14px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-mini-item strong,
+.app-mode-stage.is-laptop-mode .today-focus-career-item strong,
+.app-mode-stage.is-laptop-mode .today-focus-memo strong {
+  font-size: 11px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-mini-item span,
+.app-mode-stage.is-laptop-mode .today-focus-career-item span,
+.app-mode-stage.is-laptop-mode .today-focus-memo span {
+  font-size: 10px !important;
+}
+
+.app-mode-stage.is-laptop-mode .today-focus-empty,
+.app-mode-stage.is-laptop-mode .today-focus-alert {
+  font-size: 10.5px !important;
+}
+
 @media (min-width: 921px) {
   .topbar {
     border-top-left-radius: 0 !important;
