@@ -1,4 +1,4 @@
-import { LayoutGrid, Settings, Sparkles } from "lucide-react";
+import { LayoutGrid, Monitor, Settings, Sparkles } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
   applyTheme,
@@ -9,13 +9,15 @@ import {
 } from "../../constants/themes";
 
 import { cn } from "../../lib/utils";
-import type { DashboardTab } from "../../types/workspace";
+import type { DashboardLayoutMode, DashboardTab } from "../../types/workspace";
 import { WorkspaceTabsNav } from "./WorkspaceTabsNav";
 
 type TopbarProps = {
   editMode: boolean;
+  layoutMode: DashboardLayoutMode;
   tabs: DashboardTab[];
   activeTabId: string;
+  onChangeLayoutMode: (mode: DashboardLayoutMode) => void;
   onToggleEditMode: () => void;
   onOpenSettings: () => void;
   onSelectTab: (tabId: string) => void;
@@ -26,8 +28,10 @@ type TopbarProps = {
 
 export const Topbar = ({
   editMode,
+  layoutMode,
   tabs,
   activeTabId,
+  onChangeLayoutMode,
   onToggleEditMode,
   onOpenSettings,
   onSelectTab,
@@ -84,6 +88,34 @@ export const Topbar = ({
           </div>
 
           <div className="topbar-actions">
+            <div className="layout-mode-toggle" aria-label="Layout mode">
+              <button
+                type="button"
+                onClick={() => onChangeLayoutMode("wide")}
+                className={cn(
+                  "layout-mode-button",
+                  layoutMode === "wide" && "is-active"
+                )}
+                title="Wide web layout"
+              >
+                <Monitor className="w-3.5 h-3.5" />
+                <span>Wide</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onChangeLayoutMode("laptop")}
+                className={cn(
+                  "layout-mode-button",
+                  layoutMode === "laptop" && "is-active"
+                )}
+                title="Laptop app preview layout"
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span>Laptop</span>
+              </button>
+            </div>
+
             <div
               className="theme-segmented-control theme-button-group"
               aria-label="Theme selector"

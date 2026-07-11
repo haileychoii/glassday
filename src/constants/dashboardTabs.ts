@@ -1,4 +1,5 @@
 import type {
+  DashboardModeLayouts,
   DashboardTab,
   GridLayoutItem,
   Layouts,
@@ -22,6 +23,24 @@ const pickLayouts = (widgetIds: WidgetId[]): Layouts => {
   );
 
   return Object.fromEntries(pickedLayouts) as Layouts;
+};
+
+const cloneLayouts = (layouts: Layouts): Layouts => {
+  return Object.fromEntries(
+    Object.entries(layouts).map(([breakpoint, items]) => [
+      breakpoint,
+      items.map(cloneLayoutItem),
+    ])
+  ) as Layouts;
+};
+
+const buildModeLayouts = (widgetIds: WidgetId[]): DashboardModeLayouts => {
+  const wideLayouts = pickLayouts(widgetIds);
+
+  return {
+    wide: wideLayouts,
+    laptop: cloneLayouts(wideLayouts),
+  };
 };
 
 const homeWidgetIds: WidgetId[] = [
@@ -78,7 +97,7 @@ export const defaultDashboardTabs: DashboardTab[] = [
     label: "Home",
     icon: "🏠",
     widgetIds: homeWidgetIds,
-    layouts: pickLayouts(homeWidgetIds),
+    layouts: buildModeLayouts(homeWidgetIds),
     locked: true,
   },
   {
@@ -86,7 +105,7 @@ export const defaultDashboardTabs: DashboardTab[] = [
     label: "Career",
     icon: "💼",
     widgetIds: careerWidgetIds,
-    layouts: pickLayouts(careerWidgetIds),
+    layouts: buildModeLayouts(careerWidgetIds),
     locked: true,
   },
   {
@@ -94,7 +113,7 @@ export const defaultDashboardTabs: DashboardTab[] = [
     label: "Study",
     icon: "📚",
     widgetIds: studyWidgetIds,
-    layouts: pickLayouts(studyWidgetIds),
+    layouts: buildModeLayouts(studyWidgetIds),
     locked: true,
   },
   {
@@ -102,7 +121,7 @@ export const defaultDashboardTabs: DashboardTab[] = [
     label: "Memo",
     icon: "📝",
     widgetIds: memoWidgetIds,
-    layouts: pickLayouts(memoWidgetIds),
+    layouts: buildModeLayouts(memoWidgetIds),
     locked: true,
   },
   {
@@ -110,7 +129,7 @@ export const defaultDashboardTabs: DashboardTab[] = [
     label: "Life",
     icon: "🌿",
     widgetIds: lifeWidgetIds,
-    layouts: pickLayouts(lifeWidgetIds),
+    layouts: buildModeLayouts(lifeWidgetIds),
     locked: true,
   },
 ];

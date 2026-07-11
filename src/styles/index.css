@@ -15,6 +15,7 @@
 
 /* 2. Shared layout, controls, grid, and overlays */
 @import "./layout.css";
+@import "./layout-modes.css";
 @import "./controls.css";
 @import "./dashboard-grid.css";
 @import "./overlays.css";

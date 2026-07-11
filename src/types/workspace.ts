@@ -45,11 +45,17 @@ export type GridLayoutItem = {
 
 export type Layouts = Record<string, GridLayoutItem[]>;
 
+export type DashboardLayoutMode = "wide" | "laptop";
+
+export type DashboardModeLayouts = Record<DashboardLayoutMode, Layouts>;
+
 export type DashboardTab = {
   id: WorkspaceId;
   label: string;
   icon: string;
   widgetIds: WidgetId[];
-  layouts: Layouts;
+  /* Layouts are stored per presentation mode so wide-web edits never
+     overwrite the dedicated laptop-app arrangement. */
+  layouts: DashboardModeLayouts;
   locked?: boolean;
 };

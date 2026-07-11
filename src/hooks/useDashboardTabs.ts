@@ -3,6 +3,8 @@ import { useMemo } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 import { defaultDashboardTabs } from "../constants/dashboardTabs";
 import type {
+  DashboardLayoutMode,
+  DashboardModeLayouts,
   DashboardTab,
   GridLayoutItem,
   Layouts,
@@ -18,24 +20,46 @@ const fallbackTab: DashboardTab = {
   icon: "✨",
   widgetIds: ["today", "calendar", "memo", "study"],
   layouts: {
-    lg: [
-      { i: "today", x: 0, y: 0, w: 4, h: 4 },
-      { i: "calendar", x: 4, y: 0, w: 6, h: 5 },
-      { i: "memo", x: 10, y: 0, w: 6, h: 5 },
-      { i: "study", x: 0, y: 4, w: 6, h: 5 },
-    ],
-    md: [
-      { i: "today", x: 0, y: 0, w: 8, h: 4 },
-      { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
-      { i: "memo", x: 0, y: 4, w: 8, h: 5 },
-      { i: "study", x: 8, y: 5, w: 8, h: 5 },
-    ],
-    sm: [
-      { i: "today", x: 0, y: 0, w: 16, h: 4 },
-      { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
-      { i: "memo", x: 0, y: 9, w: 16, h: 5 },
-      { i: "study", x: 0, y: 14, w: 16, h: 5 },
-    ],
+    wide: {
+      lg: [
+        { i: "today", x: 0, y: 0, w: 4, h: 4 },
+        { i: "calendar", x: 4, y: 0, w: 6, h: 5 },
+        { i: "memo", x: 10, y: 0, w: 6, h: 5 },
+        { i: "study", x: 0, y: 4, w: 6, h: 5 },
+      ],
+      md: [
+        { i: "today", x: 0, y: 0, w: 8, h: 4 },
+        { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
+        { i: "memo", x: 0, y: 4, w: 8, h: 5 },
+        { i: "study", x: 8, y: 5, w: 8, h: 5 },
+      ],
+      sm: [
+        { i: "today", x: 0, y: 0, w: 16, h: 4 },
+        { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
+        { i: "memo", x: 0, y: 9, w: 16, h: 5 },
+        { i: "study", x: 0, y: 14, w: 16, h: 5 },
+      ],
+    },
+    laptop: {
+      lg: [
+        { i: "today", x: 0, y: 0, w: 4, h: 4 },
+        { i: "calendar", x: 4, y: 0, w: 6, h: 5 },
+        { i: "memo", x: 10, y: 0, w: 6, h: 5 },
+        { i: "study", x: 0, y: 4, w: 6, h: 5 },
+      ],
+      md: [
+        { i: "today", x: 0, y: 0, w: 8, h: 4 },
+        { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
+        { i: "memo", x: 0, y: 4, w: 8, h: 5 },
+        { i: "study", x: 8, y: 5, w: 8, h: 5 },
+      ],
+      sm: [
+        { i: "today", x: 0, y: 0, w: 16, h: 4 },
+        { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
+        { i: "memo", x: 0, y: 9, w: 16, h: 5 },
+        { i: "study", x: 0, y: 14, w: 16, h: 5 },
+      ],
+    },
   },
   locked: true,
 };
@@ -86,19 +110,63 @@ const normalizeLayoutArray = (value: unknown): GridLayoutItem[] => {
     .map((item) => normalizeLayoutItem(item));
 };
 
+const emptyLayouts = (): Layouts => ({
+  lg: [],
+  md: [],
+  sm: [],
+});
+
 const normalizeLayouts = (layouts: unknown): Layouts => {
   if (!isRecord(layouts)) {
-    return {
-      lg: [],
-      md: [],
-      sm: [],
-    };
+    return emptyLayouts();
   }
 
   return {
     lg: normalizeLayoutArray(layouts.lg),
     md: normalizeLayoutArray(layouts.md),
     sm: normalizeLayoutArray(layouts.sm),
+  };
+};
+
+const cloneLayouts = (layouts: Layouts): Layouts => ({
+  lg: layouts.lg.map((item) => ({ ...item })),
+  md: layouts.md.map((item) => ({ ...item })),
+  sm: layouts.sm.map((item) => ({ ...item })),
+});
+
+const normalizeModeLayouts = (value: unknown): DashboardModeLayouts => {
+  /* Backward compatibility: older tabs stored one layout set only.
+     We migrate those records into both modes so existing users keep
+     their layout while laptop mode gets a separate copy to edit later. */
+  if (!isRecord(value)) {
+    return {
+      wide: emptyLayouts(),
+      laptop: emptyLayouts(),
+    };
+  }
+
+  const hasModeShape = "wide" in value || "laptop" in value;
+
+  if (hasModeShape) {
+    const wideLayouts = normalizeLayouts(value.wide);
+    const laptopLayouts = normalizeLayouts(value.laptop);
+
+    return {
+      wide: wideLayouts,
+      laptop:
+        laptopLayouts.lg.length > 0 ||
+        laptopLayouts.md.length > 0 ||
+        laptopLayouts.sm.length > 0
+          ? laptopLayouts
+          : cloneLayouts(wideLayouts),
+    };
+  }
+
+  const sharedLayouts = normalizeLayouts(value);
+
+  return {
+    wide: sharedLayouts,
+    laptop: cloneLayouts(sharedLayouts),
   };
 };
 
@@ -109,7 +177,7 @@ const normalizeTab = (tab: DashboardTab): DashboardTab => {
     label: tab.label || "Untitled",
     icon: tab.icon || "✨",
     widgetIds: Array.isArray(tab.widgetIds) ? tab.widgetIds : [],
-    layouts: normalizeLayouts(tab.layouts),
+    layouts: normalizeModeLayouts(tab.layouts),
     locked: Boolean(tab.locked),
   };
 };
@@ -129,18 +197,34 @@ const createNewTab = (): DashboardTab => {
     icon: "✨",
     widgetIds: ["memo", "calendar"],
     layouts: {
-      lg: [
-        { i: "memo", x: 0, y: 0, w: 5, h: 4 },
-        { i: "calendar", x: 5, y: 0, w: 7, h: 5 },
-      ],
-      md: [
-        { i: "memo", x: 0, y: 0, w: 8, h: 4 },
-        { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
-      ],
-      sm: [
-        { i: "memo", x: 0, y: 0, w: 16, h: 4 },
-        { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
-      ],
+      wide: {
+        lg: [
+          { i: "memo", x: 0, y: 0, w: 5, h: 4 },
+          { i: "calendar", x: 5, y: 0, w: 7, h: 5 },
+        ],
+        md: [
+          { i: "memo", x: 0, y: 0, w: 8, h: 4 },
+          { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
+        ],
+        sm: [
+          { i: "memo", x: 0, y: 0, w: 16, h: 4 },
+          { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
+        ],
+      },
+      laptop: {
+        lg: [
+          { i: "memo", x: 0, y: 0, w: 5, h: 4 },
+          { i: "calendar", x: 5, y: 0, w: 7, h: 5 },
+        ],
+        md: [
+          { i: "memo", x: 0, y: 0, w: 8, h: 4 },
+          { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
+        ],
+        sm: [
+          { i: "memo", x: 0, y: 0, w: 16, h: 4 },
+          { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
+        ],
+      },
     },
     locked: false,
   };
@@ -175,7 +259,7 @@ export const useDashboardTabs = () => {
               ...patch,
               layouts:
                 patch.layouts !== undefined
-                  ? normalizeLayouts(patch.layouts)
+                  ? normalizeModeLayouts(patch.layouts)
                   : tab.layouts,
             })
           : tab
@@ -183,11 +267,17 @@ export const useDashboardTabs = () => {
     );
   };
 
-  const updateActiveTabLayouts = (layouts: Layouts) => {
+  const updateActiveTabLayouts = (
+    mode: DashboardLayoutMode,
+    layouts: Layouts
+  ) => {
     if (!activeTab) return;
 
     updateTab(activeTab.id, {
-      layouts: normalizeLayouts(layouts),
+      layouts: {
+        ...activeTab.layouts,
+        [mode]: normalizeLayouts(layouts),
+      },
     });
   };
 
@@ -203,14 +293,22 @@ export const useDashboardTabs = () => {
   const removeWidgetFromActiveTab = (widgetId: WidgetId) => {
     if (!activeTab) return;
 
-    const currentLayouts = normalizeLayouts(activeTab.layouts);
+    const currentLayouts = activeTab.layouts;
 
-    const nextLayouts: Layouts = Object.fromEntries(
-      Object.entries(currentLayouts).map(([breakpoint, layouts]) => [
-        breakpoint,
-        layouts.filter((item: GridLayoutItem) => item.i !== widgetId),
-      ])
-    ) as Layouts;
+    const nextLayouts: DashboardModeLayouts = {
+      wide: Object.fromEntries(
+        Object.entries(currentLayouts.wide).map(([breakpoint, layouts]) => [
+          breakpoint,
+          layouts.filter((item: GridLayoutItem) => item.i !== widgetId),
+        ])
+      ) as Layouts,
+      laptop: Object.fromEntries(
+        Object.entries(currentLayouts.laptop).map(([breakpoint, layouts]) => [
+          breakpoint,
+          layouts.filter((item: GridLayoutItem) => item.i !== widgetId),
+        ])
+      ) as Layouts,
+    };
 
     updateTab(activeTab.id, {
       widgetIds: activeTab.widgetIds.filter((id) => id !== widgetId),

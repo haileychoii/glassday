@@ -9,6 +9,7 @@ import type {
 import { Responsive } from "react-grid-layout/legacy";
 
 import type {
+  DashboardLayoutMode,
   DashboardTab,
   GridLayoutItem,
   Layouts,
@@ -43,8 +44,9 @@ type Breakpoint = "lg" | "md" | "sm";
 
 type DashboardGridProps = {
   editMode: boolean;
+  layoutMode: DashboardLayoutMode;
   activeTab: DashboardTab;
-  onLayoutsChange: (layouts: Layouts) => void;
+  onLayoutsChange: (mode: DashboardLayoutMode, layouts: Layouts) => void;
   onAddWidget: (widgetId: WidgetId) => void;
   onRemoveWidget: (widgetId: WidgetId) => void;
   onEditValidationChange?: (state: {
@@ -353,6 +355,7 @@ const replaceLayoutItem = (
 
 export const DashboardGrid = ({
   editMode,
+  layoutMode,
   activeTab,
   onLayoutsChange,
   onAddWidget,
@@ -395,8 +398,8 @@ export const DashboardGrid = ({
   }, [activeTab.widgetIds]);
 
   const responsiveLayouts = useMemo<Layouts>(() => {
-    return ensureResponsiveLayouts(activeTab.layouts, activeWidgetIds);
-  }, [activeTab.layouts, activeWidgetIds]);
+    return ensureResponsiveLayouts(activeTab.layouts[layoutMode], activeWidgetIds);
+  }, [activeTab.layouts, activeWidgetIds, layoutMode]);
 
   const displayedLayouts = useMemo<Layouts>(() => {
     if (editMode && draftLayouts) {
@@ -550,7 +553,7 @@ export const DashboardGrid = ({
     const finishInteraction = () => {
       const session = interactionRef.current;
       if (session) {
-        onLayoutsChange(session.lastLayouts);
+        onLayoutsChange(layoutMode, session.lastLayouts);
       }
 
       interactionRef.current = null;
@@ -582,7 +585,7 @@ export const DashboardGrid = ({
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [onLayoutsChange, width]);
+  }, [layoutMode, onLayoutsChange, width]);
 
   const continuePointerInteraction = (event: ReactPointerEvent<HTMLElement>) => {
     const session = interactionRef.current;
