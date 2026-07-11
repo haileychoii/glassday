@@ -86,7 +86,7 @@
   --gd-topbar-pad-x: 10px;
   --gd-topbar-gap: 8px;
   --gd-sidebar-width-expanded: 144px;
-  --gd-sidebar-width-collapsed: 48px;
+  --gd-sidebar-width-collapsed: 42px;
   --gd-sidebar-brand-height: 64px;
   --gd-sidebar-body-pad: 6px;
   --gd-sidebar-section-gap: 5px;
@@ -154,14 +154,14 @@
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-item.is-collapsed .sidebar-tab-main {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-icon svg {
-  width: 15px;
-  height: 15px;
+  width: 13px;
+  height: 13px;
 }
 
 .app-shell-surface.is-laptop .topbar,

@@ -267,10 +267,25 @@ body,
   max-width: var(--gd-sidebar-width-collapsed) !important;
 }
 
+.app-mode-stage.is-laptop-mode .glass-panel > .app-shell-columns > .app-sidebar[data-collapsed="true"],
+.app-mode-stage.is-laptop-mode .liquid-shell > .app-shell-columns > .app-sidebar[data-collapsed="true"],
+.app-mode-stage.is-laptop-mode .glass-panel > .app-shell-columns > .sidebar[data-collapsed="true"],
+.app-mode-stage.is-laptop-mode .liquid-shell > .app-shell-columns > .sidebar[data-collapsed="true"] {
+  flex-basis: var(--gd-sidebar-width-collapsed) !important;
+  width: var(--gd-sidebar-width-collapsed) !important;
+  min-width: var(--gd-sidebar-width-collapsed) !important;
+  max-width: var(--gd-sidebar-width-collapsed) !important;
+}
+
 .app-mode-stage.is-laptop-mode .sidebar-brand {
   height: var(--gd-sidebar-brand-height) !important;
   min-height: var(--gd-sidebar-brand-height) !important;
   padding: 0 10px !important;
+}
+
+.app-mode-stage.is-laptop-mode .app-sidebar[data-collapsed="true"] .sidebar-brand,
+.app-mode-stage.is-laptop-mode .sidebar[data-collapsed="true"] .sidebar-brand {
+  padding-inline: 5px !important;
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-brand-title {
@@ -284,6 +299,11 @@ body,
 
 .app-mode-stage.is-laptop-mode .sidebar-body {
   padding: var(--gd-sidebar-body-pad) !important;
+}
+
+.app-mode-stage.is-laptop-mode .app-sidebar[data-collapsed="true"] .sidebar-body,
+.app-mode-stage.is-laptop-mode .sidebar[data-collapsed="true"] .sidebar-body {
+  padding: 8px 3px 10px !important;
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-section-header {
@@ -435,26 +455,26 @@ body,
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-tab-item.is-collapsed .sidebar-tab-main {
-  width: 32px !important;
-  height: 32px !important;
+  width: 28px !important;
+  height: 28px !important;
   padding: 0 !important;
-  border-radius: 10px !important;
+  border-radius: 9px !important;
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-tab-icon svg {
-  width: 15px !important;
-  height: 15px !important;
+  width: 13px !important;
+  height: 13px !important;
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-collapse-button {
-  width: 24px !important;
-  min-width: 24px !important;
-  height: 24px !important;
+  width: 22px !important;
+  min-width: 22px !important;
+  height: 22px !important;
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-collapse-button svg {
-  width: 13px !important;
-  height: 13px !important;
+  width: 11px !important;
+  height: 11px !important;
 }
 
 /* Keep Today Focus stable inside laptop preview even when the outer browser

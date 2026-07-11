@@ -45,9 +45,9 @@ export const Sidebar = ({
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? (
-            <PanelLeftOpen className="w-3.5 h-3.5" />
+            <PanelLeftOpen className="w-3 h-3" />
           ) : (
-            <PanelLeftClose className="w-3.5 h-3.5" />
+            <PanelLeftClose className="w-3 h-3" />
           )}
         </button>
       </div>
