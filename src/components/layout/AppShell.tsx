@@ -132,7 +132,7 @@ export const AppShell = ({
     >
       <div
         className={[
-          "flex",
+          "flex app-shell-columns",
           layoutMode === "laptop"
             ? "h-full min-h-0"
             : "min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
@@ -152,7 +152,7 @@ export const AppShell = ({
           onRemoveTab={onRemoveTab}
         />
 
-        <div className="flex-1 min-w-0 flex flex-col">
+        <div className="app-shell-main-column flex-1 min-w-0 flex flex-col">
           <Topbar
             editMode={editMode}
             layoutMode={layoutMode}
@@ -167,7 +167,14 @@ export const AppShell = ({
             onRemoveTab={onRemoveTab}
           />
 
-          <main className="flex-1 px-2 py-1.5 md:px-2.5 md:py-2 !overflow-y-auto !overflow-x-hidden bg-transparent">
+          <main
+            className={[
+              "app-shell-main flex-1 !overflow-y-auto !overflow-x-hidden bg-transparent",
+              layoutMode === "laptop"
+                ? "px-1.5 py-1.5 md:px-1.5 md:py-1.5"
+                : "px-2 py-1.5 md:px-2.5 md:py-2",
+            ].join(" ")}
+          >
             {children}
           </main>
         </div>

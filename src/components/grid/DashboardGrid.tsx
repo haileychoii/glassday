@@ -67,8 +67,6 @@ const GRID_COLS: Record<Breakpoint, number> = {
   sm: 16,
 };
 
-const ROW_HEIGHT = 52;
-const GRID_GAP = 14;
 const INITIAL_VISIBLE_ROWS = 16;
 
 const RESIZE_HANDLES = ["n", "s", "e", "w", "ne", "nw", "se", "sw"] as const;
@@ -396,6 +394,8 @@ export const DashboardGrid = ({
   const activeWidgetIds = useMemo<WidgetId[]>(() => {
     return Array.isArray(activeTab.widgetIds) ? activeTab.widgetIds : [];
   }, [activeTab.widgetIds]);
+  const rowHeight = layoutMode === "laptop" ? 46 : 52;
+  const gridGap = layoutMode === "laptop" ? 10 : 14;
 
   const responsiveLayouts = useMemo<Layouts>(() => {
     return ensureResponsiveLayouts(activeTab.layouts[layoutMode], activeWidgetIds);
@@ -439,12 +439,12 @@ export const DashboardGrid = ({
 
   const getGridMetrics = (breakpoint: Breakpoint) => {
     const cols = GRID_COLS[breakpoint];
-    const columnWidth = (width - GRID_GAP * (cols - 1)) / cols;
+    const columnWidth = (width - gridGap * (cols - 1)) / cols;
 
     return {
       cols,
-      columnStep: columnWidth + GRID_GAP,
-      rowStep: ROW_HEIGHT + GRID_GAP,
+      columnStep: columnWidth + gridGap,
+      rowStep: rowHeight + gridGap,
     };
   };
 
@@ -690,10 +690,10 @@ export const DashboardGrid = ({
   };
 
   const canvasStyle = {
-    "--gd-grid-row-height": `${ROW_HEIGHT}px`,
-    "--gd-grid-gap": `${GRID_GAP}px`,
+    "--gd-grid-row-height": `${rowHeight}px`,
+    "--gd-grid-gap": `${gridGap}px`,
     "--gd-grid-min-height": `${
-      INITIAL_VISIBLE_ROWS * ROW_HEIGHT + (INITIAL_VISIBLE_ROWS - 1) * GRID_GAP
+      INITIAL_VISIBLE_ROWS * rowHeight + (INITIAL_VISIBLE_ROWS - 1) * gridGap
     }px`,
   } as CSSProperties;
 
@@ -778,9 +778,9 @@ export const DashboardGrid = ({
           layouts={displayedLayouts}
           breakpoints={BREAKPOINTS}
           cols={GRID_COLS}
-          rowHeight={ROW_HEIGHT}
+          rowHeight={rowHeight}
           width={width}
-          margin={[GRID_GAP, GRID_GAP]}
+          margin={[gridGap, gridGap]}
           containerPadding={[0, 0]}
           autoSize={true}
           isDraggable={false}

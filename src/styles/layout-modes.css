@@ -59,9 +59,146 @@
 }
 
 .app-shell-surface.is-laptop {
+  --gd-radius-app: 26px;
+  --gd-radius-panel: 22px;
+  --gd-radius-widget: 22px;
+  --gd-radius-card: 18px;
+  --gd-radius-inner: 16px;
+  --gd-space-sm: 6px;
+  --gd-space-md: 8px;
+  --gd-space-lg: 10px;
+  --gd-space-xl: 12px;
+  --gd-space-2xl: 16px;
+  --gd-widget-pad-x: 12px;
+  --gd-widget-pad-y: 12px;
+  --gd-widget-header-pad-top: 12px;
+  --gd-widget-header-pad-bottom: 6px;
+  --gd-widget-header-gap: 10px;
+  --gd-widget-title-gap: 8px;
+  --gd-control-height-sm: 28px;
+  --gd-control-height-md: 30px;
   width: 100%;
   height: 100%;
   min-height: var(--gd-laptop-frame-height);
+}
+
+.app-shell-surface.is-laptop .app-sidebar,
+.app-shell-surface.is-laptop .sidebar {
+  --sidebar-width: 176px;
+  min-width: 176px;
+  max-width: 176px;
+}
+
+.app-shell-surface.is-laptop .app-sidebar[data-collapsed="true"],
+.app-shell-surface.is-laptop .sidebar[data-collapsed="true"] {
+  --sidebar-width: 60px;
+  min-width: 60px;
+  max-width: 60px;
+}
+
+.app-shell-surface.is-laptop .sidebar-brand {
+  height: 72px;
+  min-height: 72px;
+  padding: 0 14px;
+}
+
+.app-shell-surface.is-laptop .sidebar-brand-title {
+  font-size: 17px;
+}
+
+.app-shell-surface.is-laptop .sidebar-brand-subtitle,
+.app-shell-surface.is-laptop .sidebar-section-title {
+  font-size: 11px;
+}
+
+.app-shell-surface.is-laptop .sidebar-body {
+  padding: 8px;
+}
+
+.app-shell-surface.is-laptop .sidebar-section-header {
+  margin-bottom: 10px;
+  padding: 0 6px;
+}
+
+.app-shell-surface.is-laptop .sidebar-workspace-list {
+  gap: 6px;
+}
+
+.app-shell-surface.is-laptop .sidebar-tab-item {
+  min-height: 38px;
+}
+
+.app-shell-surface.is-laptop .sidebar-tab-main {
+  height: 38px;
+  padding: 0 10px;
+  gap: 8px;
+  font-size: 12.5px;
+  border-radius: 14px;
+}
+
+.app-shell-surface.is-laptop .sidebar-tab-item.is-collapsed .sidebar-tab-main {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+}
+
+.app-shell-surface.is-laptop .sidebar-tab-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.app-shell-surface.is-laptop .topbar,
+.app-shell-surface.is-laptop .topbar-inner {
+  min-height: 60px;
+}
+
+.app-shell-surface.is-laptop .topbar-inner {
+  padding: 0 14px;
+  gap: 10px;
+}
+
+.app-shell-surface.is-laptop .topbar-heading {
+  gap: 10px;
+}
+
+.app-shell-surface.is-laptop .topbar-title h1 {
+  font-size: 20px;
+}
+
+.app-shell-surface.is-laptop .topbar-title p {
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.app-shell-surface.is-laptop .topbar-sparkle {
+  width: 14px;
+  height: 14px;
+}
+
+.app-shell-surface.is-laptop .topbar-actions {
+  gap: 5px;
+}
+
+.app-shell-surface.is-laptop .topbar-action-button,
+.app-shell-surface.is-laptop .layout-mode-button {
+  height: 32px;
+}
+
+.app-shell-surface.is-laptop .topbar-action-button {
+  padding: 0 10px;
+}
+
+.app-shell-surface.is-laptop .layout-mode-button {
+  padding: 0 10px;
+  font-size: 11px;
+}
+
+.app-shell-surface.is-laptop .app-shell-main {
+  padding-top: 4px;
+}
+
+.app-shell-surface.is-laptop .dashboard-tab-header {
+  margin-bottom: 8px;
 }
 
 .laptop-preview-stage {
