@@ -1,12 +1,4 @@
 import { LayoutGrid, Monitor, Settings, Sparkles } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import {
-  applyTheme,
-  getCurrentTheme,
-  themeOptions,
-  topbarThemeOptions,
-  type ThemeId,
-} from "../../constants/themes";
 
 import { cn } from "../../lib/utils";
 import type { DashboardLayoutMode, DashboardTab } from "../../types/workspace";
@@ -39,41 +31,6 @@ export const Topbar = ({
   onRenameTab,
   onRemoveTab,
 }: TopbarProps) => {
-  const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
-
-  const isTopbarTheme = useMemo(() => {
-    return topbarThemeOptions.some((item) => item.id === theme);
-  }, [theme]);
-
-  const currentThemeLabel = useMemo(() => {
-    return themeOptions.find((item) => item.id === theme)?.label ?? "Theme";
-  }, [theme]);
-
-  useEffect(() => {
-    applyTheme(theme);
-  }, [theme]);
-
-  // SettingsModal에서 테마를 바꿨을 때 Topbar도 같이 따라오게 함
-  useEffect(() => {
-    const handleThemeChange = (event: Event) => {
-      const customEvent = event as CustomEvent<ThemeId>;
-
-      if (!customEvent.detail) return;
-
-      setTheme(customEvent.detail);
-    };
-
-    window.addEventListener("glassday-theme-change", handleThemeChange);
-
-    return () => {
-      window.removeEventListener("glassday-theme-change", handleThemeChange);
-    };
-  }, []);
-
-  const handleTopbarThemeChange = (nextTheme: ThemeId) => {
-    setTheme(nextTheme);
-  };
-
   return (
     <header className="topbar">
       <div className="topbar-inner">
@@ -115,47 +72,6 @@ export const Topbar = ({
                 <span>Laptop</span>
               </button>
             </div>
-
-            <div
-              className="theme-segmented-control theme-button-group"
-              aria-label="Theme selector"
-            >
-              {topbarThemeOptions.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => handleTopbarThemeChange(item.id)}
-                  className={cn(
-                    "theme-segment-button",
-                    theme === item.id && "is-active"
-                  )}
-                  title={item.description}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-
-            <select
-              className="theme-select-mobile"
-              value={isTopbarTheme ? theme : ""}
-              onChange={(event) =>
-                handleTopbarThemeChange(event.target.value as ThemeId)
-              }
-              aria-label="Theme selector"
-            >
-              {!isTopbarTheme && (
-                <option value="" disabled>
-                  {currentThemeLabel}
-                </option>
-              )}
-
-              {topbarThemeOptions.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
 
             <button
               type="button"
