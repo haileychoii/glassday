@@ -267,6 +267,30 @@ body,
   max-width: var(--gd-sidebar-width-collapsed) !important;
 }
 
+.app-mode-stage.is-laptop-mode .sidebar-brand {
+  height: var(--gd-sidebar-brand-height) !important;
+  min-height: var(--gd-sidebar-brand-height) !important;
+  padding: 0 10px !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-brand-title {
+  font-size: 17px !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-brand-subtitle,
+.app-mode-stage.is-laptop-mode .sidebar-section-title {
+  font-size: 11px !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-body {
+  padding: var(--gd-sidebar-body-pad) !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-section-header {
+  margin-bottom: 8px !important;
+  padding: 0 4px !important;
+}
+
 .app-mode-stage.is-laptop-mode .glass-panel > .app-shell-columns > .app-shell-main-column,
 .app-mode-stage.is-laptop-mode .liquid-shell > .app-shell-columns > .app-shell-main-column {
   flex: 1 1 auto !important;
@@ -388,11 +412,13 @@ body,
 .app-mode-stage.is-laptop-mode .sidebar-workspace-list-collapsed {
   display: flex !important;
   flex-direction: column !important;
+  gap: var(--gd-sidebar-section-gap) !important;
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-tab-item {
   width: 100% !important;
   min-width: 0 !important;
+  min-height: 36px !important;
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-tab-item.is-collapsed {
@@ -401,6 +427,23 @@ body,
 
 .app-mode-stage.is-laptop-mode .sidebar-tab-main {
   white-space: nowrap !important;
+  height: 36px !important;
+  padding: 0 8px !important;
+  gap: 7px !important;
+  font-size: 12px !important;
+  border-radius: 12px !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-tab-item.is-collapsed .sidebar-tab-main {
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-tab-icon svg {
+  width: 16px !important;
+  height: 16px !important;
 }
 
 /* Keep Today Focus stable inside laptop preview even when the outer browser
