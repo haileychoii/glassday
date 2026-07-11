@@ -222,6 +222,129 @@ body,
   padding: var(--gd-main-pad-y) var(--gd-main-pad-x);
 }
 
+/* =========================================================
+   4. Laptop preview viewport isolation
+   The laptop mode should react only to the dashboard frame size,
+   not to the outer browser viewport media queries.
+========================================================= */
+
+.app-mode-stage.is-laptop-mode .glass-panel,
+.app-mode-stage.is-laptop-mode .liquid-shell {
+  overflow: hidden !important;
+}
+
+.app-mode-stage.is-laptop-mode .glass-panel > .app-shell-columns,
+.app-mode-stage.is-laptop-mode .liquid-shell > .app-shell-columns {
+  flex-direction: row !important;
+  gap: 0 !important;
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.app-mode-stage.is-laptop-mode .glass-panel > .app-shell-columns > .app-sidebar,
+.app-mode-stage.is-laptop-mode .liquid-shell > .app-shell-columns > .app-sidebar,
+.app-mode-stage.is-laptop-mode .glass-panel > .app-shell-columns > .sidebar,
+.app-mode-stage.is-laptop-mode .liquid-shell > .app-shell-columns > .sidebar {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-basis: var(--gd-sidebar-width-expanded) !important;
+  width: var(--gd-sidebar-width-expanded) !important;
+  min-width: var(--gd-sidebar-width-expanded) !important;
+  max-width: var(--gd-sidebar-width-expanded) !important;
+}
+
+.app-mode-stage.is-laptop-mode .app-sidebar[data-collapsed="true"],
+.app-mode-stage.is-laptop-mode .sidebar[data-collapsed="true"] {
+  flex-basis: var(--gd-sidebar-width-collapsed) !important;
+  width: var(--gd-sidebar-width-collapsed) !important;
+  min-width: var(--gd-sidebar-width-collapsed) !important;
+  max-width: var(--gd-sidebar-width-collapsed) !important;
+}
+
+.app-mode-stage.is-laptop-mode .topbar {
+  min-height: var(--gd-topbar-min-height) !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.app-mode-stage.is-laptop-mode .topbar-inner {
+  min-height: var(--gd-topbar-min-height) !important;
+  padding: 0 var(--gd-topbar-pad-x) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--gd-topbar-gap) !important;
+  flex-wrap: nowrap !important;
+}
+
+.app-mode-stage.is-laptop-mode .topbar-heading {
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.app-mode-stage.is-laptop-mode .topbar-title h1 {
+  font-size: 20px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.app-mode-stage.is-laptop-mode .topbar-title p {
+  font-size: 12px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.app-mode-stage.is-laptop-mode .topbar-mobile-workspaces {
+  display: none !important;
+}
+
+.app-mode-stage.is-laptop-mode .topbar-actions {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin-left: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 5px !important;
+  flex-wrap: nowrap !important;
+  overflow: visible !important;
+  padding: 0 !important;
+  scrollbar-width: none !important;
+}
+
+.app-mode-stage.is-laptop-mode .topbar-actions::-webkit-scrollbar {
+  display: none !important;
+}
+
+.app-mode-stage.is-laptop-mode .topbar-action-button {
+  width: auto !important;
+  height: 32px !important;
+  padding-inline: 10px !important;
+}
+
+.app-mode-stage.is-laptop-mode .topbar-action-button span {
+  display: inline !important;
+}
+
+.app-mode-stage.is-laptop-mode .dashboard-tab-space {
+  padding:
+    var(--gd-shell-pad-top)
+    var(--gd-shell-pad-x)
+    var(--gd-shell-pad-bottom) !important;
+}
+
+.app-mode-stage.is-laptop-mode .app-shell-main {
+  padding: var(--gd-main-pad-y) var(--gd-main-pad-x) !important;
+  min-height: 0 !important;
+}
+
 @media (min-width: 921px) {
   .topbar {
     border-top-left-radius: 0 !important;

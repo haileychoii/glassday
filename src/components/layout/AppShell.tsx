@@ -178,7 +178,13 @@ export const AppShell = ({
   );
 
   return (
-    <div className="app-mode-stage min-h-screen relative overflow-hidden bg-background text-foreground">
+    <div
+      className={[
+        "app-mode-stage min-h-screen relative overflow-hidden bg-background text-foreground",
+        layoutMode === "laptop" ? "is-laptop-mode" : "is-wide-mode",
+      ].join(" ")}
+      data-layout-mode={layoutMode}
+    >
       <div className="fixed inset-0 bg-glass-gradient" />
       {/* <PixelDesktopDecor /> */}
 
