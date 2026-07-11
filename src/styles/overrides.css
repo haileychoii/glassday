@@ -297,8 +297,22 @@ body,
   gap: 10px !important;
 }
 
+.app-mode-stage.is-laptop-mode .topbar-title {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  padding-top: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.app-mode-stage.is-laptop-mode .topbar-title-row {
+  align-items: center !important;
+}
+
 .app-mode-stage.is-laptop-mode .topbar-title h1 {
   font-size: 20px !important;
+  line-height: 1.1 !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
@@ -306,6 +320,8 @@ body,
 
 .app-mode-stage.is-laptop-mode .topbar-title p {
   font-size: 12px !important;
+  margin-top: 2px !important;
+  line-height: 1.15 !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
