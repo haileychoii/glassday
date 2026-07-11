@@ -202,8 +202,22 @@ export const AppShell = ({
               onPointerUp={finishLaptopFrameDrag}
               onPointerCancel={finishLaptopFrameDrag}
             >
-              <span className="laptop-preview-title">Laptop App Preview</span>
-              <span className="laptop-preview-size">960 x 640</span>
+              <div className="laptop-preview-chrome-side laptop-preview-chrome-left">
+                <span className="laptop-preview-traffic">
+                  <span className="is-close" />
+                  <span className="is-minimize" />
+                  <span className="is-expand" />
+                </span>
+              </div>
+
+              <div className="laptop-preview-chrome-center">
+                <span className="laptop-preview-title">Glassday Laptop App</span>
+                <span className="laptop-preview-subtitle">960 x 640 preview</span>
+              </div>
+
+              <div className="laptop-preview-chrome-side laptop-preview-chrome-right">
+                <span className="laptop-preview-mode-pill">Laptop Mode</span>
+              </div>
             </div>
 
             <div className="laptop-preview-window">{shellContent}</div>
