@@ -1,6 +1,7 @@
 /* =========================================================
-   Settings Modal Layout Fix
-   카드가 원형처럼 되는 문제 + 헤더 정렬 문제 해결
+   SETTINGS MODAL LAYOUT
+   Structure, sizing, and spacing for the settings modal.
+   Theme-specific color and glass treatment stay elsewhere.
 ========================================================= */
 
 .settings-modal-window,
@@ -17,7 +18,7 @@
   box-sizing: border-box !important;
 }
 
-/* Settings 상단 툴바 정리 */
+/* Settings header row */
 .settings-modal-header,
 .settings-header,
 .settings-titlebar {
@@ -35,7 +36,7 @@
   box-sizing: border-box !important;
 }
 
-/* 왼쪽 제목 묶음 */
+/* Header title cluster */
 .settings-modal-title-wrap {
   min-width: 0 !important;
 
@@ -44,7 +45,7 @@
   gap: 12px !important;
 }
 
-/* 아이콘은 작게, 제목 옆에 붙게 */
+/* Compact leading icon */
 .settings-modal-icon,
 .settings-icon {
   width: 38px !important;
@@ -58,7 +59,7 @@
   flex-shrink: 0 !important;
 }
 
-/* 제목 텍스트 */
+/* Header copy */
 .settings-modal-title-text,
 .settings-modal-title-wrap > div:last-child {
   min-width: 0 !important;
@@ -83,7 +84,7 @@
   line-height: 1.2 !important;
 }
 
-/* 닫기 버튼 위치 고정 */
+/* Stable close button slot */
 .settings-close-button,
 .settings-modal-header > button,
 .settings-header > button,
@@ -101,7 +102,7 @@
   margin-left: auto !important;
 }
 
-/* 본문 */
+/* Scrollable modal body */
 .settings-modal-body,
 .settings-body,
 .settings-content {
@@ -117,7 +118,7 @@
   box-sizing: border-box !important;
 }
 
-/* 섹션 박스 */
+/* Inner settings sections */
 .settings-section,
 .settings-card {
   width: 100% !important;
@@ -130,7 +131,7 @@
   gap: 18px !important;
 }
 
-/* 섹션 제목 */
+/* Section titles */
 .settings-section-title,
 .settings-card-title {
   display: inline-flex !important;
@@ -155,7 +156,7 @@
   align-items: stretch !important;
 }
 
-/* 핵심: button 전역 radius 때문에 원형처럼 되는 것 방지 */
+/* Prevent global button radius rules from turning cards circular */
 .settings-theme-card {
   width: 100% !important;
   min-width: 0 !important;
@@ -175,7 +176,7 @@
   box-sizing: border-box !important;
 }
 
-/* 프리뷰도 카드 안에서 같은 크기 */
+/* Uniform preview size inside each theme card */
 .settings-theme-preview {
   width: 100% !important;
   height: 52px !important;
@@ -192,7 +193,7 @@
   overflow: hidden !important;
 }
 
-/* 프리뷰 안 점/칩 */
+/* Preview chips */
 .settings-theme-preview > span {
   display: block !important;
   flex: 1 1 0 !important;
@@ -201,7 +202,7 @@
   border-radius: 999px !important;
 }
 
-/* 카드 텍스트 */
+/* Theme card copy */
 .settings-theme-card strong {
   margin: 0 !important;
   font-size: 13px !important;
@@ -216,7 +217,7 @@
   font-weight: 600 !important;
 }
 
-/* Backup / Reset 카드도 원형 방지 */
+/* Backup / reset cards keep the same framed shape */
 .settings-action-grid,
 .settings-backup-grid {
   width: 100% !important;
@@ -337,7 +338,7 @@ body.theme-retro .settings-reset-button {
   border-radius: 0 !important;
 }
 
-/* 모바일 */
+/* Small-screen modal layout */
 @media (max-width: 768px) {
   .settings-modal-window,
   .settings-window,
@@ -380,17 +381,18 @@ body.theme-retro .settings-reset-button {
 }
 
 /* =========================================================
-   Sidebar base layout stabilizer
-   테마별 색/배경은 themes/*.css에서 담당
+   SIDEBAR SAFETY LAYER
+   Stabilizes base sidebar sizing before the app-level sidebar
+   styles and breakpoints refine the final layout.
 ========================================================= */
 
 aside {
-  --sidebar-width: clamp(198px, 17vw, 258px);
+  --sidebar-width: clamp(198px, 17vw, 200px);
 
   flex: 0 0 var(--sidebar-width);
   width: var(--sidebar-width);
-  min-width: 190px;
-  max-width: 258px;
+  min-width: 180px;
+  max-width: 200px;
 
   min-height: 100%;
   overflow: hidden;
@@ -459,18 +461,19 @@ aside .sidebar-workspace-list {
 }
 
 /* =========================================================
-   Sidebar Base Layout
-   색/배경/테두리/질감은 themes/*.css에서 담당
+   SIDEBAR APP LAYOUT
+   Core desktop sidebar structure. Theme palette, blur, and
+   surface styling still belong in the theme files.
 ========================================================= */
 
 .app-sidebar,
 .sidebar {
-  --sidebar-width: clamp(198px, 17vw, 258px);
+  --sidebar-width: clamp(198px, 17vw, 200px);
 
   flex: 0 0 var(--sidebar-width);
   width: var(--sidebar-width);
   min-width: 190px;
-  max-width: 258px;
+  max-width: 200px;
 
   min-height: 100%;
 
@@ -513,7 +516,7 @@ aside .sidebar-workspace-list {
 }
 
 .sidebar-brand-title {
-  font-size: 21px;
+  font-size: 20px;
   line-height: 1.1;
   font-weight: 760;
   letter-spacing: -0.035em;
@@ -524,7 +527,7 @@ aside .sidebar-workspace-list {
 
   font-size: 12.5px;
   line-height: 1.2;
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .sidebar-body {
@@ -774,7 +777,7 @@ aside .sidebar-workspace-list {
   flex-shrink: 0;
 }
 
-/* tablet/mobile: sidebar becomes horizontal workspace bar */
+/* On tablet/mobile, the dedicated sidebar is replaced by the top workspace bar. */
 @media (max-width: 920px) {
   .app-sidebar,
   .sidebar {

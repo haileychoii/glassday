@@ -1,13 +1,11 @@
 /* =========================================================
-   TODAY FOCUS
-   Widget-local styles for:
-   - Today Focus content blocks
-   - shared title visibility repairs used by linked focus widgets
-   - compact mini sections inside the focus surface
+   TODAY FOCUS / ALERT / BASIC WIDGET CONTENT
+   Shared structural guardrails for a few lightweight widgets.
+   Theme color, blur, and material still belong in theme files.
 ========================================================= */
 
 /* =========================================================
-   1. Widget roots and header visibility safety
+   0. Widget roots
 ========================================================= */
 
 .today-focus-card,
@@ -31,6 +29,8 @@
   box-sizing: border-box;
 }
 
+/* These title rules are a safety net against theme or utility overrides
+   that can accidentally hide widget headers. */
 .today-focus-card .glass-card-title,
 .today-focus-widget .glass-card-title,
 .alert-center-widget .glass-card-title {
@@ -73,15 +73,6 @@
   position: relative !important;
   z-index: 3 !important;
   isolation: isolate !important;
-}
-
-.today-focus-widget .glass-card-title,
-.alert-center-widget .glass-card-title {
-  font-size: 15px !important;
-  line-height: 1.15 !important;
-  font-weight: 800 !important;
-  letter-spacing: 0 !important;
-  text-shadow: 0 1px 0 hsl(0 0% 100% / 0.24) !important;
 }
 
 .today-focus-widget .glass-card-subtitle,
@@ -165,9 +156,9 @@
 .today-focus-hero-value {
   min-width: 0;
 
-  font-size: 22px;
+  font-size: 15px;
   line-height: 1.15;
-  font-weight: 850;
+  font-weight: 750;
   letter-spacing: -0.045em;
 }
 
@@ -229,7 +220,7 @@
   align-items: center;
   gap: 7px;
 
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1.2;
   font-weight: 850;
 }
@@ -537,7 +528,9 @@
 }
 
 /* =========================================================
-   TODAY FOCUS HEIGHT RESTORE
+   8. Height restore
+   The focus widgets must remain scrollable instead of stretching the
+   whole dashboard column when content gets longer than the card.
 ========================================================= */
 
 .today-focus-card,

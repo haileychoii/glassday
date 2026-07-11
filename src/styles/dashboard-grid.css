@@ -56,7 +56,7 @@
 
   pointer-events: none;
 
-  border-radius: 24px;
+  border-radius: 20px;
 
   background-image:
     linear-gradient(
@@ -95,7 +95,7 @@
   box-sizing: border-box !important;
 }
 
-/* RGL이 직접 넣는 position / transform 절대 수정 금지 */
+/* React Grid Layout owns runtime transforms and positioning. */
 .react-grid-item {
   min-width: 0 !important;
   min-height: 0 !important;
@@ -119,7 +119,7 @@
 
   position: relative;
 
-  padding: 7px;
+  padding: 0px;
 
   overflow: hidden;
 
@@ -137,7 +137,8 @@
 
 /* =========================================================
    EDIT MODE SELECTION
-   위젯 내부 구조는 전혀 건드리지 않음
+   This layer only changes emphasis and selection affordances.
+   Widget internals still belong to their own CSS files.
 ========================================================= */
 
 /* Dim all widgets first so the active one stands out. */
@@ -168,7 +169,7 @@
   z-index: 80;
 
   border: 2px solid hsl(var(--primary) / 0.72);
-  border-radius: var(--gd-radius-widget, 28px);
+  border-radius: var(--gd-radius-widget, 20px);
 
   box-shadow:
     0 0 0 4px hsl(var(--primary) / 0.1);
@@ -176,7 +177,7 @@
   pointer-events: none;
 }
 
-/* 이동/resize 중에도 선명 */
+/* Keep the active widget fully legible while dragging/resizing. */
 .dashboard-tab-space.is-editing
   .react-grid-item.react-draggable-dragging
   .dashboard-grid-item,
@@ -310,7 +311,7 @@
     hsl(var(--primary) / 0.42);
 
   border-radius:
-    var(--gd-radius-widget, 28px);
+    var(--gd-radius-widget, 20px);
 
   background:
     hsl(var(--primary) / 0.12);
@@ -341,7 +342,7 @@
   transition: opacity 120ms ease;
 }
 
-/* hover / selected / resizing일 때만 edge 표시 */
+/* Show edge handles only when the card is interactive enough to use them. */
 .dashboard-tab-space.is-editing
 .react-grid-item:hover
 .react-resizable-handle,
@@ -354,7 +355,7 @@
   opacity: 1;
 }
 
-/* library 기본 삼각형 제거 */
+/* Remove the library's default corner triangle art. */
 .dashboard-tab-space.is-editing
 .react-resizable-handle::after {
   content: "";
@@ -532,7 +533,7 @@
    17. Reflow animation
 ========================================================= */
 
-/* 밀려나는 다른 위젯들만 부드럽게 */
+/* Only non-active widgets should animate when reflowing around changes. */
 .react-grid-item.cssTransforms {
   transition: transform 180ms ease;
 }
@@ -551,7 +552,7 @@
   overflow: visible !important;
 }
 
-/* 모든 resize handle 공통 */
+/* Compatibility pass: some handle rules need higher priority after RGL injects them. */
 .dashboard-tab-space.is-editing .react-resizable-handle {
   position: absolute !important;
 
@@ -570,7 +571,7 @@
   pointer-events: auto !important;
 }
 
-/* 마우스 올리면 보임 */
+/* Reveal handles on hover or while a resize is already in progress. */
 .dashboard-tab-space.is-editing
   .react-grid-item:hover
   .react-resizable-handle,
@@ -580,7 +581,7 @@
   opacity: 1;
 }
 
-/* 위 */
+/* Top edge */
 .dashboard-tab-space.is-editing .react-resizable-handle-n {
   top: -7px !important;
   left: 18px !important;
@@ -592,7 +593,7 @@
   cursor: ns-resize !important;
 }
 
-/* 아래 */
+/* Bottom edge */
 .dashboard-tab-space.is-editing .react-resizable-handle-s {
   bottom: -7px !important;
   left: 18px !important;
@@ -604,7 +605,7 @@
   cursor: ns-resize !important;
 }
 
-/* 왼쪽 */
+/* Left edge */
 .dashboard-tab-space.is-editing .react-resizable-handle-w {
   left: -7px !important;
   top: 18px !important;
@@ -616,7 +617,7 @@
   cursor: ew-resize !important;
 }
 
-/* 오른쪽 */
+/* Right edge */
 .dashboard-tab-space.is-editing .react-resizable-handle-e {
   right: -7px !important;
   top: 18px !important;
@@ -628,7 +629,7 @@
   cursor: ew-resize !important;
 }
 
-/* 모서리 */
+/* Corner handles */
 .dashboard-tab-space.is-editing .react-resizable-handle-nw,
 .dashboard-tab-space.is-editing .react-resizable-handle-ne,
 .dashboard-tab-space.is-editing .react-resizable-handle-sw,
@@ -661,13 +662,13 @@
   cursor: nwse-resize !important;
 }
 
-/* resize 중인 위젯 위로 */
+/* Keep the active manipulated item above neighbors. */
 .react-grid-item.react-resizable-resizing,
 .react-grid-item.react-draggable-dragging {
   z-index: 1000 !important;
 }
 
-/* 겹칠 자리를 보여주는 placeholder */
+/* Placeholder marks the next occupied slot during edit interactions. */
 .react-grid-item.react-grid-placeholder {
   opacity: 1 !important;
 
@@ -678,7 +679,7 @@
     hsl(var(--primary) / 0.42) !important;
 
   border-radius:
-    var(--gd-radius-widget, 28px);
+    var(--gd-radius-widget, 20px);
 }
 
 /* =========================================================

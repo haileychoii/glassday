@@ -303,7 +303,7 @@ main {
   }
 
   .topbar-mobile-workspace-list::-webkit-scrollbar {
-    display: none !important;
+    display: none;
   }
 
   .topbar-mobile-workspaces .sidebar-tab-item {
@@ -442,7 +442,7 @@ main {
   }
 
   .topbar-action-button span {
-    display: none !important;
+    display: none;
   }
 
   .topbar-action-button {

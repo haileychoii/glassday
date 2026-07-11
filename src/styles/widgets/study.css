@@ -44,7 +44,7 @@
 
 .study-kicker {
   font-size: 11px;
-  font-weight: 850;
+  font-weight: 800;
   color: hsl(var(--foreground) / 0.44);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -470,9 +470,10 @@
   border: 1px dashed hsl(0 0% 100% / 0.36);
 } 
 
-/* ================================
-   Study Detail Floating Window
-   ================================ */
+/* =========================================================
+   3. Detail floating window
+   Expanded study-planner layout used in the larger floating panel
+========================================================= */
 
 .study-detail-window {
   height: 100%;
@@ -643,20 +644,11 @@
   gap: 8px;
 }
 
-/* ================================
-   Study Detail Floating Window
-   ================================ */
-
-.study-detail-window {
-  height: 100%;
-  min-height: 0;
-  padding: 18px;
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  grid-template-rows: auto auto auto 1fr;
-  gap: 14px;
-  overflow: auto;
-}
+/* =========================================================
+   4. Grid-embedded study widget safety
+   These rules only keep the study widget stable inside the
+   dashboard grid card. They should not restyle the floating window.
+========================================================= */
 
 .react-grid-item .study-widget .glass-card-body {
   overflow: hidden !important;
@@ -727,13 +719,3 @@
   grid-column: 1 / -1;
 }
 
-@media (max-width: 760px){  
-  .today-focus-hero {
-    flex-direction: column !important;
-  }
-
-  .today-focus-ring {
-    width: 52px !important;
-    height: 52px !important;
-  }
-}
