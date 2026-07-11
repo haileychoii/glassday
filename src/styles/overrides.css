@@ -435,15 +435,26 @@ body,
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-tab-item.is-collapsed .sidebar-tab-main {
-  width: 36px !important;
-  height: 36px !important;
+  width: 32px !important;
+  height: 32px !important;
   padding: 0 !important;
-  border-radius: 12px !important;
+  border-radius: 10px !important;
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-tab-icon svg {
-  width: 16px !important;
-  height: 16px !important;
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-collapse-button {
+  width: 24px !important;
+  min-width: 24px !important;
+  height: 24px !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-collapse-button svg {
+  width: 13px !important;
+  height: 13px !important;
 }
 
 /* Keep Today Focus stable inside laptop preview even when the outer browser

@@ -508,9 +508,9 @@ aside .sidebar-workspace-list {
 }
 
 .sidebar-collapse-button {
-  width: 34px;
-  min-width: 34px;
-  height: 34px;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
   padding: 0;
   flex-shrink: 0;
 }

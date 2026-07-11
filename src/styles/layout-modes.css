@@ -85,8 +85,8 @@
   --gd-topbar-min-height: 56px;
   --gd-topbar-pad-x: 10px;
   --gd-topbar-gap: 8px;
-  --gd-sidebar-width-expanded: 150px;
-  --gd-sidebar-width-collapsed: 56px;
+  --gd-sidebar-width-expanded: 144px;
+  --gd-sidebar-width-collapsed: 48px;
   --gd-sidebar-brand-height: 64px;
   --gd-sidebar-body-pad: 6px;
   --gd-sidebar-section-gap: 5px;
@@ -98,6 +98,8 @@
 .app-shell-surface.is-laptop .app-sidebar,
 .app-shell-surface.is-laptop .sidebar {
   --sidebar-width: var(--gd-sidebar-width-expanded);
+  flex-basis: var(--gd-sidebar-width-expanded);
+  width: var(--gd-sidebar-width-expanded);
   min-width: var(--gd-sidebar-width-expanded);
   max-width: var(--gd-sidebar-width-expanded);
 }
@@ -105,6 +107,8 @@
 .app-shell-surface.is-laptop .app-sidebar[data-collapsed="true"],
 .app-shell-surface.is-laptop .sidebar[data-collapsed="true"] {
   --sidebar-width: var(--gd-sidebar-width-collapsed);
+  flex-basis: var(--gd-sidebar-width-collapsed);
+  width: var(--gd-sidebar-width-collapsed);
   min-width: var(--gd-sidebar-width-collapsed);
   max-width: var(--gd-sidebar-width-collapsed);
 }
@@ -150,14 +154,14 @@
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-item.is-collapsed .sidebar-tab-main {
-  width: 15px;
-  height: 36px;
-  border-radius: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-icon svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
 }
 
 .app-shell-surface.is-laptop .topbar,
