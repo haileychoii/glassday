@@ -2,6 +2,12 @@
    GLASSDAY RESPONSIVE RULES
    Breakpoint-only layout adjustments live here.
    Theme color, blur, border, and radius stay in theme files.
+
+   읽는 법:
+   - 이 파일은 "브라우저 viewport" 기준 반응형이다.
+   - laptop mode 자체 크기 조정은 layout-modes.css 쪽 토큰을 먼저 본다.
+   - 여기서는 topbar / sidebar / mobile workspace bar처럼
+     viewport 때문에 구조가 바뀌는 것만 다룬다.
 ========================================================= */
 
 /* =========================================================
@@ -22,6 +28,7 @@ main {
 
 /* =========================================================
    1. Medium desktop
+   큰 desktop에서 살짝만 압축되는 단계.
 ========================================================= */
 
 @media (max-width: 1280px) {
@@ -41,6 +48,10 @@ main {
 /* =========================================================
    2. <= 1180px
    Hide the desktop theme pills and switch to the compact selector
+
+   피그마 대응:
+   - topbar action area가 넓은 pill 그룹을 버리고
+     compact select 한 개로 바뀌는 시점
 ========================================================= */
 
 @media (max-width: 1180px) {
@@ -165,6 +176,9 @@ main {
 /* =========================================================
    3. <= 1100px
    Gradually tighten the desktop sidebar
+
+   여기는 desktop wide 레이아웃용.
+   laptop preview frame 자체 폭과는 별개다.
 ========================================================= */
 
 @media (max-width: 1100px) {
@@ -253,6 +267,9 @@ main {
 /* =========================================================
    4. <= 920px
    Replace the desktop sidebar with the horizontal mobile workspace bar
+
+   이 시점부터는 "사이드바 프레임"이 사라지고
+   상단 mobile workspace bar 로 역할이 넘어간다.
 ========================================================= */
 
 @media (max-width: 920px) {
