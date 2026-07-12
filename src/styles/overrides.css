@@ -928,7 +928,7 @@ body,
       var(--gd-widget-header-pad-top)
       var(--gd-widget-pad-x)
       var(--gd-widget-header-pad-bottom) !important;
-    gap: 10px !important;
+    gap: var(--gd-widget-stack-gap) !important;
     align-items: center !important;
   }
 
@@ -937,7 +937,7 @@ body,
     display: flex !important;
     justify-content: flex-end !important;
     flex-wrap: wrap !important;
-    gap: 6px !important;
+    gap: var(--gd-space-xs) !important;
   }
 
   .glass-card > div:last-child {
@@ -969,7 +969,7 @@ body,
   .study-hero {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 12px !important;
+    gap: var(--gd-widget-stack-gap) !important;
   }
 
   .today-focus-grid,
@@ -1000,7 +1000,7 @@ body,
   }
 
   .calendar-sync-preview {
-    margin-top: 8px !important;
+    margin-top: var(--gd-widget-stack-gap) !important;
     align-items: stretch !important;
     flex-direction: column !important;
   }
@@ -1058,7 +1058,7 @@ body,
   .study-task-panel,
   .study-record-list-panel {
     border-radius: 16px !important;
-    padding: 10px !important;
+    padding: var(--gd-widget-panel-pad) !important;
   }
 }
 

@@ -336,6 +336,15 @@ main {
 ========================================================= */
 
 @media (max-width: 768px) {
+  :root {
+    --gd-widget-shell-pad-x: 16px;
+    --gd-widget-shell-pad-bottom: 16px;
+    --gd-widget-header-anchor-y: 16px;
+    --gd-widget-content-gap-top: 10px;
+    --gd-widget-stack-gap: 10px;
+    --gd-widget-panel-pad: 12px;
+  }
+
   .relative.z-10.min-h-screen {
     padding: 3px !important;
   }
@@ -462,6 +471,15 @@ main {
 ========================================================= */
 
 @media (max-width: 430px) {
+  :root {
+    --gd-widget-shell-pad-x: 14px;
+    --gd-widget-shell-pad-bottom: 14px;
+    --gd-widget-header-anchor-y: 16px;
+    --gd-widget-content-gap-top: 10px;
+    --gd-widget-stack-gap: 8px;
+    --gd-widget-panel-pad: 8px;
+  }
+
   .dashboard-tab-space {
     padding: 14px 14px 28px !important;
   }
@@ -472,11 +490,17 @@ main {
   }
 
   .react-grid-item .glass-card > div:first-child {
-    padding: 16px 14px 10px !important;
+    padding:
+      var(--gd-widget-header-pad-top)
+      var(--gd-widget-pad-x)
+      var(--gd-widget-header-pad-bottom) !important;
   }
 
   .react-grid-item .glass-card > div:last-child {
-    padding: 0 14px 14px !important;
+    padding:
+      var(--gd-widget-content-gap-top)
+      var(--gd-widget-pad-x)
+      var(--gd-widget-pad-y) !important;
   }
 
   .topbar-title {
@@ -491,7 +515,7 @@ main {
   .today-focus-hero,
   .today-focus-section,
   .today-focus-block {
-    padding: 8px !important;
+    padding: var(--gd-widget-panel-pad) !important;
   }
 
   .today-focus-task {
