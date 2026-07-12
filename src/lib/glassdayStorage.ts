@@ -1,9 +1,10 @@
 export const GLASSDAY_STORAGE_PREFIX = "glassday.";
 export const GLASSDAY_STORAGE_EVENT = "glassday-storage-change";
+export const GLASSDAY_STORAGE_SNAPSHOT_VERSION = 3;
 
 export type GlassdayStorageSnapshot = {
   app: "Glassday";
-  version: 2;
+  version: number;
   exportedAt: string;
   data: Record<string, string>;
 };
@@ -15,14 +16,17 @@ export type GlassdayStorageChangeDetail = {
 
 const isBrowser = () => typeof window !== "undefined";
 
-/* Cloud sync should restore durable user content, not device-specific UI state.
-   In practice this prevents old snapshots from overwriting preview-only layout,
-   tab composition, collapsed sidebar state, floating window positions, and other
-   branch-specific view scaffolding after login on Vercel. */
+/* Cloud sync should restore durable user content plus shared dashboard structure.
+   Wide and laptop mode still keep separate layouts inside the same tab payload,
+   so one signed-in user can move between modes/devices and keep the same memory.
+   Device-only view state such as sidebar collapse, preview frame position, and
+   floating window rects stay local and are intentionally excluded. */
 const CLOUD_SYNC_ALLOWED_PREFIXES = [
   "glassday.calendar.",
   "glassday.career.",
   "glassday.custom.web-fonts.",
+  "glassday.dashboard.activeTab.",
+  "glassday.dashboard.tabs.",
   "glassday.health",
   "glassday.journal.",
   "glassday.memo.default-font.",
@@ -38,6 +42,21 @@ const CLOUD_SYNC_ALLOWED_PREFIXES = [
 
 const isCloudSyncAllowedKey = (key: string) =>
   CLOUD_SYNC_ALLOWED_PREFIXES.some((prefix) => key.startsWith(prefix));
+
+export const isCompatibleGlassdayStorageSnapshot = (
+  snapshot: unknown
+): snapshot is GlassdayStorageSnapshot => {
+  if (!snapshot || typeof snapshot !== "object") return false;
+
+  const candidate = snapshot as Partial<GlassdayStorageSnapshot>;
+
+  return (
+    candidate.app === "Glassday" &&
+    candidate.version === GLASSDAY_STORAGE_SNAPSHOT_VERSION &&
+    typeof candidate.exportedAt === "string" &&
+    Boolean(candidate.data && typeof candidate.data === "object")
+  );
+};
 
 export const getGlassdayLocalStorageKeys = () => {
   if (!isBrowser()) return [];
@@ -74,7 +93,7 @@ export const createGlassdayStorageSnapshot = (): GlassdayStorageSnapshot => {
 
   return {
     app: "Glassday",
-    version: 2,
+    version: GLASSDAY_STORAGE_SNAPSHOT_VERSION,
     exportedAt: new Date().toISOString(),
     data,
   };

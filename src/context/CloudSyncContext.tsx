@@ -14,6 +14,7 @@ import {
   applyGlassdayStorageSnapshot,
   createGlassdayStorageSnapshot,
   GLASSDAY_STORAGE_EVENT,
+  isCompatibleGlassdayStorageSnapshot,
   patchLocalStorageEvents,
   type GlassdayStorageSnapshot,
 } from "../lib/glassdayStorage";
@@ -133,7 +134,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    if (data?.payload) {
+    if (data?.payload && isCompatibleGlassdayStorageSnapshot(data.payload)) {
       suppressUploadRef.current = true;
       applyGlassdayStorageSnapshot(data.payload as GlassdayStorageSnapshot);
       setLastSyncedAt(data.updated_at ?? null);
@@ -144,6 +145,13 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
 
       setSyncState("synced", "Loaded your saved dashboard.");
       return;
+    }
+
+    if (data?.payload) {
+      setSyncState(
+        "syncing",
+        "Updating your cloud snapshot to the latest dashboard format..."
+      );
     }
 
     await uploadSnapshot();
