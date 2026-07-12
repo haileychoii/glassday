@@ -10,25 +10,42 @@
    1. Main study planner layout
 ========================================================= */
 
+.study-widget {
+  min-height: 0;
+  container-type: inline-size;
+  container-name: study-widget;
+}
+
+.study-widget .glass-card-body {
+  min-height: 0;
+  overflow: hidden;
+}
+
 .study-planner {
   height: 100%;
   min-height: 0;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: none;
+  grid-auto-rows: max-content;
+  align-content: start;
   gap: var(--gd-widget-stack-gap);
   overflow-y: auto;
   overflow-x: hidden;
+  padding-right: 2px;
 }
 
 .study-hero {
   grid-column: 1 / -1;
+  min-width: 0;
   min-height: 84px;
   padding: var(--gd-widget-panel-pad);
   border-radius: 26px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--gd-widget-stack-gap);
+  flex-wrap: wrap;
   background:
     radial-gradient(circle at 18% 12%, hsl(var(--primary) / 0.18), transparent 42%),
     linear-gradient(145deg, hsl(0 0% 100% / 0.46), hsl(0 0% 100% / 0.16));
@@ -98,6 +115,7 @@
 
 .study-date-row {
   grid-column: 1 / -1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -120,6 +138,7 @@
 .study-date-input {
   height: 34px;
   flex: 1;
+  min-width: 0;
   border-radius: 999px;
   padding: 0 12px;
   font-size: 12px;
@@ -133,6 +152,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
   gap: 8px;
+  align-items: stretch;
 }
 
 .study-subject-card {
@@ -143,6 +163,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-content: space-between;
+  text-align: left;
   background: hsl(0 0% 100% / 0.28);
   border: 1px solid hsl(0 0% 100% / 0.4);
 }
@@ -179,8 +201,10 @@
   color: hsl(var(--foreground) / 0.42);
 }
 
-.study-subject-percent {
+.study-subject-percent,
+.study-subject-card em {
   flex: 0 0 auto;
+  font-style: normal;
   font-size: 11px;
   font-weight: 900;
   color: hsl(var(--primary));
@@ -194,6 +218,9 @@
   min-height: 0;
   padding: 12px;
   border-radius: 22px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
   background:
     linear-gradient(145deg, hsl(0 0% 100% / 0.34), hsl(0 0% 100% / 0.13));
   border: 1px solid hsl(0 0% 100% / 0.42);
@@ -202,27 +229,27 @@
 
 .study-input-panel {
   grid-column: 1 / -1;
-  min-height: 112px;
+  min-height: 0;
 }
 
 .study-week-panel {
   grid-column: 1 / -1;
-  min-height: 214px;
+  min-height: 0;
 }
 
 .study-goal-panel {
   grid-column: 1 / -1;
-  min-height: 222px;
+  min-height: 0;
 }
 
 .study-task-panel {
   grid-column: 1 / -1;
-  min-height: 96px;
+  min-height: 0;
 }
 
 .study-record-list-panel {
   grid-column: 1 / -1;
-  min-height: 96px;
+  min-height: 0;
 }
 
 .study-section-title {
@@ -237,8 +264,9 @@
 
 .study-record-form {
   display: grid;
-  grid-template-columns: 100px 100px minmax(0, 1fr) 64px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
+  align-items: end;
 }
 
 .study-record-form label {
@@ -314,7 +342,7 @@
 }
 
 .study-week-bars {
-  height: 150px;
+  height: 140px;
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 7px;
@@ -360,6 +388,7 @@
 .study-task-list,
 .study-record-list {
   min-height: 0;
+  min-width: 0;
   overflow: auto;
   display: grid;
   align-content: start;
@@ -369,6 +398,7 @@
 .study-task,
 .study-record-item {
   min-height: 36px;
+  min-width: 0;
   border-radius: 15px;
   padding: 0 8px;
   display: flex;
@@ -422,6 +452,7 @@
 
 .study-task input {
   min-width: 0;
+  width: 100%;
   flex: 1;
   background: transparent !important;
   border: 0 !important;
@@ -469,6 +500,90 @@
   background: hsl(0 0% 100% / 0.2);
   border: 1px dashed hsl(0 0% 100% / 0.36);
 } 
+
+@container study-widget (max-width: 700px) {
+  .study-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .study-subject-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .study-input-panel,
+  .study-goal-panel,
+  .study-week-panel,
+  .study-task-panel,
+  .study-record-list-panel {
+    padding: 10px;
+    border-radius: 18px;
+    gap: 7px;
+  }
+
+  .study-record-form {
+    grid-template-columns: 1fr;
+  }
+
+  .study-week-bars {
+    height: 124px;
+    gap: 6px;
+  }
+
+  .study-goal-item {
+    grid-template-columns: 1fr 48px 22px;
+  }
+}
+
+@container study-widget (max-width: 520px) {
+  .study-date-row {
+    gap: 6px;
+  }
+
+  .study-date-button,
+  .study-today-button,
+  .study-date-input {
+    height: 30px;
+  }
+
+  .study-subject-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .study-subject-card {
+    min-height: 52px;
+    padding: 8px;
+  }
+
+  .study-week-bars {
+    height: 112px;
+    gap: 5px;
+  }
+
+  .study-week-day {
+    gap: 4px;
+  }
+
+  .study-week-day strong {
+    font-size: 10px;
+  }
+
+  .study-week-day span {
+    font-size: 8px;
+  }
+
+  .study-goal-item {
+    height: 30px;
+    grid-template-columns: 1fr 44px 20px;
+    gap: 5px;
+  }
+
+  .study-task,
+  .study-record-item {
+    gap: 6px;
+    padding-inline: 7px;
+  }
+}
 
 /* =========================================================
    3. Detail floating window
@@ -705,10 +820,6 @@
 .react-grid-item .study-task-list,
 .react-grid-item .study-record-list {
   max-height: 220px;
-}
-
-.study-record-form {
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
 
 .study-note-field {
