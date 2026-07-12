@@ -13,9 +13,10 @@
 .daily-journal-widget {
   height: 100%;
   min-height: 0;
+  padding: 16px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 0;
+  gap: 10px;
   overflow: hidden;
   container-type: inline-size;
   container-name: journal-widget;
@@ -25,11 +26,7 @@
   min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: var(--gd-widget-stack-gap);
-  padding:
-    var(--gd-widget-content-gap-top)
-    var(--gd-widget-pad-x)
-    var(--gd-widget-pad-y);
+  gap: 6px;
 }
 
 .journal-date-nav,
@@ -73,7 +70,7 @@
 
 .journal-summary-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 0.56fr)) minmax(340px, 1.95fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -111,6 +108,7 @@
 
 .journal-score-strip-card {
   min-width: 0;
+  grid-column: 1 / -1;
 }
 
 .journal-score-strip {
@@ -123,11 +121,11 @@
 .journal-score-inline {
   min-width: 0;
   border-radius: 16px;
-  padding: 8px 9px;
+  padding: 7px 8px;
   background: hsl(0 0% 100% / 0.18);
   border: 1px solid hsl(0 0% 100% / 0.3);
   display: grid;
-  gap: 6px;
+  gap: 5px;
 }
 
 .journal-score-inline small {
@@ -137,29 +135,30 @@
 }
 
 .journal-score-stepper {
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr) 22px;
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
 }
 
 .journal-score-stepper button {
-  width: 22px;
-  height: 22px;
+  width: 14px;
+  height: 14px;
   border-radius: 999px;
   display: grid;
   place-items: center;
   background: hsl(0 0% 100% / 0.34);
   border: 1px solid hsl(0 0% 100% / 0.44);
   color: hsl(var(--foreground) / 0.56);
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 900;
 }
 
 .journal-score-stepper b {
   text-align: center;
-  font-size: 18px;
-  font-weight: 900;
+  font-size: 13px;
+  margin: 0 3px;
+  font-weight: 800;
   line-height: 1;
 }
 
@@ -194,13 +193,14 @@
   overflow: auto;
   display: grid;
   align-content: start;
-  gap: var(--gd-widget-stack-gap);
-  padding-right: 2px;
+  gap: 8px;
+  margin-top: 0;
+  padding-right: 0px;
 }
 
 .journal-section {
-  border-radius: 24px;
-  padding: var(--gd-widget-panel-pad);
+  border-radius: 18px;
+  padding: 6px;
   background:
     linear-gradient(
       180deg,
@@ -211,19 +211,19 @@
 }
 
 .journal-section-title {
-  gap: 7px;
-  margin-bottom: 10px;
+  gap: 8px 15px;
+  margin-bottom: 5px;
   font-size: 12px;
-  font-weight: 900;
-  color: hsl(var(--foreground) / 0.68);
+  font-weight: 800;
+  color: hsl(var(--foreground) / 0.82);
 }
 
 .journal-add-row,
 .journal-clip-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 40px;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 5px;
+  margin-bottom: 5px;
 }
 
 .journal-clip-row {
@@ -236,7 +236,7 @@
 .journal-section textarea {
   width: 100%;
   min-width: 0;
-  border-radius: 16px;
+  border-radius: 15px;
   background: hsl(0 0% 100% / 0.32);
   border: 1px solid hsl(0 0% 100% / 0.44);
   color: hsl(var(--foreground) / 0.72);
@@ -255,14 +255,14 @@
 .journal-add-row button,
 .journal-clip-row button {
   min-height: 38px;
-  border-radius: 16px;
+  border-radius: 15px;
   display: grid;
   place-items: center;
   background: hsl(var(--primary) / 0.12);
   border: 1px solid hsl(var(--primary) / 0.2);
   color: hsl(var(--primary));
   font-size: 12px;
-  font-weight: 850;
+  font-weight: 800;
 }
 
 .journal-section textarea {
@@ -271,22 +271,24 @@
   padding: 12px;
   font-size: 12px;
   line-height: 1.55;
+  font-weight: 500;
+  color: hsl(var(--foreground) / 0.72);
 }
 
 .journal-task-list,
 .journal-clip-list,
 .journal-library-list {
   display: grid;
-  gap: 8px;
+  gap: 5px;
 }
 
 .journal-task-item {
   min-height: 42px;
-  display: grid;
-  grid-template-columns: 30px minmax(0, 1fr) 30px;
-  gap: 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
   padding: 7px;
-  border-radius: 17px;
+  border-radius: 7px;
   background: hsl(0 0% 100% / 0.26);
   border: 1px solid hsl(0 0% 100% / 0.38);
 }
@@ -301,8 +303,9 @@
 
 .journal-task-check,
 .journal-task-delete {
-  width: 25px;
-  height: 25px;
+  width: 12px;
+  height: 12px;
+
   border-radius: 999px;
   display: grid;
   place-items: center;
@@ -475,12 +478,13 @@
   display: grid !important;
   grid-template-rows: auto minmax(0, 1fr) !important;
   align-content: stretch !important;
-  gap: 0 !important;
+  gap: 10px !important;
   overflow: hidden !important;
 }
 
 .react-grid-item .daily-journal-widget > .journal-header,
-.react-grid-item .daily-journal-widget > .journal-content {
+.react-grid-item .daily-journal-widget > .journal-summary-row,
+.react-grid-item .daily-journal-widget > .journal-score-grid {
   min-height: 0 !important;
   flex: 0 0 auto !important;
 }
@@ -498,7 +502,7 @@
 @container journal-widget (max-width: 860px) {
   .daily-journal-widget {
     padding: 14px !important;
-    gap: 12px !important;
+    gap: 9px !important;
   }
 
   .journal-header {
@@ -517,12 +521,12 @@
   .journal-summary-row {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 8px !important;
+    gap: 6px !important;
   }
 
   .journal-summary-card {
     min-height: 0 !important;
-    padding: 9px 8px !important;
+    padding: 8px 7px !important;
     border-radius: 16px !important;
   }
 
@@ -569,11 +573,22 @@
   .journal-score-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
+
+  .journal-score-stepper button {
+    width: 13px !important;
+    height: 13px !important;
+    font-size: 8px !important;
+  }
+
+  .journal-score-stepper b {
+    font-size: 12px !important;
+    margin: 0 2px !important;
+  }
 }
 
 @container journal-widget (max-width: 560px) {
   .journal-summary-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 
   .journal-score-strip-card {

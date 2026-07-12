@@ -1469,6 +1469,21 @@ body,
     font-size: 9px !important;
   }
 
+  .daily-journal-widget .journal-score-strip-card {
+    grid-column: 1 / -1 !important;
+  }
+
+  .daily-journal-widget .journal-score-stepper button {
+    width: 14px !important;
+    height: 14px !important;
+    font-size: 9px !important;
+  }
+
+  .daily-journal-widget .journal-score-stepper b {
+    margin: 0 3px !important;
+    font-size: 13px !important;
+  }
+
   .daily-journal-widget .journal-score-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 8px !important;
@@ -1509,7 +1524,7 @@ body,
   }
 
   .daily-journal-widget .journal-summary-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 
   .daily-journal-widget .journal-summary-card:last-child {
