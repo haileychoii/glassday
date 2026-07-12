@@ -18,7 +18,7 @@
   min-height: 0;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
-  gap: 12px;
+  gap: var(--gd-widget-stack-gap);
 }
 
 /* =========================================================
@@ -27,12 +27,12 @@
 
 .today-mini-main {
   min-height: 92px;
-  padding: 16px;
+  padding: var(--gd-widget-panel-pad);
   border-radius: 26px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: var(--gd-widget-stack-gap);
   background:
     radial-gradient(
       circle at 20% 0%,
@@ -71,11 +71,11 @@
 .today-mini-weather {
   min-width: 92px;
   min-height: 74px;
-  padding: 12px;
+  padding: var(--gd-widget-panel-pad);
   border-radius: 24px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--gd-widget-stack-gap);
   background:
     linear-gradient(
       145deg,
@@ -105,16 +105,16 @@
 .today-mini-stats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: var(--gd-widget-stack-gap);
 }
 
 .today-mini-stat {
   min-height: 58px;
-  padding: 12px;
+  padding: var(--gd-widget-panel-pad);
   border-radius: 22px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--gd-widget-stack-gap);
   background:
     linear-gradient(
       180deg,
@@ -141,7 +141,7 @@
 
 .today-mini-next {
   min-height: 0;
-  padding: 12px 14px;
+  padding: var(--gd-widget-panel-pad);
   border-radius: 22px;
   background:
     linear-gradient(
@@ -213,15 +213,15 @@
   min-height: 0;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
-  gap: 12px;
+  gap: var(--gd-widget-stack-gap);
 }
 
 .today-tasks-progress {
   min-height: 76px;
-  padding: 14px;
+  padding: var(--gd-widget-panel-pad);
   border-radius: 24px;
   display: grid;
-  gap: 12px;
+  gap: var(--gd-widget-stack-gap);
   background:
     radial-gradient(
       circle at 18% 0%,

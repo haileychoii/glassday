@@ -67,7 +67,7 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--gd-widget-gap);
+  gap: var(--gd-widget-stack-gap);
   overflow: hidden;
 }
 
@@ -136,7 +136,7 @@
 .calendar-event-item {
   width: 100%;
   border-radius: 20px;
-  padding: var(--gd-space-lg);
+  padding: var(--gd-widget-panel-pad);
   background: hsl(0 0% 100% / 0.25);
   border: 1px solid hsl(0 0% 100% / 0.38);
   text-align: left;
@@ -201,7 +201,7 @@
 
 .calendar-empty-state {
   border-radius: 20px;
-  padding: 16px;
+  padding: var(--gd-widget-panel-pad);
   background: hsl(0 0% 100% / 0.16);
   border: 1px dashed hsl(0 0% 100% / 0.32);
   font-size: 12px;
@@ -211,12 +211,12 @@
 .calendar-sync-preview {
   flex: 0 0 auto;
   border-radius: 20px;
-  padding: var(--gd-space-lg);
-  margin-top: 25px;
+  padding: var(--gd-widget-panel-pad);
+  margin-top: var(--gd-widget-stack-gap);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--gd-widget-gap);
+  gap: var(--gd-widget-stack-gap);
 }
 
 .calendar-sync-button {

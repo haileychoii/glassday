@@ -19,7 +19,7 @@
   padding: var(--gd-widget-pad-y);
   display: grid;
   grid-template-rows: auto auto auto minmax(0, 1fr);
-  gap: var(--gd-widget-gap);
+  gap: var(--gd-widget-stack-gap);
   container-type: inline-size;
   container-name: career-widget;
 }
@@ -57,7 +57,7 @@
 .career-summary-card {
   min-width: 0;
   min-height: 72px;
-  padding: var(--gd-space-md);
+  padding: var(--gd-widget-panel-pad);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -139,7 +139,7 @@
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: minmax(220px, 1fr);
-  gap: var(--gd-widget-gap);
+  gap: var(--gd-widget-stack-gap);
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 4px;
@@ -150,8 +150,8 @@
   min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: var(--gd-widget-gap-tight);
-  padding: var(--gd-space-lg);
+  gap: var(--gd-widget-stack-gap);
+  padding: var(--gd-widget-panel-pad);
   border-radius: 22px;
   background: hsl(0 0% 100% / 0.2);
   border: 1px solid hsl(0 0% 100% / 0.34);
@@ -190,7 +190,7 @@
   display: grid;
   grid-auto-rows: max-content;
   align-content: start;
-  gap: var(--gd-widget-gap-tight);
+  gap: var(--gd-widget-stack-gap);
 }
 
 .career-board-card {
@@ -200,10 +200,10 @@
   border-radius: 18px;
   background: hsl(0 0% 100% / 0.24);
   border: 1px solid hsl(0 0% 100% / 0.38);
-  padding: var(--gd-space-lg);
+  padding: var(--gd-widget-panel-pad);
   display: flex;
   flex-direction: column;
-  gap: var(--gd-widget-gap-tight);
+  gap: var(--gd-widget-stack-gap);
   cursor: pointer;
   transition: 160ms ease;
 }
@@ -251,9 +251,9 @@
   border-radius: 22px;
   background: hsl(0 0% 100% / 0.24);
   border: 1px solid hsl(0 0% 100% / 0.38);
-  padding: var(--gd-space-lg);
+  padding: var(--gd-widget-panel-pad);
   display: grid;
-  gap: var(--gd-widget-gap-tight);
+  gap: var(--gd-widget-stack-gap);
   cursor: pointer;
   transition: 160ms ease;
 }
