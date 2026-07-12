@@ -109,8 +109,22 @@ main {
   overflow: hidden;
 }
 
-/* core widget card */
-.glass-card {
+/* =========================================================
+   Core widget frame
+   These aliases are the Figma-facing names to reuse:
+   - widget-frame
+   - widget-frame__header
+   - widget-frame__title-group
+   - widget-frame__icon
+   - widget-frame__copy
+   - widget-frame__title
+   - widget-frame__subtitle
+   - widget-frame__actions
+   - widget-frame__body
+========================================================= */
+
+.glass-card,
+.widget-frame {
   position: relative;
   min-width: 0;
   min-height: 0;
@@ -131,7 +145,8 @@ main {
 }
 
 .glass-card-header,
-.widget-card-header {
+.widget-card-header,
+.widget-frame__header {
   min-width: 0;
   min-height: var(--gd-widget-header-row-min-height);
   padding:
@@ -147,7 +162,8 @@ main {
   isolation: isolate;
 }
 
-.glass-card-title {
+.glass-card-title,
+.widget-frame__title {
   font-size: 12px;
   font-weight: 800;
   line-height: 1.2;
@@ -157,8 +173,9 @@ main {
   visibility: visible;
 }
 
-.glass-card-subtitle {
-  margin-top: 3px;
+.glass-card-subtitle,
+.widget-frame__subtitle {
+  margin: 0;
   font-size: 11px;
   font-weight: 650;
   line-height: 1.25;
@@ -168,7 +185,8 @@ main {
   visibility: visible;
 }
 
-.glass-card-body {
+.glass-card-body,
+.widget-frame__body {
   min-height: 0;
   padding:
     var(--gd-widget-content-gap-top)
@@ -178,7 +196,8 @@ main {
 }
 
 .glass-card-title-group,
-.widget-card-title-group {
+.widget-card-title-group,
+.widget-frame__title-group {
   min-width: 0;
   flex: 1 1 auto;
   display: flex;
@@ -187,20 +206,23 @@ main {
 }
 
 .glass-card-copy,
-.widget-card-copy {
+.widget-card-copy,
+.widget-frame__copy {
   min-width: 0;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  gap: var(--gd-widget-copy-gap);
   position: relative;
   z-index: 2;
   opacity: 1;
   visibility: visible;
 }
 
-.glass-card-actions {
+.glass-card-actions,
+.widget-frame__actions {
   min-width: 0;
   flex: 0 0 auto;
   display: flex;
@@ -209,7 +231,8 @@ main {
 
 .glass-icon-box,
 .glass-card-icon,
-.widget-card-icon {
+.widget-card-icon,
+.widget-frame__icon {
   width: 28px;
   height: 28px;
   min-width: 28px;
@@ -222,12 +245,14 @@ main {
 
 .glass-icon-box svg,
 .glass-card-icon svg,
-.widget-card-icon svg {
+.widget-card-icon svg,
+.widget-frame__icon svg {
   width: 15px;
   height: 15px;
 }
 
-.widget-card-copy h3 {
+.widget-card-copy h3,
+.widget-frame__copy > h3 {
   margin: 0;
   font-size: 12px;
   font-weight: 800;
@@ -238,8 +263,9 @@ main {
   visibility: visible;
 }
 
-.widget-card-copy p {
-  margin: 3px 0 0;
+.widget-card-copy p,
+.widget-frame__copy > p {
+  margin: 0;
   font-size: 11px;
   font-weight: 650;
   line-height: 1.25;
