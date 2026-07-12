@@ -260,14 +260,17 @@ main {
     --gd-topbar-inner-pad-x: 10px;
     --gd-topbar-inner-pad-top: 10px;
     --gd-topbar-heading-pad-bottom: 1px;
+    --gd-topbar-title-pad-top: 15px;
     --gd-topbar-mobile-pad-x: 18px;
     --gd-topbar-mobile-pad-top: 5px;
     --gd-topbar-mobile-pad-bottom: 3px;
     --gd-topbar-mobile-gap: 10px;
     --gd-topbar-mobile-list-gap: 8px;
+    --gd-topbar-mobile-list-pad-bottom: 4px;
     --gd-topbar-mobile-tab-min-width: 112px;
     --gd-topbar-mobile-tab-height: 38px;
     --gd-topbar-mobile-tab-pad-x: 12px;
+    --gd-topbar-mobile-tab-font-size: 14px;
     --gd-topbar-mobile-delete-size: 28px;
     --gd-shell-pad-x: 20px;
     --gd-shell-pad-top: 18px;
@@ -326,7 +329,7 @@ main {
   }
 
   .topbar-title {
-    padding-top: 15px;
+    padding-top: var(--gd-topbar-title-pad-top);
   }
 
   .topbar-mobile-workspaces {
@@ -349,7 +352,7 @@ main {
     gap: var(--gd-topbar-mobile-list-gap);
     overflow-x: auto;
     overflow-y: hidden;
-    padding-bottom: 4px;
+    padding-bottom: var(--gd-topbar-mobile-list-pad-bottom);
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
@@ -367,7 +370,7 @@ main {
   .topbar-mobile-workspaces .sidebar-tab-main {
     height: var(--gd-topbar-mobile-tab-height);
     padding: 0 var(--gd-topbar-mobile-tab-pad-x);
-    font-size: 14px;
+    font-size: var(--gd-topbar-mobile-tab-font-size);
     white-space: nowrap;
   }
 
@@ -403,19 +406,24 @@ main {
     --gd-shell-pad-bottom: 30px;
     --gd-topbar-min-height: 80px;
     --gd-topbar-pad-x: 18px;
+    --gd-topbar-inner-pad-top: 14px;
     --gd-topbar-heading-gap: 10px;
     --gd-topbar-title-size: 20px;
     --gd-topbar-subtitle-size: 12px;
     --gd-topbar-action-gap: 5px;
+    --gd-topbar-action-pad-x: 10px;
+    --gd-topbar-action-font-size: 12px;
     --gd-theme-select-width: 132px;
     --gd-theme-select-min-width: 116px;
     --gd-theme-select-max-width: 142px;
     --gd-theme-select-height: 36px;
+    --gd-theme-select-font-size: 13px;
     --gd-topbar-action-height: 36px;
     --gd-topbar-action-width-compact: 38px;
     --gd-topbar-mobile-pad-x: 18px;
     --gd-topbar-mobile-pad-top: 1px;
     --gd-topbar-mobile-pad-bottom: 0px;
+    --gd-mobile-input-font-size: 16px;
   }
 
   .relative.z-10.min-h-screen {
@@ -441,7 +449,7 @@ main {
 
   .topbar-inner {
     min-height: var(--gd-topbar-min-height) !important;
-    padding: 14px var(--gd-topbar-pad-x) 0 !important;
+    padding: var(--gd-topbar-inner-pad-top) var(--gd-topbar-pad-x) 0 !important;
     flex-direction: column !important;
     align-items: stretch !important;
     justify-content: center !important;
@@ -492,7 +500,7 @@ main {
   input,
   select,
   textarea {
-    font-size: 16px !important;
+    font-size: var(--gd-mobile-input-font-size) !important;
   }
 
   .topbar .theme-segmented-control,
@@ -519,13 +527,13 @@ main {
     min-width: var(--gd-theme-select-min-width) !important;
     max-width: var(--gd-theme-select-max-width) !important;
     height: var(--gd-theme-select-height) !important;
-    font-size: 13px !important;
+    font-size: var(--gd-theme-select-font-size) !important;
   }
 
   .topbar-action-button {
     height: var(--gd-topbar-action-height) !important;
-    padding-inline: 10px !important;
-    font-size: 12px !important;
+    padding-inline: var(--gd-topbar-action-pad-x) !important;
+    font-size: var(--gd-topbar-action-font-size) !important;
     font-weight: 700 !important;
   }
 
@@ -560,6 +568,8 @@ main {
     --gd-shell-pad-x: 14px;
     --gd-shell-pad-top: 14px;
     --gd-shell-pad-bottom: 28px;
+    --gd-topbar-title-pad-top: 5px;
+    --gd-topbar-actions-pad-top: 15px;
   }
 
   .dashboard-tab-space {
@@ -589,11 +599,11 @@ main {
   }
 
   .topbar-title {
-    padding-top: 5px !important;
+    padding-top: var(--gd-topbar-title-pad-top) !important;
   }
 
   .topbar-actions {
-    padding-top: 15px !important;
+    padding-top: var(--gd-topbar-actions-pad-top) !important;
   }
 
   .today-focus-main,
