@@ -180,6 +180,7 @@ main {
 .glass-card-title-group,
 .widget-card-title-group {
   min-width: 0;
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   gap: var(--gd-widget-title-gap);
@@ -188,9 +189,11 @@ main {
 .glass-card-copy,
 .widget-card-copy {
   min-width: 0;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
   position: relative;
   z-index: 2;
   opacity: 1;

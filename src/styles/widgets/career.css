@@ -1760,53 +1760,6 @@ body.theme-pixel-desk .career-cover-question-input {
 
   .career-widget-header {
     width: 100% !important;
-
-    display: flex !important;
-    flex-direction: row !important;
-
-    align-items: center !important;
-    justify-content: space-between !important;
-
-    gap: var(--gd-widget-header-gap) !important;
-  }
-
-  .career-widget-title-wrap {
-    min-width: 0 !important;
-
-    display: flex !important;
-    align-items: center !important;
-
-    gap: var(--gd-widget-title-gap) !important;
-  }
-
-  .career-widget-title-wrap .glass-card-icon {
-    width: 28px !important;
-    height: 28px !important;
-
-    min-width: 28px !important;
-
-    flex: 0 0 28px !important;
-  }
-
-  .career-widget-title-wrap .glass-card-icon svg {
-    width: 15px !important;
-    height: 15px !important;
-  }
-
-  .career-widget h3 {
-    margin: 0 !important;
-
-    font-size: 12px !important;
-    line-height: 1.2 !important;
-
-    font-weight: 800 !important;
-  }
-
-  .career-widget p {
-    margin: 3px 0 0 !important;
-
-    font-size: 11px !important;
-    line-height: 1.25 !important;
   }
 
   .career-widget-header > .career-icon-button {
