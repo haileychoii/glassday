@@ -44,19 +44,32 @@ main {
 ========================================================= */
 
 @media (max-width: 1180px) {
+  :root {
+    --gd-topbar-min-height: 74px;
+    --gd-topbar-pad-x: 20px;
+    --gd-topbar-gap: 14px;
+    --gd-topbar-heading-gap: 14px;
+    --gd-topbar-title-size: 21px;
+    --gd-topbar-action-gap: 8px;
+    --gd-theme-select-width: 136px;
+    --gd-theme-select-min-width: 118px;
+    --gd-theme-select-max-width: 150px;
+    --gd-theme-select-height: 36px;
+  }
+
   .topbar {
     height: auto;
-    min-height: 74px;
+    min-height: var(--gd-topbar-min-height);
     overflow: visible;
   }
 
   .topbar-inner {
-    min-height: 74px;
-    padding: 12px 20px;
+    min-height: var(--gd-topbar-min-height);
+    padding: 12px var(--gd-topbar-pad-x);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 14px;
+    gap: var(--gd-topbar-gap);
     flex-wrap: nowrap;
   }
 
@@ -66,7 +79,7 @@ main {
   }
 
   .topbar-title h1 {
-    font-size: 21px;
+    font-size: var(--gd-topbar-title-size);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -85,7 +98,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 8px;
+    gap: var(--gd-topbar-action-gap);
     flex-wrap: nowrap;
 
     overflow: visible;
@@ -111,10 +124,10 @@ main {
     display: inline-flex !important;
     visibility: visible !important;
     flex: 0 0 auto !important;
-    width: 136px !important;
-    min-width: 118px !important;
-    max-width: 150px !important;
-    height: 36px !important;
+    width: var(--gd-theme-select-width) !important;
+    min-width: var(--gd-theme-select-min-width) !important;
+    max-width: var(--gd-theme-select-max-width) !important;
+    height: var(--gd-theme-select-height) !important;
   }
 
   html[data-theme="mac-core"] .topbar-actions,
@@ -155,14 +168,23 @@ main {
 ========================================================= */
 
 @media (max-width: 1100px) {
+  :root {
+    --gd-sidebar-width-expanded: 208px;
+    --gd-sidebar-width-expanded-min: 190px;
+    --gd-sidebar-width-collapsed: 72px;
+    --gd-sidebar-tab-gap: 8px;
+    --gd-sidebar-tab-pad-x: 10px;
+    --gd-sidebar-tab-font-size: 13.5px;
+  }
+
   .app-sidebar,
   .sidebar,
   aside {
-    --sidebar-width: 208px !important;
-    flex-basis: 208px !important;
-    width: 208px !important;
-    min-width: 190px !important;
-    max-width: 208px !important;
+    --sidebar-width: var(--gd-sidebar-width-expanded) !important;
+    flex-basis: var(--gd-sidebar-width-expanded) !important;
+    width: var(--gd-sidebar-width-expanded) !important;
+    min-width: var(--gd-sidebar-width-expanded-min) !important;
+    max-width: var(--gd-sidebar-width-expanded) !important;
   }
 
   /* Keep the manual collapsed desktop rail functional even after the
@@ -170,52 +192,61 @@ main {
      breakpoint rule above forces the sidebar back to full width. */
   .app-sidebar[data-collapsed="true"],
   .sidebar[data-collapsed="true"] {
-    --sidebar-width: 72px !important;
-    flex-basis: 72px !important;
-    width: 72px !important;
-    min-width: 72px !important;
-    max-width: 72px !important;
+    --sidebar-width: var(--gd-sidebar-width-collapsed) !important;
+    flex-basis: var(--gd-sidebar-width-collapsed) !important;
+    width: var(--gd-sidebar-width-collapsed) !important;
+    min-width: var(--gd-sidebar-width-collapsed) !important;
+    max-width: var(--gd-sidebar-width-collapsed) !important;
   }
 
   .sidebar-tab-main {
-    gap: 8px !important;
-    padding-inline: 10px !important;
-    font-size: 13.5px !important;
+    gap: var(--gd-sidebar-tab-gap) !important;
+    padding-inline: var(--gd-sidebar-tab-pad-x) !important;
+    font-size: var(--gd-sidebar-tab-font-size) !important;
   }
 }
 
 @media (max-width: 1000px) {
+  :root {
+    --gd-sidebar-width-expanded: 190px;
+    --gd-sidebar-width-expanded-min: 176px;
+    --gd-sidebar-width-collapsed: 72px;
+    --gd-sidebar-brand-pad-x: 18px;
+    --gd-sidebar-body-pad: 14px;
+    --gd-sidebar-tab-font-size: 13px;
+  }
+
   .app-sidebar,
   .sidebar,
   aside {
-    --sidebar-width: 190px !important;
-    flex-basis: 190px !important;
-    width: 190px !important;
-    min-width: 176px !important;
-    max-width: 190px !important;
+    --sidebar-width: var(--gd-sidebar-width-expanded) !important;
+    flex-basis: var(--gd-sidebar-width-expanded) !important;
+    width: var(--gd-sidebar-width-expanded) !important;
+    min-width: var(--gd-sidebar-width-expanded-min) !important;
+    max-width: var(--gd-sidebar-width-expanded) !important;
   }
 
   /* Same fix for the tighter desktop breakpoint: collapsed state must still
      win over the viewport-based width rule. */
   .app-sidebar[data-collapsed="true"],
   .sidebar[data-collapsed="true"] {
-    --sidebar-width: 72px !important;
-    flex-basis: 72px !important;
-    width: 72px !important;
-    min-width: 72px !important;
-    max-width: 72px !important;
+    --sidebar-width: var(--gd-sidebar-width-collapsed) !important;
+    flex-basis: var(--gd-sidebar-width-collapsed) !important;
+    width: var(--gd-sidebar-width-collapsed) !important;
+    min-width: var(--gd-sidebar-width-collapsed) !important;
+    max-width: var(--gd-sidebar-width-collapsed) !important;
   }
 
   .sidebar-brand {
-    padding-inline: 18px !important;
+    padding-inline: var(--gd-sidebar-brand-pad-x) !important;
   }
 
   .sidebar-body {
-    padding: 14px !important;
+    padding: var(--gd-sidebar-body-pad) !important;
   }
 
   .sidebar-tab-main {
-    font-size: 13px !important;
+    font-size: var(--gd-sidebar-tab-font-size) !important;
   }
 }
 
@@ -225,6 +256,24 @@ main {
 ========================================================= */
 
 @media (max-width: 920px) {
+  :root {
+    --gd-topbar-inner-pad-x: 10px;
+    --gd-topbar-inner-pad-top: 10px;
+    --gd-topbar-heading-pad-bottom: 1px;
+    --gd-topbar-mobile-pad-x: 18px;
+    --gd-topbar-mobile-pad-top: 5px;
+    --gd-topbar-mobile-pad-bottom: 3px;
+    --gd-topbar-mobile-gap: 10px;
+    --gd-topbar-mobile-list-gap: 8px;
+    --gd-topbar-mobile-tab-min-width: 112px;
+    --gd-topbar-mobile-tab-height: 38px;
+    --gd-topbar-mobile-tab-pad-x: 12px;
+    --gd-topbar-mobile-delete-size: 28px;
+    --gd-shell-pad-x: 20px;
+    --gd-shell-pad-top: 18px;
+    --gd-shell-pad-bottom: 34px;
+  }
+
   .glass-panel,
   .liquid-shell {
     overflow: auto;
@@ -265,7 +314,7 @@ main {
 
   .topbar-inner {
     min-height: auto;
-    padding: 10px 10px 0;
+    padding: var(--gd-topbar-inner-pad-top) var(--gd-topbar-inner-pad-x) 0;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
@@ -273,7 +322,7 @@ main {
 
   .topbar-heading {
     align-items: flex-start;
-    padding-bottom: 1px;
+    padding-bottom: var(--gd-topbar-heading-pad-bottom);
   }
 
   .topbar-title {
@@ -283,10 +332,13 @@ main {
   .topbar-mobile-workspaces {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--gd-topbar-mobile-gap);
     min-width: 0;
     margin: 0 -2px;
-    padding: 5px 18px 3px;
+    padding:
+      var(--gd-topbar-mobile-pad-top)
+      var(--gd-topbar-mobile-pad-x)
+      var(--gd-topbar-mobile-pad-bottom);
     border-top: 1px solid hsl(var(--foreground) / 0.08);
     border-radius: 0;
   }
@@ -294,7 +346,7 @@ main {
   .topbar-mobile-workspace-list {
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: var(--gd-topbar-mobile-list-gap);
     overflow-x: auto;
     overflow-y: hidden;
     padding-bottom: 4px;
@@ -308,25 +360,28 @@ main {
 
   .topbar-mobile-workspaces .sidebar-tab-item {
     flex: 0 0 auto;
-    min-width: 112px;
+    min-width: var(--gd-topbar-mobile-tab-min-width);
     width: auto;
   }
 
   .topbar-mobile-workspaces .sidebar-tab-main {
-    height: 38px;
-    padding: 0 12px;
+    height: var(--gd-topbar-mobile-tab-height);
+    padding: 0 var(--gd-topbar-mobile-tab-pad-x);
     font-size: 14px;
     white-space: nowrap;
   }
 
   .topbar-mobile-workspaces .sidebar-tab-delete {
-    width: 28px;
-    min-width: 28px;
-    height: 28px;
+    width: var(--gd-topbar-mobile-delete-size);
+    min-width: var(--gd-topbar-mobile-delete-size);
+    height: var(--gd-topbar-mobile-delete-size);
   }
 
   .dashboard-tab-space {
-    padding: 18px 20px 34px;
+    padding:
+      var(--gd-shell-pad-top)
+      var(--gd-shell-pad-x)
+      var(--gd-shell-pad-bottom);
   }
 }
 
@@ -343,6 +398,24 @@ main {
     --gd-widget-content-gap-top: 10px;
     --gd-widget-stack-gap: 10px;
     --gd-widget-panel-pad: 12px;
+    --gd-shell-pad-x: 16px;
+    --gd-shell-pad-top: 16px;
+    --gd-shell-pad-bottom: 30px;
+    --gd-topbar-min-height: 80px;
+    --gd-topbar-pad-x: 18px;
+    --gd-topbar-heading-gap: 10px;
+    --gd-topbar-title-size: 20px;
+    --gd-topbar-subtitle-size: 12px;
+    --gd-topbar-action-gap: 5px;
+    --gd-theme-select-width: 132px;
+    --gd-theme-select-min-width: 116px;
+    --gd-theme-select-max-width: 142px;
+    --gd-theme-select-height: 36px;
+    --gd-topbar-action-height: 36px;
+    --gd-topbar-action-width-compact: 38px;
+    --gd-topbar-mobile-pad-x: 18px;
+    --gd-topbar-mobile-pad-top: 1px;
+    --gd-topbar-mobile-pad-bottom: 0px;
   }
 
   .relative.z-10.min-h-screen {
@@ -354,18 +427,21 @@ main {
   }
 
   .dashboard-tab-space {
-    padding: 16px 16px 30px !important;
+    padding:
+      var(--gd-shell-pad-top)
+      var(--gd-shell-pad-x)
+      var(--gd-shell-pad-bottom) !important;
   }
 
   .topbar {
     height: auto !important;
-    min-height: 80px !important;
+    min-height: var(--gd-topbar-min-height) !important;
     overflow: visible !important;
   }
 
   .topbar-inner {
-    min-height: 80px !important;
-    padding: 14px 18px 0 !important;
+    min-height: var(--gd-topbar-min-height) !important;
+    padding: 14px var(--gd-topbar-pad-x) 0 !important;
     flex-direction: column !important;
     align-items: stretch !important;
     justify-content: center !important;
@@ -379,17 +455,17 @@ main {
   }
 
   .topbar-heading {
-    gap: 10px !important;
+    gap: var(--gd-topbar-heading-gap) !important;
     align-items: flex-start !important;
     padding-bottom: 0px !important;
   }
 
   .topbar-title h1 {
-    font-size: 20px !important;
+    font-size: var(--gd-topbar-title-size) !important;
   }
 
   .topbar-title p {
-    font-size: 12px !important;
+    font-size: var(--gd-topbar-subtitle-size) !important;
   }
 
   .topbar-actions {
@@ -397,15 +473,18 @@ main {
     min-width: 0 !important;
     margin-left: 0 !important;
     justify-content: flex-end !important;
-    gap: 5px !important;
+    gap: var(--gd-topbar-action-gap) !important;
     overflow: visible !important;
     flex-wrap: nowrap !important;
     padding-top: 0px !important;
   }
 
   .topbar-mobile-workspaces {
-    margin: 0 -18px !important;
-    padding: 1px 18px   !important;
+    margin: 0 calc(var(--gd-topbar-mobile-pad-x) * -1) !important;
+    padding:
+      var(--gd-topbar-mobile-pad-top)
+      var(--gd-topbar-mobile-pad-x)
+      var(--gd-topbar-mobile-pad-bottom) !important;
     border-top: 1px solid hsl(var(--foreground) / 0.08) !important;
     border-radius: 0 !important;
   }
@@ -436,15 +515,15 @@ main {
     display: inline-flex !important;
     visibility: visible !important;
     flex: 0 0 auto !important;
-    width: 132px !important;
-    min-width: 116px !important;
-    max-width: 142px !important;
-    height: 36px !important;
+    width: var(--gd-theme-select-width) !important;
+    min-width: var(--gd-theme-select-min-width) !important;
+    max-width: var(--gd-theme-select-max-width) !important;
+    height: var(--gd-theme-select-height) !important;
     font-size: 13px !important;
   }
 
   .topbar-action-button {
-    height: 36px !important;
+    height: var(--gd-topbar-action-height) !important;
     padding-inline: 10px !important;
     font-size: 12px !important;
     font-weight: 700 !important;
@@ -455,8 +534,8 @@ main {
   }
 
   .topbar-action-button {
-    width: 38px !important;
-    min-width: 38px !important;
+    width: var(--gd-topbar-action-width-compact) !important;
+    min-width: var(--gd-topbar-action-width-compact) !important;
     padding-inline: 0 !important;
     justify-content: center !important;
   }
@@ -478,10 +557,16 @@ main {
     --gd-widget-content-gap-top: 10px;
     --gd-widget-stack-gap: 8px;
     --gd-widget-panel-pad: 8px;
+    --gd-shell-pad-x: 14px;
+    --gd-shell-pad-top: 14px;
+    --gd-shell-pad-bottom: 28px;
   }
 
   .dashboard-tab-space {
-    padding: 14px 14px 28px !important;
+    padding:
+      var(--gd-shell-pad-top)
+      var(--gd-shell-pad-x)
+      var(--gd-shell-pad-bottom) !important;
   }
 
   .react-grid-item > .dashboard-grid-item,
