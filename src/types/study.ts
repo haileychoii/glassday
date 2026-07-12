@@ -29,6 +29,21 @@ export type StudyTask = {
   date: string;
   subjectId: StudySubjectId;
   text: string;
+  estimatedMinutes?: number;
   done: boolean;
   createdAt: number;
+};
+
+export type StudyPomodoroMode = "focus" | "short-break" | "long-break";
+
+export type StudyPomodoroState = {
+  mode: StudyPomodoroMode;
+  remainingSeconds: number;
+  isRunning: boolean;
+  endsAt: number | null;
+  focusMinutes: number;
+  shortBreakMinutes: number;
+  longBreakMinutes: number;
+  longBreakEvery: number;
+  completedFocusSessions: number;
 };

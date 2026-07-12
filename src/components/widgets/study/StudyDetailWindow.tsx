@@ -25,6 +25,7 @@ import {
   addDays,
   createId,
   formatMinutes,
+  getEstimatedMinutesByDate,
   getSubjectMinutes,
   getSubjectProblems,
   getTasksByDate,
@@ -53,6 +54,8 @@ export const StudyDetailWindow = ({ open, onClose }: StudyDetailWindowProps) => 
   const [minutesInput, setMinutesInput] = useState("30");
   const [problemsInput, setProblemsInput] = useState("0");
   const [noteInput, setNoteInput] = useState("");
+  const [taskInput, setTaskInput] = useState("");
+  const [taskEstimateInput, setTaskEstimateInput] = useState("25");
 
   const { value: subjects, setValue: setSubjects } = useLocalStorage<
     StudySubject[]
@@ -98,6 +101,11 @@ export const StudyDetailWindow = ({ open, onClose }: StudyDetailWindowProps) => 
     (sum, date) => sum + getTotalMinutesByDate(records, date),
     0
   );
+  const dayPlannedMinutes = getEstimatedMinutesByDate(tasks, selectedDate);
+  const weekPlannedMinutes = weekDates.reduce(
+    (sum, date) => sum + getEstimatedMinutesByDate(tasks, date),
+    0
+  );
 
   const completedTasks = selectedDateTasks.filter((task) => task.done).length;
 
@@ -129,16 +137,22 @@ export const StudyDetailWindow = ({ open, onClose }: StudyDetailWindowProps) => 
   };
 
   const addTask = () => {
+    const text = taskInput.trim() || "New study task";
+    const estimatedMinutes = Math.max(0, Number(taskEstimateInput) || 0);
+
     const newTask: StudyTask = {
       id: createId("study-task"),
       date: selectedDate,
       subjectId: selectedSubjectId,
-      text: "New study task",
+      text,
+      estimatedMinutes,
       done: false,
       createdAt: Date.now(),
     };
 
     setTasks((prev) => [newTask, ...prev]);
+    setTaskInput("");
+    setTaskEstimateInput(String(Math.max(15, estimatedMinutes || 25)));
   };
 
   const updateTask = (id: string, patch: Partial<StudyTask>) => {
@@ -216,7 +230,9 @@ export const StudyDetailWindow = ({ open, onClose }: StudyDetailWindowProps) => 
             <div className="study-main">{formatMinutes(dayTotalMinutes)}</div>
             <div className="study-sub">
               {dayTotalProblems} problems · {completedTasks}/
-              {selectedDateTasks.length} tasks · week {formatMinutes(weekTotalMinutes)}
+              {selectedDateTasks.length} tasks · planned{" "}
+              {formatMinutes(dayPlannedMinutes)} · week{" "}
+              {formatMinutes(weekTotalMinutes)} / {formatMinutes(weekPlannedMinutes)}
             </div>
           </div>
 
@@ -399,6 +415,27 @@ export const StudyDetailWindow = ({ open, onClose }: StudyDetailWindowProps) => 
             Checklist
           </div>
 
+          <div className="study-task-form">
+            <input
+              value={taskInput}
+              onChange={(event) => setTaskInput(event.target.value)}
+              placeholder="Add a focused study task"
+              spellCheck={false}
+            />
+
+            <input
+              type="number"
+              min={0}
+              value={taskEstimateInput}
+              onChange={(event) => setTaskEstimateInput(event.target.value)}
+              placeholder="25"
+            />
+
+            <button type="button" onClick={addTask}>
+              Add
+            </button>
+          </div>
+
           <div className="study-task-list">
             {selectedDateTasks.length === 0 ? (
               <div className="study-empty">No study tasks for this day.</div>
@@ -432,15 +469,26 @@ export const StudyDetailWindow = ({ open, onClose }: StudyDetailWindowProps) => 
                       style={{ backgroundColor: subject.color }}
                     />
 
-                    <input
-                      value={task.text}
-                      onChange={(event) =>
-                        updateTask(task.id, {
-                          text: event.target.value,
-                        })
-                      }
-                      spellCheck={false}
-                    />
+                    <div className="study-task-copy">
+                      <input
+                        value={task.text}
+                        onChange={(event) =>
+                          updateTask(task.id, {
+                            text: event.target.value,
+                          })
+                        }
+                        spellCheck={false}
+                      />
+
+                      <div className="study-task-meta">
+                        <span>{subject.shortLabel}</span>
+                        {(task.estimatedMinutes ?? 0) > 0 ? (
+                          <span>{formatMinutes(task.estimatedMinutes ?? 0)}</span>
+                        ) : (
+                          <span>Open estimate</span>
+                        )}
+                      </div>
+                    </div>
 
                     <button
                       type="button"

@@ -1,4 +1,10 @@
-import type { StudyRecord, StudySubjectId, StudyTask } from "../../../types/study";
+import type {
+  StudyPomodoroMode,
+  StudyPomodoroState,
+  StudyRecord,
+  StudySubjectId,
+  StudyTask,
+} from "../../../types/study";
 
 export const toLocalDateInput = (date = new Date()) => {
   const year = date.getFullYear();
@@ -76,6 +82,12 @@ export const getTasksByDate = (tasks: StudyTask[], date: string) => {
   return tasks.filter((task) => task.date === date);
 };
 
+export const getEstimatedMinutesByDate = (tasks: StudyTask[], date: string) => {
+  return tasks
+    .filter((task) => task.date === date)
+    .reduce((sum, task) => sum + Math.max(0, task.estimatedMinutes ?? 0), 0);
+};
+
 export const formatMinutes = (minutes: number) => {
   const hours = Math.floor(minutes / 60);
   const rest = minutes % 60;
@@ -84,4 +96,37 @@ export const formatMinutes = (minutes: number) => {
   if (rest <= 0) return `${hours}h`;
 
   return `${hours}h ${rest}m`;
+};
+
+export const formatTimerClock = (seconds: number) => {
+  const safeSeconds = Math.max(0, seconds);
+  const minutes = Math.floor(safeSeconds / 60);
+  const restSeconds = safeSeconds % 60;
+
+  return `${String(minutes).padStart(2, "0")}:${String(restSeconds).padStart(2, "0")}`;
+};
+
+export const getPomodoroModeDurationSeconds = (
+  state: StudyPomodoroState,
+  mode: StudyPomodoroMode
+) => {
+  switch (mode) {
+    case "short-break":
+      return state.shortBreakMinutes * 60;
+    case "long-break":
+      return state.longBreakMinutes * 60;
+    default:
+      return state.focusMinutes * 60;
+  }
+};
+
+export const getPomodoroModeLabel = (mode: StudyPomodoroMode) => {
+  switch (mode) {
+    case "short-break":
+      return "Short Break";
+    case "long-break":
+      return "Long Break";
+    default:
+      return "Focus";
+  }
 };

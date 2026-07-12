@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BookOpenCheck,
   Check,
@@ -6,9 +6,14 @@ import {
   ChevronRight,
   Circle,
   Clock3,
+  Pause,
+  Play,
   Maximize2,
   Plus,
+  RotateCcw,
+  SkipForward,
   Target,
+  TimerReset,
   Trash2,
 } from "lucide-react";
 
@@ -17,6 +22,8 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
 import { defaultStudySubjects } from "../../constants/study";
 import type {
+  StudyPomodoroMode,
+  StudyPomodoroState,
   StudyRecord,
   StudySubject,
   StudySubjectId,
@@ -25,7 +32,11 @@ import type {
 import {
   addDays,
   createId,
+  formatTimerClock,
   formatMinutes,
+  getEstimatedMinutesByDate,
+  getPomodoroModeDurationSeconds,
+  getPomodoroModeLabel,
   getSubjectMinutes,
   getSubjectProblems,
   getTasksByDate,
@@ -40,6 +51,18 @@ const getSubject = (subjects: StudySubject[], id: StudySubjectId) => {
   return subjects.find((subject) => subject.id === id) ?? subjects[0];
 };
 
+const defaultPomodoroState: StudyPomodoroState = {
+  mode: "focus",
+  remainingSeconds: 25 * 60,
+  isRunning: false,
+  endsAt: null,
+  focusMinutes: 25,
+  shortBreakMinutes: 5,
+  longBreakMinutes: 15,
+  longBreakEvery: 4,
+  completedFocusSessions: 0,
+};
+
 export const StudyWidget = () => {
   const today = toLocalDateInput();
 
@@ -49,7 +72,11 @@ export const StudyWidget = () => {
   const [minutesInput, setMinutesInput] = useState("30");
   const [problemsInput, setProblemsInput] = useState("0");
   const [noteInput, setNoteInput] = useState("");
+  const [taskInput, setTaskInput] = useState("");
+  const [taskEstimateInput, setTaskEstimateInput] = useState("25");
   const [detailOpen, setDetailOpen] = useState(false);
+  const [pomodoroNow, setPomodoroNow] = useState(Date.now());
+  const pomodoroCompletionRef = useRef<number | null>(null);
 
   const { value: subjects, setValue: setSubjects } = useLocalStorage<
     StudySubject[]
@@ -63,6 +90,12 @@ export const StudyWidget = () => {
     "glassday.study.tasks.v1",
     []
   );
+
+  const { value: pomodoro, setValue: setPomodoro } =
+    useLocalStorage<StudyPomodoroState>(
+      "glassday.study.pomodoro.v1",
+      defaultPomodoroState
+    );
 
   const selectedSubject = getSubject(subjects, selectedSubjectId);
 
@@ -98,6 +131,19 @@ export const StudyWidget = () => {
     0
   );
 
+  const todayPlannedMinutes = getEstimatedMinutesByDate(tasks, selectedDate);
+  const weekPlannedMinutes = weekDates.reduce(
+    (sum, date) => sum + getEstimatedMinutesByDate(tasks, date),
+    0
+  );
+
+  const pomodoroRemainingSeconds =
+    pomodoro.isRunning && pomodoro.endsAt
+      ? Math.max(0, Math.ceil((pomodoro.endsAt - pomodoroNow) / 1000))
+      : pomodoro.remainingSeconds;
+
+  const activePomodoroLabel = getPomodoroModeLabel(pomodoro.mode);
+
   const addStudyRecord = () => {
     const minutes = Math.max(0, Number(minutesInput) || 0);
     const problems = Math.max(0, Number(problemsInput) || 0);
@@ -121,21 +167,44 @@ export const StudyWidget = () => {
     setNoteInput("");
   };
 
+  const addPomodoroRecord = () => {
+    const minutes = Math.max(1, pomodoro.focusMinutes);
+
+    setRecords((prev) => [
+      {
+        id: createId("study-record"),
+        date: selectedDate,
+        subjectId: selectedSubjectId,
+        minutes,
+        problems: 0,
+        note: `Pomodoro · ${selectedSubject.shortLabel}`,
+        createdAt: Date.now(),
+      },
+      ...prev,
+    ]);
+  };
+
   const removeRecord = (recordId: string) => {
     setRecords((prev) => prev.filter((record) => record.id !== recordId));
   };
 
-  const addTask = () => {
+  const addTask = (prefillText?: string) => {
+    const text = prefillText?.trim() || taskInput.trim() || "New study task";
+    const estimatedMinutes = Math.max(0, Number(taskEstimateInput) || 0);
+
     const newTask: StudyTask = {
       id: createId("study-task"),
       date: selectedDate,
       subjectId: selectedSubjectId,
-      text: "New study task",
+      text,
+      estimatedMinutes,
       done: false,
       createdAt: Date.now(),
     };
 
     setTasks((prev) => [newTask, ...prev]);
+    setTaskInput("");
+    setTaskEstimateInput(String(Math.max(15, estimatedMinutes || 25)));
   };
 
   const updateTask = (taskId: string, patch: Partial<StudyTask>) => {
@@ -168,6 +237,148 @@ export const StudyWidget = () => {
     );
   };
 
+  const setPomodoroMode = (mode: StudyPomodoroMode) => {
+    setPomodoro((prev) => ({
+      ...prev,
+      mode,
+      isRunning: false,
+      endsAt: null,
+      remainingSeconds: getPomodoroModeDurationSeconds(prev, mode),
+    }));
+  };
+
+  const togglePomodoro = () => {
+    setPomodoro((prev) => {
+      if (prev.isRunning) {
+        return {
+          ...prev,
+          isRunning: false,
+          remainingSeconds: pomodoroRemainingSeconds,
+          endsAt: null,
+        };
+      }
+
+      return {
+        ...prev,
+        isRunning: true,
+        endsAt: Date.now() + prev.remainingSeconds * 1000,
+      };
+    });
+  };
+
+  const resetPomodoro = () => {
+    setPomodoro((prev) => ({
+      ...prev,
+      isRunning: false,
+      endsAt: null,
+      remainingSeconds: getPomodoroModeDurationSeconds(prev, prev.mode),
+    }));
+  };
+
+  const skipPomodoroMode = () => {
+    setPomodoro((prev) => {
+      const nextMode: StudyPomodoroMode =
+        prev.mode === "focus" ? "short-break" : "focus";
+
+      return {
+        ...prev,
+        mode: nextMode,
+        isRunning: false,
+        endsAt: null,
+        remainingSeconds: getPomodoroModeDurationSeconds(prev, nextMode),
+      };
+    });
+  };
+
+  const updatePomodoroMinutes = (
+    key: "focusMinutes" | "shortBreakMinutes" | "longBreakMinutes",
+    delta: number
+  ) => {
+    setPomodoro((prev) => {
+      const nextValue = Math.max(1, prev[key] + delta);
+      const nextState = {
+        ...prev,
+        [key]: nextValue,
+      };
+
+      return prev.mode ===
+        (key === "focusMinutes"
+          ? "focus"
+          : key === "shortBreakMinutes"
+            ? "short-break"
+            : "long-break")
+        ? {
+            ...nextState,
+            isRunning: false,
+            endsAt: null,
+            remainingSeconds: getPomodoroModeDurationSeconds(
+              nextState,
+              nextState.mode
+            ),
+          }
+        : nextState;
+    });
+  };
+
+  useEffect(() => {
+    if (!pomodoro.isRunning) return;
+
+    setPomodoroNow(Date.now());
+
+    const intervalId = window.setInterval(() => {
+      setPomodoroNow(Date.now());
+    }, 1000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [pomodoro.isRunning]);
+
+  useEffect(() => {
+    if (!pomodoro.isRunning || !pomodoro.endsAt || pomodoroRemainingSeconds > 0) {
+      return;
+    }
+
+    if (pomodoroCompletionRef.current === pomodoro.endsAt) {
+      return;
+    }
+
+    pomodoroCompletionRef.current = pomodoro.endsAt;
+
+    if (pomodoro.mode === "focus") {
+      addPomodoroRecord();
+    }
+
+    setPomodoro((prev) => {
+      const completedFocusSessions =
+        prev.mode === "focus"
+          ? prev.completedFocusSessions + 1
+          : prev.completedFocusSessions;
+
+      const nextMode: StudyPomodoroMode =
+        prev.mode === "focus"
+          ? completedFocusSessions % prev.longBreakEvery === 0
+            ? "long-break"
+            : "short-break"
+          : "focus";
+
+      return {
+        ...prev,
+        mode: nextMode,
+        completedFocusSessions,
+        isRunning: false,
+        endsAt: null,
+        remainingSeconds: getPomodoroModeDurationSeconds(prev, nextMode),
+      };
+    });
+  }, [
+    pomodoro.isRunning,
+    pomodoro.endsAt,
+    pomodoro.mode,
+    pomodoroRemainingSeconds,
+    setPomodoro,
+  ]);
+
   return (
     <>
       <GlassCard
@@ -190,7 +401,7 @@ export const StudyWidget = () => {
 
             <button
               type="button"
-              onClick={addTask}
+              onClick={() => addTask()}
               className="glass-button h-8 w-8 flex items-center justify-center"
               title="Add study task"
             >
@@ -206,13 +417,151 @@ export const StudyWidget = () => {
               <div className="study-main">{formatMinutes(todayTotalMinutes)}</div>
               <div className="study-sub">
                 {todayTotalProblems} problems · {completedTasks}/
-                {selectedDateTasks.length} tasks · week{" "}
+                {selectedDateTasks.length} tasks · planned{" "}
+                {formatMinutes(todayPlannedMinutes)} · week{" "}
                 {formatMinutes(weekTotalMinutes)}
               </div>
             </div>
 
             <div className="study-progress-ring">
               <span>{todayProgress}%</span>
+            </div>
+          </section>
+
+          <section className="study-pomodoro-panel">
+            <div className="study-section-title">
+              <TimerReset className="w-3.5 h-3.5" />
+              Pomodoro · {selectedSubject.shortLabel}
+            </div>
+
+            <div className="study-pomodoro-shell">
+              <div className="study-pomodoro-main">
+                <div className="study-pomodoro-modes">
+                  {(["focus", "short-break", "long-break"] as const).map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => setPomodoroMode(mode)}
+                      className={cn(
+                        "study-pomodoro-mode",
+                        pomodoro.mode === mode && "is-active"
+                      )}
+                    >
+                      {getPomodoroModeLabel(mode)}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="study-pomodoro-time">
+                  {formatTimerClock(pomodoroRemainingSeconds)}
+                </div>
+
+                <div className="study-pomodoro-sub">
+                  {activePomodoroLabel} · {pomodoro.completedFocusSessions} focus
+                  sessions · planned {formatMinutes(weekPlannedMinutes)}
+                </div>
+
+                <div className="study-pomodoro-actions">
+                  <button type="button" onClick={togglePomodoro}>
+                    {pomodoro.isRunning ? (
+                      <>
+                        <Pause className="w-3.5 h-3.5" />
+                        Pause
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-3.5 h-3.5" />
+                        Start
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={resetPomodoro}
+                    className="is-secondary"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    Reset
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={skipPomodoroMode}
+                    className="is-secondary"
+                  >
+                    <SkipForward className="w-3.5 h-3.5" />
+                    Next
+                  </button>
+                </div>
+              </div>
+
+              <div className="study-pomodoro-settings">
+                <label>
+                  <span>Focus</span>
+                  <div className="study-pomodoro-stepper">
+                    <button
+                      type="button"
+                      onClick={() => updatePomodoroMinutes("focusMinutes", -5)}
+                    >
+                      -
+                    </button>
+                    <strong>{pomodoro.focusMinutes}m</strong>
+                    <button
+                      type="button"
+                      onClick={() => updatePomodoroMinutes("focusMinutes", 5)}
+                    >
+                      +
+                    </button>
+                  </div>
+                </label>
+
+                <label>
+                  <span>Short</span>
+                  <div className="study-pomodoro-stepper">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updatePomodoroMinutes("shortBreakMinutes", -1)
+                      }
+                    >
+                      -
+                    </button>
+                    <strong>{pomodoro.shortBreakMinutes}m</strong>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updatePomodoroMinutes("shortBreakMinutes", 1)
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                </label>
+
+                <label>
+                  <span>Long</span>
+                  <div className="study-pomodoro-stepper">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updatePomodoroMinutes("longBreakMinutes", -5)
+                      }
+                    >
+                      -
+                    </button>
+                    <strong>{pomodoro.longBreakMinutes}m</strong>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updatePomodoroMinutes("longBreakMinutes", 5)
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                </label>
+              </div>
             </div>
           </section>
 
@@ -393,6 +742,27 @@ export const StudyWidget = () => {
               Checklist
             </div>
 
+            <div className="study-task-form">
+              <input
+                value={taskInput}
+                onChange={(event) => setTaskInput(event.target.value)}
+                placeholder="Add a focused study task"
+                spellCheck={false}
+              />
+
+              <input
+                type="number"
+                min={0}
+                value={taskEstimateInput}
+                onChange={(event) => setTaskEstimateInput(event.target.value)}
+                placeholder="25"
+              />
+
+              <button type="button" onClick={() => addTask()}>
+                Add
+              </button>
+            </div>
+
             <div className="study-task-list">
               {selectedDateTasks.length === 0 ? (
                 <div className="study-empty">No study tasks for this day.</div>
@@ -426,15 +796,26 @@ export const StudyWidget = () => {
                         style={{ backgroundColor: subject.color }}
                       />
 
-                      <input
-                        value={task.text}
-                        onChange={(event) =>
-                          updateTask(task.id, {
-                            text: event.target.value,
-                          })
-                        }
-                        spellCheck={false}
-                      />
+                      <div className="study-task-copy">
+                        <input
+                          value={task.text}
+                          onChange={(event) =>
+                            updateTask(task.id, {
+                              text: event.target.value,
+                            })
+                          }
+                          spellCheck={false}
+                        />
+
+                        <div className="study-task-meta">
+                          <span>{subject.shortLabel}</span>
+                          {(task.estimatedMinutes ?? 0) > 0 ? (
+                            <span>{formatMinutes(task.estimatedMinutes ?? 0)}</span>
+                          ) : (
+                            <span>Open estimate</span>
+                          )}
+                        </div>
+                      </div>
 
                       <button
                         type="button"
