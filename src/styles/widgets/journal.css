@@ -13,10 +13,10 @@
 .daily-journal-widget {
   height: 100%;
   min-height: 0;
-  padding: 16px;
+  padding: var(--gd-widget-panel-pad);
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 8px;
+  gap: var(--gd-widget-stack-gap);
   overflow: hidden;
   container-type: inline-size;
   container-name: journal-widget;
@@ -26,7 +26,7 @@
   min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 4px;
+  gap: var(--gd-widget-gap-tight);
 }
 
 .journal-date-nav,
@@ -40,7 +40,7 @@
 }
 
 .journal-date-nav {
-  gap: 6px;
+  gap: var(--gd-widget-inline-gap);
   flex-shrink: 0;
 }
 
@@ -71,7 +71,7 @@
 .journal-summary-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: var(--gd-widget-stack-gap);
 }
 
 .journal-summary-card {
@@ -115,7 +115,7 @@
   margin-top: 6px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 7px;
+  gap: var(--gd-widget-section-gap);
 }
 
 .journal-score-inline {
@@ -201,14 +201,14 @@
   overflow: auto;
   display: grid;
   align-content: start;
-  gap: 8px;
+  gap: var(--gd-widget-stack-gap);
   margin-top: 0;
-  padding-right: 0px;
+  padding-right: 0;
 }
 
 .journal-section {
   border-radius: 18px;
-  padding: 6px;
+  padding: var(--gd-space-xs);
   background:
     linear-gradient(
       180deg,
@@ -219,8 +219,8 @@
 }
 
 .journal-section-title {
-  gap: 8px 15px;
-  margin-bottom: 5px;
+  gap: var(--gd-widget-section-title-gap);
+  margin-bottom: var(--gd-widget-section-title-bottom);
   font-size: 12px;
   font-weight: 800;
   color: hsl(var(--foreground) / 0.82);
@@ -230,8 +230,8 @@
 .journal-clip-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 40px;
-  gap: 5px;
-  margin-bottom: 5px;
+  gap: var(--gd-widget-section-gap-tight);
+  margin-bottom: var(--gd-widget-section-gap-tight);
 }
 
 .journal-clip-row {
@@ -287,7 +287,7 @@
 .journal-clip-list,
 .journal-library-list {
   display: grid;
-  gap: 5px;
+  gap: var(--gd-widget-section-gap-tight);
 }
 
 .journal-task-item {

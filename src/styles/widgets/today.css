@@ -165,7 +165,7 @@
   margin-top: 7px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--gd-widget-stack-gap);
   min-width: 0;
 }
 
@@ -540,7 +540,7 @@
 
 .today-focus-section {
   min-height: 0;
-  padding: 10px;
+  padding: var(--gd-widget-panel-pad);
   border-radius: 22px;
   background:
     linear-gradient(
@@ -555,8 +555,8 @@
 .today-focus-section-title {
   display: flex;
   align-items: center;
-  gap: 7px;
-  margin-bottom: 8px;
+  gap: var(--gd-widget-section-title-gap);
+  margin-bottom: var(--gd-widget-section-title-bottom);
   font-size: 12px;
   font-weight: 850;
   color: hsl(var(--foreground) / 0.82);
@@ -564,7 +564,7 @@
 
 .today-focus-task-list {
   display: grid;
-  gap: 7px;
+  gap: var(--gd-widget-section-gap);
 }
 
 .today-focus-task {
@@ -573,7 +573,7 @@
   padding: 0 8px;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--gd-widget-inline-gap);
   background: hsl(0 0% 100% / 0.32);
   border: 1px solid hsl(0 0% 100% / 0.42);
 }

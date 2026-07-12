@@ -107,7 +107,7 @@
 
 /* =========================================================
    4. Widget wrapper only
-   내부 위젯은 전혀 건드리지 않음
+   This layer only owns outer widget placement and clipping.
 ========================================================= */
 
 .dashboard-grid-item {
@@ -119,7 +119,7 @@
 
   position: relative;
 
-  padding: 0px;
+  padding: 0;
 
   overflow: hidden;
 
@@ -545,7 +545,7 @@
 
 /* =========================================================
    EDIT MODE RESIZE HANDLES
-   widget 내부 스타일은 건드리지 않음
+   Resize affordances only. Widget visuals stay in widget CSS.
 ========================================================= */
 
 .dashboard-tab-space.is-editing .react-grid-item {

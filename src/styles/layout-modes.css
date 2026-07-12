@@ -17,7 +17,7 @@
 .layout-mode-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--gd-space-2xs);
   padding: 3px;
   border-radius: 999px;
   background: hsl(0 0% 100% / 0.28);
@@ -26,12 +26,12 @@
 
 .layout-mode-button {
   height: 30px;
-  padding: 0 12px;
+  padding: 0 var(--gd-space-lg);
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--gd-widget-inline-gap);
   font-size: 12px;
   font-weight: 800;
   color: hsl(var(--foreground) / 0.62);
@@ -81,6 +81,7 @@
   --gd-radius-card: 20px;
 
   /* Primitive spacing scale for laptop density */
+  --gd-space-xs: 5px;
   --gd-space-sm: 6px;
   --gd-space-md: 8px;
   --gd-space-lg: 10px;
@@ -91,19 +92,25 @@
      - shell pad = 위젯 바깥 프레임 안쪽 여백
      - header anchor = 제목 줄이 위에서 내려오는 기준점
      - content gap top = 헤더와 첫 섹션 사이 간격 */
-  --gd-widget-shell-pad-x: 6px;
-  --gd-widget-shell-pad-bottom: 6px;
+  --gd-widget-shell-pad-x: var(--gd-space-sm);
+  --gd-widget-shell-pad-bottom: var(--gd-space-sm);
   --gd-widget-header-anchor-y: 7px;
-  --gd-widget-content-gap-top: 5px;
+  --gd-widget-content-gap-top: var(--gd-space-xs);
   --gd-widget-header-row-min-height: 30px;
   --gd-widget-pad-x: var(--gd-widget-shell-pad-x);
   --gd-widget-pad-y: var(--gd-widget-shell-pad-bottom);
   --gd-widget-header-pad-top: var(--gd-widget-header-anchor-y);
   --gd-widget-header-pad-bottom: var(--gd-widget-content-gap-top);
-  --gd-widget-header-gap: 5px;
+  --gd-widget-header-gap: var(--gd-space-xs);
   --gd-widget-title-gap: 4px;
-  --gd-widget-stack-gap: 8px;
+  --gd-widget-copy-gap: 2px;
+  --gd-widget-stack-gap: var(--gd-space-md);
   --gd-widget-panel-pad: 9px;
+  --gd-widget-inline-gap: var(--gd-space-xs);
+  --gd-widget-section-gap-tight: var(--gd-space-xs);
+  --gd-widget-section-gap: var(--gd-space-sm);
+  --gd-widget-section-title-gap: 6px;
+  --gd-widget-section-title-bottom: var(--gd-space-sm);
 
   /* Shared control size */
   --gd-control-height-sm: 28px;
@@ -117,13 +124,13 @@
   --gd-main-pad-x: 4px;
   --gd-main-pad-y: 4px;
   --gd-topbar-min-height: 56px;
-  --gd-topbar-pad-x: 10px;
-  --gd-topbar-gap: 8px;
+  --gd-topbar-pad-x: var(--gd-space-lg);
+  --gd-topbar-gap: var(--gd-space-md);
   --gd-sidebar-width-expanded: 144px;
   --gd-sidebar-width-collapsed: 42px;
   --gd-sidebar-brand-height: 64px;
-  --gd-sidebar-body-pad: 6px;
-  --gd-sidebar-section-gap: 5px;
+  --gd-sidebar-body-pad: var(--gd-space-sm);
+  --gd-sidebar-section-gap: var(--gd-space-xs);
   width: 100%;
   height: 100%;
   min-height: var(--gd-laptop-frame-height);
@@ -155,7 +162,7 @@
 .app-shell-surface.is-laptop .sidebar-brand {
   height: var(--gd-sidebar-brand-height);
   min-height: var(--gd-sidebar-brand-height);
-  padding: 0 10px;
+  padding: 0 var(--gd-space-lg);
 }
 
 .app-shell-surface.is-laptop .sidebar-brand-title {
@@ -172,7 +179,7 @@
 }
 
 .app-shell-surface.is-laptop .sidebar-section-header {
-  margin-bottom: 8px;
+  margin-bottom: var(--gd-widget-section-gap);
   padding: 0 4px;
 }
 
@@ -187,7 +194,7 @@
 .app-shell-surface.is-laptop .sidebar-tab-main {
   height: 36px;
   padding: 0 8px;
-  gap: 7px;
+  gap: var(--gd-widget-inline-gap);
   font-size: 12px;
   border-radius: 15px;
 }
@@ -218,7 +225,7 @@
 }
 
 .app-shell-surface.is-laptop .topbar-heading {
-  gap: 10px;
+  gap: var(--gd-space-lg);
 }
 
 .app-shell-surface.is-laptop .topbar-title h1 {
@@ -237,7 +244,7 @@
 }
 
 .app-shell-surface.is-laptop .topbar-actions {
-  gap: 5px;
+  gap: var(--gd-space-xs);
 }
 
 .app-shell-surface.is-laptop .topbar-action-button,
@@ -278,7 +285,7 @@
 .laptop-preview-stage {
   min-height: 100vh;
   position: relative;
-  padding: 24px;
+  padding: 20px;
 }
 
 .laptop-preview-frame {
@@ -414,7 +421,7 @@
 
   .laptop-preview-frame {
     left: 16px;
-    top: 16px;
+    top: 4px;
   }
 
   .laptop-preview-chrome {
