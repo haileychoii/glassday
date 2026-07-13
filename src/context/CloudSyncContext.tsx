@@ -14,6 +14,9 @@ import {
   applyGlassdayStorageSnapshot,
   createGlassdayStorageSnapshot,
   GLASSDAY_STORAGE_EVENT,
+  getGlassdayLocalUpdatedAt,
+  getGlassdaySnapshotMeaningfulScore,
+  getGlassdaySnapshotTimestamp,
   isCompatibleGlassdayStorageSnapshot,
   patchLocalStorageEvents,
   type GlassdayStorageSnapshot,
@@ -45,6 +48,8 @@ type CloudSyncContextValue = {
 };
 
 const STORAGE_TABLE = "user_storage_snapshots";
+const PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY =
+  "glassday.sync.preferLocalOnNextAuth.v1";
 const CloudSyncContext = createContext<CloudSyncContextValue | null>(null);
 
 const toSyncMessage = (status: SyncStatus, fallback?: string) => {
@@ -135,8 +140,39 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (data?.payload && isCompatibleGlassdayStorageSnapshot(data.payload)) {
+      const remoteSnapshot = data.payload as GlassdayStorageSnapshot;
+      const localSnapshot = createGlassdayStorageSnapshot();
+      const localUpdatedAt = getGlassdayLocalUpdatedAt();
+      const preferLocalAfterAuth =
+        window.localStorage.getItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY) ===
+        "true";
+      const remoteTimestamp =
+        getGlassdaySnapshotTimestamp(remoteSnapshot) ||
+        Date.parse(data.updated_at ?? "");
+      const localTimestamp = Date.parse(localUpdatedAt ?? "");
+      const localScore = getGlassdaySnapshotMeaningfulScore(localSnapshot);
+      const remoteScore = getGlassdaySnapshotMeaningfulScore(remoteSnapshot);
+
+      if (
+        preferLocalAfterAuth &&
+        localScore > 0 &&
+        localTimestamp > 0 &&
+        localTimestamp >= remoteTimestamp &&
+        localScore >= remoteScore
+      ) {
+        window.localStorage.removeItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY);
+        setSyncState(
+          "syncing",
+          "Keeping this browser's newer dashboard and updating cloud save..."
+        );
+        await uploadSnapshot();
+        return;
+      }
+
+      window.localStorage.removeItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY);
+
       suppressUploadRef.current = true;
-      applyGlassdayStorageSnapshot(data.payload as GlassdayStorageSnapshot);
+      applyGlassdayStorageSnapshot(remoteSnapshot);
       setLastSyncedAt(data.updated_at ?? null);
 
       window.setTimeout(() => {
@@ -165,6 +201,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
     if (!supabase) return;
 
     setSyncState("authenticating");
+    window.localStorage.setItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY, "true");
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -184,6 +221,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       if (!supabase) return;
 
       setSyncState("authenticating");
+      window.localStorage.setItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY, "true");
 
       const { error } = await supabase.auth.signInWithOtp({
         email,
@@ -208,6 +246,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       if (!supabase) return;
 
       setSyncState("authenticating");
+      window.localStorage.setItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY, "true");
 
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -230,6 +269,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       if (!supabase) return;
 
       setSyncState("authenticating");
+      window.localStorage.setItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY, "true");
 
       const { error } = await supabase.auth.signUp({
         email,
@@ -286,6 +326,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
     }
 
     hasHydratedRemoteRef.current = false;
+    window.localStorage.removeItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY);
     setLastSyncedAt(null);
     setSyncState("idle");
   }, [setSyncState]);

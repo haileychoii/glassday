@@ -1,6 +1,8 @@
 export const GLASSDAY_STORAGE_PREFIX = "glassday.";
 export const GLASSDAY_STORAGE_EVENT = "glassday-storage-change";
 export const GLASSDAY_STORAGE_SNAPSHOT_VERSION = 3;
+export const GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY =
+  "glassday.sync.localUpdatedAt.v1";
 
 export type GlassdayStorageSnapshot = {
   app: "Glassday";
@@ -40,8 +42,56 @@ const CLOUD_SYNC_ALLOWED_PREFIXES = [
   "glassday.ui.font.",
 ] as const;
 
+const CLOUD_SYNC_MEANINGFUL_PREFIXES = [
+  "glassday.calendar.events.",
+  "glassday.career.applications.",
+  "glassday.career.items.",
+  "glassday.journal.entries.",
+  "glassday.memo.notes.",
+  "glassday.study.records.",
+  "glassday.study.tasks.",
+] as const;
+
 const isCloudSyncAllowedKey = (key: string) =>
   CLOUD_SYNC_ALLOWED_PREFIXES.some((prefix) => key.startsWith(prefix));
+
+const isMeaningfulCloudSyncKey = (key: string) =>
+  CLOUD_SYNC_MEANINGFUL_PREFIXES.some((prefix) => key.startsWith(prefix));
+
+const toTimestamp = (value: string | null | undefined) => {
+  if (!value) return 0;
+
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const hasMeaningfulValue = (value: string) => {
+  const trimmed = value.trim();
+
+  if (!trimmed || trimmed === "null" || trimmed === "undefined") {
+    return false;
+  }
+
+  try {
+    const parsed = JSON.parse(trimmed) as unknown;
+
+    if (Array.isArray(parsed)) {
+      return parsed.length > 0;
+    }
+
+    if (parsed && typeof parsed === "object") {
+      return Object.keys(parsed as Record<string, unknown>).length > 0;
+    }
+
+    if (typeof parsed === "string") {
+      return parsed.trim().length > 0;
+    }
+
+    return Boolean(parsed);
+  } catch {
+    return trimmed.length > 0;
+  }
+};
 
 export const isCompatibleGlassdayStorageSnapshot = (
   snapshot: unknown
@@ -64,6 +114,28 @@ export const getGlassdayLocalStorageKeys = () => {
   return Object.keys(window.localStorage).filter((key) =>
     key.startsWith(GLASSDAY_STORAGE_PREFIX)
   );
+};
+
+export const getGlassdayLocalUpdatedAt = () => {
+  if (!isBrowser()) return null;
+
+  return window.localStorage.getItem(GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY);
+};
+
+export const getGlassdaySnapshotMeaningfulScore = (
+  snapshot: GlassdayStorageSnapshot
+) => {
+  return Object.entries(snapshot.data).reduce((score, [key, value]) => {
+    if (!isMeaningfulCloudSyncKey(key)) return score;
+
+    return score + (hasMeaningfulValue(value) ? 1 : 0);
+  }, 0);
+};
+
+export const getGlassdaySnapshotTimestamp = (
+  snapshot: GlassdayStorageSnapshot
+) => {
+  return toTimestamp(snapshot.exportedAt);
 };
 
 export const emitGlassdayStorageChange = (
@@ -113,6 +185,11 @@ export const applyGlassdayStorageSnapshot = (
     }
   });
 
+  window.localStorage.setItem(
+    GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY,
+    snapshot.exportedAt
+  );
+
   emitGlassdayStorageChange({
     type: "bulk",
   });
@@ -134,6 +211,14 @@ export const patchLocalStorageEvents = () => {
   ) {
     originalSetItem.call(this, key, value);
 
+    if (isCloudSyncAllowedKey(key)) {
+      originalSetItem.call(
+        this,
+        GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY,
+        new Date().toISOString()
+      );
+    }
+
     if (key.startsWith(GLASSDAY_STORAGE_PREFIX)) {
       emitGlassdayStorageChange({
         key,
@@ -144,6 +229,14 @@ export const patchLocalStorageEvents = () => {
 
   storageProto.removeItem = function patchedRemoveItem(key: string) {
     originalRemoveItem.call(this, key);
+
+    if (isCloudSyncAllowedKey(key)) {
+      originalSetItem.call(
+        this,
+        GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY,
+        new Date().toISOString()
+      );
+    }
 
     if (key.startsWith(GLASSDAY_STORAGE_PREFIX)) {
       emitGlassdayStorageChange({
