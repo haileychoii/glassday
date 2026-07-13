@@ -280,12 +280,12 @@ body,
 .app-mode-stage.is-laptop-mode .sidebar-brand {
   height: var(--gd-sidebar-brand-height) !important;
   min-height: var(--gd-sidebar-brand-height) !important;
-  padding: 0 10px !important;
+  padding: 0 var(--gd-space-lg) !important;
 }
 
 .app-mode-stage.is-laptop-mode .app-sidebar[data-collapsed="true"] .sidebar-brand,
 .app-mode-stage.is-laptop-mode .sidebar[data-collapsed="true"] .sidebar-brand {
-  padding-inline: 5px !important;
+  padding-inline: var(--gd-space-xs) !important;
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-brand-title {
@@ -307,7 +307,7 @@ body,
 }
 
 .app-mode-stage.is-laptop-mode .sidebar-section-header {
-  margin-bottom: 8px !important;
+  margin-bottom: var(--gd-widget-section-gap) !important;
   padding: 0 4px !important;
 }
 
@@ -338,7 +338,7 @@ body,
 
 .app-mode-stage.is-laptop-mode .topbar-heading {
   align-items: center !important;
-  gap: 10px !important;
+  gap: var(--gd-space-lg) !important;
 }
 
 .app-mode-stage.is-laptop-mode .topbar-title {
@@ -395,7 +395,7 @@ body,
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  gap: 5px !important;
+  gap: var(--gd-space-xs) !important;
   flex-wrap: nowrap !important;
   overflow: visible !important;
   padding: 0 !important;
@@ -408,8 +408,8 @@ body,
 
 .app-mode-stage.is-laptop-mode .topbar-action-button {
   width: auto !important;
-  height: 32px !important;
-  padding-inline: 10px !important;
+  height: var(--gd-control-height-md) !important;
+  padding-inline: var(--gd-space-lg) !important;
 }
 
 .app-mode-stage.is-laptop-mode .topbar-action-button span {
@@ -505,7 +505,7 @@ body,
   padding: 12px !important;
   grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: center !important;
-  gap: 12px !important;
+  gap: var(--gd-widget-stack-gap) !important;
 }
 
 .app-mode-stage.is-laptop-mode .today-focus-main {
@@ -744,21 +744,27 @@ body,
 
 @media (max-width: 768px) {
   .dashboard-tab-space {
-    padding: 18px 20px 32px !important;
+    padding:
+      var(--gd-shell-pad-top)
+      var(--gd-shell-pad-x)
+      var(--gd-shell-pad-bottom) !important;
   }
 
   .topbar {
     height: auto !important;
-    min-height: 100px !important;
+    min-height: var(--gd-topbar-min-height) !important;
   }
 
   .topbar-inner {
-    min-height: 100px !important;
-    padding: 18px 20px 14px !important;
+    min-height: var(--gd-topbar-min-height) !important;
+    padding:
+      var(--gd-topbar-inner-pad-top)
+      var(--gd-topbar-pad-x)
+      14px !important;
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
-    gap: 12px;
+    gap: var(--gd-topbar-heading-gap);
   }
 
   .topbar-title {
@@ -767,22 +773,22 @@ body,
 
   .topbar-heading {
     align-items: flex-start;
-    gap: 12px;
+    gap: var(--gd-topbar-heading-gap);
   }
 
   .topbar-title h1 {
-    font-size: 21px !important;
+    font-size: var(--gd-topbar-title-size) !important;
   }
 
   .topbar-title p {
-    font-size: 12px !important;
+    font-size: var(--gd-topbar-subtitle-size) !important;
   }
 
   .topbar-actions {
     width: auto;
     margin-left: 0;
     justify-content: flex-end;
-    gap: 8px;
+    gap: var(--gd-topbar-action-gap);
     scrollbar-width: none;
   }
 
@@ -800,9 +806,9 @@ body,
   }
 
   .topbar-action-button {
-    height: 36px;
-    padding-inline: 11px;
-    font-size: 12px;
+    height: var(--gd-topbar-action-height);
+    padding-inline: var(--gd-topbar-action-pad-x);
+    font-size: var(--gd-topbar-action-font-size);
   }
 
   .calendar-detail-grid {
@@ -823,11 +829,14 @@ body,
 
 @media (max-width: 430px) {
   .dashboard-tab-space {
-    padding: 16px 16px 30px !important;
+    padding:
+      var(--gd-shell-pad-top)
+      var(--gd-shell-pad-x)
+      var(--gd-shell-pad-bottom) !important;
   }
 
   .topbar-inner {
-    padding-inline: 16px !important;
+    padding-inline: var(--gd-shell-pad-x) !important;
   }
 
   .topbar-actions {
@@ -842,7 +851,7 @@ body,
   }
 
   .theme-select-mobile {
-    min-width: 110px !important;
+    min-width: var(--gd-topbar-mobile-theme-select-min-width) !important;
   }
 
   .topbar-action-button span {
@@ -850,7 +859,7 @@ body,
   }
 
   .topbar-action-button {
-    width: 38px;
+    width: var(--gd-topbar-action-width-compact);
     padding-inline: 0;
   }
 }
@@ -889,7 +898,7 @@ body,
   }
 
   .topbar-actions {
-    gap: 8px !important;
+    gap: var(--gd-topbar-action-gap) !important;
     flex-wrap: nowrap !important;
   }
 }

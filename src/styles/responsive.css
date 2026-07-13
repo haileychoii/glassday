@@ -587,6 +587,13 @@ main {
     --gd-shell-pad-bottom: 28px;
     --gd-topbar-title-pad-top: 5px;
     --gd-topbar-actions-pad-top: 15px;
+    --gd-grid-item-edge-pad: 4px;
+    --gd-topbar-mobile-theme-select-min-width: 110px;
+    --gd-topbar-mobile-theme-select-max-width: 132px;
+    --gd-today-focus-task-gap: 5px;
+    --gd-today-focus-task-pad-y: 7px;
+    --gd-today-focus-task-pad-x: 8px;
+    --gd-today-focus-delete-size: 18px;
   }
 
   .dashboard-tab-space {
@@ -598,7 +605,7 @@ main {
 
   .react-grid-item > .dashboard-grid-item,
   .react-grid-item > .dashboard-grid-item-content {
-    padding: 4px !important;
+    padding: var(--gd-grid-item-edge-pad) !important;
   }
 
   .react-grid-item .glass-card > div:first-child {
@@ -631,8 +638,10 @@ main {
   }
 
   .today-focus-task {
-    gap: 5px !important;
-    padding: 7px 8px !important;
+    gap: var(--gd-today-focus-task-gap) !important;
+    padding:
+      var(--gd-today-focus-task-pad-y)
+      var(--gd-today-focus-task-pad-x) !important;
   }
 
   .today-focus-task-input {
@@ -640,12 +649,8 @@ main {
   }
 
   .today-focus-delete {
-    width: 18px !important;
-    min-width: 18px !important;
-  }
-
-  .topbar-inner {
-    border-top: 10px !important;
+    width: var(--gd-today-focus-delete-size) !important;
+    min-width: var(--gd-today-focus-delete-size) !important;
   }
 
   .topbar-actions {
@@ -656,8 +661,8 @@ main {
 
   .theme-select-mobile {
     width: auto !important;
-    min-width: 112px !important;
-    max-width: 132px !important;
+    min-width: var(--gd-topbar-mobile-theme-select-min-width) !important;
+    max-width: var(--gd-topbar-mobile-theme-select-max-width) !important;
   }
 }
 
