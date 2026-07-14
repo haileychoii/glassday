@@ -115,6 +115,9 @@ const readPinnedMemos = (): MemoNotePreview[] => {
   }
 };
 
+/* Today Focus is a cross-widget summary surface.
+   Each block here should either summarize local state or deep-link the user
+   into the owning widget (calendar, career, memo). */
 export const TodayFocusWidget = () => {
   const { calendarEvents, careerApplications, openCareerDetail } =
     useDashboardData();

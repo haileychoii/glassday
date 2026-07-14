@@ -207,6 +207,11 @@ const normalizeCareer = (item: CareerItem): CareerItem => ({
   notes: item.notes ?? "",
 });
 
+/* Career widget is split into two surfaces:
+   1) dashboard summary + list/board preview
+   2) floating detail window for full application editing
+   Keep summary interactions lightweight here and push deeper editing into
+   the floating window below. */
 const formatApplicationWindow = (item: CareerItem) => {
   if (!item.applicationStartDate && !item.applicationEndDate) {
     return "지원기간 미입력";
@@ -629,6 +634,8 @@ export const CareerWidget = () => {
 
   return (
     <>
+      {/* Shared widget-frame header classes keep icon/title/action alignment
+          consistent with GlassCard-based widgets for Figma handoff. */}
       <section className="glass-card widget-frame career-widget">
         <div className="career-widget-header widget-card-header widget-frame__header">
           <div className="career-widget-title-wrap widget-card-title-group widget-frame__title-group">

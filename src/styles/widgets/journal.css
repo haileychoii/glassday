@@ -13,13 +13,15 @@
 .daily-journal-widget {
   height: 100%;
   min-height: 0;
-  padding: var(--gd-widget-panel-pad);
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: var(--gd-widget-stack-gap);
   overflow: hidden;
   container-type: inline-size;
   container-name: journal-widget;
+}
+
+.daily-journal-widget .glass-card-body {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
 }
 
 .journal-content {
@@ -453,7 +455,7 @@
 }
 
 @media (max-width: 900px) {
-  .journal-header {
+  .daily-journal-widget .glass-card-header {
     align-items: flex-start;
     flex-direction: column;
   }
@@ -475,6 +477,10 @@
     width: 100%;
   }
 
+  .daily-journal-widget .glass-card-actions {
+    width: 100%;
+  }
+
   .journal-date-nav input {
     flex: 1;
   }
@@ -490,13 +496,6 @@
   overflow: hidden !important;
 }
 
-.react-grid-item .daily-journal-widget > .journal-header,
-.react-grid-item .daily-journal-widget > .journal-summary-row,
-.react-grid-item .daily-journal-widget > .journal-score-grid {
-  min-height: 0 !important;
-  flex: 0 0 auto !important;
-}
-
 .react-grid-item .journal-main-scroll {
   height: 100% !important;
   min-height: 0 !important;
@@ -508,14 +507,13 @@
 }
 
 @container journal-widget (max-width: 860px) {
-  .daily-journal-widget {
-    padding: 14px !important;
-    gap: 7px !important;
-  }
-
-  .journal-header {
+  .daily-journal-widget .glass-card-header {
     align-items: flex-start !important;
     flex-direction: column !important;
+  }
+
+  .daily-journal-widget .glass-card-actions {
+    width: 100% !important;
   }
 
   .journal-date-nav {

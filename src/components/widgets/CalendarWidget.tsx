@@ -52,6 +52,10 @@ type DashboardDataWithCareerDetail = ReturnType<typeof useDashboardData> & {
   openCareerDetail?: (id: string) => void;
 };
 
+/* Calendar widget keeps one shared data model for:
+   - manual calendar events
+   - career application windows mirrored into calendar view
+   The wide/laptop modes only change presentation, not this data flow. */
 export const CalendarWidget = () => {
   const dashboardData = useDashboardData() as DashboardDataWithCareerDetail;
 
@@ -93,6 +97,8 @@ export const CalendarWidget = () => {
   }, [calendarEvents]);
 
   const visibleEvents = useMemo(() => {
+    // Normalize first so manual and career-synced events render through
+    // the same card/timeline code path.
     const normalizedEvents = calendarEvents.map((event) => ({
       ...event,
       color: event.color || getPastelColorById(event.id),

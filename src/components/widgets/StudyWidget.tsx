@@ -63,6 +63,12 @@ const defaultPomodoroState: StudyPomodoroState = {
   completedFocusSessions: 0,
 };
 
+/* Study widget structure:
+   1) local input state
+   2) persisted study data from local storage
+   3) derived totals for the selected day/week
+   4) pomodoro actions
+   5) compact dashboard render + detail window */
 export const StudyWidget = () => {
   const today = toLocalDateInput();
 
@@ -97,6 +103,7 @@ export const StudyWidget = () => {
       defaultPomodoroState
     );
 
+  // Selected subject drives the pomodoro label plus quick-entry defaults.
   const selectedSubject = getSubject(subjects, selectedSubjectId);
 
   const selectedDateTasks = useMemo(
@@ -144,6 +151,7 @@ export const StudyWidget = () => {
 
   const activePomodoroLabel = getPomodoroModeLabel(pomodoro.mode);
 
+  // Quick capture for manual study input from the dashboard surface.
   const addStudyRecord = () => {
     const minutes = Math.max(0, Number(minutesInput) || 0);
     const problems = Math.max(0, Number(problemsInput) || 0);
@@ -410,6 +418,8 @@ export const StudyWidget = () => {
           </div>
         }
       >
+        {/* Dashboard surface stays task-first.
+            Deeper edits and longer lists move into the floating detail window. */}
         <div className="study-planner">
           <section className="study-hero">
             <div>

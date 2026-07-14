@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
+import { GlassCard } from "../glass/GlassCard";
 import type {
   JournalClip,
   JournalEntry,
@@ -39,6 +40,12 @@ const cx = (...classes: Array<string | false | null | undefined>) => {
   return classes.filter(Boolean).join(" ");
 };
 
+/* Daily journal is the denser "capture everything about today" widget.
+   Keep this file organized around:
+   1) local widget state
+   2) derived summaries
+   3) small update helpers
+   4) section rendering */
 export const DailyJournalWidget = () => {
   const [entries, setEntries] = useState<JournalEntry[]>(() =>
     loadJournalEntries()
@@ -49,6 +56,7 @@ export const DailyJournalWidget = () => {
   const [clipText, setClipText] = useState("");
   const [clipTag, setClipTag] = useState("#자소서소재");
 
+  // Derived active entry for the selected day.
   const entry = useMemo(() => {
     return getOrCreateJournalEntry(entries, selectedDate);
   }, [entries, selectedDate]);
@@ -62,6 +70,7 @@ export const DailyJournalWidget = () => {
   const hashtags = getEntryHashtags(entry);
   const hashtagLibrary = collectHashtagLibrary(entries);
 
+  // Lightweight helpers keep JSX readable and make later field additions safer.
   const adjustScore = (
     key: "energy" | "focus" | "sleepy" | "stress",
     delta: number
@@ -187,21 +196,12 @@ export const DailyJournalWidget = () => {
   };
 
   return (
-    <section className="glass-card widget-frame daily-journal-widget">
-      <div className="journal-header widget-card-header widget-frame__header">
-        <div className="journal-title-group widget-card-title-group widget-frame__title-group">
-          <div className="glass-card-icon widget-card-icon widget-frame__icon">
-            <BookOpen className="w-4 h-4" />
-          </div>
-
-          <div className="widget-card-copy widget-frame__copy">
-            <h3 className="glass-card-title widget-frame__title">Daily Journal</h3>
-            <p className="glass-card-subtitle widget-frame__subtitle">
-              {entry.date} · {progress}% filled
-            </p>
-          </div>
-        </div>
-
+    <GlassCard
+      className="daily-journal-widget"
+      title="Daily Journal"
+      subtitle={`${entry.date} · ${progress}% filled`}
+      icon={<BookOpen className="w-4 h-4" />}
+      actions={
         <div className="journal-date-nav">
           <button
             type="button"
@@ -227,8 +227,11 @@ export const DailyJournalWidget = () => {
             →
           </button>
         </div>
-      </div>
-
+      }
+    >
+      {/* Summary first, then the long scroll body.
+          This keeps the widget header position consistent with other widgets
+          while still preserving the journal's dense internals. */}
       <div className="journal-content">
         <div className="journal-summary-row">
           <div className="journal-summary-card">
@@ -285,274 +288,274 @@ export const DailyJournalWidget = () => {
         </div>
 
         <div className="journal-main-scroll">
-        <section className="journal-section">
-          <div className="journal-section-title">
-            <ClipboardList className="w-3.5 h-3.5" />
-            Today Tasks
-          </div>
+          <section className="journal-section">
+            <div className="journal-section-title">
+              <ClipboardList className="w-3.5 h-3.5" />
+              Today Tasks
+            </div>
 
-          <div className="journal-add-row">
-            <input
-              value={newTaskText}
-              onChange={(event) => setNewTaskText(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
+            <div className="journal-add-row">
+              <input
+                value={newTaskText}
+                onChange={(event) => setNewTaskText(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    addTask("todayTasks", newTaskText);
+                    setNewTaskText("");
+                  }
+                }}
+                placeholder="오늘 할 일"
+              />
+
+              <button
+                type="button"
+                onClick={() => {
                   addTask("todayTasks", newTaskText);
                   setNewTaskText("");
-                }
-              }}
-              placeholder="오늘 할 일"
-            />
+                }}
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                addTask("todayTasks", newTaskText);
-                setNewTaskText("");
-              }}
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-          </div>
+            {renderTaskList("todayTasks", entry.todayTasks)}
+          </section>
 
-          {renderTaskList("todayTasks", entry.todayTasks)}
-        </section>
+          <section className="journal-section">
+            <div className="journal-section-title">
+              <CalendarDays className="w-3.5 h-3.5" />
+              Tomorrow
+            </div>
 
-        <section className="journal-section">
-          <div className="journal-section-title">
-            <CalendarDays className="w-3.5 h-3.5" />
-            Tomorrow
-          </div>
+            <div className="journal-add-row">
+              <input
+                value={newTomorrowTaskText}
+                onChange={(event) => setNewTomorrowTaskText(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    addTask("tomorrowTasks", newTomorrowTaskText);
+                    setNewTomorrowTaskText("");
+                  }
+                }}
+                placeholder="내일 할 일"
+              />
 
-          <div className="journal-add-row">
-            <input
-              value={newTomorrowTaskText}
-              onChange={(event) => setNewTomorrowTaskText(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
+              <button
+                type="button"
+                onClick={() => {
                   addTask("tomorrowTasks", newTomorrowTaskText);
                   setNewTomorrowTaskText("");
-                }
-              }}
-              placeholder="내일 할 일"
+                }}
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            </div>
+
+            {renderTaskList("tomorrowTasks", entry.tomorrowTasks)}
+          </section>
+
+          <section className="journal-section">
+            <div className="journal-section-title">
+              <Sparkles className="w-3.5 h-3.5" />
+              Condition
+            </div>
+
+            <select
+              value={entry.condition}
+              onChange={(event) =>
+                updateEntry({
+                  condition: event.target.value as JournalMood,
+                })
+              }
+              className="journal-mood-select"
+            >
+              {journalMoodOptions.map((mood) => (
+                <option key={mood} value={mood}>
+                  {journalMoodLabels[mood]}
+                </option>
+              ))}
+            </select>
+          </section>
+
+          <section className="journal-section">
+            <div className="journal-section-title">
+              <BriefcaseBusiness className="w-3.5 h-3.5" />
+              Work Log
+            </div>
+
+            <textarea
+              value={entry.workLog}
+              onChange={(event) =>
+                updateEntry({
+                  workLog: event.target.value,
+                })
+              }
+              placeholder="오늘 한 업무 / 회사에서 처리한 일"
             />
 
-            <button
-              type="button"
-              onClick={() => {
-                addTask("tomorrowTasks", newTomorrowTaskText);
-                setNewTomorrowTaskText("");
-              }}
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-          </div>
+            <div className="journal-tag-tools">
+              <button type="button" onClick={() => applyTagToField("workLog", "#업무")}>
+                #업무
+              </button>
+              <button type="button" onClick={() => applyTagToField("workLog", "#성과")}>
+                #성과
+              </button>
+            </div>
+          </section>
 
-          {renderTaskList("tomorrowTasks", entry.tomorrowTasks)}
-        </section>
+          <section className="journal-section">
+            <div className="journal-section-title">
+              <BookOpen className="w-3.5 h-3.5" />
+              Learned
+            </div>
 
-        <section className="journal-section">
-          <div className="journal-section-title">
-            <Sparkles className="w-3.5 h-3.5" />
-            Condition
-          </div>
-
-          <select
-            value={entry.condition}
-            onChange={(event) =>
-              updateEntry({
-                condition: event.target.value as JournalMood,
-              })
-            }
-            className="journal-mood-select"
-          >
-            {journalMoodOptions.map((mood) => (
-              <option key={mood} value={mood}>
-                {journalMoodLabels[mood]}
-              </option>
-            ))}
-          </select>
-        </section>
-
-        <section className="journal-section">
-          <div className="journal-section-title">
-            <BriefcaseBusiness className="w-3.5 h-3.5" />
-            Work Log
-          </div>
-
-          <textarea
-            value={entry.workLog}
-            onChange={(event) =>
-              updateEntry({
-                workLog: event.target.value,
-              })
-            }
-            placeholder="오늘 한 업무 / 회사에서 처리한 일"
-          />
-
-          <div className="journal-tag-tools">
-            <button type="button" onClick={() => applyTagToField("workLog", "#업무")}>
-              #업무
-            </button>
-            <button type="button" onClick={() => applyTagToField("workLog", "#성과")}>
-              #성과
-            </button>
-          </div>
-        </section>
-
-        <section className="journal-section">
-          <div className="journal-section-title">
-            <BookOpen className="w-3.5 h-3.5" />
-            Learned
-          </div>
-
-          <textarea
-            value={entry.learned}
-            onChange={(event) =>
-              updateEntry({
-                learned: event.target.value,
-              })
-            }
-            placeholder="오늘 배운 것 / 공부하면서 알게 된 것"
-          />
-
-          <div className="journal-tag-tools">
-            <button type="button" onClick={() => applyTagToField("learned", "#공부")}>
-              #공부
-            </button>
-            <button type="button" onClick={() => applyTagToField("learned", "#개념")}>
-              #개념
-            </button>
-          </div>
-        </section>
-
-        <section className="journal-section">
-          <div className="journal-section-title">
-            <BriefcaseBusiness className="w-3.5 h-3.5" />
-            Career Material
-          </div>
-
-          <textarea
-            value={entry.careerMaterial}
-            onChange={(event) =>
-              updateEntry({
-                careerMaterial: event.target.value,
-              })
-            }
-            placeholder="자소서 소재 / 면접 답변으로 쓸 만한 경험"
-          />
-
-          <div className="journal-tag-tools">
-            <button
-              type="button"
-              onClick={() => applyTagToField("careerMaterial", "#자소서소재")}
-            >
-              #자소서소재
-            </button>
-            <button
-              type="button"
-              onClick={() => applyTagToField("careerMaterial", "#면접소재")}
-            >
-              #면접소재
-            </button>
-          </div>
-        </section>
-
-        <section className="journal-section">
-          <div className="journal-section-title">
-            <Hash className="w-3.5 h-3.5" />
-            Clip to Hashtag Library
-          </div>
-
-          <div className="journal-clip-row">
-            <input
-              value={clipTag}
-              onChange={(event) => setClipTag(event.target.value)}
-              placeholder="#자소서소재"
+            <textarea
+              value={entry.learned}
+              onChange={(event) =>
+                updateEntry({
+                  learned: event.target.value,
+                })
+              }
+              placeholder="오늘 배운 것 / 공부하면서 알게 된 것"
             />
 
-            <button type="button" onClick={addClip}>
-              Save Clip
-            </button>
-          </div>
+            <div className="journal-tag-tools">
+              <button type="button" onClick={() => applyTagToField("learned", "#공부")}>
+                #공부
+              </button>
+              <button type="button" onClick={() => applyTagToField("learned", "#개념")}>
+                #개념
+              </button>
+            </div>
+          </section>
 
-          <textarea
-            value={clipText}
-            onChange={(event) => setClipText(event.target.value)}
-            placeholder="모아둘 문장이나 소재를 적고 태그로 저장"
-          />
+          <section className="journal-section">
+            <div className="journal-section-title">
+              <BriefcaseBusiness className="w-3.5 h-3.5" />
+              Career Material
+            </div>
 
-          <div className="journal-clip-list">
-            {entry.clips.length === 0 ? (
-              <div className="journal-empty-box">아직 저장한 클립이 없어.</div>
-            ) : (
-              entry.clips.map((clip: JournalClip) => (
-                <article key={clip.id} className="journal-clip-item">
-                  <div>
-                    <strong>{clip.tag}</strong>
-                    <span>{clip.text}</span>
-                  </div>
+            <textarea
+              value={entry.careerMaterial}
+              onChange={(event) =>
+                updateEntry({
+                  careerMaterial: event.target.value,
+                })
+              }
+              placeholder="자소서 소재 / 면접 답변으로 쓸 만한 경험"
+            />
 
-                  <button type="button" onClick={() => deleteClip(clip.id)}>
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </article>
-              ))
-            )}
-          </div>
-        </section>
+            <div className="journal-tag-tools">
+              <button
+                type="button"
+                onClick={() => applyTagToField("careerMaterial", "#자소서소재")}
+              >
+                #자소서소재
+              </button>
+              <button
+                type="button"
+                onClick={() => applyTagToField("careerMaterial", "#면접소재")}
+              >
+                #면접소재
+              </button>
+            </div>
+          </section>
 
-        <section className="journal-section">
-          <div className="journal-section-title">
-            <Sparkles className="w-3.5 h-3.5" />
-            Reflection
-          </div>
+          <section className="journal-section">
+            <div className="journal-section-title">
+              <Hash className="w-3.5 h-3.5" />
+              Clip to Hashtag Library
+            </div>
 
-          <textarea
-            value={entry.reflection}
-            onChange={(event) =>
-              updateEntry({
-                reflection: event.target.value,
-              })
-            }
-            placeholder="오늘의 한 줄 회고"
-          />
+            <div className="journal-clip-row">
+              <input
+                value={clipTag}
+                onChange={(event) => setClipTag(event.target.value)}
+                placeholder="#자소서소재"
+              />
 
-          <div className="journal-tag-tools">
-            <button
-              type="button"
-              onClick={() => applyTagToField("reflection", "#회고")}
-            >
-              #회고
-            </button>
-          </div>
-        </section>
+              <button type="button" onClick={addClip}>
+                Save Clip
+              </button>
+            </div>
 
-        <section className="journal-section">
-          <div className="journal-section-title">
-            <Hash className="w-3.5 h-3.5" />
-            Hashtags
-          </div>
+            <textarea
+              value={clipText}
+              onChange={(event) => setClipText(event.target.value)}
+              placeholder="모아둘 문장이나 소재를 적고 태그로 저장"
+            />
 
-          <div className="journal-hashtag-row">
-            {hashtags.length === 0 ? (
-              <span className="journal-muted">No hashtags yet</span>
-            ) : (
-              hashtags.map((tag) => <span key={tag}>{tag}</span>)
-            )}
-          </div>
+            <div className="journal-clip-list">
+              {entry.clips.length === 0 ? (
+                <div className="journal-empty-box">아직 저장한 클립이 없어.</div>
+              ) : (
+                entry.clips.map((clip: JournalClip) => (
+                  <article key={clip.id} className="journal-clip-item">
+                    <div>
+                      <strong>{clip.tag}</strong>
+                      <span>{clip.text}</span>
+                    </div>
 
-          <div className="journal-library-list">
-            {hashtagLibrary.slice(0, 8).map((group) => (
-              <div key={group.tag} className="journal-library-item">
-                <strong>{group.tag}</strong>
-                <span>{group.count}</span>
-              </div>
-            ))}
-          </div>
-        </section>
+                    <button type="button" onClick={() => deleteClip(clip.id)}>
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </article>
+                ))
+              )}
+            </div>
+          </section>
+
+          <section className="journal-section">
+            <div className="journal-section-title">
+              <Sparkles className="w-3.5 h-3.5" />
+              Reflection
+            </div>
+
+            <textarea
+              value={entry.reflection}
+              onChange={(event) =>
+                updateEntry({
+                  reflection: event.target.value,
+                })
+              }
+              placeholder="오늘의 한 줄 회고"
+            />
+
+            <div className="journal-tag-tools">
+              <button
+                type="button"
+                onClick={() => applyTagToField("reflection", "#회고")}
+              >
+                #회고
+              </button>
+            </div>
+          </section>
+
+          <section className="journal-section">
+            <div className="journal-section-title">
+              <Hash className="w-3.5 h-3.5" />
+              Hashtags
+            </div>
+
+            <div className="journal-hashtag-row">
+              {hashtags.length === 0 ? (
+                <span className="journal-muted">No hashtags yet</span>
+              ) : (
+                hashtags.map((tag) => <span key={tag}>{tag}</span>)
+              )}
+            </div>
+
+            <div className="journal-library-list">
+              {hashtagLibrary.slice(0, 8).map((group) => (
+                <div key={group.tag} className="journal-library-item">
+                  <strong>{group.tag}</strong>
+                  <span>{group.count}</span>
+                </div>
+              ))}
+            </div>
+          </section>
         </div>
       </div>
-    </section>
+    </GlassCard>
   );
 };
