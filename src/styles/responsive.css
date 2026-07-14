@@ -608,14 +608,17 @@ main {
     padding: var(--gd-grid-item-edge-pad) !important;
   }
 
-  .react-grid-item .glass-card > div:first-child {
+  /* Widget shell padding on very small phones:
+     keep using the shared widget-frame classes so the structure is readable
+     from code without counting child order. */
+  .react-grid-item .glass-card > .widget-frame__header {
     padding:
       var(--gd-widget-header-pad-top)
       var(--gd-widget-pad-x)
       var(--gd-widget-header-pad-bottom) !important;
   }
 
-  .react-grid-item .glass-card > div:last-child {
+  .react-grid-item .glass-card > .widget-frame__body {
     padding:
       var(--gd-widget-content-gap-top)
       var(--gd-widget-pad-x)

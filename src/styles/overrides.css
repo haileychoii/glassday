@@ -922,56 +922,60 @@ body,
   container-name: gd-widget;
 }
 
-.dashboard-grid-item > .glass-card > div:first-child {
+.dashboard-grid-item > .glass-card > .widget-frame__header {
   min-width: 0;
 }
 
-.dashboard-grid-item > .glass-card > div:last-child {
+.dashboard-grid-item > .glass-card > .widget-frame__body {
   min-width: 0;
   min-height: 0;
 }
 
+/* Shared compact widget frame behavior.
+   These rules intentionally target the semantic widget-frame classes instead
+   of positional selectors so the same structure is easier to mirror in Figma. */
 @container gd-widget (max-width: 620px) {
-  .glass-card > div:first-child {
+  .glass-card > .widget-frame__header {
     padding:
       var(--gd-widget-header-pad-top)
       var(--gd-widget-pad-x)
-      var(--gd-widget-header-pad-bottom) !important;
-    gap: var(--gd-widget-stack-gap) !important;
-    align-items: center !important;
+      var(--gd-widget-header-pad-bottom);
+    gap: var(--gd-widget-stack-gap);
+    align-items: center;
   }
 
-  .glass-card > div:first-child > .glass-card-actions {
-    width: 100% !important;
-    display: flex !important;
-    justify-content: flex-end !important;
-    flex-wrap: wrap !important;
-    gap: var(--gd-space-xs) !important;
+  .glass-card > .widget-frame__header > .glass-card-actions,
+  .glass-card > .widget-frame__header > .widget-frame__actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: var(--gd-space-xs);
   }
 
-  .glass-card > div:last-child {
+  .glass-card > .widget-frame__body {
     padding:
       var(--gd-widget-content-gap-top)
       var(--gd-widget-pad-x)
-      var(--gd-widget-pad-y) !important;
+      var(--gd-widget-pad-y);
   }
 
-  .glass-card > div:first-child h3 {
-    color: hsl(var(--foreground) / 0.92) !important;
-    font-size: 13px !important;
-    line-height: 1.22 !important;
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
+  .glass-card > .widget-frame__header h3 {
+    color: hsl(var(--foreground) / 0.92);
+    font-size: 13px;
+    line-height: 1.22;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
   }
 
-  .glass-card > div:first-child p {
-    color: hsl(var(--muted-foreground) / 0.8) !important;
-    font-size: 11px !important;
-    line-height: 1.25 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+  .glass-card > .widget-frame__header p {
+    color: hsl(var(--muted-foreground) / 0.8);
+    font-size: 11px;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .today-focus-hero,
@@ -1028,18 +1032,18 @@ body,
 }
 
 @container gd-widget (max-width: 440px) {
-  .glass-card > div:first-child {
+  .glass-card > .widget-frame__header {
     padding:
       var(--gd-widget-header-pad-top)
       var(--gd-widget-pad-x)
-      var(--gd-widget-header-pad-bottom) !important;
+      var(--gd-widget-header-pad-bottom);
   }
 
-  .glass-card > div:last-child {
+  .glass-card > .widget-frame__body {
     padding:
       var(--gd-widget-content-gap-top)
       var(--gd-widget-pad-x)
-      var(--gd-widget-pad-y) !important;
+      var(--gd-widget-pad-y);
   }
 
   .glass-card h3,
@@ -1080,7 +1084,7 @@ body,
   container-name: gd-widget memo-widget;
 }
 
-.memo-widget > div:last-child {
+.memo-widget > .widget-frame__body {
   min-height: 0 !important;
   overflow: hidden !important;
 }
@@ -1324,23 +1328,24 @@ body,
 ========================================================= */
 
 @container gd-widget (max-width: 620px) {
-  .glass-card > div:first-child {
+  .glass-card > .widget-frame__header {
     align-items: flex-start !important;
     gap: 10px !important;
     padding: 16px 14px 10px !important;
   }
 
-  .glass-card > div:first-child > div:first-child {
+  .glass-card > .widget-frame__header > .widget-frame__title-group,
+  .glass-card > .widget-frame__header > div:first-child {
     min-width: 0 !important;
     flex: 1 1 auto !important;
   }
 
-  .glass-card > div:first-child > div:last-child,
-  .glass-card > div:first-child > .glass-card-actions {
+  .glass-card > .widget-frame__header > .widget-frame__actions,
+  .glass-card > .widget-frame__header > .glass-card-actions {
     align-self: flex-start !important;
   }
 
-  .glass-card > div:first-child h3 {
+  .glass-card > .widget-frame__header h3 {
     color: hsl(var(--foreground) / 0.92) !important;
     white-space: nowrap !important;
     overflow: hidden !important;
@@ -1349,7 +1354,7 @@ body,
     line-height: 1.1 !important;
   }
 
-  .glass-card > div:first-child p {
+  .glass-card > .widget-frame__header p {
     color: hsl(var(--muted-foreground) / 0.8) !important;
   }
 }
@@ -1529,7 +1534,7 @@ body,
 
 @container gd-widget (max-width: 600px) {
   .career-widget .career-header,
-  .daily-journal-widget .journal-header {
+  .daily-journal-widget .widget-frame__header {
     align-items: flex-start !important;
     flex-direction: column !important;
     gap: 10px !important;
