@@ -1961,3 +1961,144 @@ body.theme-glass-dark
     display: none !important;
   }
 }
+
+/* =========================================================
+   29. LATE COMPACT GUARDS
+   These rules used to live in overrides.css.
+   Keep them here so memo-specific responsive behavior is readable in one file.
+   ========================================================= */
+
+.memo-widget > .widget-frame__body {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.memo-widget .memo-title-input,
+.memo-widget .memo-title-view,
+.memo-widget .memo-toolbar,
+.memo-widget .memo-editor {
+  width: 100%;
+  max-width: 860px;
+}
+
+.memo-widget .memo-editor {
+  min-height: 0;
+  padding: clamp(16px, 4cqw, 36px) clamp(14px, 5cqw, 48px);
+}
+
+@container memo-widget (max-width: 760px) {
+  .memo-widget .memo-app {
+    grid-template-columns: clamp(150px, 34%, 210px) minmax(0, 1fr) !important;
+  }
+
+  .memo-widget .memo-list-panel {
+    padding: 12px 10px;
+  }
+
+  .memo-widget .memo-note-item {
+    min-height: 52px;
+    padding: 9px;
+    gap: 7px;
+  }
+
+  .memo-widget .memo-note-preview {
+    display: none;
+  }
+
+  .memo-widget .memo-toolbar {
+    gap: 6px;
+  }
+
+  .memo-widget .memo-select {
+    max-width: 118px;
+  }
+}
+
+@container memo-widget (max-width: 560px) {
+  .memo-widget .memo-compact-toggle,
+  .memo-widget .memo-list-close {
+    display: inline-flex;
+  }
+
+  .memo-widget .memo-app {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+  }
+
+  .memo-widget .memo-list-panel {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: min(236px, calc(100% - 28px));
+    max-width: 82%;
+    height: auto;
+    max-height: none;
+    padding: 12px 10px;
+    border-right: 1px solid hsl(220 18% 82% / 0.45);
+    border-bottom: 0;
+    border-radius: 20px;
+    background: hsl(220 35% 97% / 0.82);
+    box-shadow:
+      0 14px 36px hsl(220 30% 22% / 0.16),
+      inset -1px 0 0 hsl(0 0% 100% / 0.62);
+    transform: translateX(calc(-100% - 12px));
+    opacity: 0;
+    pointer-events: none;
+    z-index: 7;
+  }
+
+  .memo-widget .memo-app.is-compact-list-open .memo-list-panel {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .memo-widget .memo-note-list {
+    display: flex;
+    flex-direction: column;
+    grid-auto-flow: initial;
+    grid-auto-columns: initial;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .memo-widget .memo-workspace {
+    grid-row: 1 !important;
+    grid-column: 1 !important;
+    padding: 12px;
+  }
+
+  .memo-widget .memo-list-panel strong,
+  .memo-widget .memo-list-panel small,
+  .memo-widget .memo-title-view,
+  .memo-widget .memo-title-input,
+  .memo-widget .memo-editor {
+    color: hsl(var(--foreground) / 0.9);
+  }
+}
+
+@container memo-widget (max-width: 390px) {
+  .memo-widget .memo-app {
+    grid-template-rows: minmax(104px, 26%) minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .memo-floating-body {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(130px, 28%) minmax(0, 1fr) !important;
+  }
+
+  .memo-floating-body .memo-list-panel {
+    max-height: none !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid hsl(220 18% 82% / 0.45) !important;
+  }
+
+  .memo-floating-body .memo-note-list {
+    display: grid !important;
+    grid-auto-flow: column !important;
+    grid-auto-columns: minmax(150px, 40%) !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+}
