@@ -597,15 +597,100 @@
 }
 
 @container journal-widget (max-width: 560px) {
+  /* Compact dashboard preview:
+     summary cards stay on one line, condition spans full width, and
+     task/clip entry rows collapse into a single column here instead of
+     depending on global overrides.css. */
   .journal-summary-row {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .journal-summary-card {
+    min-height: 0 !important;
+    padding: 8px 6px !important;
+    border-radius: 14px !important;
+  }
+
+  .journal-summary-card strong {
+    margin-top: 4px !important;
+    font-size: 15px !important;
+  }
+
+  .journal-summary-card span {
+    font-size: 9px !important;
   }
 
   .journal-score-strip-card {
     grid-column: 1 / -1 !important;
   }
 
+  .journal-score-inline {
+    min-height: 48px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 4px !important;
+    text-align: center !important;
+  }
+
+  .journal-score-stepper {
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  .journal-score-stepper button {
+    width: 14px !important;
+    height: 14px !important;
+    font-size: 9px !important;
+  }
+
+  .journal-score-stepper b {
+    margin: 0 3px !important;
+    font-size: 13px !important;
+  }
+
+  .journal-score-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .journal-score-grid label {
+    min-height: 0 !important;
+    padding: 9px !important;
+  }
+
   .journal-score-strip {
+    grid-template-columns: 1fr !important;
+  }
+
+  .journal-add-row,
+  .journal-clip-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@container journal-widget (max-width: 600px) {
+  .daily-journal-widget .widget-frame__header {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .daily-journal-widget .glass-card-actions,
+  .journal-date-nav {
+    width: 100% !important;
+  }
+
+  .journal-date-nav input {
+    flex: 1 1 auto !important;
+    width: auto !important;
+  }
+
+  .journal-summary-card:last-child {
+    grid-column: 1 / -1 !important;
+  }
+
+  .journal-score-grid {
     grid-template-columns: 1fr !important;
   }
 }
