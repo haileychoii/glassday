@@ -274,13 +274,17 @@ main {
 
 @media (max-width: 920px) {
   :root {
+    /* Mobile header shell tokens:
+       this breakpoint is where the sidebar becomes the horizontal workspace rail. */
     --gd-topbar-inner-pad-x: 10px;
     --gd-topbar-inner-pad-top: 10px;
+    --gd-topbar-inner-pad-bottom: 0px;
     --gd-topbar-heading-pad-bottom: 1px;
     --gd-topbar-title-pad-top: 15px;
     --gd-topbar-mobile-pad-x: 18px;
     --gd-topbar-mobile-pad-top: 5px;
     --gd-topbar-mobile-pad-bottom: 3px;
+    --gd-topbar-mobile-rail-bleed-x: 2px;
     --gd-topbar-mobile-gap: 10px;
     --gd-topbar-mobile-list-gap: 8px;
     --gd-topbar-mobile-list-pad-bottom: 4px;
@@ -334,7 +338,10 @@ main {
 
   .topbar-inner {
     min-height: auto;
-    padding: var(--gd-topbar-inner-pad-top) var(--gd-topbar-inner-pad-x) 0;
+    padding:
+      var(--gd-topbar-inner-pad-top)
+      var(--gd-topbar-inner-pad-x)
+      var(--gd-topbar-inner-pad-bottom);
     flex-direction: column;
     align-items: stretch;
     gap: 0;
@@ -354,7 +361,7 @@ main {
     align-items: center;
     gap: var(--gd-topbar-mobile-gap);
     min-width: 0;
-    margin: 0 -2px;
+    margin: 0 calc(var(--gd-topbar-mobile-rail-bleed-x) * -1);
     padding:
       var(--gd-topbar-mobile-pad-top)
       var(--gd-topbar-mobile-pad-x)
@@ -412,6 +419,8 @@ main {
 
 @media (max-width: 768px) {
   :root {
+    /* Narrow phone / tablet tokens:
+       adjust these first when matching a Figma mobile header. */
     --gd-widget-shell-pad-x: 16px;
     --gd-widget-shell-pad-bottom: 16px;
     --gd-widget-header-anchor-y: 16px;
@@ -424,10 +433,13 @@ main {
     --gd-topbar-min-height: 80px;
     --gd-topbar-pad-x: 18px;
     --gd-topbar-inner-pad-top: 14px;
+    --gd-topbar-inner-pad-bottom: 0px;
     --gd-topbar-heading-gap: 10px;
+    --gd-topbar-heading-pad-bottom: 0px;
     --gd-topbar-title-size: 20px;
     --gd-topbar-subtitle-size: 12px;
     --gd-topbar-action-gap: 5px;
+    --gd-topbar-actions-pad-top: 0px;
     --gd-topbar-action-pad-x: 10px;
     --gd-topbar-action-font-size: 12px;
     --gd-theme-select-width: 132px;
@@ -466,7 +478,10 @@ main {
 
   .topbar-inner {
     min-height: var(--gd-topbar-min-height) !important;
-    padding: var(--gd-topbar-inner-pad-top) var(--gd-topbar-pad-x) 0 !important;
+    padding:
+      var(--gd-topbar-inner-pad-top)
+      var(--gd-topbar-pad-x)
+      var(--gd-topbar-inner-pad-bottom) !important;
     flex-direction: column !important;
     align-items: stretch !important;
     justify-content: center !important;
@@ -476,13 +491,13 @@ main {
   .topbar-title {
     width: 100% !important;
     min-width: 0 !important;
-    padding-top: 0px !important;
+    padding-top: 0 !important;
   }
 
   .topbar-heading {
     gap: var(--gd-topbar-heading-gap) !important;
     align-items: flex-start !important;
-    padding-bottom: 0px !important;
+    padding-bottom: var(--gd-topbar-heading-pad-bottom) !important;
   }
 
   .topbar-title h1 {
@@ -501,7 +516,7 @@ main {
     gap: var(--gd-topbar-action-gap) !important;
     overflow: visible !important;
     flex-wrap: nowrap !important;
-    padding-top: 0px !important;
+    padding-top: var(--gd-topbar-actions-pad-top) !important;
   }
 
   .topbar-mobile-workspaces {
