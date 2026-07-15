@@ -988,30 +988,6 @@ body,
     grid-template-columns: 1fr !important;
   }
 
-  .calendar-widget-toolbar {
-    align-items: stretch !important;
-  }
-
-  .calendar-widget-toolbar > div,
-  .calendar-view-toggle,
-  .calendar-date-input {
-    width: 100% !important;
-  }
-
-  .calendar-view-toggle {
-    justify-content: space-between !important;
-  }
-
-  .calendar-view-button {
-    flex: 1 1 0 !important;
-  }
-
-  .calendar-sync-preview {
-    margin-top: var(--gd-widget-stack-gap) !important;
-    align-items: stretch !important;
-    flex-direction: column !important;
-  }
-
   .career-list-item,
   .career-list-title-row,
   .career-list-meta {

@@ -2560,6 +2560,34 @@ body.theme-pixel-desk .career-cover-status-select option {
   text-overflow: ellipsis !important;
 }
 
+/* Small calendar cards need their toolbar and sync preview to stack inside the
+   widget instead of depending on global override rules. */
+@container gd-widget (max-width: 620px) {
+  .calendar-widget-toolbar {
+    align-items: stretch !important;
+  }
+
+  .calendar-widget-toolbar > div,
+  .calendar-view-toggle,
+  .calendar-date-input {
+    width: 100% !important;
+  }
+
+  .calendar-view-toggle {
+    justify-content: space-between !important;
+  }
+
+  .calendar-view-button {
+    flex: 1 1 0 !important;
+  }
+
+  .calendar-sync-preview {
+    margin-top: var(--gd-widget-stack-gap) !important;
+    align-items: stretch !important;
+    flex-direction: column !important;
+  }
+}
+
 @container gd-widget (max-width: 560px) {
   .calendar-widget-card .glass-card-subtitle {
     display: none !important;
