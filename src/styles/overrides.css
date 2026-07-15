@@ -906,8 +906,10 @@ body,
     padding: 16px 14px 10px !important;
   }
 
-  .glass-card > .widget-frame__header > .widget-frame__title-group,
-  .glass-card > .widget-frame__header > div:first-child {
+  /* Keep header sizing semantic:
+     the title block should be targeted by its shared frame class rather than
+     by child order, so widget markup stays readable and easier to mirror in Figma. */
+  .glass-card > .widget-frame__header > .widget-frame__title-group {
     min-width: 0 !important;
     flex: 1 1 auto !important;
   }
