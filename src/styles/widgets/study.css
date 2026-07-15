@@ -718,6 +718,26 @@
   }
 }
 
+/* Compact widths inside the dashboard grid need one extra step between the
+   broader tablet layout and the narrow phone layout below. */
+@container study-widget (max-width: 620px) {
+  .study-subject-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Preserve the current mid-narrow subject layout used by this widget before
+   it fully collapses into a single column at the smallest width token. */
+@container study-widget (max-width: 560px) {
+  .study-record-form {
+    grid-template-columns: 1fr;
+  }
+
+  .study-subject-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @container study-widget (max-width: 520px) {
   .study-date-row {
     gap: 6px;
