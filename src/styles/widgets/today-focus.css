@@ -29,6 +29,13 @@
   box-sizing: border-box;
 }
 
+.today-focus-card,
+.today-focus-widget,
+.today-mini-card {
+  container-type: inline-size;
+  container-name: today-focus-widget;
+}
+
 .today-focus-card .glass-card-body,
 .today-focus-widget .glass-card-body,
 .today-mini-card .glass-card-body,
@@ -444,7 +451,23 @@
 }
 
 /* =========================================================
-   7. Mobile
+   7. Compact container behavior
+========================================================= */
+
+@container today-focus-widget (max-width: 620px) {
+  .today-focus-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gd-widget-stack-gap);
+  }
+
+  .today-focus-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   8. Mobile
 ========================================================= */
 
 @media (max-width: 768px) {
@@ -475,7 +498,7 @@
 }
 
 /* =========================================================
-   8. Height restore
+   9. Height restore
    The focus widgets must remain scrollable instead of stretching the
    whole dashboard column when content gets longer than the card.
 ========================================================= */

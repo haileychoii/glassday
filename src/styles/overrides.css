@@ -978,16 +978,6 @@ body,
     text-overflow: ellipsis;
   }
 
-  .today-focus-hero {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: var(--gd-widget-stack-gap) !important;
-  }
-
-  .today-focus-grid {
-    grid-template-columns: 1fr !important;
-  }
-
   .career-list-item,
   .career-list-title-row,
   .career-list-meta {
