@@ -969,7 +969,105 @@
   outline: none !important;
 }
 
-/* Sidebar active */
+/* Pixel sidebar rail
+   The outer item is only a layout slot. The actual visible button is
+   sidebar-tab-main, so the rounded default pill cannot overlap the square
+   Windows-98 button frame. */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .sidebar-tab-item {
+  min-height: 28px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  color: inherit !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-mode-stage.is-laptop-mode .sidebar-tab-item {
+  min-height: 28px !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .sidebar-tab-main {
+  height: 30px !important;
+  padding: 0 8px !important;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    1px 1px 0 #dfdfdf inset,
+    -1px -1px 0 #808080 inset !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .sidebar-tab-item.is-collapsed .sidebar-tab-main {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-mode-stage.is-laptop-mode .sidebar-tab-main,
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-mode-stage.is-laptop-mode .sidebar-tab-item.is-collapsed .sidebar-tab-main {
+  border-radius: 0 !important;
+}
+
 :where(
   html[data-theme="pixel-desk"],
   body[data-theme="pixel-desk"],
@@ -998,6 +1096,7 @@
 ) .sidebar-tab-item.is-active .sidebar-tab-main {
   background: #000080 !important;
   color: #ffffff !important;
+  border-radius: 0 !important;
   border-top: 2px solid #404040 !important;
   border-left: 2px solid #404040 !important;
   border-right: 2px solid #ffffff !important;
@@ -1016,6 +1115,20 @@
   body.theme-pixel
 ) .sidebar-tab-item.is-active * {
   color: #ffffff !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .workspace-theme-icon-pixel-desk {
+  width: 16px !important;
+  height: 16px !important;
 }
 
 /* Pixel widget headers share one tighter start line so title placement stays
