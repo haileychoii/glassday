@@ -26,7 +26,6 @@ const TimerSurface = ({
   controller,
   floating = false,
 }: TimerSurfaceProps) => {
-  const [compactSettingsOpen, setCompactSettingsOpen] = useState(false);
   const {
     pomodoro,
     remainingSeconds,
@@ -43,15 +42,20 @@ const TimerSurface = ({
     startFocusSession,
     dismissCompletionPrompt,
   } = controller;
+  const cycleFocusPreset = () => {
+    const currentIndex = focusPresets.indexOf(
+      pomodoro.focusMinutes as (typeof focusPresets)[number]
+    );
+    const nextPreset =
+      focusPresets[
+        (currentIndex + 1 + focusPresets.length) % focusPresets.length
+      ];
+
+    applyFocusPreset(nextPreset);
+  };
 
   return (
-    <div
-      className={cn(
-        "timer-widget-layout",
-        floating && "is-floating-mode",
-        compactSettingsOpen && "is-compact-settings-open"
-      )}
-    >
+    <div className={cn("timer-widget-layout", floating && "is-floating-mode")}>
       <section className="timer-widget-main-card">
         <div className="timer-widget-mode-row">
           {(["focus", "short-break", "long-break"] as const).map((mode) => (
@@ -74,10 +78,10 @@ const TimerSurface = ({
 
           <button
             type="button"
-            onClick={() => setCompactSettingsOpen((prev) => !prev)}
+            onClick={cycleFocusPreset}
             className="timer-widget-compact-settings-toggle"
-            title="Change timer lengths"
-            aria-expanded={compactSettingsOpen}
+            title="Cycle focus length"
+            disabled={pomodoro.isRunning}
           >
             <Clock3 className="w-3.5 h-3.5" />
             <span>{pomodoro.focusMinutes}m</span>

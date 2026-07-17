@@ -38,6 +38,12 @@
   gap: var(--gd-widget-section-gap);
 }
 
+.timer-widget-main-card {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .timer-widget-mode-row,
 .timer-widget-action-row,
 .timer-widget-presets,
@@ -182,7 +188,7 @@
   min-width: 0;
   min-height: 0;
   padding: 16px;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .timer-floating-window {
@@ -201,27 +207,15 @@
 }
 
 @container timer-widget (max-width: 559px) {
-  .timer-widget-settings-card {
-    order: 3;
-  }
-}
-
-@container timer-widget (max-width: 420px) {
   .timer-widget-layout {
     gap: 0;
   }
 
-  .timer-widget-main-card,
-  .timer-widget-settings-card {
-    padding: 8px;
-    border-radius: 18px;
-  }
-
   .timer-widget-main-card {
     height: 100%;
+    padding: 10px;
     align-content: center;
-    gap: 7px;
-    overflow: hidden;
+    gap: 8px;
   }
 
   .timer-widget-mode-row,
@@ -253,33 +247,52 @@
   }
 
   .timer-widget-settings-card {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    z-index: 20;
-    width: min(214px, calc(100% - 12px));
-    max-height: calc(100% - 12px);
     display: none;
-    overflow: auto;
-    box-shadow:
-      0 18px 38px hsl(220 30% 16% / 0.18),
-      inset 0 1px 0 hsl(0 0% 100% / 0.6);
-  }
-
-  .timer-widget-layout.is-compact-settings-open .timer-widget-settings-card {
-    display: grid;
-  }
-
-  .timer-widget-clock {
-    font-size: clamp(30px, 16cqi, 42px);
   }
 
   .timer-widget-prompt {
     position: absolute;
-    inset: auto 8px 8px;
+    right: 6px;
+    bottom: 6px;
+    left: 6px;
+    padding: 6px;
+    gap: 5px;
+    overflow: hidden;
+  }
+
+  .timer-widget-prompt-copy {
+    display: none;
+  }
+
+  .timer-widget-prompt-actions {
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  .timer-widget-prompt-actions .timer-widget-primary,
+  .timer-widget-prompt-actions .timer-widget-secondary {
+    min-height: 26px;
+    padding: 0 9px;
+    font-size: 10px;
+  }
+}
+
+@container timer-widget (max-width: 420px) {
+  .timer-widget-main-card {
     padding: 8px;
-    gap: 6px;
-    max-height: calc(100% - 16px);
-    overflow: auto;
+    border-radius: 18px;
+  }
+
+  .timer-widget-main-card {
+    gap: 7px;
+  }
+
+  .timer-widget-primary {
+    min-height: 28px;
+    padding: 0 10px;
+  }
+
+  .timer-widget-clock {
+    font-size: clamp(30px, 16cqi, 42px);
   }
 }
