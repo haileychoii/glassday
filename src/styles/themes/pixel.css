@@ -1040,9 +1040,9 @@
   html.theme-pixel,
   body.theme-pixel
 ) .widget-frame__header {
-  min-height: 32px !important;
-  padding: 8px 12px 5px !important;
-  gap: 8px !important;
+  min-height: 28px !important;
+  padding: 4px 10px 3px !important;
+  gap: 6px !important;
 }
 
 :where(
@@ -1055,6 +1055,16 @@
   html.theme-pixel,
   body.theme-pixel
 ) .glass-card-title,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .widget-card-title,
 :where(
   html[data-theme="pixel-desk"],
   body[data-theme="pixel-desk"],
@@ -1079,6 +1089,16 @@
   html.theme-pixel,
   body.theme-pixel
 ) .glass-card-subtitle,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .widget-card-subtitle,
 :where(
   html[data-theme="pixel-desk"],
   body[data-theme="pixel-desk"],
@@ -1151,7 +1171,7 @@
   height: 100% !important;
   min-height: 0 !important;
 
-  padding: 42px 18px 18px 18px !important;
+  padding: 34px 12px 12px 12px !important;
 
   border-radius: 0 !important;
   overflow: hidden !important;
@@ -1284,6 +1304,7 @@
 ) .glass-card-body {
   height: 100% !important;
   min-height: 0 !important;
+  padding: 4px 10px 10px !important;
   overflow: auto !important;
 }
 

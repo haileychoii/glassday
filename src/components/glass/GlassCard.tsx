@@ -44,7 +44,7 @@ export const GlassCard = ({
 
           <div className="glass-card-copy widget-card-copy widget-frame__copy">
             <h3
-              className="glass-card-title widget-frame__title whitespace-nowrap overflow-hidden text-ellipsis"
+              className="glass-card-title widget-card-title widget-frame__title whitespace-nowrap overflow-hidden text-ellipsis"
               style={titleStyle}
             >
               {title}
@@ -52,7 +52,7 @@ export const GlassCard = ({
 
             {subtitle && (
               <p
-                className="glass-card-subtitle widget-frame__subtitle whitespace-nowrap overflow-hidden text-ellipsis"
+                className="glass-card-subtitle widget-card-subtitle widget-frame__subtitle whitespace-nowrap overflow-hidden text-ellipsis"
                 style={subtitleStyle}
               >
                 {subtitle}

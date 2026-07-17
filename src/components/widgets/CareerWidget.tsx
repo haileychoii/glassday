@@ -637,15 +637,17 @@ export const CareerWidget = () => {
       {/* Shared widget-frame header classes keep icon/title/action alignment
           consistent with GlassCard-based widgets for Figma handoff. */}
       <section className="glass-card widget-frame career-widget">
-        <div className="career-widget-header widget-card-header widget-frame__header">
-          <div className="career-widget-title-wrap widget-card-title-group widget-frame__title-group">
-            <div className="glass-card-icon widget-card-icon widget-frame__icon">
+        <div className="career-widget-header glass-card-header widget-card-header widget-frame__header">
+          <div className="career-widget-title-wrap glass-card-title-group widget-card-title-group widget-frame__title-group">
+            <div className="glass-icon-box glass-card-icon widget-card-icon widget-frame__icon">
               <BriefcaseBusiness className="w-4 h-4" />
             </div>
 
-            <div className="widget-card-copy widget-frame__copy">
-              <h3 className="widget-frame__title">Career</h3>
-              <p className="widget-frame__subtitle">
+            <div className="glass-card-copy widget-card-copy widget-frame__copy">
+              <h3 className="glass-card-title widget-card-title widget-frame__title">
+                Career
+              </h3>
+              <p className="glass-card-subtitle widget-card-subtitle widget-frame__subtitle">
                 {summary.total} applications · {summary.urgent} urgent
               </p>
             </div>
