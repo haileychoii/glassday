@@ -19,6 +19,13 @@ export const defaultPomodoroState: StudyPomodoroState = {
   completedFocusSessions: 0,
 };
 
+const FOCUS_DEFAULT_MIGRATION_KEY =
+  "glassday.study.pomodoro.focus-default-25.v1";
+
+const clampMinutes = (minutes: number) => {
+  return Math.min(180, Math.max(1, Math.round(minutes)));
+};
+
 export const getSuggestedBreakMode = (
   pomodoro: StudyPomodoroState
 ): StudyPomodoroMode => {
@@ -44,6 +51,32 @@ export const usePomodoroTimer = () => {
       "glassday.study.pomodoro.v1",
       defaultPomodoroState
     );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.localStorage.getItem(FOCUS_DEFAULT_MIGRATION_KEY)) return;
+
+    window.localStorage.setItem(FOCUS_DEFAULT_MIGRATION_KEY, "1");
+
+    setPomodoro((prev) => {
+      if (prev.focusMinutes === defaultPomodoroState.focusMinutes) {
+        return prev;
+      }
+
+      const nextState = {
+        ...prev,
+        focusMinutes: defaultPomodoroState.focusMinutes,
+      };
+
+      return prev.mode === "focus" && !prev.isRunning
+        ? {
+            ...nextState,
+            endsAt: null,
+            remainingSeconds: defaultPomodoroState.remainingSeconds,
+          }
+        : nextState;
+    });
+  }, [setPomodoro]);
 
   const remainingSeconds =
     pomodoro.isRunning && pomodoro.endsAt
@@ -130,7 +163,7 @@ export const usePomodoroTimer = () => {
     delta: number
   ) => {
     setPomodoro((prev) => {
-      const nextValue = Math.max(1, prev[key] + delta);
+      const nextValue = clampMinutes(prev[key] + delta);
       const nextState = {
         ...prev,
         [key]: nextValue,
@@ -156,15 +189,17 @@ export const usePomodoroTimer = () => {
     });
   };
 
-  const applyFocusPreset = (minutes: number) => {
+  const setFocusMinutes = (minutes: number) => {
+    const nextMinutes = clampMinutes(minutes);
+
     setCompletionPrompt(null);
     setPomodoro((prev) => ({
       ...prev,
-      focusMinutes: minutes,
+      focusMinutes: nextMinutes,
       mode: "focus",
       isRunning: false,
       endsAt: null,
-      remainingSeconds: minutes * 60,
+      remainingSeconds: nextMinutes * 60,
     }));
   };
 
@@ -237,7 +272,7 @@ export const usePomodoroTimer = () => {
     reset,
     skip,
     updateMinutes,
-    applyFocusPreset,
+    setFocusMinutes,
     startFocusSession,
     dismissCompletionPrompt,
   };

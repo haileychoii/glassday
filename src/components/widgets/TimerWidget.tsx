@@ -44,9 +44,12 @@ const TimerSurface = ({
     reset,
     skip,
     updateMinutes,
+    setFocusMinutes,
     startFocusSession,
     dismissCompletionPrompt,
   } = controller;
+  const [timeEditorOpen, setTimeEditorOpen] = useState(false);
+  const [draftFocusMinutes, setDraftFocusMinutes] = useState("25");
   const totalSeconds = getPomodoroModeDurationSeconds(pomodoro, pomodoro.mode);
   const elapsedSeconds = Math.max(0, totalSeconds - remainingSeconds);
   const progressRatio =
@@ -70,6 +73,10 @@ const TimerSurface = ({
   } as CSSProperties;
 
   useEffect(() => {
+    setDraftFocusMinutes(String(pomodoro.focusMinutes || 25));
+  }, [pomodoro.focusMinutes]);
+
+  useEffect(() => {
     const surface = surfaceRef.current;
     if (!surface) return;
 
@@ -90,6 +97,31 @@ const TimerSurface = ({
 
     return () => observer.disconnect();
   }, []);
+
+  const applyDraftFocusMinutes = (closeEditor = true) => {
+    const parsedMinutes = Number(draftFocusMinutes);
+
+    if (!Number.isFinite(parsedMinutes)) {
+      setDraftFocusMinutes(String(pomodoro.focusMinutes || 25));
+      return;
+    }
+
+    setFocusMinutes(parsedMinutes);
+
+    if (closeEditor) {
+      setTimeEditorOpen(false);
+    }
+  };
+
+  const adjustFocusMinutes = (delta: number) => {
+    const nextMinutes = Math.min(
+      180,
+      Math.max(1, Math.round((pomodoro.focusMinutes || 25) + delta))
+    );
+
+    setDraftFocusMinutes(String(nextMinutes));
+    setFocusMinutes(nextMinutes);
+  };
 
   return (
     <div
@@ -117,39 +149,96 @@ const TimerSurface = ({
           ))}
         </div>
 
-        <div className="timer-widget-focus-stage" style={progressStyle}>
-          <svg
-            className="timer-widget-progress-svg"
-            viewBox="0 0 120 120"
-            aria-hidden="true"
+        <div className="timer-widget-time-editor-shell">
+          <button
+            type="button"
+            className="timer-widget-focus-stage timer-widget-time-button"
+            style={progressStyle}
+            onClick={() => setTimeEditorOpen((open) => !open)}
+            aria-label="Change focus timer length"
+            aria-expanded={timeEditorOpen}
           >
-            <circle
-              className="timer-widget-progress-track"
-              cx="60"
-              cy="60"
-              r={progressRadius}
-            />
-            <circle
-              className="timer-widget-progress-value"
-              cx="60"
-              cy="60"
-              r={progressRadius}
-              strokeDasharray={progressCircumference}
-              strokeDashoffset={progressDashOffset}
-            />
-          </svg>
+            <svg
+              className="timer-widget-progress-svg"
+              viewBox="0 0 120 120"
+              aria-hidden="true"
+            >
+              <circle
+                className="timer-widget-progress-track"
+                cx="60"
+                cy="60"
+                r={progressRadius}
+              />
+              <circle
+                className="timer-widget-progress-value"
+                cx="60"
+                cy="60"
+                r={progressRadius}
+                strokeDasharray={progressCircumference}
+                strokeDashoffset={progressDashOffset}
+              />
+            </svg>
 
-          <span className="timer-widget-progress-dot" aria-hidden="true" />
+            <span className="timer-widget-progress-dot" aria-hidden="true" />
 
-          <div className="timer-widget-clock-stack">
-            <div className="timer-widget-clock">
-              {formatTimerClock(remainingSeconds)}
+            <div className="timer-widget-clock-stack">
+              <div className="timer-widget-clock">
+                {formatTimerClock(remainingSeconds)}
+              </div>
+              <div className="timer-widget-duration-label">
+                {Math.round(totalSeconds / 60)}m {modeLabel}
+              </div>
+              <div className="timer-widget-remaining-label">{remainingLabel}</div>
             </div>
-            <div className="timer-widget-duration-label">
-              {Math.round(totalSeconds / 60)}m {modeLabel}
+          </button>
+
+          {timeEditorOpen && (
+            <div className="timer-widget-time-popover" role="dialog">
+              <div className="timer-widget-time-popover-title">
+                Focus minutes
+              </div>
+
+              <div className="timer-widget-time-edit-row">
+                <button
+                  type="button"
+                  onClick={() => adjustFocusMinutes(-5)}
+                  aria-label="Decrease focus minutes"
+                >
+                  -
+                </button>
+                <input
+                  value={draftFocusMinutes}
+                  onChange={(event) =>
+                    setDraftFocusMinutes(event.target.value)
+                  }
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      applyDraftFocusMinutes();
+                    }
+                  }}
+                  inputMode="numeric"
+                  type="number"
+                  min={1}
+                  max={180}
+                />
+                <button
+                  type="button"
+                  onClick={() => adjustFocusMinutes(5)}
+                  aria-label="Increase focus minutes"
+                >
+                  +
+                </button>
+              </div>
+
+              <button
+                type="button"
+                className="timer-widget-time-apply"
+                onClick={() => applyDraftFocusMinutes()}
+              >
+                Apply
+              </button>
             </div>
-            <div className="timer-widget-remaining-label">{remainingLabel}</div>
-          </div>
+          )}
         </div>
 
         <div className="timer-widget-meta">

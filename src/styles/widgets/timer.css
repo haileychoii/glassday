@@ -80,6 +80,29 @@
   isolation: isolate;
 }
 
+.timer-widget-time-editor-shell {
+  position: relative;
+  max-width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.timer-widget-time-button {
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+}
+
+.timer-widget-time-button:focus-visible {
+  outline: 2px solid hsl(var(--primary) / 0.58);
+  outline-offset: 5px;
+  border-radius: 999px;
+}
+
 .timer-widget-progress-svg {
   position: absolute;
   inset: 0;
@@ -241,6 +264,77 @@
   font-size: 13px;
   font-weight: 850;
   color: hsl(var(--foreground) / 0.78);
+}
+
+.timer-widget-time-popover {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 12;
+  width: min(184px, calc(100cqi - 18px));
+  max-width: calc(100cqi - 18px);
+  padding: 10px;
+  border-radius: 16px;
+  display: grid;
+  gap: 8px;
+  color: hsl(var(--foreground) / 0.9);
+  background:
+    linear-gradient(145deg, hsl(var(--card) / 0.9), hsl(var(--accent) / 0.34));
+  border: 1px solid hsl(var(--border) / 0.52);
+  box-shadow:
+    0 16px 38px hsl(var(--foreground) / 0.13),
+    inset 0 1px 0 hsl(var(--background) / 0.3);
+  backdrop-filter: blur(18px);
+  transform: translate(-50%, -50%);
+}
+
+.timer-widget-time-popover-title {
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1;
+  color: hsl(var(--muted-foreground) / 0.78);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.timer-widget-time-edit-row {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) 30px;
+  gap: 7px;
+  align-items: center;
+}
+
+.timer-widget-time-edit-row button,
+.timer-widget-time-apply {
+  min-height: 30px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid hsl(var(--border) / 0.42);
+  color: hsl(var(--foreground) / 0.8);
+  background: hsl(var(--card) / 0.55);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.timer-widget-time-edit-row input {
+  min-width: 0;
+  width: 100%;
+  height: 30px;
+  border-radius: 999px;
+  text-align: center;
+  border: 1px solid hsl(var(--primary) / 0.28);
+  color: hsl(var(--foreground) / 0.9);
+  background: hsl(var(--background) / 0.42);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.timer-widget-time-apply {
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.18);
+  border-color: hsl(var(--primary) / 0.3);
 }
 
 .timer-widget-prompt {
