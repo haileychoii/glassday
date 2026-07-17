@@ -1153,9 +1153,10 @@
   html.theme-pixel,
   body.theme-pixel
 ) .widget-frame__header {
-  min-height: 28px !important;
-  padding: 4px 10px 3px !important;
-  gap: 6px !important;
+  min-height: 24px !important;
+  padding: 2px 8px !important;
+  gap: 5px !important;
+  align-items: center !important;
 }
 
 :where(
@@ -1226,6 +1227,89 @@
   line-height: 1.1 !important;
 }
 
+/* Pixel header anchor:
+   responsive.css and overrides.css are imported after this theme, so these
+   higher-specificity selectors keep every widget title on the same tighter
+   pixel title line. Today Focus uses the same GlassCard header as the rest. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-card > :is(.glass-card-header, .widget-frame__header),
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .dashboard-grid-item > .glass-card > :is(.glass-card-header, .widget-frame__header),
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-mode-stage.is-laptop-mode .dashboard-grid-item > .glass-card > :is(.glass-card-header, .widget-frame__header),
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) :is(.today-focus-card, .today-focus-widget) > :is(.glass-card-header, .widget-frame__header) {
+  min-height: 24px !important;
+  padding: 2px 8px !important;
+  gap: 5px !important;
+  align-items: center !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-card > :is(.glass-card-body, .widget-frame__body),
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .dashboard-grid-item > .glass-card > :is(.glass-card-body, .widget-frame__body),
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-mode-stage.is-laptop-mode .dashboard-grid-item > .glass-card > :is(.glass-card-body, .widget-frame__body) {
+  padding: 2px 8px 8px !important;
+}
+
 /* =========================================================
    Grid / card rectangle fix
 ========================================================= */
@@ -1284,7 +1368,7 @@
   height: 100% !important;
   min-height: 0 !important;
 
-  padding: 34px 12px 12px 12px !important;
+  padding: 30px 10px 10px !important;
 
   border-radius: 0 !important;
   overflow: hidden !important;
