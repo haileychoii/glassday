@@ -14,13 +14,17 @@
 .timer-widget .glass-card-body {
   min-height: 0;
   display: grid;
+  overflow: hidden;
 }
 
 .timer-widget-layout {
+  position: relative;
+  height: 100%;
   min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--gd-widget-stack-gap);
+  overflow: hidden;
 }
 
 .timer-widget-main-card,
@@ -41,6 +45,30 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--gd-widget-inline-gap);
+}
+
+.timer-widget-clock-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gd-widget-inline-gap);
+}
+
+.timer-widget-compact-settings-toggle {
+  display: none;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 850;
+  white-space: nowrap;
+  color: hsl(var(--foreground) / 0.68);
+  background: hsl(0 0% 100% / 0.24);
+  border: 1px solid hsl(0 0% 100% / 0.34);
 }
 
 .timer-widget-mode-button,
@@ -179,17 +207,79 @@
 }
 
 @container timer-widget (max-width: 420px) {
+  .timer-widget-layout {
+    gap: 0;
+  }
+
   .timer-widget-main-card,
   .timer-widget-settings-card {
-    padding: var(--gd-widget-gap);
+    padding: 8px;
     border-radius: 18px;
   }
 
-  .timer-widget-settings-card {
+  .timer-widget-main-card {
+    height: 100%;
+    align-content: center;
+    gap: 7px;
+    overflow: hidden;
+  }
+
+  .timer-widget-mode-row,
+  .timer-widget-presets,
+  .timer-widget-meta {
     display: none;
   }
 
+  .timer-widget-clock-row {
+    justify-content: center;
+  }
+
+  .timer-widget-compact-settings-toggle {
+    display: inline-flex;
+  }
+
+  .timer-widget-action-row {
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  .timer-widget-action-row .timer-widget-secondary {
+    display: none;
+  }
+
+  .timer-widget-primary {
+    min-height: 28px;
+    padding: 0 10px;
+  }
+
+  .timer-widget-settings-card {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 20;
+    width: min(214px, calc(100% - 12px));
+    max-height: calc(100% - 12px);
+    display: none;
+    overflow: auto;
+    box-shadow:
+      0 18px 38px hsl(220 30% 16% / 0.18),
+      inset 0 1px 0 hsl(0 0% 100% / 0.6);
+  }
+
+  .timer-widget-layout.is-compact-settings-open .timer-widget-settings-card {
+    display: grid;
+  }
+
   .timer-widget-clock {
-    font-size: clamp(30px, 15cqi, 42px);
+    font-size: clamp(30px, 16cqi, 42px);
+  }
+
+  .timer-widget-prompt {
+    position: absolute;
+    inset: auto 8px 8px;
+    padding: 8px;
+    gap: 6px;
+    max-height: calc(100% - 16px);
+    overflow: auto;
   }
 }

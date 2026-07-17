@@ -2420,8 +2420,9 @@
   html.theme-pixel,
   body.theme-pixel
 ) .memo-editor {
-  height: 100% !important;
+  flex: 1 1 auto !important;
   min-height: 0 !important;
+  height: auto !important;
   padding: 14px !important;
 
   background:
@@ -2441,6 +2442,45 @@
     inset -1px -1px 0 #f7f7f7 !important;
 
   overflow: auto !important;
+  scrollbar-color: #c0c0c0 #d4d0c8 !important;
+}
+
+/* Pixel memo scroll targets:
+   memo has nested list/editor panes, so each scrollable child needs an
+   explicit overflow rule instead of relying only on the outer widget window. */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-widget .memo-list-panel,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-widget .memo-note-list,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-widget .memo-editor {
+  min-height: 0 !important;
+  overflow: auto !important;
+  scrollbar-color: #c0c0c0 #d4d0c8 !important;
 }
 
 /* =========================================================

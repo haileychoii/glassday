@@ -1700,7 +1700,7 @@ export const MemoWidget = () => {
         }
       >
         <div
-          className="memo-app"
+          className={cn("memo-app", isWidgetListOpen && "is-compact-list-open")}
         >
           {isWidgetListOpen && renderNoteList()}
           {renderWorkspace(editorRef)}

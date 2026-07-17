@@ -1995,7 +1995,10 @@ body.theme-glass-dark
 }
 
 .memo-widget .memo-editor {
+  flex: 1 1 auto;
+  height: auto;
   min-height: 0;
+  overflow: auto;
   padding: clamp(16px, 4cqw, 36px) clamp(14px, 5cqw, 48px);
 }
 
@@ -2040,11 +2043,13 @@ body.theme-glass-dark
 
   .memo-widget .memo-list-panel {
     position: absolute;
-    inset: 0 auto 0 0;
-    width: min(236px, calc(100% - 28px));
-    max-width: 82%;
-    height: auto;
-    max-height: none;
+    top: 6px;
+    left: 6px;
+    bottom: auto;
+    width: min(236px, calc(100% - 12px));
+    max-width: calc(100% - 12px);
+    height: min(330px, calc(100% - 12px));
+    max-height: calc(100% - 12px);
     padding: 12px 10px;
     border-right: 1px solid hsl(220 18% 82% / 0.45);
     border-bottom: 0;
@@ -2055,8 +2060,9 @@ body.theme-glass-dark
       inset -1px 0 0 hsl(0 0% 100% / 0.62);
     transform: translateX(calc(-100% - 12px));
     opacity: 0;
+    overflow: hidden;
     pointer-events: none;
-    z-index: 7;
+    z-index: 30;
   }
 
   .memo-widget .memo-app.is-compact-list-open .memo-list-panel {

@@ -26,6 +26,7 @@ const TimerSurface = ({
   controller,
   floating = false,
 }: TimerSurfaceProps) => {
+  const [compactSettingsOpen, setCompactSettingsOpen] = useState(false);
   const {
     pomodoro,
     remainingSeconds,
@@ -44,7 +45,13 @@ const TimerSurface = ({
   } = controller;
 
   return (
-    <div className={cn("timer-widget-layout", floating && "is-floating-mode")}>
+    <div
+      className={cn(
+        "timer-widget-layout",
+        floating && "is-floating-mode",
+        compactSettingsOpen && "is-compact-settings-open"
+      )}
+    >
       <section className="timer-widget-main-card">
         <div className="timer-widget-mode-row">
           {(["focus", "short-break", "long-break"] as const).map((mode) => (
@@ -62,7 +69,20 @@ const TimerSurface = ({
           ))}
         </div>
 
-        <div className="timer-widget-clock">{formatTimerClock(remainingSeconds)}</div>
+        <div className="timer-widget-clock-row">
+          <div className="timer-widget-clock">{formatTimerClock(remainingSeconds)}</div>
+
+          <button
+            type="button"
+            onClick={() => setCompactSettingsOpen((prev) => !prev)}
+            className="timer-widget-compact-settings-toggle"
+            title="Change timer lengths"
+            aria-expanded={compactSettingsOpen}
+          >
+            <Clock3 className="w-3.5 h-3.5" />
+            <span>{pomodoro.focusMinutes}m</span>
+          </button>
+        </div>
 
         <div className="timer-widget-meta">
           {activeLabel} · {pomodoro.completedFocusSessions} focus sessions
