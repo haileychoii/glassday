@@ -439,12 +439,12 @@ main {
        adjust these first when matching a Figma mobile header. */
     --gd-viewport-frame-pad-mobile: 3px;
     --gd-main-pad-mobile: 0px;
-    --gd-widget-shell-pad-x: 16px;
-    --gd-widget-shell-pad-bottom: 16px;
-    --gd-widget-header-anchor-y: 16px;
-    --gd-widget-content-gap-top: 10px;
+    --gd-widget-frame-pad-x: 16px;
+    --gd-widget-frame-pad-bottom: 16px;
+    --gd-widget-frame-header-y: 16px;
+    --gd-widget-frame-content-gap-top: 10px;
     --gd-widget-stack-gap: 10px;
-    --gd-widget-panel-pad: 12px;
+    --gd-widget-frame-panel-pad: 12px;
     --gd-shell-pad-x: 16px;
     --gd-shell-pad-top: 16px;
     --gd-shell-pad-bottom: 30px;
@@ -612,12 +612,12 @@ main {
   :root {
     /* Small phone tokens:
        only the final tightest adjustments should live here. */
-    --gd-widget-shell-pad-x: 14px;
-    --gd-widget-shell-pad-bottom: 14px;
-    --gd-widget-header-anchor-y: 16px;
-    --gd-widget-content-gap-top: 10px;
+    --gd-widget-frame-pad-x: 14px;
+    --gd-widget-frame-pad-bottom: 14px;
+    --gd-widget-frame-header-y: 16px;
+    --gd-widget-frame-content-gap-top: 10px;
     --gd-widget-stack-gap: 8px;
-    --gd-widget-panel-pad: 8px;
+    --gd-widget-frame-panel-pad: 8px;
     --gd-shell-pad-x: 14px;
     --gd-shell-pad-top: 14px;
     --gd-shell-pad-bottom: 28px;

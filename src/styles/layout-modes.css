@@ -92,20 +92,16 @@
      - shell pad = 위젯 바깥 프레임 안쪽 여백
      - header anchor = 제목 줄이 위에서 내려오는 기준점
      - content gap top = 헤더와 첫 섹션 사이 간격 */
-  --gd-widget-shell-pad-x: var(--gd-space-sm);
-  --gd-widget-shell-pad-bottom: var(--gd-space-sm);
-  --gd-widget-header-anchor-y: 7px;
-  --gd-widget-content-gap-top: var(--gd-space-xs);
+  --gd-widget-frame-pad-x: var(--gd-space-sm);
+  --gd-widget-frame-pad-bottom: var(--gd-space-sm);
+  --gd-widget-frame-header-y: 7px;
+  --gd-widget-frame-content-gap-top: var(--gd-space-xs);
+  --gd-widget-frame-panel-pad: 9px;
   --gd-widget-header-row-min-height: 30px;
-  --gd-widget-pad-x: var(--gd-widget-shell-pad-x);
-  --gd-widget-pad-y: var(--gd-widget-shell-pad-bottom);
-  --gd-widget-header-pad-top: var(--gd-widget-header-anchor-y);
-  --gd-widget-header-pad-bottom: var(--gd-widget-content-gap-top);
   --gd-widget-header-gap: var(--gd-space-xs);
   --gd-widget-title-gap: 4px;
   --gd-widget-copy-gap: 2px;
   --gd-widget-stack-gap: var(--gd-space-md);
-  --gd-widget-panel-pad: 9px;
   --gd-widget-inline-gap: var(--gd-space-xs);
   --gd-widget-section-gap-tight: var(--gd-space-xs);
   --gd-widget-section-gap: var(--gd-space-sm);

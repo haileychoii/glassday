@@ -20,13 +20,22 @@
 
   /* 2. Widget shell spacing
      Change these first to tighten or loosen most widgets at once.
-     These are the main Figma-facing widget spacing knobs. */
+     These are the main Figma-facing widget spacing knobs.
+
+     Reading order:
+     1) widget-frame-* = human-friendly source tokens for Figma matching
+     2) gd-widget-*     = compatibility aliases used by existing component CSS */
   --gd-widget-gap-tight: var(--gd-space-sm);
   --gd-widget-gap: var(--gd-space-md);
-  --gd-widget-shell-pad-x: var(--gd-space-lg);
-  --gd-widget-shell-pad-bottom: var(--gd-space-lg);
-  --gd-widget-header-anchor-y: 13px;
-  --gd-widget-content-gap-top: 7px;
+  --gd-widget-frame-pad-x: var(--gd-space-lg);
+  --gd-widget-frame-pad-bottom: var(--gd-space-lg);
+  --gd-widget-frame-header-y: 13px;
+  --gd-widget-frame-content-gap-top: 7px;
+  --gd-widget-frame-panel-pad: var(--gd-space-lg);
+  --gd-widget-shell-pad-x: var(--gd-widget-frame-pad-x);
+  --gd-widget-shell-pad-bottom: var(--gd-widget-frame-pad-bottom);
+  --gd-widget-header-anchor-y: var(--gd-widget-frame-header-y);
+  --gd-widget-content-gap-top: var(--gd-widget-frame-content-gap-top);
   --gd-widget-header-row-min-height: 36px;
   --gd-widget-pad-x: var(--gd-widget-shell-pad-x);
   --gd-widget-pad-y: var(--gd-widget-shell-pad-bottom);
@@ -36,7 +45,7 @@
   --gd-widget-title-gap: var(--gd-space-xs);
   --gd-widget-copy-gap: 3px;
   --gd-widget-stack-gap: var(--gd-space-md);
-  --gd-widget-panel-pad: var(--gd-space-lg);
+  --gd-widget-panel-pad: var(--gd-widget-frame-panel-pad);
   --gd-widget-inline-gap: var(--gd-space-xs);
   --gd-widget-section-gap-tight: var(--gd-space-xs);
   --gd-widget-section-gap: var(--gd-space-sm);
