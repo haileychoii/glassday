@@ -1,6 +1,5 @@
 import { useState, type CSSProperties } from "react";
 import {
-  Clock3,
   Maximize2,
   Pause,
   Play,
@@ -19,7 +18,6 @@ import {
 } from "./study/studyUtils";
 import { usePomodoroTimer } from "./timer/usePomodoroTimer";
 
-const focusPresets = [15, 25, 50] as const;
 const progressRadius = 48;
 const progressCircumference = 2 * Math.PI * progressRadius;
 
@@ -44,21 +42,9 @@ const TimerSurface = ({
     reset,
     skip,
     updateMinutes,
-    applyFocusPreset,
     startFocusSession,
     dismissCompletionPrompt,
   } = controller;
-  const cycleFocusPreset = () => {
-    const currentIndex = focusPresets.indexOf(
-      pomodoro.focusMinutes as (typeof focusPresets)[number]
-    );
-    const nextPreset =
-      focusPresets[
-        (currentIndex + 1 + focusPresets.length) % focusPresets.length
-      ];
-
-    applyFocusPreset(nextPreset);
-  };
   const totalSeconds = getPomodoroModeDurationSeconds(pomodoro, pomodoro.mode);
   const elapsedSeconds = Math.max(0, totalSeconds - remainingSeconds);
   const progressRatio =
@@ -67,16 +53,16 @@ const TimerSurface = ({
     progressCircumference * (1 - progressRatio);
   const modeLabel =
     pomodoro.mode === "focus"
-      ? "집중"
+      ? "Focus"
       : pomodoro.mode === "short-break"
-        ? "짧은 휴식"
-        : "긴 휴식";
+        ? "Short break"
+        : "Long break";
   const remainingMinutes = Math.floor(remainingSeconds / 60);
   const remainingRestSeconds = remainingSeconds % 60;
   const remainingLabel =
     remainingMinutes > 0
-      ? `${remainingMinutes}분 ${remainingRestSeconds}초 남았습니다`
-      : `${remainingRestSeconds}초 남았습니다`;
+      ? `${remainingMinutes}m ${remainingRestSeconds}s left`
+      : `${remainingRestSeconds}s left`;
   const progressStyle = {
     "--timer-progress": progressRatio,
   } as CSSProperties;
@@ -129,21 +115,10 @@ const TimerSurface = ({
               {formatTimerClock(remainingSeconds)}
             </div>
             <div className="timer-widget-duration-label">
-              {Math.round(totalSeconds / 60)}분 {modeLabel} 중
+              {Math.round(totalSeconds / 60)}m {modeLabel}
             </div>
             <div className="timer-widget-remaining-label">{remainingLabel}</div>
           </div>
-
-          <button
-            type="button"
-            onClick={cycleFocusPreset}
-            className="timer-widget-compact-settings-toggle"
-            title="Cycle focus length"
-            disabled={pomodoro.isRunning}
-          >
-            <Clock3 className="w-3.5 h-3.5" />
-            <span>{pomodoro.focusMinutes}m</span>
-          </button>
         </div>
 
         <div className="timer-widget-meta">
@@ -176,30 +151,11 @@ const TimerSurface = ({
           </button>
         </div>
 
-        <div className="timer-widget-presets">
-          {focusPresets.map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              onClick={() => applyFocusPreset(preset)}
-              className={cn(
-                "timer-widget-preset",
-                pomodoro.mode === "focus" &&
-                  pomodoro.focusMinutes === preset &&
-                  !pomodoro.isRunning &&
-                  "is-active"
-              )}
-            >
-              {preset}m
-            </button>
-          ))}
-        </div>
-
         {completionPrompt && (
           <section className="timer-widget-prompt">
             <div className="timer-widget-prompt-copy">
               {completionPrompt === "take-break"
-                ? "Focus session complete. Take a break or start another 25 minutes."
+                ? "Focus session complete. Take a break or start another focus."
                 : "Break complete. Ready to start another focus session?"}
             </div>
 
@@ -216,17 +172,17 @@ const TimerSurface = ({
 
                   <button
                     type="button"
-                    onClick={() => startFocusSession(25)}
+                    onClick={() => startFocusSession(pomodoro.focusMinutes)}
                     className="timer-widget-secondary"
                   >
-                    Another 25m
+                    Another Focus
                   </button>
                 </>
               ) : (
                 <>
                   <button
                     type="button"
-                    onClick={() => startFocusSession(25)}
+                    onClick={() => startFocusSession(pomodoro.focusMinutes)}
                     className="timer-widget-primary"
                   >
                     Start Focus
