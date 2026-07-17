@@ -4,7 +4,7 @@
    - alert list flow
    - alert item states
    - inline severity and meta treatments
-========================================================= */
+====== =================================================== */
 
 /* =========================================================
    1. Alert list and card rows
@@ -40,7 +40,7 @@
       hsl(350 100% 94% / 0.58),
       hsl(0 0% 100% / 0.18)
     );
-  border-color: hsl(350 80% 76% / 0.56);
+  border-color: hsl(350 80% 76% / 0.57);
 }
 
 .alert-center-item.tone-warning {
