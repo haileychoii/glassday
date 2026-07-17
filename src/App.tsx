@@ -5,15 +5,15 @@ import { DashboardGrid } from "./components/grid/DashboardGrid";
 import { DashboardDataProvider } from "./context/DashboardDataContext";
 import { CloudSyncProvider } from "./context/CloudSyncContext";
 import { SettingsModal } from "./components/settings/SettingsModal";
+import { DASHBOARD_LAYOUT_MODE_KEY } from "./constants/dashboardStorage";
 import { applyAppFont, getSavedAppFont, loadSavedCustomFonts } from "./constants/fonts";
 import {
   OPEN_WIDGET_EVENT,
   type OpenWidgetDetail,
 } from "./constants/widgetNavigation";
+import { GLASSDAY_STORAGE_EVENT } from "./lib/glassdayStorage";
 import { useDashboardTabs } from "./hooks/useDashboardTabs";
 import type { DashboardLayoutMode } from "./types/workspace";
-
-const DASHBOARD_LAYOUT_MODE_KEY = "glassday.dashboard.layoutMode.v1";
 
 const readLayoutModeFromUrl = (): DashboardLayoutMode | null => {
   if (typeof window === "undefined") return null;
@@ -64,6 +64,30 @@ function App() {
     nextUrl.searchParams.set("layout", layoutMode);
     window.history.replaceState({}, "", nextUrl);
   }, [layoutMode]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleStorageModeChange = (event: Event) => {
+      const detail = (event as CustomEvent<{ key?: string; type: string }>).detail;
+
+      if (detail?.type !== "bulk" && detail?.key !== DASHBOARD_LAYOUT_MODE_KEY) {
+        return;
+      }
+
+      const savedMode = window.localStorage.getItem(DASHBOARD_LAYOUT_MODE_KEY);
+
+      if (savedMode === "laptop" || savedMode === "wide") {
+        setLayoutMode(savedMode);
+      }
+    };
+
+    window.addEventListener(GLASSDAY_STORAGE_EVENT, handleStorageModeChange);
+
+    return () => {
+      window.removeEventListener(GLASSDAY_STORAGE_EVENT, handleStorageModeChange);
+    };
+  }, []);
 
   useEffect(() => {
     const handleOpenWidget = (event: Event) => {

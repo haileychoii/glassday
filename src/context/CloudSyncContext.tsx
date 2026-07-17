@@ -52,6 +52,13 @@ const PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY =
   "glassday.sync.preferLocalOnNextAuth.v1";
 const CloudSyncContext = createContext<CloudSyncContextValue | null>(null);
 
+const getAuthRedirectUrl = () => {
+  const url = new URL(window.location.href);
+  url.hash = "";
+
+  return url.toString();
+};
+
 const toSyncMessage = (status: SyncStatus, fallback?: string) => {
   if (fallback) return fallback;
 
@@ -172,12 +179,27 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       window.localStorage.removeItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY);
 
       suppressUploadRef.current = true;
-      applyGlassdayStorageSnapshot(remoteSnapshot);
+      const applyResult = applyGlassdayStorageSnapshot(remoteSnapshot);
       setLastSyncedAt(data.updated_at ?? null);
 
-      window.setTimeout(() => {
+      const releaseUploadSuppression = () => {
         suppressUploadRef.current = false;
-      }, 1200);
+      };
+
+      if (applyResult.skippedIncompatibleDashboardState) {
+        window.setTimeout(() => {
+          releaseUploadSuppression();
+          void uploadSnapshot();
+        }, 1200);
+
+        setSyncState(
+          "syncing",
+          "Loaded your saved data and kept the current dashboard layout."
+        );
+        return;
+      }
+
+      window.setTimeout(releaseUploadSuppression, 1200);
 
       setSyncState("synced", "Loaded your saved dashboard.");
       return;
@@ -206,7 +228,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: window.location.origin,
+        redirectTo: getAuthRedirectUrl(),
       },
     });
 
@@ -226,7 +248,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: getAuthRedirectUrl(),
         },
       });
 
@@ -275,7 +297,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: getAuthRedirectUrl(),
         },
       });
 
@@ -300,7 +322,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       setSyncState("authenticating");
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin,
+        redirectTo: getAuthRedirectUrl(),
       });
 
       if (error) {

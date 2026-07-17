@@ -1,6 +1,10 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { useLocalStorage } from "./useLocalStorage";
+import {
+  DASHBOARD_STORAGE_SCHEMA_KEY,
+  DASHBOARD_STORAGE_SCHEMA_VERSION,
+} from "../constants/dashboardStorage";
 import { defaultDashboardTabs } from "../constants/dashboardTabs";
 import type {
   DashboardLayoutMode,
@@ -134,6 +138,39 @@ const cloneLayouts = (layouts: Layouts): Layouts => ({
   sm: layouts.sm.map((item) => ({ ...item })),
 });
 
+const mergeLayoutsWithDefaults = (
+  savedLayouts: DashboardModeLayouts,
+  defaultLayouts: DashboardModeLayouts
+): DashboardModeLayouts => {
+  const mergeMode = (mode: DashboardLayoutMode): Layouts => {
+    const savedModeLayouts = savedLayouts[mode];
+    const defaultModeLayouts = defaultLayouts[mode];
+
+    return {
+      lg: mergeLayoutArray(savedModeLayouts.lg, defaultModeLayouts.lg),
+      md: mergeLayoutArray(savedModeLayouts.md, defaultModeLayouts.md),
+      sm: mergeLayoutArray(savedModeLayouts.sm, defaultModeLayouts.sm),
+    };
+  };
+
+  return {
+    wide: mergeMode("wide"),
+    laptop: mergeMode("laptop"),
+  };
+};
+
+const mergeLayoutArray = (
+  savedItems: GridLayoutItem[],
+  defaultItems: GridLayoutItem[]
+): GridLayoutItem[] => {
+  const savedIds = new Set(savedItems.map((item) => item.i));
+  const missingDefaultItems = defaultItems
+    .filter((item) => !savedIds.has(item.i))
+    .map((item) => ({ ...item }));
+
+  return [...savedItems, ...missingDefaultItems];
+};
+
 const normalizeModeLayouts = (value: unknown): DashboardModeLayouts => {
   /* Backward compatibility: older tabs stored one layout set only.
      We migrate those records into both modes so existing users keep
@@ -170,8 +207,11 @@ const normalizeModeLayouts = (value: unknown): DashboardModeLayouts => {
   };
 };
 
-const normalizeTab = (tab: DashboardTab): DashboardTab => {
-  return {
+const normalizeTab = (
+  tab: DashboardTab,
+  options: { mergeCurrentDefaults?: boolean } = {}
+): DashboardTab => {
+  const normalizedTab = {
     ...tab,
     id: String(tab.id),
     label: tab.label || "Untitled",
@@ -180,14 +220,46 @@ const normalizeTab = (tab: DashboardTab): DashboardTab => {
     layouts: normalizeModeLayouts(tab.layouts),
     locked: Boolean(tab.locked),
   };
+
+  if (!options.mergeCurrentDefaults) {
+    return normalizedTab;
+  }
+
+  const defaultTab = defaultDashboardTabs.find(
+    (candidate) => candidate.id === normalizedTab.id
+  );
+
+  if (!defaultTab) {
+    return normalizedTab;
+  }
+
+  const mergedWidgetIds = [
+    ...normalizedTab.widgetIds,
+    ...defaultTab.widgetIds.filter(
+      (widgetId) => !normalizedTab.widgetIds.includes(widgetId)
+    ),
+  ];
+
+  return {
+    ...normalizedTab,
+    icon: normalizedTab.icon || defaultTab.icon,
+    widgetIds: mergedWidgetIds,
+    layouts: mergeLayoutsWithDefaults(
+      normalizedTab.layouts,
+      defaultTab.layouts
+    ),
+  };
 };
 
-const normalizeTabs = (tabs: DashboardTab[]): DashboardTab[] => {
+const normalizeTabs = (
+  tabs: DashboardTab[],
+  options: { mergeCurrentDefaults?: boolean } = {}
+): DashboardTab[] => {
   if (!Array.isArray(tabs) || tabs.length === 0) {
     return [fallbackTab];
   }
 
-  return tabs.map(normalizeTab);
+  return tabs.map((tab) => normalizeTab(tab, options));
 };
 
 const createNewTab = (): DashboardTab => {
@@ -238,9 +310,28 @@ export const useDashboardTabs = () => {
   const { value: activeTabId, setValue: setActiveTabId } =
     useLocalStorage<string>(ACTIVE_TAB_KEY, "home");
 
+  const shouldUpgradeDashboardStorage =
+    typeof window !== "undefined" &&
+    window.localStorage.getItem(DASHBOARD_STORAGE_SCHEMA_KEY) !==
+      String(DASHBOARD_STORAGE_SCHEMA_VERSION);
+
   const tabs = useMemo(() => {
-    return normalizeTabs(storedTabs);
-  }, [storedTabs]);
+    return normalizeTabs(storedTabs, {
+      mergeCurrentDefaults: shouldUpgradeDashboardStorage,
+    });
+  }, [shouldUpgradeDashboardStorage, storedTabs]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !shouldUpgradeDashboardStorage) {
+      return;
+    }
+
+    setTabs(tabs);
+    window.localStorage.setItem(
+      DASHBOARD_STORAGE_SCHEMA_KEY,
+      String(DASHBOARD_STORAGE_SCHEMA_VERSION)
+    );
+  }, [setTabs, shouldUpgradeDashboardStorage, tabs]);
 
   const activeTab = useMemo(() => {
     return (

@@ -1,3 +1,8 @@
+import {
+  DASHBOARD_STORAGE_SCHEMA_KEY,
+  DASHBOARD_STORAGE_SCHEMA_VERSION,
+} from "../constants/dashboardStorage";
+
 export const GLASSDAY_STORAGE_PREFIX = "glassday.";
 export const GLASSDAY_STORAGE_EVENT = "glassday-storage-change";
 export const GLASSDAY_STORAGE_SNAPSHOT_VERSION = 3;
@@ -28,6 +33,8 @@ const CLOUD_SYNC_ALLOWED_PREFIXES = [
   "glassday.career.",
   "glassday.custom.web-fonts.",
   "glassday.dashboard.activeTab.",
+  "glassday.dashboard.layoutMode.",
+  "glassday.dashboard.storageSchema.",
   "glassday.dashboard.tabs.",
   "glassday.health",
   "glassday.journal.",
@@ -42,6 +49,12 @@ const CLOUD_SYNC_ALLOWED_PREFIXES = [
   "glassday.ui.font.",
 ] as const;
 
+const CLOUD_SYNC_DASHBOARD_STATE_PREFIXES = [
+  "glassday.dashboard.activeTab.",
+  "glassday.dashboard.layoutMode.",
+  "glassday.dashboard.tabs.",
+] as const;
+
 const CLOUD_SYNC_MEANINGFUL_PREFIXES = [
   "glassday.calendar.events.",
   "glassday.career.applications.",
@@ -54,6 +67,9 @@ const CLOUD_SYNC_MEANINGFUL_PREFIXES = [
 
 const isCloudSyncAllowedKey = (key: string) =>
   CLOUD_SYNC_ALLOWED_PREFIXES.some((prefix) => key.startsWith(prefix));
+
+const isCloudSyncDashboardStateKey = (key: string) =>
+  CLOUD_SYNC_DASHBOARD_STATE_PREFIXES.some((prefix) => key.startsWith(prefix));
 
 const isMeaningfulCloudSyncKey = (key: string) =>
   CLOUD_SYNC_MEANINGFUL_PREFIXES.some((prefix) => key.startsWith(prefix));
@@ -163,6 +179,8 @@ export const createGlassdayStorageSnapshot = (): GlassdayStorageSnapshot => {
     }
   });
 
+  data[DASHBOARD_STORAGE_SCHEMA_KEY] = String(DASHBOARD_STORAGE_SCHEMA_VERSION);
+
   return {
     app: "Glassday",
     version: GLASSDAY_STORAGE_SNAPSHOT_VERSION,
@@ -174,9 +192,24 @@ export const createGlassdayStorageSnapshot = (): GlassdayStorageSnapshot => {
 export const applyGlassdayStorageSnapshot = (
   snapshot: GlassdayStorageSnapshot
 ) => {
-  if (!isBrowser()) return;
+  const result = {
+    skippedIncompatibleDashboardState: false,
+  };
+
+  if (!isBrowser()) return result;
+
+  const dashboardSchemaVersion = Number(
+    snapshot.data[DASHBOARD_STORAGE_SCHEMA_KEY] ?? 0
+  );
+  const canApplyDashboardState =
+    dashboardSchemaVersion >= DASHBOARD_STORAGE_SCHEMA_VERSION;
 
   Object.entries(snapshot.data).forEach(([key, value]) => {
+    if (isCloudSyncDashboardStateKey(key) && !canApplyDashboardState) {
+      result.skippedIncompatibleDashboardState = true;
+      return;
+    }
+
     if (
       key.startsWith(GLASSDAY_STORAGE_PREFIX) &&
       isCloudSyncAllowedKey(key)
@@ -193,6 +226,8 @@ export const applyGlassdayStorageSnapshot = (
   emitGlassdayStorageChange({
     type: "bulk",
   });
+
+  return result;
 };
 
 let storageEventsPatched = false;
