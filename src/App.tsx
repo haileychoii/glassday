@@ -5,7 +5,10 @@ import { DashboardGrid } from "./components/grid/DashboardGrid";
 import { DashboardDataProvider } from "./context/DashboardDataContext";
 import { CloudSyncProvider } from "./context/CloudSyncContext";
 import { SettingsModal } from "./components/settings/SettingsModal";
-import { DASHBOARD_LAYOUT_MODE_KEY } from "./constants/dashboardStorage";
+import {
+  DASHBOARD_LAYOUT_MODE_KEY,
+  DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
+} from "./constants/dashboardStorage";
 import { applyAppFont, getSavedAppFont, loadSavedCustomFonts } from "./constants/fonts";
 import {
   OPEN_WIDGET_EVENT,
@@ -33,6 +36,13 @@ function App() {
     const urlMode = readLayoutModeFromUrl();
     if (urlMode) return urlMode;
 
+    const pendingAuthMode = window.localStorage.getItem(
+      DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY
+    );
+    if (pendingAuthMode === "laptop" || pendingAuthMode === "wide") {
+      return pendingAuthMode;
+    }
+
     const savedMode = window.localStorage.getItem(DASHBOARD_LAYOUT_MODE_KEY);
     return savedMode === "laptop" ? "laptop" : "wide";
   });
@@ -59,6 +69,7 @@ function App() {
     if (typeof window === "undefined") return;
 
     window.localStorage.setItem(DASHBOARD_LAYOUT_MODE_KEY, layoutMode);
+    window.localStorage.removeItem(DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY);
 
     const nextUrl = new URL(window.location.href);
     nextUrl.searchParams.set("layout", layoutMode);

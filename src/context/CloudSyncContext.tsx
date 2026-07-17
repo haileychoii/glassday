@@ -21,6 +21,10 @@ import {
   patchLocalStorageEvents,
   type GlassdayStorageSnapshot,
 } from "../lib/glassdayStorage";
+import {
+  DASHBOARD_LAYOUT_MODE_KEY,
+  DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
+} from "../constants/dashboardStorage";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 
 type SyncStatus =
@@ -52,9 +56,26 @@ const PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY =
   "glassday.sync.preferLocalOnNextAuth.v1";
 const CloudSyncContext = createContext<CloudSyncContextValue | null>(null);
 
+const readCurrentLayoutModeForAuth = () => {
+  const params = new URLSearchParams(window.location.search);
+  const urlMode = params.get("layout");
+
+  if (urlMode === "laptop" || urlMode === "wide") {
+    return urlMode;
+  }
+
+  const savedMode = window.localStorage.getItem(DASHBOARD_LAYOUT_MODE_KEY);
+
+  return savedMode === "wide" || savedMode === "laptop" ? savedMode : "laptop";
+};
+
 const getAuthRedirectUrl = () => {
   const url = new URL(window.location.href);
+  const layoutMode = readCurrentLayoutModeForAuth();
+
   url.hash = "";
+  url.searchParams.set("layout", layoutMode);
+  window.localStorage.setItem(DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY, layoutMode);
 
   return url.toString();
 };

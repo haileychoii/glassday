@@ -23,19 +23,14 @@ export type GlassdayStorageChangeDetail = {
 
 const isBrowser = () => typeof window !== "undefined";
 
-/* Cloud sync should restore durable user content plus shared dashboard structure.
-   Wide and laptop mode still keep separate layouts inside the same tab payload,
-   so one signed-in user can move between modes/devices and keep the same memory.
-   Device-only view state such as sidebar collapse, preview frame position, and
-   floating window rects stay local and are intentionally excluded. */
+/* Cloud sync restores durable user content, not the current browser's view shell.
+   Wide/laptop mode, active tab, and grid layout are local UI state because an
+   old Vercel snapshot can otherwise drag the user back into a previous desktop
+   layout immediately after OAuth login. */
 const CLOUD_SYNC_ALLOWED_PREFIXES = [
   "glassday.calendar.",
   "glassday.career.",
   "glassday.custom.web-fonts.",
-  "glassday.dashboard.activeTab.",
-  "glassday.dashboard.layoutMode.",
-  "glassday.dashboard.storageSchema.",
-  "glassday.dashboard.tabs.",
   "glassday.health",
   "glassday.journal.",
   "glassday.memo.default-font.",
@@ -52,6 +47,8 @@ const CLOUD_SYNC_ALLOWED_PREFIXES = [
 const CLOUD_SYNC_DASHBOARD_STATE_PREFIXES = [
   "glassday.dashboard.activeTab.",
   "glassday.dashboard.layoutMode.",
+  "glassday.dashboard.pendingAuthLayoutMode.",
+  "glassday.dashboard.storageSchema.",
   "glassday.dashboard.tabs.",
 ] as const;
 
