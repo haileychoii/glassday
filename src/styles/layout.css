@@ -7,9 +7,9 @@
 .settings-modal-window,
 .settings-window,
 .settings-panel {
-  width: min(980px, calc(100vw - 32px)) !important;
-  max-width: 980px !important;
-  max-height: calc(100vh - 32px) !important;
+  width: min(860px, calc(100vw - 40px)) !important;
+  max-width: 860px !important;
+  max-height: calc(100vh - 48px) !important;
 
   display: grid !important;
   grid-template-rows: auto minmax(0, 1fr) !important;
@@ -22,10 +22,10 @@
 .settings-modal-header,
 .settings-header,
 .settings-titlebar {
-  min-height: 86px !important;
+  min-height: 78px !important;
   height: auto !important;
 
-  padding: 18px 24px !important;
+  padding: 16px 22px !important;
 
   display: flex !important;
   align-items: center !important;
@@ -107,7 +107,7 @@
 .settings-body,
 .settings-content {
   min-height: 0 !important;
-  padding: 22px 24px 28px !important;
+  padding: 18px 22px 24px !important;
 
   display: grid !important;
   align-content: start !important;
@@ -124,7 +124,7 @@
   width: 100% !important;
   min-width: 0 !important;
 
-  padding: 22px !important;
+  padding: 18px !important;
   box-sizing: border-box !important;
 
   display: grid !important;
@@ -150,8 +150,8 @@
   width: 100% !important;
 
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)) !important;
-  gap: 14px !important;
+  grid-template-columns: repeat(auto-fit, minmax(156px, 1fr)) !important;
+  gap: 12px !important;
 
   align-items: stretch !important;
 }
@@ -160,14 +160,14 @@
 .settings-theme-card {
   width: 100% !important;
   min-width: 0 !important;
-  min-height: 148px !important;
+  min-height: 136px !important;
 
-  padding: 16px !important;
+  padding: 14px !important;
 
   display: grid !important;
-  grid-template-rows: 52px auto auto !important;
+  grid-template-rows: 48px auto auto !important;
   align-content: start !important;
-  gap: 10px !important;
+  gap: 8px !important;
 
   text-align: left !important;
 
@@ -179,14 +179,14 @@
 /* Uniform preview size inside each theme card */
 .settings-theme-preview {
   width: 100% !important;
-  height: 52px !important;
-  min-height: 52px !important;
+  height: 48px !important;
+  min-height: 48px !important;
 
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
 
-  padding: 0 12px !important;
+  padding: 0 10px !important;
 
   border-radius: 18px !important;
   box-sizing: border-box !important;
@@ -225,6 +225,11 @@
   display: grid !important;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
   gap: 14px !important;
+}
+
+.settings-auth-actions {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 10px !important;
 }
 
 .settings-reset-grid {
@@ -280,7 +285,7 @@
 .settings-sync-box {
   width: 100% !important;
   min-width: 0 !important;
-  padding: 18px !important;
+  padding: 16px !important;
   border-radius: 22px !important;
   box-sizing: border-box !important;
 }
@@ -369,12 +374,17 @@ body.theme-retro .settings-reset-button {
   .settings-theme-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
+
+  .settings-auth-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
 }
 
 @media (max-width: 520px) {
   .settings-theme-grid,
   .settings-action-grid,
   .settings-backup-grid,
+  .settings-auth-actions,
   .settings-reset-grid {
     grid-template-columns: 1fr !important;
   }
@@ -715,6 +725,13 @@ aside .sidebar-workspace-list {
 .workspace-theme-icon-glass-dark {
   color: hsl(0 0% 100% / 0.92);
   filter: drop-shadow(0 0 10px rgb(180 220 255 / 0.18));
+}
+
+.workspace-theme-icon-aurora {
+  color: hsl(0 0% 100% / 0.96);
+  filter:
+    drop-shadow(0 0 10px rgb(132 214 255 / 0.22))
+    drop-shadow(0 0 14px rgb(199 126 255 / 0.16));
 }
 
 .workspace-theme-icon-mac-core {

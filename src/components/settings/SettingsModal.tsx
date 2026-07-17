@@ -912,7 +912,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                       </label>
                     </div>
 
-                    <div className="settings-action-grid settings-backup-grid">
+                    <div className="settings-action-grid settings-backup-grid settings-auth-actions">
                       <button
                         type="button"
                         onClick={() => void signInWithGoogle()}

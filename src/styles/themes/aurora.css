@@ -1,0 +1,236 @@
+/* =========================================================
+   AURORA THEME
+   Dark holographic glass with deeper aurora color shift.
+   Existing glass-dark widget-level dark selectors are reused through the
+   compatibility class added in applyTheme(), then refined here.
+========================================================= */
+
+html[data-theme="aurora"],
+body[data-theme="aurora"],
+html.theme-aurora,
+body.theme-aurora {
+  --background: 231 32% 8%;
+  --foreground: 222 38% 95%;
+  --primary: 194 100% 72%;
+  --muted-foreground: 224 22% 74%;
+
+  --aurora-shell-bg:
+    linear-gradient(180deg, rgba(16, 20, 36, 0.26), rgba(8, 11, 24, 0.12));
+  --aurora-shell-border: rgba(172, 197, 255, 0.18);
+  --aurora-shell-shadow:
+    0 28px 82px rgba(2, 4, 12, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  --aurora-card-bg:
+    linear-gradient(145deg, rgba(22, 28, 49, 0.34), rgba(10, 14, 28, 0.16));
+  --aurora-card-border: rgba(168, 198, 255, 0.18);
+  --aurora-card-shadow:
+    0 20px 56px rgba(2, 4, 12, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  --aurora-panel-bg:
+    linear-gradient(145deg, rgba(27, 34, 58, 0.34), rgba(12, 16, 30, 0.16));
+  --aurora-panel-border: rgba(170, 191, 240, 0.16);
+  --aurora-control-bg:
+    linear-gradient(145deg, rgba(36, 44, 70, 0.72), rgba(17, 22, 38, 0.54));
+  --aurora-control-border: rgba(182, 202, 246, 0.2);
+  --aurora-active-bg:
+    linear-gradient(
+      135deg,
+      rgba(38, 92, 190, 0.62),
+      rgba(88, 84, 196, 0.42) 44%,
+      rgba(144, 74, 215, 0.38) 72%,
+      rgba(38, 59, 118, 0.68)
+    );
+
+  color: hsl(var(--foreground) / 0.94);
+}
+
+html[data-theme="aurora"] body,
+body[data-theme="aurora"],
+html.theme-aurora body,
+body.theme-aurora {
+  background:
+    radial-gradient(circle at 14% 16%, rgba(64, 154, 255, 0.22), transparent 28%),
+    radial-gradient(circle at 82% 18%, rgba(175, 92, 255, 0.16), transparent 24%),
+    radial-gradient(circle at 70% 84%, rgba(68, 236, 214, 0.12), transparent 28%),
+    linear-gradient(135deg, #090d1a, #11162a 46%, #0d1220) !important;
+}
+
+html[data-theme="aurora"] .bg-glass-gradient,
+body[data-theme="aurora"] .bg-glass-gradient,
+html.theme-aurora .bg-glass-gradient,
+body.theme-aurora .bg-glass-gradient {
+  background:
+    linear-gradient(135deg, rgba(6, 10, 20, 0.18), rgba(6, 10, 20, 0.44)),
+    url("/glass-background/glass4.jpeg") center / cover no-repeat !important;
+}
+
+html[data-theme="aurora"] .bg-glass-gradient::after,
+body[data-theme="aurora"] .bg-glass-gradient::after,
+html.theme-aurora .bg-glass-gradient::after,
+body.theme-aurora .bg-glass-gradient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 16% 10%, rgba(113, 197, 255, 0.22), transparent 32%),
+    radial-gradient(circle at 80% 12%, rgba(195, 122, 255, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(7, 10, 18, 0.18), rgba(7, 10, 18, 0.54));
+}
+
+html[data-theme="aurora"] :is(.glass-panel, .liquid-shell, .app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+body[data-theme="aurora"] :is(.glass-panel, .liquid-shell, .app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+html.theme-aurora :is(.glass-panel, .liquid-shell, .app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),
+body.theme-aurora :is(.glass-panel, .liquid-shell, .app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell) {
+  background: var(--aurora-shell-bg) !important;
+  border-color: var(--aurora-shell-border) !important;
+  box-shadow: var(--aurora-shell-shadow) !important;
+  backdrop-filter: blur(26px) saturate(156%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(156%) !important;
+}
+
+html[data-theme="aurora"] :is(.topbar, aside),
+body[data-theme="aurora"] :is(.topbar, aside),
+html.theme-aurora :is(.topbar, aside),
+body.theme-aurora :is(.topbar, aside) {
+  color: hsl(var(--foreground) / 0.92) !important;
+  background: var(--aurora-card-bg) !important;
+  border-color: var(--aurora-card-border) !important;
+  box-shadow: var(--aurora-card-shadow) !important;
+  backdrop-filter: blur(24px) saturate(154%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(154%) !important;
+}
+
+html[data-theme="aurora"] .glass-card,
+body[data-theme="aurora"] .glass-card,
+html.theme-aurora .glass-card,
+body.theme-aurora .glass-card {
+  color: hsl(var(--foreground) / 0.94) !important;
+  background: var(--aurora-card-bg) !important;
+  border-color: var(--aurora-card-border) !important;
+  box-shadow: var(--aurora-card-shadow) !important;
+  backdrop-filter: blur(22px) saturate(152%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(152%) !important;
+}
+
+html[data-theme="aurora"] :is(.today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block, .today-mini-main, .today-mini-next, .today-tasks-progress, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+body[data-theme="aurora"] :is(.today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block, .today-mini-main, .today-mini-next, .today-tasks-progress, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+html.theme-aurora :is(.today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block, .today-mini-main, .today-mini-next, .today-tasks-progress, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+body.theme-aurora :is(.today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block, .today-mini-main, .today-mini-next, .today-tasks-progress, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card) {
+  background: var(--aurora-panel-bg) !important;
+  border-color: var(--aurora-panel-border) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 40px -30px rgba(0, 0, 0, 0.38) !important;
+}
+
+html[data-theme="aurora"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, .calendar-sync-button, input, textarea, select),
+body[data-theme="aurora"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, .calendar-sync-button, input, textarea, select),
+html.theme-aurora :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, .calendar-sync-button, input, textarea, select),
+body.theme-aurora :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, .calendar-sync-button, input, textarea, select) {
+  color: hsl(var(--foreground) / 0.92) !important;
+  background: var(--aurora-control-bg) !important;
+  border-color: var(--aurora-control-border) !important;
+}
+
+html[data-theme="aurora"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active, .sidebar-tab-item.is-active .sidebar-tab-main),
+body[data-theme="aurora"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active, .sidebar-tab-item.is-active .sidebar-tab-main),
+html.theme-aurora :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active, .sidebar-tab-item.is-active .sidebar-tab-main),
+body.theme-aurora :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active, .sidebar-tab-item.is-active .sidebar-tab-main) {
+  background: var(--aurora-active-bg) !important;
+  border-color: rgba(165, 203, 255, 0.28) !important;
+}
+
+html[data-theme="aurora"] :is(h1, h2, h3, h4, strong, .font-semibold, .font-bold),
+body[data-theme="aurora"] :is(h1, h2, h3, h4, strong, .font-semibold, .font-bold),
+html.theme-aurora :is(h1, h2, h3, h4, strong, .font-semibold, .font-bold),
+body.theme-aurora :is(h1, h2, h3, h4, strong, .font-semibold, .font-bold) {
+  color: hsl(var(--foreground) / 0.97) !important;
+}
+
+html[data-theme="aurora"] :is(p, span, small, .text-muted-foreground),
+body[data-theme="aurora"] :is(p, span, small, .text-muted-foreground),
+html.theme-aurora :is(p, span, small, .text-muted-foreground),
+body.theme-aurora :is(p, span, small, .text-muted-foreground) {
+  color: hsl(var(--muted-foreground) / 0.8) !important;
+}
+
+html[data-theme="aurora"] .settings-modal-window,
+body[data-theme="aurora"] .settings-modal-window,
+html.theme-aurora .settings-modal-window,
+body.theme-aurora .settings-modal-window {
+  background:
+    radial-gradient(circle at 16% 14%, rgba(96, 183, 255, 0.16), transparent 30%),
+    radial-gradient(circle at 82% 18%, rgba(198, 133, 255, 0.14), transparent 28%),
+    radial-gradient(circle at 72% 84%, rgba(74, 232, 216, 0.08), transparent 26%),
+    linear-gradient(145deg, rgba(18, 22, 40, 0.86), rgba(8, 12, 24, 0.74)) !important;
+  border-color: rgba(177, 198, 244, 0.22) !important;
+}
+
+html[data-theme="aurora"] :is(.settings-section, .settings-theme-card, .settings-action-card, .settings-sync-box, .settings-custom-font-item, .settings-status),
+body[data-theme="aurora"] :is(.settings-section, .settings-theme-card, .settings-action-card, .settings-sync-box, .settings-custom-font-item, .settings-status),
+html.theme-aurora :is(.settings-section, .settings-theme-card, .settings-action-card, .settings-sync-box, .settings-custom-font-item, .settings-status),
+body.theme-aurora :is(.settings-section, .settings-theme-card, .settings-action-card, .settings-sync-box, .settings-custom-font-item, .settings-status) {
+  background:
+    radial-gradient(circle at 14% 18%, rgba(85, 171, 255, 0.08), transparent 26%),
+    radial-gradient(circle at 84% 20%, rgba(195, 134, 255, 0.08), transparent 22%),
+    var(--aurora-panel-bg) !important;
+  border-color: rgba(173, 196, 243, 0.18) !important;
+}
+
+html[data-theme="aurora"] .floating-window,
+body[data-theme="aurora"] .floating-window,
+html.theme-aurora .floating-window,
+body.theme-aurora .floating-window {
+  color: hsl(var(--foreground) / 0.94) !important;
+  background:
+    linear-gradient(145deg, rgba(18, 20, 34, 0.44), rgba(255, 255, 255, 0.04)) !important;
+  border: 1px solid rgba(186, 205, 248, 0.16) !important;
+  box-shadow:
+    0 36px 110px -48px rgba(0, 0, 0, 0.58),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+html[data-theme="aurora"] .floating-window-titlebar,
+body[data-theme="aurora"] .floating-window-titlebar,
+html.theme-aurora .floating-window-titlebar,
+body.theme-aurora .floating-window-titlebar {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)) !important;
+  border-bottom: 1px solid rgba(191, 206, 244, 0.08) !important;
+}
+
+html[data-theme="aurora"],
+body[data-theme="aurora"],
+html.theme-aurora,
+body.theme-aurora {
+  scrollbar-color: rgba(132, 153, 206, 0.56) rgba(8, 12, 24, 0.16);
+}
+
+html[data-theme="aurora"] ::-webkit-scrollbar,
+body[data-theme="aurora"] ::-webkit-scrollbar,
+html.theme-aurora ::-webkit-scrollbar,
+body.theme-aurora ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html[data-theme="aurora"] ::-webkit-scrollbar-track,
+body[data-theme="aurora"] ::-webkit-scrollbar-track,
+html.theme-aurora ::-webkit-scrollbar-track,
+body.theme-aurora ::-webkit-scrollbar-track {
+  background: rgba(7, 11, 22, 0.18);
+}
+
+html[data-theme="aurora"] ::-webkit-scrollbar-thumb,
+body[data-theme="aurora"] ::-webkit-scrollbar-thumb,
+html.theme-aurora ::-webkit-scrollbar-thumb,
+body.theme-aurora ::-webkit-scrollbar-thumb {
+  background:
+    linear-gradient(180deg, rgba(126, 219, 255, 0.38), rgba(167, 126, 255, 0.42));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}

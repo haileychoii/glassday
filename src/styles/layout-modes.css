@@ -6,10 +6,11 @@
 
 :root {
   /* Laptop preview 기본 기준 크기.
-     지금 작업 중인 기본 프레임은 960 x 640 이고,
+     기본 프레임은 1080 x 720 으로 키워 두고,
+     기존 960 x 640 은 이후 medium 프리셋으로 분리하기 쉽게 남겨둔다.
      이후 small / large laptop 변형을 만들 때도 이 위치에서 분기하면 된다. */
-  --gd-laptop-frame-width: 960px;
-  --gd-laptop-frame-height: 640px;
+  --gd-laptop-frame-width: 1080px;
+  --gd-laptop-frame-height: 720px;
 }
 
 /* Wide / Laptop 전환 토글.

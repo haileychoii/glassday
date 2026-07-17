@@ -245,7 +245,7 @@ const resolveMemoPalette = (color?: string | null) =>
   ) ?? memoPalettes[0];
 
 const isDarkMemoTheme = (theme: ThemeId) => {
-  return theme === "glass-dark";
+  return theme === "glass-dark" || theme === "aurora";
 };
 
 const getMemoPaletteDotStyle = (color: string | null | undefined, theme: ThemeId) => {

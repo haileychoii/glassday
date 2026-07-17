@@ -813,9 +813,8 @@ body[data-theme="glass-dark"] .settings-modal-window,
 html.theme-glass-dark .settings-modal-window,
 body.theme-glass-dark .settings-modal-window {
   background:
-    radial-gradient(circle at 16% 14%, rgba(96, 183, 255, 0.13), transparent 30%),
-    radial-gradient(circle at 82% 18%, rgba(198, 133, 255, 0.11), transparent 28%),
-    radial-gradient(circle at 72% 84%, rgba(255, 138, 206, 0.08), transparent 30%),
+    radial-gradient(circle at 16% 14%, rgba(120, 152, 212, 0.08), transparent 28%),
+    radial-gradient(circle at 84% 18%, rgba(172, 184, 218, 0.06), transparent 26%),
     var(--gd-dark-modal-bg) !important;
   border-color: var(--gd-dark-modal-border) !important;
   box-shadow:
@@ -838,11 +837,11 @@ html[data-theme="glass-dark"] .settings-modal-header,
 body[data-theme="glass-dark"] .settings-modal-header,
 html.theme-glass-dark .settings-modal-header,
 body.theme-glass-dark .settings-modal-header {
-  border-bottom-color: rgba(167, 184, 233, 0.16) !important;
+  border-bottom-color: rgba(154, 168, 198, 0.14) !important;
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.05),
       rgba(255, 255, 255, 0.01)
     ) !important;
 }
@@ -854,10 +853,10 @@ body.theme-glass-dark .settings-modal-icon {
   background:
     linear-gradient(
       145deg,
-      rgba(50, 58, 89, 0.78),
-      rgba(25, 30, 48, 0.42)
+      rgba(45, 52, 73, 0.78),
+      rgba(22, 27, 40, 0.44)
     ) !important;
-  border-color: rgba(174, 191, 240, 0.18) !important;
+  border-color: rgba(161, 176, 208, 0.16) !important;
 }
 
 html[data-theme="glass-dark"] .settings-section,
@@ -865,8 +864,8 @@ body[data-theme="glass-dark"] .settings-section,
 html.theme-glass-dark .settings-section,
 body.theme-glass-dark .settings-section {
   background:
-    radial-gradient(circle at 14% 18%, rgba(96, 183, 255, 0.08), transparent 28%),
-    radial-gradient(circle at 84% 20%, rgba(198, 133, 255, 0.07), transparent 24%),
+    radial-gradient(circle at 14% 18%, rgba(114, 141, 190, 0.06), transparent 26%),
+    radial-gradient(circle at 84% 20%, rgba(132, 146, 178, 0.05), transparent 22%),
     var(--gd-dark-panel-bg) !important;
   border-color: var(--gd-dark-control-border) !important;
   box-shadow:
@@ -911,8 +910,8 @@ body[data-theme="glass-dark"] .settings-theme-card,
 html.theme-glass-dark .settings-theme-card,
 body.theme-glass-dark .settings-theme-card {
   background:
-    radial-gradient(circle at 14% 16%, rgba(96, 183, 255, 0.06), transparent 24%),
-    radial-gradient(circle at 84% 18%, rgba(198, 133, 255, 0.06), transparent 22%),
+    radial-gradient(circle at 14% 16%, rgba(110, 138, 185, 0.05), transparent 22%),
+    radial-gradient(circle at 84% 18%, rgba(146, 157, 184, 0.04), transparent 20%),
     var(--gd-dark-panel-bg) !important;
   border-color: var(--gd-dark-control-border) !important;
   box-shadow:
@@ -927,16 +926,16 @@ body.theme-glass-dark .settings-theme-card.is-active {
   background:
     radial-gradient(
       circle at 14% 16%,
-      rgba(118, 196, 255, 0.12),
+      rgba(126, 170, 232, 0.1),
       transparent 26%
     ),
     radial-gradient(
       circle at 82% 18%,
-      rgba(212, 150, 255, 0.12),
+      rgba(171, 183, 219, 0.08),
       transparent 24%
     ),
-    rgba(74, 96, 152, 0.26) !important;
-  border-color: rgba(154, 187, 255, 0.34) !important;
+    rgba(72, 86, 118, 0.3) !important;
+  border-color: rgba(146, 165, 205, 0.28) !important;
 }
 
 html[data-theme="glass-dark"] .settings-modal-window input,

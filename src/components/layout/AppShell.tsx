@@ -213,7 +213,7 @@ export const AppShell = ({
 
               <div className="laptop-preview-chrome-center">
                 <span className="laptop-preview-title">Glassday Laptop App</span>
-                <span className="laptop-preview-subtitle">960 x 640 preview</span>
+                <span className="laptop-preview-subtitle">1080 x 720 preview</span>
               </div>
 
               <div className="laptop-preview-chrome-side laptop-preview-chrome-right">

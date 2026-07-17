@@ -24,8 +24,8 @@
 }
 
 .settings-modal-window {
-  width: min(760px, calc(100vw - 96px));
-  max-height: min(760px, calc(100vh - 88px));
+  width: min(860px, calc(100vw - 40px));
+  max-height: min(760px, calc(100vh - 48px));
   overflow: hidden;
   border-radius: 34px;
   position: relative;
@@ -61,8 +61,8 @@
 }
 
 .settings-modal-header {
-  height: 78px;
-  padding: 0 26px;
+  height: 74px;
+  padding: 0 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -96,15 +96,15 @@
 .settings-modal-body {
   max-height: calc(90vh - 78px);
   overflow: auto;
-  padding: 24px 26px 30px;
+  padding: 18px 22px 24px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .settings-section {
   border-radius: 28px;
-  padding: 20px;
+  padding: 18px;
   background:
     radial-gradient(
       circle at 12% 18%,
@@ -141,13 +141,17 @@
 
 .settings-theme-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
   gap: 12px;
 }
 
 @media (max-width: 720px) {
   .settings-action-grid {
     grid-template-columns: 1fr;
+  }
+
+  .settings-auth-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .settings-font-stack,
@@ -173,12 +177,11 @@
 
   .settings-sync-box {
     align-items: flex-start;
-    flex-direction: column;
   }
 }
 
 .settings-theme-card {
-  min-height: 128px;
+  min-height: 136px;
   padding: 14px;
   border-radius: 22px;
   text-align: left;
@@ -212,10 +215,10 @@
 }
 
 .settings-theme-preview {
-  height: 72px;
-  border-radius: 18px;
-  margin-bottom: 12px;
-  padding: 8px;
+  height: 68px;
+  border-radius: 16px;
+  margin-bottom: 10px;
+  padding: 7px;
   display: block;
   overflow: hidden;
   position: relative;
@@ -472,34 +475,67 @@
 
 .settings-theme-preview-glass-dark {
   background:
-    radial-gradient(circle at 22% 14%, rgb(76 120 220 / 0.44), transparent 38%),
-    radial-gradient(circle at 78% 22%, rgb(183 105 255 / 0.36), transparent 34%),
-    linear-gradient(135deg, #151a29, #1f2738 60%, #151b27);
+    radial-gradient(circle at 18% 14%, rgb(112 142 198 / 0.18), transparent 32%),
+    radial-gradient(circle at 80% 18%, rgb(178 193 229 / 0.12), transparent 30%),
+    linear-gradient(135deg, #111620, #19202d 56%, #10151f);
 }
 
 .settings-theme-preview-glass-dark .settings-preview-window {
-  background: linear-gradient(145deg, rgb(29 37 53 / 0.56), rgb(18 25 39 / 0.34));
-  border: 1px solid rgb(176 197 238 / 0.22);
+  background: linear-gradient(145deg, rgb(28 34 48 / 0.66), rgb(17 21 31 / 0.44));
+  border: 1px solid rgb(178 191 218 / 0.18);
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
     0 10px 22px -14px rgb(0 0 0 / 0.65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
 .settings-theme-preview-glass-dark .settings-preview-titlebar {
-  background: linear-gradient(90deg, rgb(232 238 255 / 0.12), rgb(255 255 255 / 0.04));
+  background: linear-gradient(90deg, rgb(214 222 239 / 0.08), rgb(255 255 255 / 0.02));
 }
 
 .settings-theme-preview-glass-dark .settings-preview-title-chip {
-  background: rgb(232 240 255 / 0.32);
+  background: rgb(219 227 244 / 0.22);
 }
 
 .settings-theme-preview-glass-dark .settings-preview-lights > span,
 .settings-theme-preview-glass-dark .settings-preview-panel,
 .settings-theme-preview-glass-dark .settings-preview-sidebar {
-  background: rgb(232 240 255 / 0.18);
-  border: 1px solid rgb(218 228 255 / 0.08);
+  background: rgb(224 231 246 / 0.11);
+  border: 1px solid rgb(215 223 240 / 0.06);
+}
+
+.settings-theme-preview-aurora {
+  background:
+    radial-gradient(circle at 18% 12%, rgb(63 132 255 / 0.46), transparent 34%),
+    radial-gradient(circle at 76% 18%, rgb(177 98 255 / 0.38), transparent 32%),
+    radial-gradient(circle at 64% 82%, rgb(75 242 214 / 0.18), transparent 34%),
+    linear-gradient(135deg, #101424, #1b1d35 52%, #141827);
+}
+
+.settings-theme-preview-aurora .settings-preview-window {
+  background: linear-gradient(145deg, rgb(25 31 52 / 0.62), rgb(16 19 34 / 0.34));
+  border: 1px solid rgb(170 197 255 / 0.2);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    0 10px 22px -14px rgb(0 0 0 / 0.66);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.settings-theme-preview-aurora .settings-preview-titlebar {
+  background: linear-gradient(90deg, rgb(222 236 255 / 0.1), rgb(255 255 255 / 0.03));
+}
+
+.settings-theme-preview-aurora .settings-preview-title-chip {
+  background: linear-gradient(90deg, rgb(121 225 255 / 0.5), rgb(214 150 255 / 0.44));
+}
+
+.settings-theme-preview-aurora .settings-preview-lights > span,
+.settings-theme-preview-aurora .settings-preview-panel,
+.settings-theme-preview-aurora .settings-preview-sidebar {
+  background: linear-gradient(145deg, rgb(214 231 255 / 0.2), rgb(193 158 255 / 0.12));
+  border: 1px solid rgb(219 230 255 / 0.1);
 }
 
 .settings-theme-preview-mac-core {
@@ -652,6 +688,11 @@
   gap: 12px;
 }
 
+.settings-auth-actions {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
 .settings-action-card {
   min-height: 74px;
   border-radius: 22px;
@@ -717,10 +758,9 @@
       hsl(0 0% 100% / 0.18)
     );
   border: 1px solid hsl(0 0% 100% / 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  display: grid;
+  gap: 14px;
+  align-items: start;
 }
 
 .settings-sync-box strong {

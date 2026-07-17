@@ -2,6 +2,7 @@ export type ThemeId =
   | "pastel"
   | "glass-light"
   | "glass-dark"
+  | "aurora"
   | "mac-core"
   | "pixel-desk"
   | "retro";
@@ -29,6 +30,11 @@ export const themeOptions: ThemeOption[] = [
     id: "glass-dark",
     label: "Glass Dark",
     description: "Transparent desktop glass, dark mode",
+  },
+  {
+    id: "aurora",
+    label: "Aurora",
+    description: "Deeper holographic night glass with aurora tint",
   },
   {
     id: "mac-core",
@@ -82,9 +88,18 @@ export const applyTheme = (theme: ThemeId) => {
   // 예전 glass class 제거
   root.classList.remove("theme-glass");
   body.classList.remove("theme-glass");
+  root.classList.remove("theme-glass-dark");
+  body.classList.remove("theme-glass-dark");
 
   root.classList.add(`theme-${theme}`);
   body.classList.add(`theme-${theme}`);
+
+  /* Aurora reuses the existing glass-dark widget-level dark styling as a
+     compatibility layer, then overrides the surface palette in aurora.css. */
+  if (theme === "aurora") {
+    root.classList.add("theme-glass-dark");
+    body.classList.add("theme-glass-dark");
+  }
 
   root.setAttribute("data-theme", theme);
   body.setAttribute("data-theme", theme);

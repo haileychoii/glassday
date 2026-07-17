@@ -9,6 +9,7 @@ import "./styles/overlays.css";
 import "./styles/themes/pastel.css";
 import "./styles/themes/glass-light.css";
 import "./styles/themes/glass-dark.css";
+import "./styles/themes/aurora.css";
 import "./styles/themes/mac-core.css";
 import "./styles/themes/pixel.css";
 import "./styles/themes/retro.css";
