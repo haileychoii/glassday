@@ -23,6 +23,7 @@ import { DailyJournalWidget } from "../widgets/DailyJournalWidget";
 import { CalendarWidget } from "../widgets/CalendarWidget";
 import { MemoWidget } from "../widgets/MemoWidget";
 import { StudyWidget } from "../widgets/StudyWidget";
+import { TimerWidget } from "../widgets/TimerWidget";
 import { CareerWidget } from "../widgets/CareerWidget";
 import { HealthWidget } from "../widgets/HealthWidget";
 import { MoneyWidget } from "../widgets/MoneyWidget";
@@ -104,6 +105,7 @@ const widgetMap: Partial<Record<WidgetId, ReactNode>> = {
   calendar: <CalendarWidget />,
   memo: <MemoWidget />,
   study: <StudyWidget />,
+  timer: <TimerWidget />,
   career: <CareerWidget />,
   health: <HealthWidget />,
   money: <MoneyWidget />,

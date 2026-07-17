@@ -58,6 +58,13 @@ export const wideDefaultLayouts: Layouts = {
       w: 8,
       h: 18,
     },
+    {
+      i: "timer",
+      x: 8,
+      y: 60,
+      w: 8,
+      h: 8,
+    },
 
     {
       i: "health",
@@ -140,6 +147,13 @@ export const wideDefaultLayouts: Layouts = {
       y: 42,
       w: 8,
       h: 18,
+    },
+    {
+      i: "timer",
+      x: 8,
+      y: 60,
+      w: 8,
+      h: 8,
     },
 
     {
@@ -225,11 +239,18 @@ export const wideDefaultLayouts: Layouts = {
       w: 16,
       h: 18,
     },
+    {
+      i: "timer",
+      x: 0,
+      y: 119,
+      w: 16,
+      h: 10,
+    },
 
     {
       i: "health",
       x: 0,
-      y: 119,
+      y: 129,
       w: 16,
       h: 9,
     },
@@ -237,7 +258,7 @@ export const wideDefaultLayouts: Layouts = {
     {
       i: "money",
       x: 0,
-      y: 128,
+      y: 138,
       w: 16,
       h: 9,
     },
@@ -245,7 +266,7 @@ export const wideDefaultLayouts: Layouts = {
     {
       i: "mood",
       x: 0,
-      y: 137,
+      y: 147,
       w: 16,
       h: 9,
     },
@@ -264,6 +285,7 @@ export const laptopDefaultLayouts: Layouts = {
     { i: "health", x: 0, y: 43, w: 4, h: 7 },
     { i: "money", x: 4, y: 43, w: 4, h: 7 },
     { i: "mood", x: 0, y: 50, w: 8, h: 7 },
+    { i: "timer", x: 8, y: 49, w: 8, h: 8 },
   ],
   md: [
     { i: "today", x: 0, y: 0, w: 8, h: 9 },
@@ -276,6 +298,7 @@ export const laptopDefaultLayouts: Layouts = {
     { i: "health", x: 0, y: 43, w: 8, h: 7 },
     { i: "money", x: 8, y: 49, w: 8, h: 7 },
     { i: "mood", x: 0, y: 50, w: 8, h: 7 },
+    { i: "timer", x: 8, y: 56, w: 8, h: 8 },
   ],
   sm: [
     { i: "today", x: 0, y: 0, w: 16, h: 10 },
@@ -285,9 +308,10 @@ export const laptopDefaultLayouts: Layouts = {
     { i: "study", x: 0, y: 62, w: 16, h: 15 },
     { i: "career", x: 0, y: 77, w: 16, h: 11 },
     { i: "memo", x: 0, y: 88, w: 16, h: 15 },
-    { i: "health", x: 0, y: 103, w: 16, h: 8 },
-    { i: "money", x: 0, y: 111, w: 16, h: 8 },
-    { i: "mood", x: 0, y: 119, w: 16, h: 8 },
+    { i: "timer", x: 0, y: 103, w: 16, h: 10 },
+    { i: "health", x: 0, y: 113, w: 16, h: 8 },
+    { i: "money", x: 0, y: 121, w: 16, h: 8 },
+    { i: "mood", x: 0, y: 129, w: 16, h: 8 },
   ],
 };
 

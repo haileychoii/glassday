@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   BookOpenCheck,
   Check,
@@ -6,14 +6,9 @@ import {
   ChevronRight,
   Circle,
   Clock3,
-  Pause,
-  Play,
   Maximize2,
   Plus,
-  RotateCcw,
-  SkipForward,
   Target,
-  TimerReset,
   Trash2,
 } from "lucide-react";
 
@@ -22,8 +17,6 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
 import { defaultStudySubjects } from "../../constants/study";
 import type {
-  StudyPomodoroMode,
-  StudyPomodoroState,
   StudyRecord,
   StudySubject,
   StudySubjectId,
@@ -32,11 +25,8 @@ import type {
 import {
   addDays,
   createId,
-  formatTimerClock,
   formatMinutes,
   getEstimatedMinutesByDate,
-  getPomodoroModeDurationSeconds,
-  getPomodoroModeLabel,
   getSubjectMinutes,
   getSubjectProblems,
   getTasksByDate,
@@ -46,29 +36,18 @@ import {
   toLocalDateInput,
 } from "./study/studyUtils";
 import { StudyDetailWindow } from "./study/StudyDetailWindow";
+import { usePomodoroTimer } from "./timer/usePomodoroTimer";
 
 const getSubject = (subjects: StudySubject[], id: StudySubjectId) => {
   return subjects.find((subject) => subject.id === id) ?? subjects[0];
-};
-
-const defaultPomodoroState: StudyPomodoroState = {
-  mode: "focus",
-  remainingSeconds: 25 * 60,
-  isRunning: false,
-  endsAt: null,
-  focusMinutes: 25,
-  shortBreakMinutes: 5,
-  longBreakMinutes: 15,
-  longBreakEvery: 4,
-  completedFocusSessions: 0,
 };
 
 /* Study widget structure:
    1) local input state
    2) persisted study data from local storage
    3) derived totals for the selected day/week
-   4) pomodoro actions
-   5) compact dashboard render + detail window */
+   4) compact dashboard render + detail window
+   Pomodoro controls now live in the separate Timer widget. */
 export const StudyWidget = () => {
   const today = toLocalDateInput();
 
@@ -81,8 +60,6 @@ export const StudyWidget = () => {
   const [taskInput, setTaskInput] = useState("");
   const [taskEstimateInput, setTaskEstimateInput] = useState("25");
   const [detailOpen, setDetailOpen] = useState(false);
-  const [pomodoroNow, setPomodoroNow] = useState(Date.now());
-  const pomodoroCompletionRef = useRef<number | null>(null);
 
   const { value: subjects, setValue: setSubjects } = useLocalStorage<
     StudySubject[]
@@ -96,12 +73,7 @@ export const StudyWidget = () => {
     "glassday.study.tasks.v1",
     []
   );
-
-  const { value: pomodoro, setValue: setPomodoro } =
-    useLocalStorage<StudyPomodoroState>(
-      "glassday.study.pomodoro.v1",
-      defaultPomodoroState
-    );
+  const { pomodoro, remainingSeconds, activeLabel } = usePomodoroTimer();
 
   // Selected subject drives the pomodoro label plus quick-entry defaults.
   const selectedSubject = getSubject(subjects, selectedSubjectId);
@@ -144,13 +116,6 @@ export const StudyWidget = () => {
     0
   );
 
-  const pomodoroRemainingSeconds =
-    pomodoro.isRunning && pomodoro.endsAt
-      ? Math.max(0, Math.ceil((pomodoro.endsAt - pomodoroNow) / 1000))
-      : pomodoro.remainingSeconds;
-
-  const activePomodoroLabel = getPomodoroModeLabel(pomodoro.mode);
-
   // Quick capture for manual study input from the dashboard surface.
   const addStudyRecord = () => {
     const minutes = Math.max(0, Number(minutesInput) || 0);
@@ -173,23 +138,6 @@ export const StudyWidget = () => {
     setMinutesInput("30");
     setProblemsInput("0");
     setNoteInput("");
-  };
-
-  const addPomodoroRecord = () => {
-    const minutes = Math.max(1, pomodoro.focusMinutes);
-
-    setRecords((prev) => [
-      {
-        id: createId("study-record"),
-        date: selectedDate,
-        subjectId: selectedSubjectId,
-        minutes,
-        problems: 0,
-        note: `Pomodoro · ${selectedSubject.shortLabel}`,
-        createdAt: Date.now(),
-      },
-      ...prev,
-    ]);
   };
 
   const removeRecord = (recordId: string) => {
@@ -245,148 +193,6 @@ export const StudyWidget = () => {
     );
   };
 
-  const setPomodoroMode = (mode: StudyPomodoroMode) => {
-    setPomodoro((prev) => ({
-      ...prev,
-      mode,
-      isRunning: false,
-      endsAt: null,
-      remainingSeconds: getPomodoroModeDurationSeconds(prev, mode),
-    }));
-  };
-
-  const togglePomodoro = () => {
-    setPomodoro((prev) => {
-      if (prev.isRunning) {
-        return {
-          ...prev,
-          isRunning: false,
-          remainingSeconds: pomodoroRemainingSeconds,
-          endsAt: null,
-        };
-      }
-
-      return {
-        ...prev,
-        isRunning: true,
-        endsAt: Date.now() + prev.remainingSeconds * 1000,
-      };
-    });
-  };
-
-  const resetPomodoro = () => {
-    setPomodoro((prev) => ({
-      ...prev,
-      isRunning: false,
-      endsAt: null,
-      remainingSeconds: getPomodoroModeDurationSeconds(prev, prev.mode),
-    }));
-  };
-
-  const skipPomodoroMode = () => {
-    setPomodoro((prev) => {
-      const nextMode: StudyPomodoroMode =
-        prev.mode === "focus" ? "short-break" : "focus";
-
-      return {
-        ...prev,
-        mode: nextMode,
-        isRunning: false,
-        endsAt: null,
-        remainingSeconds: getPomodoroModeDurationSeconds(prev, nextMode),
-      };
-    });
-  };
-
-  const updatePomodoroMinutes = (
-    key: "focusMinutes" | "shortBreakMinutes" | "longBreakMinutes",
-    delta: number
-  ) => {
-    setPomodoro((prev) => {
-      const nextValue = Math.max(1, prev[key] + delta);
-      const nextState = {
-        ...prev,
-        [key]: nextValue,
-      };
-
-      return prev.mode ===
-        (key === "focusMinutes"
-          ? "focus"
-          : key === "shortBreakMinutes"
-            ? "short-break"
-            : "long-break")
-        ? {
-            ...nextState,
-            isRunning: false,
-            endsAt: null,
-            remainingSeconds: getPomodoroModeDurationSeconds(
-              nextState,
-              nextState.mode
-            ),
-          }
-        : nextState;
-    });
-  };
-
-  useEffect(() => {
-    if (!pomodoro.isRunning) return;
-
-    setPomodoroNow(Date.now());
-
-    const intervalId = window.setInterval(() => {
-      setPomodoroNow(Date.now());
-    }, 1000);
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
-  }, [pomodoro.isRunning]);
-
-  useEffect(() => {
-    if (!pomodoro.isRunning || !pomodoro.endsAt || pomodoroRemainingSeconds > 0) {
-      return;
-    }
-
-    if (pomodoroCompletionRef.current === pomodoro.endsAt) {
-      return;
-    }
-
-    pomodoroCompletionRef.current = pomodoro.endsAt;
-
-    if (pomodoro.mode === "focus") {
-      addPomodoroRecord();
-    }
-
-    setPomodoro((prev) => {
-      const completedFocusSessions =
-        prev.mode === "focus"
-          ? prev.completedFocusSessions + 1
-          : prev.completedFocusSessions;
-
-      const nextMode: StudyPomodoroMode =
-        prev.mode === "focus"
-          ? completedFocusSessions % prev.longBreakEvery === 0
-            ? "long-break"
-            : "short-break"
-          : "focus";
-
-      return {
-        ...prev,
-        mode: nextMode,
-        completedFocusSessions,
-        isRunning: false,
-        endsAt: null,
-        remainingSeconds: getPomodoroModeDurationSeconds(prev, nextMode),
-      };
-    });
-  }, [
-    pomodoro.isRunning,
-    pomodoro.endsAt,
-    pomodoro.mode,
-    pomodoroRemainingSeconds,
-    setPomodoro,
-  ]);
-
   return (
     <>
       <GlassCard
@@ -429,149 +235,14 @@ export const StudyWidget = () => {
                 {todayTotalProblems} problems · {completedTasks}/
                 {selectedDateTasks.length} tasks · planned{" "}
                 {formatMinutes(todayPlannedMinutes)} · week{" "}
-                {formatMinutes(weekTotalMinutes)}
+                {formatMinutes(weekTotalMinutes)} · timer{" "}
+                {pomodoro.isRunning ? "running" : activeLabel.toLowerCase()}{" "}
+                {Math.ceil(remainingSeconds / 60)}m
               </div>
             </div>
 
             <div className="study-progress-ring">
               <span>{todayProgress}%</span>
-            </div>
-          </section>
-
-          <section className="study-pomodoro-panel">
-            <div className="study-section-title">
-              <TimerReset className="w-3.5 h-3.5" />
-              Pomodoro · {selectedSubject.shortLabel}
-            </div>
-
-            <div className="study-pomodoro-shell">
-              <div className="study-pomodoro-main">
-                <div className="study-pomodoro-modes">
-                  {(["focus", "short-break", "long-break"] as const).map((mode) => (
-                    <button
-                      key={mode}
-                      type="button"
-                      onClick={() => setPomodoroMode(mode)}
-                      className={cn(
-                        "study-pomodoro-mode",
-                        pomodoro.mode === mode && "is-active"
-                      )}
-                    >
-                      {getPomodoroModeLabel(mode)}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="study-pomodoro-time">
-                  {formatTimerClock(pomodoroRemainingSeconds)}
-                </div>
-
-                <div className="study-pomodoro-sub">
-                  {activePomodoroLabel} · {pomodoro.completedFocusSessions} focus
-                  sessions · planned {formatMinutes(weekPlannedMinutes)}
-                </div>
-
-                <div className="study-pomodoro-actions">
-                  <button type="button" onClick={togglePomodoro}>
-                    {pomodoro.isRunning ? (
-                      <>
-                        <Pause className="w-3.5 h-3.5" />
-                        Pause
-                      </>
-                    ) : (
-                      <>
-                        <Play className="w-3.5 h-3.5" />
-                        Start
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={resetPomodoro}
-                    className="is-secondary"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    Reset
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={skipPomodoroMode}
-                    className="is-secondary"
-                  >
-                    <SkipForward className="w-3.5 h-3.5" />
-                    Next
-                  </button>
-                </div>
-              </div>
-
-              <div className="study-pomodoro-settings">
-                <label>
-                  <span>Focus</span>
-                  <div className="study-pomodoro-stepper">
-                    <button
-                      type="button"
-                      onClick={() => updatePomodoroMinutes("focusMinutes", -5)}
-                    >
-                      -
-                    </button>
-                    <strong>{pomodoro.focusMinutes}m</strong>
-                    <button
-                      type="button"
-                      onClick={() => updatePomodoroMinutes("focusMinutes", 5)}
-                    >
-                      +
-                    </button>
-                  </div>
-                </label>
-
-                <label>
-                  <span>Short</span>
-                  <div className="study-pomodoro-stepper">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        updatePomodoroMinutes("shortBreakMinutes", -1)
-                      }
-                    >
-                      -
-                    </button>
-                    <strong>{pomodoro.shortBreakMinutes}m</strong>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        updatePomodoroMinutes("shortBreakMinutes", 1)
-                      }
-                    >
-                      +
-                    </button>
-                  </div>
-                </label>
-
-                <label>
-                  <span>Long</span>
-                  <div className="study-pomodoro-stepper">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        updatePomodoroMinutes("longBreakMinutes", -5)
-                      }
-                    >
-                      -
-                    </button>
-                    <strong>{pomodoro.longBreakMinutes}m</strong>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        updatePomodoroMinutes("longBreakMinutes", 5)
-                      }
-                    >
-                      +
-                    </button>
-                  </div>
-                </label>
-              </div>
             </div>
           </section>
 

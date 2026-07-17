@@ -36,6 +36,13 @@ export const widgetRegistry: Record<WidgetId, WidgetMeta> = {
     category: "study",
     defaultSize: "large",
   },
+  timer: {
+    id: "timer",
+    label: "Timer",
+    description: "뽀모도로와 플로팅 타이머",
+    category: "study",
+    defaultSize: "small",
+  },
   memo: {
     id: "memo",
     label: "Memo",

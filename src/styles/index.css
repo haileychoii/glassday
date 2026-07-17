@@ -41,6 +41,7 @@
 @import "./widgets/mood.css";
 @import "./widgets/settings.css";
 @import "./widgets/study.css";
+@import "./widgets/timer.css";
 
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";
