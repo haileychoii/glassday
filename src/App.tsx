@@ -10,6 +10,7 @@ import {
   DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
 } from "./constants/dashboardStorage";
 import { applyAppFont, getSavedAppFont, loadSavedCustomFonts } from "./constants/fonts";
+import { applyTheme, getCurrentTheme } from "./constants/themes";
 import {
   OPEN_WIDGET_EVENT,
   type OpenWidgetDetail,
@@ -63,6 +64,7 @@ function App() {
   useEffect(() => {
     void loadSavedCustomFonts();
     applyAppFont(getSavedAppFont());
+    applyTheme(getCurrentTheme());
   }, []);
 
   useEffect(() => {

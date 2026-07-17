@@ -23,10 +23,10 @@ export type GlassdayStorageChangeDetail = {
 
 const isBrowser = () => typeof window !== "undefined";
 
-/* Cloud sync restores durable user content, not the current browser's view shell.
-   Wide/laptop mode, active tab, and grid layout are local UI state because an
-   old Vercel snapshot can otherwise drag the user back into a previous desktop
-   layout immediately after OAuth login. */
+/* Cloud sync restores durable user content, not this browser's view shell.
+   Wide/laptop mode, active tab, grid layout, and theme are local UI state
+   because an old cloud snapshot can otherwise pull the user back into a
+   previous desktop look immediately after OAuth login. */
 const CLOUD_SYNC_ALLOWED_PREFIXES = [
   "glassday.calendar.",
   "glassday.career.",
@@ -38,7 +38,6 @@ const CLOUD_SYNC_ALLOWED_PREFIXES = [
   "glassday.money",
   "glassday.mood",
   "glassday.study.",
-  "glassday.theme",
   "glassday.today.",
   "glassday.todayFocus.",
   "glassday.ui.font.",
