@@ -18,6 +18,7 @@
 }
 
 .timer-widget-layout {
+  container-type: inline-size;
   position: relative;
   height: 100%;
   min-height: 0;
@@ -25,6 +26,11 @@
   grid-template-columns: minmax(0, 1fr);
   gap: var(--gd-widget-stack-gap);
   overflow: hidden;
+}
+
+.timer-widget-layout.is-settings-visible {
+  grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
+  align-items: stretch;
 }
 
 .timer-widget-main-card,
@@ -263,78 +269,65 @@
   font-size: clamp(32px, 12cqi, 48px);
 }
 
-@container timer-widget (min-width: 640px) {
-  .timer-widget-layout {
-    grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
-    align-items: stretch;
-  }
+.timer-widget-layout:not(.is-settings-visible) {
+  gap: 0;
 }
 
-@container timer-widget (max-width: 639px) {
-  .timer-widget-layout {
-    gap: 0;
-  }
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-main-card {
+  height: 100%;
+  padding: 8px;
+  align-content: center;
+  gap: 7px;
+}
 
-  .timer-widget-main-card {
-    height: 100%;
-    padding: 8px;
-    align-content: center;
-    gap: 7px;
-  }
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-mode-row,
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-meta {
+  display: none;
+}
 
-  .timer-widget-mode-row,
-  .timer-widget-meta {
-    display: none;
-  }
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-focus-stage {
+  width: min(100%, 166px);
+  --timer-ring-radius: clamp(50px, 34cqi, 66px);
+}
 
-  .timer-widget-focus-stage {
-    width: min(100%, 166px);
-    --timer-ring-radius: clamp(50px, 34cqi, 66px);
-  }
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row {
+  flex-wrap: nowrap;
+  justify-content: center;
+}
 
-  .timer-widget-action-row {
-    flex-wrap: nowrap;
-    justify-content: center;
-  }
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row .timer-widget-secondary {
+  display: none;
+}
 
-  .timer-widget-action-row .timer-widget-secondary {
-    display: none;
-  }
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-primary {
+  min-height: 28px;
+  padding: 0 10px;
+}
 
-  .timer-widget-primary {
-    min-height: 28px;
-    padding: 0 10px;
-  }
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  left: 6px;
+  padding: 6px;
+  gap: 5px;
+  overflow: hidden;
+}
 
-  .timer-widget-settings-card {
-    display: none;
-  }
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt-copy {
+  display: none;
+}
 
-  .timer-widget-prompt {
-    position: absolute;
-    right: 6px;
-    bottom: 6px;
-    left: 6px;
-    padding: 6px;
-    gap: 5px;
-    overflow: hidden;
-  }
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt-actions {
+  flex-wrap: nowrap;
+  justify-content: center;
+}
 
-  .timer-widget-prompt-copy {
-    display: none;
-  }
-
-  .timer-widget-prompt-actions {
-    flex-wrap: nowrap;
-    justify-content: center;
-  }
-
-  .timer-widget-prompt-actions .timer-widget-primary,
-  .timer-widget-prompt-actions .timer-widget-secondary {
-    min-height: 26px;
-    padding: 0 9px;
-    font-size: 10px;
-  }
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt-actions .timer-widget-primary,
+.timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt-actions .timer-widget-secondary {
+  min-height: 26px;
+  padding: 0 9px;
+  font-size: 10px;
 }
 
 @container timer-widget (max-width: 420px) {

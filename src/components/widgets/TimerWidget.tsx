@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   Maximize2,
   Pause,
@@ -30,6 +30,8 @@ const TimerSurface = ({
   controller,
   floating = false,
 }: TimerSurfaceProps) => {
+  const surfaceRef = useRef<HTMLDivElement>(null);
+  const [showSettings, setShowSettings] = useState(false);
   const {
     pomodoro,
     remainingSeconds,
@@ -67,8 +69,37 @@ const TimerSurface = ({
     "--timer-progress": progressRatio,
   } as CSSProperties;
 
+  useEffect(() => {
+    const surface = surfaceRef.current;
+    if (!surface) return;
+
+    const updateSettingsVisibility = (width: number, height: number) => {
+      // The stepper panel only belongs in a clearly expanded timer.
+      // Compact widget/floating sizes stay glanceable with no hidden lower UI.
+      setShowSettings(width >= 640 && height >= 320);
+    };
+
+    updateSettingsVisibility(surface.clientWidth, surface.clientHeight);
+
+    const observer = new ResizeObserver(([entry]) => {
+      if (!entry) return;
+      updateSettingsVisibility(entry.contentRect.width, entry.contentRect.height);
+    });
+
+    observer.observe(surface);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className={cn("timer-widget-layout", floating && "is-floating-mode")}>
+    <div
+      ref={surfaceRef}
+      className={cn(
+        "timer-widget-layout",
+        showSettings && "is-settings-visible",
+        floating && "is-floating-mode"
+      )}
+    >
       <section className="timer-widget-main-card">
         <div className="timer-widget-mode-row">
           {(["focus", "short-break", "long-break"] as const).map((mode) => (
@@ -202,68 +233,70 @@ const TimerSurface = ({
         )}
       </section>
 
-      <section className="timer-widget-settings-card">
-        <div className="timer-widget-settings-title">Session Lengths</div>
+      {showSettings && (
+        <section className="timer-widget-settings-card">
+          <div className="timer-widget-settings-title">Session Lengths</div>
 
-        <div className="timer-widget-stepper-grid">
-          <label>
-            <span>Focus</span>
-            <div className="timer-widget-stepper">
-              <button
-                type="button"
-                onClick={() => updateMinutes("focusMinutes", -5)}
-              >
-                -
-              </button>
-              <strong>{pomodoro.focusMinutes}m</strong>
-              <button
-                type="button"
-                onClick={() => updateMinutes("focusMinutes", 5)}
-              >
-                +
-              </button>
-            </div>
-          </label>
+          <div className="timer-widget-stepper-grid">
+            <label>
+              <span>Focus</span>
+              <div className="timer-widget-stepper">
+                <button
+                  type="button"
+                  onClick={() => updateMinutes("focusMinutes", -5)}
+                >
+                  -
+                </button>
+                <strong>{pomodoro.focusMinutes}m</strong>
+                <button
+                  type="button"
+                  onClick={() => updateMinutes("focusMinutes", 5)}
+                >
+                  +
+                </button>
+              </div>
+            </label>
 
-          <label>
-            <span>Short</span>
-            <div className="timer-widget-stepper">
-              <button
-                type="button"
-                onClick={() => updateMinutes("shortBreakMinutes", -1)}
-              >
-                -
-              </button>
-              <strong>{pomodoro.shortBreakMinutes}m</strong>
-              <button
-                type="button"
-                onClick={() => updateMinutes("shortBreakMinutes", 1)}
-              >
-                +
-              </button>
-            </div>
-          </label>
+            <label>
+              <span>Short</span>
+              <div className="timer-widget-stepper">
+                <button
+                  type="button"
+                  onClick={() => updateMinutes("shortBreakMinutes", -1)}
+                >
+                  -
+                </button>
+                <strong>{pomodoro.shortBreakMinutes}m</strong>
+                <button
+                  type="button"
+                  onClick={() => updateMinutes("shortBreakMinutes", 1)}
+                >
+                  +
+                </button>
+              </div>
+            </label>
 
-          <label>
-            <span>Long</span>
-            <div className="timer-widget-stepper">
-              <button
-                type="button"
-                onClick={() => updateMinutes("longBreakMinutes", -5)}
-              >
-                -
-              </button>
-              <strong>{pomodoro.longBreakMinutes}m</strong>
-              <button
-                type="button"
-                onClick={() => updateMinutes("longBreakMinutes", 5)}
-              >
-                +
-              </button>
-            </div>
-          </label>
-        </div>
-      </section>
+            <label>
+              <span>Long</span>
+              <div className="timer-widget-stepper">
+                <button
+                  type="button"
+                  onClick={() => updateMinutes("longBreakMinutes", -5)}
+                >
+                  -
+                </button>
+                <strong>{pomodoro.longBreakMinutes}m</strong>
+                <button
+                  type="button"
+                  onClick={() => updateMinutes("longBreakMinutes", 5)}
+                >
+                  +
+                </button>
+              </div>
+            </label>
+          </div>
+        </section>
+      )}
     </div>
   );
 };
