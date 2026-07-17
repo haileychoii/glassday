@@ -851,13 +851,25 @@ body.theme-mac-core {
   -moz-osx-font-smoothing: grayscale;
 
   --mac-text: #1d1d1f;
-  --mac-subtext: rgb(60 60 67 / 0.68);
-  --mac-faint: rgb(60 60 67 / 0.42);
-  --mac-separator: rgb(60 60 67 / 0.18);
-  --mac-material: rgb(246 247 250 / 0.74);
-  --mac-material-strong: rgb(255 255 255 / 0.9);
-  --mac-control-fill: rgb(118 118 128 / 0.12);
-  --mac-control-fill-hover: rgb(118 118 128 / 0.18);
+  --mac-subtext: rgb(60 60 67 / 0.7);
+  --mac-faint: rgb(60 60 67 / 0.46);
+  --mac-separator: rgb(60 60 67 / 0.12);
+  --mac-material: rgb(248 249 252 / 0.56);
+  --mac-material-strong: rgb(255 255 255 / 0.84);
+  --mac-card-fill:
+    linear-gradient(180deg, rgb(255 255 255 / 0.76), rgb(248 249 252 / 0.58));
+  --mac-card-border: rgb(255 255 255 / 0.68);
+  --mac-card-shadow:
+    0 18px 44px -30px rgb(22 24 32 / 0.16),
+    inset 0 1px 0 rgb(255 255 255 / 0.94);
+  --mac-control-fill:
+    linear-gradient(180deg, rgb(255 255 255 / 0.54), rgb(255 255 255 / 0.3));
+  --mac-control-fill-hover:
+    linear-gradient(180deg, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.42));
+  --mac-control-idle-border: rgb(255 255 255 / 0.62);
+  --mac-segmented-fill: rgb(255 255 255 / 0.24);
+  --mac-segmented-active-fill:
+    linear-gradient(180deg, rgb(255 255 255 / 0.96), rgb(255 255 255 / 0.8));
   --mac-blue: #0a84ff;
 }
 
@@ -898,14 +910,14 @@ body.theme-mac-core .liquid-shell {
   position: relative !important;
   border-radius: 22px !important;
   background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.82), rgb(242 244 249 / 0.72)) !important;
-  border: 1px solid rgb(60 60 67 / 0.16) !important;
+    linear-gradient(180deg, rgb(255 255 255 / 0.66), rgb(244 246 251 / 0.48)) !important;
+  border: 1px solid rgb(255 255 255 / 0.7) !important;
   box-shadow:
-    0 44px 110px -66px rgb(22 24 32 / 0.38),
-    0 16px 44px -32px rgb(22 24 32 / 0.22),
+    0 44px 110px -66px rgb(22 24 32 / 0.32),
+    0 16px 44px -32px rgb(22 24 32 / 0.18),
     inset 0 1px 0 rgb(255 255 255 / 0.95) !important;
-  backdrop-filter: blur(46px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(46px) saturate(180%) !important;
+  backdrop-filter: blur(54px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(54px) saturate(180%) !important;
 }
 
 html[data-theme="mac-core"] .liquid-shell::before,
@@ -915,9 +927,9 @@ body.theme-mac-core .liquid-shell::before {
   content: "";
   position: absolute;
   inset: 0 0 auto;
-  height: 52px;
+  height: 54px;
   background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.84), rgb(242 243 248 / 0.5)) !important;
+    linear-gradient(180deg, rgb(255 255 255 / 0.78), rgb(244 246 251 / 0.34)) !important;
   border-bottom: 1px solid var(--mac-separator);
   pointer-events: none;
   z-index: 0;
@@ -929,15 +941,15 @@ html.theme-mac-core .liquid-shell::after,
 body.theme-mac-core .liquid-shell::after {
   content: "";
   position: absolute;
-  top: 19px;
-  left: 20px;
-  width: 12px;
-  height: 12px;
+  top: 18px;
+  left: 18px;
+  width: 10px;
+  height: 10px;
   border-radius: 999px;
   background: #ff5f57;
   box-shadow:
-    20px 0 0 #ffbd2e,
-    40px 0 0 #28c840,
+    16px 0 0 #ffbd2e,
+    32px 0 0 #28c840,
     inset 0 0 0 1px rgb(0 0 0 / 0.08);
   pointer-events: none;
   z-index: 4;
@@ -957,7 +969,7 @@ html.theme-mac-core aside,
 body.theme-mac-core aside {
   padding-top: 54px !important;
   background:
-    linear-gradient(180deg, rgb(246 247 250 / 0.76), rgb(236 238 244 / 0.58)) !important;
+    linear-gradient(180deg, rgb(248 249 252 / 0.62), rgb(237 239 245 / 0.42)) !important;
   border-right: 1px solid var(--mac-separator) !important;
   box-shadow:
     inset -1px 0 0 rgb(255 255 255 / 0.74),
@@ -995,9 +1007,13 @@ html[data-theme="mac-core"] .sidebar-tab-item.is-active,
 body[data-theme="mac-core"] .sidebar-tab-item.is-active,
 html.theme-mac-core .sidebar-tab-item.is-active,
 body.theme-mac-core .sidebar-tab-item.is-active {
-  background: rgb(10 132 255 / 0.15) !important;
-  border-color: rgb(10 132 255 / 0.18) !important;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.42) !important;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.56), rgb(255 255 255 / 0.34)),
+    rgb(10 132 255 / 0.08) !important;
+  border-color: rgb(255 255 255 / 0.74) !important;
+  box-shadow:
+    0 8px 18px -16px rgb(10 132 255 / 0.26),
+    inset 0 1px 0 rgb(255 255 255 / 0.82) !important;
 }
 
 html[data-theme="mac-core"] .topbar,
@@ -1007,12 +1023,12 @@ body.theme-mac-core .topbar {
   min-height: 52px !important;
   border-radius: 0 !important;
   background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.7), rgb(244 245 249 / 0.46)) !important;
+    linear-gradient(180deg, rgb(255 255 255 / 0.32), rgb(255 255 255 / 0.08)) !important;
   border: 0 !important;
   border-bottom: 1px solid var(--mac-separator) !important;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.76) !important;
-  backdrop-filter: blur(38px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(38px) saturate(180%) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(22px) saturate(176%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(176%) !important;
 }
 
 html[data-theme="mac-core"] .topbar::before,
@@ -1027,7 +1043,7 @@ body[data-theme="mac-core"] .topbar-inner,
 html.theme-mac-core .topbar-inner,
 body.theme-mac-core .topbar-inner {
   min-height: 52px !important;
-  padding: 8px 14px 8px 18px !important;
+  padding: 8px 16px 8px 18px !important;
 }
 
 html[data-theme="mac-core"] .topbar-title h1,
@@ -1036,7 +1052,7 @@ html.theme-mac-core .topbar-title h1,
 body.theme-mac-core .topbar-title h1 {
   color: var(--mac-text) !important;
   font-size: 13px !important;
-  font-weight: 700 !important;
+  font-weight: 640 !important;
   letter-spacing: 0 !important;
 }
 
@@ -1059,13 +1075,12 @@ html[data-theme="mac-core"] .glass-card,
 body[data-theme="mac-core"] .glass-card,
 html.theme-mac-core .glass-card,
 body.theme-mac-core .glass-card {
-  border-radius: 16px !important;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.92), rgb(249 250 253 / 0.78)) !important;
-  border: 1px solid rgb(60 60 67 / 0.14) !important;
-  box-shadow:
-    0 18px 42px -32px rgb(22 24 32 / 0.22),
-    inset 0 1px 0 rgb(255 255 255 / 0.96) !important;
+  border-radius: 18px !important;
+  background: var(--mac-card-fill) !important;
+  border: 1px solid var(--mac-card-border) !important;
+  box-shadow: var(--mac-card-shadow) !important;
+  backdrop-filter: blur(28px) saturate(174%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(174%) !important;
   color: var(--mac-text) !important;
 }
 
@@ -1075,8 +1090,8 @@ html.theme-mac-core .glass-card::before,
 body.theme-mac-core .glass-card::before {
   height: 36px !important;
   background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.72), rgb(240 241 246 / 0.36)) !important;
-  border-bottom: 1px solid rgb(60 60 67 / 0.1) !important;
+    linear-gradient(180deg, rgb(255 255 255 / 0.58), rgb(255 255 255 / 0.14)) !important;
+  border-bottom: 1px solid rgb(255 255 255 / 0.42) !important;
 }
 
 html[data-theme="mac-core"] .glass-card h1,
@@ -1161,11 +1176,12 @@ body.theme-mac-core .career-list-item,
 html.theme-mac-core .memo-note-item,
 body.theme-mac-core .memo-note-item {
   border-radius: 12px !important;
-  background: rgb(255 255 255 / 0.72) !important;
-  border: 1px solid rgb(60 60 67 / 0.12) !important;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.58), rgb(255 255 255 / 0.34)) !important;
+  border: 1px solid rgb(255 255 255 / 0.62) !important;
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.88),
-    0 8px 22px -20px rgb(22 24 32 / 0.18) !important;
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 10px 24px -22px rgb(22 24 32 / 0.16) !important;
 }
 
 html[data-theme="mac-core"] .glass-icon-box,
@@ -1195,13 +1211,13 @@ html.theme-mac-core .calendar-nav-button,
 body.theme-mac-core .calendar-nav-button,
 html.theme-mac-core .calendar-sync-button,
 body.theme-mac-core .calendar-sync-button {
-  border-radius: 8px !important;
+  border-radius: 999px !important;
   color: var(--mac-text) !important;
   background: var(--mac-control-fill) !important;
-  border: 1px solid rgb(60 60 67 / 0.12) !important;
+  border: 1px solid var(--mac-control-idle-border) !important;
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.72),
-    0 1px 1px rgb(22 24 32 / 0.04) !important;
+    inset 0 1px 0 rgb(255 255 255 / 0.76),
+    0 8px 18px -16px rgb(22 24 32 / 0.14) !important;
 }
 
 html[data-theme="mac-core"] .glass-button:hover,
@@ -1248,10 +1264,12 @@ html.theme-mac-core .theme-button-group,
 body.theme-mac-core .theme-button-group,
 html.theme-mac-core .calendar-view-toggle,
 body.theme-mac-core .calendar-view-toggle {
-  border-radius: 9px !important;
-  background: rgb(118 118 128 / 0.12) !important;
-  border: 1px solid rgb(60 60 67 / 0.1) !important;
-  box-shadow: inset 0 1px 1px rgb(22 24 32 / 0.05) !important;
+  border-radius: 999px !important;
+  background: var(--mac-segmented-fill) !important;
+  border: 1px solid var(--mac-control-idle-border) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.72),
+    0 8px 18px -18px rgb(22 24 32 / 0.14) !important;
 }
 
 html[data-theme="mac-core"] .theme-segment-button.is-active,
@@ -1263,10 +1281,10 @@ body.theme-mac-core .theme-segment-button.is-active,
 html.theme-mac-core .calendar-view-button.is-active,
 body.theme-mac-core .calendar-view-button.is-active {
   color: var(--mac-text) !important;
-  background: rgb(255 255 255 / 0.92) !important;
+  background: var(--mac-segmented-active-fill) !important;
   box-shadow:
-    0 1px 4px rgb(22 24 32 / 0.12),
-    inset 0 1px 0 rgb(255 255 255 / 0.9) !important;
+    0 8px 18px -18px rgb(22 24 32 / 0.16),
+    inset 0 1px 0 rgb(255 255 255 / 0.92) !important;
 }
 
 html[data-theme="mac-core"] input,
@@ -1282,8 +1300,10 @@ body.theme-mac-core textarea,
 html.theme-mac-core select,
 body.theme-mac-core select {
   color: var(--mac-text) !important;
-  background: rgb(255 255 255 / 0.82) !important;
-  border: 1px solid rgb(60 60 67 / 0.16) !important;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.62), rgb(255 255 255 / 0.4)) !important;
+  border: 1px solid var(--mac-control-idle-border) !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.84) !important;
 }
 
 html[data-theme="mac-core"] input::placeholder,
