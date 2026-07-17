@@ -313,26 +313,26 @@ html.theme-mac-core .floating-window,
 body.theme-mac-core .floating-window {
   grid-template-rows: 54px minmax(0, 1fr);
 
-  border-radius: 18px !important;
+  border-radius: 20px !important;
 
-  color: #242235 !important;
+  color: #1d1d1f !important;
 
   background:
     linear-gradient(
       180deg,
-      rgb(255 255 255 / 0.86),
-      rgb(248 249 253 / 0.72)
+      rgb(255 255 255 / 0.72),
+      rgb(246 248 252 / 0.52)
     ) !important;
 
-  border: 1px solid rgb(255 255 255 / 0.82) !important;
+  border: 1px solid rgb(255 255 255 / 0.74) !important;
 
   box-shadow:
-    0 42px 100px -70px rgb(34 30 70 / 0.52),
-    0 18px 40px -34px rgb(34 30 70 / 0.34),
+    0 36px 84px -64px rgb(22 24 32 / 0.28),
+    0 14px 34px -28px rgb(22 24 32 / 0.18),
     inset 0 1px 0 rgb(255 255 255 / 0.9) !important;
 
-  backdrop-filter: blur(34px) saturate(175%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(175%) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
 }
 
 html[data-theme="mac-core"] .floating-window-titlebar,
@@ -344,16 +344,16 @@ body.theme-mac-core .floating-window-titlebar {
   height: 54px;
   min-height: 54px;
 
-  padding: 0 14px 0 76px;
+  padding: 0 16px 0 68px;
 
   background:
     linear-gradient(
       180deg,
-      rgb(255 255 255 / 0.72),
-      rgb(255 255 255 / 0.34)
+      rgb(255 255 255 / 0.58),
+      rgb(255 255 255 / 0.18)
     ) !important;
 
-  border-bottom: 1px solid rgb(36 34 53 / 0.08) !important;
+  border-bottom: 1px solid rgb(60 60 67 / 0.1) !important;
 }
 
 html[data-theme="mac-core"] .floating-window-titlebar::before,
@@ -362,17 +362,17 @@ html.theme-mac-core .floating-window-titlebar::before,
 body.theme-mac-core .floating-window-titlebar::before {
   content: "";
   position: absolute;
-  top: 21px;
-  left: 20px;
+  top: 22px;
+  left: 18px;
 
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
 
   border-radius: 999px;
   background: #ff5f57;
   box-shadow:
-    18px 0 0 #ffbd2e,
-    36px 0 0 #28c840;
+    16px 0 0 #ffbd2e,
+    32px 0 0 #28c840;
 
   pointer-events: none;
 }
@@ -381,14 +381,16 @@ html[data-theme="mac-core"] .floating-window-title,
 body[data-theme="mac-core"] .floating-window-title,
 html.theme-mac-core .floating-window-title,
 body.theme-mac-core .floating-window-title {
-  color: #242235 !important;
+  color: #1d1d1f !important;
+  font-weight: 640 !important;
+  letter-spacing: 0 !important;
 }
 
 html[data-theme="mac-core"] .floating-window-subtitle,
 body[data-theme="mac-core"] .floating-window-subtitle,
 html.theme-mac-core .floating-window-subtitle,
 body.theme-mac-core .floating-window-subtitle {
-  color: rgb(36 34 53 / 0.52) !important;
+  color: rgb(60 60 67 / 0.52) !important;
 }
 
 /* =========================================================
