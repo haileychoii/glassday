@@ -129,6 +129,7 @@ export const AppShell = ({
           ? "is-laptop h-full min-h-0"
           : "is-wide min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
       ].join(" ")}
+      data-sidebar-collapsed={sidebarCollapsed ? "true" : "false"}
     >
       <div
         className={[

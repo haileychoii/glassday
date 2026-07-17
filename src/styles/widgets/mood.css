@@ -1,0 +1,132 @@
+/* =========================================================
+   MOOD
+   Widget-local styles for:
+   - metric row spacing
+   - theme-aware active dot colors
+   - consistent label/value contrast across themes
+========================================================= */
+
+.mood-widget .glass-card-body {
+  display: grid;
+  align-content: start;
+  gap: var(--gd-widget-stack-gap);
+}
+
+.mood-row {
+  --mood-accent: hsl(var(--primary));
+  --mood-surface: hsl(0 0% 100% / 0.18);
+  --mood-surface-active:
+    color-mix(in srgb, var(--mood-accent) 18%, white 82%);
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px 10px;
+  border-radius: 16px;
+  background: var(--mood-surface);
+  border: 1px solid hsl(0 0% 100% / 0.34);
+}
+
+.mood-row[data-metric="energy"] {
+  --mood-accent: #b37cff;
+}
+
+.mood-row[data-metric="focus"] {
+  --mood-accent: #7aaeff;
+}
+
+.mood-row[data-metric="sleepiness"] {
+  --mood-accent: #f0bf74;
+}
+
+.mood-row[data-metric="stress"] {
+  --mood-accent: #79d0a5;
+}
+
+.mood-row[data-metric="appetite"] {
+  --mood-accent: #f295b3;
+}
+
+.mood-label,
+.mood-value {
+  color: hsl(var(--foreground) / 0.78);
+}
+
+.mood-track {
+  min-width: 0;
+}
+
+.mood-dot {
+  background: hsl(0 0% 100% / 0.34);
+}
+
+.mood-dot-active {
+  background: var(--mood-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--mood-accent) 20%, transparent),
+    0 6px 16px -10px color-mix(in srgb, var(--mood-accent) 62%, transparent);
+}
+
+html[data-theme="glass-dark"] .mood-row,
+body[data-theme="glass-dark"] .mood-row,
+html.theme-glass-dark .mood-row,
+body.theme-glass-dark .mood-row,
+html[data-theme="aurora"] .mood-row,
+body[data-theme="aurora"] .mood-row,
+html.theme-aurora .mood-row,
+body.theme-aurora .mood-row {
+  background: rgba(34, 40, 61, 0.24);
+  border-color: rgba(166, 181, 225, 0.16);
+}
+
+html[data-theme="glass-dark"] .mood-label,
+body[data-theme="glass-dark"] .mood-label,
+html.theme-glass-dark .mood-label,
+body.theme-glass-dark .mood-label,
+html[data-theme="glass-dark"] .mood-value,
+body[data-theme="glass-dark"] .mood-value,
+html.theme-glass-dark .mood-value,
+body.theme-glass-dark .mood-value,
+html[data-theme="aurora"] .mood-label,
+body[data-theme="aurora"] .mood-label,
+html.theme-aurora .mood-label,
+body.theme-aurora .mood-label,
+html[data-theme="aurora"] .mood-value,
+body[data-theme="aurora"] .mood-value,
+html.theme-aurora .mood-value,
+body.theme-aurora .mood-value {
+  color: rgba(236, 240, 255, 0.84);
+}
+
+html[data-theme="pixel-desk"] .mood-row,
+body[data-theme="pixel-desk"] .mood-row,
+html.theme-pixel-desk .mood-row,
+body.theme-pixel-desk .mood-row,
+html.theme-pixel .mood-row,
+body.theme-pixel .mood-row {
+  padding: 6px 8px;
+  border-radius: 0;
+  background: #e8e8dc;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #606060;
+  border-bottom: 1px solid #606060;
+}
+
+html[data-theme="pixel-desk"] .mood-dot,
+body[data-theme="pixel-desk"] .mood-dot,
+html.theme-pixel-desk .mood-dot,
+body.theme-pixel-desk .mood-dot,
+html.theme-pixel .mood-dot,
+body.theme-pixel .mood-dot {
+  background: #b8b8b0;
+}
+
+html[data-theme="mac-core"] .mood-row,
+body[data-theme="mac-core"] .mood-row,
+html.theme-mac-core .mood-row,
+body.theme-mac-core .mood-row {
+  background: rgb(255 255 255 / 0.42);
+  border-color: rgb(255 255 255 / 0.66);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.88),
+    0 10px 22px -20px rgb(22 24 32 / 0.18);
+}

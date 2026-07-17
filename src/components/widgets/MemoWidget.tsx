@@ -1162,6 +1162,18 @@ export const MemoWidget = () => {
         {sortedNotes.map((note) => {
           const preview = stripHtml(note.html) || "Empty memo";
           const palette = resolveMemoPalette(note.color);
+          const noteSurface =
+            theme === "glass-dark" || theme === "aurora"
+              ? palette.darkSurface
+              : palette.lightSurface;
+          const noteBorder =
+            theme === "glass-dark" || theme === "aurora"
+              ? palette.darkBorder
+              : palette.lightBorder;
+          const noteText =
+            theme === "glass-dark" || theme === "aurora"
+              ? palette.darkText
+              : palette.lightText;
 
           return (
             <article
@@ -1187,6 +1199,13 @@ export const MemoWidget = () => {
                 note.id === activeNote?.id && "is-active",
                 note.pinned && "is-pinned"
               )}
+              style={
+                {
+                  "--memo-note-surface": noteSurface,
+                  "--memo-note-border": noteBorder,
+                  "--memo-note-text": noteText,
+                } as CSSProperties
+              }
             >
               <div
                 className="memo-note-color-dot"

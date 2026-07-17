@@ -274,3 +274,57 @@ main {
   opacity: 1;
   visibility: visible;
 }
+
+/* =========================================================
+   Shared scrollbar skin
+   All widget/internal scroll areas inherit this unless a theme supplies
+   a stronger visual language (for example Pixel Desk).
+========================================================= */
+
+.app-mode-stage,
+.settings-modal-window,
+.memo-window,
+.floating-window {
+  scrollbar-width: thin;
+  scrollbar-color: var(--gd-scrollbar-thumb) var(--gd-scrollbar-track);
+}
+
+.app-mode-stage *::-webkit-scrollbar,
+.settings-modal-window *::-webkit-scrollbar,
+.memo-window *::-webkit-scrollbar,
+.floating-window *::-webkit-scrollbar {
+  width: var(--gd-scrollbar-size);
+  height: var(--gd-scrollbar-size);
+}
+
+.app-mode-stage *::-webkit-scrollbar-track,
+.settings-modal-window *::-webkit-scrollbar-track,
+.memo-window *::-webkit-scrollbar-track,
+.floating-window *::-webkit-scrollbar-track {
+  background: var(--gd-scrollbar-track);
+  border-radius: 999px;
+}
+
+.app-mode-stage *::-webkit-scrollbar-thumb,
+.settings-modal-window *::-webkit-scrollbar-thumb,
+.memo-window *::-webkit-scrollbar-thumb,
+.floating-window *::-webkit-scrollbar-thumb {
+  background: var(--gd-scrollbar-thumb);
+  border: 2px solid var(--gd-scrollbar-border);
+  border-radius: 999px;
+  transition: background 160ms ease;
+}
+
+.app-mode-stage *::-webkit-scrollbar-thumb:hover,
+.settings-modal-window *::-webkit-scrollbar-thumb:hover,
+.memo-window *::-webkit-scrollbar-thumb:hover,
+.floating-window *::-webkit-scrollbar-thumb:hover {
+  background: var(--gd-scrollbar-thumb-hover);
+}
+
+.app-mode-stage *::-webkit-scrollbar-corner,
+.settings-modal-window *::-webkit-scrollbar-corner,
+.memo-window *::-webkit-scrollbar-corner,
+.floating-window *::-webkit-scrollbar-corner {
+  background: transparent;
+}

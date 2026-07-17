@@ -29,8 +29,8 @@
   --gd-widget-gap: var(--gd-space-md);
   --gd-widget-frame-pad-x: var(--gd-space-lg);
   --gd-widget-frame-pad-bottom: var(--gd-space-lg);
-  --gd-widget-frame-header-y: 13px;
-  --gd-widget-frame-content-gap-top: 7px;
+  --gd-widget-frame-header-y: 10px;
+  --gd-widget-frame-content-gap-top: 5px;
   --gd-widget-frame-panel-pad: var(--gd-space-lg);
   --gd-widget-shell-pad-x: var(--gd-widget-frame-pad-x);
   --gd-widget-shell-pad-bottom: var(--gd-widget-frame-pad-bottom);
@@ -51,6 +51,15 @@
   --gd-widget-section-gap: var(--gd-space-sm);
   --gd-widget-section-title-gap: 7px;
   --gd-widget-section-title-bottom: var(--gd-space-sm);
+
+  /* 2c. Scrollbar skin
+     Keep widget/body scrollbars on the same visual system unless a theme
+     explicitly overrides these values. */
+  --gd-scrollbar-size: 10px;
+  --gd-scrollbar-track: hsl(0 0% 100% / 0.18);
+  --gd-scrollbar-thumb: hsl(var(--foreground) / 0.24);
+  --gd-scrollbar-thumb-hover: hsl(var(--foreground) / 0.34);
+  --gd-scrollbar-border: hsl(0 0% 100% / 0.18);
 
   /* 2b. Shell spacing
      These map directly to Figma frame paddings and widths.

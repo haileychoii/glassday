@@ -206,6 +206,19 @@
 }
 
 .memo-note-item {
+  --memo-note-surface-active:
+    color-mix(
+      in srgb,
+      var(--memo-note-surface, hsl(0 0% 100% / 0.72)) 72%,
+      white 28%
+    );
+  --memo-note-surface-hover:
+    color-mix(
+      in srgb,
+      var(--memo-note-surface, hsl(0 0% 100% / 0.42)) 52%,
+      white 48%
+    );
+
   width: 100%;
   min-height: 50px;
 
@@ -230,16 +243,13 @@
 }
 
 .memo-note-item:hover {
-  background:
-    hsl(0 0% 100% / 0.42);
+  background: var(--memo-note-surface-hover);
 }
 
 .memo-note-item.is-active {
-  background:
-    hsl(0 0% 100% / 0.72);
+  background: var(--memo-note-surface-active);
 
-  border-color:
-    hsl(220 18% 82% / 0.58);
+  border-color: var(--memo-note-border, hsl(220 18% 82% / 0.58));
 
   box-shadow:
     0 12px 30px -26px
@@ -272,8 +282,7 @@
 
   letter-spacing: -0.025em;
 
-  color:
-    hsl(var(--foreground) / 0.76);
+  color: var(--memo-note-text, hsl(var(--foreground) / 0.76));
 
   white-space: nowrap;
   overflow: hidden;
@@ -288,7 +297,11 @@
   font-weight: 400;
 
   color:
-    hsl(var(--foreground) / 0.42);
+    color-mix(
+      in srgb,
+      var(--memo-note-text, hsl(var(--foreground) / 0.42)) 56%,
+      transparent
+    );
 
   white-space: nowrap;
   overflow: hidden;
@@ -364,7 +377,7 @@
   display: flex;
   flex-direction: column;
 
-  gap: var(--gd-widget-stack-gap);
+  gap: var(--gd-widget-gap-tight);
 
   overflow: hidden;
 

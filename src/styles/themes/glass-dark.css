@@ -286,6 +286,10 @@ body.theme-glass-dark {
       rgba(122, 82, 156, 0.44) 74%,
       rgba(43, 54, 95, 0.78)
     );
+  --gd-scrollbar-track: rgba(21, 28, 46, 0.38);
+  --gd-scrollbar-thumb: rgba(151, 172, 230, 0.34);
+  --gd-scrollbar-thumb-hover: rgba(181, 197, 244, 0.48);
+  --gd-scrollbar-border: rgba(12, 16, 27, 0.32);
 
   --gd-dark-modal-bg:
     linear-gradient(145deg, rgba(18, 24, 40, 0.86), rgba(8, 12, 22, 0.72));

@@ -197,14 +197,14 @@
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-item.is-collapsed .sidebar-tab-main {
-  width: 28px;
-  height: 28px;
-  border-radius: 9px;
+  width: min(100%, 24px);
+  height: 24px;
+  border-radius: 8px;
 }
 
 .app-shell-surface.is-laptop .sidebar-tab-icon svg {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
 }
 
 /* =========================================================

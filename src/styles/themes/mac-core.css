@@ -45,6 +45,10 @@ body.theme-mac-core {
 
   --mac-blue: #0a84ff;
   --mac-blue-soft: rgb(10 132 255 / 0.16);
+  --gd-scrollbar-track: rgb(230 233 242 / 0.74);
+  --gd-scrollbar-thumb: rgb(124 134 165 / 0.42);
+  --gd-scrollbar-thumb-hover: rgb(102 113 146 / 0.56);
+  --gd-scrollbar-border: rgb(255 255 255 / 0.42);
 
   --mac-shadow-window:
     0 40px 100px -70px rgb(34 30 70 / 0.48),
@@ -996,6 +1000,15 @@ body.theme-mac-core .liquid-shell::after {
   z-index: 4;
 }
 
+html[data-theme="mac-core"] .liquid-shell[data-sidebar-collapsed="true"]::after,
+body[data-theme="mac-core"] .liquid-shell[data-sidebar-collapsed="true"]::after,
+html.theme-mac-core .liquid-shell[data-sidebar-collapsed="true"]::after,
+body.theme-mac-core .liquid-shell[data-sidebar-collapsed="true"]::after {
+  left: 12px;
+  transform: scale(0.88);
+  transform-origin: left center;
+}
+
 html[data-theme="mac-core"] .liquid-shell > *,
 body[data-theme="mac-core"] .liquid-shell > *,
 html.theme-mac-core .liquid-shell > *,
@@ -1082,6 +1095,13 @@ html.theme-mac-core .topbar-inner,
 body.theme-mac-core .topbar-inner {
   min-height: 52px !important;
   padding: 8px 16px 8px 18px !important;
+}
+
+html[data-theme="mac-core"] .liquid-shell[data-sidebar-collapsed="true"] .topbar-inner,
+body[data-theme="mac-core"] .liquid-shell[data-sidebar-collapsed="true"] .topbar-inner,
+html.theme-mac-core .liquid-shell[data-sidebar-collapsed="true"] .topbar-inner,
+body.theme-mac-core .liquid-shell[data-sidebar-collapsed="true"] .topbar-inner {
+  padding-left: 12px !important;
 }
 
 html[data-theme="mac-core"] .topbar-title h1,

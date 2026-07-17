@@ -64,28 +64,30 @@ export const MoodWidget = () => {
     >
       <div className="space-y-3">
         {metrics.map((metric) => (
-          <div key={metric} className="flex items-center gap-3">
-            <span className="text-xs font-medium w-20">{metric}</span>
+          <div
+            key={metric}
+            className="mood-row flex items-center gap-3"
+            data-metric={metric.toLowerCase()}
+          >
+            <span className="mood-label text-xs font-medium w-20">{metric}</span>
 
-            <div className="flex gap-1.5 flex-1">
+            <div className="mood-track flex gap-1.5 flex-1">
               {[1, 2, 3, 4, 5].map((n) => (
                 <button
                   key={n}
                   type="button"
                   onClick={() => updateMetric(metric, n)}
                   className={cn(
-                    "w-2.5 h-2.5 rounded-full transition-all",
+                    "mood-dot w-2.5 h-2.5 rounded-full transition-all",
                     editing && "cursor-pointer",
-                    n <= values[metric]
-                      ? "mood-dot-active scale-110"
-                      : "bg-white/35 hover:bg-white/65",
+                    n <= values[metric] ? "mood-dot-active scale-110" : "hover:bg-white/65",
                     !editing && "pointer-events-none"
                   )}
                 />
               ))}
             </div>
 
-            <span className="text-[11px] text-muted-foreground tabular-nums w-8">
+            <span className="mood-value text-[11px] text-muted-foreground tabular-nums w-8">
               {values[metric]}/5
             </span>
           </div>

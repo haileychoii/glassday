@@ -980,12 +980,29 @@
   html.theme-pixel,
   body.theme-pixel
 ) .sidebar-tab-item.is-active {
+  background: transparent !important;
+  color: inherit !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .sidebar-tab-item.is-active .sidebar-tab-main {
   background: #000080 !important;
   color: #ffffff !important;
   border-top: 2px solid #404040 !important;
   border-left: 2px solid #404040 !important;
   border-right: 2px solid #ffffff !important;
   border-bottom: 2px solid #ffffff !important;
+  box-shadow: none !important;
 }
 
 :where(
@@ -999,6 +1016,81 @@
   body.theme-pixel
 ) .sidebar-tab-item.is-active * {
   color: #ffffff !important;
+}
+
+/* Pixel widget headers share one tighter start line so title placement stays
+   consistent across Today Focus, Career, Memo, Journal, and the rest. */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-card-header,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .widget-frame__header {
+  min-height: 32px !important;
+  padding: 8px 12px 5px !important;
+  gap: 8px !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-card-title,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .widget-frame__title {
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .glass-card-subtitle,
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .widget-frame__subtitle {
+  font-size: 10px !important;
+  line-height: 1.1 !important;
 }
 
 /* =========================================================
@@ -2056,7 +2148,8 @@
   html.theme-pixel,
   body.theme-pixel
 ) .memo-workspace {
-  background: #d8d8cc !important;
+  background:
+    color-mix(in srgb, var(--memo-paper-color, #fff7cf) 24%, #d8d8cc 76%) !important;
   overflow: hidden !important;
 }
 
@@ -2113,13 +2206,17 @@
   min-height: 0 !important;
   padding: 14px !important;
 
-  background: #ffffff !important;
+  background:
+    var(
+      --memo-paper-surface,
+      linear-gradient(180deg, #fffef8, #f7f2dd)
+    ) !important;
   color: #111111 !important;
 
   border-top: 2px solid #424242 !important;
   border-left: 2px solid #424242 !important;
-  border-right: 2px solid #ffffff !important;
-  border-bottom: 2px solid #ffffff !important;
+  border-right: 2px solid color-mix(in srgb, var(--memo-paper-border, #ffffff) 36%, #ffffff) !important;
+  border-bottom: 2px solid color-mix(in srgb, var(--memo-paper-border, #ffffff) 36%, #ffffff) !important;
 
   box-shadow:
     inset 1px 1px 0 #808080,
