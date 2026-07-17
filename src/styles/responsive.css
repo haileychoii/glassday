@@ -32,16 +32,29 @@ main {
 ========================================================= */
 
 @media (max-width: 1280px) {
+  :root {
+    /* Wide desktop shrink tokens:
+       use these when the overall browser canvas needs a gentler outer margin. */
+    --gd-viewport-frame-pad: 14px;
+    --gd-main-pad-medium: 18px;
+    --gd-shell-pad-x-medium: 26px;
+    --gd-shell-pad-top-medium: 18px;
+    --gd-shell-pad-bottom-medium: 38px;
+  }
+
   .relative.z-10.min-h-screen {
-    padding: 14px !important;
+    padding: var(--gd-viewport-frame-pad) !important;
   }
 
   main {
-    padding: 18px !important;
+    padding: var(--gd-main-pad-medium) !important;
   }
 
   .dashboard-tab-space {
-    padding: 18px 26px 38px !important;
+    padding:
+      var(--gd-shell-pad-top-medium)
+      var(--gd-shell-pad-x-medium)
+      var(--gd-shell-pad-bottom-medium) !important;
   }
 }
 
@@ -56,8 +69,11 @@ main {
 
 @media (max-width: 1180px) {
   :root {
+    /* Compact desktop topbar tokens:
+       this is the breakpoint where the long theme pills collapse into a select. */
     --gd-topbar-min-height: 74px;
     --gd-topbar-pad-x: 20px;
+    --gd-topbar-pad-y: 12px;
     --gd-topbar-gap: 14px;
     --gd-topbar-heading-gap: 14px;
     --gd-topbar-title-size: 21px;
@@ -76,7 +92,7 @@ main {
 
   .topbar-inner {
     min-height: var(--gd-topbar-min-height);
-    padding: 12px var(--gd-topbar-pad-x);
+    padding: var(--gd-topbar-pad-y) var(--gd-topbar-pad-x);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -421,6 +437,8 @@ main {
   :root {
     /* Narrow phone / tablet tokens:
        adjust these first when matching a Figma mobile header. */
+    --gd-viewport-frame-pad-mobile: 3px;
+    --gd-main-pad-mobile: 0px;
     --gd-widget-shell-pad-x: 16px;
     --gd-widget-shell-pad-bottom: 16px;
     --gd-widget-header-anchor-y: 16px;
@@ -449,6 +467,7 @@ main {
     --gd-theme-select-font-size: 13px;
     --gd-topbar-action-height: 36px;
     --gd-topbar-action-width-compact: 38px;
+    --gd-topbar-action-icon-pad-x: 0px;
     --gd-topbar-mobile-pad-x: 18px;
     --gd-topbar-mobile-pad-top: 1px;
     --gd-topbar-mobile-pad-bottom: 0px;
@@ -456,11 +475,11 @@ main {
   }
 
   .relative.z-10.min-h-screen {
-    padding: 3px !important;
+    padding: var(--gd-viewport-frame-pad-mobile) !important;
   }
 
   main {
-    padding: 0px !important;
+    padding: var(--gd-main-pad-mobile) !important;
   }
 
   .dashboard-tab-space {
@@ -576,7 +595,7 @@ main {
   .topbar-action-button {
     width: var(--gd-topbar-action-width-compact) !important;
     min-width: var(--gd-topbar-action-width-compact) !important;
-    padding-inline: 0 !important;
+    padding-inline: var(--gd-topbar-action-icon-pad-x) !important;
     justify-content: center !important;
   }
 
@@ -591,6 +610,8 @@ main {
 
 @media (max-width: 430px) {
   :root {
+    /* Small phone tokens:
+       only the final tightest adjustments should live here. */
     --gd-widget-shell-pad-x: 14px;
     --gd-widget-shell-pad-bottom: 14px;
     --gd-widget-header-anchor-y: 16px;
@@ -608,6 +629,7 @@ main {
     --gd-today-focus-task-gap: 5px;
     --gd-today-focus-task-pad-y: 7px;
     --gd-today-focus-task-pad-x: 8px;
+    --gd-today-focus-task-font-size: 11px;
     --gd-today-focus-delete-size: 18px;
   }
 
@@ -663,7 +685,7 @@ main {
   }
 
   .today-focus-task-input {
-    font-size: 11px !important;
+    font-size: var(--gd-today-focus-task-font-size) !important;
   }
 
   .today-focus-delete {
@@ -689,6 +711,10 @@ main {
 ========================================================= */
 
 @media (max-width: 1180px) {
+  :root {
+    --gd-today-focus-main-size-compact: 18px;
+  }
+
   .today-focus-grid {
     grid-template-columns: 1fr !important;
   }
@@ -698,7 +724,7 @@ main {
   }
 
   .today-focus-main {
-    font-size: 18px !important;
+    font-size: var(--gd-today-focus-main-size-compact) !important;
   }
 }
 
