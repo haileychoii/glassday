@@ -1,98 +1,193 @@
 /* =========================================================
-   TIMER
-   Widget-local styles for:
-   - separate pomodoro timer widget
-   - compact vs expanded layouts
-   - floating mini timer surface
+   TIMER — FULL REPLACEMENT
+   - large centered timer ring
+   - start button always visible
+   - compact / settings / floating layouts
 ========================================================= */
 
 .timer-widget {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+
   container-type: inline-size;
   container-name: timer-widget;
 }
 
+.timer-widget,
+.timer-widget *,
+.timer-widget *::before,
+.timer-widget *::after {
+  box-sizing: border-box;
+}
+
 .timer-widget .glass-card-body {
+  flex: 1 1 auto;
+
+  width: 100%;
+  height: 100%;
+  min-width: 0;
   min-height: 0;
-  display: grid;
+
+  padding: 0 8px 7px;
+
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+
   overflow: hidden;
 }
 
+/* =========================================================
+   ROOT LAYOUT
+========================================================= */
+
 .timer-widget-layout {
-  container-type: inline-size;
-  position: relative;
+  flex: 1 1 auto;
+
+  container-type: size;
+  container-name: timer-layout;
+
+  width: 100%;
   height: 100%;
+  min-width: 0;
   min-height: 0;
+
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--gd-widget-stack-gap);
+  grid-template-rows: minmax(0, 0.75fr);
+
+  gap: var(--gd-widget-stack-gap, 12px);
+
   overflow: hidden;
 }
 
 .timer-widget-layout.is-settings-visible {
-  grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
-  align-items: stretch;
+  grid-template-columns:
+    minmax(0, 1.15fr)
+    minmax(220px, 0.85fr);
 }
+
+/* =========================================================
+   PANELS
+========================================================= */
 
 .timer-widget-main-card,
 .timer-widget-settings-card {
+  width: 100%;
+  height: 100%;
   min-width: 0;
-  padding: var(--gd-widget-panel-pad);
+  min-height: 0;
+
+  padding: var(--gd-widget-panel-pad, 14px);
+
   border-radius: var(--gd-radius-card, 22px);
-  background: hsl(var(--card) / 0.48);
   border: 1px solid hsl(var(--border) / 0.34);
-  display: grid;
-  gap: var(--gd-widget-section-gap);
+
+  background: hsl(var(--card) / 0.48);
 }
 
 .timer-widget-main-card {
   position: relative;
-  min-height: 0;
+
+  display: grid;
   align-content: center;
   justify-items: center;
+
+  gap: var(--gd-widget-section-gap, 10px);
+
   overflow: hidden;
+
   color: hsl(var(--foreground) / 0.92);
+
   background:
-    radial-gradient(circle at 50% 20%, hsl(var(--primary) / 0.18), transparent 38%),
-    linear-gradient(145deg, hsl(var(--card) / 0.68), hsl(var(--accent) / 0.16));
+    radial-gradient(
+      circle at 50% 18%,
+      hsl(var(--primary) / 0.18),
+      transparent 38%
+    ),
+    linear-gradient(
+      145deg,
+      hsl(var(--card) / 0.68),
+      hsl(var(--accent) / 0.16)
+    );
+
   border-color: hsl(var(--border) / 0.42);
+
   box-shadow:
     0 24px 58px hsl(var(--foreground) / 0.08),
     inset 0 1px 0 hsl(var(--background) / 0.32);
 }
+
+.timer-widget-settings-card {
+  display: grid;
+  align-content: start;
+
+  gap: var(--gd-widget-section-gap, 10px);
+
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* =========================================================
+   MODE / ACTION ROWS
+========================================================= */
 
 .timer-widget-mode-row,
 .timer-widget-action-row,
 .timer-widget-prompt-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--gd-widget-inline-gap);
+  align-items: center;
+
+  gap: var(--gd-widget-inline-gap, 7px);
 }
 
+.timer-widget-mode-row,
+.timer-widget-action-row {
+  justify-content: center;
+}
+
+/* =========================================================
+   TIMER STAGE
+========================================================= */
+
 .timer-widget-focus-stage {
-  --timer-ring-radius: clamp(52px, 23cqi, 79px);
+  --timer-ring-radius: clamp(68px, 29cqi, 90px);
 
   position: relative;
-  width: clamp(132px, 58cqi, 198px);
+
+  width: clamp(176px, 66cqi, 226px);
   max-width: 100%;
+
   aspect-ratio: 1;
+
   display: grid;
   place-items: center;
+
   isolation: isolate;
 }
 
 .timer-widget-time-editor-shell {
   position: relative;
+
   max-width: 100%;
+
   display: grid;
   place-items: center;
 }
 
 .timer-widget-time-button {
   padding: 0;
+
   border: 0;
+
   font: inherit;
   color: inherit;
+
   background: transparent;
+
   cursor: pointer;
   appearance: none;
 }
@@ -100,14 +195,21 @@
 .timer-widget-time-button:focus-visible {
   outline: 2px solid hsl(var(--primary) / 0.58);
   outline-offset: 5px;
+
   border-radius: 999px;
 }
+
+/* =========================================================
+   PROGRESS RING
+========================================================= */
 
 .timer-widget-progress-svg {
   position: absolute;
   inset: 0;
+
   width: 100%;
   height: 100%;
+
   transform: rotate(-90deg);
 }
 
@@ -124,6 +226,7 @@
 .timer-widget-progress-value {
   stroke: hsl(var(--primary) / 0.9);
   stroke-linecap: round;
+
   transition: stroke-dashoffset 220ms ease;
 }
 
@@ -131,71 +234,62 @@
   position: absolute;
   left: 50%;
   top: 50%;
+
   z-index: 2;
+
   width: 11px;
   height: 11px;
+
   border-radius: 999px;
+
   background: hsl(var(--primary));
-  box-shadow: 0 0 14px hsl(var(--primary) / 0.42);
+
+  box-shadow:
+    0 0 14px hsl(var(--primary) / 0.42);
+
   transform:
     translate(-50%, -50%)
     rotate(calc(var(--timer-progress) * 360deg))
     translateY(calc(-1 * var(--timer-ring-radius)));
 }
 
+/* =========================================================
+   CLOCK
+========================================================= */
+
 .timer-widget-clock-stack {
   position: relative;
   z-index: 1;
-  width: min(100%, 118px);
+
+  width: min(100%, 148px);
+
   display: grid;
   justify-items: center;
-  gap: 5px;
+
+  gap: 4px;
+
   text-align: center;
 }
 
-.timer-widget-mode-button,
-.timer-widget-primary,
-.timer-widget-secondary {
-  min-height: 32px;
-  padding: 0 12px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 800;
-  border: 1px solid hsl(0 0% 100% / 0.34);
-}
-
-.timer-widget-mode-button,
-.timer-widget-secondary {
-  background: hsl(var(--card) / 0.42);
-  color: hsl(var(--foreground) / 0.68);
-}
-
-.timer-widget-mode-button.is-active,
-.timer-widget-primary {
-  background: hsl(var(--primary) / 0.2);
-  border-color: hsl(var(--primary) / 0.28);
-  color: hsl(var(--primary));
-}
-
 .timer-widget-clock {
-  font-size: clamp(28px, 9cqi, 46px);
+  font-size: clamp(38px, 15cqi, 54px);
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.045em;
+
   color: hsl(var(--foreground) / 0.94);
 }
 
 .timer-widget-duration-label,
 .timer-widget-remaining-label {
   max-width: 100%;
+
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
   line-height: 1.15;
+
   color: hsl(var(--muted-foreground) / 0.86);
 }
 
@@ -212,79 +306,154 @@
 .timer-widget-meta,
 .timer-widget-prompt-copy {
   font-size: 11px;
-  line-height: 1.45;
   font-weight: 650;
+  line-height: 1.45;
+
   color: hsl(var(--muted-foreground) / 0.72);
 }
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.timer-widget-mode-button,
+.timer-widget-primary,
+.timer-widget-secondary {
+  min-height: 32px;
+
+  padding: 0 12px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  border-radius: 999px;
+  border: 1px solid hsl(0 0% 100% / 0.34);
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.timer-widget-mode-button,
+.timer-widget-secondary {
+  color: hsl(var(--foreground) / 0.68);
+  background: hsl(var(--card) / 0.42);
+}
+
+.timer-widget-mode-button.is-active,
+.timer-widget-primary {
+  color: hsl(var(--primary));
+
+  background: hsl(var(--primary) / 0.2);
+  border-color: hsl(var(--primary) / 0.28);
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
 
 .timer-widget-settings-title {
   font-size: 11px;
   font-weight: 850;
-  color: hsl(var(--foreground) / 0.48);
-  text-transform: uppercase;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  color: hsl(var(--foreground) / 0.48);
 }
 
 .timer-widget-stepper-grid {
   display: grid;
-  gap: var(--gd-widget-section-gap);
+  gap: var(--gd-widget-section-gap, 10px);
 }
 
 .timer-widget-stepper-grid label {
   display: grid;
-  gap: var(--gd-widget-section-gap-tight);
+  gap: var(--gd-widget-section-gap-tight, 6px);
 }
 
 .timer-widget-stepper-grid span {
   font-size: 10px;
   font-weight: 800;
+
   color: hsl(var(--foreground) / 0.44);
 }
 
 .timer-widget-stepper {
   display: grid;
-  grid-template-columns: 30px minmax(0, 1fr) 30px;
+  grid-template-columns:
+    30px
+    minmax(0, 1fr)
+    30px;
+
   align-items: center;
-  gap: var(--gd-widget-inline-gap);
+
+  gap: var(--gd-widget-inline-gap, 7px);
 }
 
 .timer-widget-stepper button {
   width: 30px;
   height: 30px;
-  border-radius: 999px;
+  min-height: 30px;
+
   display: grid;
   place-items: center;
-  background: hsl(var(--card) / 0.48);
+
+  border-radius: 999px;
   border: 1px solid hsl(var(--border) / 0.34);
+
   color: hsl(var(--foreground) / 0.62);
+  background: hsl(var(--card) / 0.48);
 }
 
 .timer-widget-stepper strong {
   text-align: center;
+
   font-size: 13px;
   font-weight: 850;
+
   color: hsl(var(--foreground) / 0.78);
 }
+
+/* =========================================================
+   TIME EDIT POPOVER
+========================================================= */
 
 .timer-widget-time-popover {
   position: absolute;
   left: 50%;
   top: 50%;
+
   z-index: 12;
+
   width: min(184px, calc(100cqi - 18px));
   max-width: calc(100cqi - 18px);
+
   padding: 10px;
-  border-radius: 16px;
+
   display: grid;
   gap: 8px;
-  color: hsl(var(--foreground) / 0.9);
-  background:
-    linear-gradient(145deg, hsl(var(--card) / 0.9), hsl(var(--accent) / 0.34));
+
+  border-radius: 16px;
   border: 1px solid hsl(var(--border) / 0.52);
+
+  color: hsl(var(--foreground) / 0.9);
+
+  background:
+    linear-gradient(
+      145deg,
+      hsl(var(--card) / 0.9),
+      hsl(var(--accent) / 0.34)
+    );
+
   box-shadow:
     0 16px 38px hsl(var(--foreground) / 0.13),
     inset 0 1px 0 hsl(var(--background) / 0.3);
+
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
   transform: translate(-50%, -50%);
 }
 
@@ -292,66 +461,95 @@
   font-size: 10px;
   font-weight: 850;
   line-height: 1;
-  color: hsl(var(--muted-foreground) / 0.78);
-  text-transform: uppercase;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  color: hsl(var(--muted-foreground) / 0.78);
 }
 
 .timer-widget-time-edit-row {
   display: grid;
-  grid-template-columns: 30px minmax(0, 1fr) 30px;
-  gap: 7px;
+  grid-template-columns:
+    30px
+    minmax(0, 1fr)
+    30px;
+
   align-items: center;
+
+  gap: 7px;
 }
 
 .timer-widget-time-edit-row button,
 .timer-widget-time-apply {
-  min-height: 30px;
-  border-radius: 999px;
+  min-height: 40px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
+  border-radius: 999px;
   border: 1px solid hsl(var(--border) / 0.42);
-  color: hsl(var(--foreground) / 0.8);
-  background: hsl(var(--card) / 0.55);
+
   font-size: 11px;
   font-weight: 850;
+
+  color: hsl(var(--foreground) / 0.8);
+  background: hsl(var(--card) / 0.55);
 }
 
 .timer-widget-time-edit-row input {
-  min-width: 0;
   width: 100%;
-  height: 30px;
+  min-width: 0;
+  height: 40px;
+  min-height: 40px;
+
   border-radius: 999px;
-  text-align: center;
   border: 1px solid hsl(var(--primary) / 0.28);
-  color: hsl(var(--foreground) / 0.9);
-  background: hsl(var(--background) / 0.42);
+
+  text-align: center;
+
   font-size: 12px;
   font-weight: 850;
+
+  color: hsl(var(--foreground) / 0.9);
+  background: hsl(var(--background) / 0.42);
 }
 
 .timer-widget-time-apply {
   color: hsl(var(--primary));
+
   background: hsl(var(--primary) / 0.18);
   border-color: hsl(var(--primary) / 0.3);
 }
 
+/* =========================================================
+   COMPLETION PROMPT
+========================================================= */
+
 .timer-widget-prompt {
   padding: 12px;
-  border-radius: 18px;
-  background: hsl(var(--primary) / 0.08);
-  border: 1px solid hsl(var(--primary) / 0.16);
+
   display: grid;
   gap: 10px;
+
+  border-radius: 18px;
+  border: 1px solid hsl(var(--primary) / 0.16);
+
+  background: hsl(var(--primary) / 0.08);
 }
+
+/* =========================================================
+   FLOATING TIMER
+========================================================= */
 
 .timer-floating-body {
   width: 100%;
   height: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 16px;
+
+  padding: 12px;
+
   overflow: hidden;
 }
 
@@ -360,86 +558,301 @@
 }
 
 .timer-widget-layout.is-floating-mode .timer-widget-clock {
-  font-size: clamp(32px, 12cqi, 48px);
+  font-size: clamp(38px, 13cqi, 54px);
 }
+
+/* =========================================================
+   COMPACT MODE
+   Settings closed
+
+   Layout:
+   1) large circle
+   2) Start button directly below
+========================================================= */
 
 .timer-widget-layout:not(.is-settings-visible) {
   gap: 0;
 }
 
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-main-card {
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-main-card {
+  width: 100%;
   height: 100%;
-  padding: 8px;
-  align-content: center;
-  gap: 7px;
-}
+  min-width: 0;
+  min-height: 0;
 
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-mode-row,
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-meta {
-  display: none;
-}
+  padding: 2px 6px 5px;
 
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-focus-stage {
-  width: min(100%, 166px);
-  --timer-ring-radius: clamp(50px, 34cqi, 66px);
-}
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows:
+    minmax(0, 1fr)
+    28px;
 
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row {
-  flex-wrap: nowrap;
-  justify-content: center;
-}
+  align-items: center;
+  justify-items: center;
 
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row .timer-widget-secondary {
-  display: none;
-}
+  gap: 3px;
 
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-primary {
-  min-height: 28px;
-  padding: 0 10px;
-}
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt {
-  position: absolute;
-  right: 6px;
-  bottom: 6px;
-  left: 6px;
-  padding: 6px;
-  gap: 5px;
   overflow: hidden;
 }
 
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt-copy {
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-mode-row,
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-meta {
   display: none;
 }
 
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt-actions {
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-focus-stage {
+  /*
+   * timer-layout is the actual body area.
+   * Reserve 38px for Start + gap + padding.
+   */
+  --timer-stage-size:
+    min(
+      78cqi,
+      calc(100cqb - 38px),
+      220px
+    );
+
+  --timer-ring-radius:
+    calc(var(--timer-stage-size) * 0.405);
+
+  grid-row: 1;
+
+  width: var(--timer-stage-size);
+  height: var(--timer-stage-size);
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
+
+  aspect-ratio: 1;
+
+  align-self: center;
+  justify-self: center;
+}
+
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-clock-stack {
+  width: min(70%, 146px);
+
+  gap: 3px;
+}
+
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-clock {
+  font-size: clamp(34px, 16cqi, 52px);
+}
+
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-duration-label {
+  font-size: 9px;
+}
+
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-remaining-label {
+  font-size: 8px;
+}
+
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-action-row {
+  position: relative;
+  z-index: 5;
+
+  grid-row: 2;
+
+  width: 100%;
+  height: 28px;
+  min-height: 28px;
+
+  margin: 0;
+
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+
+  overflow: visible;
+}
+
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-action-row
+  .timer-widget-primary {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-action-row
+  .timer-widget-secondary {
+  display: none;
+}
+
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-primary {
+  min-width: 78px;
+  height: 28px;
+  min-height: 28px;
+
+  padding: 0 11px;
+
+  font-size: 10px;
+}
+
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-prompt {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+
+  z-index: 8;
+
+  padding: 6px;
+
+  gap: 5px;
+
+  overflow: hidden;
+}
+
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-prompt-copy {
+  display: none;
+}
+
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-prompt-actions {
   flex-wrap: nowrap;
   justify-content: center;
 }
 
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt-actions .timer-widget-primary,
-.timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt-actions .timer-widget-secondary {
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-prompt-actions
+  .timer-widget-primary,
+.timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-prompt-actions
+  .timer-widget-secondary {
+  height: 26px;
   min-height: 26px;
+
   padding: 0 9px;
+
   font-size: 10px;
 }
 
+/* =========================================================
+   NARROW SETTINGS LAYOUT
+========================================================= */
+
+@container timer-widget (max-width: 680px) {
+  .timer-widget-layout.is-settings-visible {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows:
+      minmax(180px, 1fr)
+      auto;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .timer-widget-layout.is-settings-visible
+    .timer-widget-main-card,
+  .timer-widget-layout.is-settings-visible
+    .timer-widget-settings-card {
+    height: auto;
+  }
+}
+
+/* =========================================================
+   SMALL TIMER WIDGET
+   One block only
+========================================================= */
+
 @container timer-widget (max-width: 420px) {
-  .timer-widget-main-card {
+  .timer-widget .glass-card-body {
+    padding: 0 4px 4px;
+  }
+
+  .timer-widget-layout:not(.is-settings-visible)
+    .timer-widget-main-card {
+    padding: 0 4px 4px;
+
+    grid-template-rows:
+      minmax(0, 1fr)
+      27px;
+
+    gap: 3px;
+  }
+
+  .timer-widget-layout:not(.is-settings-visible)
+    .timer-widget-focus-stage {
+    --timer-stage-size:
+      min(
+        80cqi,
+        calc(100cqb - 36px),
+        216px
+      );
+
+    --timer-ring-radius:
+      calc(var(--timer-stage-size) * 0.405);
+  }
+
+  .timer-widget-layout:not(.is-settings-visible)
+    .timer-widget-clock-stack {
+    width: min(70%, 142px);
+
+    gap: 2px;
+  }
+
+  .timer-widget-layout:not(.is-settings-visible)
+    .timer-widget-clock {
+    font-size: clamp(33px, 16.5cqi, 50px);
+  }
+
+  .timer-widget-layout:not(.is-settings-visible)
+    .timer-widget-action-row {
+    height: 27px;
+    min-height: 27px;
+  }
+
+  .timer-widget-layout:not(.is-settings-visible)
+    .timer-widget-primary {
+    min-width: 76px;
+    height: 27px;
+    min-height: 27px;
+
+    padding: 0 10px;
+
+    font-size: 10px;
+  }
+
+  .timer-widget-layout.is-settings-visible
+    .timer-widget-main-card,
+  .timer-widget-layout.is-settings-visible
+    .timer-widget-settings-card {
     padding: 8px;
+
     border-radius: 18px;
   }
 
-  .timer-widget-main-card {
-    gap: 7px;
-  }
-
-  .timer-widget-primary {
+  .timer-widget-layout.is-settings-visible
+    .timer-widget-primary {
     min-height: 28px;
+
     padding: 0 10px;
   }
 
-  .timer-widget-clock {
+  .timer-widget-layout.is-settings-visible
+    .timer-widget-clock {
     font-size: clamp(27px, 17cqi, 40px);
   }
 }
