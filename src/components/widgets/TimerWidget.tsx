@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import {
   Clock3,
   Maximize2,
@@ -12,10 +12,16 @@ import {
 import { FloatingWindow } from "../common/FloatingWindow";
 import { GlassCard } from "../glass/GlassCard";
 import { cn } from "../../lib/utils";
-import { formatTimerClock, getPomodoroModeLabel } from "./study/studyUtils";
+import {
+  formatTimerClock,
+  getPomodoroModeDurationSeconds,
+  getPomodoroModeLabel,
+} from "./study/studyUtils";
 import { usePomodoroTimer } from "./timer/usePomodoroTimer";
 
 const focusPresets = [15, 25, 50] as const;
+const progressRadius = 48;
+const progressCircumference = 2 * Math.PI * progressRadius;
 
 type TimerSurfaceProps = {
   controller: ReturnType<typeof usePomodoroTimer>;
@@ -53,6 +59,27 @@ const TimerSurface = ({
 
     applyFocusPreset(nextPreset);
   };
+  const totalSeconds = getPomodoroModeDurationSeconds(pomodoro, pomodoro.mode);
+  const elapsedSeconds = Math.max(0, totalSeconds - remainingSeconds);
+  const progressRatio =
+    totalSeconds > 0 ? Math.min(1, elapsedSeconds / totalSeconds) : 0;
+  const progressDashOffset =
+    progressCircumference * (1 - progressRatio);
+  const modeLabel =
+    pomodoro.mode === "focus"
+      ? "집중"
+      : pomodoro.mode === "short-break"
+        ? "짧은 휴식"
+        : "긴 휴식";
+  const remainingMinutes = Math.floor(remainingSeconds / 60);
+  const remainingRestSeconds = remainingSeconds % 60;
+  const remainingLabel =
+    remainingMinutes > 0
+      ? `${remainingMinutes}분 ${remainingRestSeconds}초 남았습니다`
+      : `${remainingRestSeconds}초 남았습니다`;
+  const progressStyle = {
+    "--timer-progress": progressRatio,
+  } as CSSProperties;
 
   return (
     <div className={cn("timer-widget-layout", floating && "is-floating-mode")}>
@@ -73,8 +100,39 @@ const TimerSurface = ({
           ))}
         </div>
 
-        <div className="timer-widget-clock-row">
-          <div className="timer-widget-clock">{formatTimerClock(remainingSeconds)}</div>
+        <div className="timer-widget-focus-stage" style={progressStyle}>
+          <svg
+            className="timer-widget-progress-svg"
+            viewBox="0 0 120 120"
+            aria-hidden="true"
+          >
+            <circle
+              className="timer-widget-progress-track"
+              cx="60"
+              cy="60"
+              r={progressRadius}
+            />
+            <circle
+              className="timer-widget-progress-value"
+              cx="60"
+              cy="60"
+              r={progressRadius}
+              strokeDasharray={progressCircumference}
+              strokeDashoffset={progressDashOffset}
+            />
+          </svg>
+
+          <span className="timer-widget-progress-dot" aria-hidden="true" />
+
+          <div className="timer-widget-clock-stack">
+            <div className="timer-widget-clock">
+              {formatTimerClock(remainingSeconds)}
+            </div>
+            <div className="timer-widget-duration-label">
+              {Math.round(totalSeconds / 60)}분 {modeLabel} 중
+            </div>
+            <div className="timer-widget-remaining-label">{remainingLabel}</div>
+          </div>
 
           <button
             type="button"

@@ -41,7 +41,17 @@
 .timer-widget-main-card {
   position: relative;
   min-height: 0;
+  align-content: center;
+  justify-items: center;
   overflow: hidden;
+  color: rgb(250 250 252 / 0.94);
+  background:
+    radial-gradient(circle at 50% 38%, rgb(255 255 255 / 0.08), transparent 34%),
+    linear-gradient(145deg, rgb(25 25 29), rgb(13 14 18));
+  border-color: rgb(255 255 255 / 0.12);
+  box-shadow:
+    0 24px 58px rgb(0 0 0 / 0.24),
+    inset 0 1px 0 rgb(255 255 255 / 0.1);
 }
 
 .timer-widget-mode-row,
@@ -53,16 +63,74 @@
   gap: var(--gd-widget-inline-gap);
 }
 
-.timer-widget-clock-row {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gd-widget-inline-gap);
+.timer-widget-focus-stage {
+  --timer-ring-radius: clamp(52px, 23cqi, 79px);
+
+  position: relative;
+  width: clamp(132px, 58cqi, 198px);
+  max-width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
+.timer-widget-progress-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.timer-widget-progress-track,
+.timer-widget-progress-value {
+  fill: none;
+  stroke-width: 9;
+}
+
+.timer-widget-progress-track {
+  stroke: rgb(255 255 255 / 0.09);
+}
+
+.timer-widget-progress-value {
+  stroke: hsl(var(--primary) / 0.92);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 220ms ease;
+}
+
+.timer-widget-progress-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: rgb(250 250 252);
+  box-shadow: 0 0 14px rgb(255 255 255 / 0.46);
+  transform:
+    translate(-50%, -50%)
+    rotate(calc(var(--timer-progress) * 360deg))
+    translateY(calc(-1 * var(--timer-ring-radius)));
+}
+
+.timer-widget-clock-stack {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 118px);
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  text-align: center;
 }
 
 .timer-widget-compact-settings-toggle {
   display: none;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  z-index: 4;
   min-height: 30px;
   padding: 0 10px;
   border-radius: 999px;
@@ -72,9 +140,9 @@
   font-size: 11px;
   font-weight: 850;
   white-space: nowrap;
-  color: hsl(var(--foreground) / 0.68);
-  background: hsl(0 0% 100% / 0.24);
-  border: 1px solid hsl(0 0% 100% / 0.34);
+  color: rgb(250 250 252 / 0.88);
+  background: rgb(255 255 255 / 0.09);
+  border: 1px solid rgb(255 255 255 / 0.14);
 }
 
 .timer-widget-mode-button,
@@ -96,24 +164,44 @@
 .timer-widget-mode-button,
 .timer-widget-preset,
 .timer-widget-secondary {
-  background: hsl(0 0% 100% / 0.24);
-  color: hsl(var(--foreground) / 0.68);
+  background: rgb(255 255 255 / 0.08);
+  color: rgb(250 250 252 / 0.7);
 }
 
 .timer-widget-mode-button.is-active,
 .timer-widget-preset.is-active,
 .timer-widget-primary {
-  background: hsl(var(--primary) / 0.14);
-  border-color: hsl(var(--primary) / 0.22);
-  color: hsl(var(--primary));
+  background: rgb(255 255 255 / 0.9);
+  border-color: rgb(255 255 255 / 0.9);
+  color: rgb(18 18 22);
 }
 
 .timer-widget-clock {
-  font-size: clamp(34px, 10cqi, 54px);
+  font-size: clamp(28px, 9cqi, 46px);
   font-weight: 900;
   line-height: 1;
-  letter-spacing: -0.05em;
-  color: hsl(var(--foreground) / 0.86);
+  letter-spacing: -0.045em;
+  color: rgb(255 255 255 / 0.98);
+}
+
+.timer-widget-duration-label,
+.timer-widget-remaining-label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.15;
+  color: rgb(255 255 255 / 0.72);
+}
+
+.timer-widget-duration-label {
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.timer-widget-remaining-label {
+  font-size: 9px;
+  font-weight: 750;
 }
 
 .timer-widget-meta,
@@ -121,7 +209,7 @@
   font-size: 11px;
   line-height: 1.45;
   font-weight: 650;
-  color: hsl(var(--foreground) / 0.54);
+  color: rgb(250 250 252 / 0.54);
 }
 
 .timer-widget-settings-title {
@@ -213,9 +301,9 @@
 
   .timer-widget-main-card {
     height: 100%;
-    padding: 10px;
+    padding: 8px;
     align-content: center;
-    gap: 8px;
+    gap: 7px;
   }
 
   .timer-widget-mode-row,
@@ -224,8 +312,9 @@
     display: none;
   }
 
-  .timer-widget-clock-row {
-    justify-content: center;
+  .timer-widget-focus-stage {
+    width: min(100%, 166px);
+    --timer-ring-radius: clamp(50px, 34cqi, 66px);
   }
 
   .timer-widget-compact-settings-toggle {
@@ -293,6 +382,6 @@
   }
 
   .timer-widget-clock {
-    font-size: clamp(30px, 16cqi, 42px);
+    font-size: clamp(27px, 17cqi, 40px);
   }
 }
