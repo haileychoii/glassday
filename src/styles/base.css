@@ -243,6 +243,10 @@ main {
   color: hsl(var(--foreground) / 0.72);
 }
 
+.glass-card-icon{
+  border-radius: 8px;
+}
+
 .glass-icon-box svg,
 .glass-card-icon svg,
 .widget-card-icon svg,

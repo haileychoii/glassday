@@ -276,8 +276,9 @@
 }
 
 .journal-section textarea {
-  min-height: 96px;
-  resize: vertical;
+  min-height: 100px;
+  width: 100%;
+  /* resize: vertical; */
   padding: 12px;
   font-size: 12px;
   line-height: 1.55;
@@ -346,10 +347,10 @@
 
 .journal-tag-tools,
 .journal-hashtag-row {
-  margin-top: 10px;
+  margin-top: 5px;
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 4px;
 }
 
 .journal-tag-tools button,

@@ -34,12 +34,12 @@ textarea {
 .topbar-action-button,
 .icon-button,
 .control-button {
-  min-height: 36px;
-  border-radius: 999px;
+  height: 32px;
+  border-radius: 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
 
   color: hsl(var(--foreground) / 0.72);
   background: hsl(0 0% 100% / 0.34);

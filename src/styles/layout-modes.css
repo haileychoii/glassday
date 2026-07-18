@@ -5,8 +5,8 @@
 ========================================================= */
 
 :root {
-  --gd-laptop-frame-width: 960px;
-  --gd-laptop-frame-height: 640px;
+  --gd-laptop-frame-width: 1080px;
+  --gd-laptop-frame-height: 720px;
 }
 
 .layout-mode-toggle {
