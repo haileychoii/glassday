@@ -59,7 +59,7 @@
   grid-template-rows: minmax(0, 0.75fr);
 
   gap: var(--gd-widget-stack-gap, 12px);
-
+ 
   overflow: hidden;
 }
 
