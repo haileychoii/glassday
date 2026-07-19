@@ -2186,3 +2186,132 @@ body.theme-glass-dark
   :is(.memo-workspace, .memo-editor, .memo-window-editor) {
   border-radius: 0 !important;
 }
+
+/* =========================================================
+   31. FLOATING WINDOW READABILITY GUARD
+   Floating memo windows should feel glassy, but the dashboard behind them
+   should not be readable through the editor surface.
+   ========================================================= */
+
+.memo-window,
+.memo-floating-window {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(250 251 255 / 0.96),
+      rgb(238 240 248 / 0.92)
+    ) !important;
+  border-color: rgb(255 255 255 / 0.76) !important;
+  box-shadow:
+    0 44px 130px rgb(20 20 42 / 0.38),
+    inset 0 1px 0 rgb(255 255 255 / 0.92) !important;
+  backdrop-filter: blur(72px) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(72px) saturate(175%) !important;
+}
+
+.memo-window-titlebar,
+.memo-floating-window-titlebar {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.9),
+      rgb(248 249 254 / 0.7)
+    ) !important;
+  border-bottom-color: rgb(210 216 232 / 0.72) !important;
+}
+
+.memo-floating-window .floating-window-body,
+.memo-floating-window .memo-floating-body {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.42),
+      rgb(238 241 248 / 0.32)
+    ) !important;
+}
+
+.memo-floating-window .memo-list-panel,
+.memo-floating-window .memo-workspace {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.88),
+      rgb(242 244 250 / 0.8)
+    ) !important;
+  border-color: rgb(210 216 232 / 0.66) !important;
+  backdrop-filter: blur(52px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(52px) saturate(160%) !important;
+}
+
+html[data-theme="glass-dark"] .memo-window,
+html[data-theme="glass-dark"] .memo-floating-window,
+body[data-theme="glass-dark"] .memo-window,
+body[data-theme="glass-dark"] .memo-floating-window,
+html.theme-glass-dark .memo-window,
+html.theme-glass-dark .memo-floating-window,
+body.theme-glass-dark .memo-window,
+body.theme-glass-dark .memo-floating-window,
+html[data-theme="aurora"] .memo-window,
+html[data-theme="aurora"] .memo-floating-window,
+body[data-theme="aurora"] .memo-window,
+body[data-theme="aurora"] .memo-floating-window,
+html.theme-aurora .memo-window,
+html.theme-aurora .memo-floating-window,
+body.theme-aurora .memo-window,
+body.theme-aurora .memo-floating-window {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(19 23 36 / 0.96),
+      rgb(31 29 46 / 0.92)
+    ) !important;
+  border-color: rgb(205 216 255 / 0.22) !important;
+  box-shadow:
+    0 44px 130px rgb(0 0 0 / 0.58),
+    inset 0 1px 0 rgb(255 255 255 / 0.12) !important;
+}
+
+html[data-theme="glass-dark"] .memo-floating-window .memo-list-panel,
+html[data-theme="glass-dark"] .memo-floating-window .memo-workspace,
+body[data-theme="glass-dark"] .memo-floating-window .memo-list-panel,
+body[data-theme="glass-dark"] .memo-floating-window .memo-workspace,
+html.theme-glass-dark .memo-floating-window .memo-list-panel,
+html.theme-glass-dark .memo-floating-window .memo-workspace,
+body.theme-glass-dark .memo-floating-window .memo-list-panel,
+body.theme-glass-dark .memo-floating-window .memo-workspace,
+html[data-theme="aurora"] .memo-floating-window .memo-list-panel,
+html[data-theme="aurora"] .memo-floating-window .memo-workspace,
+body[data-theme="aurora"] .memo-floating-window .memo-list-panel,
+body[data-theme="aurora"] .memo-floating-window .memo-workspace,
+html.theme-aurora .memo-floating-window .memo-list-panel,
+html.theme-aurora .memo-floating-window .memo-workspace,
+body.theme-aurora .memo-floating-window .memo-list-panel,
+body.theme-aurora .memo-floating-window .memo-workspace {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(28 33 49 / 0.9),
+      rgb(38 36 55 / 0.82)
+    ) !important;
+  border-color: rgb(205 216 255 / 0.18) !important;
+}
+
+html[data-theme="pixel-desk"] .memo-window,
+html[data-theme="pixel-desk"] .memo-floating-window,
+body[data-theme="pixel-desk"] .memo-window,
+body[data-theme="pixel-desk"] .memo-floating-window,
+html.theme-pixel-desk .memo-window,
+html.theme-pixel-desk .memo-floating-window,
+body.theme-pixel-desk .memo-window,
+body.theme-pixel-desk .memo-floating-window,
+html[data-theme="retro"] .memo-window,
+html[data-theme="retro"] .memo-floating-window,
+body[data-theme="retro"] .memo-window,
+body[data-theme="retro"] .memo-floating-window,
+html.theme-retro .memo-window,
+html.theme-retro .memo-floating-window,
+body.theme-retro .memo-window,
+body.theme-retro .memo-floating-window {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
