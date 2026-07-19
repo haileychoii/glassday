@@ -3069,7 +3069,8 @@ body.theme-glass-dark .career-floating-window {
   background: var(--gd-dark-floating-bg) !important;
   border-color: var(--gd-dark-floating-border) !important;
   box-shadow: var(--gd-dark-floating-shadow) !important;
-  blur: var(--gd-dark-floating-blur) !important;
+  backdrop-filter: blur(48px) !important;
+  -webkit-backdrop-filter: blur(48px) !important;
 }
 
 html[data-theme="aurora"] .career-floating-window,
