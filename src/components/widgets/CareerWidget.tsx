@@ -2,6 +2,7 @@ import { createPortal } from "react-dom";
 import {
   BriefcaseBusiness,
   CalendarDays,
+  Check,
   ExternalLink,
   FileText,
   GripHorizontal,
@@ -23,7 +24,6 @@ import type {
   CareerItem,
   CareerStatus,
   CoverLetterItem,
-  CoverLetterStatus,
 } from "../../types/dashboard";
 
 type CareerWindowState = {
@@ -51,20 +51,6 @@ const statusOptions: CareerStatus[] = [
   "Rejected",
   "Completed",
 ];
-
-const coverLetterStatusOptions: CoverLetterStatus[] = [
-  "todo",
-  "drafting",
-  "done",
-];
-
-const getCoverLetterStatusLabel = (status: CoverLetterStatus) => {
-  if (status === "todo") return "To do";
-  if (status === "drafting") return "Drafting";
-  if (status === "done") return "Done";
-
-  return status;
-};
 
 const createCoverLetterId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -1091,22 +1077,28 @@ export const CareerWidget = () => {
                                 placeholder={`${index + 1}. 자소서 문항 입력`}
                               />
 
-                              <select
-                                value={item.status}
-                                onChange={(event) =>
+                              <button
+                                type="button"
+                                onClick={() =>
                                   updateCoverLetterItem(item.id, {
-                                    status: event.target
-                                      .value as CoverLetterStatus,
+                                    status:
+                                      item.status === "done"
+                                        ? "drafting"
+                                        : "done",
                                   })
                                 }
-                                className="career-cover-status-select"
+                                className={`career-cover-done-toggle ${
+                                  item.status === "done" ? "is-done" : ""
+                                }`}
+                                aria-pressed={item.status === "done"}
                               >
-                                {coverLetterStatusOptions.map((status) => (
-                                  <option key={status} value={status}>
-                                    {getCoverLetterStatusLabel(status)}
-                                  </option>
-                                ))}
-                              </select>
+                                <span>
+                                  {item.status === "done" && (
+                                    <Check className="w-3 h-3" />
+                                  )}
+                                </span>
+                                완료
+                              </button>
 
                               <label className="career-cover-limit-field">
                                 <span>Limit</span>
