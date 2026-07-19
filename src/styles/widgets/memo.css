@@ -2250,7 +2250,15 @@ body[data-theme="glass-dark"] .memo-floating-window,
 html.theme-glass-dark .memo-window,
 html.theme-glass-dark .memo-floating-window,
 body.theme-glass-dark .memo-window,
-body.theme-glass-dark .memo-floating-window,
+body.theme-glass-dark .memo-floating-window {
+  /* Glass Dark floating surface:
+     use the theme-owned floating tokens so memo windows match the dashboard
+     instead of borrowing the darker Aurora palette. */
+  background: var(--gd-dark-floating-bg) !important;
+  border-color: var(--gd-dark-floating-border) !important;
+  box-shadow: var(--gd-dark-floating-shadow) !important;
+}
+
 html[data-theme="aurora"] .memo-window,
 html[data-theme="aurora"] .memo-floating-window,
 body[data-theme="aurora"] .memo-window,
@@ -2259,13 +2267,8 @@ html.theme-aurora .memo-window,
 html.theme-aurora .memo-floating-window,
 body.theme-aurora .memo-window,
 body.theme-aurora .memo-floating-window {
-  background:
-    linear-gradient(
-      145deg,
-      rgb(19 23 36 / 0.96),
-      rgb(31 29 46 / 0.92)
-    ) !important;
-  border-color: rgb(205 216 255 / 0.22) !important;
+  background: var(--aurora-card-bg) !important;
+  border-color: var(--aurora-card-border) !important;
   box-shadow:
     0 44px 130px rgb(0 0 0 / 0.58),
     inset 0 1px 0 rgb(255 255 255 / 0.12) !important;
@@ -2278,7 +2281,11 @@ body[data-theme="glass-dark"] .memo-floating-window .memo-workspace,
 html.theme-glass-dark .memo-floating-window .memo-list-panel,
 html.theme-glass-dark .memo-floating-window .memo-workspace,
 body.theme-glass-dark .memo-floating-window .memo-list-panel,
-body.theme-glass-dark .memo-floating-window .memo-workspace,
+body.theme-glass-dark .memo-floating-window .memo-workspace {
+  background: var(--gd-dark-panel-bg) !important;
+  border-color: var(--gd-dark-panel-border) !important;
+}
+
 html[data-theme="aurora"] .memo-floating-window .memo-list-panel,
 html[data-theme="aurora"] .memo-floating-window .memo-workspace,
 body[data-theme="aurora"] .memo-floating-window .memo-list-panel,
@@ -2287,13 +2294,8 @@ html.theme-aurora .memo-floating-window .memo-list-panel,
 html.theme-aurora .memo-floating-window .memo-workspace,
 body.theme-aurora .memo-floating-window .memo-list-panel,
 body.theme-aurora .memo-floating-window .memo-workspace {
-  background:
-    linear-gradient(
-      145deg,
-      rgb(28 33 49 / 0.9),
-      rgb(38 36 55 / 0.82)
-    ) !important;
-  border-color: rgb(205 216 255 / 0.18) !important;
+  background: var(--aurora-panel-bg) !important;
+  border-color: var(--aurora-panel-border) !important;
 }
 
 html[data-theme="pixel-desk"] .memo-window,

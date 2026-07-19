@@ -18,7 +18,9 @@
 
 .study-widget .glass-card-body {
   min-height: 0;
-  padding-top: 4px;
+  /* Keep the first Study section aligned with the shared widget body start.
+     This prevents the Today Study panel from sliding up into the title row. */
+  padding-top: var(--gd-widget-content-gap-top);
   overflow: hidden;
 }
 
