@@ -13,7 +13,9 @@
 .study-widget {
   min-height: 0;
   container-type: inline-size;
-  container-name: study-widget;
+  /* Use the shared widget container name so Study follows the same responsive
+     measuring system as every other dashboard card. */
+  container-name: gd-widget;
 }
 
 .study-widget .glass-card-body {
@@ -25,6 +27,7 @@
 }
 
 .study-planner {
+  flex: 1 1 auto;
   height: 100%;
   min-height: 0;
   display: grid;
@@ -683,7 +686,7 @@
   border: 1px dashed hsl(0 0% 100% / 0.36);
 } 
 
-@container study-widget (max-width: 700px) {
+@container gd-widget (max-width: 700px) {
   .study-hero {
     min-height: 58px;
     grid-template-columns: minmax(0, 1fr) 46px;
@@ -744,7 +747,7 @@
 
 /* Compact widths inside the dashboard grid need one extra step between the
    broader tablet layout and the narrow phone layout below. */
-@container study-widget (max-width: 620px) {
+@container gd-widget (max-width: 620px) {
   .study-subject-grid {
     grid-template-columns: 1fr;
   }
@@ -752,7 +755,7 @@
 
 /* Preserve the current mid-narrow subject layout used by this widget before
    it fully collapses into a single column at the smallest width token. */
-@container study-widget (max-width: 560px) {
+@container gd-widget (max-width: 560px) {
   .study-record-form {
     grid-template-columns: 1fr;
   }
@@ -762,9 +765,9 @@
   }
 }
 
-@container study-widget (max-width: 520px) {
+@container gd-widget (max-width: 520px) {
   .study-widget .glass-card-body {
-    padding-top: 5px;
+    padding-top: var(--gd-widget-content-gap-top);
   }
 
   .study-hero {

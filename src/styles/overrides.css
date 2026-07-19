@@ -780,6 +780,14 @@ body,
   container-name: gd-widget;
 }
 
+/* Study uses the same responsive container as the other widgets.
+   Keep this late in the cascade so generic grid rules cannot silently
+   disable the Study Planner structure again. */
+.dashboard-grid-item > .glass-card.study-widget {
+  container-type: inline-size;
+  container-name: gd-widget;
+}
+
 .dashboard-grid-item > .glass-card > .widget-frame__header {
   min-width: 0;
 }
