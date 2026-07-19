@@ -3090,6 +3090,8 @@ html.theme-glass-dark .career-floating-titlebar,
 body.theme-glass-dark .career-floating-titlebar {
   background: var(--gd-dark-floating-titlebar-bg) !important;
   border-bottom-color: var(--gd-dark-floating-titlebar-border) !important;
+  backdrop-filter: blur(60px) !important;
+  -webkit-backdrop-filter: blur(60px) !important;
 }
 
 html[data-theme="aurora"] .career-floating-titlebar,
