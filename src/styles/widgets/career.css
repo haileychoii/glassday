@@ -3081,7 +3081,7 @@ body.theme-aurora .career-floating-window {
   border-color: var(--aurora-card-border) !important;
   box-shadow:
     0 46px 140px rgb(0 0 0 / 0.62),
-    inset 0 1px 0 rgb(255 255 255 / 0.12) !important;
+    inset 0 1px 0 rgb(255 255 255 / 0.3) !important;
 }
 
 html[data-theme="glass-dark"] .career-floating-titlebar,
@@ -3090,8 +3090,8 @@ html.theme-glass-dark .career-floating-titlebar,
 body.theme-glass-dark .career-floating-titlebar {
   background: var(--gd-dark-floating-titlebar-bg) !important;
   border-bottom-color: var(--gd-dark-floating-titlebar-border) !important;
-  backdrop-filter: blur(60px) !important;
-  -webkit-backdrop-filter: blur(60px) !important;
+  backdrop-filter: blur(48px) !important;
+  -webkit-backdrop-filter: blur(48px) !important;
 }
 
 html[data-theme="aurora"] .career-floating-titlebar,
