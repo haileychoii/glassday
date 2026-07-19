@@ -545,6 +545,24 @@ body.theme-glass-dark .memo-list-panel {
   border-right-color: var(--gd-dark-panel-border) !important;
 }
 
+html[data-theme="glass-dark"] .memo-widget-list-popover,
+body[data-theme="glass-dark"] .memo-widget-list-popover,
+html.theme-glass-dark .memo-widget-list-popover,
+body.theme-glass-dark .memo-widget-list-popover {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(29, 34, 52, 0.94),
+      rgba(42, 38, 62, 0.9)
+    ) !important;
+  border-color: rgba(196, 208, 246, 0.2) !important;
+  box-shadow:
+    0 22px 56px rgba(2, 5, 14, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(34px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(150%) !important;
+}
+
 html[data-theme="glass-dark"] .memo-note-item:hover,
 body[data-theme="glass-dark"] .memo-note-item:hover,
 html.theme-glass-dark .memo-note-item:hover,
