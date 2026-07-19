@@ -3064,13 +3064,22 @@ body[data-theme="glass-dark"] .career-floating-window,
 html.theme-glass-dark .career-floating-window,
 body.theme-glass-dark .career-floating-window {
   /* Glass Dark floating window:
-     keep the career detail window on the same surface tokens as the rest of
-     the glass-dark dashboard. */
-  background: var(--gd-dark-floating-bg) !important;
-  border-color: var(--gd-dark-floating-border) !important;
-  box-shadow: var(--gd-dark-floating-shadow) !important;
-  backdrop-filter: blur(60px) !important;
-  -webkit-backdrop-filter: blur(60px) !important;
+     the career detail window has long forms, so it needs a denser glass
+     surface than the dashboard cards while staying inside the same blue-gray
+     glass-dark palette. */
+  color: var(--gd-dark-text) !important;
+  background:
+    linear-gradient(
+      145deg,
+      rgb(31 38 57 / 0.72),
+      rgb(18 24 39 / 0.58)
+    ) !important;
+  border-color: rgb(184 202 246 / 0.24) !important;
+  box-shadow:
+    0 42px 120px rgb(0 0 0 / 0.44),
+    inset 0 1px 0 rgb(255 255 255 / 0.13) !important;
+  backdrop-filter: blur(42px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(42px) saturate(150%) !important;
 }
 
 html[data-theme="aurora"] .career-floating-window,
@@ -3088,10 +3097,15 @@ html[data-theme="glass-dark"] .career-floating-titlebar,
 body[data-theme="glass-dark"] .career-floating-titlebar,
 html.theme-glass-dark .career-floating-titlebar,
 body.theme-glass-dark .career-floating-titlebar {
-  background: var(--gd-dark-floating-titlebar-bg) !important;
-  border-bottom-color: var(--gd-dark-floating-titlebar-border) !important;
-  backdrop-filter: blur(48px) !important;
-  -webkit-backdrop-filter: blur(48px) !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgb(43 50 70 / 0.66),
+      rgb(24 31 48 / 0.48)
+    ) !important;
+  border-bottom-color: rgb(184 202 246 / 0.18) !important;
+  backdrop-filter: blur(38px) saturate(148%) !important;
+  -webkit-backdrop-filter: blur(38px) saturate(148%) !important;
 }
 
 html[data-theme="aurora"] .career-floating-titlebar,
@@ -3105,6 +3119,36 @@ body.theme-aurora .career-floating-titlebar {
 
 
 
+
+html[data-theme="glass-dark"] .career-floating-body,
+body[data-theme="glass-dark"] .career-floating-body,
+html.theme-glass-dark .career-floating-body,
+body.theme-glass-dark .career-floating-body {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(12 17 30 / 0.2),
+      rgb(8 12 22 / 0.12)
+    ) !important;
+}
+
+html[data-theme="glass-dark"] .career-detail-section,
+body[data-theme="glass-dark"] .career-detail-section,
+html.theme-glass-dark .career-detail-section,
+body.theme-glass-dark .career-detail-section {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(39 46 64 / 0.64),
+      rgb(23 30 46 / 0.5)
+    ) !important;
+  border-color: rgb(184 202 246 / 0.2) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.11),
+    0 14px 34px rgb(0 0 0 / 0.18) !important;
+  backdrop-filter: blur(34px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(145%) !important;
+}
 
 html[data-theme="aurora"] .career-detail-section,
 body[data-theme="aurora"] .career-detail-section,
