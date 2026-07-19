@@ -8,6 +8,7 @@ import {
   Plus,
   Sparkles,
   Trash2,
+  X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -55,6 +56,9 @@ export const DailyJournalWidget = () => {
   const [newTomorrowTaskText, setNewTomorrowTaskText] = useState("");
   const [clipText, setClipText] = useState("");
   const [clipTag, setClipTag] = useState("#자소서소재");
+  const [pendingDeleteTaskId, setPendingDeleteTaskId] = useState<string | null>(
+    null
+  );
 
   // Derived active entry for the selected day.
   const entry = useMemo(() => {
@@ -105,6 +109,7 @@ export const DailyJournalWidget = () => {
     updateEntry({
       [key]: entry[key].filter((task) => task.id !== taskId),
     } as Partial<JournalEntry>);
+    setPendingDeleteTaskId(null);
   };
 
   const addTask = (key: "todayTasks" | "tomorrowTasks", text: string) => {
@@ -155,41 +160,69 @@ export const DailyJournalWidget = () => {
         {tasks.length === 0 ? (
           <div className="journal-empty-box">아직 체크리스트가 비어 있어.</div>
         ) : (
-          tasks.map((task) => (
-            <article
-              key={task.id}
-              className={cx("journal-task-item", task.done && "is-done")}
-            >
-              <button
-                type="button"
-                onClick={() =>
-                  updateTask(key, task.id, {
-                    done: !task.done,
-                  })
-                }
-                className="journal-task-check"
-              >
-                {task.done && <Check className="w-3.5 h-3.5" />}
-              </button>
+          tasks.map((task) => {
+            const isDeletePending = pendingDeleteTaskId === task.id;
 
-              <input
-                value={task.text}
-                onChange={(event) =>
-                  updateTask(key, task.id, {
-                    text: event.target.value,
-                  })
-                }
-              />
-
-              <button
-                type="button"
-                onClick={() => deleteTask(key, task.id)}
-                className="journal-task-delete"
+            return (
+              <article
+                key={task.id}
+                className={cx(
+                  "journal-task-item",
+                  task.done && "is-done",
+                  isDeletePending && "is-delete-pending"
+                )}
               >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            </article>
-          ))
+                <button
+                  type="button"
+                  onClick={() =>
+                    updateTask(key, task.id, {
+                      done: !task.done,
+                    })
+                  }
+                  className="journal-task-check"
+                  aria-label={task.done ? "Mark task incomplete" : "Mark task done"}
+                >
+                  {task.done && <Check className="w-3.5 h-3.5" />}
+                </button>
+
+                <input
+                  value={task.text}
+                  onChange={(event) =>
+                    updateTask(key, task.id, {
+                      text: event.target.value,
+                    })
+                  }
+                />
+
+                {isDeletePending ? (
+                  <div className="journal-task-delete-confirm">
+                    <button
+                      type="button"
+                      onClick={() => deleteTask(key, task.id)}
+                      aria-label="Delete task"
+                    >
+                      <Check className="w-3 h-3" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setPendingDeleteTaskId(null)}
+                      aria-label="Cancel delete"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setPendingDeleteTaskId(task.id)}
+                    className="journal-task-delete-select"
+                    aria-label="Select task for delete"
+                  />
+                )}
+              </article>
+            );
+          })
         )}
       </div>
     );
