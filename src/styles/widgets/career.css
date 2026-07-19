@@ -3069,6 +3069,7 @@ body.theme-glass-dark .career-floating-window {
   background: var(--gd-dark-floating-bg) !important;
   border-color: var(--gd-dark-floating-border) !important;
   box-shadow: var(--gd-dark-floating-shadow) !important;
+  blur: var(--gd-dark-floating-blur) !important;
 }
 
 html[data-theme="aurora"] .career-floating-window,
@@ -3098,28 +3099,9 @@ body.theme-aurora .career-floating-titlebar {
   border-bottom-color: var(--aurora-card-border) !important;
 }
 
-html[data-theme="glass-dark"] .career-floating-body,
-body[data-theme="glass-dark"] .career-floating-body,
-html.theme-glass-dark .career-floating-body,
-body.theme-glass-dark .career-floating-body {
-  background: var(--gd-dark-shell-bg) !important;
-}
 
-html[data-theme="aurora"] .career-floating-body,
-body[data-theme="aurora"] .career-floating-body,
-html.theme-aurora .career-floating-body,
-body.theme-aurora .career-floating-body {
-  background: var(--aurora-shell-bg) !important;
-}
 
-html[data-theme="glass-dark"] .career-detail-section,
-body[data-theme="glass-dark"] .career-detail-section,
-html.theme-glass-dark .career-detail-section,
-body.theme-glass-dark .career-detail-section {
-  background: var(--gd-dark-panel-bg) !important;
-  border-color: var(--gd-dark-panel-border) !important;
-  box-shadow: var(--gd-dark-panel-shadow) !important;
-}
+
 
 html[data-theme="aurora"] .career-detail-section,
 body[data-theme="aurora"] .career-detail-section,
