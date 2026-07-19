@@ -18,6 +18,7 @@
 
 .study-widget .glass-card-body {
   min-height: 0;
+  padding-top: 4px;
   overflow: hidden;
 }
 
@@ -29,7 +30,7 @@
   grid-template-rows: none;
   grid-auto-rows: max-content;
   align-content: start;
-  gap: var(--gd-widget-stack-gap);
+  gap: var(--gd-widget-section-gap-tight);
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 2px;
@@ -38,14 +39,14 @@
 .study-hero {
   grid-column: 1 / -1;
   min-width: 0;
-  min-height: 84px;
-  padding: var(--gd-widget-panel-pad);
-  border-radius: 26px;
-  display: flex;
+  min-height: 66px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 52px;
   align-items: center;
   justify-content: space-between;
-  gap: var(--gd-widget-stack-gap);
-  flex-wrap: wrap;
+  gap: var(--gd-widget-section-gap);
   background:
     radial-gradient(circle at 18% 12%, hsl(var(--primary) / 0.18), transparent 42%),
     linear-gradient(145deg, hsl(0 0% 100% / 0.46), hsl(0 0% 100% / 0.16));
@@ -69,7 +70,7 @@
 
 .study-main {
   margin-top: 2px;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 900;
   line-height: 1;
   color: hsl(var(--foreground) / 0.84);
@@ -80,11 +81,15 @@
   font-size: 11px;
   font-weight: 750;
   color: hsl(var(--foreground) / 0.48);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .study-progress-ring {
-  width: 62px;
-  height: 62px;
+  width: 52px;
+  height: 52px;
   border-radius: 999px;
   display: flex;
   align-items: center;
@@ -101,8 +106,8 @@
 }
 
 .study-progress-ring span {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   display: flex;
   align-items: center;
@@ -678,8 +683,25 @@
 
 @container study-widget (max-width: 700px) {
   .study-hero {
-    align-items: flex-start;
-    flex-direction: column;
+    min-height: 58px;
+    grid-template-columns: minmax(0, 1fr) 46px;
+    padding: 8px 10px;
+    border-radius: 16px;
+  }
+
+  .study-main {
+    font-size: 18px;
+  }
+
+  .study-progress-ring {
+    width: 46px;
+    height: 46px;
+  }
+
+  .study-progress-ring span {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
   }
 
   .study-pomodoro-shell {
@@ -739,6 +761,40 @@
 }
 
 @container study-widget (max-width: 520px) {
+  .study-widget .glass-card-body {
+    padding-top: 5px;
+  }
+
+  .study-hero {
+    min-height: 52px;
+    grid-template-columns: minmax(0, 1fr) 40px;
+    padding: 7px 9px;
+  }
+
+  .study-kicker {
+    font-size: 10px;
+  }
+
+  .study-main {
+    font-size: 17px;
+  }
+
+  .study-sub {
+    margin-top: 3px;
+    font-size: 10px;
+  }
+
+  .study-progress-ring {
+    width: 40px;
+    height: 40px;
+  }
+
+  .study-progress-ring span {
+    width: 31px;
+    height: 31px;
+    font-size: 11px;
+  }
+
   .study-date-row {
     gap: 6px;
   }
