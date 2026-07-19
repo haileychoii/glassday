@@ -2124,3 +2124,51 @@ body.theme-glass-dark
     overflow-y: hidden !important;
   }
 }
+
+/* =========================================================
+   30. THEME SHAPE GUARD
+   Memo paper should stay softly rounded in modern themes.
+   Pixel Desk and Retro 98 intentionally keep the square desktop-window shape.
+   ========================================================= */
+
+:is(
+  html[data-theme="pastel"],
+  body[data-theme="pastel"],
+  html.theme-pastel,
+  body.theme-pastel,
+  html[data-theme="glass-light"],
+  body[data-theme="glass-light"],
+  html.theme-glass-light,
+  body.theme-glass-light,
+  html[data-theme="glass-dark"],
+  body[data-theme="glass-dark"],
+  html.theme-glass-dark,
+  body.theme-glass-dark,
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora,
+  html[data-theme="mac-core"],
+  body[data-theme="mac-core"],
+  html.theme-mac-core,
+  body.theme-mac-core
+)
+  .memo-widget
+  :is(.memo-workspace, .memo-editor, .memo-window-editor) {
+  border-radius: 18px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html[data-theme="retro"],
+  body[data-theme="retro"],
+  html.theme-retro,
+  body.theme-retro
+)
+  .memo-widget
+  :is(.memo-workspace, .memo-editor, .memo-window-editor) {
+  border-radius: 0 !important;
+}
