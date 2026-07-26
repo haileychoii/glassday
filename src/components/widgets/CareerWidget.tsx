@@ -193,11 +193,12 @@ const normalizeCareer = (item: CareerItem): CareerItem => ({
   notes: item.notes ?? "",
 });
 
-/* Career widget is split into two surfaces:
-   1) dashboard summary + list/board preview
-   2) floating detail window for full application editing
-   Keep summary interactions lightweight here and push deeper editing into
-   the floating window below. */
+/* Career widget structure:
+   1) dashboard summary keeps the main grid dense and scannable
+   2) list/board mode changes only the preview surface
+   3) the floating detail window owns long-form editing, notes, and cover letters
+   4) windowState + dragRef are UI-only state; application data stays in
+      DashboardDataContext so it can sync across layouts/devices. */
 const formatApplicationWindow = (item: CareerItem) => {
   if (!item.applicationStartDate && !item.applicationEndDate) {
     return "지원기간 미입력";
@@ -227,6 +228,8 @@ export const CareerWidget = () => {
   const [viewMode, setViewMode] = useState<CareerViewMode>("list");
   const [statusFilter, setStatusFilter] = useState<CareerStatus | "All">("All");
 
+  // Floating detail window geometry is intentionally separate from the dashboard
+  // grid layout. Moving/resizing this editor should not push widgets around.
   const [windowState, setWindowState] = useState<CareerWindowState>(() =>
     getInitialWindowState()
   );
@@ -246,6 +249,8 @@ export const CareerWidget = () => {
     );
   }, [normalizedItems, activeCareerDetailId]);
 
+  // Prefer the canonical context item, but keep an optimistic local copy while
+  // the shared context catches up after edits.
   const selectedItem =
     selectedFromContext ??
     (optimisticSelectedItem?.id === activeCareerDetailId

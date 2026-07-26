@@ -1033,8 +1033,12 @@
 
 /* =========================================================
    4. Grid-embedded study widget safety
-   These rules only keep the study widget stable inside the
-   dashboard grid card. They should not restyle the floating window.
+   These rules only protect the compact dashboard card:
+   - one vertical flow
+   - internal scroll when the widget is short
+   - every panel fills the card width
+   The floating Study detail window has its own section above and should not
+   inherit these grid-only constraints.
 ========================================================= */
 
 .react-grid-item .study-widget .glass-card-body {

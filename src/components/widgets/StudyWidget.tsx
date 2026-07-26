@@ -43,11 +43,12 @@ const getSubject = (subjects: StudySubject[], id: StudySubjectId) => {
 };
 
 /* Study widget structure:
-   1) local input state
-   2) persisted study data from local storage
-   3) derived totals for the selected day/week
-   4) compact dashboard render + detail window
-   Pomodoro controls now live in the separate Timer widget. */
+   1) local input state controls the quick dashboard form only
+   2) persisted subjects/records/tasks are shared with the detail window
+   3) derived totals keep the compact card readable without extra storage
+   4) the dashboard card stays summary-first; deeper editing opens the detail window
+   Pomodoro timing lives in the separate Timer widget, but this card still reads
+   the timer state so the study summary can mention the active focus length. */
 export const StudyWidget = () => {
   const today = toLocalDateInput();
 
@@ -75,7 +76,7 @@ export const StudyWidget = () => {
   );
   const { pomodoro, remainingSeconds, activeLabel } = usePomodoroTimer();
 
-  // Selected subject drives the pomodoro label plus quick-entry defaults.
+  // Selected subject drives quick-entry defaults and the subject cards below.
   const selectedSubject = getSubject(subjects, selectedSubjectId);
 
   const selectedDateTasks = useMemo(
@@ -224,8 +225,10 @@ export const StudyWidget = () => {
           </div>
         }
       >
-        {/* Dashboard surface stays task-first.
-            Deeper edits and longer lists move into the floating detail window. */}
+        {/* Dashboard surface:
+            keep this layout compact and scrollable inside the grid item.
+            Long record/task editing belongs in StudyDetailWindow so the widget
+            does not become a full page squeezed into a small dashboard card. */}
         <div className="study-planner">
           <section className="study-hero">
             <div>
