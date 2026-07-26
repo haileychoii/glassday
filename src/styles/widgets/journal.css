@@ -20,8 +20,8 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  container-type: inline-size;
-  container-name: journal-widget;
+  container-type: size;
+  container-name: gd-widget journal-widget;
 }
 
 .daily-journal-widget .glass-card-body {
@@ -722,5 +722,201 @@
 
   .journal-score-grid {
     grid-template-columns: 1fr !important;
+  }
+}
+
+/* =========================================================
+   Final Daily Journal adaptive composition
+   The journal summary should not simply stack into one column. The first three
+   counters stay compact, while Condition behaves like a dense horizontal
+   control strip that wraps only when the actual widget width cannot support it.
+========================================================= */
+
+.daily-journal-widget {
+  --journal-summary-gap: clamp(5px, 1.1cqw, 8px);
+  --journal-summary-counter-min: clamp(58px, 14cqw, 86px);
+  --journal-condition-min: clamp(220px, 42cqw, 360px);
+}
+
+.daily-journal-widget .glass-card-body {
+  overflow: hidden;
+}
+
+.journal-content {
+  gap: var(--journal-summary-gap) !important;
+}
+
+.journal-summary-row {
+  width: 100%;
+  min-width: 0;
+  display: grid !important;
+  grid-template-columns:
+    repeat(3, minmax(var(--journal-summary-counter-min), 0.28fr))
+    minmax(var(--journal-condition-min), 1fr) !important;
+  align-items: stretch !important;
+  gap: var(--journal-summary-gap) !important;
+}
+
+.journal-summary-card {
+  min-width: 0 !important;
+  min-height: 40px !important;
+  padding: 6px 8px !important;
+  display: grid;
+  align-content: center;
+}
+
+.journal-summary-card span {
+  line-height: 1;
+}
+
+.journal-summary-card strong {
+  margin-top: 3px !important;
+  line-height: 1.05;
+}
+
+.journal-score-strip-card {
+  grid-column: auto !important;
+  min-height: 40px !important;
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.journal-score-strip-card > span {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.journal-score-strip {
+  min-width: 0;
+  margin-top: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(54px, 1fr)) !important;
+  gap: 5px !important;
+}
+
+.journal-score-inline {
+  min-height: 31px !important;
+  padding: 4px 6px !important;
+  border-radius: 12px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center !important;
+  justify-content: initial !important;
+  gap: 5px !important;
+  text-align: left !important;
+}
+
+.journal-score-inline small {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.journal-score-stepper {
+  width: auto !important;
+  flex: 0 0 auto;
+  gap: 3px !important;
+}
+
+.journal-score-stepper button {
+  width: 13px !important;
+  height: 13px !important;
+  font-size: 8px !important;
+}
+
+.journal-score-stepper b {
+  min-width: 10px;
+  margin: 0 1px !important;
+  font-size: 12px !important;
+}
+
+@container journal-widget (max-width: 760px) {
+  .journal-summary-row {
+    grid-template-columns: repeat(3, minmax(56px, 1fr)) !important;
+  }
+
+  .journal-score-strip-card {
+    grid-column: 1 / -1 !important;
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .journal-score-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
+@container journal-widget (max-width: 500px) {
+  .journal-summary-card {
+    min-height: 36px !important;
+    padding: 5px 6px !important;
+  }
+
+  .journal-summary-card strong {
+    font-size: 13px !important;
+  }
+
+  .journal-score-strip-card {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .journal-score-strip {
+    display: flex !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-gutter: stable;
+    padding-bottom: 1px;
+  }
+
+  .journal-score-inline {
+    flex: 1 0 78px;
+    min-height: 30px !important;
+  }
+}
+
+@container journal-widget (max-height: 430px) {
+  .journal-content {
+    gap: 5px !important;
+  }
+
+  .journal-summary-card {
+    min-height: 33px !important;
+    padding: 4px 6px !important;
+    border-radius: 11px !important;
+  }
+
+  .journal-summary-card span {
+    font-size: 8px !important;
+  }
+
+  .journal-summary-card strong {
+    margin-top: 1px !important;
+    font-size: 12px !important;
+  }
+
+  .journal-score-strip-card > span {
+    display: none;
+  }
+
+  .journal-score-inline {
+    min-height: 27px !important;
+    padding: 3px 5px !important;
+  }
+
+  .journal-score-stepper button {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .journal-main-scroll {
+    gap: 7px !important;
+  }
+
+  .journal-section {
+    padding: 8px !important;
+    border-radius: 12px !important;
   }
 }

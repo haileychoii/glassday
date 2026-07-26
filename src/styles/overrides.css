@@ -965,7 +965,7 @@ body,
 }
 
 .dashboard-grid-item > .glass-card.daily-journal-widget {
-  container-type: inline-size !important;
+  container-type: size !important;
   container-name: gd-widget journal-widget !important;
 }
 
