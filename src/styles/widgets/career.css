@@ -127,7 +127,7 @@
   grid-auto-rows: max-content;
   align-content: start;
   gap: var(--gd-widget-gap-tight);
-  padding-right: 2px;
+  padding-inline: 2px;
 }
 
 .career-list-hidden {

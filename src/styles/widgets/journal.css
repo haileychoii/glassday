@@ -533,7 +533,7 @@
   overflow-x: hidden !important;
   overscroll-behavior: contain !important;
   -webkit-overflow-scrolling: touch !important;
-  padding-right: 2px !important;
+  padding-inline: 2px !important;
 }
 
 @container journal-widget (max-width: 860px) {
@@ -867,7 +867,7 @@
     display: flex !important;
     overflow-x: auto;
     overflow-y: hidden;
-    scrollbar-gutter: stable;
+    scrollbar-gutter: auto;
     padding-bottom: 1px;
   }
 

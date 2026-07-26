@@ -2471,7 +2471,7 @@ body.theme-pixel-desk .career-cover-status-select option {
   grid-template-rows: auto minmax(0, 1fr) !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
 }
 
 /* Month view should consume the available body height first, and only scroll

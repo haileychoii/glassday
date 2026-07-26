@@ -29,7 +29,7 @@
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
 }
 
 .money-widget-actions {
@@ -158,7 +158,7 @@
   gap: var(--gd-widget-section-gap);
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 2px;
+  padding-inline: 2px;
 }
 
 .money-summary-panel,
@@ -463,7 +463,7 @@
   container-type: size;
   container-name: money-detail-panel;
   overscroll-behavior: contain;
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
 }
 
 .money-detail {
@@ -504,9 +504,9 @@
   overflow: auto;
   display: grid;
   gap: var(--gd-widget-section-gap);
-  padding-right: 2px;
+  padding-inline: 2px;
   overscroll-behavior: contain;
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
 }
 
 .money-overview-grid {

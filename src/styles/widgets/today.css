@@ -323,7 +323,7 @@
   display: grid;
   align-content: start;
   gap: 8px;
-  padding-right: 2px;
+  padding-inline: 2px;
 }
 
 .today-task-empty {
@@ -895,7 +895,7 @@
   overflow-x: hidden !important;
   overscroll-behavior: contain !important;
   -webkit-overflow-scrolling: touch !important;
-  padding-right: 2px !important;
+  padding-inline: 2px !important;
 }
 
 .today-focus-main,
