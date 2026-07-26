@@ -7,9 +7,18 @@
 ========================================================= */
 
 .mood-widget .glass-card-body {
+  container-type: inline-size;
+  container-name: mood-widget;
   display: grid;
   align-content: start;
-  gap: var(--gd-widget-stack-gap);
+  gap: 0;
+  overflow: auto;
+}
+
+.mood-list {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
 }
 
 .mood-row {
@@ -18,9 +27,13 @@
   --mood-surface-active:
     color-mix(in srgb, var(--mood-accent) 18%, white 82%);
   min-width: 0;
-  min-height: 42px;
-  padding: 8px 10px;
-  border-radius: 16px;
+  min-height: 34px;
+  padding: 6px 8px;
+  border-radius: 14px;
+  display: grid;
+  grid-template-columns: minmax(58px, 0.62fr) minmax(60px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
   background: var(--mood-surface);
   border: 1px solid hsl(0 0% 100% / 0.34);
 }
@@ -50,19 +63,66 @@
   color: hsl(var(--foreground) / 0.78);
 }
 
+.mood-label {
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mood-value {
+  min-width: 30px;
+  text-align: right;
+  font-size: 10.5px;
+  font-weight: 750;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
 .mood-track {
   min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(7px, 10px));
+  justify-content: center;
+  gap: 5px;
 }
 
 .mood-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
   background: hsl(0 0% 100% / 0.34);
+  transition:
+    transform 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
 }
 
 .mood-dot-active {
   background: var(--mood-accent);
+  transform: scale(1.08);
   box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--mood-accent) 20%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--mood-accent) 18%, transparent),
     0 6px 16px -10px color-mix(in srgb, var(--mood-accent) 62%, transparent);
+}
+
+.mood-reset-button {
+  min-width: 0;
+  padding-top: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 750;
+  color: hsl(var(--muted-foreground) / 0.78);
+  transition: color 140ms ease;
+}
+
+.mood-reset-button:hover {
+  color: hsl(var(--foreground) / 0.9);
 }
 
 html[data-theme="glass-dark"] .mood-row,
@@ -102,7 +162,7 @@ html.theme-pixel-desk .mood-row,
 body.theme-pixel-desk .mood-row,
 html.theme-pixel .mood-row,
 body.theme-pixel .mood-row {
-  padding: 6px 8px;
+  padding: 5px 7px;
   border-radius: 0;
   background: #e8e8dc;
   border-top: 1px solid #ffffff;
@@ -129,4 +189,36 @@ body.theme-mac-core .mood-row {
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.88),
     0 10px 22px -20px rgb(22 24 32 / 0.18);
+}
+
+@container mood-widget (max-width: 360px) {
+  .mood-list {
+    gap: 5px;
+  }
+
+  .mood-row {
+    min-height: 31px;
+    grid-template-columns: minmax(48px, 0.58fr) minmax(48px, 1fr) auto;
+    gap: 6px;
+    padding: 5px 7px;
+  }
+
+  .mood-label {
+    font-size: 10px;
+  }
+
+  .mood-value {
+    min-width: 26px;
+    font-size: 10px;
+  }
+
+  .mood-track {
+    grid-template-columns: repeat(5, 8px);
+    gap: 4px;
+  }
+
+  .mood-dot {
+    width: 8px;
+    height: 8px;
+  }
 }

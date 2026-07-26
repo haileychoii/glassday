@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { createPortal } from "react-dom";
 import {
   CalendarDays,
   ChevronLeft,
@@ -8,10 +7,10 @@ import {
   Lock,
   Plus,
   Trash2,
-  X,
 } from "lucide-react";
 
 import { GlassCard } from "../glass/GlassCard";
+import { FloatingWindow } from "../common/FloatingWindow";
 import { cn } from "../../lib/utils";
 import { useDashboardData } from "../../context/DashboardDataContext";
 import {
@@ -363,41 +362,28 @@ export const CalendarWidget = () => {
         </div>
       </GlassCard>
 
-      {editingEvent &&
-        createPortal(
-          <div
-            className="calendar-modal-backdrop"
-            onMouseDown={() => setEditingId(null)}
-          >
-            <div
-              className="calendar-modal-window"
-              onMouseDown={(event) => event.stopPropagation()}
-            >
-              <div className="calendar-modal-header">
-                <div>
-                  <div className="text-sm font-semibold">
-                    {editingEvent.source === "career"
-                      ? "Career Application Window"
-                      : "Calendar Event"}
-                  </div>
-
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {editingEvent.source === "career"
-                      ? "Changes here will update Career Widget too."
-                      : "Manual dashboard event."}
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setEditingId(null)}
-                  className="glass-button h-8 w-8 flex items-center justify-center"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="calendar-modal-body">
+      <FloatingWindow
+        open={Boolean(editingEvent)}
+        title={
+          editingEvent?.source === "career"
+            ? "Career Application Window"
+            : "Calendar Event"
+        }
+        subtitle={
+          editingEvent?.source === "career"
+            ? "Changes here update Career Widget too."
+            : "Manual dashboard event."
+        }
+        storageKey="glassday.calendar.eventWindow.rect.v1"
+        defaultRect={{ x: 160, y: 96, w: 620, h: 600 }}
+        minWidth={360}
+        minHeight={420}
+        className="calendar-floating-window"
+        titlebarClassName="calendar-floating-titlebar"
+        onClose={() => setEditingId(null)}
+      >
+        {editingEvent && (
+          <div className="calendar-modal-body">
                 <label className="calendar-field">
                   <span>Title</span>
                   <input
@@ -546,10 +532,8 @@ export const CalendarWidget = () => {
                   </button>
                 </div>
               </div>
-            </div>
-          </div>,
-          document.body
         )}
+      </FloatingWindow>
     </>
   );
 };

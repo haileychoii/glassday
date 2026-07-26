@@ -4,20 +4,20 @@ export type PastelEventColor = {
 };
 
 export const pastelEventColors: PastelEventColor[] = [
-  { name: "Powder Blue", value: "#DCEBFF" },
-  { name: "Cloud Blue", value: "#E3E5FF" },
-  { name: "Soft Lavender", value: "#EFE3FF" },
-  { name: "Blush Pink", value: "#FFE3F1" },
-  { name: "Milk Rose", value: "#FFE5E5" },
-  { name: "Cream Peach", value: "#FFEBD8" },
-  { name: "Butter Cream", value: "#FFF6D8" },
-  { name: "Pale Lime", value: "#EAF9D8" },
-  { name: "Mint Cream", value: "#DDF7EA" },
-  { name: "Aqua Mist", value: "#DCF7F7" },
-  { name: "Ice Blue", value: "#E3F2FF" },
-  { name: "Dusty Lilac", value: "#E8E8F4" },
-  { name: "Oat Beige", value: "#F2E8DF" },
-  { name: "Mauve Milk", value: "#F8E4EE" },
+  { name: "Powder Blue", value: "#BFD8FF" },
+  { name: "Cloud Blue", value: "#C8CDFB" },
+  { name: "Soft Lavender", value: "#DAC7F6" },
+  { name: "Blush Pink", value: "#F4C3D8" },
+  { name: "Milk Rose", value: "#F4C9C7" },
+  { name: "Cream Peach", value: "#F2D2B2" },
+  { name: "Butter Cream", value: "#EEDB9B" },
+  { name: "Pale Lime", value: "#CDE6A7" },
+  { name: "Mint Cream", value: "#B7E3CA" },
+  { name: "Aqua Mist", value: "#B4E1E4" },
+  { name: "Ice Blue", value: "#BCDDF6" },
+  { name: "Dusty Lilac", value: "#D2D0E5" },
+  { name: "Oat Beige", value: "#E2D2C3" },
+  { name: "Mauve Milk", value: "#EAC6D7" },
 ];
 
 export const getRandomPastelEventColor = () => {

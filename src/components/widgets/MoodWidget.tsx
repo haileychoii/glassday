@@ -62,32 +62,32 @@ export const MoodWidget = () => {
         </button>
       }
     >
-      <div className="space-y-3">
+      <div className="mood-list">
         {metrics.map((metric) => (
           <div
             key={metric}
-            className="mood-row flex items-center gap-3"
+            className="mood-row"
             data-metric={metric.toLowerCase()}
           >
-            <span className="mood-label text-xs font-medium w-20">{metric}</span>
+            <span className="mood-label">{metric}</span>
 
-            <div className="mood-track flex gap-1.5 flex-1">
+            <div className="mood-track">
               {[1, 2, 3, 4, 5].map((n) => (
                 <button
                   key={n}
                   type="button"
                   onClick={() => updateMetric(metric, n)}
                   className={cn(
-                    "mood-dot w-2.5 h-2.5 rounded-full transition-all",
+                    "mood-dot",
                     editing && "cursor-pointer",
-                    n <= values[metric] ? "mood-dot-active scale-110" : "hover:bg-white/65",
+                    n <= values[metric] ? "mood-dot-active" : "hover:bg-white/65",
                     !editing && "pointer-events-none"
                   )}
                 />
               ))}
             </div>
 
-            <span className="mood-value text-[11px] text-muted-foreground tabular-nums w-8">
+            <span className="mood-value">
               {values[metric]}/5
             </span>
           </div>
@@ -97,7 +97,7 @@ export const MoodWidget = () => {
           <button
             type="button"
             onClick={resetValue}
-            className="pt-2 flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition"
+            className="mood-reset-button"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset mood data
