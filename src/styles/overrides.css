@@ -940,3 +940,82 @@ body,
     color: hsl(var(--muted-foreground) / 0.8) !important;
   }
 }
+
+/* =========================================================
+   Widget responsive container registry
+   The generic rule above gives every dashboard card the shared gd-widget
+   container. Some widgets also have their own named container queries
+   (money-widget, memo-widget, journal-widget, etc.). Keep both names here so
+   widget-specific responsive layouts do not get erased by the late overrides.
+========================================================= */
+
+.dashboard-grid-item > .glass-card.calendar-widget-card {
+  container-type: size !important;
+  container-name: gd-widget calendar-widget !important;
+}
+
+.dashboard-grid-item > .glass-card.money-widget {
+  container-type: inline-size !important;
+  container-name: gd-widget money-widget !important;
+}
+
+.dashboard-grid-item > .glass-card.memo-widget {
+  container-type: inline-size !important;
+  container-name: gd-widget memo-widget !important;
+}
+
+.dashboard-grid-item > .glass-card.daily-journal-widget {
+  container-type: inline-size !important;
+  container-name: gd-widget journal-widget !important;
+}
+
+.dashboard-grid-item > .glass-card.mood-widget {
+  container-type: inline-size !important;
+  container-name: gd-widget mood-widget !important;
+}
+
+.dashboard-grid-item > .glass-card.timer-widget {
+  container-type: inline-size !important;
+  container-name: gd-widget timer-widget !important;
+}
+
+.dashboard-grid-item > .glass-card.today-focus-widget {
+  container-type: inline-size !important;
+  container-name: gd-widget today-focus-widget !important;
+}
+
+.dashboard-grid-item > .career-widget {
+  container-type: inline-size !important;
+  container-name: gd-widget career-widget !important;
+}
+
+.dashboard-grid-item > .glass-card.study-widget,
+.dashboard-grid-item > .glass-card.alert-center-widget {
+  container-type: inline-size !important;
+  container-name: gd-widget !important;
+}
+
+/* Dashboard card scroll safety:
+   Every widget body keeps a vertical scroll fallback when the user resizes the
+   grid item shorter than its ideal content. Widget-local CSS can still place a
+   more specific internal scroller inside this body. */
+.dashboard-grid-item > .glass-card > .widget-frame__body {
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  scrollbar-gutter: stable !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+@container gd-widget (max-width: 520px) {
+  .glass-card > .widget-frame__header {
+    gap: 8px !important;
+  }
+
+  .glass-card > .widget-frame__header > .widget-frame__actions,
+  .glass-card > .widget-frame__header > .glass-card-actions {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+}
