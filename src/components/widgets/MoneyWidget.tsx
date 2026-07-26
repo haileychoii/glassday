@@ -870,8 +870,8 @@ export const MoneyWidget = () => {
         subtitle="Personal finance, spending, wishlist, recurring"
         storageKey="glassday.money.detailWindow.rect.v1"
         defaultRect={{ x: 120, y: 72, w: 1060, h: 740 }}
-        minWidth={720}
-        minHeight={520}
+        minWidth={380}
+        minHeight={320}
         className="money-floating-window"
         titlebarClassName="money-floating-titlebar"
         actions={
