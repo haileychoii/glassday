@@ -1,0 +1,1068 @@
+/* =========================================================
+   MONEY WIDGET
+   Personal finance surfaces for:
+   - compact dashboard summary
+   - spending transaction database
+   - wishlist purchase flow
+   - recurring expense model
+
+   Figma-friendly naming:
+   money-dashboard     = compact widget body
+   money-detail-card   = repeated panels inside the floating window
+   money-form          = shared input grid
+   money-section-tabs  = Overview / Spending / Wishlist / Recurring nav
+========================================================= */
+
+/* =========================================================
+   1. Widget root and shared primitives
+========================================================= */
+
+.money-widget {
+  container-type: inline-size;
+  container-name: money-widget;
+  min-width: 0;
+  min-height: 0;
+}
+
+.money-widget .glass-card-body {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.money-widget-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--gd-widget-inline-gap);
+}
+
+.money-action-button,
+.money-icon-button,
+.money-text-button,
+.money-secondary-button,
+.money-danger-button,
+.money-submit-button,
+.money-pill,
+.money-section-tab {
+  min-width: 0;
+  border: 1px solid hsl(0 0% 100% / 0.42);
+  background: hsl(0 0% 100% / 0.28);
+  color: hsl(var(--foreground) / 0.72);
+  transition:
+    transform 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.money-action-button,
+.money-secondary-button,
+.money-danger-button,
+.money-submit-button {
+  min-height: var(--gd-control-height-md);
+  border-radius: 999px;
+  padding: 0 var(--gd-space-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gd-space-xs);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.money-icon-button {
+  width: var(--gd-control-height-md);
+  height: var(--gd-control-height-md);
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.money-action-button:hover,
+.money-icon-button:hover,
+.money-text-button:hover,
+.money-secondary-button:hover,
+.money-submit-button:hover,
+.money-pill:hover,
+.money-section-tab:hover {
+  transform: translateY(-1px);
+  color: hsl(var(--foreground) / 0.92);
+  background: hsl(0 0% 100% / 0.4);
+}
+
+.money-submit-button,
+.money-pill.is-active,
+.money-section-tab.is-active {
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.16);
+  border-color: hsl(var(--primary) / 0.28);
+}
+
+.money-danger-button {
+  color: hsl(352 66% 42%);
+  background: hsl(352 90% 96% / 0.72);
+  border-color: hsl(352 78% 70% / 0.35);
+}
+
+.money-submit-button:disabled {
+  cursor: default;
+  opacity: 0.58;
+  transform: none;
+}
+
+.money-text-button {
+  min-height: 28px;
+  border-radius: 999px;
+  padding: 0 var(--gd-space-md);
+  font-size: 10.5px;
+  font-weight: 800;
+}
+
+.money-kicker {
+  display: block;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+.money-empty {
+  min-height: 44px;
+  border: 1px dashed hsl(0 0% 100% / 0.38);
+  border-radius: 16px;
+  padding: var(--gd-space-lg);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: hsl(var(--muted-foreground) / 0.76);
+  background: hsl(0 0% 100% / 0.16);
+}
+
+/* =========================================================
+   2. Compact dashboard widget
+   Small cards show summary, donut, top category, recent transactions.
+========================================================= */
+
+.money-dashboard {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--gd-widget-section-gap);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 2px;
+}
+
+.money-summary-panel,
+.money-budget-panel,
+.money-visual-panel,
+.money-recent-panel,
+.money-detail-card {
+  min-width: 0;
+  border: 1px solid hsl(0 0% 100% / 0.42);
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, hsl(0 0% 100% / 0.36), hsl(0 0% 100% / 0.15));
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.52);
+}
+
+.money-summary-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--gd-widget-stack-gap);
+  align-items: center;
+  padding: var(--gd-widget-panel-pad);
+}
+
+.money-summary-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.money-summary-copy span,
+.money-budget-mini span,
+.money-panel-heading span {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: hsl(var(--muted-foreground) / 0.76);
+}
+
+.money-summary-copy strong {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  color: hsl(var(--foreground) / 0.88);
+}
+
+.money-summary-copy em {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: normal;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: hsl(var(--muted-foreground) / 0.78);
+}
+
+.money-budget-mini {
+  width: 68px;
+  height: 58px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: hsl(0 0% 100% / 0.22);
+  border: 1px solid hsl(0 0% 100% / 0.34);
+}
+
+.money-budget-mini strong {
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.money-budget-panel,
+.money-recent-panel {
+  padding: var(--gd-widget-panel-pad);
+  display: grid;
+  gap: var(--gd-widget-section-gap);
+}
+
+.money-panel-heading,
+.money-section-heading {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gd-widget-stack-gap);
+}
+
+.money-panel-heading strong {
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.money-panel-heading button {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: hsl(var(--primary));
+}
+
+.money-budget-track {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: hsl(0 0% 100% / 0.26);
+}
+
+.money-budget-fill {
+  height: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, hsl(var(--primary) / 0.58), hsl(var(--primary) / 0.28));
+  transition: width 220ms ease;
+}
+
+.money-visual-panel {
+  padding: var(--gd-widget-panel-pad);
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--gd-widget-stack-gap);
+}
+
+.money-top-category {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.money-top-category span {
+  font-size: 10px;
+  font-weight: 800;
+  color: hsl(var(--muted-foreground) / 0.7);
+}
+
+.money-top-category strong {
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.25;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+/* =========================================================
+   3. Donut and chart primitives
+========================================================= */
+
+.money-donut {
+  width: 132px;
+  aspect-ratio: 1;
+  position: relative;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+}
+
+.money-donut-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.money-donut-track {
+  stroke: hsl(0 0% 100% / 0.24);
+}
+
+.money-donut-segment {
+  cursor: pointer;
+  transition:
+    stroke-width 160ms ease,
+    opacity 160ms ease,
+    filter 160ms ease;
+}
+
+.money-donut-segment:hover,
+.money-donut-segment.is-selected {
+  filter: drop-shadow(0 4px 10px hsl(var(--foreground) / 0.14));
+}
+
+.money-donut-center {
+  position: absolute;
+  inset: 30px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 3px;
+  text-align: center;
+  background: hsl(0 0% 100% / 0.28);
+  border: 1px solid hsl(0 0% 100% / 0.34);
+}
+
+.money-donut-center strong {
+  max-width: 84px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.money-donut-center span {
+  font-size: 8.5px;
+  font-weight: 800;
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+.money-category-list,
+.money-store-bars {
+  min-width: 0;
+  display: grid;
+  gap: var(--gd-space-xs);
+}
+
+.money-category-row {
+  min-width: 0;
+  min-height: 34px;
+  border-radius: 13px;
+  padding: 0 var(--gd-space-sm);
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto 34px;
+  align-items: center;
+  gap: var(--gd-space-xs);
+  text-align: left;
+  background: hsl(0 0% 100% / 0.22);
+  border: 1px solid hsl(0 0% 100% / 0.3);
+}
+
+.money-category-row.is-selected {
+  background: hsl(var(--primary) / 0.12);
+  border-color: hsl(var(--primary) / 0.24);
+}
+
+.money-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--money-color);
+}
+
+.money-category-row span:nth-child(2),
+.money-store-row span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.money-category-row strong,
+.money-store-row strong {
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.money-category-row em {
+  font-style: normal;
+  text-align: right;
+  font-size: 10px;
+  font-weight: 800;
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+.money-store-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(76px, 0.8fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gd-space-sm);
+}
+
+.money-store-track {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: hsl(0 0% 100% / 0.22);
+}
+
+.money-store-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: hsl(var(--primary) / 0.42);
+}
+
+/* =========================================================
+   4. Floating detail layout
+========================================================= */
+
+.money-floating-window {
+  max-width: calc(100vw - 28px);
+}
+
+.money-floating-window .floating-window-body {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.money-detail {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--gd-widget-section-gap);
+  overflow: hidden;
+}
+
+.money-section-tabs {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gd-space-xs);
+}
+
+.money-section-tab {
+  min-height: 34px;
+  border-radius: 999px;
+  padding: 0 var(--gd-space-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gd-space-xs);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.money-overview-grid,
+.money-spending-layout,
+.money-wishlist-layout,
+.money-recurring-layout {
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  gap: var(--gd-widget-section-gap);
+  padding-right: 2px;
+}
+
+.money-overview-grid {
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+}
+
+.money-spending-layout,
+.money-recurring-layout {
+  grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.22fr);
+}
+
+.money-wishlist-layout {
+  grid-template-columns: minmax(260px, 0.7fr) minmax(260px, 0.8fr) minmax(300px, 1fr);
+}
+
+.money-detail-card {
+  padding: var(--gd-widget-panel-pad);
+  display: grid;
+  align-content: start;
+  gap: var(--gd-widget-section-gap);
+}
+
+.money-section-heading h3 {
+  margin: 2px 0 0;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.2;
+  color: hsl(var(--foreground) / 0.88);
+}
+
+.money-section-heading p {
+  margin: 3px 0 0;
+  font-size: 11px;
+  color: hsl(var(--muted-foreground) / 0.75);
+}
+
+.money-overview-hero {
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.38fr);
+  align-items: center;
+}
+
+.money-overview-hero h3 {
+  margin: 2px 0 8px;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.money-overview-hero strong {
+  display: block;
+  font-size: 28px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.money-overview-hero p {
+  margin: 7px 0 0;
+  font-size: 12px;
+  font-weight: 750;
+  color: hsl(var(--muted-foreground) / 0.78);
+}
+
+.money-budget-editor {
+  display: grid;
+  gap: var(--gd-space-xs);
+}
+
+.money-budget-editor em {
+  font-style: normal;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: hsl(var(--muted-foreground) / 0.7);
+}
+
+.money-chart-card {
+  min-height: 280px;
+}
+
+.money-chart-layout {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--gd-widget-stack-gap);
+}
+
+.money-chart-layout .money-donut {
+  width: 180px;
+}
+
+/* =========================================================
+   5. Forms and transaction lists
+========================================================= */
+
+.money-form,
+.money-detail-fields {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gd-widget-section-gap);
+}
+
+.money-form label,
+.money-detail-fields label,
+.money-budget-editor,
+.money-purchase-dialog label {
+  min-width: 0;
+}
+
+.money-form span,
+.money-detail-fields span,
+.money-budget-editor span,
+.money-purchase-dialog span {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 10px;
+  font-weight: 850;
+  color: hsl(var(--muted-foreground) / 0.78);
+}
+
+.money-form input,
+.money-form select,
+.money-form textarea,
+.money-detail-fields input,
+.money-detail-fields select,
+.money-detail-fields textarea,
+.money-budget-editor input,
+.money-purchase-dialog input,
+.money-purchase-dialog select {
+  width: 100%;
+  min-width: 0;
+  min-height: 34px;
+  border-radius: 13px;
+  border: 1px solid hsl(0 0% 100% / 0.38);
+  background: hsl(0 0% 100% / 0.26);
+  padding: 0 var(--gd-space-md);
+  color: hsl(var(--foreground) / 0.82);
+  font-size: 12px;
+  font-weight: 750;
+  outline: none;
+}
+
+.money-form textarea,
+.money-detail-fields textarea {
+  min-height: 72px;
+  padding-block: var(--gd-space-sm);
+  resize: vertical;
+}
+
+.money-form-wide,
+.money-submit-button {
+  grid-column: 1 / -1;
+}
+
+.money-quick-add,
+.money-pill-row {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gd-space-xs);
+}
+
+.money-quick-add button,
+.money-pill {
+  min-height: 28px;
+  border-radius: 999px;
+  padding: 0 var(--gd-space-md);
+  font-size: 10.5px;
+  font-weight: 800;
+}
+
+.money-list-card {
+  min-height: 0;
+}
+
+.money-transaction-groups {
+  min-width: 0;
+  display: grid;
+  gap: var(--gd-widget-section-gap);
+}
+
+.money-date-group {
+  min-width: 0;
+  display: grid;
+  gap: var(--gd-space-xs);
+}
+
+.money-date-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--gd-space-xs);
+  font-size: 10.5px;
+  font-weight: 850;
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+.money-transaction-list {
+  display: grid;
+  gap: var(--gd-space-xs);
+}
+
+.money-transaction-row {
+  min-width: 0;
+  min-height: 44px;
+  border-radius: 15px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 7px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gd-space-sm);
+  background: hsl(0 0% 100% / 0.2);
+  border: 1px solid hsl(0 0% 100% / 0.3);
+}
+
+.money-transaction-mark {
+  width: 7px;
+  height: 30px;
+  border-radius: 999px;
+}
+
+.money-transaction-copy {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.money-transaction-copy strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.money-transaction-copy span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+.money-transaction-side {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gd-space-xs);
+}
+
+.money-transaction-side > strong {
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   6. Wishlist and purchase dialog
+========================================================= */
+
+.money-wishlist-list,
+.money-recurring-list {
+  display: grid;
+  gap: var(--gd-space-xs);
+}
+
+.money-wishlist-card {
+  min-width: 0;
+  border-radius: 16px;
+  padding: var(--gd-space-sm);
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gd-space-sm);
+  text-align: left;
+  background: hsl(0 0% 100% / 0.2);
+  border: 1px solid hsl(0 0% 100% / 0.3);
+}
+
+.money-wishlist-card.is-selected {
+  background: hsl(var(--primary) / 0.12);
+  border-color: hsl(var(--primary) / 0.24);
+}
+
+.money-wishlist-image,
+.money-image-empty {
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: hsl(0 0% 100% / 0.28);
+  border: 1px solid hsl(0 0% 100% / 0.34);
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+.money-wishlist-image {
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+}
+
+.money-wishlist-image img,
+.money-image-gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.money-wishlist-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.money-wishlist-copy strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.money-wishlist-copy span,
+.money-wishlist-card em {
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 750;
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+.money-stars {
+  font-size: 11px;
+  letter-spacing: 0;
+  color: hsl(43 72% 54%);
+}
+
+.money-image-gallery {
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gd-space-xs);
+}
+
+.money-image-gallery img,
+.money-image-empty {
+  aspect-ratio: 1.25;
+  min-height: 78px;
+}
+
+.money-wishlist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gd-space-xs);
+}
+
+.money-purchase-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: hsl(var(--background) / 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.money-purchase-dialog {
+  width: min(420px, 100%);
+  border-radius: 24px;
+  border: 1px solid hsl(0 0% 100% / 0.5);
+  background:
+    linear-gradient(145deg, hsl(0 0% 100% / 0.82), hsl(0 0% 100% / 0.58));
+  box-shadow:
+    0 28px 90px hsl(240 38% 10% / 0.28),
+    inset 0 1px 0 hsl(0 0% 100% / 0.82);
+  padding: var(--gd-space-xl);
+  display: grid;
+  gap: var(--gd-widget-section-gap);
+}
+
+/* =========================================================
+   7. Recurring rows
+========================================================= */
+
+.money-recurring-row {
+  min-width: 0;
+  min-height: 48px;
+  border-radius: 16px;
+  padding: var(--gd-space-sm);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: var(--gd-space-sm);
+  background: hsl(0 0% 100% / 0.2);
+  border: 1px solid hsl(0 0% 100% / 0.3);
+}
+
+.money-recurring-row div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.money-recurring-row strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.money-recurring-row span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10.5px;
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+.money-toggle-label {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gd-space-xs);
+}
+
+.money-toggle-label input {
+  width: 16px;
+  height: 16px;
+}
+
+/* =========================================================
+   8. Container responsive behavior
+   Reacts to Money widget width, not browser viewport.
+========================================================= */
+
+@container money-widget (max-width: 620px) {
+  .money-widget-actions .money-action-button span {
+    display: none;
+  }
+
+  .money-summary-panel {
+    grid-template-columns: minmax(0, 1fr) 58px;
+    padding: 10px;
+  }
+
+  .money-summary-copy strong {
+    font-size: 18px;
+  }
+
+  .money-budget-mini {
+    width: 58px;
+    height: 52px;
+  }
+
+  .money-visual-panel {
+    grid-template-columns: 104px minmax(0, 1fr);
+    padding: 10px;
+  }
+
+  .money-visual-panel .money-donut {
+    width: 104px;
+  }
+
+  .money-recent-panel .money-date-heading {
+    display: none;
+  }
+}
+
+@container money-widget (max-width: 420px) {
+  .money-dashboard {
+    gap: var(--gd-space-xs);
+  }
+
+  .money-summary-panel,
+  .money-budget-panel,
+  .money-visual-panel,
+  .money-recent-panel {
+    border-radius: 15px;
+    padding: 9px;
+  }
+
+  .money-visual-panel {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .money-top-category {
+    width: 100%;
+  }
+
+  .money-transaction-row {
+    min-height: 40px;
+    grid-template-columns: 6px minmax(0, 1fr);
+  }
+
+  .money-transaction-side {
+    grid-column: 2;
+    justify-content: space-between;
+  }
+}
+
+/* Floating detail responsive rules use viewport because the floating window
+   itself is resized by the user and capped by the screen. */
+@media (max-width: 980px) {
+  .money-overview-grid,
+  .money-spending-layout,
+  .money-wishlist-layout,
+  .money-recurring-layout,
+  .money-overview-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .money-chart-layout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+}
+
+@media (max-width: 680px) {
+  .money-form,
+  .money-detail-fields,
+  .money-recurring-row {
+    grid-template-columns: 1fr;
+  }
+
+  .money-store-row {
+    grid-template-columns: 1fr;
+  }
+
+  .money-section-tab span {
+    display: none;
+  }
+
+  .money-section-tab {
+    width: 34px;
+    padding: 0;
+  }
+}
+
+/* =========================================================
+   9. Theme-specific readability
+========================================================= */
+
+html[data-theme="glass-dark"] .money-detail-card,
+body[data-theme="glass-dark"] .money-detail-card,
+html.theme-glass-dark .money-detail-card,
+body.theme-glass-dark .money-detail-card {
+  background:
+    linear-gradient(145deg, rgb(31 38 57 / 0.54), rgb(18 24 39 / 0.4));
+  border-color: rgb(184 202 246 / 0.18);
+}
+
+html[data-theme="glass-dark"] .money-purchase-dialog,
+body[data-theme="glass-dark"] .money-purchase-dialog,
+html.theme-glass-dark .money-purchase-dialog,
+body.theme-glass-dark .money-purchase-dialog {
+  background:
+    linear-gradient(145deg, rgb(31 38 57 / 0.9), rgb(18 24 39 / 0.78));
+  border-color: rgb(184 202 246 / 0.24);
+}
+
+html[data-theme="pixel-desk"] .money-detail-card,
+body[data-theme="pixel-desk"] .money-detail-card,
+html.theme-pixel-desk .money-detail-card,
+body.theme-pixel-desk .money-detail-card,
+html[data-theme="retro"] .money-detail-card,
+body[data-theme="retro"] .money-detail-card,
+html.theme-retro .money-detail-card,
+body.theme-retro .money-detail-card {
+  border-radius: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
