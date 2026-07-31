@@ -450,13 +450,13 @@
 .money-floating-window {
   max-width: calc(100vw - 28px);
   background:
-    linear-gradient(145deg, hsl(0 0% 100% / 0.86), hsl(250 36% 96% / 0.72));
-  border-color: hsl(0 0% 100% / 0.74);
+    linear-gradient(145deg, hsl(0 0% 100% / 0.94), hsl(250 36% 96% / 0.84));
+  border-color: hsl(0 0% 100% / 0.82);
   box-shadow:
     0 42px 120px -54px hsl(230 28% 12% / 0.48),
     inset 0 1px 0 hsl(0 0% 100% / 0.88);
-  backdrop-filter: blur(34px) saturate(168%);
-  -webkit-backdrop-filter: blur(34px) saturate(168%);
+  backdrop-filter: blur(54px) saturate(174%);
+  -webkit-backdrop-filter: blur(54px) saturate(174%);
 }
 
 .money-floating-window .floating-window-body {
@@ -470,13 +470,13 @@
 }
 
 .money-detail {
-  height: 100%;
-  max-height: 100%;
+  height: auto;
+  max-height: none;
   min-height: 0;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
   gap: var(--gd-widget-section-gap);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .money-section-tabs {
@@ -503,9 +503,10 @@
 .money-wishlist-layout,
 .money-recurring-layout {
   min-height: 0;
-  max-height: 100%;
-  overflow: auto;
+  max-height: none;
+  overflow: visible;
   display: grid;
+  align-content: start;
   gap: var(--gd-widget-section-gap);
   padding-inline: 2px;
   overscroll-behavior: contain;
@@ -522,7 +523,24 @@
 }
 
 .money-wishlist-layout {
-  grid-template-columns: minmax(260px, 0.7fr) minmax(260px, 0.8fr) minmax(300px, 1fr);
+  grid-template-columns: minmax(280px, 0.92fr) minmax(320px, 1.08fr);
+}
+
+.money-wishlist-add-card {
+  grid-column: 1 / -1;
+}
+
+.money-wishlist-add-card.is-collapsed {
+  padding-block: 12px;
+}
+
+.money-wishlist-add-card.is-collapsed .money-section-heading {
+  align-items: center;
+}
+
+.money-wishlist-toggle {
+  min-height: 32px;
+  white-space: nowrap;
 }
 
 .money-detail-card {
@@ -590,19 +608,20 @@
 }
 
 .money-chart-card {
-  min-height: 280px;
+  min-height: 238px;
 }
 
 .money-chart-layout {
   min-width: 0;
   display: grid;
-  grid-template-columns: 180px minmax(0, 1fr);
-  align-items: center;
-  gap: var(--gd-widget-stack-gap);
+  grid-template-columns: minmax(132px, 168px) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--gd-widget-section-gap);
 }
 
 .money-chart-layout .money-donut {
-  width: 180px;
+  width: min(168px, 100%);
+  justify-self: start;
 }
 
 /* =========================================================
@@ -1090,7 +1109,11 @@
   }
 
   .money-chart-layout {
-    grid-template-columns: minmax(140px, 180px) minmax(0, 1fr);
+    grid-template-columns: minmax(118px, 148px) minmax(0, 1fr);
+  }
+
+  .money-chart-layout .money-donut {
+    width: min(148px, 100%);
   }
 }
 
@@ -1132,13 +1155,33 @@
   }
 
   .money-chart-layout {
-    grid-template-columns: 1fr;
-    justify-items: center;
+    grid-template-columns: minmax(92px, 112px) minmax(0, 1fr);
+    align-items: start;
+    justify-items: stretch;
   }
 
   .money-chart-layout .money-donut,
   .money-donut {
-    width: min(160px, 68cqw);
+    width: min(112px, 100%);
+  }
+
+  .money-donut-center {
+    inset: 22px;
+  }
+
+  .money-donut-center strong {
+    max-width: 58px;
+    font-size: 10px;
+  }
+
+  .money-category-row {
+    min-height: 30px;
+    grid-template-columns: 8px minmax(0, 1fr) auto;
+    padding-inline: 8px;
+  }
+
+  .money-category-row em {
+    display: none;
   }
 
   .money-store-row {
@@ -1148,6 +1191,10 @@
   .money-section-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .money-wishlist-layout {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1234,6 +1281,24 @@
     font-size: 22px;
   }
 
+  .money-chart-layout {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .money-chart-layout .money-donut,
+  .money-donut {
+    width: 88px;
+  }
+
+  .money-donut-center {
+    inset: 18px;
+  }
+
+  .money-donut-center span {
+    display: none;
+  }
+
   .money-summary-card,
   .money-wishlist-card,
   .money-transaction-row {
@@ -1250,10 +1315,6 @@
     grid-template-columns: 1fr;
   }
 
-  .money-chart-layout {
-    grid-template-columns: 1fr;
-    justify-items: center;
-  }
 }
 
 @media (max-width: 680px) {
@@ -1295,10 +1356,10 @@ body[data-theme="glass-light"] .money-floating-window,
 html.theme-glass-light .money-floating-window,
 body.theme-glass-light .money-floating-window {
   background:
-    linear-gradient(145deg, rgb(255 255 255 / 0.62), rgb(246 243 255 / 0.48)) !important;
-  border-color: rgb(255 255 255 / 0.58) !important;
-  backdrop-filter: blur(30px) saturate(158%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(158%) !important;
+    linear-gradient(145deg, rgb(255 255 255 / 0.9), rgb(246 243 255 / 0.78)) !important;
+  border-color: rgb(255 255 255 / 0.78) !important;
+  backdrop-filter: blur(48px) saturate(166%) !important;
+  -webkit-backdrop-filter: blur(48px) saturate(166%) !important;
 }
 
 html[data-theme="glass-dark"] .money-floating-window,
@@ -1310,13 +1371,13 @@ body[data-theme="aurora"] .money-floating-window,
 html.theme-aurora .money-floating-window,
 body.theme-aurora .money-floating-window {
   background:
-    linear-gradient(145deg, rgb(23 29 46 / 0.82), rgb(10 14 26 / 0.76)) !important;
+    linear-gradient(145deg, rgb(27 34 52 / 0.93), rgb(12 17 30 / 0.9)) !important;
   border-color: rgb(186 205 248 / 0.24) !important;
   box-shadow:
     0 40px 116px -48px rgb(0 0 0 / 0.62),
     inset 0 1px 0 rgb(255 255 255 / 0.12) !important;
-  backdrop-filter: blur(28px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
+  backdrop-filter: blur(48px) saturate(158%) !important;
+  -webkit-backdrop-filter: blur(48px) saturate(158%) !important;
 }
 
 html[data-theme="glass-dark"] .money-purchase-dialog,

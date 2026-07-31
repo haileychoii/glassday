@@ -3,7 +3,6 @@ import type { CSSProperties, FormEvent } from "react";
 import {
   CalendarDays,
   Check,
-  ChevronLeft,
   ExternalLink,
   Heart,
   Maximize2,
@@ -435,6 +434,7 @@ export const MoneyWidget = () => {
   const [section, setSection] = useState<MoneySection>("overview");
   const [spendingView, setSpendingView] = useState<MoneySpendingView>("All");
   const [wishlistView, setWishlistView] = useState<MoneyWishlistView>("All");
+  const [wishlistFormOpen, setWishlistFormOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<MoneyCategory | null>(
     null
   );
@@ -633,6 +633,7 @@ export const MoneyWidget = () => {
     }));
     setSelectedWishlistId(item.id);
     setWishlistDraft(createDefaultWishlistDraft());
+    setWishlistFormOpen(false);
   };
 
   const updateWishlistItem = (
@@ -1167,132 +1168,153 @@ export const MoneyWidget = () => {
 
           {section === "wishlist" && (
             <div className="money-wishlist-layout">
-              <section className="money-detail-card money-form-card">
+              <section
+                className={cn(
+                  "money-detail-card money-form-card money-wishlist-add-card",
+                  !wishlistFormOpen && "is-collapsed"
+                )}
+              >
                 <div className="money-section-heading">
                   <div>
                     <span className="money-kicker">Wishlist</span>
                     <h3>Add Item</h3>
+                    <p>Keep the form closed until you need a new planned purchase.</p>
                   </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setWishlistFormOpen((prev) => !prev)}
+                    className="money-secondary-button money-wishlist-toggle"
+                  >
+                    {wishlistFormOpen ? (
+                      <X className="w-3.5 h-3.5" />
+                    ) : (
+                      <Plus className="w-3.5 h-3.5" />
+                    )}
+                    {wishlistFormOpen ? "Hide" : "Add Wishlist"}
+                  </button>
                 </div>
 
-                <form className="money-form" onSubmit={addWishlistItem}>
-                  <label>
-                    <span>Name</span>
-                    <input
-                      value={wishlistDraft.name}
-                      onChange={(event) =>
-                        updateWishlistDraft("name", event.target.value)
-                      }
-                      placeholder="What do you want?"
-                    />
-                  </label>
+                {wishlistFormOpen && (
+                  <form className="money-form" onSubmit={addWishlistItem}>
+                    <label>
+                      <span>Name</span>
+                      <input
+                        value={wishlistDraft.name}
+                        onChange={(event) =>
+                          updateWishlistDraft("name", event.target.value)
+                        }
+                        placeholder="What do you want?"
+                      />
+                    </label>
 
-                  <label>
-                    <span>Need</span>
-                    <input
-                      type="number"
-                      min={1}
-                      max={5}
-                      value={wishlistDraft.need}
-                      onChange={(event) =>
-                        updateWishlistDraft("need", event.target.value)
-                      }
-                    />
-                  </label>
+                    <label>
+                      <span>Need</span>
+                      <input
+                        type="number"
+                        min={1}
+                        max={5}
+                        value={wishlistDraft.need}
+                        onChange={(event) =>
+                          updateWishlistDraft("need", event.target.value)
+                        }
+                      />
+                    </label>
 
-                  <label>
-                    <span>Expected Price</span>
-                    <input
-                      type="number"
-                      min={0}
-                      value={wishlistDraft.expectedPrice}
-                      onChange={(event) =>
-                        updateWishlistDraft("expectedPrice", event.target.value)
-                      }
-                    />
-                  </label>
+                    <label>
+                      <span>Expected Price</span>
+                      <input
+                        type="number"
+                        min={0}
+                        value={wishlistDraft.expectedPrice}
+                        onChange={(event) =>
+                          updateWishlistDraft("expectedPrice", event.target.value)
+                        }
+                      />
+                    </label>
 
-                  <label>
-                    <span>Category</span>
-                    <CategorySelect
-                      value={wishlistDraft.category}
-                      onChange={(value) => updateWishlistDraft("category", value)}
-                    />
-                  </label>
+                    <label>
+                      <span>Category</span>
+                      <CategorySelect
+                        value={wishlistDraft.category}
+                        onChange={(value) => updateWishlistDraft("category", value)}
+                      />
+                    </label>
 
-                  <label>
-                    <span>Subcategory</span>
-                    <input
-                      value={wishlistDraft.subcategory}
-                      onChange={(event) =>
-                        updateWishlistDraft("subcategory", event.target.value)
-                      }
-                    />
-                  </label>
+                    <label>
+                      <span>Subcategory</span>
+                      <input
+                        value={wishlistDraft.subcategory}
+                        onChange={(event) =>
+                          updateWishlistDraft("subcategory", event.target.value)
+                        }
+                      />
+                    </label>
 
-                  <label>
-                    <span>Store</span>
-                    <StoreInput
-                      value={wishlistDraft.store}
-                      onChange={(value) => updateWishlistDraft("store", value)}
-                    />
-                  </label>
+                    <label>
+                      <span>Store</span>
+                      <StoreInput
+                        value={wishlistDraft.store}
+                        onChange={(value) => updateWishlistDraft("store", value)}
+                      />
+                    </label>
 
-                  <label>
-                    <span>Status</span>
-                    <select
-                      value={wishlistDraft.status}
-                      onChange={(event) =>
-                        updateWishlistDraft(
-                          "status",
-                          event.target.value as MoneyWishlistStatus
-                        )
-                      }
-                    >
-                      <option value="want">want</option>
-                      <option value="considering">considering</option>
-                      <option value="purchased">purchased</option>
-                      <option value="dropped">dropped</option>
-                    </select>
-                  </label>
+                    <label>
+                      <span>Status</span>
+                      <select
+                        value={wishlistDraft.status}
+                        onChange={(event) =>
+                          updateWishlistDraft(
+                            "status",
+                            event.target.value as MoneyWishlistStatus
+                          )
+                        }
+                      >
+                        <option value="want">want</option>
+                        <option value="considering">considering</option>
+                        <option value="purchased">purchased</option>
+                        <option value="dropped">dropped</option>
+                      </select>
+                    </label>
 
-                  <label>
-                    <span>URL</span>
-                    <input
-                      value={wishlistDraft.url}
-                      onChange={(event) =>
-                        updateWishlistDraft("url", event.target.value)
-                      }
-                      placeholder="https://"
-                    />
-                  </label>
+                    <label>
+                      <span>URL</span>
+                      <input
+                        value={wishlistDraft.url}
+                        onChange={(event) =>
+                          updateWishlistDraft("url", event.target.value)
+                        }
+                        placeholder="https://"
+                      />
+                    </label>
 
-                  <label className="money-form-wide">
-                    <span>Reason</span>
-                    <textarea
-                      value={wishlistDraft.reason}
-                      onChange={(event) =>
-                        updateWishlistDraft("reason", event.target.value)
-                      }
-                      placeholder="Why do you want it?"
-                    />
-                  </label>
+                    <label className="money-form-wide">
+                      <span>Reason</span>
+                      <textarea
+                        value={wishlistDraft.reason}
+                        onChange={(event) =>
+                          updateWishlistDraft("reason", event.target.value)
+                        }
+                        placeholder="Why do you want it?"
+                      />
+                    </label>
 
-                  <label className="money-form-wide">
-                    <span>Images</span>
-                    <textarea
-                      value={wishlistDraft.images}
-                      onChange={(event) =>
-                        updateWishlistDraft("images", event.target.value)
-                      }
-                      placeholder="Image URLs, one per line"
-                    />
-                  </label>
+                    <label className="money-form-wide">
+                      <span>Images</span>
+                      <textarea
+                        value={wishlistDraft.images}
+                        onChange={(event) =>
+                          updateWishlistDraft("images", event.target.value)
+                        }
+                        placeholder="Image URLs, one per line"
+                      />
+                    </label>
 
-                  <button type="submit" className="money-submit-button">
-                    Add Wishlist
-                  </button>
-                </form>
+                    <button type="submit" className="money-submit-button">
+                      Add Wishlist
+                    </button>
+                  </form>
+                )}
               </section>
 
               <section className="money-detail-card money-list-card">
