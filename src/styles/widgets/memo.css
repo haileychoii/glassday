@@ -1998,7 +1998,8 @@ body.theme-glass-dark
 
 .memo-widget .memo-workspace {
   min-height: 0;
-  padding-block: clamp(8px, 1.8cqw, 12px);
+  padding: clamp(7px, 1.5cqw, 11px);
+  gap: clamp(5px, 1.2cqw, 8px);
 }
 
 .memo-widget .memo-editor-shell {
@@ -2020,7 +2021,8 @@ body.theme-glass-dark
   max-height: 100%;
   min-height: 0;
   overflow: auto;
-  padding: clamp(12px, 2.6cqw, 22px) clamp(12px, 3.4cqw, 28px);
+  overscroll-behavior: contain;
+  padding: clamp(10px, 2.2cqw, 18px) clamp(10px, 2.8cqw, 22px);
 }
 
 .memo-widget .memo-app.is-compact-list-open {
@@ -2050,6 +2052,11 @@ body.theme-glass-dark
   border-right: 0;
   border-left: 1px solid hsl(220 18% 82% / 0.45);
   border-radius: 18px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow:
+    0 16px 38px -24px hsl(220 28% 16% / 0.34),
+    inset 1px 0 0 hsl(0 0% 100% / 0.72);
 }
 
 @container memo-widget (max-width: 760px) {
@@ -2158,7 +2165,7 @@ body.theme-glass-dark
   .memo-widget .memo-workspace {
     grid-row: 1 !important;
     grid-column: 1 !important;
-    padding: 12px;
+    padding: 8px;
   }
 
   .memo-widget .memo-list-panel strong,
@@ -2177,7 +2184,23 @@ body.theme-glass-dark
   }
 
   .memo-widget .memo-workspace {
-    padding-block: 6px;
+    padding: 6px;
+  }
+
+  .memo-widget .memo-title-input,
+  .memo-widget .memo-title-view {
+    min-height: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  .memo-widget .memo-toolbar,
+  .memo-widget .memo-editor-toolbar {
+    min-height: 28px;
+  }
+
+  .memo-widget .memo-editor {
+    padding: 9px;
   }
 }
 
