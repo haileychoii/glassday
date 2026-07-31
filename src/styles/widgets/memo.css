@@ -2226,7 +2226,141 @@ body.theme-glass-dark
 }
 
 /* =========================================================
-   30. THEME SHAPE GUARD
+   30. WIDGET RESPONSIVE COMPOSITION
+   The dashboard widget uses one continuous writing surface. The memo list only
+   becomes a fixed left rail when the widget itself is wide enough; otherwise
+   the same list is a small popover over the editor.
+   ========================================================= */
+
+.memo-widget .memo-compact-toggle.is-inline-visible {
+  display: none !important;
+}
+
+.memo-widget .memo-app.is-inline-list-open {
+  grid-template-columns:
+    clamp(164px, 28cqw, 226px)
+    minmax(0, 1fr) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  gap: clamp(6px, 1.1cqw, 10px);
+}
+
+.memo-widget .memo-app.is-inline-list-open > .memo-list-panel {
+  position: relative;
+  inset: auto;
+  grid-column: 1;
+  grid-row: 1;
+  width: auto;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+  border-right: 1px solid hsl(220 18% 82% / 0.42);
+  border-radius: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.memo-widget .memo-app.is-inline-list-open > .memo-workspace {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+}
+
+:is(
+  html[data-theme="pastel"],
+  body[data-theme="pastel"],
+  html.theme-pastel,
+  body.theme-pastel,
+  html[data-theme="glass-light"],
+  body[data-theme="glass-light"],
+  html.theme-glass-light,
+  body.theme-glass-light,
+  html[data-theme="glass-dark"],
+  body[data-theme="glass-dark"],
+  html.theme-glass-dark,
+  body.theme-glass-dark,
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora,
+  html[data-theme="mac-core"],
+  body[data-theme="mac-core"],
+  html.theme-mac-core,
+  body.theme-mac-core
+)
+  .memo-widget
+  .memo-workspace {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.memo-widget .memo-workspace {
+  padding: clamp(6px, 1.15cqw, 10px);
+  gap: clamp(5px, 0.95cqw, 8px);
+}
+
+.memo-widget .memo-title-input,
+.memo-widget .memo-title-view,
+.memo-widget .memo-toolbar,
+.memo-widget .memo-editor-toolbar,
+.memo-widget .memo-editor {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+.memo-widget .memo-title-input,
+.memo-widget .memo-title-view {
+  height: clamp(24px, 3.5cqw, 28px);
+  min-height: clamp(24px, 3.5cqw, 28px);
+  line-height: clamp(24px, 3.5cqw, 28px);
+}
+
+.memo-widget .memo-toolbar,
+.memo-widget .memo-editor-toolbar {
+  min-height: 28px;
+  gap: clamp(4px, 0.8cqw, 7px);
+}
+
+.memo-widget .memo-editor,
+.memo-widget [contenteditable="true"].memo-editor {
+  flex: 1 1 0;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  padding:
+    clamp(10px, 1.8cqw, 16px)
+    clamp(11px, 2.2cqw, 18px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+@container memo-widget (max-width: 560px) {
+  .memo-widget .memo-widget-list-popover {
+    top: 6px;
+    left: 6px;
+    width: min(236px, calc(100% - 12px));
+    height: min(330px, calc(100% - 12px));
+    max-width: calc(100% - 12px);
+    max-height: calc(100% - 12px);
+    border-radius: 18px;
+  }
+
+  .memo-widget .memo-workspace {
+    padding: 6px;
+  }
+
+  .memo-widget .memo-editor,
+  .memo-widget [contenteditable="true"].memo-editor {
+    padding: 9px;
+  }
+}
+
+/* =========================================================
+   31. THEME SHAPE GUARD
    Memo paper should stay softly rounded in modern themes.
    Pixel Desk and Retro 98 intentionally keep the square desktop-window shape.
    ========================================================= */

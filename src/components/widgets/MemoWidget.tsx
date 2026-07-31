@@ -388,6 +388,7 @@ export const MemoWidget = () => {
   const [editing, setEditing] = useState(false);
   const [memoWindowOpen, setMemoWindowOpen] = useState(false);
   const [isWidgetListOpen, setIsWidgetListOpen] = useState(false);
+  const [isWidgetListInline, setIsWidgetListInline] = useState(false);
   const {
     value: isWindowListHidden,
     setValue: setIsWindowListHidden,
@@ -406,6 +407,7 @@ export const MemoWidget = () => {
   const windowEditorRef = useRef<HTMLDivElement | null>(null);
   const saveInputRef = useRef<HTMLInputElement | null>(null);
   const floatingBodyRef = useRef<HTMLDivElement | null>(null);
+  const widgetAppRef = useRef<HTMLDivElement | null>(null);
 
   const { value: notes, setValue: setNotes } = useLocalStorage<MemoNote[]>(
     "glassday.memo.notes.v2",
@@ -477,6 +479,31 @@ export const MemoWidget = () => {
       window.removeEventListener(OPEN_MEMO_EVENT, handleOpenMemoNote);
     };
   }, [normalizedNotes, setSelectedNoteId]);
+
+  useEffect(() => {
+    const app = widgetAppRef.current;
+    if (!app || typeof ResizeObserver === "undefined") {
+      return;
+    }
+
+    /* Widget-size behavior:
+       wide memo widgets get a permanent left list, while narrow widgets keep
+       the list as a small popover opened from the header button. */
+    const updateInlineList = (width: number, height: number) => {
+      setIsWidgetListInline(width >= 720 && height >= 250);
+    };
+
+    updateInlineList(app.clientWidth, app.clientHeight);
+
+    const observer = new ResizeObserver(([entry]) => {
+      if (!entry) return;
+      updateInlineList(entry.contentRect.width, entry.contentRect.height);
+    });
+
+    observer.observe(app);
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!isDraggingWindowSidebar) {
@@ -1122,11 +1149,12 @@ export const MemoWidget = () => {
     </div>
   );
 
-  const renderNoteList = (windowMode = false) => (
+  const renderNoteList = (windowMode = false, inlineMode = false) => (
     <div
       className={cn(
         "memo-list-panel",
-        !windowMode && "memo-widget-list-popover"
+        !windowMode && !inlineMode && "memo-widget-list-popover",
+        !windowMode && inlineMode && "memo-widget-inline-list"
       )}
     >
       <div className="memo-list-header">
@@ -1141,20 +1169,22 @@ export const MemoWidget = () => {
             <Plus className="w-3.5 h-3.5" />
           </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              if (windowMode) {
-                setIsWindowListHidden(true);
-              } else {
-                setIsWidgetListOpen(false);
-              }
-            }}
-            className="memo-mini-button memo-list-close"
-            title="Hide memo list"
-          >
-            <X className="w-3.5 h-3.5" />
-          </button>
+          {!inlineMode && (
+            <button
+              type="button"
+              onClick={() => {
+                if (windowMode) {
+                  setIsWindowListHidden(true);
+                } else {
+                  setIsWidgetListOpen(false);
+                }
+              }}
+              className="memo-mini-button memo-list-close"
+              title="Hide memo list"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -1182,14 +1212,14 @@ export const MemoWidget = () => {
               tabIndex={0}
               onClick={() => {
                 setSelectedNoteId(note.id);
-                if (!windowMode) {
+                if (!windowMode && !inlineMode) {
                   setIsWidgetListOpen(false);
                 }
               }}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   setSelectedNoteId(note.id);
-                  if (!windowMode) {
+                  if (!windowMode && !inlineMode) {
                     setIsWidgetListOpen(false);
                   }
                 }
@@ -1633,6 +1663,8 @@ export const MemoWidget = () => {
       )
     : null;
 
+  const shouldRenderWidgetList = isWidgetListInline || isWidgetListOpen;
+
   return (
     <>
       <GlassCard
@@ -1655,9 +1687,16 @@ export const MemoWidget = () => {
               }}
               className={cn(
                 "glass-button h-8 w-8 flex items-center justify-center memo-compact-toggle",
-                isWidgetListOpen && "is-active"
+                (isWidgetListOpen || isWidgetListInline) && "is-active",
+                isWidgetListInline && "is-inline-visible"
               )}
-              title={isWidgetListOpen ? "Hide memo list" : "Show memo list"}
+              title={
+                isWidgetListInline
+                  ? "Memo list is pinned in wide mode"
+                  : isWidgetListOpen
+                    ? "Hide memo list"
+                    : "Show memo list"
+              }
             >
               <PanelLeft className="w-3.5 h-3.5" />
             </button>
@@ -1700,9 +1739,14 @@ export const MemoWidget = () => {
         }
       >
         <div
-          className={cn("memo-app", isWidgetListOpen && "is-compact-list-open")}
+          ref={widgetAppRef}
+          className={cn(
+            "memo-app",
+            isWidgetListInline && "is-inline-list-open",
+            !isWidgetListInline && isWidgetListOpen && "is-compact-list-open"
+          )}
         >
-          {isWidgetListOpen && renderNoteList()}
+          {shouldRenderWidgetList && renderNoteList(false, isWidgetListInline)}
           {renderWorkspace(editorRef)}
         </div>
       </GlassCard>
