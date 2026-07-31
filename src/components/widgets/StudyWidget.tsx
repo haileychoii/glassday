@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import type { CSSProperties } from "react";
 import {
   BookOpenCheck,
   Check,
@@ -296,11 +297,13 @@ export const StudyWidget = () => {
                     "study-subject-card",
                     selectedSubjectId === subject.id && "is-active"
                   )}
+                  style={
+                    {
+                      "--study-subject-color": subject.color,
+                    } as CSSProperties
+                  }
                 >
-                  <span
-                    className="study-subject-color"
-                    style={{ backgroundColor: subject.color }}
-                  />
+                  <span className="study-subject-color" />
 
                   <div className="min-w-0">
                     <strong>{subject.shortLabel}</strong>

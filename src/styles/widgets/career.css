@@ -44,6 +44,20 @@
   color: hsl(var(--foreground) / 0.66);
 }
 
+.career-widget-header > .career-icon-button {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  margin-left: auto;
+  align-self: center;
+}
+
+.career-widget-header > .career-icon-button svg {
+  width: 14px;
+  height: 14px;
+}
+
 .career-summary-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1076,13 +1090,18 @@
 
 @container career-widget (max-width: 600px) {
   .career-widget-header {
-    align-items: flex-start !important;
-    flex-direction: column !important;
-    gap: 10px !important;
+    align-items: center !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    justify-content: space-between !important;
   }
 
-  .career-icon-button {
-    align-self: flex-start;
+  .career-widget-header > .career-icon-button {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    flex: 0 0 30px !important;
+    align-self: center !important;
   }
 }
 

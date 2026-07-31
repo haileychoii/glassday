@@ -1996,6 +1996,16 @@ body.theme-glass-dark
   overflow: hidden;
 }
 
+.memo-widget .memo-workspace {
+  min-height: 0;
+  padding-block: clamp(8px, 1.8cqw, 12px);
+}
+
+.memo-widget .memo-editor-shell {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
 .memo-widget .memo-title-input,
 .memo-widget .memo-title-view,
 .memo-widget .memo-toolbar,
@@ -2006,15 +2016,45 @@ body.theme-glass-dark
 
 .memo-widget .memo-editor {
   flex: 1 1 auto;
-  height: 100%;
+  height: auto;
+  max-height: 100%;
   min-height: 0;
   overflow: auto;
   padding: clamp(12px, 2.6cqw, 22px) clamp(12px, 3.4cqw, 28px);
 }
 
+.memo-widget .memo-app.is-compact-list-open {
+  grid-template-columns: minmax(0, 1fr) clamp(156px, 28%, 220px) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  gap: 8px;
+}
+
+.memo-widget .memo-app.is-compact-list-open > .memo-workspace {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+}
+
+.memo-widget .memo-app.is-compact-list-open > .memo-list-panel {
+  position: relative;
+  inset: auto;
+  grid-column: 2;
+  grid-row: 1;
+  z-index: 1;
+  width: auto;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+  border-right: 0;
+  border-left: 1px solid hsl(220 18% 82% / 0.45);
+  border-radius: 18px;
+}
+
 @container memo-widget (max-width: 760px) {
-  .memo-widget .memo-app {
-    grid-template-columns: clamp(150px, 34%, 210px) minmax(0, 1fr) !important;
+  .memo-widget .memo-app.is-compact-list-open {
+    grid-template-columns: minmax(0, 1fr) clamp(150px, 34%, 210px) !important;
   }
 
   .memo-widget .memo-list-panel {
@@ -2082,6 +2122,24 @@ body.theme-glass-dark
     z-index: 30;
   }
 
+  .memo-widget .memo-app.is-compact-list-open > .memo-list-panel {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    right: auto;
+    bottom: auto;
+    grid-column: 1;
+    grid-row: 1;
+    width: min(236px, calc(100% - 12px));
+    max-width: calc(100% - 12px);
+    height: min(330px, calc(100% - 12px));
+    max-height: calc(100% - 12px);
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 30;
+  }
+
   .memo-widget .memo-app.is-compact-list-open .memo-list-panel {
     transform: translateX(0);
     opacity: 1;
@@ -2114,7 +2172,12 @@ body.theme-glass-dark
 
 @container memo-widget (max-width: 390px) {
   .memo-widget .memo-app {
-    grid-template-rows: minmax(104px, 26%) minmax(0, 1fr) !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+  }
+
+  .memo-widget .memo-workspace {
+    padding-block: 6px;
   }
 }
 
