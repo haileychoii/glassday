@@ -10,8 +10,26 @@ body.theme-glass-light {
   --background: 220 30% 98%;
   --foreground: 238 26% 18%;
   --muted-foreground: 236 12% 48%;
-  --primary: 258 88% 66%;
+  --primary: 202 84% 55%;
   --primary-foreground: 0 0% 100%;
+  --gd-glass-light-holo-surface:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.66),
+      rgba(181, 224, 255, 0.34) 34%,
+      rgba(255, 209, 238, 0.36) 68%,
+      rgba(222, 250, 242, 0.52)
+    );
+  --gd-glass-light-holo-progress:
+    linear-gradient(
+      90deg,
+      rgba(127, 197, 229, 0.72),
+      rgba(198, 180, 236, 0.58) 48%,
+      rgba(238, 183, 215, 0.6) 74%,
+      rgba(163, 218, 205, 0.68)
+    );
+  --gd-glass-light-holo-border: rgba(255, 255, 255, 0.62);
+  --gd-glass-light-holo-shadow: rgba(119, 155, 205, 0.18);
 
   --gd-radius-app: 32px;
   --gd-radius-panel: 28px;
@@ -410,18 +428,61 @@ body.theme-glass-light .settings-modal-window textarea {
 html[data-theme="glass-light"] .sidebar-tab-item.is-active .sidebar-tab-main,
 body[data-theme="glass-light"] .sidebar-tab-item.is-active .sidebar-tab-main {
   color: hsl(var(--foreground) / 0.98) !important;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.58),
-      rgba(197, 226, 255, 0.28) 42%,
-      rgba(255, 205, 239, 0.32) 76%,
-      rgba(235, 244, 255, 0.5)
-    ) !important;
-  border-color: rgba(255, 255, 255, 0.54) !important;
+  background: var(--gd-glass-light-holo-surface) !important;
+  border-color: var(--gd-glass-light-holo-border) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.68),
-    0 12px 28px rgba(140, 154, 220, 0.18) !important;
+    0 12px 28px var(--gd-glass-light-holo-shadow) !important;
+}
+
+html[data-theme="glass-light"] .theme-segment-button.is-active,
+html[data-theme="glass-light"] .glass-button.is-active,
+html[data-theme="glass-light"] .settings-toggle-button.is-active,
+html[data-theme="glass-light"] .calendar-view-button.is-active,
+html[data-theme="glass-light"] .career-filter-pill.is-active,
+html[data-theme="glass-light"] .money-pill.is-active,
+html[data-theme="glass-light"] .money-section-tab.is-active,
+html[data-theme="glass-light"] .study-pomodoro-mode.is-active,
+html[data-theme="glass-light"] .study-subject-card.is-active,
+html[data-theme="glass-light"] .study-detail-subject-card.is-active,
+html[data-theme="glass-light"] .timer-widget-mode-button.is-active,
+body[data-theme="glass-light"] .theme-segment-button.is-active,
+body[data-theme="glass-light"] .glass-button.is-active,
+body[data-theme="glass-light"] .settings-toggle-button.is-active,
+body[data-theme="glass-light"] .calendar-view-button.is-active,
+body[data-theme="glass-light"] .career-filter-pill.is-active,
+body[data-theme="glass-light"] .money-pill.is-active,
+body[data-theme="glass-light"] .money-section-tab.is-active,
+body[data-theme="glass-light"] .study-pomodoro-mode.is-active,
+body[data-theme="glass-light"] .study-subject-card.is-active,
+body[data-theme="glass-light"] .study-detail-subject-card.is-active,
+body[data-theme="glass-light"] .timer-widget-mode-button.is-active {
+  color: hsl(var(--foreground) / 0.96) !important;
+  background: var(--gd-glass-light-holo-surface) !important;
+  border-color: var(--gd-glass-light-holo-border) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 10px 24px var(--gd-glass-light-holo-shadow) !important;
+}
+
+html[data-theme="glass-light"] .money-budget-fill,
+html[data-theme="glass-light"] .money-store-fill,
+html[data-theme="glass-light"] .cover-letter-progress i,
+body[data-theme="glass-light"] .money-budget-fill,
+body[data-theme="glass-light"] .money-store-fill,
+body[data-theme="glass-light"] .cover-letter-progress i {
+  background: var(--gd-glass-light-holo-progress) !important;
+}
+
+html[data-theme="glass-light"] .timer-widget-progress-value,
+body[data-theme="glass-light"] .timer-widget-progress-value {
+  stroke: rgba(108, 165, 210, 0.92) !important;
+}
+
+html[data-theme="glass-light"] .timer-widget-progress-dot,
+body[data-theme="glass-light"] .timer-widget-progress-dot {
+  background: var(--gd-glass-light-holo-progress) !important;
+  box-shadow: 0 0 14px rgba(124, 178, 218, 0.22) !important;
 }
 
 html[data-theme="glass-light"] .sidebar-tab-item.is-active .sidebar-tab-icon,
