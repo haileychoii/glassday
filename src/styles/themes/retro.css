@@ -52,10 +52,18 @@ body.theme-retro {
   --retro-muted: #454545;
   --retro-white: #ffffff;
   --retro-cream: #f4f1df;
+  --retro-field: #ffffff;
+  --retro-client: #eeeede;
   --retro-yellow: #fff6bf;
   --retro-mint: #d8f0df;
   --retro-blue: #dcecff;
   --retro-pink: #ffe1ee;
+  --retro-raised-border:
+    inset 1px 1px 0 var(--retro-white),
+    inset -1px -1px 0 var(--retro-panel-dark);
+  --retro-sunken-border:
+    inset 1px 1px 0 var(--retro-panel-darker),
+    inset -1px -1px 0 var(--retro-white);
 
   color: var(--retro-text);
 }
@@ -583,4 +591,245 @@ body.theme-retro .calendar-event-time {
   body.theme-retro .glass-card-header {
     padding-top: 34px !important;
   }
+}
+
+/* =========================================================
+   Retro 98 final polish
+   These overrides intentionally stay at the end of this file so the Retro
+   theme owns its Win98 chrome without leaking into Pixel Desk or glass themes.
+   Reference language:
+   - 98.css style raised windows, sunken client areas, and status bars
+   - XP.css-style native dropdown/input clarity
+========================================================= */
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
+  --retro-control-height: 24px;
+  --retro-titlebar-height: 28px;
+  --retro-window-gap: 4px;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card, .floating-window, .settings-modal-window, .memo-window, .memo-floating-window) {
+  border-radius: 0 !important;
+  background: var(--retro-panel) !important;
+  border-top: 2px solid var(--retro-white) !important;
+  border-left: 2px solid var(--retro-white) !important;
+  border-right: 2px solid var(--retro-panel-darker) !important;
+  border-bottom: 2px solid var(--retro-panel-darker) !important;
+  box-shadow:
+    var(--retro-raised-border),
+    4px 4px 0 rgb(0 0 0 / 0.32) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .glass-card::before {
+  content: none !important;
+  display: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .glass-card::after {
+  content: "_  []  X" !important;
+  position: absolute !important;
+  top: 5px !important;
+  right: 6px !important;
+  z-index: 4 !important;
+  min-width: 52px !important;
+  height: 16px !important;
+  padding: 0 4px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #000000 !important;
+  background: var(--retro-panel) !important;
+  border-top: 1px solid var(--retro-white) !important;
+  border-left: 1px solid var(--retro-white) !important;
+  border-right: 1px solid var(--retro-panel-darker) !important;
+  border-bottom: 1px solid var(--retro-panel-darker) !important;
+  font-family: "MS Sans Serif", Tahoma, sans-serif !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-header, .widget-card-header, .widget-frame__header) {
+  min-height: var(--retro-titlebar-height) !important;
+  padding: 3px 66px 3px 5px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: var(--retro-white) !important;
+  background: linear-gradient(90deg, var(--retro-title), var(--retro-title-2)) !important;
+  border-bottom: 2px solid var(--retro-panel-darker) !important;
+  box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.16) !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3) {
+  color: var(--retro-white) !important;
+  font-family: "MS Sans Serif", Tahoma, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  text-shadow: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle, .widget-frame__header p) {
+  color: rgb(255 255 255 / 0.78) !important;
+  font-size: 10px !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-icon, .widget-card-icon, .widget-frame__icon) {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  flex-basis: 18px !important;
+  color: var(--retro-white) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-actions, .widget-frame__actions) {
+  gap: 3px !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-body, .widget-frame__body, .floating-window-body, .settings-modal-body) {
+  margin: var(--retro-window-gap) !important;
+  padding: 6px !important;
+  background: var(--retro-client) !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid var(--retro-panel-darker) !important;
+  border-left: 2px solid var(--retro-panel-darker) !important;
+  border-right: 2px solid var(--retro-white) !important;
+  border-bottom: 2px solid var(--retro-white) !important;
+  box-shadow: var(--retro-sunken-border) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .glass-card-body::after {
+  content: "" !important;
+  display: block !important;
+  height: 16px !important;
+  margin-top: 5px !important;
+  background: var(--retro-panel) !important;
+  border-top: 1px solid var(--retro-panel-dark) !important;
+  border-left: 1px solid var(--retro-panel-dark) !important;
+  border-right: 1px solid var(--retro-white) !important;
+  border-bottom: 1px solid var(--retro-white) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(
+    .money-detail-card,
+    .memo-workspace,
+    .memo-list-panel,
+    .calendar-modal-body,
+    .calendar-detail-grid,
+    .career-detail-section,
+    .settings-section,
+    .settings-theme-card,
+    .today-focus-section,
+    .study-overview-panel,
+    .study-input-panel,
+    .study-week-panel,
+    .daily-journal-section,
+    .mood-row
+  ) {
+  border-radius: 0 !important;
+  background: var(--retro-cream) !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid var(--retro-white) !important;
+  border-left: 2px solid var(--retro-white) !important;
+  border-right: 2px solid var(--retro-panel-dark) !important;
+  border-bottom: 2px solid var(--retro-panel-dark) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(input, textarea, select, .memo-editor, .memo-window-editor, [contenteditable="true"].memo-editor) {
+  min-height: var(--retro-control-height) !important;
+  border-radius: 0 !important;
+  background: var(--retro-field) !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid var(--retro-panel-darker) !important;
+  border-left: 2px solid var(--retro-panel-darker) !important;
+  border-right: 2px solid var(--retro-white) !important;
+  border-bottom: 2px solid var(--retro-white) !important;
+  box-shadow:
+    inset 1px 1px 0 var(--retro-panel-dark),
+    inset -1px -1px 0 var(--retro-panel-light) !important;
+  font-family: "MS Sans Serif", Tahoma, sans-serif !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  select {
+  height: var(--retro-control-height) !important;
+  padding: 1px 22px 1px 4px !important;
+  appearance: auto !important;
+  -webkit-appearance: menulist !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button, .glass-button, .money-action-button, .money-icon-button, .money-secondary-button, .money-submit-button, .calendar-nav-button, .career-icon-button, .career-small-button) {
+  min-height: var(--retro-control-height) !important;
+  border-radius: 0 !important;
+  background: var(--retro-panel) !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid var(--retro-white) !important;
+  border-left: 2px solid var(--retro-white) !important;
+  border-right: 2px solid var(--retro-panel-darker) !important;
+  border-bottom: 2px solid var(--retro-panel-darker) !important;
+  box-shadow: var(--retro-raised-border) !important;
+  transform: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  font-family: "MS Sans Serif", Tahoma, sans-serif !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button:active, button.is-active, .glass-button.is-active, .money-section-tab.is-active, .theme-card.is-active) {
+  color: var(--retro-white) !important;
+  background: var(--retro-title) !important;
+  border-top: 2px solid var(--retro-panel-darker) !important;
+  border-left: 2px solid var(--retro-panel-darker) !important;
+  border-right: 2px solid var(--retro-white) !important;
+  border-bottom: 2px solid var(--retro-white) !important;
+  box-shadow: var(--retro-sunken-border) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
+  min-height: var(--retro-titlebar-height) !important;
+  height: var(--retro-titlebar-height) !important;
+  padding: 3px 6px !important;
+  color: var(--retro-white) !important;
+  background: linear-gradient(90deg, var(--retro-title), var(--retro-title-2)) !important;
+  border-bottom: 2px solid var(--retro-panel-darker) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.floating-window-title, .floating-window-subtitle, .settings-modal-header h2, .settings-modal-header p) {
+  color: var(--retro-white) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.floating-window-actions .glass-button, .settings-close-button) {
+  width: 20px !important;
+  min-width: 20px !important;
+  height: 20px !important;
+  min-height: 20px !important;
+  padding: 0 !important;
 }
