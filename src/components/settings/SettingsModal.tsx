@@ -4,6 +4,8 @@ import { createPortal } from "react-dom";
 import {
   Cloud,
   Download,
+  Eye,
+  EyeOff,
   Globe,
   KeyRound,
   LogIn,
@@ -38,6 +40,10 @@ import {
   themeOptions,
   type ThemeId,
 } from "../../constants/themes";
+import {
+  getSavedScrollbarVisibility,
+  saveScrollbarVisibility,
+} from "../../constants/uiPreferences";
 import {
   downloadGlassdayBackup,
   importGlassdayBackupFile,
@@ -147,6 +153,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const [defaultMemoFont, setDefaultMemoFont] = useState(() =>
     getSavedDefaultMemoFont()
   );
+  const [scrollbarsVisible, setScrollbarsVisible] = useState(() =>
+    getSavedScrollbarVisibility()
+  );
   const [customFonts, setCustomFonts] = useState(() => getSavedCustomFonts());
   const [customFontLabel, setCustomFontLabel] = useState("");
   const [customFontFamily, setCustomFontFamily] = useState("");
@@ -188,6 +197,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     setTheme(getCurrentTheme());
     setAppFont(getSavedAppFont());
     setDefaultMemoFont(getSavedDefaultMemoFont());
+    setScrollbarsVisible(getSavedScrollbarVisibility());
     setCustomFonts(getSavedCustomFonts());
   }, [open]);
 
@@ -316,6 +326,12 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     setDefaultMemoFont(nextFont);
     saveDefaultMemoFont(nextFont);
     setStatus("Default memo font updated.");
+  };
+
+  const handleScrollbarVisibilityChange = (visible: boolean) => {
+    setScrollbarsVisible(visible);
+    saveScrollbarVisibility(visible);
+    setStatus(visible ? "Scrollbars are visible." : "Scrollbars are hidden.");
   };
 
   const handleAddCustomFont = async () => {
@@ -681,6 +697,53 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                 ))}
               </div>
             )}
+          </section>
+
+          <section className="settings-section settings-card">
+            <div className="settings-section-title settings-card-title">
+              {scrollbarsVisible ? (
+                <Eye className="w-4 h-4" />
+              ) : (
+                <EyeOff className="w-4 h-4" />
+              )}
+              <span>Display</span>
+            </div>
+
+            <div className="settings-toggle-row">
+              <div>
+                <strong>Scrollbars</strong>
+                <span>
+                  Keep scroll behavior, but choose whether the scrollbar rails
+                  are visible.
+                </span>
+              </div>
+
+              <div className="settings-toggle-group" role="group">
+                <button
+                  type="button"
+                  onClick={() => handleScrollbarVisibilityChange(true)}
+                  className={cn(
+                    "settings-toggle-button",
+                    scrollbarsVisible && "is-active"
+                  )}
+                  aria-pressed={scrollbarsVisible}
+                >
+                  Show
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleScrollbarVisibilityChange(false)}
+                  className={cn(
+                    "settings-toggle-button",
+                    !scrollbarsVisible && "is-active"
+                  )}
+                  aria-pressed={!scrollbarsVisible}
+                >
+                  Hide
+                </button>
+              </div>
+            </div>
           </section>
 
           <section className="settings-section settings-card">

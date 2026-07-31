@@ -18,7 +18,7 @@
 ========================================================= */
 
 .money-widget {
-  container-type: inline-size;
+  container-type: size;
   container-name: gd-widget money-widget;
   min-width: 0;
   min-height: 0;
@@ -29,6 +29,8 @@
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   scrollbar-gutter: auto;
 }
 
@@ -152,6 +154,7 @@
 .money-dashboard {
   height: 100%;
   min-height: 0;
+  max-height: 100%;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
@@ -1015,6 +1018,62 @@
   .money-transaction-side {
     grid-column: 2;
     justify-content: space-between;
+  }
+}
+
+@container money-widget (max-height: 360px) {
+  .money-dashboard {
+    gap: 7px;
+    overflow-y: auto;
+    padding-block-end: 2px;
+  }
+
+  .money-summary-panel,
+  .money-budget-panel,
+  .money-visual-panel,
+  .money-recent-panel {
+    padding: 8px;
+    border-radius: 14px;
+  }
+
+  .money-summary-copy strong {
+    font-size: 17px;
+  }
+
+  .money-budget-mini {
+    width: 48px;
+    height: 42px;
+    border-radius: 13px;
+  }
+
+  .money-visual-panel {
+    grid-template-columns: 76px minmax(0, 1fr);
+  }
+
+  .money-visual-panel .money-donut {
+    width: 76px;
+  }
+
+  .money-donut-center {
+    inset: 18px;
+  }
+
+  .money-donut-center span {
+    display: none;
+  }
+
+  .money-category-row {
+    min-height: 28px;
+    grid-template-columns: 8px minmax(0, 1fr) auto;
+  }
+
+  .money-category-row em,
+  .money-panel-heading span {
+    display: none;
+  }
+
+  .money-transaction-row {
+    min-height: 34px;
   }
 }
 

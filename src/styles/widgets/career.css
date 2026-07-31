@@ -985,9 +985,10 @@
 
 @container career-widget (max-width: 680px) {
   .career-widget-header {
-    align-items: flex-start !important;
+    align-items: center !important;
     gap: 10px !important;
-    flex-direction: column !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
   }
 
   .career-summary-card {

@@ -12,6 +12,10 @@ import {
 import { applyAppFont, getSavedAppFont, loadSavedCustomFonts } from "./constants/fonts";
 import { applyTheme, getCurrentTheme } from "./constants/themes";
 import {
+  applyScrollbarVisibility,
+  getSavedScrollbarVisibility,
+} from "./constants/uiPreferences";
+import {
   OPEN_WIDGET_EVENT,
   type OpenWidgetDetail,
 } from "./constants/widgetNavigation";
@@ -65,6 +69,7 @@ function App() {
     void loadSavedCustomFonts();
     applyAppFont(getSavedAppFont());
     applyTheme(getCurrentTheme());
+    applyScrollbarVisibility(getSavedScrollbarVisibility());
   }, []);
 
   useEffect(() => {

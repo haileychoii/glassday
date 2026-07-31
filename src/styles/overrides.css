@@ -955,7 +955,7 @@ body,
 }
 
 .dashboard-grid-item > .glass-card.money-widget {
-  container-type: inline-size !important;
+  container-type: size !important;
   container-name: gd-widget money-widget !important;
 }
 

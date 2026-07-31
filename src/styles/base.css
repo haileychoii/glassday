@@ -332,3 +332,20 @@ main {
 .floating-window *::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+/* User display preference: hide scrollbar rails without disabling scrolling.
+   Settings toggles this class on html/body so every theme keeps the same
+   behavior while still allowing themed scrollbars when the setting is visible. */
+html.glassday-scrollbars-hidden,
+body.glassday-scrollbars-hidden,
+html.glassday-scrollbars-hidden *,
+body.glassday-scrollbars-hidden * {
+  scrollbar-width: none !important;
+}
+
+html.glassday-scrollbars-hidden *::-webkit-scrollbar,
+body.glassday-scrollbars-hidden *::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
