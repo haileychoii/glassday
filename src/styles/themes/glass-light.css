@@ -30,6 +30,17 @@ body.theme-glass-light {
     );
   --gd-glass-light-holo-border: rgba(255, 255, 255, 0.62);
   --gd-glass-light-holo-shadow: rgba(119, 155, 205, 0.18);
+  --gd-glass-light-holo-soft:
+    radial-gradient(circle at 14% 10%, rgba(255, 255, 255, 0.62), transparent 30%),
+    radial-gradient(circle at 82% 18%, rgba(183, 226, 255, 0.24), transparent 34%),
+    radial-gradient(circle at 74% 82%, rgba(255, 211, 236, 0.22), transparent 32%),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.42),
+      rgba(225, 241, 255, 0.18) 42%,
+      rgba(248, 225, 243, 0.2) 74%,
+      rgba(231, 250, 245, 0.28)
+    );
 
   --gd-radius-app: 32px;
   --gd-radius-panel: 28px;
@@ -483,6 +494,113 @@ html[data-theme="glass-light"] .timer-widget-progress-dot,
 body[data-theme="glass-light"] .timer-widget-progress-dot {
   background: var(--gd-glass-light-holo-progress) !important;
   box-shadow: 0 0 14px rgba(124, 178, 218, 0.22) !important;
+}
+
+html[data-theme="glass-light"] .widget-frame__actions .glass-button,
+html[data-theme="glass-light"] .glass-card-header > .glass-button,
+html[data-theme="glass-light"] .today-task-add-row button,
+html[data-theme="glass-light"] .study-record-form button,
+html[data-theme="glass-light"] .study-task-form button,
+html[data-theme="glass-light"] .study-detail-record-form button,
+html[data-theme="glass-light"] .career-icon-button,
+html[data-theme="glass-light"] .money-action-button,
+html[data-theme="glass-light"] .money-icon-button,
+body[data-theme="glass-light"] .widget-frame__actions .glass-button,
+body[data-theme="glass-light"] .glass-card-header > .glass-button,
+body[data-theme="glass-light"] .today-task-add-row button,
+body[data-theme="glass-light"] .study-record-form button,
+body[data-theme="glass-light"] .study-task-form button,
+body[data-theme="glass-light"] .study-detail-record-form button,
+body[data-theme="glass-light"] .career-icon-button,
+body[data-theme="glass-light"] .money-action-button,
+body[data-theme="glass-light"] .money-icon-button {
+  color: hsl(var(--foreground) / 0.88) !important;
+  background: var(--gd-glass-light-holo-soft) !important;
+  border-color: rgba(255, 255, 255, 0.58) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 10px 22px rgba(119, 155, 205, 0.12) !important;
+}
+
+html[data-theme="glass-light"] .widget-frame__actions .glass-button:hover,
+html[data-theme="glass-light"] .glass-card-header > .glass-button:hover,
+html[data-theme="glass-light"] .today-task-add-row button:hover,
+html[data-theme="glass-light"] .study-record-form button:hover,
+html[data-theme="glass-light"] .study-task-form button:hover,
+html[data-theme="glass-light"] .study-detail-record-form button:hover,
+html[data-theme="glass-light"] .career-icon-button:hover,
+html[data-theme="glass-light"] .money-action-button:hover,
+html[data-theme="glass-light"] .money-icon-button:hover,
+body[data-theme="glass-light"] .widget-frame__actions .glass-button:hover,
+body[data-theme="glass-light"] .glass-card-header > .glass-button:hover,
+body[data-theme="glass-light"] .today-task-add-row button:hover,
+body[data-theme="glass-light"] .study-record-form button:hover,
+body[data-theme="glass-light"] .study-task-form button:hover,
+body[data-theme="glass-light"] .study-detail-record-form button:hover,
+body[data-theme="glass-light"] .career-icon-button:hover,
+body[data-theme="glass-light"] .money-action-button:hover,
+body[data-theme="glass-light"] .money-icon-button:hover {
+  transform: translateY(-1px);
+  background: var(--gd-glass-light-holo-surface) !important;
+  border-color: rgba(255, 255, 255, 0.66) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    0 12px 28px rgba(119, 155, 205, 0.17) !important;
+}
+
+html[data-theme="glass-light"] .today-focus-hero,
+html[data-theme="glass-light"] .today-focus-main,
+body[data-theme="glass-light"] .today-focus-hero,
+body[data-theme="glass-light"] .today-focus-main {
+  background: var(--gd-glass-light-holo-soft) !important;
+  border-color: rgba(255, 255, 255, 0.56) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.74),
+    0 16px 34px rgba(119, 155, 205, 0.12) !important;
+}
+
+html[data-theme="glass-light"] .today-focus-ring,
+html[data-theme="glass-light"] .today-focus-progress-ring,
+html[data-theme="glass-light"] .today-progress-ring,
+body[data-theme="glass-light"] .today-focus-ring,
+body[data-theme="glass-light"] .today-focus-progress-ring,
+body[data-theme="glass-light"] .today-progress-ring {
+  background:
+    conic-gradient(
+      from 18deg,
+      rgba(120, 190, 226, 0.78),
+      rgba(208, 184, 235, 0.52) 36%,
+      rgba(244, 194, 225, 0.56) 64%,
+      rgba(166, 220, 208, 0.68) 86%,
+      rgba(120, 190, 226, 0.78)
+    ) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    0 12px 26px rgba(119, 155, 205, 0.18) !important;
+}
+
+html[data-theme="glass-light"] .today-tasks-progress-fill,
+body[data-theme="glass-light"] .today-tasks-progress-fill {
+  background: var(--gd-glass-light-holo-progress) !important;
+}
+
+html[data-theme="glass-light"] .today-focus-check,
+html[data-theme="glass-light"] .today-focus-dday,
+html[data-theme="glass-light"] .today-focus-memo svg,
+body[data-theme="glass-light"] .today-focus-check,
+body[data-theme="glass-light"] .today-focus-dday,
+body[data-theme="glass-light"] .today-focus-memo svg {
+  color: rgba(88, 137, 185, 0.92) !important;
+}
+
+html[data-theme="glass-light"] .today-focus-mini-item.is-clickable:hover,
+html[data-theme="glass-light"] .today-focus-career-item.is-clickable:hover,
+html[data-theme="glass-light"] .today-focus-memo.is-clickable:hover,
+body[data-theme="glass-light"] .today-focus-mini-item.is-clickable:hover,
+body[data-theme="glass-light"] .today-focus-career-item.is-clickable:hover,
+body[data-theme="glass-light"] .today-focus-memo.is-clickable:hover {
+  background: var(--gd-glass-light-holo-soft) !important;
+  border-color: rgba(255, 255, 255, 0.56) !important;
 }
 
 html[data-theme="glass-light"] .sidebar-tab-item.is-active .sidebar-tab-icon,
