@@ -2236,6 +2236,13 @@ body.theme-glass-dark
   display: none !important;
 }
 
+/* Widget paper viewport
+   This single inset controls the visible breathing room below the memo paper.
+   메모 종이가 위젯 테두리에 붙어 잘린 것처럼 보일 때 이 값만 조절하면 된다. */
+.memo-widget {
+  --memo-widget-paper-bottom-inset: 12px;
+}
+
 .memo-widget .memo-app.is-inline-list-open {
   grid-template-columns:
     clamp(164px, 28cqw, 226px)
@@ -2298,8 +2305,16 @@ body.theme-glass-dark
 }
 
 .memo-widget .memo-workspace {
-  padding: clamp(6px, 1.15cqw, 10px);
+  padding:
+    clamp(6px, 1.15cqw, 10px)
+    clamp(6px, 1.15cqw, 10px)
+    var(--memo-widget-paper-bottom-inset);
   gap: clamp(5px, 0.95cqw, 8px);
+}
+
+.memo-widget .memo-editor-shell {
+  min-height: 0;
+  overflow: hidden;
 }
 
 .memo-widget .memo-title-input,
@@ -2336,6 +2351,7 @@ body.theme-glass-dark
     clamp(11px, 2.2cqw, 18px);
   overflow: auto;
   overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 @container memo-widget (max-width: 560px) {
@@ -2350,7 +2366,7 @@ body.theme-glass-dark
   }
 
   .memo-widget .memo-workspace {
-    padding: 6px;
+    padding: 6px 6px 10px;
   }
 
   .memo-widget .memo-editor,
