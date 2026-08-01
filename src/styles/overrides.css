@@ -1009,6 +1009,18 @@ body,
   -webkit-overflow-scrolling: touch !important;
 }
 
+/* Nested widget scrollers
+   Money and Memo own dedicated inner scroll areas. Their shared card body only
+   measures the remaining height below the header, so the final rows never sit
+   underneath the clipped card edge. Money/Memo 스크롤은 내부 요소 한 곳만 담당한다. */
+.dashboard-grid-item > .money-widget > .widget-frame__body,
+.dashboard-grid-item > .memo-widget > .widget-frame__body {
+  height: auto !important;
+  display: grid !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  overflow: hidden !important;
+}
+
 @container gd-widget (max-width: 520px) {
   .glass-card > .widget-frame__header {
     gap: 8px !important;
