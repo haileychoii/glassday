@@ -2418,7 +2418,10 @@ body.theme-pixel-desk .career-cover-status-select option {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
-  padding-top: 4px !important;
+  /* First-section alignment
+     GlassCard already owns the gap below the shared title row.
+     Calendar 내부에서 상단 여백을 한 번 더 더하지 않도록 0으로 유지한다. */
+  padding-top: 0 !important;
   gap: 10px !important;
   overflow-x: hidden !important;
 }
@@ -2600,7 +2603,8 @@ body.theme-pixel-desk .career-cover-status-select option {
   }
 
   .calendar-widget-frame {
-    padding-top: 10px !important;
+    /* Narrow calendars use the same first-content line as the other widgets. */
+    padding-top: 0 !important;
     gap: 10px !important;
   }
 

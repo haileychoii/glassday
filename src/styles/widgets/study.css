@@ -18,6 +18,13 @@
   container-name: gd-widget;
 }
 
+/* Header height guard
+   Study has a dense scroll body, so its flex header must never shrink below
+   the title + subtitle height. 본문이 길어져도 Today Study가 제목을 침범하지 않는다. */
+.study-widget > .widget-frame__header {
+  flex: 0 0 auto;
+}
+
 .study-widget .glass-card-body {
   min-height: 0;
   /* Keep the first Study section aligned with the shared widget body start.
