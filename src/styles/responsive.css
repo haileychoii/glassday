@@ -34,12 +34,14 @@ main {
 @media (max-width: 1280px) {
   :root {
     /* Wide desktop shrink tokens:
-       use these when the overall browser canvas needs a gentler outer margin. */
-    --gd-viewport-frame-pad: 14px;
-    --gd-main-pad-medium: 18px;
-    --gd-shell-pad-x-medium: 26px;
-    --gd-shell-pad-top-medium: 18px;
-    --gd-shell-pad-bottom-medium: 38px;
+       The main and dashboard padding are intentionally additive. Keep their
+       combined value compact so the first widget aligns close to the shell.
+       중간 폭 Wide 화면의 실제 좌우 여백은 main + shell 값의 합이다. */
+    --gd-viewport-frame-pad: 6px;
+    --gd-main-pad-medium: 4px;
+    --gd-shell-pad-x-medium: 10px;
+    --gd-shell-pad-top-medium: 8px;
+    --gd-shell-pad-bottom-medium: 24px;
   }
 
   .relative.z-10.min-h-screen {

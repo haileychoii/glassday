@@ -67,11 +67,14 @@
      1) shell pad = 앱 전체 프레임 여백
      2) main pad = 위젯 영역 시작 여백
      3) topbar/sidebar = 상단/좌측 프레임 크기 */
-  --gd-shell-pad-x: 20px;
-  --gd-shell-pad-top: 18px;
-  --gd-shell-pad-bottom: 30px;
-  --gd-main-pad-x: 10px;
-  --gd-main-pad-y: 8px;
+  /* Wide dashboard canvas
+     main pad + shell pad is the actual distance from topbar/sidebar to widgets.
+     Wide 여백은 아래 다섯 값만 조절하면 되고 위젯 개별 margin은 건드리지 않는다. */
+  --gd-shell-pad-x: 12px;
+  --gd-shell-pad-top: 10px;
+  --gd-shell-pad-bottom: 24px;
+  --gd-main-pad-x: 4px;
+  --gd-main-pad-y: 4px;
   --gd-topbar-min-height: 70px;
   --gd-topbar-pad-x: 20px;
   --gd-topbar-gap: 12px;
