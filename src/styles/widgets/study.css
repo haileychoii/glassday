@@ -1,1151 +1,883 @@
 /* =========================================================
-   STUDY PLANNER
-   Widget-local styles for:
-   - study summary panels
-   - subject, goal, and task sections
-   - recent record and progress layouts
-========================================================= */
+   STUDY PLANNER WIDGET
 
-/* =========================================================
-   1. Main study planner layout
+   Figma / code map:
+   1. .study10-summary       = summary strip
+   2. .study10-date-bar      = date navigation
+   3. .study10-control-band  = subjects + live timer
+   4. .study10-workspace     = timeline + task/note column
+
+   Spacing rule:
+   Change --study10-gap or --study10-panel-pad first. Child components use
+   these two values instead of stacking unrelated margins and paddings.
+   / 간격은 아래 두 토큰을 먼저 조절하면 위젯 전체에 일관되게 반영됩니다.
 ========================================================= */
 
 .study-widget {
+  --study10-gap: var(--gd-widget-section-gap, 8px);
+  --study10-gap-tight: var(--gd-widget-section-gap-tight, 6px);
+  --study10-panel-pad: var(--gd-widget-panel-pad, 12px);
+  --study10-control-height: var(--gd-control-height-md, 32px);
+  --study10-radius: var(--gd-radius-inner, 14px);
+  container-type: size;
+  container-name: gd-widget study-widget;
+}
+
+.study-widget > .glass-card-body,
+.study-widget > .widget-frame__body {
   min-height: 0;
-  container-type: inline-size;
-  /* Use the shared widget container name so Study follows the same responsive
-     measuring system as every other dashboard card. */
-  container-name: gd-widget;
+  overflow: auto;
 }
 
-/* Header height guard
-   Study has a dense scroll body, so its flex header must never shrink below
-   the title + subtitle height. 본문이 길어져도 Today Study가 제목을 침범하지 않는다. */
-.study-widget > .widget-frame__header {
-  flex: 0 0 auto;
-}
-
-.study-widget .glass-card-body {
-  min-height: 0;
-  /* Keep the first Study section aligned with the shared widget body start.
-     This prevents the Today Study panel from sliding up into the title row. */
-  padding-top: var(--gd-widget-content-gap-top);
-  overflow: hidden;
-}
-
-.study-planner {
-  flex: 1 1 auto;
-  height: 100%;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: none;
-  grid-auto-rows: max-content;
-  align-content: start;
-  gap: var(--gd-widget-section-gap-tight);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-inline: 2px;
-}
-
-.study-hero {
-  grid-column: 1 / -1;
+.study10-planner {
   min-width: 0;
-  min-height: 66px;
-  padding: 10px 12px;
-  border-radius: 18px;
+  color: hsl(var(--foreground) / 0.94);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 52px;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gd-widget-section-gap);
-  background:
-    radial-gradient(circle at 18% 12%, hsl(var(--primary) / 0.18), transparent 42%),
-    linear-gradient(145deg, hsl(0 0% 100% / 0.46), hsl(0 0% 100% / 0.16));
-  border: 1px solid hsl(0 0% 100% / 0.48);
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.68),
-    0 18px 40px -32px hsl(var(--primary) / 0.36);
+  gap: var(--study10-gap);
 }
 
-/* =========================================================
-   2. Hero summary and daily progress
-========================================================= */
-
-.study-kicker {
-  font-size: 11px;
-  font-weight: 800;
-  color: hsl(var(--foreground) / 0.44);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.study10-planner button,
+.study10-planner input,
+.study10-planner select,
+.study10-planner textarea {
+  color: inherit;
+  font: inherit;
+  letter-spacing: 0;
 }
 
-.study-main {
-  margin-top: 2px;
-  font-size: 20px;
-  font-weight: 900;
-  line-height: 1;
-  color: hsl(var(--foreground) / 0.84);
+.study10-planner button {
+  cursor: pointer;
 }
 
-.study-sub {
-  margin-top: 5px;
-  font-size: 11px;
-  font-weight: 750;
-  color: hsl(var(--foreground) / 0.48);
-  max-width: 100%;
+.study10-planner button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+/* ---------------------------------------------------------
+   1. Summary strip
+   Three cards stay in one row unless the container is exceptionally narrow.
+--------------------------------------------------------- */
+
+.study10-summary {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr) minmax(0, 1.35fr);
+  gap: var(--study10-gap-tight);
+}
+
+.study10-summary-card {
+  min-width: 0;
+  min-height: 62px;
+  padding: 9px 11px;
+  border: 1px solid hsl(var(--border) / 0.66);
+  border-radius: var(--study10-radius);
+  background: hsl(var(--card) / 0.38);
+  backdrop-filter: blur(18px) saturate(116%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+
+.study10-summary-card > span,
+.study10-summary-card > label {
+  color: hsl(var(--muted-foreground) / 0.86);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.study10-summary-card > strong {
   overflow: hidden;
+  font-size: 15px;
+  font-weight: 750;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.study-progress-ring {
-  width: 52px;
-  height: 52px;
-  border-radius: 999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:
-    conic-gradient(
-      hsl(var(--primary) / 0.82),
-      hsl(var(--primary) / 0.24),
-      hsl(0 0% 100% / 0.35)
-    );
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.7),
-    0 12px 28px -22px hsl(var(--primary) / 0.5);
-}
-
-.study-progress-ring span {
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: hsl(0 0% 100% / 0.76);
-  font-size: 13px;
-  font-weight: 900;
-  color: hsl(var(--foreground) / 0.72);
-}
-
-.study-date-row {
-  grid-column: 1 / -1;
+.study10-goal-line {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: var(--gd-widget-stack-gap);
+  justify-content: space-between;
+  gap: var(--study10-gap-tight);
 }
 
-.study-pomodoro-panel,
-.study-input-panel,
-.study-goal-panel,
-.study-week-panel,
-.study-task-panel,
-.study-record-list-panel {
-  min-height: 0;
-  padding: var(--gd-widget-panel-pad);
-  border-radius: 22px;
-  display: grid;
-  align-content: start;
-  gap: var(--gd-widget-section-gap);
-  background:
-    linear-gradient(145deg, hsl(0 0% 100% / 0.34), hsl(0 0% 100% / 0.13));
-  border: 1px solid hsl(0 0% 100% / 0.42);
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.52);
-}
-
-.study-pomodoro-panel {
-  grid-column: 1 / -1;
-}
-
-.study-pomodoro-shell {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.85fr);
-  gap: var(--gd-widget-stack-gap);
-  align-items: stretch;
-}
-
-.study-pomodoro-main,
-.study-pomodoro-settings {
+.study10-goal-line input {
+  width: 66px;
   min-width: 0;
-  border-radius: 18px;
-  padding: var(--gd-widget-gap);
-  background: hsl(0 0% 100% / 0.22);
-  border: 1px solid hsl(0 0% 100% / 0.34);
-}
-
-.study-pomodoro-main {
-  display: grid;
-  justify-items: start;
-  gap: var(--gd-widget-section-gap);
-}
-
-.study-pomodoro-modes,
-.study-pomodoro-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gd-widget-inline-gap);
-}
-
-.study-pomodoro-mode,
-.study-pomodoro-actions button,
-.study-task-form button {
-  min-height: 32px;
-  border-radius: 999px;
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 850;
-}
-
-.study-pomodoro-mode {
-  background: hsl(0 0% 100% / 0.28);
-  border: 1px solid hsl(0 0% 100% / 0.34);
-  color: hsl(var(--foreground) / 0.56);
-}
-
-.study-pomodoro-mode.is-active {
-  color: hsl(var(--foreground) / 0.86);
-  background: hsl(var(--primary) / 0.14);
-  border-color: hsl(var(--primary) / 0.26);
-}
-
-.study-pomodoro-time {
-  font-size: clamp(30px, 5cqw, 44px);
-  font-weight: 900;
-  line-height: 1;
-  color: hsl(var(--foreground) / 0.84);
-}
-
-.study-pomodoro-sub {
+  height: 23px;
+  padding: 0 6px;
+  border: 1px solid hsl(var(--border) / 0.58);
+  border-radius: calc(var(--study10-radius) * 0.6);
+  background: hsl(var(--card) / 0.34);
   font-size: 11px;
   font-weight: 700;
-  color: hsl(var(--foreground) / 0.46);
 }
 
-.study-pomodoro-actions button,
-.study-task-form button {
-  color: hsl(var(--primary));
-  background: hsl(var(--primary) / 0.12);
-  border: 1px solid hsl(var(--primary) / 0.18);
-}
-
-.study-pomodoro-actions button.is-secondary {
-  color: hsl(var(--foreground) / 0.68);
-  background: hsl(0 0% 100% / 0.26);
-  border-color: hsl(0 0% 100% / 0.34);
-}
-
-.study-pomodoro-settings {
-  display: grid;
-  align-content: start;
-  gap: var(--gd-widget-section-gap);
-}
-
-.study-pomodoro-settings label {
-  min-width: 0;
-  display: grid;
-  gap: var(--gd-widget-section-gap-tight);
-}
-
-.study-pomodoro-settings span {
-  font-size: 10px;
-  font-weight: 800;
-  color: hsl(var(--foreground) / 0.42);
-}
-
-.study-pomodoro-stepper {
-  display: grid;
-  grid-template-columns: 28px minmax(0, 1fr) 28px;
-  align-items: center;
-  gap: var(--gd-widget-inline-gap);
-}
-
-.study-pomodoro-stepper button {
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: hsl(0 0% 100% / 0.28);
-  border: 1px solid hsl(0 0% 100% / 0.36);
-  color: hsl(var(--foreground) / 0.62);
+.study10-goal-line strong {
   font-size: 13px;
-  font-weight: 900;
 }
 
-.study-pomodoro-stepper strong {
-  min-width: 0;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 850;
-  color: hsl(var(--foreground) / 0.78);
-}
-
-.study-date-button,
-.study-today-button {
-  height: 34px;
+.study10-progress {
+  width: 100%;
+  height: 4px;
+  overflow: hidden;
   border-radius: 999px;
-  padding: 0 12px;
+  background: hsl(var(--foreground) / 0.09);
+}
+
+.study10-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: hsl(var(--primary) / 0.76);
+  transition: width 180ms ease;
+}
+
+/* ---------------------------------------------------------
+   2. Date navigation
+   This row is outside inner scrollers, so it remains reachable at low heights.
+--------------------------------------------------------- */
+
+.study10-date-bar {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--study10-control-height) minmax(0, 1fr) auto var(--study10-control-height);
+  align-items: center;
+  gap: var(--study10-gap-tight);
+}
+
+.study10-icon-button,
+.study10-today-button {
+  height: var(--study10-control-height);
+  border: 1px solid hsl(var(--border) / 0.66);
+  border-radius: calc(var(--study10-radius) * 0.8);
+  background: hsl(var(--card) / 0.4);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.study10-icon-button {
+  width: var(--study10-control-height);
+  padding: 0;
+}
+
+.study10-icon-button svg,
+.study10-timer-button svg,
+.study10-add-button svg,
+.study10-eraser-tool svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+
+.study10-today-button {
+  padding: 0 10px;
+  color: hsl(var(--foreground) / 0.72);
   font-size: 11px;
-  font-weight: 800;
-  background: hsl(0 0% 100% / 0.32);
-  border: 1px solid hsl(0 0% 100% / 0.44);
+  font-weight: 700;
 }
 
-.study-date-input {
-  height: 34px;
-  flex: 1;
+.study10-date-control {
   min-width: 0;
-  border-radius: 999px;
-  padding: 0 12px;
-  font-size: 12px;
-  font-weight: 750;
-  background: hsl(0 0% 100% / 0.36);
-  border: 1px solid hsl(0 0% 100% / 0.44);
-}
-
-.study-subject-grid {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(106px, 1fr));
-  gap: 7px;
-  align-items: stretch;
-}
-
-.study-subject-card {
-  --study-subject-color: hsl(var(--primary));
-
-  min-width: 0;
-  min-height: 50px;
-  border-radius: 16px;
-  padding: 8px;
-  display: grid;
-  grid-template-columns: 8px minmax(0, 1fr) auto;
+  height: var(--study10-control-height);
+  padding: 0 9px;
+  border: 1px solid hsl(var(--border) / 0.62);
+  border-radius: calc(var(--study10-radius) * 0.8);
+  background: hsl(var(--card) / 0.34);
+  display: flex;
   align-items: center;
-  gap: 7px;
+  justify-content: space-between;
+  gap: var(--study10-gap-tight);
+}
+
+.study10-date-control span {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.study10-date-control input {
+  width: 22px;
+  min-width: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color-scheme: light dark;
+}
+
+/* ---------------------------------------------------------
+   3. Subject tools and live timer
+--------------------------------------------------------- */
+
+.study10-control-band {
+  min-width: 0;
+  display: grid;
+  gap: var(--study10-gap-tight);
+}
+
+.study10-subject-tools {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.study10-subject-tool {
+  min-width: 0;
+  min-height: 37px;
+  padding: 5px 7px;
+  border: 1px solid hsl(var(--border) / 0.56);
+  border-radius: calc(var(--study10-radius) * 0.75);
+  background: hsl(var(--card) / 0.3);
+  display: grid;
+  grid-template-columns: 7px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 5px;
   text-align: left;
-  background:
-    linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--study-subject-color) 18%, hsl(0 0% 100% / 0.3)),
-      hsl(0 0% 100% / 0.18)
-    );
-  border: 1px solid
-    color-mix(in srgb, var(--study-subject-color) 34%, hsl(0 0% 100% / 0.44));
+  transition: border-color 140ms ease, background-color 140ms ease,
+    transform 140ms ease;
 }
 
-.study-subject-card.is-active {
-  background:
-    linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--study-subject-color) 26%, hsl(0 0% 100% / 0.46)),
-      hsl(0 0% 100% / 0.28)
-    );
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.64),
-    0 12px 28px -24px color-mix(in srgb, var(--study-subject-color) 62%, transparent);
+.study10-subject-tool:hover {
+  background: hsl(var(--card) / 0.5);
 }
 
-.study-subject-color {
-  width: 8px;
-  height: 28px;
+.study10-subject-tool.is-active {
+  border-color: var(--study-subject-color, hsl(var(--primary) / 0.78));
+  background: color-mix(
+    in srgb,
+    var(--study-subject-color, hsl(var(--primary))) 14%,
+    hsl(var(--card) / 0.5)
+  );
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--study-subject-color) 24%, transparent);
+}
+
+.study10-subject-dot,
+.study10-task-color {
+  width: 7px;
+  height: 18px;
   border-radius: 999px;
   background: var(--study-subject-color);
-  border: 1px solid hsl(0 0% 100% / 0.66);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--study-subject-color) 24%, transparent),
-    inset 0 1px 0 hsl(0 0% 100% / 0.44);
 }
 
-.study-subject-card strong {
+.study10-subject-tool > span:not(.study10-subject-dot) {
   min-width: 0;
-  display: block;
+  overflow: hidden;
   font-size: 11px;
-  font-weight: 900;
-  color: hsl(var(--foreground) / 0.74);
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.study-subject-card span {
+.study10-subject-tool small {
+  color: hsl(var(--muted-foreground) / 0.84);
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.study10-eraser-tool {
+  grid-template-columns: 14px minmax(0, 1fr);
+  color: hsl(var(--muted-foreground) / 0.9);
+}
+
+.study10-eraser-tool.is-active {
+  --study-subject-color: hsl(var(--foreground) / 0.56);
+}
+
+.study10-timer {
   min-width: 0;
-  display: block;
-  margin-top: 3px;
-  font-size: 9.5px;
-  font-weight: 700;
-  color: hsl(var(--foreground) / 0.42);
-}
-
-.study-subject-percent,
-.study-subject-card em {
-  flex: 0 0 auto;
-  font-style: normal;
-  font-size: 11px;
-  font-weight: 900;
-  color: hsl(var(--primary));
-}
-
-.study-input-panel {
-  grid-column: 1 / -1;
-  min-height: 0;
-}
-
-.study-week-panel {
-  grid-column: 1 / -1;
-  min-height: 0;
-}
-
-.study-goal-panel {
-  grid-column: 1 / -1;
-  min-height: 0;
-}
-
-.study-task-panel {
-  grid-column: 1 / -1;
-  min-height: 0;
-}
-
-.study-record-list-panel {
-  grid-column: 1 / -1;
-  min-height: 0;
-}
-
-.study-section-title {
+  padding: 7px 8px 7px 10px;
+  border: 1px solid hsl(var(--border) / 0.62);
+  border-radius: var(--study10-radius);
+  background: hsl(var(--card) / 0.38);
+  backdrop-filter: blur(18px) saturate(116%);
   display: flex;
   align-items: center;
-  gap: var(--gd-widget-section-title-gap);
-  margin-bottom: var(--gd-widget-section-title-bottom);
-  font-size: 12px;
-  font-weight: 850;
-  color: hsl(var(--foreground) / 0.6);
+  justify-content: space-between;
+  gap: var(--study10-gap);
 }
 
-.study-record-form {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--gd-widget-section-gap);
-  align-items: end;
+.study10-timer.is-running {
+  border-color: hsl(var(--primary) / 0.48);
+  background: hsl(var(--primary) / 0.09);
 }
 
-.study-record-form label {
+.study10-timer-copy {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--gd-widget-section-gap-tight);
+  gap: 1px;
 }
 
-.study-record-form span {
-  font-size: 10px;
-  font-weight: 800;
-  color: hsl(var(--foreground) / 0.42);
+.study10-timer-copy span {
+  color: hsl(var(--muted-foreground) / 0.84);
+  font-size: 9px;
+  font-weight: 700;
 }
 
-.study-record-form input {
-  height: 34px;
-  border-radius: 14px;
+.study10-timer-copy strong {
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.study10-timer-button,
+.study10-add-button {
+  min-height: 30px;
   padding: 0 10px;
-  font-size: 12px;
-  font-weight: 750;
-  background: hsl(0 0% 100% / 0.38);
-  border: 1px solid hsl(0 0% 100% / 0.44);
-}
-
-.study-record-form button {
-  align-self: end;
-  height: 34px;
-  border-radius: 14px;
-  font-size: 12px;
-  font-weight: 900;
-  color: hsl(var(--primary));
-  background: hsl(var(--primary) / 0.12);
-  border: 1px solid hsl(var(--primary) / 0.18);
-}
-
-.study-goal-list {
-  display: grid;
-  gap: var(--gd-widget-section-gap);
-}
-
-.study-goal-item {
-  height: 32px;
-  border-radius: 14px;
-  padding: 0 8px;
-  display: grid;
-  grid-template-columns: 1fr 54px 24px;
+  border: 1px solid hsl(var(--primary) / 0.4);
+  border-radius: calc(var(--study10-radius) * 0.72);
+  background: hsl(var(--primary) / 0.13);
+  color: hsl(var(--foreground) / 0.9);
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: hsl(0 0% 100% / 0.26);
-  border: 1px solid hsl(0 0% 100% / 0.36);
-}
-
-.study-goal-item span {
-  font-size: 11px;
-  font-weight: 850;
-  color: hsl(var(--foreground) / 0.68);
-}
-
-.study-goal-item input {
-  height: 24px;
-  border-radius: 10px;
-  padding: 0 6px;
-  font-size: 11px;
-  text-align: right;
-  background: hsl(0 0% 100% / 0.42);
-  border: 1px solid hsl(0 0% 100% / 0.42);
-}
-
-.study-goal-item small {
+  justify-content: center;
+  gap: 5px;
   font-size: 10px;
-  color: hsl(var(--foreground) / 0.4);
+  font-weight: 750;
 }
 
-.study-week-bars {
-  height: 140px;
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 7px;
-  align-items: end;
-}
+/* ---------------------------------------------------------
+   4. Main workspace and shared panels
+--------------------------------------------------------- */
 
-.study-week-day {
-  height: 100%;
+.study10-workspace {
   min-width: 0;
   display: grid;
-  grid-template-rows: 1fr auto;
-  gap: 6px;
+  gap: var(--study10-gap);
+  align-items: start;
+}
+
+.study10-panel {
+  min-width: 0;
+  padding: var(--study10-panel-pad);
+  border: 1px solid hsl(var(--border) / 0.62);
+  border-radius: var(--study10-radius);
+  background: hsl(var(--card) / 0.34);
+  backdrop-filter: blur(18px) saturate(116%);
+}
+
+.study10-panel-heading {
+  min-width: 0;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--study10-gap);
+}
+
+.study10-panel-heading > div {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--study10-gap-tight);
+}
+
+.study10-panel-heading span {
+  font-size: 12px;
+  font-weight: 780;
+}
+
+.study10-panel-heading small {
+  overflow: hidden;
+  color: hsl(var(--muted-foreground) / 0.82);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Timeline grid
+   The minute header and every hour row share the same seven columns. */
+.study10-timeline-scroll {
+  max-height: 430px;
+  margin-top: var(--study10-gap-tight);
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.study10-minute-head,
+.study10-hour-row {
+  min-width: 290px;
+  display: grid;
+  grid-template-columns: 31px repeat(6, minmax(32px, 1fr));
+  gap: 3px;
+}
+
+.study10-minute-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding-bottom: 4px;
+  background: color-mix(in srgb, hsl(var(--card)) 86%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+.study10-minute-head span {
+  color: hsl(var(--muted-foreground) / 0.7);
+  font-size: 8px;
   text-align: center;
 }
 
-.study-week-bar-track {
-  height: 100%;
-  border-radius: 999px;
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-  background: hsl(0 0% 100% / 0.28);
-  border: 1px solid hsl(0 0% 100% / 0.4);
-}
-
-.study-week-bar {
-  width: 100%;
-  border-radius: 999px;
-  background:
-    linear-gradient(
-      180deg,
-      hsl(var(--primary) / 0.76),
-      hsl(var(--primary) / 0.3)
-    );
-}
-
-.study-week-day span {
-  font-size: 9px;
-  font-weight: 800;
-  color: hsl(var(--foreground) / 0.42);
-}
-
-.study-task-list,
-.study-record-list {
-  min-height: 0;
-  min-width: 0;
-  overflow: auto;
+.study10-timeline-grid {
   display: grid;
-  align-content: start;
-  gap: 7px;
+  gap: 3px;
 }
 
-.study-task-form {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 88px 72px;
-  gap: 8px;
-}
-
-.study-task-form input {
-  min-width: 0;
-  height: 34px;
-  border-radius: 14px;
-  padding: 0 10px;
-  font-size: 11.5px;
-  font-weight: 700;
-  background: hsl(0 0% 100% / 0.34);
-  border: 1px solid hsl(0 0% 100% / 0.42);
-}
-
-.study-task,
-.study-record-item {
-  min-height: 36px;
-  min-width: 0;
-  border-radius: 15px;
-  padding: 0 8px;
+.study10-hour-label {
   display: flex;
   align-items: center;
-  gap: 7px;
-  background: hsl(0 0% 100% / 0.28);
-  border: 1px solid hsl(0 0% 100% / 0.38);
+  color: hsl(var(--muted-foreground) / 0.86);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
 }
 
-.study-task.is-done {
-  opacity: 0.55;
+.study10-slot {
+  min-width: 0;
+  height: 27px;
+  padding: 0;
+  border: 1px solid hsl(var(--border) / 0.52);
+  border-radius: calc(var(--study10-radius) * 0.38);
+  background: hsl(var(--card) / 0.3);
+  touch-action: none;
+  transition: border-color 110ms ease, background-color 110ms ease,
+    transform 110ms ease;
 }
 
-.study-task-check,
-.study-task-delete,
-.study-record-delete {
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  flex-shrink: 0;
+.study10-slot:hover {
+  border-color: hsl(var(--foreground) / 0.38);
+  transform: translateY(-1px);
+}
+
+.study10-slot.is-filled {
+  border-color: color-mix(in srgb, var(--study-subject-color) 72%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--study-subject-color) 78%,
+    hsl(var(--card))
+  );
+  box-shadow: inset 0 0 0 1px hsl(0 0% 100% / 0.12);
+}
+
+/* Task and note column */
+.study10-side-stack {
+  min-width: 0;
+  display: grid;
+  gap: var(--study10-gap);
+}
+
+.study10-task-form {
+  min-width: 0;
+  margin-top: var(--study10-gap-tight);
+  display: grid;
+  grid-template-columns: minmax(82px, 0.7fr) minmax(120px, 1.6fr) 70px auto;
+  gap: 5px;
+}
+
+.study10-task-form select,
+.study10-task-form > input,
+.study10-estimate-input,
+.study10-note-panel textarea {
+  border: 1px solid hsl(var(--border) / 0.58);
+  border-radius: calc(var(--study10-radius) * 0.65);
+  background: hsl(var(--card) / 0.38);
+  outline: none;
+}
+
+.study10-task-form select,
+.study10-task-form > input {
+  min-width: 0;
+  height: 30px;
+  padding: 0 8px;
+  font-size: 10px;
+}
+
+.study10-estimate-input {
+  min-width: 0;
+  height: 30px;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+}
+
+.study10-estimate-input input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-size: 10px;
+}
+
+.study10-estimate-input span {
+  color: hsl(var(--muted-foreground) / 0.76);
+  font-size: 9px;
+}
+
+.study10-task-list {
+  max-height: 250px;
+  margin-top: var(--study10-gap-tight);
+  overflow: auto;
+  display: grid;
+  gap: 5px;
+}
+
+.study10-task-row {
+  min-width: 0;
+  min-height: 39px;
+  padding: 5px 6px;
+  border: 1px solid hsl(var(--border) / 0.48);
+  border-radius: calc(var(--study10-radius) * 0.68);
+  background: hsl(var(--card) / 0.28);
+  display: grid;
+  grid-template-columns: 23px 5px minmax(0, 1fr) 26px;
+  align-items: center;
+  gap: 6px;
+}
+
+.study10-task-row.is-done {
+  opacity: 0.58;
+}
+
+.study10-task-row.is-done strong {
+  text-decoration: line-through;
+}
+
+.study10-task-check,
+.study10-task-delete {
+  padding: 0;
+  border: 1px solid hsl(var(--border) / 0.56);
+  background: hsl(var(--card) / 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.study10-task-check {
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+}
+
+.study10-task-check svg,
+.study10-task-delete svg {
+  width: 12px;
+  height: 12px;
+}
+
+.study10-task-delete {
+  width: 26px;
+  height: 26px;
+  border-radius: calc(var(--study10-radius) * 0.55);
+  color: hsl(var(--muted-foreground) / 0.78);
+}
+
+.study10-task-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.study10-task-copy strong,
+.study10-task-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.study10-task-copy strong {
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.study10-task-copy small,
+.study10-empty,
+.study10-legacy-note {
+  color: hsl(var(--muted-foreground) / 0.82);
+  font-size: 9px;
+}
+
+.study10-empty {
+  min-height: 40px;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.study-task-check {
-  color: hsl(var(--primary));
-}
-
-.study-task-delete,
-.study-record-delete {
-  margin-left: auto;
-  color: hsl(350 70% 46% / 0.68);
-  opacity: 0;
-  transition: opacity 160ms ease;
-}
-
-.study-task:hover .study-task-delete,
-.study-record-item:hover .study-record-delete {
-  opacity: 1;
-}
-
-.study-task-dot,
-.study-record-color {
-  width: 7px;
-  height: 24px;
-  border-radius: 999px;
-  flex-shrink: 0;
-  border: 1px solid hsl(0 0% 100% / 0.64);
-}
-
-.study-task input {
-  min-width: 0;
+.study10-note-panel textarea {
   width: 100%;
-  flex: 1;
-  background: transparent !important;
-  border: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  font-size: 11.5px;
-  font-weight: 750;
-  color: hsl(var(--foreground) / 0.7);
-}
-
-.study-task-copy {
-  min-width: 0;
-  flex: 1;
-  display: grid;
-  gap: 4px;
-}
-
-.study-task-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gd-widget-inline-gap);
-  font-size: 9px;
-  font-weight: 800;
-  color: hsl(var(--foreground) / 0.44);
-}
-
-.study-task-meta span {
-  padding: 0 7px;
-  min-height: 18px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  background: hsl(0 0% 100% / 0.24);
-  border: 1px solid hsl(0 0% 100% / 0.28);
-}
-
-.study-task.is-done input {
-  text-decoration: line-through;
-}
-
-.study-record-item {
-  padding: 8px;
-}
-
-.study-record-item strong {
-  display: block;
-  font-size: 11.5px;
-  font-weight: 900;
-  color: hsl(var(--foreground) / 0.74);
-}
-
-.study-record-item span {
-  display: block;
-  margin-top: 3px;
+  min-height: 88px;
+  margin-top: var(--study10-gap-tight);
+  padding: 9px;
+  resize: vertical;
   font-size: 10px;
-  color: hsl(var(--foreground) / 0.46);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.5;
 }
 
-.study-empty {
-  min-height: 42px;
-  border-radius: 15px;
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  font-size: 11px;
-  color: hsl(var(--foreground) / 0.42);
-  background: hsl(0 0% 100% / 0.2);
-  border: 1px dashed hsl(0 0% 100% / 0.36);
-} 
+.study10-task-form :is(input, select):focus,
+.study10-note-panel textarea:focus,
+.study10-goal-line input:focus {
+  border-color: hsl(var(--primary) / 0.58);
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.1);
+}
 
-@container gd-widget (max-width: 700px) {
-  .study-hero {
-    min-height: 58px;
-    grid-template-columns: minmax(0, 1fr) 46px;
-    padding: 8px 10px;
-    border-radius: 16px;
+.study10-legacy-note {
+  padding: 8px 10px;
+  border: 1px dashed hsl(var(--border) / 0.58);
+  border-radius: calc(var(--study10-radius) * 0.75);
+  background: hsl(var(--card) / 0.2);
+  line-height: 1.45;
+}
+
+/* ---------------------------------------------------------
+   Floating detail
+   It uses the same planner content and container queries as the widget.
+--------------------------------------------------------- */
+
+.study10-floating-window {
+  background: hsl(var(--card) / 0.88);
+  backdrop-filter: blur(34px) saturate(122%);
+}
+
+.study10-floating-window .floating-window-body {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.study10-detail-body {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--gd-space-md, 10px);
+  overflow: auto;
+  container-type: size;
+  container-name: study-widget;
+}
+
+.study10-planner--detail {
+  min-height: 100%;
+}
+
+/* ---------------------------------------------------------
+   Container-responsive layouts
+   Breakpoints follow the widget/window itself, never the browser viewport.
+--------------------------------------------------------- */
+
+@container study-widget (min-width: 720px) {
+  .study10-control-band {
+    grid-template-columns: minmax(0, 1fr) 178px;
+    align-items: stretch;
   }
 
-  .study-main {
-    font-size: 18px;
+  .study10-workspace {
+    grid-template-columns: minmax(0, 1.35fr) minmax(270px, 0.9fr);
   }
 
-  .study-progress-ring {
-    width: 46px;
-    height: 46px;
+  .study10-timer {
+    align-self: stretch;
+  }
+}
+
+@container study-widget (min-width: 940px) {
+  .study10-subject-tools {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
   }
 
-  .study-progress-ring span {
-    width: 36px;
-    height: 36px;
-    font-size: 12px;
+  .study10-subject-tool {
+    grid-template-columns: 7px minmax(0, 1fr);
   }
 
-  .study-pomodoro-shell {
-    grid-template-columns: 1fr;
+  .study10-subject-tool small {
+    grid-column: 2;
+  }
+}
+
+@container study-widget (max-width: 560px) {
+  .study10-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .study-subject-grid {
+  .study10-summary-card {
+    min-height: 54px;
+    padding: 7px 8px;
+  }
+
+  .study10-summary-card > strong {
+    font-size: 13px;
+  }
+
+  .study10-subject-tools {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .study-input-panel,
-  .study-goal-panel,
-  .study-week-panel,
-  .study-task-panel,
-  .study-record-list-panel {
-    padding: 10px;
-    border-radius: 18px;
-    gap: 7px;
+  .study10-task-form {
+    grid-template-columns: minmax(78px, 0.8fr) minmax(0, 1.7fr) 66px;
   }
 
-  .study-record-form {
-    grid-template-columns: 1fr;
+  .study10-add-button {
+    grid-column: 1 / -1;
   }
 
-  .study-task-form {
-    grid-template-columns: 1fr;
+  .study10-add-button span {
+    display: inline;
   }
 
-  .study-week-bars {
-    height: 124px;
-    gap: 6px;
-  }
-
-  .study-goal-item {
-    grid-template-columns: 1fr 48px 22px;
+  .study10-panel {
+    padding: 9px;
   }
 }
 
-/* Compact widths inside the dashboard grid need one extra step between the
-   broader tablet layout and the narrow phone layout below. */
-@container gd-widget (max-width: 620px) {
-  .study-subject-grid {
-    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
-  }
-}
-
-/* Keep subjects compact in mid-narrow dashboard cells. They should collapse
-   only when the widget itself is truly too narrow for two usable cards. */
-@container gd-widget (max-width: 560px) {
-  .study-record-form {
-    grid-template-columns: 1fr;
-  }
-
-  .study-subject-grid {
-    grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
-  }
-}
-
-@container gd-widget (max-width: 520px) {
-  .study-widget .glass-card-body {
-    padding-top: var(--gd-widget-content-gap-top);
-  }
-
-  .study-hero {
-    min-height: 52px;
-    grid-template-columns: minmax(0, 1fr) 40px;
-    padding: 7px 9px;
-  }
-
-  .study-kicker {
-    font-size: 10px;
-  }
-
-  .study-main {
-    font-size: 17px;
-  }
-
-  .study-sub {
-    margin-top: 3px;
-    font-size: 10px;
-  }
-
-  .study-progress-ring {
-    width: 40px;
-    height: 40px;
-  }
-
-  .study-progress-ring span {
-    width: 31px;
-    height: 31px;
-    font-size: 11px;
-  }
-
-  .study-date-row {
-    gap: 6px;
-  }
-
-  .study-date-button,
-  .study-today-button,
-  .study-date-input {
-    height: 30px;
-  }
-
-  .study-subject-grid {
-    grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
-  }
-
-  .study-subject-card {
-    min-height: 46px;
-    grid-template-columns: 7px minmax(0, 1fr) auto;
-    gap: 6px;
-    padding: 7px;
-  }
-
-  .study-subject-color {
-    width: 7px;
-    height: 24px;
-  }
-
-  .study-subject-card strong {
-    font-size: 10px;
-  }
-
-  .study-subject-card span {
-    margin-top: 2px;
-    font-size: 8.5px;
-  }
-
-  .study-subject-card em {
-    font-size: 10px;
-  }
-
-  .study-pomodoro-actions {
-    width: 100%;
-  }
-
-  .study-pomodoro-actions button {
-    flex: 1 1 0;
-  }
-
-  .study-week-bars {
-    height: 112px;
-    gap: 5px;
-  }
-
-  .study-week-day {
+@container study-widget (max-width: 390px) {
+  .study10-summary {
     gap: 4px;
   }
 
-  .study-week-day strong {
-    font-size: 10px;
+  .study10-summary-card {
+    min-height: 50px;
+    padding: 6px;
   }
 
-  .study-week-day span {
+  .study10-summary-card > span,
+  .study10-summary-card > label {
     font-size: 8px;
   }
 
-  .study-goal-item {
-    height: 30px;
-    grid-template-columns: 1fr 44px 20px;
-    gap: 5px;
+  .study10-summary-card > strong,
+  .study10-goal-line strong {
+    font-size: 11px;
   }
 
-  .study-task,
-  .study-record-item {
-    gap: 6px;
-    padding-inline: 7px;
+  .study10-goal-line input {
+    width: 48px;
+  }
+
+  .study10-date-bar {
+    grid-template-columns: 30px minmax(0, 1fr) 30px;
+  }
+
+  .study10-today-button {
+    grid-column: 2;
+    grid-row: 2;
+    height: 26px;
+  }
+
+  .study10-date-bar > .study10-icon-button:last-child {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .study10-subject-tool {
+    min-height: 34px;
+  }
+
+  .study10-task-form {
+    grid-template-columns: minmax(0, 1fr) 66px;
+  }
+
+  .study10-task-form select {
+    grid-column: 1 / -1;
+  }
+
+  .study10-minute-head,
+  .study10-hour-row {
+    min-width: 280px;
+    grid-template-columns: 28px repeat(6, minmax(31px, 1fr));
   }
 }
 
-/* =========================================================
-   3. Detail floating window
-   Expanded study-planner layout used in the larger floating panel
-========================================================= */
+@container study-widget (max-height: 520px) {
+  .study10-planner {
+    --study10-gap: 6px;
+    --study10-panel-pad: 8px;
+  }
 
-.study-detail-window {
-  height: 100%;
-  min-height: 0;
-  padding: 18px;
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  grid-template-rows: auto auto auto 1fr;
-  gap: 14px;
-  overflow: auto;
+  .study10-summary-card {
+    min-height: 50px;
+  }
+
+  .study10-timeline-scroll {
+    max-height: 230px;
+  }
+
+  .study10-task-list {
+    max-height: 150px;
+  }
+
+  .study10-note-panel textarea {
+    min-height: 66px;
+  }
 }
 
-.study-detail-hero {
-  grid-column: 1 / -1;
-  min-height: 96px;
-  padding: 18px;
-  border-radius: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background:
-    radial-gradient(circle at 18% 12%, hsl(var(--primary) / 0.18), transparent 42%),
-    linear-gradient(145deg, hsl(0 0% 100% / 0.46), hsl(0 0% 100% / 0.16));
-  border: 1px solid hsl(0 0% 100% / 0.48);
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.68),
-    0 18px 40px -32px hsl(var(--primary) / 0.36);
+@container study-widget (max-height: 390px) {
+  .study10-timeline-scroll {
+    max-height: 180px;
+  }
 }
 
-.study-detail-date-row {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* ---------------------------------------------------------
+   Pixel Desk and Retro 98
+   Only these two themes exchange glass blur/radius for OS-style hard panels.
+--------------------------------------------------------- */
+
+:where(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html[data-theme="retro"],
+    body[data-theme="retro"]
+  )
+  :is(
+    .study10-summary-card,
+    .study10-date-control,
+    .study10-icon-button,
+    .study10-today-button,
+    .study10-subject-tool,
+    .study10-timer,
+    .study10-panel,
+    .study10-task-row,
+    .study10-note-panel textarea,
+    .study10-legacy-note
+  ) {
+  border-radius: 0;
+  background: hsl(var(--card));
+  backdrop-filter: none;
+  box-shadow: none;
 }
 
-.study-detail-subjects {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+:where(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html[data-theme="retro"],
+    body[data-theme="retro"]
+  )
+  :is(.study10-slot, .study10-task-check, .study10-task-delete) {
+  border-radius: 0;
 }
 
-.study-detail-subject-card {
-  min-height: 72px;
-  border-radius: 20px;
-  padding: 11px;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  text-align: left;
-  background: hsl(0 0% 100% / 0.3);
-  border: 1px solid hsl(0 0% 100% / 0.42);
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.56);
+:where(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html[data-theme="retro"],
+    body[data-theme="retro"]
+  )
+  .study10-floating-window {
+  background: hsl(var(--card));
+  backdrop-filter: none;
 }
 
-.study-detail-subject-card.is-active {
-  background: hsl(0 0% 100% / 0.52);
-  border-color: hsl(var(--primary) / 0.32);
+@media (prefers-reduced-motion: reduce) {
+  .study10-progress span,
+  .study10-subject-tool,
+  .study10-slot {
+    transition: none;
+  }
 }
-
-.study-detail-subject-card strong {
-  display: block;
-  font-size: 12px;
-  font-weight: 900;
-  color: hsl(var(--foreground) / 0.78);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.study-detail-subject-card span {
-  display: block;
-  margin-top: 4px;
-  font-size: 10.5px;
-  font-weight: 700;
-  color: hsl(var(--foreground) / 0.46);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.study-detail-subject-card em {
-  font-style: normal;
-  font-size: 12px;
-  font-weight: 900;
-  color: hsl(var(--primary));
-}
-
-.study-detail-record-form,
-.study-detail-week-panel,
-.study-detail-goals,
-.study-detail-tasks,
-.study-detail-records {
-  min-height: 0;
-  padding: 14px;
-  border-radius: 24px;
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.34),
-      hsl(0 0% 100% / 0.13)
-    );
-  border: 1px solid hsl(0 0% 100% / 0.42);
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.52);
-}
-
-.study-detail-record-form {
-  grid-column: 1 / -1;
-}
-
-.study-detail-week-panel {
-  grid-column: 1 / 2;
-}
-
-.study-detail-goals {
-  grid-column: 2 / 3;
-}
-
-.study-detail-tasks {
-  grid-column: 1 / 2;
-}
-
-.study-detail-records {
-  grid-column: 2 / 3;
-}
-
-.study-detail-week-bars {
-  height: 240px;
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 9px;
-  align-items: end;
-}
-
-.study-detail-week-day {
-  height: 100%;
-  min-width: 0;
-  display: grid;
-  grid-template-rows: 1fr auto auto;
-  gap: 6px;
-  text-align: center;
-}
-
-.study-detail-week-day.is-active .study-week-bar-track {
-  border-color: hsl(var(--primary) / 0.34);
-  background: hsl(var(--primary) / 0.1);
-}
-
-.study-detail-week-day strong {
-  font-size: 10px;
-  font-weight: 900;
-  color: hsl(var(--foreground) / 0.6);
-}
-
-.study-detail-week-day span {
-  font-size: 9px;
-  font-weight: 800;
-  color: hsl(var(--foreground) / 0.42);
-}
-
-.study-detail-record-list {
-  min-height: 0;
-  max-height: 360px;
-  overflow: auto;
-  display: grid;
-  align-content: start;
-  gap: 8px;
-}
-
-/* =========================================================
-   4. Grid-embedded study widget safety
-   These rules only protect the compact dashboard card:
-   - one vertical flow
-   - internal scroll when the widget is short
-   - every panel fills the card width
-   The floating Study detail window has its own section above and should not
-   inherit these grid-only constraints.
-========================================================= */
-
-.react-grid-item .study-widget .glass-card-body {
-  overflow: hidden !important;
-}
-
-.react-grid-item .study-planner {
-  grid-template-columns: 1fr !important;
-  grid-template-rows: none !important;
-  align-content: start !important;
-  min-height: 0 !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior: contain !important;
-  -webkit-overflow-scrolling: touch !important;
-  padding-inline: 2px !important;
-}
-
-.react-grid-item .study-hero,
-.react-grid-item .study-date-row,
-.react-grid-item .study-subject-grid,
-.react-grid-item .study-input-panel {
-  grid-column: 1 / -1 !important;
-}
-
-.react-grid-item .study-week-panel {
-  grid-column: 1 / -1 !important;
-  grid-row: auto !important;
-}
-
-.react-grid-item .study-goal-panel {
-  grid-column: 1 / -1 !important;
-  grid-row: auto !important;
-}
-
-.react-grid-item .study-task-panel {
-  grid-column: 1 / -1 !important;
-  grid-row: auto !important;
-}
-
-.react-grid-item .study-record-list-panel {
-  grid-column: 1 / -1 !important;
-  grid-row: auto !important;
-}
-
-.react-grid-item .study-input-panel,
-.react-grid-item .study-goal-panel,
-.react-grid-item .study-week-panel,
-.react-grid-item .study-task-panel,
-.react-grid-item .study-record-list-panel {
-  min-width: 0 !important;
-  overflow: visible !important;
-}
-
-.react-grid-item .study-task-list,
-.react-grid-item .study-record-list {
-  max-height: 220px;
-}
-
-.study-note-field {
-  grid-column: 1 / -1;
-}
-
-.study-record-form button {
-  grid-column: 1 / -1;
-}
-

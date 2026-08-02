@@ -784,8 +784,8 @@ body,
    Keep this late in the cascade so generic grid rules cannot silently
    disable the Study Planner structure again. */
 .dashboard-grid-item > .glass-card.study-widget {
-  container-type: inline-size;
-  container-name: gd-widget;
+  container-type: size;
+  container-name: gd-widget study-widget;
 }
 
 .dashboard-grid-item > .glass-card > .widget-frame__header {
@@ -875,20 +875,14 @@ body,
     font-size: 11px !important;
   }
 
-  .today-focus-ring,
-  .study-progress-ring {
+  .today-focus-ring {
     width: 54px !important;
     height: 54px !important;
   }
 
   .calendar-event-item,
   .career-list-item,
-  .today-focus-section,
-  .study-input-panel,
-  .study-week-panel,
-  .study-goal-panel,
-  .study-task-panel,
-  .study-record-list-panel {
+  .today-focus-section {
     border-radius: 16px !important;
     padding: var(--gd-widget-panel-pad) !important;
   }
@@ -986,6 +980,14 @@ body,
 .dashboard-grid-item > .glass-card.alert-center-widget {
   container-type: inline-size !important;
   container-name: gd-widget !important;
+}
+
+/* Study needs height queries as well as width queries. Keep both container
+   names so shared gd-widget rules and Study-specific rules can coexist.
+   / 위젯 높이가 낮을 때 내부 스크롤을 줄이기 위해 size 컨테이너를 사용합니다. */
+.dashboard-grid-item > .glass-card.study-widget {
+  container-type: size !important;
+  container-name: gd-widget study-widget !important;
 }
 
 /* Dashboard card scroll safety:
