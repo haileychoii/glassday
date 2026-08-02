@@ -31,8 +31,8 @@ export const StudyDetailWindow = ({
       w: 1120,
       h: 780,
     }}
-    minWidth={640}
-    minHeight={480}
+    minWidth={280}
+    minHeight={360}
     className="study10-floating-window"
     onClose={onClose}
   >

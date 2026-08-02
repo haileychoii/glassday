@@ -13,12 +13,16 @@
    / 간격은 아래 두 토큰을 먼저 조절하면 위젯 전체에 일관되게 반영됩니다.
 ========================================================= */
 
-.study-widget {
+.study-widget,
+.study10-detail-body {
   --study10-gap: var(--gd-widget-section-gap, 8px);
   --study10-gap-tight: var(--gd-widget-section-gap-tight, 6px);
   --study10-panel-pad: var(--gd-widget-panel-pad, 12px);
   --study10-control-height: var(--gd-control-height-md, 32px);
   --study10-radius: var(--gd-radius-inner, 14px);
+}
+
+.study-widget {
   container-type: size;
   container-name: gd-widget study-widget;
 }
@@ -822,6 +826,88 @@
   .study10-timeline-scroll {
     max-height: 180px;
   }
+}
+
+/* ---------------------------------------------------------
+   Dark glass readability
+   The global card token is intentionally pale in several themes. These local
+   surfaces keep white Study text readable without changing the app-wide theme.
+   / Glass Dark와 Aurora에서만 내부 면을 어두운 유리색으로 통일합니다.
+--------------------------------------------------------- */
+
+:where(
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html[data-theme="aurora"],
+    body[data-theme="aurora"]
+  )
+  :is(
+    .study10-summary-card,
+    .study10-date-control,
+    .study10-icon-button,
+    .study10-today-button,
+    .study10-subject-tool,
+    .study10-timer,
+    .study10-panel,
+    .study10-task-row,
+    .study10-legacy-note
+  ) {
+  border-color: rgb(255 255 255 / 0.15);
+  background: rgb(22 25 38 / 0.56);
+}
+
+:where(
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html[data-theme="aurora"],
+    body[data-theme="aurora"]
+  )
+  :is(
+    .study10-goal-line input,
+    .study10-task-form select,
+    .study10-task-form > input,
+    .study10-estimate-input,
+    .study10-note-panel textarea,
+    .study10-task-check,
+    .study10-task-delete,
+    .study10-slot
+  ) {
+  border-color: rgb(255 255 255 / 0.14);
+  background: rgb(8 11 20 / 0.34);
+}
+
+:where(
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html[data-theme="aurora"],
+    body[data-theme="aurora"]
+  )
+  .study10-minute-head {
+  background: rgb(22 25 38 / 0.86);
+}
+
+:where(
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html[data-theme="aurora"],
+    body[data-theme="aurora"]
+  )
+  .study10-subject-tool:hover {
+  background: rgb(30 34 48 / 0.72);
+}
+
+:where(
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html[data-theme="aurora"],
+    body[data-theme="aurora"]
+  )
+  .study10-subject-tool.is-active {
+  background: color-mix(
+    in srgb,
+    var(--study-subject-color) 22%,
+    rgb(22 25 38 / 0.78)
+  );
 }
 
 /* ---------------------------------------------------------

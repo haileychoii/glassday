@@ -1,7 +1,6 @@
 import type {
   StudyPlannerSubject,
   StudyPlannerSubjectId,
-  StudySubject,
 } from "../types/study";
 
 export const STUDY_PLANNER_STORAGE_KEY = "glassday.study.planner.v2";
@@ -31,51 +30,3 @@ export const STUDY_PLANNER_SUBJECTS: readonly StudyPlannerSubject[] = [
 export const STUDY_PLANNER_SUBJECT_IDS = new Set<StudyPlannerSubjectId>(
   STUDY_PLANNER_SUBJECTS.map((subject) => subject.id)
 );
-
-/* v1 compatibility
-   The old widget reads this export until the UI replacement commit lands, and
-   the migration uses its goal values as a sensible first daily goal. */
-export const defaultStudySubjects: StudySubject[] = [
-  {
-    id: "economics",
-    label: "경제학",
-    shortLabel: "경제",
-    color: "#6F9FC9",
-    dailyGoalMinutes: 60,
-  },
-  {
-    id: "ncs",
-    label: "NCS",
-    shortLabel: "NCS",
-    color: "#8B7DB8",
-    dailyGoalMinutes: 60,
-  },
-  {
-    id: "accounting",
-    label: "회계",
-    shortLabel: "회계",
-    color: "#C77D8F",
-    dailyGoalMinutes: 40,
-  },
-  {
-    id: "actuarial",
-    label: "보험수학",
-    shortLabel: "보험",
-    color: "#5CA694",
-    dailyGoalMinutes: 40,
-  },
-  {
-    id: "english",
-    label: "영어",
-    shortLabel: "영어",
-    color: "#CB955A",
-    dailyGoalMinutes: 30,
-  },
-  {
-    id: "other",
-    label: "기타",
-    shortLabel: "기타",
-    color: "#858FA2",
-    dailyGoalMinutes: 10,
-  },
-];

@@ -157,6 +157,16 @@ export const StudyWidget = () => {
     paintToolRef.current = selectedTool;
   }, [selectedTool]);
 
+  /* Persist the migration immediately.
+     useLocalStorage does not write its initial value until the first edit, so
+     this one-time bridge makes migrated v1 records available to cloud backup
+     and Alert Center even before the user paints a cell. / 첫 편집을 기다리지
+     않고 v2 키를 생성하되 기존 v1 키는 삭제하지 않습니다. */
+  useEffect(() => {
+    if (window.localStorage.getItem(STUDY_PLANNER_STORAGE_KEY) !== null) return;
+    setStoredPlanner(initialPlanner);
+  }, [initialPlanner, setStoredPlanner]);
+
   useEffect(() => {
     window.dispatchEvent(new Event("glassday:study-updated"));
   }, [storedPlanner]);
@@ -591,7 +601,7 @@ export const StudyWidget = () => {
             </div>
           </section>
 
-          <aside className="study10-side-stack">
+          <div className="study10-side-stack">
             {/* Tasks: subject, text and estimate stay in one semantic form. */}
             <section className="study10-panel study10-task-panel">
               <div className="study10-panel-heading">
@@ -723,7 +733,7 @@ export const StudyWidget = () => {
                 )}이 오늘 합계에 포함되어 있어요.
               </section>
             )}
-          </aside>
+          </div>
         </div>
       </div>
     );
