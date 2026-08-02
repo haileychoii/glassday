@@ -398,7 +398,7 @@
       hsl(0 0% 100% / 0.46),
       hsl(318 100% 98% / 0.22)
     ) !important;
-  border-color: hsl(0 0% 100% / 0.7) !important;
+  border-color: hsl(0 0% 100% / 0.54) !important;
   box-shadow:
     0 44px 140px -68px hsl(276 42% 42% / 0.38),
     inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
@@ -458,10 +458,12 @@
       hsl(0 0% 100% / 0.68),
       hsl(280 100% 98% / 0.32)
     ) !important;
-  border-color: hsl(0 0% 100% / 0.72) !important;
+  border-color: hsl(0 0% 100% / 0.48) !important;
   box-shadow:
     0 26px 80px -62px hsl(275 36% 42% / 0.32),
-    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
+    inset 0 1px 0 hsl(0 0% 100% / 0.76),
+    inset 1px 0 0 hsl(324 82% 86% / 0.1),
+    inset -1px 0 0 hsl(190 82% 82% / 0.08) !important;
   backdrop-filter: blur(26px) saturate(160%) !important;
   -webkit-backdrop-filter: blur(26px) saturate(160%) !important;
 }
@@ -504,7 +506,7 @@
 /* Pastel에서 테마 선택 버튼을 참고처럼 더 뽀얗게 */
 .theme-pastel .theme-segmented-control {
   background: hsl(0 0% 100% / 0.58) !important;
-  border-color: hsl(0 0% 100% / 0.72) !important;
+  border-color: hsl(0 0% 100% / 0.54) !important;
 }
 
 .theme-pastel .theme-segment-button {
@@ -530,7 +532,7 @@
 .theme-pastel .calendar-date-input {
   color: hsl(246 30% 20% / 0.86) !important;
   background: hsl(0 0% 100% / 0.56) !important;
-  border-color: hsl(0 0% 100% / 0.7) !important;
+  border-color: hsl(0 0% 100% / 0.52) !important;
 }
 
 /* progress만 민트 → 핑크 */
@@ -557,7 +559,9 @@
   color: hsl(250 30% 20%) !important;
 }
 
-/* 내부 박스들은 배경을 진하게 채우지 말고 선 + 아주 약한 tint만 */
+/* Inner pastel glass edge
+   These panels use one soft reflection recipe instead of a hard colored line.
+   / 내부 박스도 선을 그리지 않고 흰 반사광과 약한 색 반사로 구분한다. */
 .theme-pastel .today-focus-main,
 .theme-pastel .today-focus-section,
 .theme-pastel .today-focus-block,
@@ -570,8 +574,11 @@
 .theme-pastel .memo-card,
 .theme-pastel .study-card {
   background: hsl(0 0% 100% / 0.32) !important;
-  border: 1px solid hsl(250 24% 78% / 0.34) !important;
-  box-shadow: none !important;
+  border: 1px solid hsl(0 0% 100% / 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.62),
+    inset 1px 0 0 hsl(324 82% 86% / 0.08),
+    inset -1px 0 0 hsl(190 82% 82% / 0.07) !important;
 }
 
 /* 내부 요소에 깔린 그라데이션/대각선/과한 광택 제거 */
@@ -618,7 +625,8 @@
 .theme-pastel .today-focus .today-focus-task,
 .theme-pastel .today-mini .top-three-item {
   background: transparent !important;
-  border: 1px solid hsl(250 24% 78% / 0.28) !important;
+  border: 1px solid hsl(0 0% 100% / 0.38) !important;
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.46) !important;
 }
 
 /* final theme overrides: active sidebar + journal accents */
@@ -643,7 +651,7 @@
 }
 
 .theme-pastel .journal-score-grid label {
-  border-color: hsl(0 0% 100% / 0.72) !important;
+  border-color: hsl(0 0% 100% / 0.48) !important;
   background: hsl(0 0% 100% / 0.24) !important;
   box-shadow:
     inset 0 1px 0 hsl(0 0% 100% / 0.7),

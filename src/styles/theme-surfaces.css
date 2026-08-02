@@ -51,23 +51,31 @@ body.theme-pastel {
     radial-gradient(circle at 8% 0%, hsl(324 88% 86% / 0.22), transparent 38%),
     radial-gradient(circle at 96% 8%, hsl(190 86% 80% / 0.18), transparent 42%),
     linear-gradient(145deg, hsl(0 0% 100% / 0.4), hsl(287 72% 94% / 0.2));
-  --gd-app-border: hsl(264 34% 74% / 0.34);
+  /* Pastel glass edge
+     A translucent white rim reads as reflected light instead of a drawn
+     lavender outline. Pink and sky reflections live in the inset shadows.
+     / 보라색 선 대신 흰 반사광과 좌우 색 반사로 유리 가장자리를 만든다. */
+  --gd-app-border: hsl(0 0% 100% / 0.48);
   --gd-app-shadow:
     0 42px 120px -66px hsl(282 40% 38% / 0.34),
     0 18px 48px -38px hsl(188 48% 38% / 0.24),
-    inset 0 1px 0 hsl(0 0% 100% / 0.78);
+    inset 0 1px 0 hsl(0 0% 100% / 0.76),
+    inset 1px 0 0 hsl(324 82% 86% / 0.13),
+    inset -1px 0 0 hsl(190 82% 82% / 0.11);
   --gd-app-filter: blur(34px) saturate(148%);
 
   --gd-surface-bg:
     radial-gradient(circle at 10% 0%, hsl(324 88% 88% / 0.3), transparent 44%),
     radial-gradient(circle at 96% 4%, hsl(190 86% 82% / 0.26), transparent 48%),
     linear-gradient(145deg, hsl(0 0% 100% / 0.5), hsl(282 72% 94% / 0.26));
-  --gd-surface-border: hsl(262 34% 72% / 0.34);
+  --gd-surface-border: hsl(0 0% 100% / 0.5);
   --gd-surface-shadow:
     0 28px 72px -52px hsl(278 38% 36% / 0.3),
     0 12px 30px -26px hsl(188 46% 38% / 0.22),
-    inset 0 1px 0 hsl(0 0% 100% / 0.72),
-    inset 0 -1px 0 hsl(267 44% 76% / 0.16);
+    inset 0 1px 0 hsl(0 0% 100% / 0.74),
+    inset 1px 0 0 hsl(324 82% 86% / 0.12),
+    inset -1px 0 0 hsl(190 82% 82% / 0.1),
+    inset 0 -1px 0 hsl(267 44% 76% / 0.08);
   --gd-surface-filter: blur(30px) saturate(150%);
 
   --gd-inner-bg:
@@ -77,15 +85,17 @@ body.theme-pastel {
       hsl(324 74% 92% / 0.2) 52%,
       hsl(192 72% 90% / 0.17)
     );
-  --gd-inner-border: hsl(258 28% 70% / 0.3);
+  --gd-inner-border: hsl(0 0% 100% / 0.44);
   --gd-control-bg:
     linear-gradient(135deg, hsl(0 0% 100% / 0.58), hsl(318 74% 92% / 0.26), hsl(193 76% 90% / 0.22));
-  --gd-control-border: hsl(258 30% 70% / 0.32);
+  --gd-control-border: hsl(0 0% 100% / 0.52);
   --gd-control-active-bg:
     linear-gradient(135deg, hsl(318 76% 86% / 0.56), hsl(193 74% 84% / 0.5), hsl(155 56% 84% / 0.42));
   --gd-widget-panel-shadow:
     0 12px 26px -24px hsl(276 36% 38% / 0.34),
-    inset 0 1px 0 hsl(0 0% 100% / 0.58);
+    inset 0 1px 0 hsl(0 0% 100% / 0.64),
+    inset 1px 0 0 hsl(324 82% 86% / 0.1),
+    inset -1px 0 0 hsl(190 82% 82% / 0.08);
 }
 
 html[data-theme="glass-light"],
