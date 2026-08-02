@@ -13,6 +13,10 @@ import {
 } from "lucide-react";
 
 import { GlassCard } from "../glass/GlassCard";
+import {
+  getStudyPlannerTotalMinutes,
+  readStudyPlannerStorage,
+} from "./study/studyUtils";
 
 type AlertTone = "danger" | "warning" | "info" | "success";
 
@@ -37,19 +41,6 @@ type StoredCareerItem = {
   }>;
 };
 
-type StoredStudySubject = {
-  id?: string;
-  label?: string;
-  records?: Array<{
-    date?: string;
-    minutes?: number;
-    targetMinutes?: number;
-    tasks?: Array<{
-      done?: boolean;
-    }>;
-  }>;
-};
-
 type StoredJournalEntry = {
   date?: string;
   reflection?: string;
@@ -59,7 +50,6 @@ type StoredJournalEntry = {
 };
 
 const CAREER_STORAGE_KEY = "glassday.career.items.v1";
-const STUDY_STORAGE_KEY = "glassday.study.planner.v1";
 const JOURNAL_STORAGE_KEY = "glassday.journal.entries.v1";
 
 const pad2 = (value: number) => String(value).padStart(2, "0");
@@ -177,15 +167,16 @@ const getCareerAlerts = (): AlertItem[] => {
 };
 
 const getStudyAlerts = (): AlertItem[] => {
-  const subjects = parseJsonArray<StoredStudySubject>(STUDY_STORAGE_KEY);
+  const planner = readStudyPlannerStorage();
   const today = todayString();
+  const day = planner.days[today];
 
-  if (subjects.length === 0) {
+  if (!day) {
     return [
       {
         id: "study-empty",
         title: "Study Planner 준비됨",
-        description: "오늘 공부 시간과 목표 시간을 입력하면 알림이 자동으로 잡혀.",
+        description: "오늘 할 일이나 10분 공부 기록을 시작하면 여기에 반영돼.",
         meta: "Study",
         tone: "info",
         icon: <BookOpen className="w-4 h-4" />,
@@ -194,54 +185,43 @@ const getStudyAlerts = (): AlertItem[] => {
   }
 
   const alerts: AlertItem[] = [];
+  const minutes = getStudyPlannerTotalMinutes(day);
+  const progress = Math.min(
+    100,
+    Math.round((minutes / Math.max(day.goalMinutes, 1)) * 100)
+  );
+  const unfinishedTasks = day.tasks.filter((task) => !task.done).length;
 
-  subjects.forEach((subject) => {
-    const record = subject.records?.find((item) => item.date === today);
-    const label = subject.label || subject.id || "Study";
+  if (minutes === 0) {
+    alerts.push({
+      id: "study-no-record-today",
+      title: "오늘 공부 기록 없음",
+      description: "과목을 고르고 첫 10분 칸을 기록해봐.",
+      meta: "Today",
+      tone: "warning",
+      icon: <Clock3 className="w-4 h-4" />,
+    });
+  } else if (progress < 50) {
+    alerts.push({
+      id: "study-low-progress-today",
+      title: "오늘 공부 목표 진행 중",
+      description: `오늘 목표 대비 ${progress}% 진행했어.`,
+      meta: `${minutes}/${day.goalMinutes}m`,
+      tone: "warning",
+      icon: <BookOpen className="w-4 h-4" />,
+    });
+  }
 
-    if (!record) {
-      alerts.push({
-        id: `study-no-record-${subject.id ?? label}`,
-        title: `${label} 기록 없음`,
-        description: "오늘 공부 기록이 아직 없어.",
-        meta: "Today",
-        tone: "warning",
-        icon: <Clock3 className="w-4 h-4" />,
-      });
-
-      return;
-    }
-
-    const minutes = record.minutes ?? 0;
-    const targetMinutes = record.targetMinutes ?? 0;
-    const progress =
-      targetMinutes <= 0 ? 0 : Math.round((minutes / targetMinutes) * 100);
-
-    if (targetMinutes > 0 && progress < 50) {
-      alerts.push({
-        id: `study-low-progress-${subject.id ?? label}`,
-        title: `${label} 목표 미달`,
-        description: `오늘 목표 대비 ${progress}% 진행했어.`,
-        meta: `${minutes}/${targetMinutes}m`,
-        tone: "warning",
-        icon: <BookOpen className="w-4 h-4" />,
-      });
-    }
-
-    const tasks = Array.isArray(record.tasks) ? record.tasks : [];
-    const unfinishedTasks = tasks.filter((task) => !task.done).length;
-
-    if (unfinishedTasks > 0) {
-      alerts.push({
-        id: `study-tasks-${subject.id ?? label}`,
-        title: `${label} 체크리스트 남음`,
-        description: `아직 ${unfinishedTasks}개 할 일이 남아 있어.`,
-        meta: "Checklist",
-        tone: "info",
-        icon: <CheckCircle2 className="w-4 h-4" />,
-      });
-    }
-  });
+  if (unfinishedTasks > 0) {
+    alerts.push({
+      id: "study-tasks-today",
+      title: "Study 체크리스트 남음",
+      description: `아직 ${unfinishedTasks}개 할 일이 남아 있어.`,
+      meta: "Checklist",
+      tone: "info",
+      icon: <CheckCircle2 className="w-4 h-4" />,
+    });
+  }
 
   return alerts.slice(0, 5);
 };

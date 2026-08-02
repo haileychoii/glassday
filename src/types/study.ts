@@ -1,9 +1,66 @@
-export type StudySubjectId =
-  | "actuarial"
-  | "soa-fm"
+/* 10-minute planner domain
+   These six IDs are the durable values stored in each timeline block. Keep
+   them stable when labels or colors change. / 라벨·색상을 바꿔도 ID는 유지합니다. */
+export type StudyPlannerSubjectId =
+  | "economics"
   | "ncs"
-  | "essay"
+  | "accounting"
+  | "actuarial"
   | "english"
+  | "other";
+
+export type StudyPlannerSubject = {
+  id: StudyPlannerSubjectId;
+  label: string;
+  shortLabel: string;
+  color: string;
+};
+
+export type StudyPlannerTask = {
+  id: string;
+  subjectId: StudyPlannerSubjectId;
+  text: string;
+  estimatedMinutes: number;
+  done: boolean;
+  createdAt: number;
+};
+
+export type StudyLegacyRecordSummary = {
+  id: string;
+  subjectId: StudyPlannerSubjectId;
+  minutes: number;
+  problems: number;
+  note: string;
+};
+
+export type StudyDayData = {
+  blocks: Record<string, StudyPlannerSubjectId>;
+  tasks: StudyPlannerTask[];
+  note: string;
+  goalMinutes: number;
+  legacyRecords?: StudyLegacyRecordSummary[];
+  updatedAt: number;
+};
+
+export type StudyActiveTimer = {
+  date: string;
+  subjectId: StudyPlannerSubjectId;
+  startedAt: number;
+};
+
+export type StudyPlannerStorage = {
+  version: 2;
+  days: Record<string, StudyDayData>;
+  activeTimer: StudyActiveTimer | null;
+};
+
+/* Legacy manual-record domain
+   Kept only so v1 records/tasks can be migrated without deleting user data.
+   새 플래너 UI에서는 아래 레거시 ID를 새 타임라인 블록에 직접 쓰지 않습니다. */
+export type StudySubjectId =
+  | StudyPlannerSubjectId
+  | "soa-fm"
+  | "essay"
   | "custom";
 
 export type StudySubject = {

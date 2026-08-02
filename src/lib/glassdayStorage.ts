@@ -59,6 +59,7 @@ const CLOUD_SYNC_MEANINGFUL_PREFIXES = [
   "glassday.memo.notes.",
   "glassday.study.records.",
   "glassday.study.tasks.",
+  "glassday.study.planner.",
 ] as const;
 
 const isCloudSyncAllowedKey = (key: string) =>
