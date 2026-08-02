@@ -22,9 +22,10 @@ import type {
 } from "react";
 
 import { useDashboardData } from "../../context/DashboardDataContext";
+import { prepareLocalImageDataUrl } from "../../lib/localImage";
 import type {
+  CareerImageAttachment,
   CareerItem,
-  CareerJobImage,
   CareerStatus,
   CoverLetterItem,
 } from "../../types/dashboard";
@@ -44,6 +45,7 @@ type DragState = {
 };
 
 type CareerViewMode = "list" | "board";
+type CareerImageField = "jobImages" | "noteImages";
 
 const statusOptions: CareerStatus[] = [
   "Saved",
@@ -63,9 +65,9 @@ const createCoverLetterId = () => {
   return `cl-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
-const CAREER_JOB_IMAGE_LIMIT = 8;
-const CAREER_JOB_IMAGE_MAX_INPUT_BYTES = 12 * 1024 * 1024;
-const CAREER_JOB_IMAGE_MAX_EDGE = 1280;
+const CAREER_IMAGE_LIMIT = 8;
+const CAREER_IMAGE_MAX_INPUT_BYTES = 12 * 1024 * 1024;
+const CAREER_IMAGE_MAX_EDGE = 1280;
 
 const createJobImageId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -75,57 +77,20 @@ const createJobImageId = () => {
   return `career-image-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
-const readImageFile = (file: File) =>
-  new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result ?? ""));
-    reader.onerror = () => reject(new Error("사진 파일을 읽지 못했어."));
-    reader.readAsDataURL(file);
-  });
-
-const loadImageElement = (source: string) =>
-  new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("사진 형식을 열 수 없어."));
-    image.src = source;
-  });
-
 /* Local image preparation
-   Career data currently lives in local/cloud JSON snapshots, so large camera
-   originals are resized before storage. / 큰 원본은 저장 전에 1280px WebP로 줄입니다. */
-const prepareCareerJobImage = async (file: File): Promise<CareerJobImage> => {
-  if (!file.type.startsWith("image/")) {
-    throw new Error(`${file.name}: 이미지 파일만 추가할 수 있어.`);
-  }
-
-  if (file.size > CAREER_JOB_IMAGE_MAX_INPUT_BYTES) {
-    throw new Error(`${file.name}: 원본은 12MB 이하만 추가할 수 있어.`);
-  }
-
-  const source = await readImageFile(file);
-  const image = await loadImageElement(source);
-  const scale = Math.min(
-    1,
-    CAREER_JOB_IMAGE_MAX_EDGE / Math.max(image.naturalWidth, image.naturalHeight)
-  );
-  const width = Math.max(1, Math.round(image.naturalWidth * scale));
-  const height = Math.max(1, Math.round(image.naturalHeight * scale));
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
-
-  if (!context) {
-    throw new Error("브라우저에서 사진 변환을 시작하지 못했어.");
-  }
-
-  canvas.width = width;
-  canvas.height = height;
-  context.drawImage(image, 0, 0, width, height);
-
+   Career adds attachment metadata after the shared resizer prepares a compact
+   WebP data URL. / 공통 변환 뒤 Career 항목에 필요한 이름과 ID만 붙입니다. */
+const prepareCareerImage = async (
+  file: File
+): Promise<CareerImageAttachment> => {
   return {
     id: createJobImageId(),
     name: file.name,
-    dataUrl: canvas.toDataURL("image/webp", 0.8),
+    dataUrl: await prepareLocalImageDataUrl(file, {
+      maxInputBytes: CAREER_IMAGE_MAX_INPUT_BYTES,
+      maxEdge: CAREER_IMAGE_MAX_EDGE,
+      quality: 0.8,
+    }),
     createdAt: new Date().toISOString(),
   };
 };
@@ -259,6 +224,7 @@ const normalizeCareer = (item: CareerItem): CareerItem => ({
   postingUrl: item.postingUrl ?? "",
   jobDescription: item.jobDescription ?? "",
   jobImages: Array.isArray(item.jobImages) ? item.jobImages : [],
+  noteImages: Array.isArray(item.noteImages) ? item.noteImages : [],
   coverLetterQuestions: item.coverLetterQuestions ?? [],
   coverLetterItems: item.coverLetterItems ?? [],
   notes: item.notes ?? "",
@@ -298,7 +264,10 @@ export const CareerWidget = () => {
     useState<CareerItem | null>(null);
   const [viewMode, setViewMode] = useState<CareerViewMode>("list");
   const [statusFilter, setStatusFilter] = useState<CareerStatus | "All">("All");
-  const [jobImageError, setJobImageError] = useState("");
+  const [imageErrors, setImageErrors] = useState<Record<CareerImageField, string>>({
+    jobImages: "",
+    noteImages: "",
+  });
 
   // Floating detail window geometry is intentionally separate from the dashboard
   // grid layout. Moving/resizing this editor should not push widgets around.
@@ -483,27 +452,37 @@ export const CareerWidget = () => {
     updateCareerApplication(selectedItem.id, patch);
   };
 
-  const addJobImages = async (event: ReactChangeEvent<HTMLInputElement>) => {
+  /* Shared Career gallery actions
+     The field argument decides whether the attachment belongs to Application
+     Core or Notes; validation, limits, and persistence remain identical.
+     field만 바꾸면 두 사진 영역이 같은 저장 규칙을 사용합니다. */
+  const addCareerImages = async (
+    event: ReactChangeEvent<HTMLInputElement>,
+    field: CareerImageField
+  ) => {
     const input = event.currentTarget;
     const files = Array.from(input.files ?? []);
     input.value = "";
 
     if (!selectedItem || files.length === 0) return;
 
-    const currentImages = selectedItem.jobImages ?? [];
-    const availableSlots = CAREER_JOB_IMAGE_LIMIT - currentImages.length;
+    const currentImages = selectedItem[field] ?? [];
+    const availableSlots = CAREER_IMAGE_LIMIT - currentImages.length;
 
     if (availableSlots <= 0) {
-      setJobImageError(`사진은 최대 ${CAREER_JOB_IMAGE_LIMIT}장까지 저장할 수 있어.`);
+      setImageErrors((current) => ({
+        ...current,
+        [field]: `사진은 최대 ${CAREER_IMAGE_LIMIT}장까지 저장할 수 있어.`,
+      }));
       return;
     }
 
-    const preparedImages: CareerJobImage[] = [];
+    const preparedImages: CareerImageAttachment[] = [];
     const errors: string[] = [];
 
     for (const file of files.slice(0, availableSlots)) {
       try {
-        preparedImages.push(await prepareCareerJobImage(file));
+        preparedImages.push(await prepareCareerImage(file));
       } catch (error) {
         errors.push(
           error instanceof Error ? error.message : `${file.name}: 사진 추가 실패`
@@ -513,26 +492,108 @@ export const CareerWidget = () => {
 
     if (preparedImages.length > 0) {
       updateSelectedItem({
-        jobImages: [...currentImages, ...preparedImages],
+        [field]: [...currentImages, ...preparedImages],
       });
     }
 
     if (files.length > availableSlots) {
-      errors.push(`최대 ${CAREER_JOB_IMAGE_LIMIT}장까지만 저장했어.`);
+      errors.push(`최대 ${CAREER_IMAGE_LIMIT}장까지만 저장했어.`);
     }
 
-    setJobImageError(errors.join(" "));
+    setImageErrors((current) => ({
+      ...current,
+      [field]: errors.join(" "),
+    }));
   };
 
-  const removeJobImage = (imageId: string) => {
+  const removeCareerImage = (field: CareerImageField, imageId: string) => {
     if (!selectedItem) return;
 
     updateSelectedItem({
-      jobImages: (selectedItem.jobImages ?? []).filter(
+      [field]: (selectedItem[field] ?? []).filter(
         (image) => image.id !== imageId
       ),
     });
-    setJobImageError("");
+    setImageErrors((current) => ({
+      ...current,
+      [field]: "",
+    }));
+  };
+
+  /* Career attachment gallery
+     Application Core and Notes intentionally render through one helper so
+     limits, controls, thumbnail sizing, and accessibility stay identical.
+     직무/메모 사진 UI를 한곳에서 관리해 이후 크기 수정도 동시에 반영됩니다. */
+  const renderCareerImageGallery = (
+    field: CareerImageField,
+    title: string,
+    emptyMessage: string
+  ) => {
+    if (!selectedItem) return null;
+
+    const images = selectedItem[field] ?? [];
+
+    return (
+      <div
+        className={`career-job-images ${
+          field === "noteImages" ? "career-note-images" : ""
+        }`}
+      >
+        <div className="career-job-images-header">
+          <div>
+            <strong>{title}</strong>
+            <span>
+              {images.length} / {CAREER_IMAGE_LIMIT}장 · 클릭하면 크게 보기
+            </span>
+          </div>
+
+          <label className="career-job-image-add">
+            <ImagePlus className="w-3.5 h-3.5" />
+            Add Photos
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              onChange={(event) => void addCareerImages(event, field)}
+            />
+          </label>
+        </div>
+
+        {imageErrors[field] && (
+          <div className="career-job-image-error">{imageErrors[field]}</div>
+        )}
+
+        {images.length === 0 ? (
+          <div className="career-job-image-empty">{emptyMessage}</div>
+        ) : (
+          <div className="career-job-image-grid">
+            {images.map((image) => (
+              <figure key={image.id} className="career-job-image-card">
+                <a
+                  href={image.dataUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={`${image.name} 크게 보기`}
+                >
+                  <img src={image.dataUrl} alt={image.name} />
+                  <figcaption>{image.name}</figcaption>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => removeCareerImage(field, image.id)}
+                  className="career-job-image-delete"
+                  title="Delete photo"
+                  aria-label={`${image.name} 삭제`}
+                >
+                  <Trash2 className="w-3 h-3" />
+                </button>
+              </figure>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   const deleteCareerItem = (id: string) => {
@@ -1039,68 +1100,12 @@ export const CareerWidget = () => {
                     </label>
                   </div>
 
-                  {/* Job detail photos
-                      These thumbnails stay inside Application Core so screenshots,
-                      role diagrams, and posting references sit beside the text they explain.
-                      직무 참고 이미지를 설명 텍스트와 같은 섹션에서 관리합니다. */}
-                  <div className="career-job-images">
-                    <div className="career-job-images-header">
-                      <div>
-                        <strong>Job Detail Photos</strong>
-                        <span>
-                          {(selectedItem.jobImages ?? []).length} / {CAREER_JOB_IMAGE_LIMIT}
-                          장 · 클릭하면 원본 크기로 보기
-                        </span>
-                      </div>
-
-                      <label className="career-job-image-add">
-                        <ImagePlus className="w-3.5 h-3.5" />
-                        Add Photos
-                        <input
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp"
-                          multiple
-                          onChange={addJobImages}
-                        />
-                      </label>
-                    </div>
-
-                    {jobImageError && (
-                      <div className="career-job-image-error">{jobImageError}</div>
-                    )}
-
-                    {(selectedItem.jobImages ?? []).length === 0 ? (
-                      <div className="career-job-image-empty">
-                        직무 설명 캡처, 조직도, 참고 이미지를 추가해봐.
-                      </div>
-                    ) : (
-                      <div className="career-job-image-grid">
-                        {(selectedItem.jobImages ?? []).map((image) => (
-                          <figure key={image.id} className="career-job-image-card">
-                            <a
-                              href={image.dataUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              title={`${image.name} 크게 보기`}
-                            >
-                              <img src={image.dataUrl} alt={image.name} />
-                              <figcaption>{image.name}</figcaption>
-                            </a>
-
-                            <button
-                              type="button"
-                              onClick={() => removeJobImage(image.id)}
-                              className="career-job-image-delete"
-                              title="Delete photo"
-                              aria-label={`${image.name} 삭제`}
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </button>
-                          </figure>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  {/* Job detail photos stay beside the role description they explain. */}
+                  {renderCareerImageGallery(
+                    "jobImages",
+                    "Job Detail Photos",
+                    "직무 설명 캡처, 조직도, 참고 이미지를 추가해봐."
+                  )}
                 </section>
 
                 <section className="career-detail-section">
@@ -1404,6 +1409,14 @@ export const CareerWidget = () => {
                     className="career-textarea career-notes-textarea"
                     placeholder="지원 전략, 자소서 방향, 면접 준비 메모..."
                   />
+
+                  {/* Notes photos belong to the same application snapshot as text.
+                      면접 메모 사진, 현장 자료, 손글씨 기록을 Notes와 함께 저장합니다. */}
+                  {renderCareerImageGallery(
+                    "noteImages",
+                    "Notes Photos",
+                    "메모와 함께 볼 사진이나 캡처를 추가해봐."
+                  )}
                 </section>
 
                 <div className="career-detail-danger-row">

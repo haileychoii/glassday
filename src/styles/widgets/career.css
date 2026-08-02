@@ -1313,6 +1313,17 @@
   gap: var(--career-job-image-gap);
 }
 
+/* Notes gallery density
+   Notes already owns a textarea, so its gallery begins with a smaller inset
+   and keeps the empty prompt compact. / 메모 영역의 불필요한 세로 증가를 줄입니다. */
+.career-note-images {
+  margin-top: 8px;
+}
+
+.career-note-images .career-job-image-empty {
+  min-height: 38px;
+}
+
 .career-job-images-header {
   min-width: 0;
   display: flex;

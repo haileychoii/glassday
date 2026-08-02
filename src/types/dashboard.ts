@@ -67,11 +67,11 @@ export type CareerInterviewReview = {
   notes: string;
 };
 
-/* Career job-detail image
-   Images are resized before they reach this model, then stored with the same
-   CareerItem snapshot used by Wide/Laptop and cloud sync.
-   직무 사진도 CareerItem과 함께 저장되므로 레이아웃별로 따로 관리하지 않습니다. */
-export type CareerJobImage = {
+/* Career image attachment
+   Job-detail and Notes galleries share this model and the same CareerItem
+   snapshot used by Wide/Laptop and cloud sync.
+   직무 사진과 메모 사진은 레이아웃별로 나뉘지 않고 같은 지원 항목에 저장됩니다. */
+export type CareerImageAttachment = {
   id: string;
   name: string;
   dataUrl: string;
@@ -97,7 +97,8 @@ export type CareerItem = {
 
   postingUrl: string;
   jobDescription: string;
-  jobImages?: CareerJobImage[];
+  jobImages?: CareerImageAttachment[];
+  noteImages?: CareerImageAttachment[];
 
   coverLetterQuestions: string[];
   coverLetterItems?: CoverLetterItem[];
