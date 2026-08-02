@@ -11,6 +11,10 @@
 ========================================================= */
 
 .career-widget {
+  /* Figma mapping: one token owns the vertical distance between header,
+     summary, filters, and the application list.
+     피그마에서는 이 값을 Career 섹션 사이의 공통 Auto Layout gap으로 사용합니다. */
+  --career-layout-gap: 6px;
   height: 100%;
   min-height: 0;
   /* This widget's default density is intentionally driven by the shared
@@ -19,7 +23,7 @@
   padding: var(--gd-widget-pad-y);
   display: grid;
   grid-template-rows: auto auto auto minmax(0, 1fr);
-  gap: var(--gd-widget-stack-gap);
+  gap: var(--career-layout-gap);
   container-type: inline-size;
   container-name: career-widget;
 }
@@ -3124,4 +3128,14 @@ html.theme-retro .career-floating-window,
 body.theme-retro .career-floating-window {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+}
+
+/* =========================================================
+   Career density guard
+   Older responsive rules still describe sizing and overflow behavior, but
+   section spacing always comes from the single Figma-facing token above.
+   화면 폭별 규칙이 바깥 세로 간격을 다시 키우지 못하도록 최종 우선순위를 둡니다.
+========================================================= */
+.career-widget {
+  gap: var(--career-layout-gap) !important;
 }
