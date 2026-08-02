@@ -325,17 +325,21 @@ html[data-theme="glass-light"] .settings-modal-window,
 body[data-theme="glass-light"] .settings-modal-window,
 html.theme-glass-light .settings-modal-window,
 body.theme-glass-light .settings-modal-window {
+  /* Settings readability surface
+     The modal is still glass, but this layer is intentionally denser than
+     dashboard widgets so form labels never compete with the page behind it.
+     밝은 배경에서도 설정 내용이 묻히지 않도록 창 표면만 더 불투명하게 유지합니다. */
   background:
-    radial-gradient(circle at 14% 14%, rgb(255 255 255 / 0.78), transparent 30%),
-    radial-gradient(circle at 82% 18%, rgb(220 233 255 / 0.38), transparent 26%),
-    radial-gradient(circle at 72% 82%, rgb(255 219 237 / 0.28), transparent 30%),
-    linear-gradient(145deg, rgb(255 255 255 / 0.86), rgb(247 249 255 / 0.72)) !important;
-  border-color: rgba(255, 255, 255, 0.72) !important;
+    radial-gradient(circle at 14% 14%, rgb(255 255 255 / 0.94), transparent 30%),
+    radial-gradient(circle at 82% 18%, rgb(220 233 255 / 0.5), transparent 26%),
+    radial-gradient(circle at 72% 82%, rgb(255 219 237 / 0.36), transparent 30%),
+    linear-gradient(145deg, rgb(255 255 255 / 0.96), rgb(242 246 253 / 0.9)) !important;
+  border-color: rgba(255, 255, 255, 0.88) !important;
   box-shadow:
     0 38px 120px -34px rgba(78, 92, 148, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
-  backdrop-filter: blur(16px) saturate(148%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(148%) !important;
+  backdrop-filter: blur(34px) saturate(142%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(142%) !important;
 }
 
 html[data-theme="glass-light"] .settings-modal-backdrop,
@@ -364,10 +368,10 @@ html.theme-glass-light .settings-card,
 body.theme-glass-light .settings-section,
 body.theme-glass-light .settings-card {
   background:
-    radial-gradient(circle at 12% 18%, rgb(239 247 255 / 0.46), transparent 28%),
-    radial-gradient(circle at 84% 20%, rgb(246 234 255 / 0.28), transparent 24%),
-    linear-gradient(145deg, rgb(255 255 255 / 0.58), rgb(255 255 255 / 0.34)) !important;
-  border-color: rgba(255, 255, 255, 0.58) !important;
+    radial-gradient(circle at 12% 18%, rgb(239 247 255 / 0.62), transparent 28%),
+    radial-gradient(circle at 84% 20%, rgb(246 234 255 / 0.42), transparent 24%),
+    linear-gradient(145deg, rgb(255 255 255 / 0.88), rgb(247 249 253 / 0.7)) !important;
+  border-color: rgba(255, 255, 255, 0.82) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.78),
     0 14px 30px -28px rgba(88, 105, 160, 0.18) !important;
@@ -404,8 +408,8 @@ body.theme-glass-light .settings-custom-font-item,
 body.theme-glass-light .settings-status,
 body.theme-glass-light .settings-theme-card {
   background:
-    linear-gradient(145deg, rgb(255 255 255 / 0.62), rgb(255 255 255 / 0.34)) !important;
-  border-color: rgba(255, 255, 255, 0.62) !important;
+    linear-gradient(145deg, rgb(255 255 255 / 0.94), rgb(239 244 252 / 0.78)) !important;
+  border-color: rgba(183, 196, 218, 0.48) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.82),
     0 10px 24px rgba(105, 118, 168, 0.1) !important;
