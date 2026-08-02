@@ -486,18 +486,19 @@ export const MemoWidget = () => {
       return;
     }
 
-    /* Widget-size behavior:
-       wide memo widgets get a permanent left list, while narrow widgets keep
-       the list as a small popover opened from the header button. */
-    const updateInlineList = (width: number, height: number) => {
-      setIsWidgetListInline(width >= 720 && height >= 250);
+    /* Widget-width behavior:
+       A wide memo always reserves a left list column. Height compression is
+       handled independently by CSS so a short-but-wide widget stays useful.
+       가로 680px 이상이면 높이와 관계없이 목록을 왼쪽 열에 고정한다. */
+    const updateInlineList = (width: number) => {
+      setIsWidgetListInline(width >= 680);
     };
 
-    updateInlineList(app.clientWidth, app.clientHeight);
+    updateInlineList(app.clientWidth);
 
     const observer = new ResizeObserver(([entry]) => {
       if (!entry) return;
-      updateInlineList(entry.contentRect.width, entry.contentRect.height);
+      updateInlineList(entry.contentRect.width);
     });
 
     observer.observe(app);

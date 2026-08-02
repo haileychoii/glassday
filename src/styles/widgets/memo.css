@@ -12,11 +12,14 @@
    ========================================================= */
 
 .memo-widget {
-  container-type: inline-size;
+  container-type: size;
   container-name: memo-widget;
 
+  width: 100%;
   height: 100%;
   min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   overflow: hidden;
 }
 
@@ -1989,7 +1992,7 @@ body.theme-glass-dark
    ========================================================= */
 
 .memo-widget > .widget-frame__body {
-  height: 100%;
+  height: auto;
   min-height: 0;
   display: grid;
   grid-template-rows: minmax(0, 1fr);
@@ -2372,6 +2375,72 @@ body.theme-glass-dark
   .memo-widget .memo-editor,
   .memo-widget [contenteditable="true"].memo-editor {
     padding: 9px;
+  }
+}
+
+/* Height-responsive editor density
+   Short widgets keep every writing control on one compact horizontal rail,
+   leaving the remaining height to the memo paper and its internal scrollbar.
+   세로가 짧을 때 툴바가 여러 줄로 늘어나 편집기를 밀어내지 않게 한다. */
+@container memo-widget (max-height: 360px) {
+  .memo-widget .memo-workspace {
+    --memo-widget-paper-bottom-inset: 8px;
+    padding-top: 4px;
+    gap: 4px;
+  }
+
+  .memo-widget .memo-title-input,
+  .memo-widget .memo-title-view {
+    height: 23px;
+    min-height: 23px;
+    line-height: 23px;
+    font-size: 13px;
+  }
+
+  .memo-widget .memo-toolbar,
+  .memo-widget .memo-editor-toolbar {
+    min-height: 27px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scrollbar-gutter: auto;
+    padding-bottom: 1px;
+  }
+
+  .memo-widget .memo-select,
+  .memo-widget .memo-tool-button {
+    flex: 0 0 auto;
+  }
+
+  .memo-widget .memo-editor,
+  .memo-widget [contenteditable="true"].memo-editor {
+    min-height: 52px;
+    padding: 9px 10px;
+  }
+}
+
+@container memo-widget (max-height: 280px) {
+  .memo-widget .memo-workspace {
+    padding: 3px 5px 7px;
+    gap: 3px;
+  }
+
+  .memo-widget .memo-title-input,
+  .memo-widget .memo-title-view {
+    height: 21px;
+    min-height: 21px;
+    line-height: 21px;
+  }
+
+  .memo-widget .memo-toolbar,
+  .memo-widget .memo-editor-toolbar {
+    min-height: 25px;
+  }
+
+  .memo-widget .memo-select,
+  .memo-widget .memo-tool-button {
+    height: 24px;
   }
 }
 

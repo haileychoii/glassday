@@ -960,7 +960,7 @@ body,
 }
 
 .dashboard-grid-item > .glass-card.memo-widget {
-  container-type: inline-size !important;
+  container-type: size !important;
   container-name: gd-widget memo-widget !important;
 }
 
