@@ -216,8 +216,9 @@ export const MonthCalendar = ({
   };
 
   const handleEventClick = (event: CalendarEvent) => {
-    onSelectEvent?.(event);
-    onEventClick?.(event);
+    /* Prefer the current callback name and fall back to the legacy alias.
+       Calling both opened the same Career detail twice when both were passed. */
+    (onEventClick ?? onSelectEvent)?.(event);
   };
 
   const showPreview = (

@@ -47,6 +47,12 @@ type DragState = {
 type CareerViewMode = "list" | "board";
 type CareerImageField = "jobImages" | "noteImages";
 
+type CareerWidgetProps = {
+  /* Detail-only mode reuses the existing portal when the Career widget is not
+     present in the active workspace. Calendar 일정에서 연 상세창도 같은 UI다. */
+  detailOnly?: boolean;
+};
+
 const statusOptions: CareerStatus[] = [
   "Saved",
   "Preparing",
@@ -249,7 +255,7 @@ const formatApplicationWindow = (item: CareerItem) => {
   }`;
 };
 
-export const CareerWidget = () => {
+export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
   const {
     careerApplications,
     activeCareerDetailId,
@@ -812,6 +818,7 @@ export const CareerWidget = () => {
     <>
       {/* Shared widget-frame header classes keep icon/title/action alignment
           consistent with GlassCard-based widgets for Figma handoff. */}
+      {!detailOnly && (
       <section className="glass-card widget-frame career-widget">
         <div className="career-widget-header glass-card-header widget-card-header widget-frame__header">
           <div className="career-widget-title-wrap glass-card-title-group widget-card-title-group widget-frame__title-group">
@@ -920,6 +927,7 @@ export const CareerWidget = () => {
           </div>
         )}
       </section>
+      )}
 
       {selectedItem &&
         typeof document !== "undefined" &&

@@ -27,11 +27,10 @@ type WeekTimelineProps = {
   onDateSelect?: (date: string) => void;
 
   /**
-   * 이벤트 클릭 시.
-   * 기존 코드가 id를 받든 event 객체를 받든 일단 any로 열어둠.
+   * Event click callbacks. onSelectEvent remains as a typed legacy alias.
    */
-  onSelectEvent?: (event: any) => void;
-  onEventClick?: (event: any) => void;
+  onSelectEvent?: (event: CalendarEvent) => void;
+  onEventClick?: (event: CalendarEvent) => void;
 };
 
 type WeekDay = {
@@ -202,8 +201,8 @@ export const WeekTimeline = ({
   };
 
   const handleEventClick = (event: CalendarEvent) => {
-    onSelectEvent?.(event);
-    onEventClick?.(event);
+    /* One user action must open one detail window. */
+    (onEventClick ?? onSelectEvent)?.(event);
   };
 
   const hourLabels = useMemo(() => {

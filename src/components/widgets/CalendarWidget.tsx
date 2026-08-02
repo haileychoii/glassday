@@ -290,7 +290,6 @@ export const CalendarWidget = () => {
                   setSelectedDate(date);
                 }}
                 onEventClick={openEvent}
-                onSelectEvent={openEvent}
               />
             ) : view === "week" ? (
               <WeekTimeline
@@ -298,7 +297,6 @@ export const CalendarWidget = () => {
                 events={visibleEvents}
                 onSelectDate={setSelectedDate}
                 onEventClick={openEvent}
-                onSelectEvent={openEvent}
               />
             ) : (
               <div className="calendar-event-list">

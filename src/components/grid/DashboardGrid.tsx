@@ -896,6 +896,12 @@ export const DashboardGrid = ({
           })}
         </ResponsiveGridLayout>
       </div>
+
+      {/* Global Career detail host
+          Career's normal widget owns the portal when it is visible. Other
+          workspaces mount only the detail renderer so Calendar events can open
+          the same floating window without adding Career to that grid. */}
+      {!activeWidgetIds.includes("career") && <CareerWidget detailOnly />}
     </div>
   );
 };
