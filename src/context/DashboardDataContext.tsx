@@ -7,6 +7,7 @@ import type {
   CareerAttachmentLink,
   CareerInterviewReview,
   CareerItem,
+  CareerJobImage,
   CareerPriority,
   CareerStage,
   CareerStatus,
@@ -289,6 +290,8 @@ const normalizeCareerItem = (item: Partial<CareerItem>): CareerItem => {
 
     postingUrl: item.postingUrl ?? "",
     jobDescription: item.jobDescription ?? "",
+
+    jobImages: normalizeJobImages(item.jobImages),
 
     coverLetterQuestions,
     coverLetterItems: normalizeCoverLetterItems(
@@ -661,4 +664,34 @@ export const useDashboardData = () => {
   }
 
   return context;
+};
+
+/* Career image migration
+   Older saved careers have no jobImages field; malformed or incomplete image
+   entries are ignored so an old local/cloud snapshot can still be opened.
+   이전 저장 데이터에는 사진 필드가 없어도 안전하게 빈 배열로 복구됩니다. */
+const normalizeJobImages = (value: unknown): CareerJobImage[] => {
+  if (!Array.isArray(value)) return [];
+
+  return value.flatMap((item) => {
+    if (
+      typeof item?.id !== "string" ||
+      typeof item?.dataUrl !== "string" ||
+      !item.dataUrl.startsWith("data:image/")
+    ) {
+      return [];
+    }
+
+    return [
+      {
+        id: item.id,
+        name: typeof item?.name === "string" ? item.name : "Job image",
+        dataUrl: item.dataUrl,
+        createdAt:
+          typeof item?.createdAt === "string"
+            ? item.createdAt
+            : new Date().toISOString(),
+      },
+    ];
+  });
 };
