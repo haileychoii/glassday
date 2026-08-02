@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { MouseEvent as ReactMouseEvent, RefObject } from "react";
+import type {
+  ChangeEvent as ReactChangeEvent,
+  MouseEvent as ReactMouseEvent,
+  RefObject,
+} from "react";
 import type { CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -7,6 +11,7 @@ import {
   Check,
   Download,
   Highlighter,
+  ImagePlus,
   Italic,
   List,
   ListOrdered,
@@ -30,6 +35,7 @@ import {
 } from "lucide-react";
 
 import { GlassCard } from "../glass/GlassCard";
+import { prepareLocalImageDataUrl } from "../../lib/localImage";
 import {
   DEFAULT_MEMO_FONT,
   FONT_CHANGE_EVENT,
@@ -405,6 +411,7 @@ export const MemoWidget = () => {
 
   const editorRef = useRef<HTMLDivElement | null>(null);
   const windowEditorRef = useRef<HTMLDivElement | null>(null);
+  const memoImageRangeRef = useRef<Range | null>(null);
   const saveInputRef = useRef<HTMLInputElement | null>(null);
   const floatingBodyRef = useRef<HTMLDivElement | null>(null);
   const widgetAppRef = useRef<HTMLDivElement | null>(null);
@@ -656,6 +663,113 @@ export const MemoWidget = () => {
     setTimeout(() => {
       syncFromEditor(activeEditor);
     }, 0);
+  };
+
+  /* Memo inline image insertion
+     The current caret range is saved before the native file chooser takes
+     focus. Resized WebP images then enter the memo HTML at that exact point.
+     파일 창이 커서를 빼앗기 전에 위치를 저장해 선택한 사진을 본문 안에 삽입합니다. */
+  const captureMemoImageRange = () => {
+    const editor = memoWindowOpen
+      ? windowEditorRef.current
+      : editorRef.current;
+    const selection = window.getSelection();
+
+    if (
+      !editor ||
+      !selection ||
+      selection.rangeCount === 0 ||
+      !editor.contains(selection.anchorNode)
+    ) {
+      memoImageRangeRef.current = null;
+      return;
+    }
+
+    memoImageRangeRef.current = selection.getRangeAt(0).cloneRange();
+  };
+
+  const insertMemoImages = async (
+    event: ReactChangeEvent<HTMLInputElement>
+  ) => {
+    const input = event.currentTarget;
+    const files = Array.from(input.files ?? []);
+    const editor = memoWindowOpen
+      ? windowEditorRef.current
+      : editorRef.current;
+    const savedRange = memoImageRangeRef.current;
+    input.value = "";
+
+    if (!editing || !editor || files.length === 0) return;
+
+    const preparedImages: Array<{ name: string; dataUrl: string }> = [];
+    const errors: string[] = [];
+
+    for (const file of files) {
+      try {
+        preparedImages.push({
+          name: file.name,
+          dataUrl: await prepareLocalImageDataUrl(file, {
+            maxInputBytes: 12 * 1024 * 1024,
+            maxEdge: 1280,
+            quality: 0.8,
+          }),
+        });
+      } catch (error) {
+        errors.push(
+          error instanceof Error ? error.message : `${file.name}: 사진 추가 실패`
+        );
+      }
+    }
+
+    if (preparedImages.length > 0) {
+      editor.focus();
+
+      const selection = window.getSelection();
+      const range =
+        savedRange && editor.contains(savedRange.commonAncestorContainer)
+          ? savedRange
+          : document.createRange();
+
+      if (range !== savedRange) {
+        range.selectNodeContents(editor);
+        range.collapse(false);
+      }
+
+      range.deleteContents();
+
+      const fragment = document.createDocumentFragment();
+      let lastInsertedNode: Node | null = null;
+
+      preparedImages.forEach(({ name, dataUrl }) => {
+        const image = document.createElement("img");
+        const spacer = document.createElement("p");
+
+        image.src = dataUrl;
+        image.alt = name;
+        image.dataset.memoImage = "true";
+        image.loading = "lazy";
+        spacer.appendChild(document.createElement("br"));
+        fragment.append(image, spacer);
+        lastInsertedNode = spacer;
+      });
+
+      range.insertNode(fragment);
+
+      if (selection && lastInsertedNode) {
+        range.setStartAfter(lastInsertedNode);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+
+      syncFromEditor(editor);
+    }
+
+    memoImageRangeRef.current = null;
+
+    if (errors.length > 0) {
+      window.alert(errors.join("\n"));
+    }
   };
 
   const addNewMemo = () => {
@@ -1105,6 +1219,36 @@ export const MemoWidget = () => {
       >
         <Table2 className="w-3.5 h-3.5" />
       </button>
+
+      <button
+        type="button"
+        onMouseDown={(event) => {
+          captureMemoImageRange();
+          event.preventDefault();
+        }}
+        onClick={(event) => {
+          const input = event.currentTarget.nextElementSibling;
+
+          if (input instanceof HTMLInputElement) {
+            input.click();
+          }
+        }}
+        className="memo-tool-button"
+        disabled={!editing}
+        title="Insert image"
+        aria-label="메모 본문에 사진 추가"
+      >
+        <ImagePlus className="w-3.5 h-3.5" />
+      </button>
+      <input
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        multiple
+        className="memo-image-input"
+        onChange={(event) => void insertMemoImages(event)}
+        disabled={!editing}
+        aria-label="메모 사진 파일 선택"
+      />
 
       <button
         type="button"

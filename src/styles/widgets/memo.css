@@ -2018,6 +2018,40 @@ body.theme-glass-dark
   max-width: 860px;
 }
 
+/* Inline memo images
+   Images live inside the rich-text HTML, so the editor owns their width and
+   scrolling instead of creating a second gallery surface.
+   사진이 길어져도 위젯 밖으로 밀지 않고 기존 메모 편집기 안에서 스크롤됩니다. */
+.memo-image-input {
+  display: none;
+}
+
+.memo-editor img[data-memo-image="true"],
+.memo-window-editor img[data-memo-image="true"] {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 520px;
+  margin: 8px 0;
+  display: block;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px hsl(230 30% 18% / 0.12);
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html[data-theme="retro"],
+  body[data-theme="retro"],
+  html.theme-retro,
+  body.theme-retro
+) :is(.memo-editor, .memo-window-editor) img[data-memo-image="true"] {
+  border-radius: 0;
+}
+
 .memo-widget .memo-editor {
   flex: 1 1 auto;
   height: auto;
