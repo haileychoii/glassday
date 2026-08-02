@@ -844,17 +844,10 @@ body,
     text-overflow: ellipsis;
   }
 
-  .career-list-item,
-  .career-list-title-row,
-  .career-list-meta {
-    align-items: flex-start !important;
-    flex-direction: column !important;
-  }
-
-  .career-list-side {
-    width: 100% !important;
-    justify-content: space-between !important;
-  }
+  /* Career card rows are owned by widgets/career.css.
+     A generic narrow-widget override previously stacked every metadata badge,
+     making one application consume three extra rows even when 500px was free.
+     Career 메타 배지는 카드 너비 안에서 한 행을 유지하고 자체 컨테이너 규칙만 따릅니다. */
 }
 
 @container gd-widget (max-width: 440px) {
