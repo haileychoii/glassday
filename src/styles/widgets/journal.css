@@ -11,6 +11,10 @@
 ========================================================= */
 
 .daily-journal-widget {
+  /* Widget body inset
+     This single token controls the Journal content distance from both sides.
+     / 위젯 내부 좌우 여백은 이 값 하나만 수정하면 된다. */
+  --journal-body-pad-x: var(--gd-space-xs);
   /* Theme surface aliases
      Journal and Study intentionally share the same panel/control contrast.
      / 테마별 명암은 theme-surfaces.css에서 한 번만 조절한다. */
@@ -568,7 +572,8 @@
   overflow-x: hidden !important;
   overscroll-behavior: contain !important;
   -webkit-overflow-scrolling: touch !important;
-  padding-inline: 2px !important;
+  /* The outer widget body owns horizontal spacing; do not stack another inset. */
+  padding-inline: 0 !important;
 }
 
 @container journal-widget (max-width: 860px) {
