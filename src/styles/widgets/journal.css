@@ -524,11 +524,6 @@
 }
 
 @media (max-width: 900px) {
-  .daily-journal-widget .glass-card-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .journal-summary-row,
   .journal-score-grid {
     display: grid;
@@ -540,18 +535,6 @@
 
   .journal-score-strip-card {
     grid-column: 1 / -1;
-  }
-
-  .journal-date-nav {
-    width: 100%;
-  }
-
-  .daily-journal-widget .glass-card-actions {
-    width: 100%;
-  }
-
-  .journal-date-nav input {
-    flex: 1;
   }
 }
 
@@ -577,23 +560,6 @@
 }
 
 @container journal-widget (max-width: 860px) {
-  .daily-journal-widget .glass-card-header {
-    align-items: flex-start !important;
-    flex-direction: column !important;
-  }
-
-  .daily-journal-widget .glass-card-actions {
-    width: 100% !important;
-  }
-
-  .journal-date-nav {
-    width: 100% !important;
-  }
-
-  .journal-date-nav input {
-    flex: 1 !important;
-  }
-
   .journal-summary-row {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
@@ -740,22 +706,6 @@
 }
 
 @container journal-widget (max-width: 600px) {
-  .daily-journal-widget .widget-frame__header {
-    align-items: flex-start !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-  }
-
-  .daily-journal-widget .glass-card-actions,
-  .journal-date-nav {
-    width: 100% !important;
-  }
-
-  .journal-date-nav input {
-    flex: 1 1 auto !important;
-    width: auto !important;
-  }
-
   .journal-summary-card:last-child {
     grid-column: 1 / -1 !important;
   }

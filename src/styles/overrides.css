@@ -1013,6 +1013,67 @@ body,
   padding-inline: var(--journal-body-pad-x) !important;
 }
 
+/* Daily Journal header alignment
+   The shared desktop composition keeps title copy on the left and date actions
+   on the right. Only the widget's own width, never the browser viewport, may
+   switch this header to two rows. / 제목은 항상 왼쪽 기준선을 유지한다. */
+.dashboard-grid-item
+  > .glass-card.daily-journal-widget
+  > .widget-frame__header {
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  text-align: left !important;
+}
+
+.dashboard-grid-item
+  > .glass-card.daily-journal-widget
+  > .widget-frame__header
+  > .widget-frame__title-group,
+.dashboard-grid-item
+  > .glass-card.daily-journal-widget
+  > .widget-frame__header
+  .widget-frame__copy {
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+.dashboard-grid-item
+  > .glass-card.daily-journal-widget
+  > .widget-frame__header
+  > .widget-frame__actions {
+  width: auto !important;
+  margin-left: auto !important;
+  align-self: center !important;
+}
+
+/* Compact Journal header
+   At genuinely narrow widget widths the date controls move below the title,
+   but both rows remain left-aligned and fully usable. */
+@container journal-widget (max-width: 420px) {
+  .dashboard-grid-item
+    > .glass-card.daily-journal-widget
+    > .widget-frame__header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .dashboard-grid-item
+    > .glass-card.daily-journal-widget
+    > .widget-frame__header
+    > .widget-frame__actions,
+  .daily-journal-widget .journal-date-nav {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .daily-journal-widget .journal-date-nav input {
+    width: auto !important;
+    flex: 1 1 auto !important;
+  }
+}
+
 /* Study header-to-content rhythm
    The planner starts after one shared widget gap instead of inheriting the
    compact 5px body offset. 제목과 첫 요약 카드 사이 간격은 이 토큰 하나로 조절한다. */
