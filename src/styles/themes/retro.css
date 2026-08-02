@@ -605,6 +605,7 @@ body.theme-retro .calendar-event-time {
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
   --retro-control-height: 24px;
   --retro-titlebar-height: 28px;
+  --retro-titlebar-control-height: 22px;
   --retro-window-gap: 4px;
 }
 
@@ -621,6 +622,17 @@ body.theme-retro .calendar-event-time {
     4px 4px 0 rgb(0 0 0 / 0.32) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Widget window geometry
+   GlassCard always has exactly two layers: titlebar and client area.
+   위젯마다 다른 여백을 더하지 않고 Win98 창의 두 행만 사용합니다. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .glass-card.widget-frame {
+  display: grid !important;
+  grid-template-rows: var(--retro-titlebar-height) minmax(0, 1fr) !important;
+  overflow: hidden !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
@@ -631,35 +643,18 @@ body.theme-retro .calendar-event-time {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .glass-card::after {
-  content: "_  []  X" !important;
-  position: absolute !important;
-  top: 5px !important;
-  right: 6px !important;
-  z-index: 4 !important;
-  min-width: 52px !important;
-  height: 16px !important;
-  padding: 0 4px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  color: #000000 !important;
-  background: var(--retro-panel) !important;
-  border-top: 1px solid var(--retro-white) !important;
-  border-left: 1px solid var(--retro-white) !important;
-  border-right: 1px solid var(--retro-panel-darker) !important;
-  border-bottom: 1px solid var(--retro-panel-darker) !important;
-  font-family: "MS Sans Serif", Tahoma, sans-serif !important;
-  font-size: 10px !important;
-  line-height: 1 !important;
-  letter-spacing: 0 !important;
+  content: none !important;
+  display: none !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-header, .widget-card-header, .widget-frame__header) {
+  height: var(--retro-titlebar-height) !important;
   min-height: var(--retro-titlebar-height) !important;
-  padding: 3px 66px 3px 5px !important;
+  padding: 2px 3px 2px 5px !important;
   display: flex !important;
   align-items: center !important;
+  justify-content: space-between !important;
   gap: 6px !important;
   color: var(--retro-white) !important;
   background: linear-gradient(90deg, var(--retro-title), var(--retro-title-2)) !important;
@@ -667,22 +662,34 @@ body.theme-retro .calendar-event-time {
   box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.16) !important;
   position: relative !important;
   z-index: 3 !important;
+  box-sizing: border-box !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.widget-frame__title-group, .widget-frame__copy) {
+  min-width: 0 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .widget-frame__copy {
+  gap: 0 !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3) {
   color: var(--retro-white) !important;
   font-family: "MS Sans Serif", Tahoma, sans-serif !important;
-  font-size: 12px !important;
+  font-size: 11px !important;
   font-weight: 800 !important;
-  line-height: 1.1 !important;
+  line-height: 11px !important;
   text-shadow: none !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle, .widget-frame__header p) {
   color: rgb(255 255 255 / 0.78) !important;
-  font-size: 10px !important;
+  font-size: 8px !important;
+  line-height: 9px !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
@@ -700,7 +707,24 @@ body.theme-retro .calendar-event-time {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-actions, .widget-frame__actions) {
+  height: var(--retro-titlebar-control-height) !important;
+  margin-left: auto !important;
+  align-self: center !important;
   gap: 3px !important;
+}
+
+/* Real widget commands occupy the native titlebar slot. The previous fake
+   minimize/close decoration was removed because it collided with Add/Refresh.
+   실제 기능 버튼만 같은 높이로 정렬합니다. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .widget-frame__actions > :is(button, .glass-button, .career-icon-button) {
+  width: auto !important;
+  min-width: var(--retro-titlebar-control-height) !important;
+  height: var(--retro-titlebar-control-height) !important;
+  min-height: var(--retro-titlebar-control-height) !important;
+  padding: 0 6px !important;
+  margin: 0 !important;
+  line-height: 1 !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
@@ -718,15 +742,8 @@ body.theme-retro .calendar-event-time {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .glass-card-body::after {
-  content: "" !important;
-  display: block !important;
-  height: 16px !important;
-  margin-top: 5px !important;
-  background: var(--retro-panel) !important;
-  border-top: 1px solid var(--retro-panel-dark) !important;
-  border-left: 1px solid var(--retro-panel-dark) !important;
-  border-right: 1px solid var(--retro-white) !important;
-  border-bottom: 1px solid var(--retro-white) !important;
+  content: none !important;
+  display: none !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
@@ -832,4 +849,94 @@ body.theme-retro .calendar-event-time {
   height: 20px !important;
   min-height: 20px !important;
   padding: 0 !important;
+}
+
+/* =========================================================
+   Retro Settings window
+   The settings dialog reuses the same opaque titlebar/client geometry as a
+   desktop window. / 설정창도 투명한 glass 레이어가 아닌 Win98 창으로 표시합니다.
+========================================================= */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .settings-modal-window {
+  display: grid !important;
+  grid-template-rows: var(--retro-titlebar-height) minmax(0, 1fr) !important;
+  overflow: hidden !important;
+  background: var(--retro-panel) !important;
+  color: var(--retro-text) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .settings-modal-header {
+  height: var(--retro-titlebar-height) !important;
+  min-height: var(--retro-titlebar-height) !important;
+  padding: 2px 3px 2px 5px !important;
+  gap: 6px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .settings-modal-title-wrap {
+  height: 100% !important;
+  min-width: 0 !important;
+  gap: 5px !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .settings-modal-icon {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .settings-modal-title-text {
+  gap: 0 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .settings-modal-header h2 {
+  font-size: 12px !important;
+  line-height: 12px !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .settings-modal-header p {
+  font-size: 9px !important;
+  line-height: 9px !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .settings-modal-body {
+  min-height: 0 !important;
+  margin: var(--retro-window-gap) !important;
+  padding: 8px !important;
+  gap: 8px !important;
+  overflow: auto !important;
+  background: var(--retro-client) !important;
+  color: var(--retro-text) !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .settings-section {
+  padding: 10px !important;
+  gap: 10px !important;
+  background: var(--retro-cream) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .settings-theme-card {
+  min-height: 126px !important;
+  padding: 10px !important;
+  gap: 6px !important;
+  background: var(--retro-panel) !important;
+  color: var(--retro-text) !important;
+  opacity: 1 !important;
 }
