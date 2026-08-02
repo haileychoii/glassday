@@ -120,7 +120,7 @@
 .theme-pastel .font-bold {
   color: hsl(246 36% 18% / 0.94) !important;
   font-weight: 700 !important;
-  letter-spacing: -0.04em !important;
+  letter-spacing: 0 !important;
 }
 
 .theme-pastel p,
@@ -610,7 +610,7 @@
 .theme-pastel .today-task-meta,
 .theme-pastel .calendar-event-time,
 .theme-pastel .career-list-title span {
-  color: hsl(250 18% 34% / 0.58) !important;
+  color: hsl(248 22% 30% / 0.74) !important;
 }
 
 /* Pastel에서는 더 연하게 */

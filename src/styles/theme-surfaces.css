@@ -8,12 +8,14 @@
   --gd-app-bg: hsl(0 0% 100% / 0.2);
   --gd-app-border: hsl(0 0% 100% / 0.38);
   --gd-app-shadow: 0 44px 120px -72px hsl(250 40% 34% / 0.32);
+  --gd-app-filter: blur(30px) saturate(165%);
 
   --gd-surface-bg: hsl(0 0% 100% / 0.5);
   --gd-surface-border: hsl(0 0% 100% / 0.56);
   --gd-surface-shadow:
     0 24px 70px -50px hsl(248 38% 36% / 0.26),
     inset 0 1px 0 hsl(0 0% 100% / 0.72);
+  --gd-surface-filter: blur(24px) saturate(165%);
 
   --gd-inner-bg: hsl(0 0% 100% / 0.3);
   --gd-inner-border: hsl(0 0% 100% / 0.42);
@@ -38,30 +40,52 @@ body[data-theme="pastel"],
 html.theme-pastel,
 body.theme-pastel {
   --background: 315 88% 97%;
-  --foreground: 246 34% 18%;
+  --foreground: 246 36% 16%;
   --primary: 318 58% 72%;
-  --muted-foreground: 246 16% 48%;
+  --muted-foreground: 246 20% 40%;
 
-  --gd-app-bg: linear-gradient(145deg, hsl(0 0% 100% / 0.48), hsl(318 100% 98% / 0.24));
-  --gd-app-border: hsl(0 0% 100% / 0.7);
+  /* Pastel tinted glass
+     Unlike Glass Light, these surfaces retain pink, sky, and mint pigment.
+     / 무채색 투명 유리가 아니라 색이 남는 파스텔 유리 레이어다. */
+  --gd-app-bg:
+    radial-gradient(circle at 8% 0%, hsl(324 88% 86% / 0.22), transparent 38%),
+    radial-gradient(circle at 96% 8%, hsl(190 86% 80% / 0.18), transparent 42%),
+    linear-gradient(145deg, hsl(0 0% 100% / 0.4), hsl(287 72% 94% / 0.2));
+  --gd-app-border: hsl(264 34% 74% / 0.34);
   --gd-app-shadow:
-    0 44px 140px -68px hsl(276 42% 42% / 0.38),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9);
+    0 42px 120px -66px hsl(282 40% 38% / 0.34),
+    0 18px 48px -38px hsl(188 48% 38% / 0.24),
+    inset 0 1px 0 hsl(0 0% 100% / 0.78);
+  --gd-app-filter: blur(34px) saturate(148%);
 
   --gd-surface-bg:
-    radial-gradient(circle at 12% 0%, hsl(318 100% 96% / 0.38), transparent 42%),
-    radial-gradient(circle at 100% 0%, hsl(190 100% 93% / 0.36), transparent 46%),
-    linear-gradient(145deg, hsl(0 0% 100% / 0.68), hsl(280 100% 98% / 0.32));
-  --gd-surface-border: hsl(0 0% 100% / 0.72);
+    radial-gradient(circle at 10% 0%, hsl(324 88% 88% / 0.3), transparent 44%),
+    radial-gradient(circle at 96% 4%, hsl(190 86% 82% / 0.26), transparent 48%),
+    linear-gradient(145deg, hsl(0 0% 100% / 0.5), hsl(282 72% 94% / 0.26));
+  --gd-surface-border: hsl(262 34% 72% / 0.34);
   --gd-surface-shadow:
-    0 26px 80px -62px hsl(275 36% 42% / 0.32),
-    inset 0 1px 0 hsl(0 0% 100% / 0.88);
+    0 28px 72px -52px hsl(278 38% 36% / 0.3),
+    0 12px 30px -26px hsl(188 46% 38% / 0.22),
+    inset 0 1px 0 hsl(0 0% 100% / 0.72),
+    inset 0 -1px 0 hsl(267 44% 76% / 0.16);
+  --gd-surface-filter: blur(30px) saturate(150%);
 
-  --gd-inner-bg: hsl(0 0% 100% / 0.34);
-  --gd-inner-border: hsl(250 24% 78% / 0.3);
-  --gd-control-bg: hsl(0 0% 100% / 0.58);
-  --gd-control-border: hsl(0 0% 100% / 0.7);
-  --gd-control-active-bg: linear-gradient(135deg, hsl(318 100% 92% / 0.78), hsl(200 100% 91% / 0.7));
+  --gd-inner-bg:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.42),
+      hsl(324 74% 92% / 0.2) 52%,
+      hsl(192 72% 90% / 0.17)
+    );
+  --gd-inner-border: hsl(258 28% 70% / 0.3);
+  --gd-control-bg:
+    linear-gradient(135deg, hsl(0 0% 100% / 0.58), hsl(318 74% 92% / 0.26), hsl(193 76% 90% / 0.22));
+  --gd-control-border: hsl(258 30% 70% / 0.32);
+  --gd-control-active-bg:
+    linear-gradient(135deg, hsl(318 76% 86% / 0.56), hsl(193 74% 84% / 0.5), hsl(155 56% 84% / 0.42));
+  --gd-widget-panel-shadow:
+    0 12px 26px -24px hsl(276 36% 38% / 0.34),
+    inset 0 1px 0 hsl(0 0% 100% / 0.58);
 }
 
 html[data-theme="glass-light"],
@@ -217,11 +241,11 @@ body.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient {
 html[data-theme="pastel"] .bg-glass-gradient,
 body[data-theme="pastel"] .bg-glass-gradient {
   background:
-    radial-gradient(circle at 12% 8%, hsl(318 100% 90% / 0.82), transparent 34%),
-    radial-gradient(circle at 88% 10%, hsl(198 100% 88% / 0.9), transparent 35%),
-    radial-gradient(circle at 18% 82%, hsl(270 100% 92% / 0.75), transparent 38%),
-    radial-gradient(circle at 86% 88%, hsl(178 100% 88% / 0.72), transparent 36%),
-    linear-gradient(135deg, hsl(318 100% 97%), hsl(285 100% 97%) 38%, hsl(208 100% 96%) 70%, hsl(184 100% 95%)) !important;
+    radial-gradient(circle at 12% 8%, hsl(322 92% 86% / 0.78), transparent 34%),
+    radial-gradient(circle at 88% 10%, hsl(198 92% 84% / 0.82), transparent 35%),
+    radial-gradient(circle at 18% 82%, hsl(274 82% 88% / 0.68), transparent 38%),
+    radial-gradient(circle at 86% 88%, hsl(166 76% 82% / 0.66), transparent 36%),
+    linear-gradient(135deg, hsl(320 82% 95%), hsl(286 72% 95%) 38%, hsl(208 78% 93%) 70%, hsl(178 68% 92%)) !important;
 }
 
 html[data-theme="mac-core"] .bg-glass-gradient,
@@ -247,8 +271,8 @@ body[data-theme="glass-dark"] .liquid-shell {
   background: var(--gd-app-bg) !important;
   border-color: var(--gd-app-border) !important;
   box-shadow: var(--gd-app-shadow) !important;
-  backdrop-filter: blur(30px) saturate(165%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(165%) !important;
+  backdrop-filter: var(--gd-app-filter) !important;
+  -webkit-backdrop-filter: var(--gd-app-filter) !important;
 }
 
 html[data-theme="pastel"] .glass-card,
@@ -261,8 +285,8 @@ body[data-theme="glass-dark"] .glass-card {
   background: var(--gd-surface-bg) !important;
   border-color: var(--gd-surface-border) !important;
   box-shadow: var(--gd-surface-shadow) !important;
-  backdrop-filter: blur(24px) saturate(165%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(165%) !important;
+  backdrop-filter: var(--gd-surface-filter) !important;
+  -webkit-backdrop-filter: var(--gd-surface-filter) !important;
 }
 
 html[data-theme="pastel"] :is(.topbar, aside),
@@ -275,8 +299,8 @@ body[data-theme="glass-dark"] :is(.topbar, aside) {
   background: var(--gd-surface-bg) !important;
   border-color: var(--gd-surface-border) !important;
   box-shadow: var(--gd-surface-shadow) !important;
-  backdrop-filter: blur(24px) saturate(165%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(165%) !important;
+  backdrop-filter: var(--gd-surface-filter) !important;
+  -webkit-backdrop-filter: var(--gd-surface-filter) !important;
 }
 
 html[data-theme="pastel"] :is(.today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block, .today-mini-main, .today-mini-next, .today-tasks-progress, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
