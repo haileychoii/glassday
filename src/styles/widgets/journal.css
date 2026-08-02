@@ -11,12 +11,14 @@
 ========================================================= */
 
 .daily-journal-widget {
-  --journal-surface-bg:
-    linear-gradient(145deg, hsl(0 0% 100% / 0.26), hsl(0 0% 100% / 0.13));
-  --journal-surface-border: hsl(0 0% 100% / 0.36);
-  --journal-surface-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.42);
-  --journal-control-bg: hsl(0 0% 100% / 0.24);
-  --journal-control-border: hsl(0 0% 100% / 0.36);
+  /* Theme surface aliases
+     Journal and Study intentionally share the same panel/control contrast.
+     / 테마별 명암은 theme-surfaces.css에서 한 번만 조절한다. */
+  --journal-surface-bg: var(--gd-widget-panel-bg);
+  --journal-surface-border: var(--gd-widget-panel-border);
+  --journal-surface-shadow: var(--gd-widget-panel-shadow);
+  --journal-control-bg: var(--gd-widget-control-bg);
+  --journal-control-border: var(--gd-widget-control-border);
   /* Holographic action palette
      Add/Save controls share this muted cyan-pink-champagne surface.
      저널 강조색을 바꾸려면 아래 action 변수만 조절하면 된다. */

@@ -1011,6 +1011,20 @@ body,
   padding-top: var(--gd-widget-gap) !important;
 }
 
+/* Pixel Desk previously forced every widget body to 2px. Study needs the same
+   readable title gap as other themes while retaining its square pixel frame. */
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk
+  )
+  .dashboard-grid-item
+  > .glass-card.study-widget
+  > .widget-frame__body {
+  padding-top: var(--gd-widget-gap) !important;
+}
+
 /* Nested widget scrollers
    Money and Memo own dedicated inner scroll areas. Their shared card body only
    measures the remaining height below the header, so the final rows never sit

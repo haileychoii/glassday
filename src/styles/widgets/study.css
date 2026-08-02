@@ -20,6 +20,15 @@
   --study10-panel-pad: var(--gd-widget-panel-pad, 12px);
   --study10-control-height: var(--gd-control-height-md, 32px);
   --study10-radius: var(--gd-radius-inner, 14px);
+  /* Shared theme surfaces
+     These aliases match Daily Journal and keep theme contrast consistent.
+     / Study 전용 회색을 만들지 않고 공통 위젯 면 토큰을 사용한다. */
+  --study10-panel-bg: var(--gd-widget-panel-bg);
+  --study10-panel-border: var(--gd-widget-panel-border);
+  --study10-panel-shadow: var(--gd-widget-panel-shadow);
+  --study10-control-bg: var(--gd-widget-control-bg);
+  --study10-control-border: var(--gd-widget-control-border);
+  --study10-control-active-bg: var(--gd-widget-control-active-bg);
 }
 
 .study-widget {
@@ -74,9 +83,10 @@
   min-width: 0;
   min-height: 62px;
   padding: 9px 11px;
-  border: 1px solid hsl(var(--border) / 0.66);
+  border: 1px solid var(--study10-panel-border);
   border-radius: var(--study10-radius);
-  background: hsl(var(--card) / 0.38);
+  background: var(--study10-panel-bg);
+  box-shadow: var(--study10-panel-shadow);
   backdrop-filter: blur(18px) saturate(116%);
   display: flex;
   flex-direction: column;
@@ -112,9 +122,9 @@
   min-width: 0;
   height: 23px;
   padding: 0 6px;
-  border: 1px solid hsl(var(--border) / 0.58);
+  border: 1px solid var(--study10-control-border);
   border-radius: calc(var(--study10-radius) * 0.6);
-  background: hsl(var(--card) / 0.34);
+  background: var(--study10-control-bg);
   font-size: 11px;
   font-weight: 700;
 }
@@ -155,9 +165,9 @@
 .study10-icon-button,
 .study10-today-button {
   height: var(--study10-control-height);
-  border: 1px solid hsl(var(--border) / 0.66);
+  border: 1px solid var(--study10-control-border);
   border-radius: calc(var(--study10-radius) * 0.8);
-  background: hsl(var(--card) / 0.4);
+  background: var(--study10-control-bg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -188,9 +198,9 @@
   min-width: 0;
   height: var(--study10-control-height);
   padding: 0 9px;
-  border: 1px solid hsl(var(--border) / 0.62);
+  border: 1px solid var(--study10-control-border);
   border-radius: calc(var(--study10-radius) * 0.8);
-  background: hsl(var(--card) / 0.34);
+  background: var(--study10-control-bg);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -236,9 +246,9 @@
   min-width: 0;
   min-height: 37px;
   padding: 5px 7px;
-  border: 1px solid hsl(var(--border) / 0.56);
+  border: 1px solid var(--study10-control-border);
   border-radius: calc(var(--study10-radius) * 0.75);
-  background: hsl(var(--card) / 0.3);
+  background: var(--study10-control-bg);
   display: grid;
   grid-template-columns: 7px minmax(0, 1fr) auto;
   align-items: center;
@@ -249,16 +259,25 @@
 }
 
 .study10-subject-tool:hover {
-  background: hsl(var(--card) / 0.5);
+  background: var(--study10-control-active-bg);
 }
 
 .study10-subject-tool.is-active {
   border-color: var(--study-subject-color, hsl(var(--primary) / 0.78));
-  background: color-mix(
-    in srgb,
-    var(--study-subject-color, hsl(var(--primary))) 14%,
-    hsl(var(--card) / 0.5)
-  );
+  background:
+    linear-gradient(
+      color-mix(
+        in srgb,
+        var(--study-subject-color, hsl(var(--primary))) 14%,
+        transparent
+      ),
+      color-mix(
+        in srgb,
+        var(--study-subject-color, hsl(var(--primary))) 14%,
+        transparent
+      )
+    ),
+    var(--study10-control-active-bg);
   box-shadow: inset 0 0 0 1px
     color-mix(in srgb, var(--study-subject-color) 24%, transparent);
 }
@@ -298,9 +317,10 @@
 .study10-timer {
   min-width: 0;
   padding: 7px 8px 7px 10px;
-  border: 1px solid hsl(var(--border) / 0.62);
+  border: 1px solid var(--study10-panel-border);
   border-radius: var(--study10-radius);
-  background: hsl(var(--card) / 0.38);
+  background: var(--study10-panel-bg);
+  box-shadow: var(--study10-panel-shadow);
   backdrop-filter: blur(18px) saturate(116%);
   display: flex;
   align-items: center;
@@ -362,9 +382,10 @@
 .study10-panel {
   min-width: 0;
   padding: var(--study10-panel-pad);
-  border: 1px solid hsl(var(--border) / 0.62);
+  border: 1px solid var(--study10-panel-border);
   border-radius: var(--study10-radius);
-  background: hsl(var(--card) / 0.34);
+  background: var(--study10-panel-bg);
+  box-shadow: var(--study10-panel-shadow);
   backdrop-filter: blur(18px) saturate(116%);
 }
 
@@ -419,7 +440,7 @@
   top: 0;
   z-index: 2;
   padding-bottom: 4px;
-  background: color-mix(in srgb, hsl(var(--card)) 86%, transparent);
+  background: var(--study10-panel-bg);
   backdrop-filter: blur(16px);
 }
 
@@ -447,9 +468,9 @@
   min-width: 0;
   height: 27px;
   padding: 0;
-  border: 1px solid hsl(var(--border) / 0.52);
+  border: 1px solid var(--study10-control-border);
   border-radius: calc(var(--study10-radius) * 0.38);
-  background: hsl(var(--card) / 0.3);
+  background: var(--study10-control-bg);
   touch-action: none;
   transition: border-color 110ms ease, background-color 110ms ease,
     transform 110ms ease;
@@ -489,9 +510,9 @@
 .study10-task-form > input,
 .study10-estimate-input,
 .study10-note-panel textarea {
-  border: 1px solid hsl(var(--border) / 0.58);
+  border: 1px solid var(--study10-control-border);
   border-radius: calc(var(--study10-radius) * 0.65);
-  background: hsl(var(--card) / 0.38);
+  background: var(--study10-control-bg);
   outline: none;
 }
 
@@ -537,9 +558,10 @@
   min-width: 0;
   min-height: 39px;
   padding: 5px 6px;
-  border: 1px solid hsl(var(--border) / 0.48);
+  border: 1px solid var(--study10-panel-border);
   border-radius: calc(var(--study10-radius) * 0.68);
-  background: hsl(var(--card) / 0.28);
+  background: var(--study10-panel-bg);
+  box-shadow: var(--study10-panel-shadow);
   display: grid;
   grid-template-columns: 23px 5px minmax(0, 1fr) 26px;
   align-items: center;
@@ -557,8 +579,8 @@
 .study10-task-check,
 .study10-task-delete {
   padding: 0;
-  border: 1px solid hsl(var(--border) / 0.56);
-  background: hsl(var(--card) / 0.3);
+  border: 1px solid var(--study10-control-border);
+  background: var(--study10-control-bg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -636,9 +658,9 @@
 
 .study10-legacy-note {
   padding: 8px 10px;
-  border: 1px dashed hsl(var(--border) / 0.58);
+  border: 1px dashed var(--study10-panel-border);
   border-radius: calc(var(--study10-radius) * 0.75);
-  background: hsl(var(--card) / 0.2);
+  background: var(--study10-panel-bg);
   line-height: 1.45;
 }
 
@@ -826,88 +848,6 @@
   .study10-timeline-scroll {
     max-height: 180px;
   }
-}
-
-/* ---------------------------------------------------------
-   Dark glass readability
-   The global card token is intentionally pale in several themes. These local
-   surfaces keep white Study text readable without changing the app-wide theme.
-   / Glass Dark와 Aurora에서만 내부 면을 어두운 유리색으로 통일합니다.
---------------------------------------------------------- */
-
-:where(
-    html[data-theme="glass-dark"],
-    body[data-theme="glass-dark"],
-    html[data-theme="aurora"],
-    body[data-theme="aurora"]
-  )
-  :is(
-    .study10-summary-card,
-    .study10-date-control,
-    .study10-icon-button,
-    .study10-today-button,
-    .study10-subject-tool,
-    .study10-timer,
-    .study10-panel,
-    .study10-task-row,
-    .study10-legacy-note
-  ) {
-  border-color: rgb(255 255 255 / 0.15);
-  background: rgb(22 25 38 / 0.56);
-}
-
-:where(
-    html[data-theme="glass-dark"],
-    body[data-theme="glass-dark"],
-    html[data-theme="aurora"],
-    body[data-theme="aurora"]
-  )
-  :is(
-    .study10-goal-line input,
-    .study10-task-form select,
-    .study10-task-form > input,
-    .study10-estimate-input,
-    .study10-note-panel textarea,
-    .study10-task-check,
-    .study10-task-delete,
-    .study10-slot
-  ) {
-  border-color: rgb(255 255 255 / 0.14);
-  background: rgb(8 11 20 / 0.34);
-}
-
-:where(
-    html[data-theme="glass-dark"],
-    body[data-theme="glass-dark"],
-    html[data-theme="aurora"],
-    body[data-theme="aurora"]
-  )
-  .study10-minute-head {
-  background: rgb(22 25 38 / 0.86);
-}
-
-:where(
-    html[data-theme="glass-dark"],
-    body[data-theme="glass-dark"],
-    html[data-theme="aurora"],
-    body[data-theme="aurora"]
-  )
-  .study10-subject-tool:hover {
-  background: rgb(30 34 48 / 0.72);
-}
-
-:where(
-    html[data-theme="glass-dark"],
-    body[data-theme="glass-dark"],
-    html[data-theme="aurora"],
-    body[data-theme="aurora"]
-  )
-  .study10-subject-tool.is-active {
-  background: color-mix(
-    in srgb,
-    var(--study-subject-color) 22%,
-    rgb(22 25 38 / 0.78)
-  );
 }
 
 /* ---------------------------------------------------------

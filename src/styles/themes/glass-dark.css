@@ -745,18 +745,20 @@ body.theme-glass-dark .journal-task-check,
 body.theme-glass-dark .journal-task-delete,
 body.theme-glass-dark .journal-task-delete-select,
 body.theme-glass-dark .journal-task-delete-confirm button {
-  background: var(--gd-dark-panel-bg) !important;
-  border-color: var(--gd-dark-panel-border) !important;
+  /* Shared widget surface aliases preserve Glass Dark here and let Aurora's
+     compatibility class resolve to Aurora tokens instead. */
+  background: var(--gd-widget-panel-bg) !important;
+  border-color: var(--gd-widget-panel-border) !important;
   color: rgba(234, 240, 255, 0.9) !important;
-  box-shadow: var(--gd-dark-panel-shadow) !important;
+  box-shadow: var(--gd-widget-panel-shadow) !important;
 }
 
 html[data-theme="glass-dark"] .journal-section,
 body[data-theme="glass-dark"] .journal-section,
 html.theme-glass-dark .journal-section,
 body.theme-glass-dark .journal-section {
-  background: var(--gd-dark-panel-bg) !important;
-  border-color: var(--gd-dark-panel-border) !important;
+  background: var(--gd-widget-panel-bg) !important;
+  border-color: var(--gd-widget-panel-border) !important;
 }
 
 html[data-theme="glass-dark"] .journal-summary-card span,

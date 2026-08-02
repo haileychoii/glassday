@@ -20,6 +20,17 @@
   --gd-control-bg: hsl(0 0% 100% / 0.42);
   --gd-control-border: hsl(0 0% 100% / 0.54);
   --gd-control-active-bg: hsl(0 0% 100% / 0.72);
+
+  /* Shared widget interior surfaces
+     Study and Daily Journal consume these semantic aliases, so both widgets
+     follow the active theme without maintaining separate gray palettes.
+     / 위젯 내부 색상은 panel, control, active 세 토큰에서 함께 조절한다. */
+  --gd-widget-panel-bg: var(--gd-inner-bg);
+  --gd-widget-panel-border: var(--gd-inner-border);
+  --gd-widget-panel-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.28);
+  --gd-widget-control-bg: var(--gd-control-bg);
+  --gd-widget-control-border: var(--gd-control-border);
+  --gd-widget-control-active-bg: var(--gd-control-active-bg);
 }
 
 html[data-theme="pastel"],
@@ -107,6 +118,48 @@ body.theme-glass-dark {
   --gd-control-bg: rgb(255 255 255 / 0.14);
   --gd-control-border: rgb(255 255 255 / 0.18);
   --gd-control-active-bg: rgb(255 255 255 / 0.26);
+
+  /* Glass Dark uses the same established panel recipe across complex widgets. */
+  --gd-widget-panel-bg: var(--gd-dark-panel-bg);
+  --gd-widget-panel-border: var(--gd-dark-panel-border);
+  --gd-widget-panel-shadow: var(--gd-dark-panel-shadow);
+  --gd-widget-control-bg: var(--gd-dark-control-bg);
+  --gd-widget-control-border: var(--gd-dark-control-border);
+  --gd-widget-control-active-bg: var(--gd-dark-active-fill);
+}
+
+/* Aurora keeps its deeper tint while preserving the same semantic structure.
+   / Aurora도 구조는 같고 이 블록의 색상 토큰만 다르게 사용한다. */
+html[data-theme="aurora"],
+body[data-theme="aurora"],
+html.theme-aurora,
+body.theme-aurora {
+  --gd-widget-panel-bg: var(--aurora-panel-bg);
+  --gd-widget-panel-border: var(--aurora-panel-border);
+  --gd-widget-panel-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 16px 40px -30px rgb(0 0 0 / 0.38);
+  --gd-widget-control-bg: var(--aurora-control-bg);
+  --gd-widget-control-border: var(--aurora-control-border);
+  --gd-widget-control-active-bg: var(--aurora-active-bg);
+}
+
+/* Hard desktop themes keep the same semantic API but resolve it to their
+   native solid panels. Pixel/Retro 색은 glass 토큰과 섞이지 않는다. */
+html[data-theme="pixel-desk"],
+body[data-theme="pixel-desk"],
+html.theme-pixel-desk,
+body.theme-pixel-desk,
+html[data-theme="retro"],
+body[data-theme="retro"],
+html.theme-retro,
+body.theme-retro {
+  --gd-widget-panel-bg: hsl(var(--card));
+  --gd-widget-panel-border: hsl(var(--border));
+  --gd-widget-panel-shadow: none;
+  --gd-widget-control-bg: hsl(var(--secondary));
+  --gd-widget-control-border: hsl(var(--border));
+  --gd-widget-control-active-bg: hsl(var(--accent));
 }
 
 html[data-theme="glass-light"] body,
