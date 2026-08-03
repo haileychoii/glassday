@@ -147,11 +147,15 @@ body.theme-glass-dark {
     0 24px 68px rgb(0 0 0 / 0.36),
     inset 0 1px 0 rgb(255 255 255 / 0.18);
 
-  --gd-inner-bg: rgb(255 255 255 / 0.1);
-  --gd-inner-border: rgb(255 255 255 / 0.15);
-  --gd-control-bg: rgb(255 255 255 / 0.14);
-  --gd-control-border: rgb(255 255 255 / 0.18);
-  --gd-control-active-bg: rgb(255 255 255 / 0.26);
+  /* Glass Dark interior bridge
+     Shared widgets still consume generic inner/control names. Point those
+     names at the dark recipe so a late common rule cannot restore pale fills.
+     / 공통 CSS가 밝은 회색으로 되돌리지 않도록 다크 토큰에 직접 연결한다. */
+  --gd-inner-bg: var(--gd-dark-panel-bg);
+  --gd-inner-border: var(--gd-dark-panel-border);
+  --gd-control-bg: var(--gd-dark-control-bg);
+  --gd-control-border: var(--gd-dark-control-border);
+  --gd-control-active-bg: var(--gd-dark-active-fill);
 
   /* Glass Dark uses the same established panel recipe across complex widgets. */
   --gd-widget-panel-bg: var(--gd-dark-panel-bg);
