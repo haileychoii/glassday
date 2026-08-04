@@ -1,3 +1,28 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Study 10-minute Planner
+ * ============================================================
+ *
+ * 화면 역할:
+ * - 06:00~24:00 timeline에 10분 단위 실제 공부 기록을 과목 색상으로 칠한다.
+ * - 날짜별 goal, task, memo와 오늘 실시간 timer를 같은 planner record로 관리한다.
+ *
+ * 연결:
+ * - Renderer: DashboardGrid (WidgetId: study)
+ * - Constants/Types: src/constants/study.ts, src/types/study.ts
+ * - Persistence/Migration: useLocalStorage, studyUtils,
+ *   glassday.study.planner.v2 및 legacy v1 key
+ * - Detail shell: src/components/widgets/study/StudyDetailWindow.tsx
+ * - Style: src/styles/widgets/study.css + theme/responsive overrides
+ *
+ * Figma 구조:
+ * - Summary, Date Navigation, Subject/Timer Controls, 10-minute Timeline,
+ *   Subject Totals, Tasks, Memo
+ * - Variants: Widget / Detail / Timer Active / Paint Subject / Eraser / Empty
+ *
+ * 반응형: 같은 renderPlanner tree에 mode class를 적용하며 Widget container 기준으로 재배치한다.
+ * ============================================================
+ */
 import {
   useCallback,
   useEffect,
@@ -73,11 +98,11 @@ const getSubject = (subjectId: StudyPlannerSubjectId) =>
 const getSubjectStyle = (color: string) =>
   ({ "--study-subject-color": color } as CSSProperties);
 
-/* Ten-minute study planner
-   One durable v2 storage object contains every date plus the active timer.
-   Widget and floating detail layouts render from the same state, which keeps
-   Wide/Laptop modes and cloud snapshots consistent. / 날짜별 시간표, 할 일,
-   목표, 메모는 모두 기존 useLocalStorage 경로를 통해 한 번만 저장됩니다. */
+/**
+ * StudyWidget
+ * Widget/Detail이 하나의 v2 storage를 공유해 Wide/Laptop에서도 동일한 학습 기록을 본다.
+ * pointer drag painting과 timer 종료가 모두 StudyDayData.blocks를 갱신한다.
+ */
 export const StudyWidget = () => {
   const today = toLocalDateInput();
   const initialPlanner = useMemo(() => createInitialStudyPlannerStorage(), []);
@@ -392,7 +417,7 @@ export const StudyWidget = () => {
 
     return (
       <div className={cn("study10-planner", `study10-planner--${mode}`)}>
-        {/* Summary strip: the same compact metrics anchor every container size. */}
+        {/* Figma Frame: Summary Metrics / 모든 container size의 상단 기준선 */}
         <section className="study10-summary" aria-label="Study summary">
           <div className="study10-summary-card">
             <span>오늘 공부</span>
@@ -429,7 +454,7 @@ export const StudyWidget = () => {
           </div>
         </section>
 
-        {/* Date navigation remains visible above all scrollable planner content. */}
+        {/* Figma Frame: Date Navigation / planner scroll content 위에 유지 */}
         <section className="study10-date-bar" aria-label="Study date">
           <button
             type="button"
@@ -466,7 +491,7 @@ export const StudyWidget = () => {
           </button>
         </section>
 
-        {/* Subject tools and real-time timer share one compact control band. */}
+        {/* Figma Component Set: Subject Paint Tool + Eraser + Real-time Timer controls */}
         <section className="study10-control-band">
           <div className="study10-subject-tools" aria-label="Study subjects">
             {STUDY_PLANNER_SUBJECTS.map((subject) => (
@@ -741,6 +766,7 @@ export const StudyWidget = () => {
 
   return (
     <>
+      {/* Figma Component: Study Widget / compact planner mode */}
       <GlassCard
         className="study-widget"
         title="Study Planner"
@@ -761,6 +787,7 @@ export const StudyWidget = () => {
         {renderPlanner("widget")}
       </GlassCard>
 
+      {/* Figma Component: Study Detail Floating Window / expanded planner mode */}
       <StudyDetailWindow
         open={detailOpen}
         subtitle={`${formatStudyDate(selectedDate)} · ${formatStudyMinutes(

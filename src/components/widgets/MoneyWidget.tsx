@@ -1,3 +1,30 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Money Widget + Finance Detail
+ * ============================================================
+ *
+ * 화면 역할:
+ * - Grid에서는 월 지출/예산/category/recent transaction을 compact summary로 보여준다.
+ * - Floating Detail에서는 Overview, Spending, Wishlist, Recurring 전체 기능을 제공한다.
+ *
+ * 연결:
+ * - Renderer: DashboardGrid (WidgetId: money, legacy alias: wealth)
+ * - Types: src/types/money.ts
+ * - Domain helpers/migration: src/components/widgets/money/moneyUtils.ts
+ * - Persistence: useLocalStorage / glassday.money
+ * - Floating shell: src/components/common/FloatingWindow.tsx
+ * - Style: src/styles/widgets/money.css + theme/responsive overrides
+ *
+ * Data relation:
+ * - Wishlist Purchased action은 MoneyTransaction을 생성하고 transactionId/wishlistItemId로
+ *   두 record를 연결한다. chart/total/list는 같은 transactions 배열에서 파생된다.
+ *
+ * Figma 구조:
+ * - Compact Widget: Summary, Budget, Donut, Recent List
+ * - Detail: Section Tabs + Overview/Spending/Wishlist/Recurring Variant
+ * - Overlay states: Wishlist Detail, Purchase Dialog, Add forms
+ * ============================================================
+ */
 import { useMemo, useState } from "react";
 import type { CSSProperties, FormEvent } from "react";
 import {
@@ -61,9 +88,8 @@ import {
   wishlistViews,
 } from "./money/moneyUtils";
 
-/* Draft types are UI-only state.
-   They intentionally keep numeric fields as strings so empty inputs stay empty
-   while the user is typing; conversion happens only inside submit handlers. */
+/* Form Draft는 UI-only state다. 빈 number input을 유지하기 위해 문자열로 편집하고
+   submit handler에서만 domain number로 변환한다. */
 type ExpenseDraft = {
   name: string;
   amount: string;
@@ -429,6 +455,11 @@ const Stars = ({ value }: { value: number }) => (
   </span>
 );
 
+/**
+ * MoneyWidget
+ * 하나의 MoneyData Source of Truth를 compact Widget과 Floating Detail이 공유한다.
+ * section/filter/selected item/form draft는 일시적인 UI state이고 MoneyData만 저장된다.
+ */
 export const MoneyWidget = () => {
   const [detailOpen, setDetailOpen] = useState(false);
   const [section, setSection] = useState<MoneySection>("overview");
@@ -783,6 +814,7 @@ export const MoneyWidget = () => {
 
   return (
     <>
+      {/* Figma Component: Money Compact Widget / container 크기별 summary density Variant */}
       <GlassCard
         title="Money"
         subtitle={`${getMonthLabel(currentMonth)} · ${formatWon(totalSpent)} spent`}
@@ -812,6 +844,7 @@ export const MoneyWidget = () => {
         }
       >
         <div className="money-dashboard">
+          {/* Figma Frame: Monthly Summary + Budget usage */}
           <section className="money-summary-panel">
             <div className="money-summary-copy">
               <span>{getMonthLabel(currentMonth)}</span>
@@ -838,6 +871,7 @@ export const MoneyWidget = () => {
             </div>
           </section>
 
+          {/* Figma Frame: Category Visualization / Donut + Top Category */}
           <section className="money-visual-panel">
             <SpendingDonut
               items={categoryBreakdown}
@@ -852,6 +886,7 @@ export const MoneyWidget = () => {
             </div>
           </section>
 
+          {/* Scroll/List Frame: Recent Transaction Row instances */}
           <section className="money-recent-panel">
             <div className="money-panel-heading">
               <span>Recent spending</span>
@@ -865,6 +900,7 @@ export const MoneyWidget = () => {
         </div>
       </GlassCard>
 
+      {/* Figma Component: Money Detail Floating Window / 4 section Variants */}
       <FloatingWindow
         open={detailOpen}
         title="Money"
@@ -893,7 +929,9 @@ export const MoneyWidget = () => {
           ))}
         </datalist>
 
+        {/* Scroll Container: section navigation과 선택된 finance section content */}
         <div className="money-detail">
+          {/* Figma Component Set: Section Tab / Default · Selected */}
           <nav className="money-section-tabs" aria-label="Money sections">
             {(["overview", "spending", "wishlist", "recurring"] as MoneySection[]).map(
               (item) => (

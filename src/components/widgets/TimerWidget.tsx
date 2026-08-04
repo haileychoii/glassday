@@ -1,3 +1,25 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Pomodoro Timer Widget
+ * ============================================================
+ *
+ * 화면 역할:
+ * - Focus/Short Break/Long Break timer를 실행하고 완료 후 다음 session을 제안한다.
+ * - 같은 timer controller를 Grid Widget과 작은 Floating Window에서 공유한다.
+ *
+ * 연결:
+ * - Renderer: DashboardGrid (WidgetId: timer)
+ * - State/Persistence: src/components/widgets/timer/usePomodoroTimer.ts
+ * - Types/helpers: src/types/study.ts, studyUtils
+ * - Floating shell: src/components/common/FloatingWindow.tsx
+ * - Style: src/styles/widgets/timer.css + theme/responsive overrides
+ *
+ * Figma 구조:
+ * - Mode Segmented Control, Progress Clock, Primary Controls, Completion Prompt,
+ *   optional Session Settings
+ * - Variants: Focus / Break / Running / Paused / Complete / Compact / Floating
+ * ============================================================
+ */
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   Maximize2,
@@ -22,7 +44,9 @@ const progressRadius = 48;
 const progressCircumference = 2 * Math.PI * progressRadius;
 
 type TimerSurfaceProps = {
+  /** Widget와 Floating Window가 공유하는 Pomodoro state/action controller. */
   controller: ReturnType<typeof usePomodoroTimer>;
+  /** 작은 floating presentation에 필요한 class Variant를 켠다. */
   floating?: boolean;
 };
 
@@ -132,6 +156,7 @@ const TimerSurface = ({
         floating && "is-floating-mode"
       )}
     >
+      {/* Figma Frame: Primary Timer Surface / Mode + Clock + Actions */}
       <section className="timer-widget-main-card">
         <div className="timer-widget-mode-row">
           {(["focus", "short-break", "long-break"] as const).map((mode) => (
@@ -322,6 +347,7 @@ const TimerSurface = ({
         )}
       </section>
 
+      {/* Figma Variant: Expanded Session Length Settings */}
       {showSettings && (
         <section className="timer-widget-settings-card">
           <div className="timer-widget-settings-title">Session Lengths</div>
@@ -390,6 +416,7 @@ const TimerSurface = ({
   );
 };
 
+/** Grid와 Floating presentation이 동일한 usePomodoroTimer instance를 공유하는 host. */
 export const TimerWidget = () => {
   const [floatingOpen, setFloatingOpen] = useState(false);
   const timerController = usePomodoroTimer();
@@ -397,6 +424,7 @@ export const TimerWidget = () => {
 
   return (
     <>
+      {/* Figma Component: Timer Widget / compact responsive surface */}
       <GlassCard
         className="timer-widget"
         title="Timer"
@@ -420,6 +448,7 @@ export const TimerWidget = () => {
         <TimerSurface controller={timerController} />
       </GlassCard>
 
+      {/* Figma Component: Floating Timer / Always-on-top style compact Variant */}
       <FloatingWindow
         open={floatingOpen}
         onClose={() => setFloatingOpen(false)}
