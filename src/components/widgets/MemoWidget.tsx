@@ -1,3 +1,32 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Memo Widget + Memo Floating Window
+ * ============================================================
+ *
+ * 화면 역할:
+ * - rich text Memo를 작성하고 font, size, paper color, formatting, image/table을 편집한다.
+ * - 좁은 Widget에서는 Memo list를 popover로, 넓은 Widget에서는 inline side panel로 표시한다.
+ *
+ * 연결:
+ * - Renderer: src/components/grid/DashboardGrid.tsx (WidgetId: memo)
+ * - Persistence: useLocalStorage / glassday.memo.notes.v2 및 selection/list/width key
+ * - Fonts/Themes: src/constants/fonts.ts, src/constants/themes.ts
+ * - Image pipeline: src/lib/localImage.ts
+ * - Cross-widget navigation: src/constants/widgetNavigation.ts
+ * - Floating shell: src/components/common/FloatingWindow.tsx
+ * - Style: src/styles/widgets/memo.css + theme/responsive overrides
+ *
+ * Figma 구조:
+ * - Widget: Header Actions, optional Memo List, Workspace(Title/Toolbar/Editor)
+ * - Floating Window: resizable List Side Panel + Workspace + paper palette
+ * - Overlay Components: Save Dialog, Table Context Menu, Compact List Popover
+ * - Variants: Read Only / Editing / List Hidden / List Popover / List Inline / Floating
+ *
+ * 반응형:
+ * - ResizeObserver가 Widget 자체 너비를 기준으로 inline list 여부를 결정한다.
+ * - 긴 내용은 memo-editor 내부에서 스크롤하며 Widget 밖으로 확장하지 않는다.
+ * ============================================================
+ */
 import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   ChangeEvent as ReactChangeEvent,
@@ -53,8 +82,11 @@ import { cn } from "../../lib/utils";
 import { FloatingWindow } from "../common/FloatingWindow";
 
 type MemoNote = {
+  /** List selection, TodayFocus pinned navigation, editor record를 연결하는 id. */
   id: string;
+  /** Memo List와 editor title의 Primary Text. */
   title: string;
+  /** contentEditable에서 생성된 rich text HTML. */
   html: string;
   fontFamily: string;
   fontSize: string;
@@ -387,6 +419,11 @@ const sortMemos = (notes: MemoNote[]) => {
   });
 };
 
+/**
+ * MemoWidget
+ * Grid surface와 Floating Window가 동일한 notes/selectedNote state를 공유한다.
+ * editor DOM은 contentEditable이므로 state 저장과 DOM selection formatting을 함께 관리한다.
+ */
 export const MemoWidget = () => {
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
   const [availableFontGroups, setAvailableFontGroups] =
@@ -1294,6 +1331,7 @@ export const MemoWidget = () => {
     </div>
   );
 
+  /* Figma Component: Memo List Panel / Floating · Inline · Popover presentation variant. */
   const renderNoteList = (windowMode = false, inlineMode = false) => (
     <div
       className={cn(
@@ -1416,6 +1454,7 @@ export const MemoWidget = () => {
     </div>
   );
 
+  /* Figma Frame: Memo Workspace / Title + Formatting Toolbar + Scrollable Editor. */
   const renderWorkspace = (
     ref: RefObject<HTMLDivElement | null>,
     windowMode = false
@@ -1501,6 +1540,7 @@ export const MemoWidget = () => {
     );
   };
 
+  /* Figma Component: Memo Floating Window / shared notes, independent list width/visibility. */
   const memoWindow = (
     <FloatingWindow
       open={memoWindowOpen}
@@ -1812,6 +1852,7 @@ export const MemoWidget = () => {
 
   return (
     <>
+      {/* Figma Component: Memo Widget / Grid container responsive variants */}
       <GlassCard
         className="memo-widget"
         title="Memo"
@@ -1883,6 +1924,7 @@ export const MemoWidget = () => {
           </div>
         }
       >
+        {/* Primary Content: optional List Panel + Memo Workspace */}
         <div
           ref={widgetAppRef}
           className={cn(

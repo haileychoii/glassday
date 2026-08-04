@@ -1,3 +1,29 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Career Widget + Career Detail Window
+ * ============================================================
+ *
+ * 화면 역할:
+ * - 지원 현황을 Summary, List, Board로 표시하고 선택한 지원 건을 Floating Detail에서 편집한다.
+ * - 지원 기간은 Calendar event와 양방향 연결되며 detail은 Calendar에서도 열 수 있다.
+ *
+ * 연결:
+ * - Renderer/Detail host: src/components/grid/DashboardGrid.tsx (WidgetId: career)
+ * - Source of Truth: src/context/DashboardDataContext.tsx
+ * - Types: src/types/dashboard.ts
+ * - Image pipeline: src/lib/localImage.ts
+ * - Style: src/styles/widgets/career.css + theme/responsive overrides
+ *
+ * Floating 구조:
+ * - 이 파일은 공통 FloatingWindow가 아니라 createPortal 기반의 Career 전용 movable/resizable
+ *   window를 사용한다. detailOnly는 현재 tab에 Career card가 없어도 이 portal을 유지한다.
+ *
+ * Figma 구조:
+ * - Widget: Header, Summary Grid, View/Status Filters, List 또는 Board
+ * - Detail Window: Title Bar, Scroll Body, Core/Calendar/Cover Letter/Notes sections
+ * - Variants: List / Board / Empty / Detail Open / detailOnly
+ * ============================================================
+ */
 import { createPortal } from "react-dom";
 import {
   BriefcaseBusiness,
@@ -48,8 +74,10 @@ type CareerViewMode = "list" | "board";
 type CareerImageField = "jobImages" | "noteImages";
 
 type CareerWidgetProps = {
-  /* Detail-only mode reuses the existing portal when the Career widget is not
-     present in the active workspace. Calendar 일정에서 연 상세창도 같은 UI다. */
+  /**
+   * Calendar에서 Career detail을 열었지만 현재 workspace에 Career Widget이 없을 때
+   * card UI는 숨기고 전용 portal host만 유지한다.
+   */
   detailOnly?: boolean;
 };
 
@@ -255,6 +283,11 @@ const formatApplicationWindow = (item: CareerItem) => {
   }`;
 };
 
+/**
+ * CareerWidget
+ * DashboardDataContext의 CareerItem을 편집한다. List/Board는 같은 record의 presentation
+ * variant이며 Floating Detail에서 저장한 변경은 Calendar projection에도 반영된다.
+ */
 export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
   const {
     careerApplications,
@@ -816,10 +849,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
   return (
     <>
-      {/* Shared widget-frame header classes keep icon/title/action alignment
-          consistent with GlassCard-based widgets for Figma handoff. */}
+      {/* Figma Component: Career Widget / detailOnly에서는 이 Grid surface를 렌더링하지 않는다. */}
       {!detailOnly && (
       <section className="glass-card widget-frame career-widget">
+        {/* Figma Frame: Widget Header / Horizontal Auto Layout / Space Between */}
         <div className="career-widget-header glass-card-header widget-card-header widget-frame__header">
           <div className="career-widget-title-wrap glass-card-title-group widget-card-title-group widget-frame__title-group">
             <div className="glass-icon-box glass-card-icon widget-card-icon widget-frame__icon">
@@ -846,6 +879,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
           </button>
         </div>
 
+        {/* Figma Frame: Pipeline Summary / Three-column responsive grid */}
         <div className="career-summary-grid">
           <div className="career-summary-card">
             <strong>{summary.preparing}</strong>
@@ -863,6 +897,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
           </div>
         </div>
 
+        {/* Figma Component Sets: View Toggle + Status Filter Chip variants */}
         <div className="career-filter-row">
           <div className="career-view-toggle">
             <button
@@ -896,6 +931,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
           ))}
         </div>
 
+        {/* Scroll Container: List View / Application Card instances */}
         <div className={viewMode === "board" ? "career-list career-list-hidden" : "career-list"}>
           {filteredItems.length === 0 ? (
             <div className="career-empty-box">
@@ -906,6 +942,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
           )}
         </div>
 
+        {/* Figma Variant: Board View / status columns share the same CareerItem records */}
         {viewMode === "board" && (
           <div className="career-board">
             {boardColumns.map((column) => (
@@ -929,6 +966,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
       </section>
       )}
 
+      {/* Figma Component: Career Detail Floating Window / Dashboard 위를 이동·resize 가능 */}
       {selectedItem &&
         typeof document !== "undefined" &&
         createPortal(
@@ -957,6 +995,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                 pointerEvents: "auto",
               }}
             >
+              {/* Floating Window Title Bar: drag handle + primary identity + window actions */}
               <div
                 className="career-floating-titlebar"
                 onPointerDown={startWindowMove}
@@ -1009,6 +1048,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                 </div>
               </div>
 
+              {/* Scroll Container: Detail sections만 scroll되고 Title Bar는 고정된다. */}
               <div
                 className="career-floating-body"
                 style={{
