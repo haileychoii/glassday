@@ -157,6 +157,20 @@ export const getGlassdayLocalUpdatedAt = () => {
   return window.localStorage.getItem(GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY);
 };
 
+/**
+ * Cloud Sync Marker
+ *
+ * Supabase row의 `updated_at`을 이 브라우저의 마지막 동기화 시각으로 기록한다.
+ * Widget data와 별도인 비교용 metadata이며 cloud snapshot에는 포함되지 않는다.
+ * 이 값이 정확해야 focus/visibility refresh에서 이미 적용한 remote snapshot을
+ * 반복해서 다시 적용하지 않는다.
+ */
+export const markGlassdayLocalSyncedAt = (syncedAt: string) => {
+  if (!isBrowser()) return;
+
+  window.localStorage.setItem(GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY, syncedAt);
+};
+
 export const getGlassdaySnapshotMeaningfulScore = (
   snapshot: GlassdayStorageSnapshot
 ) => {
@@ -209,7 +223,8 @@ export const createGlassdayStorageSnapshot = (): GlassdayStorageSnapshot => {
 };
 
 export const applyGlassdayStorageSnapshot = (
-  snapshot: GlassdayStorageSnapshot
+  snapshot: GlassdayStorageSnapshot,
+  syncedAt = snapshot.exportedAt
 ) => {
   const result = {
     skippedIncompatibleDashboardState: false,
@@ -237,10 +252,7 @@ export const applyGlassdayStorageSnapshot = (
     }
   });
 
-  window.localStorage.setItem(
-    GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY,
-    snapshot.exportedAt
-  );
+  markGlassdayLocalSyncedAt(syncedAt);
 
   emitGlassdayStorageChange({
     type: "bulk",

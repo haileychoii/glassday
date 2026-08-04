@@ -967,7 +967,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
                       <div>
                         <strong>Sync Now</strong>
-                        <span>Upload the latest dashboard snapshot</span>
+                        <span>Compare this device with the latest cloud save</span>
                       </div>
                     </button>
 

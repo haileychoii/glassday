@@ -43,9 +43,9 @@ import {
   createGlassdayStorageSnapshot,
   GLASSDAY_STORAGE_EVENT,
   getGlassdayLocalUpdatedAt,
-  getGlassdaySnapshotMeaningfulScore,
   getGlassdaySnapshotTimestamp,
   isCompatibleGlassdayStorageSnapshot,
+  markGlassdayLocalSyncedAt,
   patchLocalStorageEvents,
   type GlassdayStorageSnapshot,
 } from "../lib/glassdayStorage";
@@ -81,8 +81,7 @@ type CloudSyncContextValue = {
 };
 
 const STORAGE_TABLE = "user_storage_snapshots";
-const PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY =
-  "glassday.sync.preferLocalOnNextAuth.v1";
+const REMOTE_REFRESH_INTERVAL_MS = 30_000;
 const CloudSyncContext = createContext<CloudSyncContextValue | null>(null);
 
 /* OAuth 왕복 전 현재 Wide/Laptop mode를 URL과 임시 key에 보존한다. */
@@ -141,7 +140,11 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
 
   const suppressUploadRef = useRef(false);
   const syncTimeoutRef = useRef<number | null>(null);
-  const hasHydratedRemoteRef = useRef(false);
+  /* 한 user의 최초 hydrate와 background refresh가 겹치지 않도록 분리한다.
+     user id를 저장하면 TOKEN_REFRESHED 같은 반복 auth event가 remote 데이터를
+     매번 다시 적용하는 문제도 피할 수 있다. */
+  const hydratedUserIdRef = useRef<string | null>(null);
+  const syncInFlightRef = useRef(false);
 
   const setSyncState = useCallback(
     (status: SyncStatus, message?: string) => {
@@ -159,11 +162,12 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
     /* Snapshot에는 glassdayStorage가 허용한 사용자 데이터만 포함된다. */
     const snapshot = createGlassdayStorageSnapshot();
 
+    const updatedAt = new Date().toISOString();
     const { error } = await supabase.from(STORAGE_TABLE).upsert(
       {
         user_id: session.user.id,
         payload: snapshot,
-        updated_at: new Date().toISOString(),
+        updated_at: updatedAt,
       },
       {
         onConflict: "user_id",
@@ -176,111 +180,140 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    setLastSyncedAt(snapshot.exportedAt);
+    /* markGlassdayLocalSyncedAt도 storage event를 발생시키므로 이 동기 호출 동안
+       upload listener를 억제해 self-triggered upload loop를 막는다. */
+    suppressUploadRef.current = true;
+    markGlassdayLocalSyncedAt(updatedAt);
+    suppressUploadRef.current = false;
+    setLastSyncedAt(updatedAt);
     setSyncState("synced");
   }, [session, setSyncState]);
 
-  const hydrateFromRemote = useCallback(async () => {
-    if (!supabase || !session?.user || hasHydratedRemoteRef.current) return;
+  const synchronizeWithRemote = useCallback(
+    async (mode: "initial" | "refresh") => {
+      if (!supabase || !session?.user || syncInFlightRef.current) return;
 
-    hasHydratedRemoteRef.current = true;
-    setSyncState("syncing", "Loading your saved dashboard...");
+      const userId = session.user.id;
 
-    const { data, error } = await supabase
-      .from(STORAGE_TABLE)
-      .select("payload, updated_at")
-      .eq("user_id", session.user.id)
-      .maybeSingle();
+      if (mode === "initial" && hydratedUserIdRef.current === userId) {
+        return;
+      }
 
-    if (error) {
-      console.error(error);
-      setSyncState("error", error.message);
-      return;
-    }
+      syncInFlightRef.current = true;
 
-    if (data?.payload && isCompatibleGlassdayStorageSnapshot(data.payload)) {
-      /*
-       * Conflict rule:
-       * 인증 직전의 로컬 데이터가 더 새롭고 의미 있는 경우 cloud를 덮어쓴다.
-       * 그 외에는 remote snapshot을 적용하되 UI shell state는 유지한다.
-       */
-      const remoteSnapshot = data.payload as GlassdayStorageSnapshot;
-      const localSnapshot = createGlassdayStorageSnapshot();
-      const localUpdatedAt = getGlassdayLocalUpdatedAt();
-      const preferLocalAfterAuth =
-        window.localStorage.getItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY) ===
-        "true";
-      const remoteTimestamp =
-        getGlassdaySnapshotTimestamp(remoteSnapshot) ||
-        Date.parse(data.updated_at ?? "");
-      const localTimestamp = Date.parse(localUpdatedAt ?? "");
-      const localScore = getGlassdaySnapshotMeaningfulScore(localSnapshot);
-      const remoteScore = getGlassdaySnapshotMeaningfulScore(remoteSnapshot);
+      if (mode === "initial") {
+        setSyncState("syncing", "Loading your saved dashboard...");
+      }
 
-      if (
-        preferLocalAfterAuth &&
-        localScore > 0 &&
-        localTimestamp > 0 &&
-        localTimestamp >= remoteTimestamp &&
-        localScore >= remoteScore
-      ) {
-        window.localStorage.removeItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY);
-        setSyncState(
-          "syncing",
-          "Keeping this browser's newer dashboard and updating cloud save..."
-        );
+      try {
+        const { data, error } = await supabase
+          .from(STORAGE_TABLE)
+          .select("payload, updated_at")
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        if (error) {
+          console.error(error);
+          setSyncState("error", error.message);
+          return;
+        }
+
+        if (data?.payload && isCompatibleGlassdayStorageSnapshot(data.payload)) {
+          const remoteSnapshot = data.payload as GlassdayStorageSnapshot;
+          const remoteSyncedAt = data.updated_at ?? remoteSnapshot.exportedAt;
+          const remoteTimestamp = Math.max(
+            getGlassdaySnapshotTimestamp(remoteSnapshot),
+            Date.parse(remoteSyncedAt)
+          );
+          const localTimestamp = Date.parse(getGlassdayLocalUpdatedAt() ?? "");
+
+          /* Conflict Policy
+           * - 새 기기의 최초 로그인: remote snapshot이 Source of Truth다.
+           * - 로그인 이후 refresh: 더 최근 timestamp만 반대편으로 전달한다.
+           * 로그인 버튼을 누른 사실만으로 local 우선 플래그를 만들지 않으므로,
+           * 새 컴퓨터의 기본값이 기존 cloud 데이터를 덮어쓰지 않는다. */
+          const shouldApplyRemote =
+            mode === "initial" ||
+            !Number.isFinite(localTimestamp) ||
+            remoteTimestamp > localTimestamp;
+          const shouldUploadLocal =
+            mode === "refresh" &&
+            Number.isFinite(localTimestamp) &&
+            localTimestamp > remoteTimestamp;
+
+          if (shouldUploadLocal) {
+            setSyncState(
+              "syncing",
+              "Uploading newer changes from this device..."
+            );
+            await uploadSnapshot();
+            hydratedUserIdRef.current = userId;
+            return;
+          }
+
+          if (shouldApplyRemote) {
+            suppressUploadRef.current = true;
+            const applyResult = applyGlassdayStorageSnapshot(
+              remoteSnapshot,
+              remoteSyncedAt
+            );
+            setLastSyncedAt(remoteSyncedAt);
+
+            const releaseUploadSuppression = () => {
+              suppressUploadRef.current = false;
+            };
+
+            if (applyResult.skippedIncompatibleDashboardState) {
+              window.setTimeout(() => {
+                releaseUploadSuppression();
+                void uploadSnapshot();
+              }, 1200);
+
+              setSyncState(
+                "syncing",
+                "Loaded your saved data and kept the current dashboard layout."
+              );
+              hydratedUserIdRef.current = userId;
+              return;
+            }
+
+            window.setTimeout(releaseUploadSuppression, 1200);
+            setSyncState("synced", "Loaded newer dashboard data from cloud.");
+            hydratedUserIdRef.current = userId;
+            return;
+          }
+
+          setLastSyncedAt(remoteSyncedAt);
+          setSyncState("synced", "This device is up to date.");
+          hydratedUserIdRef.current = userId;
+          return;
+        }
+
+        if (data?.payload) {
+          setSyncState(
+            "syncing",
+            "Updating your cloud snapshot to the latest dashboard format..."
+          );
+        }
+
+        /* 첫 cloud row가 없거나 호환되지 않을 때만 현재 기기의 durable data로 생성한다. */
         await uploadSnapshot();
-        return;
+        hydratedUserIdRef.current = userId;
+      } finally {
+        syncInFlightRef.current = false;
       }
-
-      window.localStorage.removeItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY);
-
-      suppressUploadRef.current = true;
-      const applyResult = applyGlassdayStorageSnapshot(remoteSnapshot);
-      setLastSyncedAt(data.updated_at ?? null);
-
-      const releaseUploadSuppression = () => {
-        suppressUploadRef.current = false;
-      };
-
-      if (applyResult.skippedIncompatibleDashboardState) {
-        window.setTimeout(() => {
-          releaseUploadSuppression();
-          void uploadSnapshot();
-        }, 1200);
-
-        setSyncState(
-          "syncing",
-          "Loaded your saved data and kept the current dashboard layout."
-        );
-        return;
-      }
-
-      window.setTimeout(releaseUploadSuppression, 1200);
-
-      setSyncState("synced", "Loaded your saved dashboard.");
-      return;
-    }
-
-    if (data?.payload) {
-      setSyncState(
-        "syncing",
-        "Updating your cloud snapshot to the latest dashboard format..."
-      );
-    }
-
-    await uploadSnapshot();
-  }, [session, setSyncState, uploadSnapshot]);
+    },
+    [session, setSyncState, uploadSnapshot]
+  );
 
   const syncNow = useCallback(async () => {
-    await uploadSnapshot();
-  }, [uploadSnapshot]);
+    await synchronizeWithRemote("refresh");
+  }, [synchronizeWithRemote]);
 
   const signInWithGoogle = useCallback(async () => {
     if (!supabase) return;
 
     setSyncState("authenticating");
-    window.localStorage.setItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY, "true");
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -300,7 +333,6 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       if (!supabase) return;
 
       setSyncState("authenticating");
-      window.localStorage.setItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY, "true");
 
       const { error } = await supabase.auth.signInWithOtp({
         email,
@@ -325,7 +357,6 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       if (!supabase) return;
 
       setSyncState("authenticating");
-      window.localStorage.setItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY, "true");
 
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -348,7 +379,6 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       if (!supabase) return;
 
       setSyncState("authenticating");
-      window.localStorage.setItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY, "true");
 
       const { error } = await supabase.auth.signUp({
         email,
@@ -404,8 +434,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    hasHydratedRemoteRef.current = false;
-    window.localStorage.removeItem(PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY);
+    hydratedUserIdRef.current = null;
     setLastSyncedAt(null);
     setSyncState("idle");
   }, [setSyncState]);
@@ -430,7 +459,9 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      hasHydratedRemoteRef.current = false;
+      if (hydratedUserIdRef.current !== nextSession?.user.id) {
+        hydratedUserIdRef.current = null;
+      }
       setSession(nextSession);
 
       if (!nextSession) {
@@ -447,8 +478,39 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!session?.user || !supabase) return;
 
-    void hydrateFromRemote();
-  }, [hydrateFromRemote, session]);
+    void synchronizeWithRemote("initial");
+  }, [session, synchronizeWithRemote]);
+
+  useEffect(() => {
+    if (!session?.user || !supabase) return;
+
+    /* Cross-device Refresh
+       Realtime publication 설정에 의존하지 않고, 사용자가 다른 컴퓨터에서 돌아오거나
+       탭이 다시 보일 때 최신 row를 비교한다. 열린 상태에서도 30초마다 확인하되
+       실제 적용/업로드는 updated_at이 달라진 경우에만 수행한다. */
+    const refreshIfVisible = () => {
+      if (document.visibilityState === "visible") {
+        void synchronizeWithRemote("refresh");
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      refreshIfVisible();
+    };
+
+    window.addEventListener("focus", refreshIfVisible);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    const intervalId = window.setInterval(
+      refreshIfVisible,
+      REMOTE_REFRESH_INTERVAL_MS
+    );
+
+    return () => {
+      window.removeEventListener("focus", refreshIfVisible);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.clearInterval(intervalId);
+    };
+  }, [session, synchronizeWithRemote]);
 
   useEffect(() => {
     if (!session?.user || !supabase) return;
