@@ -41,14 +41,18 @@ export const HealthWidget = () => {
   };
 
   return (
+    /* Theme hook:
+       Keeps Health-specific surfaces selectable without coupling theme CSS
+       to Tailwind utility names. / 테마 CSS에서 의미 있는 이름으로 찾는다. */
     <GlassCard
       title="Health Progress"
       subtitle="Editable and saved locally."
       icon={<Activity className="w-4 h-4" />}
+      className="health-widget"
     >
       <div className="space-y-4">
         <div className="grid grid-cols-3 gap-2">
-          <label className="rounded-2xl bg-white/25 border border-white/40 p-3">
+          <label className="health-metric-card rounded-2xl bg-white/25 border border-white/40 p-3">
             <div className="text-[11px] text-muted-foreground mb-1">
               Start
             </div>
@@ -61,7 +65,7 @@ export const HealthWidget = () => {
             />
           </label>
 
-          <label className="rounded-2xl bg-white/25 border border-white/40 p-3">
+          <label className="health-metric-card rounded-2xl bg-white/25 border border-white/40 p-3">
             <div className="text-[11px] text-muted-foreground mb-1">
               Current
             </div>
@@ -74,7 +78,7 @@ export const HealthWidget = () => {
             />
           </label>
 
-          <label className="rounded-2xl bg-white/25 border border-white/40 p-3">
+          <label className="health-metric-card rounded-2xl bg-white/25 border border-white/40 p-3">
             <div className="text-[11px] text-muted-foreground mb-1">
               Goal
             </div>
@@ -94,7 +98,7 @@ export const HealthWidget = () => {
             <span className="tabular-nums">{Math.round(progress)}%</span>
           </div>
 
-          <div className="h-2 rounded-full bg-white/30 overflow-hidden">
+          <div className="health-progress-track h-2 rounded-full bg-white/30 overflow-hidden">
             <div
               className="h-full rounded-full progress-gradient transition-all duration-300"
               style={{ width: `${progress}%` }}
@@ -106,7 +110,7 @@ export const HealthWidget = () => {
           </div>
         </div>
 
-        <label className="block rounded-2xl bg-white/25 border border-white/40 p-3">
+        <label className="health-program-card block rounded-2xl bg-white/25 border border-white/40 p-3">
           <div className="text-[11px] text-muted-foreground mb-1">
             Program
           </div>

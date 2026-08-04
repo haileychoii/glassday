@@ -1227,6 +1227,124 @@ body.theme-glass-dark .calendar-sync-preview {
   color: rgba(239, 244, 255, 0.92) !important;
 }
 
+/* =========================================================
+   Dashboard widget interior normalization
+   ---------------------------------------------------------
+   Several widgets previously kept light-theme white overlays after Glass Dark
+   was selected. Large information groups use the shared dark panel recipe;
+   compact rows and controls use the slightly denser control recipe.
+   / 위젯 내부에 남아 있던 밝은 흰색 레이어만 다크 토큰으로 교체한다.
+     다른 테마와 의미 색상(활성 필터, 카테고리 표식)은 변경하지 않는다.
+========================================================= */
+html[data-theme="glass-dark"] :is(
+  .career-summary-card,
+  .money-summary-panel,
+  .money-budget-panel,
+  .money-visual-panel,
+  .money-recent-panel,
+  .money-detail-card
+),
+body[data-theme="glass-dark"] :is(
+  .career-summary-card,
+  .money-summary-panel,
+  .money-budget-panel,
+  .money-visual-panel,
+  .money-recent-panel,
+  .money-detail-card
+) {
+  background: var(--gd-dark-panel-bg) !important;
+  border-color: var(--gd-dark-panel-border) !important;
+  box-shadow: var(--gd-dark-panel-shadow) !important;
+}
+
+html[data-theme="glass-dark"] :is(
+  .career-icon-button,
+  .career-filter-pill:not(.is-active),
+  .career-status-pill,
+  .career-dday-pill.none,
+  .career-delete-button,
+  .today-focus-mini-item,
+  .today-focus-career-item,
+  .today-focus-memo,
+  .alert-center-icon,
+  .calendar-sync-button,
+  .timer-widget-mode-button:not(.is-active),
+  .timer-widget-secondary,
+  .money-budget-mini,
+  .money-donut-center,
+  .money-transaction-row,
+  .health-metric-card,
+  .health-program-card
+),
+body[data-theme="glass-dark"] :is(
+  .career-icon-button,
+  .career-filter-pill:not(.is-active),
+  .career-status-pill,
+  .career-dday-pill.none,
+  .career-delete-button,
+  .today-focus-mini-item,
+  .today-focus-career-item,
+  .today-focus-memo,
+  .alert-center-icon,
+  .calendar-sync-button,
+  .timer-widget-mode-button:not(.is-active),
+  .timer-widget-secondary,
+  .money-budget-mini,
+  .money-donut-center,
+  .money-transaction-row,
+  .health-metric-card,
+  .health-program-card
+) {
+  background: var(--gd-dark-control-bg) !important;
+  border-color: var(--gd-dark-control-border) !important;
+}
+
+html[data-theme="glass-dark"] :is(.money-budget-track, .health-progress-track),
+body[data-theme="glass-dark"] :is(.money-budget-track, .health-progress-track) {
+  background: rgba(7, 11, 22, 0.48) !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.24);
+}
+
+html[data-theme="glass-dark"] :is(
+  .career-summary-card strong,
+  .money-summary-copy strong,
+  .money-budget-mini strong,
+  .money-top-category strong,
+  .money-transaction-copy strong,
+  .money-transaction-side > strong
+),
+body[data-theme="glass-dark"] :is(
+  .career-summary-card strong,
+  .money-summary-copy strong,
+  .money-budget-mini strong,
+  .money-top-category strong,
+  .money-transaction-copy strong,
+  .money-transaction-side > strong
+) {
+  color: rgba(244, 247, 255, 0.96) !important;
+}
+
+html[data-theme="glass-dark"] :is(
+  .career-summary-card span,
+  .career-filter-pill:not(.is-active),
+  .money-summary-copy span,
+  .money-summary-copy em,
+  .money-panel-heading span,
+  .money-top-category span,
+  .money-transaction-copy span
+),
+body[data-theme="glass-dark"] :is(
+  .career-summary-card span,
+  .career-filter-pill:not(.is-active),
+  .money-summary-copy span,
+  .money-summary-copy em,
+  .money-panel-heading span,
+  .money-top-category span,
+  .money-transaction-copy span
+) {
+  color: rgba(197, 208, 236, 0.8) !important;
+}
+
 html[data-theme="glass-dark"],
 body[data-theme="glass-dark"],
 html.theme-glass-dark,
