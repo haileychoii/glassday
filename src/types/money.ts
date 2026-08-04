@@ -1,8 +1,22 @@
-/* Money domain types.
-   These types describe the single Money storage object saved under
-   localStorage key "glassday.money". Keeping transaction/wishlist/recurring
-   together makes Supabase snapshot sync treat Money as one app memory while
-   still keeping each record type explicit. */
+/**
+ * ============================================================
+ * [Domain Types] Money / Personal Finance
+ * ============================================================
+ *
+ * Consumer: src/components/widgets/MoneyWidget.tsx 및 moneyUtils
+ * Source of Truth: MoneyWidget의 useLocalStorage state
+ * Persistence: glassday.money (Transaction/Wishlist/Recurring 한 snapshot)
+ *
+ * Figma Mapping:
+ * - MoneyTransaction = Spending Row
+ * - MoneyWishlistItem = Wishlist Card + Detail Window
+ * - MoneyRecurringExpense = Recurring Row
+ * - MoneySection/View union = Segmented Control 및 Filter Chip Variant
+ * - MoneyBreakdownItem = Donut Legend / Store Bar row의 view model
+ *
+ * Wishlist Purchased action은 transactionId/wishlistItemId로 두 record를 연결한다.
+ * ============================================================
+ */
 
 export type MoneyCategory =
   | "Food"
@@ -40,6 +54,7 @@ export type MoneySpendingView =
 export type MoneyWishlistView = "All" | "★★★★★" | "Recent" | "Purchased";
 
 export type MoneyTransaction = {
+  /** Spending list, chart 합계, Wishlist purchase 연결의 record id. */
   id: string;
   name: string;
   amount: number;
@@ -70,6 +85,7 @@ export type MoneyWishlistItem = {
   addedAt: string;
   purchasedAt?: string;
   purchasedPrice?: number;
+  /** 구매 완료 시 자동 생성된 MoneyTransaction과 연결한다. */
   transactionId?: string;
 };
 

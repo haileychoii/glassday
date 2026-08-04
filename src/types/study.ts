@@ -1,6 +1,25 @@
-/* 10-minute planner domain
-   These six IDs are the durable values stored in each timeline block. Keep
-   them stable when labels or colors change. / 라벨·색상을 바꿔도 ID는 유지합니다. */
+/**
+ * ============================================================
+ * [Domain Types] Study 10-minute Planner + Pomodoro
+ * ============================================================
+ *
+ * Consumers:
+ * - src/components/widgets/StudyWidget.tsx 및 study/*
+ * - src/components/widgets/TimerWidget.tsx, usePomodoroTimer.ts
+ *
+ * Persistence:
+ * - glassday.study.planner.v2가 날짜별 timeline/task/note/goal을 저장한다.
+ * - legacy types는 v1 record/task migration을 위해 유지한다.
+ *
+ * Figma Mapping:
+ * - StudyPlannerSubject = Subject Chip/Timeline Cell Variant
+ * - StudyDayData = 날짜별 Planner Content Frame state
+ * - StudyActiveTimer = Running Timer Variant
+ * - StudyPlannerTask = Todo Row Component
+ *
+ * subject id는 timeline block에 저장되는 durable value이므로 label/color를 바꿔도 유지한다.
+ * ============================================================
+ */
 export type StudyPlannerSubjectId =
   | "economics"
   | "ncs"
@@ -34,6 +53,7 @@ export type StudyLegacyRecordSummary = {
 };
 
 export type StudyDayData = {
+  /** 10분 slot key -> subject id. 칠한 Timeline Cell의 실제 저장값이다. */
   blocks: Record<string, StudyPlannerSubjectId>;
   tasks: StudyPlannerTask[];
   note: string;

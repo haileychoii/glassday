@@ -1,3 +1,20 @@
+/**
+ * ============================================================
+ * [Domain Types] Active Daily Journal Model
+ * ============================================================
+ *
+ * Consumer: src/components/widgets/DailyJournalWidget.tsx 및 journalUtils
+ * Persistence: glassday.journal.entries.v1
+ *
+ * Figma Mapping:
+ * - JournalEntry = 날짜별 Journal Screen state
+ * - todayTasks/tomorrowTasks = Task Row Component list
+ * - energy/focus/sleepy/stress = Condition Stepper Variant
+ * - clips = Saved Clip Row list
+ *
+ * 날짜를 바꾸면 이 model 한 record 전체가 교체되어 Summary와 section이 함께 갱신된다.
+ * ============================================================
+ */
 export type JournalMood =
   | "great"
   | "good"
@@ -7,8 +24,11 @@ export type JournalMood =
   | "low";
 
 export type JournalTask = {
+  /** Task Row key. */
   id: string;
+  /** Task Row의 editable label. */
   text: string;
+  /** Checkbox 및 Completed visual state. */
   done: boolean;
 };
 

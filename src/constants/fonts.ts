@@ -1,3 +1,24 @@
+/**
+ * ============================================================
+ * [Typography Registry] Interface + Memo Font Options
+ * ============================================================
+ *
+ * 화면 연결:
+ * - Settings: src/components/settings/SettingsModal.tsx
+ * - Memo editor: src/components/widgets/MemoWidget.tsx
+ * - Font faces: src/styles/fonts.css 및 public/fonts
+ *
+ * 저장:
+ * - APP_FONT_STORAGE_KEY는 Dashboard interface 전체의 font 선택이다.
+ * - MEMO_DEFAULT_FONT_STORAGE_KEY는 새 Memo의 기본 editor font다.
+ * - CUSTOM_WEB_FONTS_STORAGE_KEY는 사용자가 추가한 web font metadata다.
+ *
+ * Figma Mapping:
+ * - FontGroup = Settings Select의 option group
+ * - FontOption = Typography style 후보
+ * - Memo 본문 font는 Theme font와 독립적인 per-note property가 될 수 있다.
+ * ============================================================
+ */
 export type FontOption = {
   label: string;
   value: string;
@@ -16,8 +37,11 @@ export type CustomFontSourceType =
   | "otf";
 
 export type CustomFontEntry = {
+  /** 저장/삭제 시 사용하는 custom font record id. */
   id: string;
+  /** Settings 목록에 보이는 사용자용 이름. */
   label: string;
+  /** CSS font-family에 전달되는 실제 family name. */
   family: string;
   sourceUrl: string;
   sourceType: CustomFontSourceType;

@@ -1,3 +1,24 @@
+/**
+ * ============================================================
+ * [Domain Types] Calendar + Career Shared Data
+ * ============================================================
+ *
+ * Consumers:
+ * - src/context/DashboardDataContext.tsx
+ * - CalendarWidget 및 calendar/* subcomponents
+ * - CareerWidget 및 career/* subcomponents
+ * - TodayFocusWidget
+ *
+ * Source of Truth / Persistence:
+ * - DashboardDataContext
+ * - glassday.calendar.events.v1, glassday.career.applications.v2
+ *
+ * Figma Mapping:
+ * - CalendarEvent = Event Card / Event Detail Form
+ * - CareerItem = Application Card / Board Card / Career Detail Window
+ * - status union = Badge, Chip, Select의 Variant 이름
+ * ============================================================
+ */
 export type CalendarView = "day" | "week" | "month";
 
 export type GoogleSyncStatus = "not_synced" | "pending" | "synced" | "error";
@@ -5,7 +26,9 @@ export type GoogleSyncStatus = "not_synced" | "pending" | "synced" | "error";
 export type CalendarEventSource = "manual" | "career" | "study" | "system";
 
 export type CalendarEvent = {
+  /** Calendar list key이며 event color fallback 계산에도 사용되는 안정적인 id. */
   id: string;
+  /** Event Card의 Primary Text. */
   title: string;
   startDate: string;
   startTime: string;
@@ -13,7 +36,9 @@ export type CalendarEvent = {
   endTime: string;
   location: string;
   notes: string;
+  /** manual/career 등 생성 경로를 구분하며 detail interaction을 결정한다. */
   source: CalendarEventSource;
+  /** 원본 Career record와 Calendar projection을 연결하는 id. */
   sourceId?: string;
   careerApplicationId?: string;
   color?: string;
@@ -79,9 +104,12 @@ export type CareerImageAttachment = {
 };
 
 export type CareerItem = {
+  /** Application Card, Calendar event, Floating Detail을 연결하는 record id. */
   id: string;
+  /** Card의 Primary/Secondary Text. */
   company: string;
   role: string;
+  /** List filter, Board column, Status Badge Variant에 함께 사용된다. */
   status: CareerStatus;
   priority?: CareerPriority;
   starred?: boolean;

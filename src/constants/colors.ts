@@ -1,3 +1,21 @@
+/**
+ * ============================================================
+ * [Color Registry] Calendar Event Palette
+ * ============================================================
+ *
+ * 화면 연결:
+ * - src/components/widgets/calendar/EventColorPicker.tsx
+ * - src/context/DashboardDataContext.tsx의 Calendar/Career 기본 색상
+ *
+ * Figma Mapping:
+ * - PastelEventColor = Event Color Swatch Component
+ * - Calendar Event Card와 Career Calendar badge가 같은 value를 공유한다.
+ *
+ * 주의:
+ * - 이 값은 Calendar 데이터에 저장될 수 있다. Theme token이 아니라
+ *   사용자 event data에 포함되는 palette다.
+ * ============================================================
+ */
 export type PastelEventColor = {
   name: string;
   value: string;

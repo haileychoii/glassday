@@ -1,3 +1,26 @@
+/**
+ * ============================================================
+ * [Theme Registry] Available Theme Variants + DOM Application
+ * ============================================================
+ *
+ * 화면 연결:
+ * - Theme chooser: src/components/settings/SettingsModal.tsx
+ * - Root application: src/App.tsx 및 applyTheme 호출부
+ * - CSS definitions: src/styles/themes/*.css
+ *
+ * 실제 Theme Variant:
+ * - pastel, glass-light, glass-dark, aurora, mac-core, pixel-desk, retro
+ *
+ * 적용 방식:
+ * - html/body에 theme-{id} class와 data-theme={id}를 함께 적용한다.
+ * - Widget CSS는 공통 token을 사용하고 Theme CSS/override가 값을 교체한다.
+ * - glassday-theme-change event는 같은 탭의 theme consumer를 갱신한다.
+ *
+ * 수정 영향:
+ * - ThemeId를 추가하면 option, CSS import, preview, theme-specific override를
+ *   모두 함께 확인해야 한다.
+ * ============================================================
+ */
 export type ThemeId =
   | "pastel"
   | "glass-light"
@@ -8,8 +31,11 @@ export type ThemeId =
   | "retro";
 
 export type ThemeOption = {
+  /** DOM class/data-theme 및 CSS selector와 일치하는 안정적인 theme key. */
   id: ThemeId;
+  /** Settings의 Theme Card Primary Text. */
   label: string;
+  /** Settings의 Theme Card Secondary Text. */
   description: string;
 };
 
@@ -53,6 +79,7 @@ export const themeOptions: ThemeOption[] = [
   },
 ];
 
+/* 현재 Topbar selector는 숨겨져 있으나 이전 연결 호환을 위해 유지하는 option subset. */
 export const topbarThemeOptions = themeOptions.filter(
   (theme) => theme.id !== "retro"
 );
@@ -94,8 +121,8 @@ export const applyTheme = (theme: ThemeId) => {
   root.classList.add(`theme-${theme}`);
   body.classList.add(`theme-${theme}`);
 
-  /* Aurora reuses the existing glass-dark widget-level dark styling as a
-     compatibility layer, then overrides the surface palette in aurora.css. */
+  /* Aurora는 glass-dark의 Widget-level dark selector를 compatibility layer로
+     재사용하고 src/styles/themes/aurora.css에서 surface palette를 덮어쓴다. */
   if (theme === "aurora") {
     root.classList.add("theme-glass-dark");
     body.classList.add("theme-glass-dark");

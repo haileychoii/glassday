@@ -1,3 +1,22 @@
+/**
+ * ============================================================
+ * [Study Registry] Timeline Scale + Subject Variants
+ * ============================================================
+ *
+ * 화면 연결:
+ * - src/components/widgets/StudyWidget.tsx
+ * - src/components/widgets/study/studyUtils.ts
+ * - Types: src/types/study.ts
+ *
+ * Figma Mapping:
+ * - STUDY_PLANNER_SUBJECTS = Subject Chip/Timeline Cell Variant set
+ * - 06:00~24:00을 10분 단위 slot으로 나눈 Timeline Grid의 기준이다.
+ *
+ * 저장 영향:
+ * - subject id가 각 날짜 block에 직접 저장되므로 label/color는 바꿀 수 있지만
+ *   id는 migration 없이 변경하지 않는다.
+ * ============================================================
+ */
 import type {
   StudyPlannerSubject,
   StudyPlannerSubjectId,
