@@ -181,6 +181,22 @@ textarea {
     inset 0 1px 0 hsl(0 0% 100% / 0.9);
 }
 
+/* Keyboard Focus
+   Hover 색만으로는 keyboard 사용자가 현재 control을 찾을 수 없다.
+   Theme의 --ring token을 사용하므로 새 색상 체계를 만들지 않고 모든 현재
+   Button/Input/Chip Variant에 동일한 탐색 기준을 제공한다. */
+:where(button, input, select, textarea):focus-visible {
+  outline: 2px solid hsl(var(--ring) / 0.78);
+  outline-offset: 2px;
+}
+
+/* Widget header의 icon action은 glyph가 작더라도 안정적인 touch target을 가진다.
+   Pixel/Retro 테마의 사각형 표현은 각 theme override가 그대로 결정한다. */
+.widget-frame__actions > :where(button, .glass-button, .icon-button) {
+  min-width: 34px;
+  min-height: 34px;
+}
+
 /* =========================================================
    4. Mobile theme select
    Hidden on desktop and revealed by responsive rules

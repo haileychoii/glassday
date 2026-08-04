@@ -818,10 +818,11 @@ body,
 
   .glass-card > .widget-frame__header > .glass-card-actions,
   .glass-card > .widget-frame__header > .widget-frame__actions {
-    width: 100%;
+    width: auto;
+    min-width: max-content;
     display: flex;
     justify-content: flex-end;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: var(--gd-space-xs);
   }
 
@@ -836,9 +837,9 @@ body,
     color: hsl(var(--foreground) / 0.92);
     font-size: 13px;
     line-height: 1.22;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .glass-card > .widget-frame__header p {
@@ -902,35 +903,41 @@ body,
 
 @container gd-widget (max-width: 620px) {
   .glass-card > .widget-frame__header {
-    align-items: flex-start !important;
-    gap: 10px !important;
-    padding: 16px 14px 10px !important;
+    align-items: center;
+    gap: var(--gd-widget-header-gap);
+    padding:
+      var(--gd-widget-header-pad-top)
+      var(--gd-widget-pad-x)
+      var(--gd-widget-header-pad-bottom);
   }
 
   /* Keep header sizing semantic:
      the title block should be targeted by its shared frame class rather than
      by child order, so widget markup stays readable and easier to mirror in Figma. */
   .glass-card > .widget-frame__header > .widget-frame__title-group {
-    min-width: 0 !important;
-    flex: 1 1 auto !important;
+    min-width: 0;
+    flex: 1 1 auto;
   }
 
   .glass-card > .widget-frame__header > .widget-frame__actions,
   .glass-card > .widget-frame__header > .glass-card-actions {
-    align-self: flex-start !important;
+    width: auto;
+    min-width: max-content;
+    align-self: center;
+    flex-wrap: nowrap;
   }
 
   .glass-card > .widget-frame__header h3 {
-    color: hsl(var(--foreground) / 0.92) !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    font-size: 13px !important;
-    line-height: 1.1 !important;
+    color: hsl(var(--foreground) / 0.92);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    line-height: 1.15;
   }
 
   .glass-card > .widget-frame__header p {
-    color: hsl(var(--muted-foreground) / 0.8) !important;
+    color: hsl(var(--muted-foreground) / 0.8);
   }
 }
 
@@ -1120,7 +1127,7 @@ body,
 
   .glass-card > .widget-frame__header > .widget-frame__actions,
   .glass-card > .widget-frame__header > .glass-card-actions {
-    flex-wrap: wrap !important;
+    flex-wrap: nowrap !important;
     gap: 6px !important;
   }
 }
