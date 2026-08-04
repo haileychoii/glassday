@@ -1,3 +1,11 @@
+/* ============================================================
+   [Figma Mapping] Alert Center Widget
+   TSX: src/components/widgets/AlertCenterWidget.tsx
+   Root: .alert-center-widget (공통 Widget Frame은 base.css)
+   Frames: Scrollable Alert List -> Alert Row -> Icon/Content/Severity.
+   Variants: .tone-danger/.tone-warning/.tone-info/.tone-success.
+   색상은 semantic tone과 active Theme override의 조합으로 결정된다.
+   ============================================================ */
 /* =========================================================
    ALERT CENTER
    Widget-local styles for:

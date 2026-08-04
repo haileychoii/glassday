@@ -1,3 +1,15 @@
+/* ============================================================
+   [Theme Variant] Glass Dark
+   Registry ID: glass-dark / selectors: data-theme="glass-dark", .theme-glass-dark
+   Switcher: src/constants/themes.ts + SettingsModal.tsx
+   Figma variables: dark transparent shell, darker inner cards, light text, muted holographic accent.
+
+   실제 파일 상태:
+   - 앞부분에는 Glass Light compatibility selector가 함께 남아 있다.
+   - line 후반의 glass-dark selector가 Dark token/surface를 선언한다.
+   import 순서상 glass-light.css 뒤에 오므로 두 theme selector의 영향 범위를 수정할 때 주의한다.
+   UI 정리 작업에서는 구조 값이 아니라 theme material만 이 파일에서 변경한다.
+   ============================================================ */
 /* =========================================================
    Theme: Glass Light
    visual only — layout 건드리지 않음

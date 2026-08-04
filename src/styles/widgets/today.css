@@ -1,3 +1,10 @@
+/* ============================================================
+   [Figma Mapping] Standalone Today Task Styles + Legacy Today Mini
+   Active TSX reference: TodayTasksWidget.tsx (현재 DashboardGrid에는 미등록).
+   .today-mini-* selector는 현재 src/components에서 사용되지 않는 이전 summary style이다.
+   Frames: Completion Summary, Quick Add Form, Task Row List.
+   현재 Dashboard home summary는 TodayFocusWidget.tsx와 today-focus.css를 사용한다.
+   ============================================================ */
 /* =========================================================
    TODAY WIDGETS
    Widget-local styles for:

@@ -593,6 +593,13 @@ body.theme-retro .calendar-event-time {
   }
 }
 
+/* ============================================================
+   [Theme Variant] Retro 98
+   Registry ID: retro / selectors: data-theme="retro", .theme-retro
+   Figma mapping: Windows 95/98 beige surface, bevel border, navy title bar, square controls.
+   Pixel Desk와 별도 Theme이며 selector scope 밖의 다른 Theme에 영향을 주지 않아야 한다.
+   Glass blur를 사용하지 않고 공통 AppShell/Grid/Widget DOM 구조만 재사용한다.
+   ============================================================ */
 /* =========================================================
    Retro 98 final polish
    These overrides intentionally stay at the end of this file so the Retro

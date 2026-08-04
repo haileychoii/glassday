@@ -1,3 +1,11 @@
+/* ============================================================
+   [Figma Mapping] Study 10-minute Planner
+   TSX: StudyWidget.tsx, study/StudyDetailWindow.tsx
+   Frames: Summary, Date Bar, Subject/Timer Control, Timeline, Task/Memo Side Panel.
+   --study10-gap과 --study10-panel-pad가 planner Auto Layout의 우선 spacing token이다.
+   Widget/Detail은 같은 DOM 구조에 mode class만 달라지고 같은 Study data를 공유한다.
+   Timeline/side content는 container 크기에 따라 재배치되며 필요한 영역만 내부 scroll한다.
+   ============================================================ */
 /* =========================================================
    STUDY PLANNER WIDGET
 

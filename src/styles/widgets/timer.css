@@ -1,3 +1,11 @@
+/* ============================================================
+   [Figma Mapping] Pomodoro Timer Widget + Floating Timer
+   TSX: src/components/widgets/TimerWidget.tsx
+   Frames: Mode Toggle, Progress Clock, Action Row, Completion Prompt, Settings Card.
+   Variants: Focus/Break, Running/Paused, Settings Open, Floating, Compact.
+   timer-widget container query가 작은 크기에서 불필요한 panel을 재배치한다.
+   Progress/accent color는 active Theme semantic token을 사용한다.
+   ============================================================ */
 /* =========================================================
    TIMER — FULL REPLACEMENT
    - large centered timer ring

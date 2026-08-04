@@ -1,3 +1,11 @@
+/* ============================================================
+   [Theme Variant] Pixel Desk
+   Registry ID: pixel-desk / selectors: data-theme="pixel-desk", .theme-pixel-desk
+   Parent decor: src/components/layout/PixelDesktopDecor.tsx
+   Figma mapping: square OS window, pixel/bevel controls, navy active title bar, desktop icon layer.
+   다른 Theme와 분리된 selector scope 안에서 radius/shadow/control appearance를 교체한다.
+   Widget data/interaction과 Grid layout 값은 공유한다.
+   ============================================================ */
 /* ================================
    Theme: Pixel Desk
    Retro 90s OS Desktop

@@ -1,3 +1,11 @@
+/* ============================================================
+   [Figma Mapping] Settings Floating Window Surface
+   TSX: src/components/settings/SettingsModal.tsx
+   Structural size/section grid는 layout.css, portal layer는 overlays.css와 연결된다.
+   이 파일은 backdrop/window surface, Theme Card, action/sync/auth state를 보완한다.
+   Frames: Fixed Title Bar + Scroll Body + repeated Settings Card.
+   Theme별 Settings 가독성은 각 themes/*.css의 settings selector가 마지막으로 조정한다.
+   ============================================================ */
 /* =========================================================
    SETTINGS MODAL
    Widget-local styles for:

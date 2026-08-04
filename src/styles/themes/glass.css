@@ -1,3 +1,10 @@
+/* ============================================================
+   [Inactive Legacy Theme] Glass
+   이 파일은 src/styles/index.css에서 import되지 않고 ThemeId registry에도 "glass"가 없다.
+   getCurrentTheme()은 과거 저장값 "glass"를 활성 glass-light로 migration한다.
+   따라서 현재 Figma Theme Variant에는 포함하지 않고 이전 image-based glass 실험으로만 본다.
+   활성 Glass Light/Dark 수정은 glass-light.css와 glass-dark.css를 사용한다.
+   ============================================================ */
 /* =========================================================
    Theme: Glass
    Soft image-based glassmorphism

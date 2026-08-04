@@ -2699,6 +2699,15 @@ body.theme-pixel-desk .career-cover-status-select option {
   }
 }
 
+/* ============================================================
+   [Figma Mapping] Calendar Widget + Event Floating Window
+   TSX: CalendarWidget.tsx, calendar/MonthCalendar.tsx, WeekTimeline.tsx,
+        EventColorPicker.tsx
+   Frames: Date Toolbar, View Toggle, Day List/Week Timeline/Month Grid, Sync Footer.
+   Floating: .calendar-floating-window -> Title Bar -> .calendar-modal-body Scroll Container.
+   Responsive: Calendar root/container 크기에 따라 day cell과 week column을 재배치한다.
+   Event color는 theme token이 아니라 CalendarEvent.color data에서 온다.
+   ============================================================ */
 /* =========================================================
    Calendar responsive stabilization
    This final block owns only the sizing-sensitive pieces:

@@ -1,3 +1,11 @@
+/* ============================================================
+   [Figma Mapping] Mood Widget
+   TSX: src/components/widgets/MoodWidget.tsx
+   Frame: Vertical Metric Row list.
+   Component Set: Metric Row / score 1..5 / Read Only · Editing.
+   container-name:mood-widget 기준으로 row density를 조절하며 body가 Scroll Container다.
+   metric별 dot accent와 Widget/row surface는 theme override와 함께 적용된다.
+   ============================================================ */
 /* =========================================================
    MOOD
    Widget-local styles for:

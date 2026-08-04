@@ -715,6 +715,14 @@
   }
 }
 
+/* ============================================================
+   [Figma Mapping] Daily Journal Widget
+   TSX: src/components/widgets/DailyJournalWidget.tsx
+   Frames: Date Nav, Summary/Condition Grid, .journal-main-scroll, Journal Sections.
+   --journal-body-pad-x는 좌우 body inset을 한곳에서 조절하는 Figma-facing token이다.
+   Summary는 fixed 영역이고 긴 task/text/clip section만 내부 scroll한다.
+   Inner surface 색상은 theme-surfaces.css semantic token을 우선 사용한다.
+   ============================================================ */
 /* =========================================================
    Final Daily Journal adaptive composition
    The journal summary should not simply stack into one column. The first three

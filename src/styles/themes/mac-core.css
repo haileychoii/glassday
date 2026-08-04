@@ -1,3 +1,11 @@
+/* ============================================================
+   [Theme Variant] Mac Core
+   Registry ID: mac-core / selectors: data-theme="mac-core", .theme-mac-core
+   Figma mapping: macOS utility window material, Cupertino controls, sidebar/topbar hierarchy.
+   Interface font는 Apple SD Gothic Neo/SF 계열 fallback을 사용하지만 Memo editor의
+   per-note fontFamily는 MemoWidget이 별도로 유지한다.
+   AppShell/Grid geometry는 layout 파일에 두고 이 파일은 material/type/control appearance를 담당한다.
+   ============================================================ */
 /* =========================================================
    MAC CORE THEME
    Purpose: make Glassday feel like a native macOS utility window.

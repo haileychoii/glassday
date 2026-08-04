@@ -1,3 +1,12 @@
+/* ============================================================
+   [Figma Mapping] Memo Widget + Memo Floating Window
+   TSX: src/components/widgets/MemoWidget.tsx
+   Frames: Header Actions, Memo List Panel, Workspace Title/Toolbar/Editor.
+   Variants: List Popover / Inline List / Hidden List / Window Mode / Editing.
+   Root는 container-type:size이며 Widget 자체 width/height로 presentation을 바꾼다.
+   .memo-editor가 rich text의 Scroll Container이고 paper color/font는 per-note data다.
+   Floating base는 overlays.css, theme surface는 themes/*.css와 함께 확인한다.
+   ============================================================ */
 /* =========================================================
    MEMO
    Unified memo stylesheet for:

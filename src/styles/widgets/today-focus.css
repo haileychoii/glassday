@@ -1,3 +1,11 @@
+/* ============================================================
+   [Figma Mapping] Today Focus + Lightweight Widget Guardrails
+   Primary TSX: src/components/widgets/TodayFocusWidget.tsx
+   Shared selectors: Alert/Calendar/Career/Study/Journal root의 최소 크기와 overflow safety.
+   Today Frames: Hero Summary, Top Tasks, linked Calendar/Career grid, Pinned Memo, Alert.
+   today-focus 전용 layout과 여러 lightweight Widget의 공통 root guard가 함께 있는 파일이다.
+   Theme material은 이 파일이 아니라 theme-surfaces.css/themes/*.css에서 결정한다.
+   ============================================================ */
 /* =========================================================
    TODAY FOCUS / ALERT / BASIC WIDGET CONTENT
    Shared structural guardrails for a few lightweight widgets.

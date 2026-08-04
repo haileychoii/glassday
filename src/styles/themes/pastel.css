@@ -1,3 +1,11 @@
+/* ============================================================
+   [Theme Variant] Pastel
+   Registry ID: pastel / Applied selector: .theme-pastel
+   Switcher: src/constants/themes.ts + SettingsModal.tsx
+   Figma variables: soft pink/lavender/sky surfaces, translucent borders, gentle shadow.
+   영향: AppShell, Sidebar, Topbar, Widget/Floating surfaces와 selected controls.
+   구조/spacing은 바꾸지 않고 base/layout/widget selector의 material을 덮어쓴다.
+   ============================================================ */
 /* Pastel / Glass / Pixel에서는 큰 Workspace Home 헤더 숨김 */
 :not(.theme-ios) .dashboard-tab-header,
 .theme-pastel .dashboard-tab-header,

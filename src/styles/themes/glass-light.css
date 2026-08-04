@@ -1,3 +1,11 @@
+/* ============================================================
+   [Theme Variant] Glass Light
+   Registry ID: glass-light / selectors: data-theme="glass-light", .theme-glass-light
+   Switcher: src/constants/themes.ts + SettingsModal.tsx
+   Figma variables: light transparent glass, holographic accent, readable inner surface.
+   desktop-transparent class에서는 Tauri wallpaper transparency를 위한 배경 규칙을 별도 적용한다.
+   layout geometry는 건드리지 않고 surface/blur/border/text contrast만 담당한다.
+   ============================================================ */
 /* =========================================================
    Theme: Glass Light
    visual only — layout 건드리지 않음

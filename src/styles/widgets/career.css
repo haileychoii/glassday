@@ -1300,6 +1300,15 @@
   min-height: 140px;
 }
 
+/* ============================================================
+   [Figma Mapping] Career Widget + Career Detail Portal
+   TSX: src/components/widgets/CareerWidget.tsx
+   Frames: Header, Summary Grid, Filter Chips, List/Board, Application Card.
+   Floating: .career-floating-layer/.career-floating-window 전용 portal 구조.
+   --career-layout-gap은 Widget section Auto Layout gap의 우선 조절 token이다.
+   공통 Widget header geometry는 base.css의 widget-frame token을 사용한다.
+   Theme surface는 themes/*.css와 theme-surfaces.css에서 결정된다.
+   ============================================================ */
 /* =========================================================
    Job detail photo gallery
    This compact gallery belongs to Application Core. One local gap token owns

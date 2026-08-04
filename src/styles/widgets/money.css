@@ -1,3 +1,12 @@
+/* ============================================================
+   [Figma Mapping] Money Widget + Finance Detail
+   TSX: src/components/widgets/MoneyWidget.tsx
+   Compact Frames: Summary, Budget, Donut, Recent Transactions.
+   Detail Variants: Overview / Spending / Wishlist / Recurring.
+   Repeated Components: .money-detail-card, Transaction Row, Wishlist Card, Form Field.
+   Money root/container query가 Widget density를 정하고 Floating body는 별도 Scroll Container다.
+   Category chart color는 moneyUtils data palette이며 Theme surface token과 구분한다.
+   ============================================================ */
 /* =========================================================
    MONEY WIDGET
    Personal finance surfaces for:

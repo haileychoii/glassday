@@ -1,3 +1,10 @@
+/* ============================================================
+   [Theme Variant] Aurora
+   Registry ID: aurora / selectors: data-theme="aurora", .theme-aurora
+   applyTheme()가 .theme-glass-dark compatibility class도 함께 붙여 dark Widget selector를 재사용한다.
+   이 파일은 그 위에 deeper aurora background/surface/accent를 덮어쓴다.
+   Figma에서는 Glass Dark와 구조가 같은 별도 Color/Effect Variable mode로 매핑한다.
+   ============================================================ */
 /* =========================================================
    AURORA THEME
    Dark holographic glass with deeper aurora color shift.
