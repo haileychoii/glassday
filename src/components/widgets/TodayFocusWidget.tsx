@@ -1,3 +1,22 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Today Focus Widget
+ * ============================================================
+ *
+ * 화면 역할: 오늘의 할 일, 일정, Career deadline, pinned Memo를 한곳에 요약한다.
+ * 요약 항목을 선택하면 원본 Calendar/Career/Memo Widget과 detail로 이동한다.
+ *
+ * 연결:
+ * - Renderer: src/components/grid/DashboardGrid.tsx (WidgetId: today)
+ * - Shared Context: src/context/DashboardDataContext.tsx
+ * - Local tasks: useLocalStorage / glassday.todayFocus.tasks.v1
+ * - Cross-widget action: src/constants/widgetNavigation.ts
+ * - Style: src/styles/widgets/today-focus.css, responsive.css, theme overrides
+ *
+ * Figma 구조: Hero Summary, Top Tasks, Linked Mini Lists, Pinned Memo, Alert State
+ * Variants: Default / Empty / Has Urgent Item / Compact
+ * ============================================================
+ */
 import { useMemo } from "react";
 import {
   AlertCircle,
@@ -118,6 +137,7 @@ const readPinnedMemos = (): MemoNotePreview[] => {
 /* Today Focus is a cross-widget summary surface.
    Each block here should either summarize local state or deep-link the user
    into the owning widget (calendar, career, memo). */
+/** 자체 task와 다른 Widget의 공유 데이터를 함께 조합하는 Dashboard summary component. */
 export const TodayFocusWidget = () => {
   const { calendarEvents, careerApplications, openCareerDetail } =
     useDashboardData();
@@ -222,6 +242,7 @@ export const TodayFocusWidget = () => {
       }
     >
       <div className="today-focus">
+        {/* Figma Frame: Hero Summary / Horizontal Auto Layout / Space Between */}
         <section className="today-focus-hero">
           <div>
             <div className="today-focus-kicker">Today</div>
@@ -237,6 +258,7 @@ export const TodayFocusWidget = () => {
           </div>
         </section>
 
+        {/* Figma Frame: Top Tasks / Vertical Auto Layout / Editable Task Row list */}
         <section className="today-focus-section">
           <div className="today-focus-section-title">
             <Check className="w-3.5 h-3.5" />
@@ -288,6 +310,7 @@ export const TodayFocusWidget = () => {
           </div>
         </section>
 
+        {/* Figma Frame: Linked Summaries / Responsive Grid / Calendar + Career */}
         <div className="today-focus-grid">
           <section className="today-focus-section">
             <div className="today-focus-section-title">

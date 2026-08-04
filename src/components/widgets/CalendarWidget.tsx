@@ -1,3 +1,22 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Calendar Widget
+ * ============================================================
+ *
+ * 화면 역할: Day/Week/Month 일정 보기와 Calendar Event 편집 Floating Window를 제공한다.
+ * Career 일정은 DashboardDataContext를 통해 Career detail과 양방향 연결된다.
+ *
+ * 연결:
+ * - Renderer: DashboardGrid (WidgetId: calendar)
+ * - Data/Types: DashboardDataContext, src/types/dashboard.ts
+ * - Child UI: MonthCalendar, WeekTimeline, EventColorPicker
+ * - Floating shell: src/components/common/FloatingWindow.tsx
+ * - Style: src/styles/widgets/calendar.css + theme/responsive overrides
+ *
+ * Figma 구조: Header, Date Toolbar, View Segmented Control, View Body, Sync Footer,
+ * Event Floating Window. Variants: Day / Week / Month / Empty / Career Managed.
+ * ============================================================
+ */
 import { useEffect, useMemo, useState } from "react";
 import {
   CalendarDays,
@@ -55,6 +74,7 @@ type DashboardDataWithCareerDetail = ReturnType<typeof useDashboardData> & {
    - manual calendar events
    - career application windows mirrored into calendar view
    The wide/laptop modes only change presentation, not this data flow. */
+/** Calendar view state와 선택된 event detail state를 함께 관리한다. */
 export const CalendarWidget = () => {
   const dashboardData = useDashboardData() as DashboardDataWithCareerDetail;
 
@@ -226,6 +246,7 @@ export const CalendarWidget = () => {
         }
       >
         <div className="calendar-widget-frame">
+          {/* Figma Frame: Date Toolbar / View Segmented Control */}
           <div className="calendar-widget-toolbar">
             <div className="flex items-center gap-1">
               <button
@@ -273,6 +294,7 @@ export const CalendarWidget = () => {
             {formatHeaderLabel(selectedDate, view)}
           </div>
 
+          {/* Primary Content: Day list, Week Timeline, Month Grid 중 선택된 Variant */}
           <div
             className={cn(
               "calendar-view-body",
@@ -345,6 +367,7 @@ export const CalendarWidget = () => {
             )}
           </div>
 
+          {/* Figma Frame: Sync Footer / Fixed support action */}
           <div className="calendar-sync-preview">
             <div>
               <div className="text-xs font-semibold">Google Calendar Sync</div>
@@ -360,6 +383,7 @@ export const CalendarWidget = () => {
         </div>
       </GlassCard>
 
+      {/* Figma Component: Event Floating Window / Manual · Career Managed Variant */}
       <FloatingWindow
         open={Boolean(editingEvent)}
         title={
@@ -381,6 +405,7 @@ export const CalendarWidget = () => {
         onClose={() => setEditingId(null)}
       >
         {editingEvent && (
+          /* Scroll Container: titlebar 아래의 event form만 내부 스크롤된다. */
           <div className="calendar-modal-body">
                 <label className="calendar-field">
                   <span>Title</span>

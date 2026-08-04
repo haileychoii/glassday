@@ -1,3 +1,15 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Health Widget
+ * ============================================================
+ *
+ * 화면 역할: 시작/현재/목표 수치와 진행률을 직접 편집하는 compact life metric Widget.
+ * Renderer: DashboardGrid (WidgetId: health)
+ * Storage: useLocalStorage / glassday.health
+ * Figma 구조: Metrics Grid, Program Field, Progress Bar, Reset Action
+ * Variants: Default / Goal Reached / Editable Values
+ * ============================================================
+ */
 import { Activity, RotateCcw } from "lucide-react";
 import { GlassCard } from "../glass/GlassCard";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
@@ -16,6 +28,7 @@ const defaultHealth: HealthData = {
   program: "Wegovy · Week 3",
 };
 
+/** HealthData를 Widget 내부 Source of Truth로 저장하는 editable summary component. */
 export const HealthWidget = () => {
   const {
     value: health,
@@ -51,6 +64,7 @@ export const HealthWidget = () => {
       className="health-widget"
     >
       <div className="space-y-4">
+        {/* Figma Frame: Health Metrics / Three-column responsive grid */}
         <div className="grid grid-cols-3 gap-2">
           <label className="health-metric-card rounded-2xl bg-white/25 border border-white/40 p-3">
             <div className="text-[11px] text-muted-foreground mb-1">

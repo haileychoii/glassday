@@ -1,3 +1,16 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Mood Widget
+ * ============================================================
+ *
+ * 화면 역할: Energy, Focus, Sleepiness, Stress, Appetite를 1~5 단계로 기록한다.
+ * Renderer: DashboardGrid (WidgetId: mood)
+ * Storage: useLocalStorage / glassday.mood
+ * Style: src/styles/widgets/mood.css + theme-specific surface overrides
+ * Figma 구조: Header Edit Action + Metric Row Component Set
+ * Variants: Read Only / Editing / Score 1..5
+ * ============================================================
+ */
 import { useState } from "react";
 import { Heart, Lock, Pencil, RotateCcw } from "lucide-react";
 import { GlassCard } from "../glass/GlassCard";
@@ -18,6 +31,7 @@ const defaultMood: MoodValues = {
   Appetite: 3,
 };
 
+/** Edit mode에서만 score dot interaction을 허용하는 life signal component. */
 export const MoodWidget = () => {
   const [editing, setEditing] = useState(false);
 
@@ -62,6 +76,7 @@ export const MoodWidget = () => {
         </button>
       }
     >
+      {/* Figma Component Set: Metric Row / Score 1..5 / Read Only · Editing */}
       <div className="mood-list">
         {metrics.map((metric) => (
           <div

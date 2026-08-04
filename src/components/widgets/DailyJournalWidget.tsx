@@ -1,3 +1,18 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Daily Journal Widget
+ * ============================================================
+ *
+ * 화면 역할: 날짜별 task, condition score, work log, reflection, hashtag clip을 기록한다.
+ * Renderer: DashboardGrid (WidgetId: journal)
+ * Types/Storage: src/types/journal.ts, journalUtils, glassday.journal.entries.v1
+ * Style: src/styles/widgets/journal.css + responsive/theme overrides
+ *
+ * Figma 구조: Header + Date Navigation, Summary Metrics, Condition Stepper,
+ * Scroll Body(Today/Tomorrow/Text/Clip sections)
+ * Variants: Empty / Partially Filled / Completed / Compact
+ * ============================================================
+ */
 import {
   BookOpen,
   BriefcaseBusiness,
@@ -41,12 +56,7 @@ const cx = (...classes: Array<string | false | null | undefined>) => {
   return classes.filter(Boolean).join(" ");
 };
 
-/* Daily journal is the denser "capture everything about today" widget.
-   Keep this file organized around:
-   1) local widget state
-   2) derived summaries
-   3) small update helpers
-   4) section rendering */
+/** 날짜를 기준으로 JournalEntry를 편집하고 derived summary를 계산하는 Widget. */
 export const DailyJournalWidget = () => {
   const [entries, setEntries] = useState<JournalEntry[]>(() =>
     loadJournalEntries()
@@ -262,10 +272,8 @@ export const DailyJournalWidget = () => {
         </div>
       }
     >
-      {/* Summary first, then the long scroll body.
-          This keeps the widget header position consistent with other widgets
-          while still preserving the journal's dense internals. */}
       <div className="journal-content">
+        {/* Figma Frame: Summary + Condition / Responsive Grid / 상단 고정 영역 */}
         <div className="journal-summary-row">
           <div className="journal-summary-card">
             <span>Progress</span>
@@ -320,6 +328,7 @@ export const DailyJournalWidget = () => {
           </div>
         </div>
 
+        {/* Scroll Container: 날짜별 Journal section만 스크롤되고 Header/Summary는 유지된다. */}
         <div className="journal-main-scroll">
           <section className="journal-section">
             <div className="journal-section-title">

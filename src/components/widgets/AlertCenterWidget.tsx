@@ -1,3 +1,18 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Alert Center Widget
+ * ============================================================
+ *
+ * 화면 역할: Career, Journal, Study 저장 상태를 읽어 마감/미작성/학습 알림을 요약한다.
+ * Renderer: DashboardGrid (WidgetId: alerts)
+ * Data: studyUtils + legacy-compatible Career/Journal localStorage reader
+ * Style: src/styles/widgets/alert-center.css 및 theme overrides
+ *
+ * Figma 구조: Header Refresh Action + Scrollable Alert Row list
+ * Alert Variants: danger / warning / info / success
+ * 이 Widget은 읽기 전용 summary이며 원본 record를 직접 수정하지 않는다.
+ * ============================================================
+ */
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import {
@@ -298,6 +313,7 @@ const buildAlerts = (): AlertItem[] => {
   return alerts;
 };
 
+/** 저장 데이터를 읽기 전용 AlertItem 목록으로 변환해 보여주는 Dashboard summary. */
 export const AlertCenterWidget = () => {
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -351,6 +367,7 @@ export const AlertCenterWidget = () => {
         </button>
       }
     >
+      {/* Scroll Container: Alert Row list / tone class가 Figma Variant를 결정한다. */}
       <div className="alert-center-list">
         {alerts.map((alert) => (
           <article

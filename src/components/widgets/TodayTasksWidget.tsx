@@ -1,3 +1,17 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Standalone Today Tasks Widget
+ * ============================================================
+ *
+ * 현재 연결 상태: 독립 구현이지만 현재 DashboardGrid widgetMap에는 등록되어 있지 않다.
+ * TodayFocusWidget의 Top Tasks와는 별도 localStorage data model이다.
+ * Storage: useLocalStorage / glassday.today.tasks.v1
+ * Figma 구조: Progress Summary, Add Form, Task Row list
+ * Variants: Empty / Priority Low·Normal·High / Completed
+ *
+ * Grid 등록 시 WidgetId, registry metadata, default layout을 함께 추가한다.
+ * ============================================================
+ */
 import { useMemo, useState } from "react";
 import {
   Check,
@@ -70,6 +84,7 @@ const sortTasks = (tasks: TodayTask[]) => {
   });
 };
 
+/** Priority와 completion을 포함한 독립형 오늘 할 일 component. */
 export const TodayTasksWidget = () => {
   const { value: tasks, setValue: setTasks } = useLocalStorage<TodayTask[]>(
     "glassday.today.tasks.v1",
@@ -143,6 +158,7 @@ export const TodayTasksWidget = () => {
       className="today-tasks-card"
     >
       <div className="today-tasks">
+        {/* Figma Frame: Completion Summary / Horizontal Auto Layout */}
         <section className="today-tasks-progress">
           <div>
             <div className="today-tasks-progress-label">Completion</div>
@@ -186,6 +202,7 @@ export const TodayTasksWidget = () => {
           </button>
         </section>
 
+        {/* List Frame: Task Row Component instances */}
         <section className="today-task-list">
           {sortedTasks.length === 0 ? (
             <div className="today-task-empty">
