@@ -1,3 +1,37 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Shared Dashboard Data / Calendar + Career
+ * ============================================================
+ *
+ * 화면 역할:
+ * - CalendarWidget과 CareerWidget이 같은 일정/지원 정보를 읽고 수정하도록
+ *   Dashboard 전역의 Calendar/Career Source of Truth를 제공한다.
+ * - Calendar에서 Career 일정을 선택하면 Career detail을 여는 연결 상태도 관리한다.
+ *
+ * 렌더링 위치:
+ * - Provider Parent: src/App.tsx
+ * - Consumers: src/components/widgets/CalendarWidget.tsx,
+ *   src/components/widgets/CareerWidget.tsx,
+ *   src/components/widgets/TodayFocusWidget.tsx
+ *
+ * 데이터 연결:
+ * - Hook: src/hooks/useLocalStorage.ts
+ * - Types: src/types/dashboard.ts
+ * - Storage: glassday.calendar.events.v1,
+ *   glassday.career.applications.v2
+ * - Cloud: src/context/CloudSyncContext.tsx가 위 key를 snapshot으로 동기화한다.
+ *
+ * Figma 구조:
+ * - Calendar Event Card와 Career Application Card는 같은 Career record를
+ *   서로 다른 화면 표현으로 보여준다.
+ * - activeCareerDetailId는 Floating Detail Window의 Open/Closed Variant에 해당한다.
+ *
+ * 수정 영향:
+ * - Career 날짜를 수정하면 연결된 Calendar event가 함께 갱신된다.
+ * - Type 또는 저장 key를 변경할 때 CalendarWidget, CareerWidget,
+ *   src/types/dashboard.ts, src/lib/glassdayStorage.ts를 함께 확인한다.
+ * ============================================================
+ */
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
@@ -389,9 +423,12 @@ const syncCareerEventIntoCalendar = (
 };
 
 type DashboardDataContextValue = {
+  /** CalendarWidget이 표시하는 수동 일정과 Career 연동 일정을 합친 목록. */
   calendarEvents: CalendarEvent[];
+  /** CareerWidget의 List/Board와 Career detail이 공유하는 지원 목록. */
   careerApplications: CareerItem[];
 
+  /** 현재 열린 Career detail의 record id. null이면 detail window가 닫힌 상태다. */
   activeCareerDetailId: string | null;
   openCareerDetail: (id: string) => void;
   closeCareerDetail: () => void;
@@ -409,6 +446,14 @@ const DashboardDataContext = createContext<DashboardDataContextValue | null>(
   null
 );
 
+/**
+ * DashboardDataProvider
+ *
+ * App 아래의 모든 Dashboard tab이 Calendar/Career 데이터를 공유하도록 감싼다.
+ * Wide와 Laptop은 Grid layout만 따로 저장하며, 이 Provider의 사용자 데이터는
+ * 공통으로 사용한다. activeCareerDetailId만 일시적인 React state이고 나머지는
+ * useLocalStorage를 통해 새로고침 후에도 유지된다.
+ */
 export const DashboardDataProvider = ({ children }: { children: ReactNode }) => {
   const [activeCareerDetailId, setActiveCareerDetailId] = useState<
     string | null
@@ -426,6 +471,11 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
       defaultApplications
     );
 
+  /*
+   * Storage migration boundary:
+   * 이전 snapshot에 빠진 색상/배열 필드는 렌더링 전에 보정한다.
+   * 저장 데이터 호환을 유지하는 영역이므로 UI 기본값 변경과 분리해서 다룬다.
+   */
   const calendarEvents = rawCalendarEvents.map((event) => ({
     ...event,
     color: event.color ?? getPastelColorById(event.id),
@@ -434,6 +484,8 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
   const careerApplications = rawCareerApplications.map(normalizeCareerItem);
 
   useEffect(() => {
+    /* Career의 지원 기간을 Calendar event로 투영한다.
+       Figma에서는 서로 다른 Component지만 데이터 record는 연결되어 있다. */
     setCalendarEvents((prev) =>
       rawCareerApplications
         .map(normalizeCareerItem)
@@ -634,6 +686,7 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
   };
 
   return (
+    /* Data Layer: App Shell 및 Floating Window가 동일한 Provider value를 사용한다. */
     <DashboardDataContext.Provider
       value={{
         calendarEvents,
@@ -657,6 +710,7 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
   );
 };
 
+/** Provider 밖에서 잘못 호출되는 것을 즉시 알리기 위한 전용 접근 Hook. */
 export const useDashboardData = () => {
   const context = useContext(DashboardDataContext);
 

@@ -1,3 +1,31 @@
+/**
+ * ============================================================
+ * [Data Flow] Supabase Authentication + Cloud Snapshot Sync
+ * ============================================================
+ *
+ * 화면 역할:
+ * - src/components/settings/SettingsModal.tsx의 로그인, 로그아웃,
+ *   수동 동기화 상태와 action을 제공한다.
+ * - 직접 UI를 렌더링하지 않고 App 전체를 감싸는 data provider다.
+ *
+ * 연결 관계:
+ * - Parent: src/App.tsx
+ * - Client: src/lib/supabase.ts
+ * - Snapshot policy: src/lib/glassdayStorage.ts
+ * - Supabase table: user_storage_snapshots (user_id당 한 row)
+ *
+ * 저장 원칙:
+ * - Memo, Study, Money, Calendar, Career 등 durable user content만 cloud에 저장한다.
+ * - Wide/Laptop mode, active tab, Grid layout, theme 같은 현재 브라우저의 UI shell은
+ *   cloud 복원에서 제외해 로그인 후 예전 화면으로 되돌아가는 것을 방지한다.
+ * - 원격 snapshot 적용 후 GLASSDAY_STORAGE_EVENT를 보내 각 useLocalStorage consumer를
+ *   같은 탭 안에서도 다시 렌더링한다.
+ *
+ * 수정 영향:
+ * - 인증 redirect나 snapshot 우선순위를 바꾸면 App의 layout mode 복원과
+ *   모든 저장형 Widget에 영향을 줄 수 있다.
+ * ============================================================
+ */
 import {
   createContext,
   useCallback,
@@ -36,6 +64,7 @@ type SyncStatus =
   | "error";
 
 type CloudSyncContextValue = {
+  /** Vite 환경 변수로 Supabase client를 만들 수 있는지 나타낸다. */
   isConfigured: boolean;
   session: Session | null;
   user: User | null;
@@ -56,6 +85,7 @@ const PREFER_LOCAL_AFTER_AUTH_STORAGE_KEY =
   "glassday.sync.preferLocalOnNextAuth.v1";
 const CloudSyncContext = createContext<CloudSyncContextValue | null>(null);
 
+/* OAuth 왕복 전 현재 Wide/Laptop mode를 URL과 임시 key에 보존한다. */
 const readCurrentLayoutModeForAuth = () => {
   const params = new URLSearchParams(window.location.search);
   const urlMode = params.get("layout");
@@ -126,6 +156,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
 
     setSyncState("syncing");
 
+    /* Snapshot에는 glassdayStorage가 허용한 사용자 데이터만 포함된다. */
     const snapshot = createGlassdayStorageSnapshot();
 
     const { error } = await supabase.from(STORAGE_TABLE).upsert(
@@ -168,6 +199,11 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (data?.payload && isCompatibleGlassdayStorageSnapshot(data.payload)) {
+      /*
+       * Conflict rule:
+       * 인증 직전의 로컬 데이터가 더 새롭고 의미 있는 경우 cloud를 덮어쓴다.
+       * 그 외에는 remote snapshot을 적용하되 UI shell state는 유지한다.
+       */
       const remoteSnapshot = data.payload as GlassdayStorageSnapshot;
       const localSnapshot = createGlassdayStorageSnapshot();
       const localUpdatedAt = getGlassdayLocalUpdatedAt();

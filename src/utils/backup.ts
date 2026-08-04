@@ -1,3 +1,21 @@
+/**
+ * ============================================================
+ * [Settings Data Tool] Backup, Import, and Reset
+ * ============================================================
+ *
+ * 화면 역할:
+ * - src/components/settings/SettingsModal.tsx의 Backup/Reset section action을 제공한다.
+ *
+ * 데이터 연결:
+ * - Snapshot format/prefix: src/lib/glassdayStorage.ts
+ * - Backup 파일은 cloud snapshot과 같은 versioned JSON 구조를 사용한다.
+ * - import 후 bulk storage event가 발생해 열린 Widget도 즉시 갱신된다.
+ *
+ * 수정 영향:
+ * - reset filter는 실제 localStorage key 이름에 의존한다.
+ * - 새 persistence key를 추가할 때 cloud 포함 여부와 backup/reset 범위를 함께 확인한다.
+ * ============================================================
+ */
 import {
   applyGlassdayStorageSnapshot,
   createGlassdayStorageSnapshot,

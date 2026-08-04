@@ -1,3 +1,25 @@
+/**
+ * ============================================================
+ * [Persistence Contract] Glassday Snapshot + Storage Events
+ * ============================================================
+ *
+ * 역할:
+ * - glassday.* localStorage key를 찾고 versioned snapshot을 생성/복원한다.
+ * - 같은 탭에서도 storage 변경을 구독할 수 있도록 Storage API를 patch하고
+ *   GLASSDAY_STORAGE_EVENT를 발생시킨다.
+ *
+ * 연결:
+ * - Local state Hook: src/hooks/useLocalStorage.ts
+ * - Cloud provider: src/context/CloudSyncContext.tsx
+ * - Manual backup/reset: src/utils/backup.ts
+ * - Dashboard schema: src/constants/dashboardStorage.ts
+ *
+ * 중요한 경계:
+ * - durable user content와 local UI shell을 분리한다.
+ * - 허용 prefix, snapshot version 또는 schema 판단을 바꾸면 로그인 복원,
+ *   backup import, 모든 저장형 Widget에 동시에 영향을 준다.
+ * ============================================================
+ */
 import {
   DASHBOARD_STORAGE_SCHEMA_KEY,
   DASHBOARD_STORAGE_SCHEMA_VERSION,
@@ -9,6 +31,7 @@ export const GLASSDAY_STORAGE_SNAPSHOT_VERSION = 3;
 export const GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY =
   "glassday.sync.localUpdatedAt.v1";
 
+/** local backup과 Supabase payload가 공유하는 versioned envelope. */
 export type GlassdayStorageSnapshot = {
   app: "Glassday";
   version: number;
@@ -23,10 +46,9 @@ export type GlassdayStorageChangeDetail = {
 
 const isBrowser = () => typeof window !== "undefined";
 
-/* Cloud sync restores durable user content, not this browser's view shell.
-   Wide/laptop mode, active tab, grid layout, and theme are local UI state
-   because an old cloud snapshot can otherwise pull the user back into a
-   previous desktop look immediately after OAuth login. */
+/* Cloud Sync Scope: durable user content.
+   Wide/Laptop mode, active tab, Grid layout, theme은 이 브라우저의 view shell이므로
+   오래된 cloud snapshot이 로그인 직후 화면을 되돌리지 않도록 제외한다. */
 const CLOUD_SYNC_ALLOWED_PREFIXES = [
   "glassday.calendar.",
   "glassday.career.",
@@ -229,6 +251,12 @@ export const applyGlassdayStorageSnapshot = (
 
 let storageEventsPatched = false;
 
+/*
+ * Event Bridge:
+ * native storage event는 값을 쓴 현재 document에는 전달되지 않는다.
+ * Storage.prototype을 한 번만 감싸 동일 탭 useLocalStorage와 CloudSync upload가
+ * 같은 변경 신호를 받을 수 있게 한다.
+ */
 export const patchLocalStorageEvents = () => {
   if (!isBrowser() || storageEventsPatched) return;
 

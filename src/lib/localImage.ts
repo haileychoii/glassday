@@ -1,6 +1,29 @@
+/**
+ * ============================================================
+ * [Data Utility] Local Image Validation + Resize
+ * ============================================================
+ *
+ * 역할:
+ * - Career detail과 Memo editor에 추가되는 로컬 이미지를 WebP data URL로 변환한다.
+ * - 원본 크기/파일 형식을 검사하고 긴 변을 제한해 local/cloud JSON snapshot이
+ *   불필요하게 커지는 것을 줄인다.
+ *
+ * 연결:
+ * - Consumers: CareerWidget 계열, MemoWidget
+ * - Persistence: 변환 결과는 각 Widget data 안에 포함되어 useLocalStorage와
+ *   CloudSync snapshot 경로로 저장된다.
+ *
+ * Figma Mapping:
+ * - 이 파일은 UI를 만들지 않으며 Image Attachment/Gallery Component의
+ *   업로드 전 data pipeline만 담당한다.
+ * ============================================================
+ */
 export type LocalImageOptions = {
+  /** 사용자가 선택할 수 있는 원본 파일의 최대 byte 수. */
   maxInputBytes: number;
+  /** resize 후 가로/세로 중 긴 변의 최대 pixel 수. */
   maxEdge: number;
+  /** WebP encoding 품질. 생략 시 prepareLocalImageDataUrl의 기본값을 사용한다. */
   quality?: number;
 };
 
@@ -22,10 +45,8 @@ const loadImage = (source: string) =>
     image.src = source;
   });
 
-/* Local snapshot image preparation
-   Career and Memo both persist inside Glassday JSON snapshots. This helper
-   validates and resizes camera originals before they enter local/cloud state.
-   Career와 Memo가 같은 용량 기준을 쓰도록 저장 직전 이미지 처리를 한곳에서 담당합니다. */
+/* Local snapshot image preparation:
+   Career와 Memo가 같은 검증/resize 경로를 사용하도록 저장 직전 처리를 한곳에서 담당한다. */
 export const prepareLocalImageDataUrl = async (
   file: File,
   options: LocalImageOptions

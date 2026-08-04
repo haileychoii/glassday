@@ -1,3 +1,32 @@
+/**
+ * ============================================================
+ * [Dashboard State] Tabs + Mode-specific Grid Layouts
+ * ============================================================
+ *
+ * 화면 역할:
+ * - Sidebar/WorkspaceTabsNav가 표시하는 Dashboard tab 목록과 active tab을 제공한다.
+ * - DashboardGrid가 사용하는 widgetIds와 breakpoint layout을 저장/갱신한다.
+ *
+ * 연결:
+ * - Consumers: src/components/grid/DashboardGrid.tsx,
+ *   src/components/layout/Sidebar.tsx, src/components/layout/WorkspaceTabsNav.tsx
+ * - Defaults: src/constants/dashboardTabs.ts,
+ *   src/components/grid/gridDefaults.ts
+ * - Types: src/types/workspace.ts
+ * - Persistence: glassday.dashboard.tabs.v1,
+ *   glassday.dashboard.activeTab.v1
+ *
+ * 구조 원칙:
+ * - Wide와 Laptop은 같은 Widget data를 보지만 layout은 mode별로 따로 저장한다.
+ * - default layout에 새 Widget이 추가되면 기존 사용자 tab에도 누락 항목만 병합한다.
+ * - WidgetId, Grid item의 i, Widget renderer key는 반드시 일치해야 한다.
+ *
+ * Figma Mapping:
+ * - DashboardTab = Workspace Navigation Item
+ * - DashboardModeLayouts = Wide/Laptop responsive Frame arrangement
+ * - locked = 기본 tab의 Delete Disabled Variant
+ * ============================================================
+ */
 import { useEffect, useMemo } from "react";
 
 import { useLocalStorage } from "./useLocalStorage";
@@ -172,9 +201,9 @@ const mergeLayoutArray = (
 };
 
 const normalizeModeLayouts = (value: unknown): DashboardModeLayouts => {
-  /* Backward compatibility: older tabs stored one layout set only.
-     We migrate those records into both modes so existing users keep
-     their layout while laptop mode gets a separate copy to edit later. */
+  /* Backward compatibility:
+     예전 tab은 layout 한 벌만 저장했으므로 Wide/Laptop 양쪽에 복제한다.
+     이후 수정은 mode별로 분리되어 한 mode의 drag/resize가 다른 mode를 덮지 않는다. */
   if (!isRecord(value)) {
     return {
       wide: emptyLayouts(),
@@ -302,6 +331,10 @@ const createNewTab = (): DashboardTab => {
   };
 };
 
+/**
+ * Dashboard tab과 Grid layout의 현재 Source of Truth를 반환한다.
+ * add/remove Widget은 목록과 두 mode의 layout을 함께 정리한다.
+ */
 export const useDashboardTabs = () => {
   const { value: storedTabs, setValue: setTabs } = useLocalStorage<
     DashboardTab[]
@@ -326,6 +359,7 @@ export const useDashboardTabs = () => {
       return;
     }
 
+    /* 저장 schema가 바뀐 경우 현재 default Widget만 보충하고 사용자의 위치는 유지한다. */
     setTabs(tabs);
     window.localStorage.setItem(
       DASHBOARD_STORAGE_SCHEMA_KEY,
