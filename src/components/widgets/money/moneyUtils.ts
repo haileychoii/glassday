@@ -1,3 +1,20 @@
+/**
+ * ============================================================
+ * [Money Utilities] Catalogs + Migration + Finance Calculations
+ * ============================================================
+ * Consumer: src/components/widgets/MoneyWidget.tsx
+ * Types: src/types/money.ts
+ * Persistence key는 MoneyWidget의 useLocalStorage(glassday.money)가 소유한다.
+ *
+ * 역할:
+ * - Category/subcategory/store/quick-add catalog
+ * - legacy Money shape -> current MoneyData normalization
+ * - 월별 total, donut/store breakdown, list filter/group 계산
+ * - Wishlist Purchased -> Transaction 연결 record 생성
+ *
+ * Figma에서 chart/legend/list에 보이는 금액과 색상은 이 helper 결과를 사용한다.
+ * ============================================================
+ */
 import type {
   LegacyMoneyData,
   MoneyBreakdownItem,

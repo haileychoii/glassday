@@ -1,3 +1,9 @@
+/**
+ * [Inactive Career Prototype] Attachment editor component
+ * 현재 src 내부에서 import되지 않으며 실제 Career detail은 CareerWidget.tsx의 inline UI와
+ * src/types/dashboard.ts를 사용한다. 이 파일은 careerTypes/careerUtils 기반의 이전 분리안이다.
+ * Figma 참고 시 Attachment List Component 후보로만 보고 현재 렌더 tree에 포함하지 않는다.
+ */
 import { ExternalLink, Link2, Plus, Trash2 } from "lucide-react";
 import type {
   CareerAttachment,

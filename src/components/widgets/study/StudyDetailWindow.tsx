@@ -1,19 +1,26 @@
+/**
+ * [Figma Mapping] Study / Floating Detail Shell
+ * Parent: src/components/widgets/StudyWidget.tsx
+ * Shell: src/components/common/FloatingWindow.tsx
+ * 이 component는 planner state를 만들지 않고 Widget이 전달한 동일한 children을 감싼다.
+ * Figma 구조: Floating Title Bar + Scrollable Expanded Planner Body.
+ */
 import type { ReactNode } from "react";
 
 import { FloatingWindow } from "../../common/FloatingWindow";
 
 type StudyDetailWindowProps = {
+  /** Floating Window의 Open/Closed Variant. */
   open: boolean;
+  /** 선택 날짜와 총 공부 시간을 Title Bar의 Secondary Text로 표시한다. */
   subtitle: string;
+  /** StudyWidget이 widget mode와 공유하는 planner tree. */
   children: ReactNode;
+  /** FloatingWindow close action을 StudyWidget state로 전달한다. */
   onClose: () => void;
 };
 
-/* Study detail shell
-   The dashboard widget owns all planner data and interaction state. This file
-   only supplies the movable, resizable Glassday window so the compact widget
-   and detail view never create competing storage hooks. / 상세 창은 동일한
-   플래너 본문을 감싸기만 하므로 위젯과 데이터가 항상 함께 갱신됩니다. */
+/** Widget과 별도 storage를 만들지 않는 movable/resizable Study detail shell. */
 export const StudyDetailWindow = ({
   open,
   subtitle,

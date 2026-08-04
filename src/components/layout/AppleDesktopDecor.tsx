@@ -1,3 +1,15 @@
+/**
+ * ============================================================
+ * [Inactive UI Reference] Apple Desktop Decoration
+ * ============================================================
+ *
+ * 현재 파일의 전체 구현은 주석 처리되어 import/export되지 않는다.
+ * 현재 Mac Core UI는 AppShell/Topbar/Sidebar와 src/styles/themes/mac-core.css에서 표현한다.
+ *
+ * 이 코드는 과거의 Finder menu/dock/desktop icon 실험을 보존한 참고 자료이며,
+ * Figma에 현재 렌더링되는 layer로 포함하면 안 된다.
+ * ============================================================
+ */
 // import {
 //   AppWindow,
 //   Bell,

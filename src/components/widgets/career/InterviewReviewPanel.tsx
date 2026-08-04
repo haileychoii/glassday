@@ -1,3 +1,9 @@
+/**
+ * [Inactive Career Prototype] Interview review list/editor
+ * 현재 Dashboard render tree에 연결되지 않은 분리 실험 파일이다.
+ * 실제 Career detail은 CareerWidget.tsx와 src/types/dashboard.ts를 확인한다.
+ * Figma 후보 구조: Review Card list + Add/Delete Action.
+ */
 import { Plus, Trash2 } from "lucide-react";
 import type { CareerItem, InterviewReview } from "./careerTypes";
 import { createInterviewReview } from "./careerUtils";

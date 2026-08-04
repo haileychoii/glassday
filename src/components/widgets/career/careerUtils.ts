@@ -1,3 +1,11 @@
+/**
+ * ============================================================
+ * [Inactive Legacy Utilities] Unmounted Career Subcomponents
+ * ============================================================
+ * 같은 career/ 폴더의 prototype component용 helper이며 현재 CareerWidget.tsx는 import하지 않는다.
+ * 현재 지원 데이터의 normalize/sync는 src/context/DashboardDataContext.tsx가 담당한다.
+ * ============================================================
+ */
 import type {
   CareerAttachment,
   CareerAttachmentType,

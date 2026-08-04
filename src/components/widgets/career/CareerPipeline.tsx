@@ -1,3 +1,9 @@
+/**
+ * [Inactive Career Prototype] Pipeline stage editor
+ * 현재 CareerWidget.tsx에서 import되지 않는 이전 child component다.
+ * Figma 후보 구조: Stage Row / Status Variant / Add-Delete Action.
+ * 실제 Career UI와 저장 타입은 CareerWidget.tsx, DashboardDataContext, src/types/dashboard.ts다.
+ */
 import { Plus, Trash2 } from "lucide-react";
 import type { CareerItem, CareerStage, CareerStageStatus } from "./careerTypes";
 import { createCareerId, stageStatusLabels } from "./careerUtils";

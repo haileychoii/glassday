@@ -1,3 +1,16 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Pixel Desk / Decorative Desktop Icons
+ * ============================================================
+ *
+ * 화면 역할: Pixel Desk theme의 desktop 배경 위에 non-interactive icon을 배치한다.
+ * Parent: src/components/layout/AppShell.tsx
+ * Style/Theme: src/styles/themes/pixel.css
+ *
+ * Figma 구조: Absolute-positioned Decoration Layer / Icon Component instances
+ * aria-hidden이므로 navigation이나 Widget 기능과 연결되지 않는다.
+ * ============================================================
+ */
 import { FileText, Folder, HardDrive, Settings, StickyNote, Trash2 } from "lucide-react";
 
 const desktopIcons = [
@@ -33,6 +46,7 @@ const desktopIcons = [
   },
 ];
 
+/** Pixel Desk에서만 보이는 presentation-only desktop layer. */
 export const PixelDesktopDecor = () => {
   return (
     <div className="pixel-desktop-decor" aria-hidden="true">

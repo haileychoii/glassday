@@ -1,3 +1,31 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Settings / Movable Settings Window
+ * ============================================================
+ *
+ * 화면 역할:
+ * - Theme, interface/memo font, scrollbar, backup/reset, Supabase auth/sync를 설정한다.
+ * - Dashboard 위에 portal로 열리는 movable window이며 닫기 전까지 설정 interaction을 담당한다.
+ *
+ * 연결:
+ * - Parent/Open state: src/App.tsx
+ * - Theme: src/constants/themes.ts + src/styles/themes/*.css
+ * - Fonts: src/constants/fonts.ts + src/styles/fonts.css
+ * - Scrollbar: src/constants/uiPreferences.ts
+ * - Backup/Reset: src/utils/backup.ts
+ * - Auth/Cloud: src/context/CloudSyncContext.tsx
+ * - Style: src/styles/widgets/settings.css, overlays.css, theme overrides
+ *
+ * Figma 구조:
+ * - Floating Window, Draggable Title Bar, Scroll Body
+ * - Theme Card Grid, Font Forms, Display Preference, Backup, Reset, Sync sections
+ * - Variants: Closed / Open / Dragging / Auth Signed Out / Signed In / Sync Error
+ *
+ * 저장 주의:
+ * - Window position은 로컬 UI preference이며 사용자 Widget data와 분리된다.
+ * - Theme/font/storage key와 Supabase schema는 이 UI의 visual 변경과 별도 contract다.
+ * ============================================================
+ */
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { createPortal } from "react-dom";
@@ -54,7 +82,9 @@ import {
 import { useCloudSync } from "../../context/CloudSyncContext";
 
 type SettingsModalProps = {
+  /** App의 Settings button이 제어하는 open state. false면 portal을 만들지 않는다. */
   open: boolean;
+  /** Close button, Escape, window 바깥 click에서 사용하는 공통 close callback. */
   onClose: () => void;
 };
 
@@ -123,6 +153,10 @@ const renderThemePreview = (themeId: ThemeId) => (
   </span>
 );
 
+/**
+ * SettingsModal
+ * 여러 설정 Source를 한 화면에서 편집하지만 각 값의 실제 저장 책임은 constants/context/helper에 둔다.
+ */
 export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const windowRef = useRef<HTMLElement | null>(null);
@@ -491,6 +525,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     await sendPasswordReset(email);
   };
 
+  /* Figma Component: Settings Floating Window / document.body portal layer. */
   return createPortal(
     <div className="settings-modal-backdrop" onMouseDown={onClose}>
       <section
@@ -504,6 +539,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
         }}
         onMouseDown={(event) => event.stopPropagation()}
       >
+        {/* Floating Window Title Bar: drag handle + title + close action */}
         <header
           className="settings-modal-header settings-header settings-titlebar"
           onPointerDown={startWindowDrag}
@@ -533,7 +569,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
           </button>
         </header>
 
+        {/* Scroll Container: 설정 section만 스크롤되고 Title Bar는 고정된다. */}
         <div className="settings-modal-body settings-body settings-content">
+          {/* Figma Frame: Theme Selection / Theme Card Component Grid */}
           <section className="settings-section settings-card">
             <div className="settings-section-title settings-card-title">
               <Palette className="w-4 h-4" />

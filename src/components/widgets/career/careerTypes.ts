@@ -1,3 +1,12 @@
+/**
+ * ============================================================
+ * [Inactive Legacy Types] Unmounted Career Subcomponent Model
+ * ============================================================
+ * 이 타입은 같은 career/ 폴더의 미사용 prototype component에서만 참조된다.
+ * 현재 CareerWidget과 저장 데이터는 src/types/dashboard.ts의 CareerItem을 사용한다.
+ * 두 CareerItem은 필드/status 값이 다르므로 현재 model로 오인하거나 합치지 않는다.
+ * ============================================================
+ */
  export type CareerStatus =
   | "Preparing"
   | "Submitted"

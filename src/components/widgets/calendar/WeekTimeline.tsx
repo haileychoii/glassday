@@ -1,3 +1,15 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Calendar / Week Timeline
+ * ============================================================
+ * Parent: src/components/widgets/CalendarWidget.tsx의 Week Variant
+ * Data/Types: CalendarEvent, calendarUtils
+ * Style: src/styles/widgets/calendar.css의 calendar-week-* selector
+ * Figma 구조: Time Rail + Day Columns + Positioned Event Blocks
+ * Variants: Weekday/Weekend, Today, Selected Day, Overlapping Event
+ * 좁은 container에서는 timeline 자체가 내부 scroll 영역이 된다.
+ * ============================================================
+ */
 import { useMemo } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
 
@@ -129,6 +141,7 @@ const getEventColor = (event: CalendarEvent) => {
   return "linear-gradient(135deg, hsl(210 100% 94% / 0.9), hsl(220 100% 97% / 0.84))";
 };
 
+/** 주간 event를 시간 좌표로 변환해 day column에 배치하는 Calendar child component. */
 export const WeekTimeline = ({
   events,
   weekStartDate,

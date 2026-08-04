@@ -1,3 +1,14 @@
+/**
+ * ============================================================
+ * [Journal Utilities] Date Records + Progress + Hashtag Clips
+ * ============================================================
+ * Consumer: src/components/widgets/DailyJournalWidget.tsx
+ * Types: src/types/journal.ts
+ * Persistence: glassday.journal.entries.v1을 직접 load/save한다.
+ * 역할: 날짜별 entry 기본값, task/clip 생성, progress 계산, hashtag parsing과 migration을 담당한다.
+ * 반환값은 Journal Summary, Task Row, Clip Library의 view state를 결정한다.
+ * ============================================================
+ */
 import type {
   JournalClip,
   JournalEntry,

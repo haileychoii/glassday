@@ -1,3 +1,9 @@
+/**
+ * [Inactive Career Prototype] Cover Letter tracker
+ * 현재 CareerWidget.tsx는 이 component를 import하지 않고 cover letter section을 inline 렌더링한다.
+ * 이 파일의 careerTypes model은 현재 DashboardDataContext Source of Truth와 별개다.
+ * Figma 후보 구조: Question Row / Todo · Drafting · Done Variant.
+ */
 import { Plus, Trash2 } from "lucide-react";
 import type {
   CareerItem,

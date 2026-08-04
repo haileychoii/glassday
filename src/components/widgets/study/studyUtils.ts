@@ -1,3 +1,13 @@
+/**
+ * ============================================================
+ * [Study Utilities] Planner Normalization + Timeline Calculations
+ * ============================================================
+ * Consumers: StudyWidget, AlertCenterWidget, TimerWidget/usePomodoroTimer
+ * 역할: v1 데이터 migration, 날짜별 v2 record 생성, 10분 slot/time 합계,
+ * timer 구간 계산과 표시 문자열을 담당한다.
+ * UI를 렌더링하지 않지만 Timeline Cell 수와 progress/summary 값의 Source다.
+ * ============================================================
+ */
 import {
   STUDY_END_HOUR,
   STUDY_LEGACY_RECORDS_KEY,

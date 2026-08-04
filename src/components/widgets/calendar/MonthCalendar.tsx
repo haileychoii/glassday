@@ -1,3 +1,15 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Calendar / Month Grid
+ * ============================================================
+ * Parent: src/components/widgets/CalendarWidget.tsx의 Month Variant
+ * Data/Types: CalendarEvent, calendarUtils
+ * Style: src/styles/widgets/calendar.css의 calendar-month-* selector
+ * Figma 구조: Weekday Header + Week Rows + Day Cell + Event Chip list
+ * Variants: Outside Month / Today / Selected / Has Events
+ * Responsive: container의 width/height에 맞춰 cell을 재분배하고 event는 cell 안에 유지한다.
+ * ============================================================
+ */
 import { useMemo, useState } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
 import { getEventColor } from "../../../constants/colors";
@@ -126,6 +138,7 @@ const getPreviewPosition = (preview: HoverPreview) => {
   };
 };
 
+/** CalendarEvent를 날짜별 Day Cell에 배치하는 controlled Month view. */
 export const MonthCalendar = ({
   events,
   selectedDate,

@@ -1,3 +1,14 @@
+/**
+ * ============================================================
+ * [Timer Hook] Persistent Pomodoro Controller
+ * ============================================================
+ * Consumer: src/components/widgets/TimerWidget.tsx
+ * Persistence: useLocalStorage / glassday.study.pomodoro.v1
+ * 역할: mode, remaining time, running deadline, completed sessions와 완료 prompt를 관리한다.
+ * TimerWidget의 Grid/Floating presentation이 같은 Hook instance를 공유하므로 두 화면이 동기화된다.
+ * Figma Variant state: Focus/Break, Running/Paused, Completion Prompt Open.
+ * ============================================================
+ */
 import { useEffect, useRef, useState } from "react";
 
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
@@ -94,6 +105,7 @@ export const getSuggestedBreakMode = (
  * Study 위젯과 Timer 위젯은 같은 localStorage 키를 사용한다.
  * 따라서 어느 화면에서 사용해도 동일한 타이머 상태를 공유한다.
  */
+/** Pomodoro state와 모든 user action을 한 controller object로 반환한다. */
 export const usePomodoroTimer = () => {
   const [now, setNow] = useState(() => Date.now());
 

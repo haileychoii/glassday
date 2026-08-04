@@ -1,3 +1,8 @@
+/**
+ * [Inactive Career Prototype] Priority segmented editor
+ * 현재 render tree에서 사용되지 않는다. 실제 priority field는 CareerWidget.tsx가 직접 렌더링한다.
+ * Figma Component Set 후보: Priority / Low · Medium · High.
+ */
 import type { CareerItem, CareerPriority } from "./careerTypes";
 import { priorityLabels } from "./careerUtils";
 

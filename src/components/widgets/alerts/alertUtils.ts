@@ -1,3 +1,12 @@
+/**
+ * ============================================================
+ * [Inactive Alert Utilities] Previous Shared Alert Model
+ * ============================================================
+ * 현재 AlertCenterWidget.tsx는 이 파일을 import하지 않고 자체 AlertItem builder를 사용한다.
+ * 이 파일은 CalendarEvent/CareerItem 기반 이전 alert 계산 API를 보존한다.
+ * Figma의 현재 Alert Row Variant와 연결된 실제 구현은 AlertCenterWidget.tsx를 확인한다.
+ * ============================================================
+ */
 import type { CalendarEvent, CareerItem } from "../../../types/dashboard";
 
 export type AlertSeverity = "danger" | "warning" | "info" | "success";

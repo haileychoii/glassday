@@ -1,3 +1,13 @@
+/**
+ * ============================================================
+ * [Calendar Utilities] Date Range + Event Placement
+ * ============================================================
+ * Consumers: CalendarWidget, MonthCalendar, WeekTimeline
+ * 역할: local date 계산, week/month cell 생성, event range 판정과 정렬을 담당한다.
+ * 결과가 Day Cell, Week Column, Event label 배치를 결정하므로 timezone 변경 시
+ * 저장된 CalendarEvent 날짜 해석 전체를 함께 확인한다.
+ * ============================================================
+ */
 import type { CalendarEvent } from "../../../types/dashboard";
 
 export const toLocalDateInput = (date = new Date()) => {
