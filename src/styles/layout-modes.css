@@ -1,8 +1,16 @@
-/* =========================================================
-   LAYOUT MODES
-   Shared wide/laptop presentation shell.
-   Data and widget behavior stay the same; only the viewing frame changes.
-========================================================= */
+/* ============================================================
+   [Figma Mapping] Wide Web + Laptop App Presentation Modes
+
+   연결 컴포넌트: AppShell, Topbar, Sidebar, DashboardGrid
+   Figma 구조:
+   - Wide Frame: viewport-filling App Shell
+   - Laptop Frame: movable 1080x720 preview + app chrome
+
+   두 mode는 기능과 Widget data를 공유하고 layout 저장만 분리한다.
+   .app-shell-surface.is-laptop 아래의 값은 브라우저 viewport가 아니라
+   Laptop Frame 자체를 기준으로 한 component density다.
+   실제 default Grid 배치는 gridDefaults.ts에서 관리한다.
+   ============================================================ */
 
 :root {
   --gd-laptop-frame-width: 1080px;

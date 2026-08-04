@@ -1,12 +1,17 @@
-/* =========================================================
-   GLASSDAY STYLE ENTRY
-   Import order matters:
-   1) tokens and primitives
-   2) shared layout and controls
-   3) themes
-   4) widget styles
-   5) responsive rules and final overrides
-========================================================= */
+/* ============================================================
+   [CSS ENTRY] Glassday UI Style Dependency Order
+
+   연결: src/main.tsx에서 한 번 import하며 모든 App/Widget에 적용된다.
+   Figma 읽기 순서:
+   1) spacing/font/base token과 공통 Component primitive
+   2) AppShell/Grid/Control/Floating Window 구조
+   3) Theme Variant palette와 surface token
+   4) 각 Widget 내부 Frame
+   5) viewport responsive와 최종 safety override
+
+   뒤에서 import된 파일이 같은 specificity의 앞 규칙을 덮으므로 순서를 바꾸면
+   시각 결과가 달라질 수 있다. 새 CSS 파일은 담당 layer에만 추가한다.
+   ============================================================ */
 
 /* 1. Global tokens and primitives */
 @import "./spacing-tokens.css";

@@ -1,8 +1,16 @@
-/* =========================================================
-   GLASSDAY CONTROLS
-   Shared buttons, selects, segmented controls, and inputs.
-   This file defines structure and interaction, not theme palettes.
-========================================================= */
+/* ============================================================
+   [Figma Mapping] Shared Control Components
+
+   연결: Topbar, Settings, Calendar, Widget header action 및 form control.
+   Figma Component Set:
+   - Button / Default · Hover · Active · Disabled
+   - Segmented Control / Default · Selected
+   - Input, Select, Icon Button
+
+   이 파일은 control의 size, alignment, interaction 구조만 담당한다.
+   색상/blur/border surface는 theme-surfaces.css와 themes/*.css가 결정한다.
+   개별 Widget 전용 button은 해당 widgets/*.css에 둔다.
+   ============================================================ */
 
 /* =========================================================
    1. Base button reset

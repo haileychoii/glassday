@@ -1,8 +1,14 @@
-/* =========================================================
-   GLASSDAY OVERRIDES
-   Final guardrails for layout, scrolling, and modal safety.
-   Theme visuals still belong in the dedicated theme files.
-========================================================= */
+/* ============================================================
+   [CSS Final Layer] Cross-component Safety Overrides
+
+   import 순서상 모든 Theme/Widget/Responsive CSS 뒤에 적용된다.
+   역할: box sizing, Grid item min-size, Scroll Container, modal overflow처럼
+   여러 파일이 충돌해도 반드시 유지해야 하는 safety contract를 모은다.
+
+   Figma에서 별도 Component가 아니라 구현 제약 조건으로 해석한다.
+   !important를 추가하기 전 원래 component CSS에서 해결 가능한지 먼저 확인한다.
+   Theme 색상/Widget 전용 spacing을 이 파일에 새로 넣지 않는다.
+   ============================================================ */
 
 /* =========================================================
    0. Global box safety

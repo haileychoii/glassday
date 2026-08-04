@@ -1,13 +1,18 @@
-/* =========================================================
-   DASHBOARD GRID
-   React Grid Layout and edit-mode interaction only.
+/* ============================================================
+   [Figma Mapping] Dashboard Grid Canvas + Edit Interaction
 
-   This file should not style widget internals such as:
-   - card typography
-   - widget body layout
-   - widget-specific overflow
-   - calendar, memo, journal, or study content structure
-========================================================= */
+   연결 컴포넌트: src/components/grid/DashboardGrid.tsx
+   외부 engine: react-grid-layout / react-resizable
+
+   Figma 구조:
+   - Dashboard Canvas = 16-column layout frame
+   - Grid Item = Widget instance frame
+   - Edit Variant = dimmed canvas + selected outline + move/resize handles
+
+   이 파일은 Widget 위치/크기/drag/resize presentation만 담당한다.
+   Widget 내부 typography, body layout, scroll은 widgets/*.css에서 관리한다.
+   Grid 숫자의 Source of Truth는 DashboardGrid.tsx와 gridDefaults.ts다.
+   ============================================================ */
 
 /* =========================================================
    1. Dashboard canvas

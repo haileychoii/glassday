@@ -1,8 +1,17 @@
-/* =========================================================
-   SETTINGS MODAL LAYOUT
-   Structure, sizing, and spacing for the settings modal.
-   Theme-specific color and glass treatment stay elsewhere.
-========================================================= */
+/* ============================================================
+   [Figma Mapping] Settings Window Layout
+
+   연결 컴포넌트: src/components/settings/SettingsModal.tsx
+   Figma 구조:
+   - Window Root / Vertical layout
+   - Fixed Draggable Title Bar
+   - Scroll Body / Settings Card sections
+   - Theme Card Grid, Font Form, Sync/Backup/Reset rows
+
+   이 파일은 Settings의 size/spacing/layout만 담당한다.
+   surface color/blur는 widgets/settings.css와 themes/*.css에서 보완한다.
+   z-index/portal 기본 구조는 overlays.css와 함께 확인한다.
+   ============================================================ */
 
 .settings-modal-window,
 .settings-window,

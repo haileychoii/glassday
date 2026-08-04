@@ -1,7 +1,20 @@
-/* =========================================================
-   GLASSDAY BASE
-   design tokens + app shell + core card
-========================================================= */
+/* ============================================================
+   [Figma Mapping] Global Tokens + Widget Frame Primitive
+
+   연결 컴포넌트:
+   - src/components/glass/GlassCard.tsx, GlassPanel.tsx
+   - CareerWidget의 widget-frame 호환 header
+   - AppShell의 공통 surface
+
+   Figma 구조:
+   - :root = Variables collection (Color, Radius, Typography)
+   - .glass-card/.widget-frame = Widget Root Component
+   - header/body/title/icon/actions = Widget 공통 child Frame
+
+   Theme Connection:
+   - 이 파일은 fallback token과 구조를 선언한다.
+   - src/styles/themes/*.css와 theme-surfaces.css가 theme별 값을 덮어쓴다.
+   ============================================================ */
 
 :root {
   --background: 250 74% 97%;

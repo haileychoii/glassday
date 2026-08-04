@@ -1,8 +1,16 @@
-/* =========================================================
-   GLASSDAY OVERLAYS
-   Floating windows, drag layers, and resize-safe modal shells.
-   Shared structure lives here; each theme can restyle the surface below.
-========================================================= */
+/* ============================================================
+   [Figma Mapping] Floating Window + Overlay Infrastructure
+
+   연결 컴포넌트:
+   - src/components/common/FloatingWindow.tsx
+   - Calendar/Memo/Money/Study/Timer Floating Window
+   - CareerWidget 전용 portal의 호환 surface
+
+   Figma 구조: Pointer-transparent Layer -> Window -> Fixed Title Bar -> Scroll Body.
+   높은 z-index는 Grid drag layer보다 위에 detail window를 유지한다.
+   layer 전체는 Dashboard interaction을 막지 않고 실제 window만 pointer event를 받는다.
+   Theme별 background/blur/border는 themes/*.css와 Widget CSS가 덮어쓴다.
+   ============================================================ */
 
 /* =========================================================
    0. Floating window layer

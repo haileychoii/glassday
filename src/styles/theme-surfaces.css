@@ -1,8 +1,15 @@
-/* =========================================================
-   Theme Surface Layer
-   Shared structure stays in layout/grid/widget files.
-   This file only maps each theme to color, texture, border, shadow, and shape.
-========================================================= */
+/* ============================================================
+   [Theme Tokens] Cross-theme Semantic Surface Map
+
+   연결: GlassPanel, GlassCard, Widget inner card, shared control, Floating Window.
+   Figma Variables:
+   - App Surface, Widget Surface, Inner Surface, Control Surface
+   - Border, Shadow, Backdrop Filter
+
+   layout/Grid/Widget 구조는 다른 CSS에 두고 이 파일은 semantic surface token만 제공한다.
+   Study와 Daily Journal 같은 여러 Widget이 같은 inner token을 사용해 theme 내 명암을 맞춘다.
+   개별 Theme selector의 원색/texture는 src/styles/themes/*.css와 함께 확인한다.
+   ============================================================ */
 
 :root {
   --gd-app-bg: hsl(0 0% 100% / 0.2);

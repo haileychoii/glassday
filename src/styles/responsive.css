@@ -1,14 +1,17 @@
-/* =========================================================
-   GLASSDAY RESPONSIVE RULES
-   Breakpoint-only layout adjustments live here.
-   Theme color, blur, border, and radius stay in theme files.
+/* ============================================================
+   [Responsive Map] Viewport-level App Shell Breakpoints
 
-   읽는 법:
-   - 이 파일은 "브라우저 viewport" 기준 반응형이다.
-   - laptop mode 자체 크기 조정은 layout-modes.css 쪽 토큰을 먼저 본다.
-   - 여기서는 topbar / sidebar / mobile workspace bar처럼
-     viewport 때문에 구조가 바뀌는 것만 다룬다.
-========================================================= */
+   연결: AppShell, Topbar, Sidebar, mobile WorkspaceTabsNav 및 공통 Widget safety.
+   이 파일은 브라우저 viewport 때문에 App shell 구조가 바뀌는 규칙만 담당한다.
+   Laptop mode 내부 density는 layout-modes.css token을 먼저 확인하고,
+   Widget 자체 width/height 대응은 widgets/*.css의 container query를 확인한다.
+
+   Figma Variant:
+   - Desktop Sidebar + Topbar
+   - Mobile Combined Header + Horizontal Workspace Tabs
+
+   Theme color/blur/radius는 여기서 선언하지 않고 themes/*.css에 둔다.
+   ============================================================ */
 
 /* =========================================================
    0. Global responsive safety

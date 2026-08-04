@@ -1,12 +1,14 @@
-/* =========================================================
-   GLASSDAY SPACING TOKENS
-   These are the first numbers to tweak when you want the
-   whole dashboard to feel denser or airier.
+/* ============================================================
+   [Figma Variables] Shared Spacing + Widget Geometry Tokens
 
+   이 파일은 Figma Variables와 가장 직접적으로 대응하는 spacing Source of Truth다.
    1) Primitive spacing scale
-   2) Widget shell spacing
-   3) Shared control sizing
-========================================================= */
+   2) Widget Frame header/body/icon/title spacing
+   3) Shared control size
+
+   여러 Widget의 여백을 통일할 때 개별 margin을 늘리기보다 이 token과
+   base.css의 Widget Frame 연결을 먼저 확인한다. theme 색상/반응형 breakpoint와는 분리한다.
+   ============================================================ */
 
 :root {
   /* 1. Primitive spacing scale */

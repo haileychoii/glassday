@@ -1,3 +1,15 @@
+/* ============================================================
+   [Typography Assets] Interface + Memo Font Faces
+
+   연결:
+   - src/constants/fonts.ts의 FontOption/CustomFontEntry
+   - src/components/settings/SettingsModal.tsx
+   - src/components/widgets/MemoWidget.tsx
+
+   Figma Mapping: Typography style 후보의 browser font source.
+   CDN과 public/fonts fallback을 정의하며 layout/size token은 선언하지 않는다.
+   font-family 이름은 constants/fonts.ts의 value 및 저장된 Memo fontFamily와 일치해야 한다.
+   ============================================================ */
 @import url("https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/mona.css");
 
 @font-face {
