@@ -1,3 +1,28 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Navigation / Sidebar
+ * ============================================================
+ *
+ * 화면 역할:
+ * - Wide/Laptop shell의 왼쪽 Workspace navigation이다.
+ * - 실제 Tab 목록 렌더링은 `WorkspaceTabsNav.tsx`에 위임한다.
+ *
+ * 상태 연결:
+ * - Expanded/Collapsed 상태는 Parent `AppShell.tsx`가 소유하고 localStorage에 저장한다.
+ * - Edit 상태에서는 Custom Workspace 추가 버튼이 나타난다.
+ *
+ * 스타일 연결:
+ * - Base: `src/styles/layout.css`
+ * - Mode: `src/styles/layout-modes.css`, `src/styles/responsive.css`
+ * - Theme override: `src/styles/themes/*.css`
+ *
+ * Figma 구조:
+ * - Sidebar / Vertical Auto Layout
+ *   - Brand Row
+ *   - Workspace Navigation / Fill container
+ * Variants: Expanded / Collapsed / Edit
+ * ============================================================
+ */
 import { PanelLeftClose, PanelLeftOpen, Plus } from "lucide-react";
 
 import type { DashboardTab } from "../../types/workspace";
@@ -15,6 +40,7 @@ type SidebarProps = {
   onRemoveTab: (tabId: string) => void;
 };
 
+/** Sidebar는 배치와 collapse control만 담당하며 Tab interaction은 WorkspaceTabsNav가 담당한다. */
 export const Sidebar = ({
   tabs,
   activeTabId,
@@ -31,6 +57,7 @@ export const Sidebar = ({
       className="app-sidebar sidebar"
       data-collapsed={collapsed ? "true" : "false"}
     >
+      {/* Figma Frame: Sidebar Brand / Horizontal Auto Layout / Space Between */}
       <div className="sidebar-brand">
         <div className="sidebar-brand-copy">
           <div className="sidebar-brand-title">Glassday</div>
@@ -52,6 +79,7 @@ export const Sidebar = ({
         </button>
       </div>
 
+      {/* Figma Frame: Workspace Section / Vertical Auto Layout / Fill container */}
       <div className="sidebar-body">
         <div className="sidebar-section-header">
           <span className="sidebar-section-title">Workspaces</span>
@@ -69,6 +97,7 @@ export const Sidebar = ({
           )}
         </div>
 
+        {/* Figma Component Set: Workspace Tab / Default · Selected · Collapsed · Edit */}
         <WorkspaceTabsNav
           tabs={tabs}
           activeTabId={activeTabId}

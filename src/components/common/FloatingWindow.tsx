@@ -1,3 +1,32 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Overlay / Floating Window
+ * ============================================================
+ *
+ * 화면 역할:
+ * - Dashboard 위에 독립적으로 이동·resize 가능한 detail window shell을 제공한다.
+ * - `createPortal(document.body)`를 사용하므로 Dashboard Grid의 overflow와 stacking
+ *   context에 잘리지 않는다.
+ *
+ * 사용 컴포넌트:
+ * - CalendarWidget, MemoWidget, MoneyWidget, TimerWidget
+ * - StudyDetailWindow를 통한 StudyWidget
+ *
+ * 저장 연결:
+ * - 호출자가 전달한 `storageKey`로 x/y/w/h를 `useLocalStorage`에 저장한다.
+ * - 각 Window는 서로 다른 key를 사용하므로 위치와 크기가 독립적이다.
+ *
+ * 스타일 연결:
+ * - `src/styles/overlays.css`
+ * - Floating surface의 Theme override는 `src/styles/themes/*.css`
+ *
+ * Figma 구조:
+ * - Overlay Layer
+ *   - Floating Window / Vertical Auto Layout
+ *     - Title Bar / Horizontal Auto Layout / Space Between
+ *     - Body / Fill container / Scroll policy는 child가 결정
+ * ============================================================
+ */
 import { useEffect, useRef } from "react";
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -14,16 +43,21 @@ type FloatingWindowRect = {
 };
 
 type FloatingWindowProps = {
+  /** false이면 Portal 자체를 렌더링하지 않는다. */
   open: boolean;
+  /** Title Bar의 Primary Text. */
   title: string;
   subtitle?: string;
+  /** 이 Window의 위치와 크기를 저장하는 고유 localStorage key. */
   storageKey: string;
   defaultRect?: FloatingWindowRect;
   minWidth?: number;
   minHeight?: number;
   className?: string;
   titlebarClassName?: string;
+  /** Title Bar 우측에 Close 앞쪽으로 삽입되는 widget 전용 action. */
   actions?: ReactNode;
+  /** Window Body. 내부 scroll 구조는 각 feature CSS가 소유한다. */
   children: ReactNode;
   onClose: () => void;
 };
@@ -44,6 +78,13 @@ const getSafeRect = (
   };
 };
 
+/**
+ * FloatingWindow
+ *
+ * Figma Component: `Floating Window`.
+ * Close는 외부 click과 Close button 모두 지원하며, drag는 Title Bar의 form/control
+ * 바깥에서만 시작된다. ResizeObserver가 CSS resize 결과를 저장 rect에 반영한다.
+ */
 export const FloatingWindow = ({
   open,
   title,
@@ -193,6 +234,7 @@ export const FloatingWindow = ({
       : getSafeRect(rect, minWidth, minHeight);
 
   return createPortal(
+    /* Figma Overlay Layer: modal backdrop가 아니므로 Dashboard를 blur/block하지 않는다. */
     <div className="floating-window-layer">
       <section
         ref={windowRef}
@@ -206,6 +248,7 @@ export const FloatingWindow = ({
           minHeight,
         }}
       >
+        {/* Figma Frame: Floating Window Title Bar / drag handle / Space Between */}
         <div
           ref={titlebarRef}
           className={cn("floating-window-titlebar", titlebarClassName)}
@@ -232,6 +275,7 @@ export const FloatingWindow = ({
           </div>
         </div>
 
+        {/* Figma Frame: Floating Window Body / feature가 자체 Scroll Container를 정의 */}
         <div className="floating-window-body">{children}</div>
       </section>
     </div>,

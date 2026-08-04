@@ -1,3 +1,26 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Navigation / Topbar
+ * ============================================================
+ *
+ * 화면 역할:
+ * - 인사말, Wide/Laptop mode, Settings, Edit 명령을 한 행에 배치한다.
+ * - 좁은 shell에서는 Sidebar와 중복되지 않도록 WorkspaceTabsNav를 Topbar 아래에 표시한다.
+ *
+ * 데이터 연결:
+ * - 모든 상태와 callback은 `App.tsx` 및 `AppShell.tsx`에서 전달된다.
+ * - 이 컴포넌트는 별도 저장이나 Context를 소유하지 않는다.
+ *
+ * 스타일 연결:
+ * - `src/styles/layout.css`, `layout-modes.css`, `responsive.css`
+ * - Theme별 Topbar surface override는 `src/styles/themes/*.css`
+ *
+ * Figma 구조:
+ * - Topbar / Vertical Auto Layout
+ *   - Desktop Row / Horizontal Auto Layout / Space Between
+ *   - Mobile Workspace Row / Horizontal Scroll
+ * ============================================================
+ */
 import { LayoutGrid, Monitor, Settings, Sparkles } from "lucide-react";
 
 import { cn } from "../../lib/utils";
@@ -18,6 +41,12 @@ type TopbarProps = {
   onRemoveTab: (tabId: string) => void;
 };
 
+/**
+ * Topbar
+ *
+ * Figma Variants: `Wide / Laptop`, `View / Edit`, `Desktop / Compact`.
+ * Layout mode 버튼은 Grid 데이터를 바꾸지 않고 저장된 mode별 layout을 선택한다.
+ */
 export const Topbar = ({
   editMode,
   layoutMode,
@@ -34,6 +63,7 @@ export const Topbar = ({
   return (
     <header className="topbar">
       <div className="topbar-inner">
+        {/* Figma Frame: Desktop Topbar Row / Horizontal Auto Layout / Space Between */}
         <div className="topbar-heading">
           <div className="topbar-title">
             <div className="topbar-title-row">
@@ -44,6 +74,7 @@ export const Topbar = ({
             <p>Focus. Create. Elevate.</p>
           </div>
 
+          {/* Figma Component Set: Topbar Actions / Layout, Settings, Edit states */}
           <div className="topbar-actions">
             <div className="layout-mode-toggle" aria-label="Layout mode">
               <button
@@ -96,6 +127,7 @@ export const Topbar = ({
           </div>
         </div>
 
+        {/* Responsive Navigation: 좁은 shell에서만 나타나는 Workspace horizontal scroll */}
         <div className="topbar-mobile-workspaces">
           <WorkspaceTabsNav
             tabs={tabs}

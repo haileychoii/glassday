@@ -1,3 +1,34 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Layout / App Shell
+ * ============================================================
+ *
+ * 화면 역할:
+ * - Sidebar, Topbar, Dashboard Content의 공통 배치 Frame이다.
+ * - Wide에서는 viewport를 채우고, Laptop에서는 1080 x 720 preview window 안에
+ *   동일한 shellContent를 렌더링한다.
+ *
+ * 렌더링 위치:
+ * - Parent: `src/App.tsx`
+ * - Children: `Sidebar.tsx`, `Topbar.tsx`, `DashboardGrid.tsx`
+ *
+ * 저장 연결:
+ * - `glassday.sidebar.collapsed`: Sidebar Component Variant
+ * - `glassday.laptopPreview.position.v1`: Laptop preview의 canvas 위치
+ *
+ * 스타일 연결:
+ * - `src/styles/layout.css`: Sidebar/Topbar/Shell 기본 배치
+ * - `src/styles/layout-modes.css`: Wide/Laptop frame 차이
+ * - 각 Theme CSS: shell surface와 desktop chrome override
+ *
+ * Figma 구조:
+ * - Root Stage
+ *   - Laptop Preview Chrome (Laptop Variant only)
+ *   - App Shell / Horizontal Auto Layout
+ *     - Sidebar / Fixed width
+ *     - Main Column / Fill container
+ * ============================================================
+ */
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
@@ -8,8 +39,11 @@ const SIDEBAR_COLLAPSED_STORAGE_KEY = "glassday.sidebar.collapsed";
 const LAPTOP_FRAME_POSITION_STORAGE_KEY = "glassday.laptopPreview.position.v1";
 
 type AppShellProps = {
+  /** DashboardGrid를 포함하는 Main Content. Shell은 내용의 데이터에 관여하지 않는다. */
   children: ReactNode;
+  /** Sidebar Tab 편집과 Grid drag/resize UI를 동시에 전환한다. */
   editMode: boolean;
+  /** Wide viewport 또는 고정 Laptop preview Frame을 선택한다. */
   layoutMode: DashboardLayoutMode;
   tabs: DashboardTab[];
   activeTabId: string;
@@ -22,6 +56,14 @@ type AppShellProps = {
   onRemoveTab: (tabId: string) => void;
 };
 
+/**
+ * AppShell
+ *
+ * Figma Component: `App Shell`
+ * Variants: `Wide / Laptop`, `Sidebar Expanded / Collapsed`.
+ * Laptop chrome의 drag는 preview 위치만 바꾸며 Dashboard Grid layout에는
+ * 영향을 주지 않는다.
+ */
 export const AppShell = ({
   children,
   editMode,
@@ -121,6 +163,9 @@ export const AppShell = ({
     event.currentTarget.releasePointerCapture(event.pointerId);
   };
 
+  /* Shared Shell Content:
+     Wide와 Laptop에서 같은 Sidebar/Topbar/Grid DOM을 재사용한다. Figma에서도
+     두 Page가 동일 Component instance를 사용하고 크기 Token만 달라야 한다. */
   const shellContent = (
     <div
       className={[
@@ -139,6 +184,7 @@ export const AppShell = ({
             : "min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
         ].join(" ")}
       >
+        {/* Figma Component: Sidebar / Fixed width / Expanded-Collapsed Variant */}
         <Sidebar
           tabs={tabs}
           activeTabId={activeTabId}
@@ -154,6 +200,7 @@ export const AppShell = ({
         />
 
         <div className="app-shell-main-column flex-1 min-w-0 flex flex-col">
+          {/* Figma Component: Topbar / Horizontal Auto Layout / Space Between */}
           <Topbar
             editMode={editMode}
             layoutMode={layoutMode}
@@ -168,6 +215,7 @@ export const AppShell = ({
             onRemoveTab={onRemoveTab}
           />
 
+          {/* Scroll Container: Dashboard 전체 세로 스크롤은 이 Main Frame이 담당한다. */}
           <main
             className="app-shell-main flex-1 !overflow-y-auto !overflow-x-hidden bg-transparent"
           >
@@ -190,6 +238,8 @@ export const AppShell = ({
       {/* <PixelDesktopDecor /> */}
 
       {layoutMode === "laptop" ? (
+        /* Figma Frame: Laptop Preview / movable desktop canvas object.
+           브라우저 viewport가 아니라 이 고정 Frame 크기가 내부 반응형 기준이다. */
         <div className="laptop-preview-stage relative z-10">
           <div
             className="laptop-preview-frame"
@@ -197,6 +247,7 @@ export const AppShell = ({
               transform: `translate(${laptopFramePosition.x}px, ${laptopFramePosition.y}px)`,
             }}
           >
+            {/* Figma Component: Desktop Window Title Bar / drag handle */}
             <div
               className="laptop-preview-chrome"
               onPointerDown={startLaptopFrameDrag}
@@ -222,6 +273,7 @@ export const AppShell = ({
               </div>
             </div>
 
+            {/* Figma Frame: Window Content / 실제 App Shell instance */}
             <div className="laptop-preview-window">{shellContent}</div>
           </div>
         </div>

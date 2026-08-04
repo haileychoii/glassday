@@ -1,3 +1,22 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Navigation / Workspace Tabs
+ * ============================================================
+ *
+ * 화면 역할:
+ * - 동일한 DashboardTab 목록을 Sidebar와 Compact Topbar 양쪽에서 렌더링한다.
+ * - 선택, 이름 변경, 삭제 interaction의 공통 구현이다.
+ *
+ * 데이터 연결:
+ * - Tab 데이터와 callback은 `useDashboardTabs`를 사용하는 `App.tsx`에서 내려온다.
+ * - Theme icon Variant를 위해 `glassday-theme-change` event를 구독한다.
+ *
+ * Figma 구조:
+ * - Component Set: Workspace Tab
+ * - Variants: Default / Selected / Edit / Collapsed / Theme Icon
+ * - Sidebar에서는 Vertical, Topbar에서는 CSS override로 Horizontal Auto Layout
+ * ============================================================
+ */
 import {
   BookOpen,
   BriefcaseBusiness,
@@ -28,6 +47,12 @@ type WorkspaceTabsNavProps = {
   showAddButton?: boolean;
 };
 
+/**
+ * WorkspaceTabsNav
+ *
+ * 한 Tab의 id는 `DashboardTab.layouts`와 activeTab 저장에 사용된다. label이나
+ * icon 표시를 바꾸는 것은 안전하지만 id 변경은 저장된 workspace 연결을 끊는다.
+ */
 export const WorkspaceTabsNav = ({
   tabs,
   activeTabId,
@@ -92,6 +117,7 @@ export const WorkspaceTabsNav = ({
 
   return (
     <>
+      {/* Figma Component List: Workspace Tabs / 방향은 배치 위치의 CSS가 결정한다. */}
       <nav
         className={cn(
           "sidebar-workspace-list",
@@ -101,6 +127,7 @@ export const WorkspaceTabsNav = ({
         aria-label="Workspaces"
       >
         {tabs.map((tab) => (
+          /* Figma Component: Workspace Tab / Selected와 Collapsed는 Variant */
           <div
             key={tab.id}
             className={cn(
@@ -149,6 +176,7 @@ export const WorkspaceTabsNav = ({
         ))}
       </nav>
 
+      {/* Secondary Action: Compact Topbar에서 사용하는 Workspace 추가 버튼 */}
       {showAddButton && editMode && onAddTab && (
         <button
           type="button"

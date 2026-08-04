@@ -1,5 +1,30 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Default Grid Layouts
+ * ============================================================
+ *
+ * 역할:
+ * - 처음 생성되는 Workspace와 누락 위젯이 사용할 16-column 기본 좌표다.
+ * - Wide와 Laptop은 별도 layout이며 서로의 사용자 편집 결과를 덮어쓰지 않는다.
+ *
+ * 연결 관계:
+ * - Renderer: `src/components/grid/DashboardGrid.tsx`
+ * - Tab defaults: `src/constants/dashboardTabs.ts`
+ * - Persisted copy: `src/hooks/useDashboardTabs.ts`
+ * - Item type: `src/types/workspace.ts#GridLayoutItem`
+ *
+ * Figma 변환:
+ * - 각 breakpoint 배열은 하나의 Layout Variant다.
+ * - x/w는 16-column 기준, y/h는 DashboardGrid의 rowHeight/gap 기준이다.
+ *
+ * 수정 주의:
+ * - `i`는 `widgetRegistry` 및 `widgetMap` key와 반드시 일치해야 한다.
+ * - 값 변경은 신규/초기화 layout에만 적용되며 기존 사용자 저장값은 유지된다.
+ * ============================================================
+ */
 import type { DashboardLayoutMode, Layouts } from "../../types/workspace";
 
+/** Wide Web 기본 배치: viewport를 채우는 Dashboard Canvas용 layout. */
 export const wideDefaultLayouts: Layouts = {
   lg: [
     {
@@ -273,6 +298,7 @@ export const wideDefaultLayouts: Layouts = {
   ],
 };
 
+/** Laptop App 기본 배치: 고정 preview Frame 안의 조밀한 layout. */
 export const laptopDefaultLayouts: Layouts = {
   lg: [
     { i: "today", x: 0, y: 0, w: 7, h: 9 },

@@ -1,3 +1,23 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / Default Workspace Tabs
+ * ============================================================
+ *
+ * 역할:
+ * - Home, Career, Study, Memo, Life Workspace의 기본 Widget 구성을 정의한다.
+ * - 각 Tab은 같은 widgetId라도 Wide/Laptop layout 복사본을 따로 가진다.
+ *
+ * 연결 관계:
+ * - State/Persistence: `src/hooks/useDashboardTabs.ts`
+ * - Navigation: `src/components/layout/WorkspaceTabsNav.tsx`
+ * - Renderer: `src/components/grid/DashboardGrid.tsx`
+ * - Coordinate source: `src/components/grid/gridDefaults.ts`
+ *
+ * Figma 구조:
+ * - 각 기본 Tab은 Figma Page 또는 Section으로 대응할 수 있다.
+ * - Widget Component 자체는 공유하고 Tab별로 instance 배치만 다르게 둔다.
+ * ============================================================
+ */
 import type {
   DashboardModeLayouts,
   DashboardLayoutMode,
@@ -38,6 +58,7 @@ const cloneLayouts = (layouts: Layouts): Layouts => {
   ) as Layouts;
 };
 
+/* 각 Workspace가 필요한 widgetId만 기본 Grid에서 골라 독립 layout 사본을 만든다. */
 const buildModeLayouts = (widgetIds: WidgetId[]): DashboardModeLayouts => {
   const wideLayouts = pickLayouts("wide", widgetIds);
   const laptopLayouts = pickLayouts("laptop", widgetIds);
@@ -98,6 +119,7 @@ const lifeWidgetIds: WidgetId[] = [
   "memo",
 ];
 
+/** 초기화 또는 최초 실행 시 생성되는 잠금 Workspace 목록. */
 export const defaultDashboardTabs: DashboardTab[] = [
   {
     id: "home",

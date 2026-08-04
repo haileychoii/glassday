@@ -1,3 +1,33 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Root / Glassday Application
+ * ============================================================
+ *
+ * 화면 역할:
+ * - 전역 Provider, AppShell, DashboardGrid, Settings Window를 조립한다.
+ * - Wide/Laptop 표시 모드와 Edit/Settings 상태의 최상위 Source of Truth다.
+ *
+ * 렌더링 위치:
+ * - Parent: `src/main.tsx`
+ * - Shell: `src/components/layout/AppShell.tsx`
+ * - Grid: `src/components/grid/DashboardGrid.tsx`
+ * - Overlay: `src/components/settings/SettingsModal.tsx`
+ *
+ * 데이터 연결:
+ * - `CloudSyncProvider`: localStorage snapshot과 Supabase 동기화
+ * - `DashboardDataProvider`: Calendar와 Career 공유 데이터
+ * - `useDashboardTabs`: Tab별 widgetId와 Wide/Laptop Grid layout 저장
+ *
+ * Figma 구조:
+ * - Root Frame
+ *   - App Shell Component
+ *   - Settings Floating Window Variant
+ *
+ * 수정 영향:
+ * - Provider 순서를 바꾸면 Context를 읽는 모든 Widget과 Settings에 영향이 간다.
+ * - layoutMode 저장 키는 OAuth 복귀와 연결되므로 임의 변경하지 않는다.
+ * ============================================================
+ */
 import { useEffect, useState } from "react";
 
 import { AppShell } from "./components/layout/AppShell";
@@ -32,6 +62,13 @@ const readLayoutModeFromUrl = (): DashboardLayoutMode | null => {
   return mode === "laptop" || mode === "wide" ? mode : null;
 };
 
+/**
+ * App
+ *
+ * URL/localStorage의 layoutMode를 복원하고 현재 DashboardTab을 AppShell과
+ * DashboardGrid에 전달한다. Figma에서는 화면 전체 Page와 Overlay Host에
+ * 해당하며, Wide/Laptop은 별도 기능이 아니라 동일 UI의 Layout Variant다.
+ */
 function App() {
   const [editMode, setEditMode] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -140,8 +177,12 @@ function App() {
   }
 
   return (
+    /* Data Provider Stack:
+       Cloud snapshot이 localStorage를 복원한 뒤 Dashboard Context와 각 Widget의
+       useLocalStorage가 동일 데이터를 다시 읽는 순서다. */
     <CloudSyncProvider>
       <DashboardDataProvider>
+        {/* Figma Frame: App Shell / Sidebar + Topbar + Dashboard Content */}
         <AppShell
           editMode={editMode}
           layoutMode={layoutMode}
@@ -165,6 +206,7 @@ function App() {
           />
         </AppShell>
 
+        {/* Figma Overlay: Settings Floating Window / Dashboard Grid와 형제 계층 */}
         <SettingsModal
           open={settingsOpen}
           onClose={() => setSettingsOpen(false)}

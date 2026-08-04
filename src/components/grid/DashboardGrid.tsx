@@ -1,3 +1,35 @@
+/**
+ * ============================================================
+ * [Figma Mapping] Dashboard / 16-Column Widget Grid
+ * ============================================================
+ *
+ * 화면 역할:
+ * - active DashboardTab의 widgetId를 실제 Widget Component로 변환해 배치한다.
+ * - Edit mode에서 선택, drag, 8방향 resize, 충돌 후 세로 reflow를 처리한다.
+ *
+ * 렌더링 위치:
+ * - Parent: `src/App.tsx` → `AppShell.tsx`의 Main Scroll Container
+ * - Registry metadata: `src/constants/widgets.ts`
+ * - Component map: 이 파일의 `widgetMap`
+ * - Default layout: `src/components/grid/gridDefaults.ts`
+ * - Persisted layout: `src/hooks/useDashboardTabs.ts`
+ *
+ * Grid 연결:
+ * - Library: `react-grid-layout`
+ * - Breakpoints: lg 980 / md 620 / sm 0
+ * - 모든 breakpoint: 16 columns
+ * - Wide와 Laptop은 rowHeight/gap 및 저장 layout이 서로 분리된다.
+ *
+ * 스타일 연결:
+ * - `src/styles/dashboard-grid.css`
+ * - `src/styles/layout-modes.css`, `responsive.css`, `overrides.css`
+ *
+ * Figma 구조:
+ * - Dashboard Canvas / 16-column Layout Grid
+ * - Widget Instance / Component instance
+ * - Edit Overlay / Selected · Collision Variants
+ * ============================================================
+ */
 import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   ComponentType,
@@ -44,9 +76,13 @@ const safeWidgetRegistry = widgetRegistry as Record<string, WidgetMeta>;
 type Breakpoint = "lg" | "md" | "sm";
 
 type DashboardGridProps = {
+  /** true이면 저장 전 draft layout에서 move/resize handle과 picker를 표시한다. */
   editMode: boolean;
+  /** 동일 Tab의 Wide/Laptop layout 중 현재 사용할 좌표 집합을 선택한다. */
   layoutMode: DashboardLayoutMode;
+  /** widgetIds와 mode별 layouts를 함께 가진 현재 Workspace. */
   activeTab: DashboardTab;
+  /** drag/resize가 끝난 layout을 useDashboardTabs 저장 계층으로 전달한다. */
   onLayoutsChange: (mode: DashboardLayoutMode, layouts: Layouts) => void;
   onAddWidget: (widgetId: WidgetId) => void;
   onRemoveWidget: (widgetId: WidgetId) => void;
@@ -56,6 +92,9 @@ type DashboardGridProps = {
   }) => void;
 };
 
+/* Grid Contract:
+   CSS breakpoint와 별개인 react-grid-layout 내부 폭 기준이다. Figma에서
+   Desktop/Compact grid Variant를 만들 때 이 세 폭을 기준으로 확인한다. */
 const BREAKPOINTS: Record<Breakpoint, number> = {
   lg: 980,
   md: 620,
@@ -98,6 +137,13 @@ type EditInteraction = {
   lastLayouts: Layouts;
 };
 
+/**
+ * Widget Component Map
+ *
+ * 저장된 widgetId를 실제 React node로 바꾼다. `widgetRegistry`는 picker용
+ * metadata만 제공하므로 새 위젯 추가 시 두 파일과 gridDefaults를 함께 수정한다.
+ * `wealth`는 기존 저장 데이터 호환을 위해 MoneyWidget으로 연결되는 alias다.
+ */
 const widgetMap: Partial<Record<WidgetId, ReactNode>> = {
   today: <TodayFocusWidget />,
   alerts: <AlertCenterWidget />,
@@ -356,6 +402,14 @@ const replaceLayoutItem = (
   );
 };
 
+/**
+ * DashboardGrid
+ *
+ * Figma Component: `Dashboard Grid`.
+ * Variants: `View / Edit`, `Wide / Laptop`, `lg / md / sm`.
+ * 위젯 내부 반응형은 각 Widget CSS의 container query가 담당하고, 이 파일은
+ * 위젯 Frame의 위치와 크기만 결정한다.
+ */
 export const DashboardGrid = ({
   editMode,
   layoutMode,
@@ -712,6 +766,7 @@ export const DashboardGrid = ({
         .filter(Boolean)
         .join(" ")}
     >
+      {/* Figma Frame: Workspace Header / Edit mode에서만 시각적으로 사용 */}
       <div className="dashboard-tab-header">
         <div>
           <div className="text-xs font-bold text-muted-foreground uppercase tracking-[0.18em]">
@@ -739,6 +794,7 @@ export const DashboardGrid = ({
         )}
       </div>
 
+      {/* Figma Component: Widget Picker / Edit mode Variant */}
       {editMode && hiddenWidgetIds.length > 0 && (
         <div className="widget-picker-panel">
           <div className="text-xs font-bold text-muted-foreground">
@@ -773,6 +829,8 @@ export const DashboardGrid = ({
         </div>
       )}
 
+      {/* Figma Frame: 16-column Dashboard Canvas.
+          Grid item의 좌표는 activeTab.layouts[layoutMode]에서 온다. */}
       <div
         ref={gridWidthRef}
         className={["dashboard-edit-canvas", editMode ? "is-editing" : ""]
@@ -808,6 +866,7 @@ export const DashboardGrid = ({
             const widget = safeWidgetRegistry[widgetId];
 
             return (
+              /* Figma Component Instance: Widget Frame / Selected-Collision Variants */
               <div
                 key={widgetId}
                 onPointerDownCapture={(event) => {
@@ -832,6 +891,7 @@ export const DashboardGrid = ({
                   .filter(Boolean)
                   .join(" ")}
               >
+                {/* Edit Overlay: move surface, 8 resize handles, label, remove action */}
                 {editMode && (
                   <>
                     <div
