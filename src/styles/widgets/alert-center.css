@@ -18,7 +18,14 @@
    1. Alert list and card rows
 ========================================================= */
 
+.alert-center-widget {
+  container-type: size;
+  container-name: gd-widget alert-center-widget;
+}
+
 .alert-center-list {
+  flex: 1 1 auto;
+  height: 100%;
   min-height: 0;
   display: grid;
   gap: var(--gd-widget-stack-gap);
@@ -136,4 +143,55 @@
 
 .alert-center-danger-icon {
   color: hsl(350 70% 45%);
+}
+
+/* Compact Alert list
+   Severity icon + content + danger marker의 3-column 관계는 유지하고,
+   작은 card에서도 metadata 때문에 action/description이 밀리지 않게 한다. */
+@container alert-center-widget (max-width: 420px) {
+  .alert-center-list {
+    gap: 7px;
+  }
+
+  .alert-center-item {
+    min-height: 54px;
+    grid-template-columns: 30px minmax(0, 1fr) 14px;
+    gap: 8px;
+    padding: 9px 10px;
+    border-radius: 15px;
+  }
+
+  .alert-center-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 11px;
+  }
+
+  .alert-center-title-row span {
+    max-width: 72px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .alert-center-content p {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@container alert-center-widget (max-height: 300px) {
+  .alert-center-item {
+    min-height: 48px;
+    padding-block: 7px;
+  }
+
+  .alert-center-content p {
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

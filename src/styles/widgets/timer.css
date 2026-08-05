@@ -146,10 +146,27 @@
 .timer-widget-action-row,
 .timer-widget-prompt-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
 
   gap: var(--gd-widget-inline-gap, 7px);
+}
+
+.timer-widget-mode-row {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  overscroll-behavior-inline: contain;
+}
+
+.timer-widget-mode-row::-webkit-scrollbar {
+  display: none;
+}
+
+.timer-widget-mode-button {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .timer-widget-mode-row,

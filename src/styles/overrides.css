@@ -995,6 +995,16 @@ body,
   container-name: gd-widget !important;
 }
 
+.dashboard-grid-item > .glass-card.alert-center-widget {
+  container-type: size !important;
+  container-name: gd-widget alert-center-widget !important;
+}
+
+.dashboard-grid-item > .glass-card.today-focus-widget {
+  container-type: size !important;
+  container-name: gd-widget today-focus-widget !important;
+}
+
 /* Study needs height queries as well as width queries. Keep both container
    names so shared gd-widget rules and Study-specific rules can coexist.
    / 위젯 높이가 낮을 때 내부 스크롤을 줄이기 위해 size 컨테이너를 사용합니다. */

@@ -751,19 +751,39 @@
   }
 
   .study10-subject-tools {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    padding-bottom: 1px;
+  }
+
+  .study10-subject-tools::-webkit-scrollbar {
+    display: none;
+  }
+
+  .study10-subject-tool {
+    flex: 0 0 clamp(106px, 33cqw, 132px);
   }
 
   .study10-task-form {
-    grid-template-columns: minmax(78px, 0.8fr) minmax(0, 1.7fr) 66px;
+    grid-template-columns:
+      minmax(68px, 0.72fr)
+      minmax(84px, 1.35fr)
+      58px
+      30px;
   }
 
   .study10-add-button {
-    grid-column: 1 / -1;
+    grid-column: auto;
+    min-width: 30px;
+    width: 30px;
+    padding-inline: 0;
   }
 
   .study10-add-button span {
-    display: inline;
+    display: none;
   }
 
   .study10-panel {
@@ -796,18 +816,15 @@
   }
 
   .study10-date-bar {
-    grid-template-columns: 30px minmax(0, 1fr) 30px;
+    grid-template-columns: 30px minmax(0, 1fr) 42px 30px;
   }
 
   .study10-today-button {
-    grid-column: 2;
-    grid-row: 2;
-    height: 26px;
-  }
-
-  .study10-date-bar > .study10-icon-button:last-child {
-    grid-column: 3;
-    grid-row: 1;
+    grid-column: auto;
+    grid-row: auto;
+    height: 30px;
+    padding-inline: 4px;
+    font-size: 9px;
   }
 
   .study10-subject-tool {
@@ -815,11 +832,7 @@
   }
 
   .study10-task-form {
-    grid-template-columns: minmax(0, 1fr) 66px;
-  }
-
-  .study10-task-form select {
-    grid-column: 1 / -1;
+    grid-template-columns: 68px minmax(80px, 1fr) 54px 30px;
   }
 
   .study10-minute-head,

@@ -827,6 +827,7 @@ export const MoneyWidget = () => {
               onClick={() => openMoneyDetail("spending")}
               className="glass-button money-action-button"
               title="Add expense"
+              aria-label="Add expense"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Expense</span>
@@ -837,6 +838,7 @@ export const MoneyWidget = () => {
               onClick={() => openMoneyDetail("overview")}
               className="glass-button money-icon-button"
               title="Open money detail"
+              aria-label="Open money detail"
             >
               <Maximize2 className="w-3.5 h-3.5" />
             </button>

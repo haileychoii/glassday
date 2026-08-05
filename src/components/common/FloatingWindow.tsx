@@ -239,6 +239,9 @@ export const FloatingWindow = ({
       <section
         ref={windowRef}
         className={cn("floating-window", className)}
+        role="dialog"
+        aria-modal="false"
+        aria-label={title}
         style={{
           left: safeRect.x,
           top: safeRect.y,
@@ -269,6 +272,7 @@ export const FloatingWindow = ({
               onClick={onClose}
               className="glass-button h-8 w-8 flex items-center justify-center"
               title="Close"
+              aria-label={`Close ${title}`}
             >
               <X className="w-4 h-4" />
             </button>

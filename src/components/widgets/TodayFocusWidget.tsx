@@ -279,6 +279,8 @@ export const TodayFocusWidget = () => {
                     })
                   }
                   className="today-focus-check"
+                  aria-label={task.done ? "Mark task as incomplete" : "Mark task as complete"}
+                  title={task.done ? "Mark as incomplete" : "Mark as complete"}
                 >
                   {task.done ? (
                     <Check className="w-3 h-3" />
@@ -296,12 +298,15 @@ export const TodayFocusWidget = () => {
                   }
                   spellCheck={false}
                   className="today-focus-task-input"
+                  title={task.text || "Focus task"}
                 />
 
                 <button
                   type="button"
                   onClick={() => removeTask(task.id)}
                   className="today-focus-delete"
+                  aria-label="Delete focus task"
+                  title="Delete task"
                 >
                   <Trash2 className="w-3 h-3" />
                 </button>

@@ -240,6 +240,7 @@ export const CalendarWidget = () => {
             onClick={createManualEvent}
             className="glass-button h-8 w-8 flex items-center justify-center"
             title="Add event"
+            aria-label="Add calendar event"
           >
             <Plus className="w-3.5 h-3.5" />
           </button>
@@ -253,6 +254,8 @@ export const CalendarWidget = () => {
                 type="button"
                 onClick={goPrev}
                 className="calendar-nav-button"
+                aria-label={`Previous ${view}`}
+                title={`Previous ${view}`}
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
@@ -268,6 +271,8 @@ export const CalendarWidget = () => {
                 type="button"
                 onClick={goNext}
                 className="calendar-nav-button"
+                aria-label={`Next ${view}`}
+                title={`Next ${view}`}
               >
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
@@ -283,6 +288,8 @@ export const CalendarWidget = () => {
                     "calendar-view-button",
                     view === item && "is-active"
                   )}
+                  aria-pressed={view === item}
+                  aria-label={`Show ${item} view`}
                 >
                   {item}
                 </button>
@@ -332,6 +339,7 @@ export const CalendarWidget = () => {
                     type="button"
                     onClick={() => openEvent(event)}
                     className="calendar-event-item"
+                    title={`${event.title} · ${formatEventTime(event)}`}
                     style={{
                       borderLeft: `6px solid ${getEventColor(event)}aa`,
                     }}

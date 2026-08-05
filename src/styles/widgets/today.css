@@ -814,7 +814,7 @@
 }
 
 /* 높이가 좁아질 때 padding 줄이기 */
-@media (max-height: 760px), (max-width: 900px) {
+@container today-focus-widget (max-width: 900px) {
   .today-focus-card,
   .today-focus-widget,
   .today-mini-card {
@@ -915,7 +915,7 @@
 }
 
 /* 높이가 부족하면 패딩 줄이고 스크롤 */
-@media (max-height: 760px) {
+@container today-focus-widget (max-height: 760px) {
   .today-focus-card,
   .today-focus-widget,
   .today-mini-card {
@@ -933,5 +933,102 @@
   .today-mini-main,
   .today-mini-next {
     padding: 10px 12px !important;
+  }
+}
+
+/* =========================================================
+   Today Focus responsive UX consolidation
+   핵심 Summary와 Top 3는 위쪽에 유지하고 linked summary만 필요할 때
+   수평 탐색한다. Widget 자체 크기만 사용하므로 browser viewport 변화가
+   같은 크기의 card 내부 구성을 바꾸지 않는다.
+========================================================= */
+
+/* today-focus.css의 legacy `.today-focus-main` panel alias가 현재 TSX의
+   headline element와 이름이 겹친다. Hero 안쪽 headline은 별도 Card가 아니므로
+   padding/grid를 제거해 Summary가 중첩 Card처럼 보이지 않게 한다. */
+.today-focus-hero .today-focus-main {
+  width: auto;
+  min-width: 0;
+  padding: 0;
+  display: block;
+  border-radius: 0;
+}
+
+@container today-focus-widget (max-width: 430px) {
+  .today-focus-hero {
+    min-height: 68px;
+    padding: 10px 11px !important;
+    grid-template-columns: minmax(0, 1fr) 50px;
+    gap: 8px;
+  }
+
+  .today-focus-main {
+    margin-top: 2px;
+    padding: 0 !important;
+    font-size: 17px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .today-focus-ring {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .today-focus-ring span {
+    width: 38px;
+    height: 38px;
+    font-size: 11px;
+  }
+
+  .today-focus-grid {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(152px, 78cqw);
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  .today-focus-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .today-focus-section {
+    padding: 9px 10px !important;
+  }
+
+  .today-focus-delete {
+    opacity: 0.62;
+  }
+}
+
+@container today-focus-widget (max-height: 420px) {
+  .today-focus,
+  .today-mini {
+    gap: 7px !important;
+  }
+
+  .today-focus-hero {
+    min-height: 62px;
+    padding-block: 8px !important;
+  }
+
+  .today-focus-section {
+    padding-block: 8px !important;
+  }
+
+  .today-focus-section-title {
+    margin-bottom: 5px;
+  }
+}
+
+@media (hover: none) {
+  .today-focus-delete {
+    opacity: 0.62;
   }
 }

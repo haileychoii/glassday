@@ -336,7 +336,8 @@ export const AlertCenterWidget = () => {
   }, []);
 
   const alerts = useMemo(() => {
-    refreshKey;
+    /* The counter intentionally invalidates the localStorage-derived snapshot. */
+    void refreshKey;
     return buildAlerts();
   }, [refreshKey]);
 
@@ -362,6 +363,7 @@ export const AlertCenterWidget = () => {
           type="button"
           onClick={() => setRefreshKey((prev) => prev + 1)}
           className="glass-button h-8 px-3 text-xs"
+          aria-label="Refresh alerts"
         >
           Refresh
         </button>

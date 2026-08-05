@@ -63,9 +63,9 @@ export const HealthWidget = () => {
       icon={<Activity className="w-4 h-4" />}
       className="health-widget"
     >
-      <div className="space-y-4">
+      <div className="health-content space-y-4">
         {/* Figma Frame: Health Metrics / Three-column responsive grid */}
-        <div className="grid grid-cols-3 gap-2">
+        <div className="health-metrics-grid grid grid-cols-3 gap-2">
           <label className="health-metric-card rounded-2xl bg-white/25 border border-white/40 p-3">
             <div className="text-[11px] text-muted-foreground mb-1">
               Start
@@ -106,7 +106,7 @@ export const HealthWidget = () => {
           </label>
         </div>
 
-        <div>
+        <div className="health-progress-panel">
           <div className="flex justify-between text-xs mb-2">
             <span className="text-muted-foreground">Progress</span>
             <span className="tabular-nums">{Math.round(progress)}%</span>
@@ -138,7 +138,9 @@ export const HealthWidget = () => {
         <button
           type="button"
           onClick={resetValue}
-          className="edit-only flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition"        >
+          className="health-reset-button edit-only flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition"
+          aria-label="Reset health data"
+        >
           <RotateCcw className="w-3.5 h-3.5" />
           Reset health data
         </button>

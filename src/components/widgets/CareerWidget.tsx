@@ -815,6 +815,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
               }}
               className="career-delete-button"
               title="Delete"
+              aria-label={`Delete ${item.company || "career"} application`}
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
@@ -874,6 +875,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
             onClick={addCareerItem}
             className="career-icon-button"
             title="Add application"
+            aria-label="Add career application"
           >
             <Plus className="w-4 h-4" />
           </button>

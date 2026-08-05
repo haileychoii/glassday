@@ -39,7 +39,7 @@
 }
 
 .money-widget .glass-card-body {
-  height: auto;
+  height: 100%;
   min-width: 0;
   min-height: 0;
   display: grid;
@@ -180,6 +180,7 @@
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 
 .money-summary-panel,
@@ -521,6 +522,8 @@
   overflow-x: hidden;
   padding-right: 2px;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  padding-bottom: 2px;
 }
 
 .money-section-tabs {
@@ -528,6 +531,13 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--gd-space-xs);
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  padding-block: 2px 5px;
+  background: color-mix(in srgb, hsl(var(--card)) 76%, transparent);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
 }
 
 .money-section-tab {
@@ -1066,8 +1076,13 @@
   }
 
   .money-visual-panel {
-    grid-template-columns: 1fr;
-    justify-items: center;
+    grid-template-columns: 86px minmax(0, 1fr);
+    justify-items: stretch;
+    align-items: center;
+  }
+
+  .money-visual-panel .money-donut {
+    width: 86px;
   }
 
   .money-top-category {

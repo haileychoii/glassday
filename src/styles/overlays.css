@@ -72,6 +72,8 @@
 
   box-sizing: border-box;
   isolation: isolate;
+  container-type: size;
+  container-name: floating-window;
 }
 
 .floating-window,
@@ -171,6 +173,43 @@
   height: 100%;
 
   overflow: hidden;
+}
+
+/* =========================================================
+   3-1. Window-local responsive titlebar
+   Figma: Title + Action Rail / compact Variant
+
+   The floating window reacts to its own resized width. Secondary text is the
+   first thing removed; window actions remain on one horizontally scrollable
+   rail instead of wrapping into a taller titlebar.
+   / 브라우저가 아닌 실제 Floating Window 폭을 기준으로 전환한다.
+========================================================= */
+@container floating-window (max-width: 520px) {
+  .floating-window-titlebar {
+    padding-inline: 14px;
+    gap: 8px;
+  }
+
+  .floating-window-subtitle {
+    display: none;
+  }
+
+  .floating-window-actions {
+    min-width: 0;
+    max-width: 62%;
+    gap: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .floating-window-actions::-webkit-scrollbar {
+    display: none;
+  }
+
+  .floating-window-actions > * {
+    flex: 0 0 auto;
+  }
 }
 
 /* =========================================================

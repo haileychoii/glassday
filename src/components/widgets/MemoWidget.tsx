@@ -1883,6 +1883,7 @@ export const MemoWidget = () => {
                     ? "Hide memo list"
                     : "Show memo list"
               }
+              aria-label={isWidgetListOpen ? "Hide memo list" : "Show memo list"}
             >
               <PanelLeft className="w-3.5 h-3.5" />
             </button>
@@ -1892,6 +1893,7 @@ export const MemoWidget = () => {
               onClick={addNewMemo}
               className="glass-button h-8 w-8 flex items-center justify-center"
               title="New memo"
+              aria-label="Create new memo"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -1901,6 +1903,7 @@ export const MemoWidget = () => {
               onClick={() => setMemoWindowOpen(true)}
               className="glass-button h-8 w-8 flex items-center justify-center"
               title="Open memo window"
+              aria-label="Open memo in floating window"
             >
               <Maximize2 className="w-3.5 h-3.5" />
             </button>
@@ -1912,6 +1915,7 @@ export const MemoWidget = () => {
                 "glass-button h-8 px-3 text-xs flex items-center gap-1.5",
                 editing && "is-active"
               )}
+              aria-label={editing ? "Finish editing memo" : "Edit memo"}
             >
               {editing ? (
                 <Lock className="w-3.5 h-3.5" />
@@ -1919,7 +1923,7 @@ export const MemoWidget = () => {
                 <Pencil className="w-3.5 h-3.5" />
               )}
 
-              {editing ? "Done" : "Edit"}
+              <span className="memo-edit-label">{editing ? "Done" : "Edit"}</span>
             </button>
           </div>
         }

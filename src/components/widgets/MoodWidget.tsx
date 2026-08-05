@@ -66,6 +66,7 @@ export const MoodWidget = () => {
               ? "bg-foreground text-background border-foreground"
               : "bg-white/35 border-white/50 text-muted-foreground hover:text-foreground"
           )}
+          aria-label={editing ? "Finish editing mood" : "Edit mood"}
         >
           {editing ? (
             <Lock className="w-3.5 h-3.5" />
@@ -98,6 +99,8 @@ export const MoodWidget = () => {
                     n <= values[metric] ? "mood-dot-active" : "hover:bg-white/65",
                     !editing && "pointer-events-none"
                   )}
+                  aria-label={`Set ${metric} to ${n} of 5`}
+                  aria-pressed={values[metric] === n}
                 />
               ))}
             </div>
@@ -113,6 +116,7 @@ export const MoodWidget = () => {
             type="button"
             onClick={resetValue}
             className="mood-reset-button"
+            aria-label="Reset mood data"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset mood data

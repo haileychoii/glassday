@@ -1,0 +1,118 @@
+/* ============================================================
+   [Figma Mapping] Health Widget
+   TSX: src/components/widgets/HealthWidget.tsx
+
+   Frames:
+   - Metrics Grid: Start / Current / Goal, always three compact columns.
+   - Progress Panel: progress value, bar, and remaining amount.
+   - Program Field: editable program name.
+
+   The widget uses its own container instead of viewport breakpoints. Theme
+   colors remain owned by shared tokens and glass-dark.css overrides.
+   / 브라우저 폭이 아니라 Health 위젯 자체 크기에 반응한다.
+============================================================ */
+
+.health-widget {
+  container-type: size;
+  container-name: health-widget;
+  min-width: 0;
+  min-height: 0;
+}
+
+.health-widget > .glass-card-body,
+.health-content {
+  min-width: 0;
+  min-height: 0;
+}
+
+.health-widget > .glass-card-body {
+  overflow: hidden;
+}
+
+.health-content {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  align-content: start;
+  gap: var(--gd-widget-section-gap);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.health-content.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0;
+}
+
+.health-metrics-grid {
+  min-width: 0;
+  gap: var(--gd-widget-gap-tight);
+}
+
+.health-metric-card,
+.health-program-card {
+  min-width: 0;
+  padding: clamp(8px, 1.6cqw, 12px);
+  border-radius: var(--gd-radius-inner, 14px);
+}
+
+.health-metric-card input,
+.health-program-card input {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.health-progress-panel {
+  min-width: 0;
+}
+
+.health-reset-button {
+  min-height: 32px;
+  width: max-content;
+}
+
+@container health-widget (max-width: 360px) {
+  .health-content {
+    gap: 6px;
+  }
+
+  .health-metric-card {
+    padding: 7px;
+  }
+
+  .health-metric-card input {
+    font-size: 15px;
+  }
+}
+
+@container health-widget (min-width: 620px) {
+  .health-content {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.72fr);
+  }
+
+  .health-metrics-grid {
+    grid-column: 1 / -1;
+  }
+
+  .health-reset-button {
+    grid-column: 1 / -1;
+  }
+}
+
+@container health-widget (max-height: 300px) {
+  .health-content {
+    grid-template-columns: minmax(0, 1fr) minmax(150px, 0.65fr);
+  }
+
+  .health-metrics-grid {
+    grid-column: 1 / -1;
+  }
+
+  .health-program-card {
+    padding-block: 7px;
+  }
+
+  .health-reset-button {
+    display: none;
+  }
+}

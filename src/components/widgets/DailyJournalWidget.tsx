@@ -251,6 +251,7 @@ export const DailyJournalWidget = () => {
             onClick={() =>
               setSelectedDate((prev) => addDaysToDateString(prev, -1))
             }
+            aria-label="Previous journal date"
           >
             ←
           </button>
@@ -259,6 +260,7 @@ export const DailyJournalWidget = () => {
             type="date"
             value={selectedDate}
             onChange={(event) => setSelectedDate(event.target.value)}
+            aria-label="Select journal date"
           />
 
           <button
@@ -266,6 +268,7 @@ export const DailyJournalWidget = () => {
             onClick={() =>
               setSelectedDate((prev) => addDaysToDateString(prev, 1))
             }
+            aria-label="Next journal date"
           >
             →
           </button>
@@ -355,6 +358,7 @@ export const DailyJournalWidget = () => {
                   addTask("todayTasks", newTaskText);
                   setNewTaskText("");
                 }}
+                aria-label="Add today task"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -388,6 +392,7 @@ export const DailyJournalWidget = () => {
                   addTask("tomorrowTasks", newTomorrowTaskText);
                   setNewTomorrowTaskText("");
                 }}
+                aria-label="Add tomorrow task"
               >
                 <Plus className="w-4 h-4" />
               </button>

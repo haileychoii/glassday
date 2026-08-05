@@ -2727,6 +2727,29 @@ body.theme-pixel-desk .career-cover-status-select option {
   --gd-calendar-week-day-min: 60px;
 }
 
+/* Toolbar density
+   Date navigation과 Segmented Control은 서로 다른 control group이다.
+   충분한 폭에서는 같은 행, 좁은 폭에서는 group 단위 두 행만 사용하며
+   개별 button은 절대 세로로 쌓지 않는다. */
+.calendar-widget-toolbar {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
+}
+
+.calendar-widget-toolbar > div:first-child {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.calendar-widget-toolbar > div:first-child .calendar-date-input {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .calendar-view-body.is-month-view {
   min-height: 0 !important;
   overflow: hidden !important;
@@ -2933,8 +2956,39 @@ body.theme-pixel-desk .career-cover-status-select option {
 
 @container calendar-widget (max-width: 520px) {
   .calendar-widget-frame {
-    --gd-calendar-week-day-min: 56px;
+    --gd-calendar-week-day-min: 48px;
     --gd-calendar-week-time-col: 34px;
+  }
+
+  .calendar-widget-toolbar {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .calendar-widget-toolbar > div,
+  .calendar-view-toggle,
+  .calendar-date-input {
+    width: auto !important;
+  }
+
+  .calendar-view-toggle {
+    width: 100% !important;
+    justify-content: stretch !important;
+  }
+
+  .calendar-view-button {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+  }
+
+  .calendar-sync-preview {
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 8px 10px !important;
+    margin-top: 0 !important;
+  }
+
+  .calendar-sync-preview .text-muted-foreground {
+    display: none;
   }
 
   .calendar-week-day-header {
@@ -2947,7 +3001,40 @@ body.theme-pixel-desk .career-cover-status-select option {
   }
 }
 
-@media (max-width: 620px) {
+@container calendar-widget (max-width: 620px) {
+  .calendar-sync-preview {
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 8px 10px !important;
+    margin-top: 0 !important;
+  }
+
+  .calendar-sync-preview .text-muted-foreground {
+    display: none;
+  }
+}
+
+/* Month/Week의 최소 column 폭은 view body 안에서만 scroll된다.
+   430px 미만에서도 day cell 자체가 겹치지 않고 event chip을 읽을 수 있다. */
+@container calendar-widget (max-width: 430px) {
+  .calendar-view-body.is-month-view {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+
+  .calendar-view-body.is-month-view .calendar-month-board {
+    width: 420px !important;
+    min-width: 420px !important;
+    max-width: none !important;
+  }
+}
+
+.calendar-floating-window {
+  container-type: inline-size;
+  container-name: calendar-floating-window;
+}
+
+@container calendar-floating-window (max-width: 620px) {
   .calendar-floating-window .calendar-detail-grid {
     grid-template-columns: 1fr !important;
   }

@@ -857,21 +857,65 @@
   }
 
   .journal-score-strip-card {
-    grid-template-columns: 1fr;
-    gap: 5px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .journal-score-strip-card > span {
+    /* The four visible labels already explain the group in compact mode. */
+    display: none;
   }
 
   .journal-score-strip {
-    display: flex !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(58px, 1fr)) !important;
     overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-gutter: auto;
-    padding-bottom: 1px;
+    scrollbar-width: none;
+  }
+
+  .journal-score-strip::-webkit-scrollbar {
+    display: none;
   }
 
   .journal-score-inline {
-    flex: 1 0 78px;
+    min-width: 58px;
     min-height: 30px !important;
+  }
+}
+
+/* =========================================================
+   Compact interaction rows
+   Figma: Input + Primary Icon Action / one horizontal Auto Layout row
+
+   Earlier mobile rules stacked these controls into two full-width rows. The
+   final contract keeps the action beside its field so task content remains
+   visible without extra scrolling. / 좁은 위젯에서도 추가 버튼은 입력창 옆에 둔다.
+========================================================= */
+@container journal-widget (max-width: 680px) {
+  .journal-add-row {
+    grid-template-columns: minmax(0, 1fr) 38px !important;
+  }
+
+  .journal-clip-row {
+    grid-template-columns: minmax(0, 1fr) 86px !important;
+  }
+
+  .journal-add-row button,
+  .journal-clip-row button {
+    width: auto !important;
+  }
+
+  .journal-date-nav {
+    gap: 4px;
+  }
+
+  .journal-date-nav button {
+    width: 28px;
+  }
+
+  .journal-date-nav input {
+    width: clamp(94px, 31cqw, 128px);
+    padding-inline: 7px;
   }
 }
 

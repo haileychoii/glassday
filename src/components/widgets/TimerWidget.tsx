@@ -168,6 +168,7 @@ const TimerSurface = ({
                 "timer-widget-mode-button",
                 pomodoro.mode === mode && "is-active"
               )}
+              aria-pressed={pomodoro.mode === mode}
             >
               {getPomodoroModeLabel(mode)}
             </button>
@@ -271,7 +272,12 @@ const TimerSurface = ({
         </div>
 
         <div className="timer-widget-action-row">
-          <button type="button" onClick={toggle} className="timer-widget-primary">
+          <button
+            type="button"
+            onClick={toggle}
+            className="timer-widget-primary"
+            aria-label={pomodoro.isRunning ? "Pause timer" : "Start timer"}
+          >
             {pomodoro.isRunning ? (
               <>
                 <Pause className="w-3.5 h-3.5" />
@@ -285,12 +291,22 @@ const TimerSurface = ({
             )}
           </button>
 
-          <button type="button" onClick={reset} className="timer-widget-secondary">
+          <button
+            type="button"
+            onClick={reset}
+            className="timer-widget-secondary"
+            aria-label="Reset timer"
+          >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset
           </button>
 
-          <button type="button" onClick={skip} className="timer-widget-secondary">
+          <button
+            type="button"
+            onClick={skip}
+            className="timer-widget-secondary"
+            aria-label="Skip to next timer mode"
+          >
             <SkipForward className="w-3.5 h-3.5" />
             Next
           </button>
@@ -439,6 +455,7 @@ export const TimerWidget = () => {
               onClick={() => setFloatingOpen(true)}
               className="glass-button h-8 w-8 flex items-center justify-center"
               title="Open floating timer"
+              aria-label="Open floating timer"
             >
               <Maximize2 className="w-3.5 h-3.5" />
             </button>

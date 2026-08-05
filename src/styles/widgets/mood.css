@@ -230,3 +230,15 @@ body.theme-mac-core .mood-row {
     height: 8px;
   }
 }
+
+/* Wide variant: use the available width for parallel metric rows instead of
+   stretching five short rows across a mostly empty panel. */
+@container mood-widget (min-width: 640px) {
+  .mood-list {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+
+  .mood-reset-button {
+    grid-column: 1 / -1;
+  }
+}
