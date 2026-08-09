@@ -25,6 +25,7 @@ import type {
   StudyDayData,
   StudyLegacyRecordSummary,
   StudyPlannerStorage,
+  StudyPlannerSubjectColors,
   StudyPlannerSubjectId,
   StudyPlannerTask,
   StudyPomodoroMode,
@@ -36,6 +37,7 @@ import type {
 } from "../../../types/study";
 
 const DATE_KEY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+const HEX_COLOR_PATTERN = /^#[0-9a-f]{6}$/i;
 
 const isRecordValue = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -136,7 +138,29 @@ export const createEmptyStudyPlannerStorage = (): StudyPlannerStorage => ({
   version: 2,
   days: {},
   activeTimer: null,
+  subjectColors: {},
 });
+
+/* Subject color migration
+   Older v2 records have no subjectColors field. Returning an empty map keeps
+   every existing day/timer intact and lets the UI fall back to new defaults.
+   / 잘못된 문자열은 저장하지 않아 native color input을 항상 안전하게 유지합니다. */
+const normalizeSubjectColors = (value: unknown): StudyPlannerSubjectColors => {
+  if (!isRecordValue(value)) return {};
+
+  const colors: StudyPlannerSubjectColors = {};
+  Object.entries(value).forEach(([subjectId, color]) => {
+    if (
+      isPlannerSubjectId(subjectId) &&
+      typeof color === "string" &&
+      HEX_COLOR_PATTERN.test(color)
+    ) {
+      colors[subjectId] = color.toUpperCase();
+    }
+  });
+
+  return colors;
+};
 
 const normalizePlannerTask = (value: unknown): StudyPlannerTask | null => {
   if (!isRecordValue(value) || !isPlannerSubjectId(value.subjectId)) return null;
@@ -245,6 +269,7 @@ export const normalizeStudyPlannerStorage = (
     version: 2,
     days,
     activeTimer: normalizeActiveTimer(value.activeTimer),
+    subjectColors: normalizeSubjectColors(value.subjectColors),
   };
 };
 

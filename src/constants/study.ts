@@ -34,16 +34,18 @@ export const STUDY_SLOTS_PER_HOUR = 60 / STUDY_SLOT_MINUTES;
 export const STUDY_TOTAL_SLOTS =
   (STUDY_END_HOUR - STUDY_START_HOUR) * STUDY_SLOTS_PER_HOUR;
 
-/* Subject palette
-   Muted mid-tone colors remain distinguishable in light and dark glass without
-   the washed-out white cast of the previous palette. / 과목 수정은 이 배열만 편집합니다. */
+/* Default subject palette
+   This coordinated pastel set follows the attached warm-neutral reference:
+   coral, blue, yellow, mint, lavender, and warm gray. Users can override each
+   color without changing durable subject IDs. / 아래 값은 최초 기본값이며
+   실제 사용자 선택은 planner storage의 subjectColors에 따로 저장됩니다. */
 export const STUDY_PLANNER_SUBJECTS: readonly StudyPlannerSubject[] = [
-  { id: "economics", label: "경제학", shortLabel: "경제", color: "#6F9FC9" },
-  { id: "ncs", label: "NCS", shortLabel: "NCS", color: "#8B7DB8" },
-  { id: "accounting", label: "회계", shortLabel: "회계", color: "#C77D8F" },
-  { id: "actuarial", label: "보험수학", shortLabel: "보험", color: "#5CA694" },
-  { id: "english", label: "영어", shortLabel: "영어", color: "#CB955A" },
-  { id: "other", label: "기타", shortLabel: "기타", color: "#858FA2" },
+  { id: "economics", label: "경제학", shortLabel: "경제", color: "#F9C6C9" },
+  { id: "ncs", label: "NCS", shortLabel: "NCS", color: "#C6DEF1" },
+  { id: "accounting", label: "회계", shortLabel: "회계", color: "#FAEDCB" },
+  { id: "actuarial", label: "보험수학", shortLabel: "보험", color: "#C9E4DE" },
+  { id: "english", label: "영어", shortLabel: "영어", color: "#DBD0F0" },
+  { id: "other", label: "기타", shortLabel: "기타", color: "#E2CFC4" },
 ];
 
 export const STUDY_PLANNER_SUBJECT_IDS = new Set<StudyPlannerSubjectId>(

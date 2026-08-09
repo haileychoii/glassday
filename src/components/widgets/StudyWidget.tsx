@@ -91,10 +91,6 @@ const HOURS = Array.from(
   (_, index) => STUDY_START_HOUR + index
 );
 
-const getSubject = (subjectId: StudyPlannerSubjectId) =>
-  STUDY_PLANNER_SUBJECTS.find((subject) => subject.id === subjectId) ??
-  STUDY_PLANNER_SUBJECTS[0];
-
 const getSubjectStyle = (color: string) =>
   ({ "--study-subject-color": color } as CSSProperties);
 
@@ -114,6 +110,22 @@ export const StudyWidget = () => {
   const planner = useMemo(
     () => normalizeStudyPlannerStorage(storedPlanner),
     [storedPlanner]
+  );
+  /* Subject catalog view model
+     Durable IDs/labels come from constants, while saved user colors override
+     only presentation. / 날짜별 공부 기록과 사용자 팔레트를 분리합니다. */
+  const subjects = useMemo(
+    () =>
+      STUDY_PLANNER_SUBJECTS.map((subject) => ({
+        ...subject,
+        color: planner.subjectColors[subject.id] ?? subject.color,
+      })),
+    [planner.subjectColors]
+  );
+  const getSubject = useCallback(
+    (subjectId: StudyPlannerSubjectId) =>
+      subjects.find((subject) => subject.id === subjectId) ?? subjects[0],
+    [subjects]
   );
 
   const [selectedDate, setSelectedDate] = useState(today);
@@ -171,6 +183,24 @@ export const StudyWidget = () => {
               ...nextDay,
               updatedAt: Date.now(),
             },
+          },
+        };
+      });
+    },
+    [setStoredPlanner]
+  );
+
+  /** 모든 날짜와 Widget/Detail에 즉시 공유되는 과목 색상만 갱신한다. */
+  const updateSubjectColor = useCallback(
+    (subjectId: StudyPlannerSubjectId, color: string) => {
+      setStoredPlanner((current) => {
+        const normalized = normalizeStudyPlannerStorage(current);
+
+        return {
+          ...normalized,
+          subjectColors: {
+            ...normalized.subjectColors,
+            [subjectId]: color.toUpperCase(),
           },
         };
       });
@@ -494,25 +524,39 @@ export const StudyWidget = () => {
         {/* Figma Component Set: Subject Paint Tool + Eraser + Real-time Timer controls */}
         <section className="study10-control-band">
           <div className="study10-subject-tools" aria-label="Study subjects">
-            {STUDY_PLANNER_SUBJECTS.map((subject) => (
-              <button
+            {subjects.map((subject) => (
+              <div
                 key={subject.id}
-                type="button"
-                className={cn(
-                  "study10-subject-tool",
-                  selectedTool === subject.id && "is-active"
-                )}
+                className="study10-subject-control"
                 style={getSubjectStyle(subject.color)}
-                onClick={() => setSelectedTool(subject.id)}
-                aria-pressed={selectedTool === subject.id}
-                title={`${subject.label} · ${formatStudyMinutes(
-                  subjectTotals[subject.id]
-                )}`}
               >
-                <span className="study10-subject-dot" />
-                <span>{subject.shortLabel}</span>
-                <small>{formatStudyMinutes(subjectTotals[subject.id])}</small>
-              </button>
+                <button
+                  type="button"
+                  className={cn(
+                    "study10-subject-tool",
+                    selectedTool === subject.id && "is-active"
+                  )}
+                  onClick={() => setSelectedTool(subject.id)}
+                  aria-pressed={selectedTool === subject.id}
+                  title={`${subject.label} · ${formatStudyMinutes(
+                    subjectTotals[subject.id]
+                  )}`}
+                >
+                  <span className="study10-subject-dot" />
+                  <span>{subject.shortLabel}</span>
+                  <small>{formatStudyMinutes(subjectTotals[subject.id])}</small>
+                </button>
+                <input
+                  type="color"
+                  className="study10-subject-color-input"
+                  value={subject.color}
+                  onChange={(event) =>
+                    updateSubjectColor(subject.id, event.target.value)
+                  }
+                  aria-label={`${subject.label} 색상 선택`}
+                  title={`${subject.label} 색상 선택`}
+                />
+              </div>
             ))}
             <button
               type="button"
@@ -644,7 +688,7 @@ export const StudyWidget = () => {
                   }
                   aria-label="Task subject"
                 >
-                  {STUDY_PLANNER_SUBJECTS.map((subject) => (
+                  {subjects.map((subject) => (
                     <option key={subject.id} value={subject.id}>
                       {subject.label}
                     </option>

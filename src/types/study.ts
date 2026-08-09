@@ -35,6 +35,11 @@ export type StudyPlannerSubject = {
   color: string;
 };
 
+/** 사용자 지정 색상만 저장한다. 누락된 과목은 constants/study.ts 기본값을 사용한다. */
+export type StudyPlannerSubjectColors = Partial<
+  Record<StudyPlannerSubjectId, string>
+>;
+
 export type StudyPlannerTask = {
   id: string;
   subjectId: StudyPlannerSubjectId;
@@ -72,6 +77,8 @@ export type StudyPlannerStorage = {
   version: 2;
   days: Record<string, StudyDayData>;
   activeTimer: StudyActiveTimer | null;
+  /** 날짜와 무관하게 Widget/Detail/Wide/Laptop이 공유하는 과목 색상 override. */
+  subjectColors: StudyPlannerSubjectColors;
 };
 
 /* Legacy manual-record domain

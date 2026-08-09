@@ -250,6 +250,22 @@
   gap: 5px;
 }
 
+/* Subject control
+   Figma Component: Subject Chip / Default · Selected · Custom Color.
+   The color input overlays the existing vertical swatch, so customization adds
+   no extra row or toolbar height. / 좁은 위젯에서도 과목 선택 영역의 밀도를
+   유지하면서 색상 칩을 직접 눌러 변경할 수 있습니다. */
+.study10-subject-control {
+  position: relative;
+  min-width: 0;
+  min-height: 37px;
+}
+
+.study10-subject-control .study10-subject-tool {
+  width: 100%;
+  height: 100%;
+}
+
 .study10-subject-tool {
   min-width: 0;
   min-height: 37px;
@@ -296,6 +312,39 @@
   height: 18px;
   border-radius: 999px;
   background: var(--study-subject-color);
+}
+
+.study10-subject-color-input {
+  position: absolute;
+  z-index: 2;
+  inset-inline-start: 1px;
+  top: 50%;
+  width: 20px !important;
+  min-width: 20px !important;
+  height: 28px !important;
+  padding: 5px 6px !important;
+  overflow: hidden;
+  transform: translateY(-50%);
+  cursor: pointer;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.study10-subject-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.study10-subject-color-input::-webkit-color-swatch,
+.study10-subject-color-input::-moz-color-swatch {
+  border: 1px solid hsl(0 0% 100% / 0.64);
+  border-radius: 999px;
+}
+
+.study10-subject-color-input:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--study-subject-color) 72%, white);
+  outline-offset: -3px;
 }
 
 .study10-subject-tool > span:not(.study10-subject-dot) {
@@ -763,8 +812,12 @@
     display: none;
   }
 
-  .study10-subject-tool {
+  .study10-subject-control {
     flex: 0 0 clamp(106px, 33cqw, 132px);
+  }
+
+  .study10-subject-control .study10-subject-tool {
+    width: 100%;
   }
 
   .study10-task-form {
