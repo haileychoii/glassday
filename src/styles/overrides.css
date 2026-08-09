@@ -989,6 +989,25 @@ body,
   container-name: gd-widget career-widget !important;
 }
 
+/* Career dashboard frame stabilization
+   Legacy viewport rules still switch the Career card to content-sized flex on
+   narrow browsers. The Dashboard Grid owns card height, so restore the native
+   four-row composition here; width adaptation remains inside career-widget
+   container queries. 브라우저 폭이 아니라 실제 카드 크기만 기준으로 삼는다. */
+.dashboard-grid-item > .career-widget {
+  height: 100% !important;
+  display: grid !important;
+  grid-template-rows: auto auto auto minmax(0, 1fr) !important;
+  overflow: hidden !important;
+}
+
+.dashboard-grid-item > .career-widget > .career-list {
+  min-height: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+}
+
 .dashboard-grid-item > .glass-card.study-widget,
 .dashboard-grid-item > .glass-card.alert-center-widget {
   container-type: inline-size !important;

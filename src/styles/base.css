@@ -157,6 +157,23 @@ main {
   overflow: hidden;
 }
 
+/*
+ * Widget Frame layout contract
+ * Figma: Root Frame / Vertical Auto Layout / Header + Fill Content
+ *
+ * Every dashboard widget renders the shared header first and the body second.
+ * Defining those rows here keeps the header fixed while `widget-frame__body`
+ * receives only the remaining Grid height. 위젯별로 height 계산을 반복하지
+ * 않아도 낮은 카드에서 본문만 스크롤되도록 하는 공통 구조다.
+ *
+ * Feature widgets such as Career may declare additional rows in their own CSS;
+ * their later, more specific rule intentionally replaces this two-row default.
+ */
+.widget-frame {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
 .glass-card-header,
 .widget-card-header,
 .widget-frame__header {

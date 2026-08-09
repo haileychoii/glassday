@@ -28,6 +28,8 @@
   height: 100%;
   min-height: 0;
   display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
   gap: var(--gd-widget-stack-gap);
   overflow: auto;
 }
@@ -193,5 +195,15 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+}
+
+/* Wide Alert Center
+   Figma: Alert List / two-column responsive grid. Short alert rows keep their
+   content height instead of stretching into empty panels, while wider cards
+   use the spare width to expose two alerts side by side. */
+@container alert-center-widget (min-width: 640px) {
+  .alert-center-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
