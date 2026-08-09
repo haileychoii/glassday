@@ -2719,7 +2719,7 @@ body.theme-pixel-desk .career-cover-status-select option {
 .calendar-widget-card {
   container-type: size;
   container-name: gd-widget calendar-widget;
-  --gd-calendar-month-row-min: clamp(38px, 8cqw, 58px);
+  --gd-calendar-month-row-min: clamp(42px, 8cqw, 58px);
   --gd-calendar-range-lane-size: clamp(5px, 1.15cqw, 8px);
   --gd-calendar-month-chip-height: clamp(13px, 2.6cqw, 17px);
   --gd-calendar-month-gap: clamp(3px, 0.75cqw, 7px);
@@ -2768,18 +2768,30 @@ body.theme-pixel-desk .career-cover-status-select option {
 .calendar-month-weeks {
   min-height: 0 !important;
   height: 100% !important;
-  grid-template-rows: repeat(6, minmax(var(--gd-calendar-month-row-min), 1fr)) !important;
+  /* Six rows stay in normal document flow. A CSS Grid track could not account
+     for each week's independent range-lane count, which let tall children
+     overlap the next track in short widgets. / 각 주의 일정 lane 수가 달라도
+     flex-basis가 실제 주 높이를 차지해 다음 주와 절대 겹치지 않는다. */
+  display: flex !important;
+  flex-direction: column !important;
   gap: var(--gd-calendar-month-gap) !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
-  align-content: stretch !important;
+  align-content: initial !important;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
 }
 
 .calendar-month-week-row {
+  flex: 1 0 calc(
+    var(--gd-calendar-month-row-min) +
+      (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
+  ) !important;
   min-height: calc(
     var(--gd-calendar-month-row-min) +
       (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
   ) !important;
+  height: auto !important;
   gap: var(--gd-calendar-month-gap) !important;
   overflow: hidden !important;
 }
@@ -2789,6 +2801,7 @@ body.theme-pixel-desk .career-cover-status-select option {
     var(--gd-calendar-month-row-min) +
       (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
   ) !important;
+  height: 100% !important;
   padding: clamp(4px, 1cqw, 7px) clamp(3px, 0.9cqw, 6px) !important;
   border-radius: clamp(10px, 2.3cqw, 15px) !important;
 }
@@ -2849,7 +2862,7 @@ body.theme-pixel-desk .career-cover-status-select option {
   }
 
   .calendar-widget-frame {
-    --gd-calendar-month-row-min: clamp(32px, 7cqw, 44px);
+    --gd-calendar-month-row-min: clamp(36px, 7cqw, 44px);
     --gd-calendar-range-lane-size: clamp(4px, 1cqw, 6px);
     --gd-calendar-month-chip-height: clamp(11px, 2.2cqw, 14px);
   }
@@ -2865,7 +2878,9 @@ body.theme-pixel-desk .career-cover-status-select option {
   }
 
   .calendar-widget-frame {
-    --gd-calendar-month-row-min: clamp(28px, 6.2cqw, 38px);
+    /* Below this readable day+event height the weeks container scrolls rather
+       than compressing event chips into the next row. */
+    --gd-calendar-month-row-min: 34px;
     --gd-calendar-range-lane-size: 4px;
     --gd-calendar-month-chip-height: 11px;
   }
