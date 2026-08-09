@@ -1276,3 +1276,183 @@ body,
 .alert-center-item {
   border-radius: var(--gd-widget-inner-radius) !important;
 }
+
+/* =========================================================
+   Career floating window theme corrections
+
+   The Career detail view uses a legacy custom portal, so it does not inherit
+   every shared FloatingWindow material automatically. These scoped rules are
+   the final theme handoff for that window only.
+========================================================= */
+
+/* Pixel Desk window
+   Figma Variant: Pixel Window / Navy Title Bar / Gray Client Area.
+   Every selector remains inside pixel-desk so no glass theme receives the
+   hard bevel or square geometry. */
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk
+  ) .career-floating-window {
+  color: #111111 !important;
+  background: #c0c0c0 !important;
+  border: 2px solid !important;
+  border-color: #ffffff #404040 #404040 #ffffff !important;
+  border-radius: 0 !important;
+  box-shadow:
+    inset 1px 1px 0 #dfdfdf,
+    inset -1px -1px 0 #808080,
+    8px 10px 0 rgb(0 0 0 / 0.22) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk
+  ) .career-floating-titlebar {
+  min-height: 30px !important;
+  padding: 3px 4px 3px 8px !important;
+  color: #ffffff !important;
+  background: #000080 !important;
+  border-bottom: 2px solid #404040 !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk
+  ) :is(
+    .career-floating-title h2,
+    .career-floating-title p,
+    .career-modal-kicker
+  ) {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk
+  ) .career-floating-body {
+  padding: 6px !important;
+  gap: 6px !important;
+  color: #111111 !important;
+  background: #c0c0c0 !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk
+  ) :is(.career-detail-section, .career-fieldset) {
+  color: #111111 !important;
+  background: #e7e7d7 !important;
+  border: 2px solid !important;
+  border-color: #808080 #ffffff #ffffff #808080 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 1px 1px 0 #404040 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk
+  ) .career-floating-window :is(input, textarea, select) {
+  color: #111111 !important;
+  background: #ffffff !important;
+  border: 2px solid !important;
+  border-color: #404040 #ffffff #ffffff #404040 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 1px 1px 0 #808080 !important;
+}
+
+/* Glass Dark career detail
+   Keep the window readable but lighter and more neutral than Aurora. */
+:is(
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html.theme-glass-dark,
+    body.theme-glass-dark
+  ) .career-floating-window {
+  color: hsl(var(--foreground) / 0.96) !important;
+  background:
+    linear-gradient(
+      145deg,
+      rgb(49 57 74 / 0.82),
+      rgb(30 37 53 / 0.74)
+    ) !important;
+  border-color: rgb(225 234 255 / 0.24) !important;
+  box-shadow:
+    0 42px 120px rgb(0 0 0 / 0.4),
+    inset 0 1px 0 rgb(255 255 255 / 0.17) !important;
+  backdrop-filter: blur(48px) saturate(142%) !important;
+  -webkit-backdrop-filter: blur(48px) saturate(142%) !important;
+}
+
+:is(
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html.theme-glass-dark,
+    body.theme-glass-dark
+  ) :is(.career-floating-titlebar, .career-floating-body) {
+  background: rgb(255 255 255 / 0.055) !important;
+  border-color: rgb(225 234 255 / 0.18) !important;
+}
+
+:is(
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html.theme-glass-dark,
+    body.theme-glass-dark
+  ) .career-detail-section {
+  color: hsl(var(--foreground) / 0.94) !important;
+  background: var(--gd-widget-panel-bg) !important;
+  border-color: var(--gd-widget-panel-border) !important;
+  box-shadow: var(--gd-widget-panel-shadow) !important;
+}
+
+/* Deadline badges need text contrast independent of the translucent window.
+   D-1/D-day states use a pale semantic fill with dark text for quick scanning. */
+:is(
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html.theme-glass-dark,
+    body.theme-glass-dark
+  ) .career-dday-pill.normal {
+  color: #17375e !important;
+  background: rgb(181 215 255 / 0.9) !important;
+  border-color: rgb(208 229 255 / 0.72) !important;
+}
+
+:is(
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html.theme-glass-dark,
+    body.theme-glass-dark
+  ) .career-dday-pill.soon {
+  color: #55370d !important;
+  background: rgb(250 219 156 / 0.92) !important;
+  border-color: rgb(255 235 192 / 0.74) !important;
+}
+
+:is(
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html.theme-glass-dark,
+    body.theme-glass-dark
+  ) .career-dday-pill.urgent {
+  color: #671c32 !important;
+  background: rgb(255 190 207 / 0.92) !important;
+  border-color: rgb(255 218 227 / 0.76) !important;
+}

@@ -154,23 +154,30 @@ body.theme-glass-dark {
     0 24px 68px rgb(0 0 0 / 0.36),
     inset 0 1px 0 rgb(255 255 255 / 0.18);
 
-  /* Glass Dark interior bridge
-     Shared widgets still consume generic inner/control names. Point those
-     names at the dark recipe so a late common rule cannot restore pale fills.
-     / 공통 CSS가 밝은 회색으로 되돌리지 않도록 다크 토큰에 직접 연결한다. */
-  --gd-inner-bg: var(--gd-dark-panel-bg);
-  --gd-inner-border: var(--gd-dark-panel-border);
-  --gd-control-bg: var(--gd-dark-control-bg);
-  --gd-control-border: var(--gd-dark-control-border);
-  --gd-control-active-bg: var(--gd-dark-active-fill);
+  /* Glass Dark visual identity
+     This is the neutral dark counterpart of Glass Light. Aurora keeps the
+     deeper blue-violet panel recipe in its own selector below.
+     / Glass Light의 어두운 유리 버전이며 Aurora의 짙은 남청 표면과 분리합니다. */
+  --gd-inner-bg:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.16),
+      rgb(214 225 246 / 0.09)
+    );
+  --gd-inner-border: rgb(225 234 255 / 0.2);
+  --gd-control-bg: rgb(255 255 255 / 0.13);
+  --gd-control-border: rgb(225 234 255 / 0.2);
+  --gd-control-active-bg: rgb(255 255 255 / 0.24);
 
-  /* Glass Dark uses the same established panel recipe across complex widgets. */
-  --gd-widget-panel-bg: var(--gd-dark-panel-bg);
-  --gd-widget-panel-border: var(--gd-dark-panel-border);
-  --gd-widget-panel-shadow: var(--gd-dark-panel-shadow);
-  --gd-widget-control-bg: var(--gd-dark-control-bg);
-  --gd-widget-control-border: var(--gd-dark-control-border);
-  --gd-widget-control-active-bg: var(--gd-dark-active-fill);
+  /* Complex widgets consume the same neutral reflected-glass recipe. */
+  --gd-widget-panel-bg: var(--gd-inner-bg);
+  --gd-widget-panel-border: var(--gd-inner-border);
+  --gd-widget-panel-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    0 14px 34px -28px rgb(0 0 0 / 0.44);
+  --gd-widget-control-bg: var(--gd-control-bg);
+  --gd-widget-control-border: var(--gd-control-border);
+  --gd-widget-control-active-bg: var(--gd-control-active-bg);
 }
 
 /* Aurora keeps its deeper tint while preserving the same semantic structure.

@@ -179,6 +179,11 @@ main {
 .widget-frame__header {
   min-width: 0;
   min-height: var(--gd-widget-header-row-min-height);
+  /* Header geometry contract
+     Grid widgets may become very short, but the title row must never shrink
+     before the scrollable content. / Study처럼 내용이 긴 위젯에서도 제목
+     기준선은 다른 위젯과 같은 위치를 유지합니다. */
+  flex: 0 0 auto;
   padding:
     var(--gd-widget-header-pad-top)
     var(--gd-widget-pad-x)
@@ -229,9 +234,10 @@ main {
 .widget-card-title-group,
 .widget-frame__title-group {
   min-width: 0;
+  min-height: 32px;
   flex: 1 1 auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--gd-widget-title-gap);
 }
 
@@ -239,10 +245,11 @@ main {
 .widget-card-copy,
 .widget-frame__copy {
   min-width: 0;
+  min-height: 32px;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: var(--gd-widget-copy-gap);
   position: relative;
