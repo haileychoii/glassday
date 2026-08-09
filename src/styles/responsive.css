@@ -709,35 +709,26 @@ main {
     min-width: var(--gd-topbar-mobile-theme-select-min-width) !important;
     max-width: var(--gd-topbar-mobile-theme-select-max-width) !important;
   }
-}
 
-/* =========================================================
-   7. Widget inner responsive
-========================================================= */
-
-@media (max-width: 1180px) {
-  :root {
-    --gd-today-focus-main-size-compact: 18px;
+  /* Compact Wide-mode switch
+     The greeting is the primary header information on a phone. The two mode
+     controls keep their familiar icons, tooltip, and aria-label while their
+     repeated text labels collapse. Laptop preview is intentionally excluded:
+     its fixed 1080px app frame must not react to the outer browser width.
+     / 모바일 Wide 화면에서만 모드 글자를 숨기고 고정 Laptop Frame은 유지합니다. */
+  .app-mode-stage:not(.is-laptop-mode) .layout-mode-button {
+    width: 32px !important;
+    min-width: 32px !important;
+    padding-inline: 0 !important;
+    justify-content: center !important;
   }
 
-  .today-focus-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .today-focus-hero {
-    align-items: flex-start !important;
-  }
-
-  .today-focus-main {
-    font-size: var(--gd-today-focus-main-size-compact) !important;
+  .app-mode-stage:not(.is-laptop-mode) .layout-mode-button span {
+    display: none !important;
   }
 }
 
-@media (max-height: 760px) {
-  .today-focus-card .glass-card-body,
-  .today-focus-widget .glass-card-body,
-  .today-mini-card .glass-card-body {
-    max-height: 100% !important;
-    overflow-y: auto !important;
-  }
-}
+/* Widget internals intentionally do not live in this viewport map.
+   Today Focus, Calendar, Study, and the other cards own their responsive
+   transitions in `styles/widgets/*.css` through named container queries.
+   위젯 크기가 같다면 브라우저 크기와 관계없이 같은 레이아웃을 유지합니다. */

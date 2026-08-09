@@ -85,6 +85,8 @@ export const Topbar = ({
                   layoutMode === "wide" && "is-active"
                 )}
                 title="Wide web layout"
+                aria-label="Use wide dashboard layout"
+                aria-pressed={layoutMode === "wide"}
               >
                 <Monitor className="w-3.5 h-3.5" />
                 <span>Wide</span>
@@ -98,6 +100,8 @@ export const Topbar = ({
                   layoutMode === "laptop" && "is-active"
                 )}
                 title="Laptop app preview layout"
+                aria-label="Use laptop dashboard layout"
+                aria-pressed={layoutMode === "laptop"}
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
                 <span>Laptop</span>
@@ -108,6 +112,8 @@ export const Topbar = ({
               type="button"
               onClick={onOpenSettings}
               className="glass-button topbar-action-button"
+              title="Open settings"
+              aria-label="Open settings"
             >
               <Settings className="w-3.5 h-3.5" />
               <span>Settings</span>
@@ -120,6 +126,9 @@ export const Topbar = ({
                 "glass-button topbar-action-button",
                 editMode && "is-active"
               )}
+              title={editMode ? "Finish editing dashboard" : "Edit dashboard"}
+              aria-label={editMode ? "Finish editing dashboard" : "Edit dashboard"}
+              aria-pressed={editMode}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
               <span>{editMode ? "Done" : "Edit"}</span>

@@ -529,6 +529,12 @@
 .money-section-tabs {
   min-width: 0;
   display: flex;
+  /*
+   * Fixed navigation rail: the detail body owns vertical scrolling, so this
+   * tab row must never collapse when the selected section is taller than the
+   * floating window. 상세 내용이 길어져도 탭 높이는 유지한다.
+   */
+  flex: 0 0 auto;
   flex-wrap: wrap;
   gap: var(--gd-space-xs);
   position: sticky;

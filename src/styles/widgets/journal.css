@@ -879,7 +879,23 @@
 
   .journal-score-inline {
     min-width: 58px;
-    min-height: 30px !important;
+    min-height: 38px !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto auto;
+    justify-items: center;
+    align-content: center;
+    gap: 2px !important;
+    text-align: center !important;
+  }
+
+  .journal-score-inline small {
+    width: 100%;
+    text-align: center;
+    text-overflow: clip;
+  }
+
+  .journal-score-inline .journal-score-stepper {
+    justify-self: center;
   }
 }
 

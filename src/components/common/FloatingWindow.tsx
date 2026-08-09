@@ -27,7 +27,7 @@
  *     - Body / Fill container / Scroll policy는 child가 결정
  * ============================================================
  */
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
@@ -67,14 +67,27 @@ const getSafeRect = (
   minWidth: number,
   minHeight: number
 ): FloatingWindowRect => {
-  const maxX = Math.max(16, window.innerWidth - minWidth);
-  const maxY = Math.max(16, window.innerHeight - 120);
+  const viewportInset = 12;
+  const availableWidth = Math.max(240, window.innerWidth - viewportInset * 2);
+  const availableHeight = Math.max(220, window.innerHeight - viewportInset * 2);
+  const effectiveMinWidth = Math.min(minWidth, availableWidth);
+  const effectiveMinHeight = Math.min(minHeight, availableHeight);
+  const safeWidth = Math.min(
+    Math.max(effectiveMinWidth, rect.w),
+    availableWidth
+  );
+  const safeHeight = Math.min(
+    Math.max(effectiveMinHeight, rect.h),
+    availableHeight
+  );
+  const maxX = Math.max(viewportInset, window.innerWidth - safeWidth - viewportInset);
+  const maxY = Math.max(viewportInset, window.innerHeight - safeHeight - viewportInset);
 
   return {
-    x: Math.min(Math.max(16, rect.x), maxX),
-    y: Math.min(Math.max(16, rect.y), maxY),
-    w: Math.max(minWidth, rect.w),
-    h: Math.max(minHeight, rect.h),
+    x: Math.min(Math.max(viewportInset, rect.x), maxX),
+    y: Math.min(Math.max(viewportInset, rect.y), maxY),
+    w: safeWidth,
+    h: safeHeight,
   };
 };
 
@@ -106,6 +119,7 @@ export const FloatingWindow = ({
 }: FloatingWindowProps) => {
   const windowRef = useRef<HTMLDivElement | null>(null);
   const titlebarRef = useRef<HTMLDivElement | null>(null);
+  const [, setViewportRevision] = useState(0);
 
   const dragRef = useRef({
     dragging: false,
@@ -117,6 +131,30 @@ export const FloatingWindow = ({
 
   const { value: rect, setValue: setRect } =
     useLocalStorage<FloatingWindowRect>(storageKey, defaultRect);
+
+  useEffect(() => {
+    if (!open) return;
+
+    let animationFrame = 0;
+    const refreshViewportClamp = () => {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = window.requestAnimationFrame(() => {
+        /*
+         * Responsive window shell: saved desktop geometry stays untouched,
+         * while a viewport resize immediately recalculates the temporary safe
+         * rectangle. 브라우저가 좁아져도 창이 화면 밖에 남지 않게 한다.
+         */
+        setViewportRevision((revision) => revision + 1);
+      });
+    };
+
+    window.addEventListener("resize", refreshViewportClamp);
+
+    return () => {
+      window.removeEventListener("resize", refreshViewportClamp);
+      window.cancelAnimationFrame(animationFrame);
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -184,6 +222,13 @@ export const FloatingWindow = ({
 
       const nextWidth = Math.round(entry.contentRect.width);
       const nextHeight = Math.round(entry.contentRect.height);
+      const isViewportConstrained =
+        window.innerWidth - 24 < minWidth || window.innerHeight - 24 < minHeight;
+
+      /* A desktop-sized saved window is rendered smaller on phones, but that
+         temporary viewport clamp must not overwrite its persisted desktop rect.
+         모바일 표시용 축소 크기와 사용자가 직접 resize한 저장 크기를 구분합니다. */
+      if (isViewportConstrained) return;
 
       setRect((prev) => {
         if (prev.w === nextWidth && prev.h === nextHeight) {
@@ -247,8 +292,8 @@ export const FloatingWindow = ({
           top: safeRect.y,
           width: safeRect.w,
           height: safeRect.h,
-          minWidth,
-          minHeight,
+          minWidth: Math.min(minWidth, safeRect.w),
+          minHeight: Math.min(minHeight, safeRect.h),
         }}
       >
         {/* Figma Frame: Floating Window Title Bar / drag handle / Space Between */}
