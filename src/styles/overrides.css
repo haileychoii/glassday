@@ -1160,3 +1160,119 @@ body,
     gap: 6px !important;
   }
 }
+
+/* =========================================================
+   Shared widget interior rhythm and geometry
+
+   Figma mapping:
+   - Widget Header remains the shared `widget-frame__header` frame.
+   - Content Start is the first child below that header.
+   - Inner Panel uses one radius and one neutral theme surface.
+
+   Only top-level section spacing is normalized here. Small controls, chips,
+   and state colors keep their widget-specific geometry and meaning.
+   / 세로 섹션 사이에는 margin token만 사용하고, 상태를 나타내는 색상은
+   각 위젯의 기존 의미를 유지합니다.
+========================================================= */
+
+/* Career is the only dashboard widget that manually renders the shared frame.
+   Remove its outer padding so its title begins on the exact same header inset
+   as every GlassCard, then place body rows with explicit margins. */
+.dashboard-grid-item > .career-widget {
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.dashboard-grid-item > .career-widget > :is(
+    .career-summary-grid,
+    .career-filter-row,
+    .career-list,
+    .career-board
+  ) {
+  width: auto !important;
+  min-width: 0 !important;
+  margin-inline: var(--gd-widget-pad-x) !important;
+}
+
+.dashboard-grid-item > .career-widget > .career-summary-grid {
+  margin-top: var(--gd-widget-content-start-margin) !important;
+}
+
+.dashboard-grid-item > .career-widget > :is(
+    .career-filter-row,
+    .career-list,
+    .career-board
+  ) {
+  margin-top: var(--gd-widget-section-margin-y) !important;
+}
+
+.dashboard-grid-item > .career-widget > :is(.career-list, .career-board) {
+  margin-bottom: var(--gd-widget-pad-y) !important;
+}
+
+/* Lists use sibling margins for vertical rhythm. This avoids stacking a Grid
+   gap with child margins when cards are moved or filtered. */
+.career-list,
+.career-board-column-body,
+.alert-center-list {
+  gap: 0 !important;
+}
+
+.career-list > * + *,
+.career-board-column-body > * + *,
+.alert-center-list > * + * {
+  margin-top: var(--gd-widget-section-margin-y) !important;
+}
+
+/* Study content start
+   The planner previously inherited a compact body padding that made the first
+   Summary row visually collide with the title. The planner itself now owns a
+   single top margin, while all following sections share the same rhythm. */
+.dashboard-grid-item > .glass-card.study-widget > .widget-frame__body {
+  padding-top: 0 !important;
+}
+
+.dashboard-grid-item .study10-planner--widget {
+  gap: 0 !important;
+  margin-top: var(--gd-widget-content-start-margin) !important;
+}
+
+.dashboard-grid-item .study10-planner--widget > * {
+  margin-block: 0 !important;
+}
+
+.dashboard-grid-item .study10-planner--widget > * + * {
+  margin-top: var(--gd-widget-section-margin-y) !important;
+}
+
+/* Neutral inner panels share one theme-owned material. Tone/urgency variants
+   are intentionally excluded so warnings and deadlines remain recognizable. */
+:is(
+    .today-focus-hero,
+    .today-focus-section,
+    .career-summary-card,
+    .career-list-item:not(.is-urgent):not(.is-soon),
+    .study10-summary-card,
+    .study10-panel,
+    .journal-summary-card,
+    .journal-section,
+    .mood-row,
+    .money-summary-panel,
+    .money-budget-panel,
+    .money-visual-panel,
+    .money-recent-panel,
+    .money-detail-card,
+    .timer-widget-main-card,
+    .timer-widget-settings-card
+  ) {
+  border-radius: var(--gd-widget-inner-radius) !important;
+  background: var(--gd-widget-panel-bg) !important;
+  border-color: var(--gd-widget-panel-border) !important;
+  box-shadow: var(--gd-widget-panel-shadow) !important;
+}
+
+/* Stateful Alert rows keep their tone fills but use the same shape as every
+   other inner panel in the active theme. */
+.alert-center-item {
+  border-radius: var(--gd-widget-inner-radius) !important;
+}

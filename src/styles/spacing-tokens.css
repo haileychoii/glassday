@@ -51,6 +51,17 @@
   --gd-widget-inline-gap: var(--gd-space-xs);
   --gd-widget-section-gap-tight: var(--gd-space-xs);
   --gd-widget-section-gap: var(--gd-space-sm);
+  /* Shared vertical rhythm
+     Use this as the margin between sibling content sections. Horizontal item
+     groups may keep their local `gap`, but top-level panels should not invent
+     separate vertical spacing values. / 위젯의 위아래 섹션 간격은 이 margin
+     token 하나로 조절합니다. */
+  --gd-widget-section-margin-y: var(--gd-space-sm);
+  --gd-widget-content-start-margin: var(--gd-space-lg);
+  /* Inner panel geometry
+     This aliases the active theme radius, so Pixel Desk and Retro remain
+     square while glass themes share one rounded panel shape. */
+  --gd-widget-inner-radius: var(--gd-radius-inner);
   --gd-widget-section-title-gap: 7px;
   --gd-widget-section-title-bottom: var(--gd-space-sm);
 
