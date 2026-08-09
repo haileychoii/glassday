@@ -35,6 +35,7 @@ import type {
   FormEvent,
   PointerEvent as ReactPointerEvent,
 } from "react";
+import { createPortal } from "react-dom";
 import {
   BookOpenCheck,
   Check,
@@ -42,11 +43,15 @@ import {
   ChevronRight,
   CircleStop,
   Eraser,
+  Lock,
   Maximize2,
   Play,
   Plus,
   RotateCcw,
   Trash2,
+  Undo2,
+  Unlock,
+  X,
 } from "lucide-react";
 
 import { GlassCard } from "../glass/GlassCard";
@@ -85,6 +90,13 @@ import { StudyDetailWindow } from "./study/StudyDetailWindow";
 
 type StudyPaintTool = StudyPlannerSubjectId | "erase";
 type StudyPlannerMode = "widget" | "detail";
+type StudySubjectDraft = {
+  subjectId: StudyPlannerSubjectId | null;
+  name: string;
+  color: string;
+  note: string;
+  isNew: boolean;
+};
 
 const HOURS = Array.from(
   { length: STUDY_END_HOUR - STUDY_START_HOUR },
@@ -112,15 +124,30 @@ export const StudyWidget = () => {
     [storedPlanner]
   );
   /* Subject catalog view model
-     Durable IDs/labels come from constants, while saved user colors override
-     only presentation. / 날짜별 공부 기록과 사용자 팔레트를 분리합니다. */
+     Durable IDs stay separate from editable labels/colors. Custom subjects and
+     defaults therefore use the same timeline/task rendering path. / 과목명을
+     바꿔도 기존 시간표 block은 안정적인 id를 계속 참조합니다. */
   const subjects = useMemo(
     () =>
-      STUDY_PLANNER_SUBJECTS.map((subject) => ({
-        ...subject,
-        color: planner.subjectColors[subject.id] ?? subject.color,
-      })),
-    [planner.subjectColors]
+      [...STUDY_PLANNER_SUBJECTS, ...planner.customSubjects].map((subject) => {
+        const setting = planner.subjectSettings[subject.id];
+        const label = setting?.label?.trim() || subject.label;
+
+        return {
+          ...subject,
+          label,
+          shortLabel: label,
+          color:
+            setting?.color ??
+            planner.subjectColors[subject.id] ??
+            subject.color,
+        };
+      }),
+    [
+      planner.customSubjects,
+      planner.subjectColors,
+      planner.subjectSettings,
+    ]
   );
   const getSubject = useCallback(
     (subjectId: StudyPlannerSubjectId) =>
@@ -137,10 +164,17 @@ export const StudyWidget = () => {
   const [taskEstimate, setTaskEstimate] = useState("30");
   const [detailOpen, setDetailOpen] = useState(false);
   const [timerNow, setTimerNow] = useState(Date.now());
+  const [subjectDraft, setSubjectDraft] = useState<StudySubjectDraft | null>(
+    null
+  );
+  const [isTimelineLocked, setIsTimelineLocked] = useState(false);
+  const [timelineHistory, setTimelineHistory] = useState<
+    Array<Record<string, StudyPlannerSubjectId>>
+  >([]);
 
   const paintingRef = useRef(false);
   const paintToolRef = useRef<StudyPaintTool>(selectedTool);
-  const lastPaintedSlotRef = useRef<number | null>(null);
+  const paintedSlotsRef = useRef<Set<number>>(new Set());
 
   const selectedDay = useMemo(
     () => getStudyDay(planner, selectedDate),
@@ -154,6 +188,16 @@ export const StudyWidget = () => {
     () => getStudyPlannerSubjectTotals(selectedDay),
     [selectedDay]
   );
+  const allTimeSubjectTotals = useMemo(() => {
+    const totals: Record<string, number> = {};
+    Object.values(planner.days).forEach((day) => {
+      const dayTotals = getStudyPlannerSubjectTotals(day);
+      Object.entries(dayTotals).forEach(([subjectId, minutes]) => {
+        totals[subjectId] = (totals[subjectId] ?? 0) + minutes;
+      });
+    });
+    return totals;
+  }, [planner.days]);
   const progress = Math.min(
     100,
     Math.round((totalMinutes / Math.max(selectedDay.goalMinutes, 1)) * 100)
@@ -190,27 +234,104 @@ export const StudyWidget = () => {
     [setStoredPlanner]
   );
 
-  /** 모든 날짜와 Widget/Detail에 즉시 공유되는 과목 색상만 갱신한다. */
-  const updateSubjectColor = useCallback(
-    (subjectId: StudyPlannerSubjectId, color: string) => {
-      setStoredPlanner((current) => {
-        const normalized = normalizeStudyPlannerStorage(current);
-
-        return {
-          ...normalized,
-          subjectColors: {
-            ...normalized.subjectColors,
-            [subjectId]: color.toUpperCase(),
-          },
-        };
+  /* Subject editor
+     A first chip click selects a paint subject; clicking the selected chip
+     again opens this draft. Closing by X, outside click, or Apply uses the same
+     commit path. / 팝오버를 닫는 방식과 관계없이 변경사항이 동일하게 저장된다. */
+  const openSubjectEditor = useCallback(
+    (subjectId: StudyPlannerSubjectId) => {
+      const subject = getSubject(subjectId);
+      setSubjectDraft({
+        subjectId,
+        name: subject.label,
+        color: subject.color,
+        note: planner.subjectSettings[subjectId]?.note ?? "",
+        isNew: false,
       });
     },
-    [setStoredPlanner]
+    [getSubject, planner.subjectSettings]
   );
+
+  const openNewSubjectEditor = () => {
+    setSubjectDraft({
+      subjectId: null,
+      name: "",
+      color: "#BEE1E6",
+      note: "",
+      isNew: true,
+    });
+  };
+
+  const commitSubjectDraft = useCallback(() => {
+    if (!subjectDraft) return;
+
+    const currentSubject = subjectDraft.subjectId
+      ? subjects.find((subject) => subject.id === subjectDraft.subjectId)
+      : null;
+    const name =
+      subjectDraft.name.trim().slice(0, 24) || currentSubject?.label || "";
+
+    /* Empty new drafts are treated as cancel, while an existing subject keeps
+       its previous name. / 실수로 빈 과목이 추가되는 것을 막는다. */
+    if (!name) {
+      setSubjectDraft(null);
+      return;
+    }
+
+    const subjectId =
+      subjectDraft.subjectId ??
+      (`custom-${createId("study-subject")}` as StudyPlannerSubjectId);
+    const color = subjectDraft.color.toUpperCase();
+
+    setStoredPlanner((current) => {
+      const normalized = normalizeStudyPlannerStorage(current);
+      const alreadyExists = normalized.customSubjects.some(
+        (subject) => subject.id === subjectId
+      );
+
+      return {
+        ...normalized,
+        subjectColors: {
+          ...normalized.subjectColors,
+          [subjectId]: color,
+        },
+        subjectSettings: {
+          ...normalized.subjectSettings,
+          [subjectId]: {
+            label: name,
+            color,
+            note: subjectDraft.note,
+          },
+        },
+        customSubjects:
+          subjectDraft.isNew && !alreadyExists
+            ? [
+                ...normalized.customSubjects,
+                {
+                  id: subjectId,
+                  label: name,
+                  shortLabel: name,
+                  color,
+                },
+              ]
+            : normalized.customSubjects,
+      };
+    });
+
+    setSelectedTool(subjectId);
+    setTaskSubjectId(subjectId);
+    setSubjectDraft(null);
+  }, [setStoredPlanner, subjectDraft, subjects]);
 
   useEffect(() => {
     paintToolRef.current = selectedTool;
   }, [selectedTool]);
+
+  useEffect(() => {
+    setTimelineHistory([]);
+    paintingRef.current = false;
+    paintedSlotsRef.current.clear();
+  }, [selectedDate]);
 
   /* Persist the migration immediately.
      useLocalStorage does not write its initial value until the first edit, so
@@ -245,8 +366,8 @@ export const StudyWidget = () => {
 
   const paintSlot = useCallback(
     (slotIndex: number, tool = paintToolRef.current) => {
-      if (lastPaintedSlotRef.current === slotIndex) return;
-      lastPaintedSlotRef.current = slotIndex;
+      if (paintedSlotsRef.current.has(slotIndex)) return;
+      paintedSlotsRef.current.add(slotIndex);
 
       updateDay(selectedDate, (day) => {
         const slotKey = String(slotIndex);
@@ -256,8 +377,15 @@ export const StudyWidget = () => {
           if (!(slotKey in nextBlocks)) return day;
           delete nextBlocks[slotKey];
         } else {
-          if (nextBlocks[slotKey] === tool) return day;
-          nextBlocks[slotKey] = tool;
+          /* Toggle painting
+             Every visited cell flips its current filled state exactly once per
+             drag gesture. / 채워진 2칸과 빈 4칸을 함께 드래그하면 각각
+             빈칸 2개와 선택 과목 4칸으로 반전된다. */
+          if (slotKey in nextBlocks) {
+            delete nextBlocks[slotKey];
+          } else {
+            nextBlocks[slotKey] = tool;
+          }
         }
 
         return { ...day, blocks: nextBlocks };
@@ -273,11 +401,11 @@ export const StudyWidget = () => {
   useEffect(() => {
     const finishPainting = () => {
       paintingRef.current = false;
-      lastPaintedSlotRef.current = null;
+      paintedSlotsRef.current.clear();
     };
 
     const continuePainting = (event: PointerEvent) => {
-      if (!paintingRef.current) return;
+      if (!paintingRef.current || isTimelineLocked) return;
       event.preventDefault();
 
       const target = document
@@ -296,16 +424,25 @@ export const StudyWidget = () => {
       window.removeEventListener("pointerup", finishPainting);
       window.removeEventListener("pointercancel", finishPainting);
     };
-  }, [paintSlot]);
+  }, [isTimelineLocked, paintSlot]);
 
   const beginPainting = (
     event: ReactPointerEvent<HTMLButtonElement>,
     slotIndex: number
   ) => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
+    if (
+      isTimelineLocked ||
+      (event.pointerType === "mouse" && event.button !== 0)
+    ) {
+      return;
+    }
     event.preventDefault();
+    setTimelineHistory((history) => [
+      ...history.slice(-19),
+      { ...selectedDay.blocks },
+    ]);
     paintingRef.current = true;
-    lastPaintedSlotRef.current = null;
+    paintedSlotsRef.current.clear();
     paintSlot(slotIndex);
   };
 
@@ -433,20 +570,41 @@ export const StudyWidget = () => {
   };
 
   const clearTimeline = () => {
+    if (isTimelineLocked) return;
     if (
       Object.keys(selectedDay.blocks).length > 0 &&
       !window.confirm("선택한 날짜의 10분 기록을 모두 지울까요?")
     ) {
       return;
     }
+    setTimelineHistory((history) => [
+      ...history.slice(-19),
+      { ...selectedDay.blocks },
+    ]);
     updateDay(selectedDate, (day) => ({ ...day, blocks: {} }));
+  };
+
+  const undoTimeline = () => {
+    if (isTimelineLocked || timelineHistory.length === 0) return;
+    const previousBlocks = timelineHistory[timelineHistory.length - 1];
+    updateDay(selectedDate, (day) => ({
+      ...day,
+      blocks: { ...previousBlocks },
+    }));
+    setTimelineHistory((history) => history.slice(0, -1));
   };
 
   const renderPlanner = (mode: StudyPlannerMode) => {
     const idPrefix = `study10-${mode}`;
 
     return (
-      <div className={cn("study10-planner", `study10-planner--${mode}`)}>
+      <div
+        className={cn(
+          "study10-planner",
+          `study10-planner--${mode}`,
+          isTimelineLocked && "is-timeline-locked"
+        )}
+      >
         {/* Figma Frame: Summary Metrics / 모든 container size의 상단 기준선 */}
         <section className="study10-summary" aria-label="Study summary">
           <div className="study10-summary-card">
@@ -536,28 +694,40 @@ export const StudyWidget = () => {
                     "study10-subject-tool",
                     selectedTool === subject.id && "is-active"
                   )}
-                  onClick={() => setSelectedTool(subject.id)}
+                  onClick={() => {
+                    if (selectedTool === subject.id) {
+                      openSubjectEditor(subject.id);
+                      return;
+                    }
+                    setSelectedTool(subject.id);
+                  }}
                   aria-pressed={selectedTool === subject.id}
-                  title={`${subject.label} · ${formatStudyMinutes(
-                    subjectTotals[subject.id]
-                  )}`}
+                  title={
+                    selectedTool === subject.id
+                      ? `${subject.label} 설정 열기`
+                      : `${subject.label} 선택 · ${formatStudyMinutes(
+                          subjectTotals[subject.id] ?? 0
+                        )}`
+                  }
                 >
                   <span className="study10-subject-dot" />
                   <span>{subject.shortLabel}</span>
-                  <small>{formatStudyMinutes(subjectTotals[subject.id])}</small>
+                  <small>
+                    {formatStudyMinutes(subjectTotals[subject.id] ?? 0)}
+                  </small>
                 </button>
-                <input
-                  type="color"
-                  className="study10-subject-color-input"
-                  value={subject.color}
-                  onChange={(event) =>
-                    updateSubjectColor(subject.id, event.target.value)
-                  }
-                  aria-label={`${subject.label} 색상 선택`}
-                  title={`${subject.label} 색상 선택`}
-                />
               </div>
             ))}
+            <button
+              type="button"
+              className="study10-subject-tool study10-subject-add-tool"
+              onClick={openNewSubjectEditor}
+              aria-label="새 과목 추가"
+              title="새 과목 추가"
+            >
+              <Plus />
+              <span>과목</span>
+            </button>
             <button
               type="button"
               className={cn(
@@ -600,15 +770,43 @@ export const StudyWidget = () => {
                 <span>10분 시간표</span>
                 <small>06:00–24:00</small>
               </div>
-              <button
-                type="button"
-                className="study10-icon-button"
-                onClick={clearTimeline}
-                aria-label="Clear selected date timeline"
-                title="시간표 지우기"
-              >
-                <RotateCcw />
-              </button>
+              <div className="study10-panel-actions">
+                <button
+                  type="button"
+                  className="study10-icon-button"
+                  onClick={undoTimeline}
+                  disabled={isTimelineLocked || timelineHistory.length === 0}
+                  aria-label="마지막 시간표 편집 되돌리기"
+                  title="되돌리기"
+                >
+                  <Undo2 />
+                </button>
+                <button
+                  type="button"
+                  className={cn(
+                    "study10-icon-button study10-lock-button",
+                    isTimelineLocked && "is-active"
+                  )}
+                  onClick={() => setIsTimelineLocked((locked) => !locked)}
+                  aria-label={
+                    isTimelineLocked ? "시간표 잠금 해제" : "시간표 잠금"
+                  }
+                  aria-pressed={isTimelineLocked}
+                  title={isTimelineLocked ? "잠금 해제" : "편집 잠금"}
+                >
+                  {isTimelineLocked ? <Lock /> : <Unlock />}
+                </button>
+                <button
+                  type="button"
+                  className="study10-icon-button"
+                  onClick={clearTimeline}
+                  disabled={isTimelineLocked}
+                  aria-label="선택한 날짜 시간표 전체 지우기"
+                  title="전체 지우기"
+                >
+                  <RotateCcw />
+                </button>
+              </div>
             </div>
 
             <div className="study10-timeline-scroll">
@@ -660,6 +858,7 @@ export const StudyWidget = () => {
                           }}
                           aria-label={label}
                           aria-pressed={Boolean(subject)}
+                          aria-disabled={isTimelineLocked}
                           title={label}
                         />
                       );
@@ -808,6 +1007,111 @@ export const StudyWidget = () => {
     );
   };
 
+  const subjectEditorPortal =
+    subjectDraft && typeof document !== "undefined"
+      ? createPortal(
+          <div
+            className="study10-subject-dialog-layer"
+            onPointerDown={(event) => {
+              if (event.target === event.currentTarget) commitSubjectDraft();
+            }}
+          >
+            {/* Figma Component: Subject Settings Popover / Edit · Create */}
+            <section
+              className="study10-subject-dialog"
+              role="dialog"
+              aria-modal="true"
+              aria-label={subjectDraft.isNew ? "새 과목 추가" : "과목 설정"}
+              style={getSubjectStyle(subjectDraft.color)}
+              onPointerDown={(event) => event.stopPropagation()}
+            >
+              <header className="study10-subject-dialog-header">
+                <div>
+                  <span>{subjectDraft.isNew ? "NEW SUBJECT" : "SUBJECT"}</span>
+                  <strong>
+                    {subjectDraft.name.trim() || "새 과목"}
+                  </strong>
+                </div>
+                <button
+                  type="button"
+                  className="study10-subject-dialog-close"
+                  onClick={commitSubjectDraft}
+                  aria-label="과목 설정 저장 후 닫기"
+                  title="저장 후 닫기"
+                >
+                  <X />
+                </button>
+              </header>
+
+              <div className="study10-subject-total">
+                <span>전체 공부 시간</span>
+                <strong>
+                  {formatStudyMinutes(
+                    subjectDraft.subjectId
+                      ? allTimeSubjectTotals[subjectDraft.subjectId] ?? 0
+                      : 0
+                  )}
+                </strong>
+              </div>
+
+              <label className="study10-subject-dialog-field">
+                <span>과목명</span>
+                <input
+                  value={subjectDraft.name}
+                  maxLength={24}
+                  onChange={(event) =>
+                    setSubjectDraft((draft) =>
+                      draft ? { ...draft, name: event.target.value } : draft
+                    )
+                  }
+                  placeholder="과목 이름"
+                  autoFocus
+                />
+              </label>
+
+              <label className="study10-subject-dialog-field study10-subject-color-field">
+                <span>색상</span>
+                <div>
+                  <input
+                    type="color"
+                    value={subjectDraft.color}
+                    onChange={(event) =>
+                      setSubjectDraft((draft) =>
+                        draft ? { ...draft, color: event.target.value } : draft
+                      )
+                    }
+                    aria-label="과목 색상 선택"
+                  />
+                  <code>{subjectDraft.color.toUpperCase()}</code>
+                </div>
+              </label>
+
+              <label className="study10-subject-dialog-field">
+                <span>과목 메모</span>
+                <textarea
+                  value={subjectDraft.note}
+                  onChange={(event) =>
+                    setSubjectDraft((draft) =>
+                      draft ? { ...draft, note: event.target.value } : draft
+                    )
+                  }
+                  placeholder="목표, 교재, 자주 막히는 부분을 적어두세요."
+                />
+              </label>
+
+              <button
+                type="button"
+                className="study10-subject-dialog-apply"
+                onClick={commitSubjectDraft}
+              >
+                {subjectDraft.isNew ? "과목 추가" : "변경사항 적용"}
+              </button>
+            </section>
+          </div>,
+          document.body
+        )
+      : null;
+
   return (
     <>
       {/* Figma Component: Study Widget / compact planner mode */}
@@ -841,6 +1145,7 @@ export const StudyWidget = () => {
       >
         {renderPlanner("detail")}
       </StudyDetailWindow>
+      {subjectEditorPortal}
     </>
   );
 };

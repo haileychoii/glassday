@@ -20,13 +20,20 @@
  * subject id는 timeline block에 저장되는 durable value이므로 label/color를 바꿔도 유지한다.
  * ============================================================
  */
-export type StudyPlannerSubjectId =
+export type StudyPlannerDefaultSubjectId =
   | "economics"
   | "ncs"
   | "accounting"
   | "actuarial"
   | "english"
   | "other";
+
+/** Custom subjects keep a stable ID so renamed subjects do not lose timeline records. */
+export type StudyPlannerCustomSubjectId = `custom-${string}`;
+
+export type StudyPlannerSubjectId =
+  | StudyPlannerDefaultSubjectId
+  | StudyPlannerCustomSubjectId;
 
 export type StudyPlannerSubject = {
   id: StudyPlannerSubjectId;
@@ -38,6 +45,18 @@ export type StudyPlannerSubject = {
 /** 사용자 지정 색상만 저장한다. 누락된 과목은 constants/study.ts 기본값을 사용한다. */
 export type StudyPlannerSubjectColors = Partial<
   Record<StudyPlannerSubjectId, string>
+>;
+
+export type StudyPlannerSubjectSetting = {
+  /** Display name only. Timeline blocks continue to reference the stable subject ID. */
+  label?: string;
+  color?: string;
+  /** Subject-level memo shared by every date and both Dashboard modes. */
+  note?: string;
+};
+
+export type StudyPlannerSubjectSettings = Partial<
+  Record<StudyPlannerSubjectId, StudyPlannerSubjectSetting>
 >;
 
 export type StudyPlannerTask = {
@@ -79,6 +98,10 @@ export type StudyPlannerStorage = {
   activeTimer: StudyActiveTimer | null;
   /** 날짜와 무관하게 Widget/Detail/Wide/Laptop이 공유하는 과목 색상 override. */
   subjectColors: StudyPlannerSubjectColors;
+  /** Name, color and memo overrides for default and user-added subjects. */
+  subjectSettings: StudyPlannerSubjectSettings;
+  /** User-created subjects. Default subjects remain in constants/study.ts. */
+  customSubjects: StudyPlannerSubject[];
 };
 
 /* Legacy manual-record domain

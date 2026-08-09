@@ -37,6 +37,14 @@
   --study10-control-bg: var(--gd-widget-control-bg);
   --study10-control-border: var(--gd-widget-control-border);
   --study10-control-active-bg: var(--gd-widget-control-active-bg);
+  --study10-accent-gradient:
+    linear-gradient(
+      100deg,
+      color-mix(in srgb, #90dbf4 70%, hsl(var(--card))),
+      color-mix(in srgb, #cfbaf0 64%, hsl(var(--card))) 48%,
+      color-mix(in srgb, #f9c6c9 62%, hsl(var(--card))) 76%,
+      color-mix(in srgb, #c9e4de 70%, hsl(var(--card)))
+    );
 }
 
 .study-widget {
@@ -153,7 +161,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: hsl(var(--primary) / 0.76);
+  background: var(--study10-accent-gradient);
   transition: width 180ms ease;
 }
 
@@ -246,15 +254,15 @@
 .study10-subject-tools {
   min-width: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 5px;
 }
 
 /* Subject control
-   Figma Component: Subject Chip / Default · Selected · Custom Color.
-   The color input overlays the existing vertical swatch, so customization adds
-   no extra row or toolbar height. / 좁은 위젯에서도 과목 선택 영역의 밀도를
-   유지하면서 색상 칩을 직접 눌러 변경할 수 있습니다. */
+   Figma Component: Subject Chip / Default · Selected.
+   Four equal columns keep the frequently used subjects visible without an
+   invisible horizontal scrollbar. / 선택된 과목을 다시 누르면 별도 설정
+   팝오버가 열리므로 chip 안에는 선택 정보만 남긴다. */
 .study10-subject-control {
   position: relative;
   min-width: 0;
@@ -314,39 +322,6 @@
   background: var(--study-subject-color);
 }
 
-.study10-subject-color-input {
-  position: absolute;
-  z-index: 2;
-  inset-inline-start: 1px;
-  top: 50%;
-  width: 20px !important;
-  min-width: 20px !important;
-  height: 28px !important;
-  padding: 5px 6px !important;
-  overflow: hidden;
-  transform: translateY(-50%);
-  cursor: pointer;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 8px !important;
-  box-shadow: none !important;
-}
-
-.study10-subject-color-input::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-
-.study10-subject-color-input::-webkit-color-swatch,
-.study10-subject-color-input::-moz-color-swatch {
-  border: 1px solid hsl(0 0% 100% / 0.64);
-  border-radius: 999px;
-}
-
-.study10-subject-color-input:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--study-subject-color) 72%, white);
-  outline-offset: -3px;
-}
-
 .study10-subject-tool > span:not(.study10-subject-dot) {
   min-width: 0;
   overflow: hidden;
@@ -365,6 +340,17 @@
 .study10-eraser-tool {
   grid-template-columns: 14px minmax(0, 1fr);
   color: hsl(var(--muted-foreground) / 0.9);
+}
+
+.study10-subject-add-tool {
+  grid-template-columns: 14px minmax(0, 1fr);
+  border-style: dashed;
+  color: hsl(var(--foreground) / 0.72);
+}
+
+.study10-subject-add-tool svg {
+  width: 14px;
+  height: 14px;
 }
 
 .study10-eraser-tool.is-active {
@@ -425,6 +411,12 @@
   font-weight: 750;
 }
 
+.study10-timer-button {
+  background: var(--study10-accent-gradient);
+  border-color: color-mix(in srgb, #a3c4f3 58%, hsl(var(--border)));
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.44);
+}
+
 /* ---------------------------------------------------------
    4. Main workspace and shared panels
 --------------------------------------------------------- */
@@ -473,6 +465,19 @@
   font-size: 9px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.study10-panel-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.study10-lock-button.is-active {
+  color: hsl(var(--foreground) / 0.94);
+  border-color: color-mix(in srgb, #a3c4f3 62%, hsl(var(--border)));
+  background: color-mix(in srgb, #c6def1 34%, var(--study10-control-bg));
 }
 
 /* Timeline grid
@@ -546,6 +551,46 @@
     hsl(var(--card))
   );
   box-shadow: inset 0 0 0 1px hsl(0 0% 100% / 0.12);
+}
+
+.study10-planner.is-timeline-locked .study10-slot {
+  cursor: not-allowed;
+  touch-action: pan-y;
+}
+
+.study10-planner.is-timeline-locked .study10-slot:hover {
+  transform: none;
+}
+
+/* Glass-only subject fill
+   A restrained multi-stop tint gives filled cells a holographic shimmer while
+   Pixel, Retro, Pastel and Mac keep their native flat materials. */
+:is(
+    html[data-theme="glass"],
+    body[data-theme="glass"],
+    html.theme-glass,
+    body.theme-glass,
+    html[data-theme="glass-light"],
+    body[data-theme="glass-light"],
+    html.theme-glass-light,
+    body.theme-glass-light,
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html.theme-glass-dark,
+    body.theme-glass-dark
+  )
+  .study10-slot.is-filled {
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--study-subject-color) 74%, white 26%),
+      color-mix(in srgb, var(--study-subject-color) 88%, #c6def1 12%) 45%,
+      color-mix(in srgb, var(--study-subject-color) 78%, #f2c6de 22%) 72%,
+      color-mix(in srgb, var(--study-subject-color) 84%, #c9e4de 16%)
+    ) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.42),
+    0 2px 7px color-mix(in srgb, var(--study-subject-color) 24%, transparent);
 }
 
 /* Task and note column */
@@ -752,6 +797,176 @@
 }
 
 /* ---------------------------------------------------------
+   Subject settings popover
+   Rendered through document.body so Dashboard and Floating Window overflow
+   cannot clip it. The transparent layer exists only to commit on outside click.
+--------------------------------------------------------- */
+
+.study10-subject-dialog-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 100080;
+  padding: 16px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+}
+
+.study10-subject-dialog {
+  --study10-accent-gradient:
+    linear-gradient(100deg, #d9f1f5, #ddd2f3 48%, #f6d8e5 76%, #d9eee8);
+  width: min(360px, calc(100vw - 32px));
+  max-height: min(520px, calc(100vh - 32px));
+  padding: 14px;
+  overflow-y: auto;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--gd-radius-card, 18px);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, hsl(var(--card)) 94%, white 6%),
+      color-mix(in srgb, hsl(var(--card)) 90%, var(--study-subject-color) 10%)
+    );
+  color: hsl(var(--foreground) / 0.94);
+  box-shadow:
+    0 24px 70px hsl(var(--foreground) / 0.22),
+    inset 0 1px 0 hsl(0 0% 100% / 0.42);
+  backdrop-filter: blur(28px) saturate(128%);
+  -webkit-backdrop-filter: blur(28px) saturate(128%);
+  display: grid;
+  gap: 11px;
+}
+
+.study10-subject-dialog-header,
+.study10-subject-total {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.study10-subject-dialog-header > div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.study10-subject-dialog-header span,
+.study10-subject-dialog-field > span,
+.study10-subject-total span {
+  color: hsl(var(--muted-foreground) / 0.86);
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.study10-subject-dialog-header strong {
+  overflow: hidden;
+  font-size: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.study10-subject-dialog-close {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid hsl(var(--border) / 0.68);
+  border-radius: 50%;
+  background: hsl(var(--card) / 0.72);
+  display: inline-grid;
+  place-items: center;
+}
+
+.study10-subject-dialog-close svg {
+  width: 15px;
+  height: 15px;
+}
+
+.study10-subject-total {
+  min-height: 50px;
+  padding: 9px 11px;
+  border: 1px solid color-mix(in srgb, var(--study-subject-color) 36%, hsl(var(--border)));
+  border-radius: calc(var(--gd-radius-inner, 14px) * 0.8);
+  background: color-mix(in srgb, var(--study-subject-color) 16%, hsl(var(--card)));
+}
+
+.study10-subject-total strong {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.study10-subject-dialog-field {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.study10-subject-dialog-field input:not([type="color"]),
+.study10-subject-dialog-field textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid hsl(var(--border) / 0.66);
+  border-radius: calc(var(--gd-radius-inner, 14px) * 0.72);
+  background: hsl(var(--card) / 0.72);
+  color: hsl(var(--foreground) / 0.94);
+  outline: none;
+}
+
+.study10-subject-dialog-field input:not([type="color"]) {
+  height: 36px;
+  padding: 0 10px;
+}
+
+.study10-subject-dialog-field textarea {
+  min-height: 88px;
+  padding: 9px 10px;
+  resize: vertical;
+}
+
+.study10-subject-dialog-field input:focus,
+.study10-subject-dialog-field textarea:focus {
+  border-color: color-mix(in srgb, var(--study-subject-color) 72%, hsl(var(--border)));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--study-subject-color) 18%, transparent);
+}
+
+.study10-subject-color-field > div {
+  min-height: 38px;
+  padding: 4px 8px 4px 5px;
+  border: 1px solid hsl(var(--border) / 0.66);
+  border-radius: calc(var(--gd-radius-inner, 14px) * 0.72);
+  background: hsl(var(--card) / 0.72);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.study10-subject-color-field input[type="color"] {
+  width: 46px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.study10-subject-color-field code {
+  color: hsl(var(--muted-foreground) / 0.9);
+  font-size: 11px;
+}
+
+.study10-subject-dialog-apply {
+  min-height: 38px;
+  border: 1px solid color-mix(in srgb, var(--study-subject-color) 46%, hsl(var(--border)));
+  border-radius: calc(var(--gd-radius-inner, 14px) * 0.78);
+  background: var(--study10-accent-gradient);
+  color: hsl(var(--foreground) / 0.92);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* ---------------------------------------------------------
    Container-responsive layouts
    Breakpoints follow the widget/window itself, never the browser viewport.
 --------------------------------------------------------- */
@@ -773,7 +988,7 @@
 
 @container study-widget (min-width: 940px) {
   .study10-subject-tools {
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .study10-subject-tool {
@@ -800,20 +1015,13 @@
   }
 
   .study10-subject-tools {
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-inline: contain;
-    scrollbar-width: none;
-    padding-bottom: 1px;
-  }
-
-  .study10-subject-tools::-webkit-scrollbar {
-    display: none;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    overflow: visible;
   }
 
   .study10-subject-control {
-    flex: 0 0 clamp(106px, 33cqw, 132px);
+    min-width: 0;
   }
 
   .study10-subject-control .study10-subject-tool {
@@ -882,6 +1090,17 @@
 
   .study10-subject-tool {
     min-height: 34px;
+    padding-inline: 5px;
+    grid-template-columns: 6px minmax(0, 1fr);
+  }
+
+  .study10-subject-tool small {
+    display: none;
+  }
+
+  .study10-eraser-tool,
+  .study10-subject-add-tool {
+    grid-template-columns: 13px minmax(0, 1fr);
   }
 
   .study10-task-form {
@@ -945,7 +1164,11 @@
     .study10-panel,
     .study10-task-row,
     .study10-note-panel textarea,
-    .study10-legacy-note
+    .study10-legacy-note,
+    .study10-subject-dialog,
+    .study10-subject-total,
+    .study10-subject-dialog-field input,
+    .study10-subject-dialog-field textarea
   ) {
   border-radius: 0;
   background: hsl(var(--card));

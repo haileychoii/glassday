@@ -25,8 +25,10 @@ import type {
   StudyDayData,
   StudyLegacyRecordSummary,
   StudyPlannerStorage,
+  StudyPlannerSubject,
   StudyPlannerSubjectColors,
   StudyPlannerSubjectId,
+  StudyPlannerSubjectSettings,
   StudyPlannerTask,
   StudyPomodoroMode,
   StudyPomodoroState,
@@ -38,6 +40,7 @@ import type {
 
 const DATE_KEY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const HEX_COLOR_PATTERN = /^#[0-9a-f]{6}$/i;
+const CUSTOM_SUBJECT_ID_PATTERN = /^custom-[a-z0-9-]{4,}$/i;
 
 const isRecordValue = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -46,7 +49,8 @@ const isPlannerSubjectId = (
   value: unknown
 ): value is StudyPlannerSubjectId =>
   typeof value === "string" &&
-  STUDY_PLANNER_SUBJECT_IDS.has(value as StudyPlannerSubjectId);
+  (STUDY_PLANNER_SUBJECT_IDS.has(value as StudyPlannerSubjectId) ||
+    CUSTOM_SUBJECT_ID_PATTERN.test(value));
 
 const safeNumber = (value: unknown, fallback = 0) =>
   typeof value === "number" && Number.isFinite(value) ? value : fallback;
@@ -139,6 +143,8 @@ export const createEmptyStudyPlannerStorage = (): StudyPlannerStorage => ({
   days: {},
   activeTimer: null,
   subjectColors: {},
+  subjectSettings: {},
+  customSubjects: [],
 });
 
 /* Subject color migration
@@ -160,6 +166,71 @@ const normalizeSubjectColors = (value: unknown): StudyPlannerSubjectColors => {
   });
 
   return colors;
+};
+
+/* Subject catalog migration
+   Defaults stay in constants, while only user-created entries are persisted.
+   / 이름을 바꿔도 id가 유지되므로 기존 시간표 block과 task가 끊기지 않는다. */
+const normalizeCustomSubjects = (value: unknown): StudyPlannerSubject[] => {
+  if (!Array.isArray(value)) return [];
+
+  const seen = new Set<string>();
+  return value.flatMap((entry) => {
+    if (
+      !isRecordValue(entry) ||
+      !isPlannerSubjectId(entry.id) ||
+      !CUSTOM_SUBJECT_ID_PATTERN.test(entry.id) ||
+      seen.has(entry.id)
+    ) {
+      return [];
+    }
+
+    const label =
+      typeof entry.label === "string" && entry.label.trim()
+        ? entry.label.trim().slice(0, 24)
+        : "새 과목";
+    const color =
+      typeof entry.color === "string" && HEX_COLOR_PATTERN.test(entry.color)
+        ? entry.color.toUpperCase()
+        : "#E2CFC4";
+
+    seen.add(entry.id);
+    return [{ id: entry.id, label, shortLabel: label, color }];
+  });
+};
+
+const normalizeSubjectSettings = (
+  value: unknown,
+  legacyColors: StudyPlannerSubjectColors
+): StudyPlannerSubjectSettings => {
+  const settings: StudyPlannerSubjectSettings = {};
+
+  if (isRecordValue(value)) {
+    Object.entries(value).forEach(([subjectId, entry]) => {
+      if (!isPlannerSubjectId(subjectId) || !isRecordValue(entry)) return;
+
+      const label =
+        typeof entry.label === "string" && entry.label.trim()
+          ? entry.label.trim().slice(0, 24)
+          : undefined;
+      const color =
+        typeof entry.color === "string" && HEX_COLOR_PATTERN.test(entry.color)
+          ? entry.color.toUpperCase()
+          : undefined;
+      const note =
+        typeof entry.note === "string" ? entry.note.slice(0, 2000) : undefined;
+
+      settings[subjectId] = { label, color, note };
+    });
+  }
+
+  /* v2 color-only records are promoted without deleting the compatibility map. */
+  Object.entries(legacyColors).forEach(([subjectId, color]) => {
+    if (!isPlannerSubjectId(subjectId) || !color) return;
+    settings[subjectId] = { ...settings[subjectId], color };
+  });
+
+  return settings;
 };
 
 const normalizePlannerTask = (value: unknown): StudyPlannerTask | null => {
@@ -265,11 +336,18 @@ export const normalizeStudyPlannerStorage = (
     });
   }
 
+  const subjectColors = normalizeSubjectColors(value.subjectColors);
+
   return {
     version: 2,
     days,
     activeTimer: normalizeActiveTimer(value.activeTimer),
-    subjectColors: normalizeSubjectColors(value.subjectColors),
+    subjectColors,
+    subjectSettings: normalizeSubjectSettings(
+      value.subjectSettings,
+      subjectColors
+    ),
+    customSubjects: normalizeCustomSubjects(value.customSubjects),
   };
 };
 
@@ -388,10 +466,11 @@ export const getStudyPlannerSubjectTotals = (day: StudyDayData) => {
   ) as Record<StudyPlannerSubjectId, number>;
 
   Object.values(day.blocks).forEach((subjectId) => {
-    totals[subjectId] += STUDY_SLOT_MINUTES;
+    totals[subjectId] = (totals[subjectId] ?? 0) + STUDY_SLOT_MINUTES;
   });
   (day.legacyRecords ?? []).forEach((record) => {
-    totals[record.subjectId] += Math.max(0, record.minutes);
+    totals[record.subjectId] =
+      (totals[record.subjectId] ?? 0) + Math.max(0, record.minutes);
   });
 
   return totals;
