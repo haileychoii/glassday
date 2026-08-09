@@ -36,71 +36,75 @@ import type {
    Keep those concepts separate so charts do not mix stores with categories.
 ========================================================= */
 
+/* Donut palette
+   A muted full-spectrum pastel set keeps adjacent categories identifiable
+   without using loud primary colors. / 색 순서는 category ID와 함께 고정되어
+   월이 바뀌어도 같은 지출 종류가 항상 같은 색으로 보입니다. */
 export const moneyCategories: MoneyCategoryDefinition[] = [
   {
     id: "Food",
     label: "Food",
-    color: "#D9877E",
+    color: "#F7D9C4",
     subcategories: ["Lunch", "Cafe", "Convenience", "Delivery", "Snack", "Dining"],
   },
   {
     id: "Fashion",
     label: "Fashion",
-    color: "#9D8BC3",
+    color: "#DBD0F0",
     subcategories: ["Top", "Bottom", "Outerwear", "Shoes", "Bag", "Accessories"],
   },
   {
     id: "Beauty",
     label: "Beauty",
-    color: "#C97F9E",
+    color: "#F2C6DE",
     subcategories: ["Makeup", "Skincare", "Hair", "Nail", "Beauty Care"],
   },
   {
     id: "Living",
     label: "Living",
-    color: "#7FA58C",
+    color: "#C9E4DE",
     subcategories: ["Household", "Organization", "Supplies"],
   },
   {
     id: "Digital",
     label: "Digital",
-    color: "#69A7AA",
+    color: "#8EECF5",
     subcategories: ["Device", "PC Accessory", "Phone Accessory", "Charger / Adapter"],
   },
   {
     id: "Transport",
     label: "Transport",
-    color: "#7897C2",
+    color: "#A3C4F3",
     subcategories: [],
   },
   {
     id: "Fixed",
     label: "Fixed",
-    color: "#A18F7C",
+    color: "#BCD4E6",
     subcategories: ["Phone", "Subscription"],
   },
   {
     id: "Study",
     label: "Study",
-    color: "#8EA273",
+    color: "#FAEDCB",
     subcategories: ["Book", "Workbook", "Exam"],
   },
   {
     id: "Content",
     label: "Content",
-    color: "#897FB8",
+    color: "#CFBAF0",
     subcategories: ["Webtoon", "Game"],
   },
   {
     id: "Gift",
     label: "Gift",
-    color: "#C4A06C",
+    color: "#F9C6C9",
     subcategories: [],
   },
   {
     id: "Other",
     label: "Other",
-    color: "#83939D",
+    color: "#D2D2CF",
     subcategories: [],
   },
 ];
