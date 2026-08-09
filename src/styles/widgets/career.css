@@ -14,7 +14,7 @@
   /* Figma mapping: one token owns the vertical distance between header,
      summary, filters, and the application list.
      피그마에서는 이 값을 Career 섹션 사이의 공통 Auto Layout gap으로 사용합니다. */
-  --career-layout-gap: 6px;
+  --career-layout-gap: 4px;
   height: 100%;
   min-height: 0;
   /* This widget's default density is intentionally driven by the shared
@@ -3347,6 +3347,9 @@ html[data-theme="retro"] .career-floating-window,
 body[data-theme="retro"] .career-floating-window,
 html.theme-retro .career-floating-window,
 body.theme-retro .career-floating-window {
+  border-radius: 0 !important;
+  background: var(--pixel-desk-card-bg) !important;
+  
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }

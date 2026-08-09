@@ -642,9 +642,9 @@
 }
 
 /* Settings window chrome
-   The visible red light maps to the real close button; yellow and green stay
-   decorative until minimize/fullscreen behaviors exist.
-   / 빨간 점은 실제 닫기 버튼이고 나머지는 현재 장식 상태다. */
+   Traffic lights remain decorative while the real close command stays visible
+   at the right edge of the titlebar. / 창 장식과 실제 X 버튼을 분리해
+   사용자가 닫기 동작을 바로 찾고 키보드 focus도 확인할 수 있게 한다. */
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-modal-window {
   border-radius: var(--gd-radius-app) !important;
 }
@@ -675,12 +675,24 @@
 
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-close-button {
   position: absolute !important;
-  top: 18px !important;
-  left: 14px !important;
-  width: 18px !important;
-  height: 18px !important;
-  z-index: 2 !important;
-  opacity: 0 !important;
+  top: 12px !important;
+  right: 12px !important;
+  left: auto !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  display: inline-flex !important;
+  visibility: visible !important;
+  z-index: 3 !important;
+  opacity: 1 !important;
+  color: var(--mac-text) !important;
+  background: var(--mac-control-bg) !important;
+  border: 1px solid var(--mac-control-border) !important;
+  box-shadow: var(--mac-control-shadow) !important;
+}
+
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-close-button:hover {
+  background: var(--mac-control-hover-bg) !important;
 }
 
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-modal-body {
