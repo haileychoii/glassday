@@ -141,6 +141,20 @@
   font-family: var(--memo-title-font, var(--memo-font-family, inherit)) !important;
 }
 
+/* Per-note list preview + font menu
+   Mac Core owns interface typography only. Saved memo fonts remain visible in
+   list previews and each option previews its real face. / 메모 콘텐츠는 앱의
+   Apple font stack과 독립적으로 렌더링됩니다. */
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  :where(.memo-note-title, .memo-note-preview) {
+  font-family: var(--memo-note-font, inherit) !important;
+}
+
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .memo-font-select option {
+  font-family: var(--memo-option-font, inherit) !important;
+}
+
 /* =========================================================
    2. Desktop and app window
    The shell acts like a single macOS utility window with a titlebar layer.

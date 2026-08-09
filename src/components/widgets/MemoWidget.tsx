@@ -1159,7 +1159,12 @@ export const MemoWidget = () => {
               <option
                 key={font.label}
                 value={font.value}
-                style={{ fontFamily: font.value }}
+                style={
+                  {
+                    fontFamily: font.value,
+                    "--memo-option-font": font.value,
+                  } as CSSProperties
+                }
               >
                 {font.label}
               </option>
@@ -1417,6 +1422,10 @@ export const MemoWidget = () => {
                   "--memo-note-surface": noteSurface,
                   "--memo-note-border": noteBorder,
                   "--memo-note-text": noteText,
+                  /* Per-note typography
+                     Theme interface fonts must not replace the font saved on
+                     this memo. / 목록에서도 각 메모가 선택한 서체를 유지합니다. */
+                  "--memo-note-font": note.fontFamily,
                 } as CSSProperties
               }
             >

@@ -660,6 +660,49 @@
   text-shadow: none !important;
 }
 
+/* Memo typography exception
+   Pixel Desk keeps its bitmap font for interface chrome, while the memo title,
+   rich text, list preview, and font options use the font saved on each note.
+   / 테마는 기본 UI 폰트만 정하고 메모별 서체를 덮어쓰지 않습니다. */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) :where(.memo-title-input, .memo-title-view, .memo-editor, .memo-editor *) {
+  font-family: var(--memo-title-font, var(--memo-font-family, inherit)) !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) :where(.memo-note-title, .memo-note-preview) {
+  font-family: var(--memo-note-font, inherit) !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .memo-font-select option {
+  font-family: var(--memo-option-font, inherit) !important;
+}
+
 :where(
   html[data-theme="pixel-desk"],
   body[data-theme="pixel-desk"],
