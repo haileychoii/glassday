@@ -73,6 +73,10 @@
   --gd-scrollbar-thumb: hsl(var(--foreground) / 0.24);
   --gd-scrollbar-thumb-hover: hsl(var(--foreground) / 0.34);
   --gd-scrollbar-border: hsl(0 0% 100% / 0.18);
+  /* Scroll content edge
+     Reserves breathing room between a widget's cards and its vertical rail.
+     / 스크롤바가 카드 테두리를 덮어 잘린 것처럼 보이지 않게 하는 여백. */
+  --gd-widget-scroll-content-inset: var(--gd-space-xs);
 
   /* 2b. Shell spacing
      These map directly to Figma frame paddings and widths.

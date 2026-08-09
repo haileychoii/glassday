@@ -650,14 +650,30 @@
 .today-focus-mini-item,
 .today-focus-career-item,
 .today-focus-memo {
+  width: 100%;
+  max-width: 100%;
   min-height: 42px;
   border-radius: 16px;
   padding: 9px;
   display: flex;
   align-items: center;
   gap: 9px;
+  overflow: hidden;
   background: hsl(0 0% 100% / 0.3);
   border: 1px solid hsl(0 0% 100% / 0.4);
+  box-sizing: border-box;
+}
+
+/* Linked row text contract
+   The label column consumes only the space left by its icon/badge and clips
+   before the scroll rail. / 긴 일정·회사·메모 문구가 오른쪽 테두리나
+   D-day badge를 밀어내지 않고 행 내부에서 줄어듭니다. */
+.today-focus-mini-item > div,
+.today-focus-career-item > div,
+.today-focus-memo > div {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
 }
 
 .today-focus-mini-item.is-clickable,
@@ -902,7 +918,12 @@
   overflow-x: hidden !important;
   overscroll-behavior: contain !important;
   -webkit-overflow-scrolling: touch !important;
-  padding-inline: 2px !important;
+  /* Scroll Frame / Vertical Auto Layout
+     Keep every direct panel inside the readable content lane instead of
+     allowing its right border to meet the scrollbar track. */
+  padding-inline: var(--gd-widget-scroll-content-inset) !important;
+  scrollbar-gutter: stable !important;
+  box-sizing: border-box !important;
 }
 
 .today-focus-main,
