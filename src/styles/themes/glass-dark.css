@@ -1,1254 +1,372 @@
+
 /* ============================================================
-   [Theme Variant] Glass Dark
-   Registry ID: glass-dark / selectors: data-theme="glass-dark", .theme-glass-dark
-   Switcher: src/constants/themes.ts + SettingsModal.tsx
-   Figma variables: dark transparent shell, darker inner cards, light text, muted holographic accent.
+   TAURI ONLY — BACKGROUNDLESS GLASS DARK
+   ------------------------------------------------------------
+   WEB / Vercel
+   - 기존 Glass Dark 배경과 디자인 그대로 유지
 
-   실제 파일 상태:
-   - 앞부분에는 Glass Light compatibility selector가 함께 남아 있다.
-   - line 후반의 glass-dark selector가 Dark token/surface를 선언한다.
-   import 순서상 glass-light.css 뒤에 오므로 두 theme selector의 영향 범위를 수정할 때 주의한다.
-   UI 정리 작업에서는 구조 값이 아니라 theme material만 이 파일에서 변경한다.
+   TAURI
+   - 앱 전체를 받치는 dark background 제거
+   - 실제 Windows Desktop이 뒤로 보임
+   - Sidebar / Topbar / Widget만 smoked glass로 유지
    ============================================================ */
-/* =========================================================
-   Theme: Glass Light
-   visual only — layout 건드리지 않음
-========================================================= */
 
-html[data-theme="glass-light"],
-body[data-theme="glass-light"],
-html.theme-glass-light,
-body.theme-glass-light {
-  --background: 220 30% 98%;
-  --foreground: 238 26% 18%;
-  --muted-foreground: 236 12% 48%;
-  --primary: 258 88% 66%;
-  --primary-foreground: 0 0% 100%;
 
-  --gd-radius-app: 32px;
-  --gd-radius-panel: 28px;
-  --gd-radius-widget: 26px;
-  --gd-radius-card: 22px;
-  --gd-radius-inner: 18px;
-  --gd-radius-button: 999px;
+/* ============================================================
+   1. TAURI DARK MATERIAL TOKENS
 
-  color: hsl(var(--foreground) / 0.94);
-}
+   기존 Glass Dark는 내부 panel/control이 상당히 불투명하다.
+   Tauri에서만 보다 투명한 smoked-glass 값으로 재정의한다.
+============================================================ */
 
-html[data-theme="glass-light"] body,
-body[data-theme="glass-light"],
-html.theme-glass-light body,
-body.theme-glass-light {
-  color: hsl(var(--foreground) / 0.94) !important;
-  background:
-    radial-gradient(circle at 12% 8%, rgb(255 255 255 / 0.92), transparent 34%),
-    radial-gradient(circle at 84% 12%, rgb(216 224 255 / 0.72), transparent 38%),
-    radial-gradient(circle at 72% 86%, rgb(255 222 246 / 0.46), transparent 42%),
-    linear-gradient(135deg, #eef1f7, #f8f6fb 48%, #e9edf5) !important;
-}
-
-/* 배경 컨테이너는 배경만. 자식 display/z-index 절대 건드리지 않음 */
-html[data-theme="glass-light"] .bg-glass-gradient,
-body[data-theme="glass-light"] .bg-glass-gradient,
-html.theme-glass-light .bg-glass-gradient,
-body.theme-glass-light .bg-glass-gradient {
-  background:
-    radial-gradient(circle at 14% 8%, rgb(255 255 255 / 0.46), transparent 34%),
-    radial-gradient(circle at 86% 12%, rgb(210 220 255 / 0.3), transparent 38%),
-    linear-gradient(135deg, rgb(245 247 252 / 0.68), rgb(255 255 255 / 0.28)) !important;
-}
-
-/* app shell visual */
-html[data-theme="glass-light"] .glass-panel,
-html[data-theme="glass-light"] .liquid-shell,
-html[data-theme="glass-light"] .app-shell,
-html[data-theme="glass-light"] .dashboard-shell,
-html[data-theme="glass-light"] .workspace-shell,
-html[data-theme="glass-light"] .desktop-shell,
-html[data-theme="glass-light"] .main-shell,
-body[data-theme="glass-light"] .glass-panel,
-body[data-theme="glass-light"] .liquid-shell,
-body[data-theme="glass-light"] .app-shell,
-body[data-theme="glass-light"] .dashboard-shell,
-body[data-theme="glass-light"] .workspace-shell,
-body[data-theme="glass-light"] .desktop-shell,
-body[data-theme="glass-light"] .main-shell {
-  background: rgba(255, 255, 255, 0.19) !important;
-  border: 1px solid rgba(255, 255, 255, 0.32) !important;
-  border-radius: var(--gd-radius-app) !important;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
-  backdrop-filter: blur(11.9px) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(11.9px) saturate(145%) !important;
-}
-
-/* sidebar */
-html[data-theme="glass-light"] .app-sidebar,
-html[data-theme="glass-light"] .sidebar,
-body[data-theme="glass-light"] .app-sidebar,
-body[data-theme="glass-light"] .sidebar {
-  color: hsl(var(--foreground) / 0.9) !important;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.26),
-      rgba(255, 255, 255, 0.11)
-    ) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.32) !important;
-  backdrop-filter: blur(18px) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(145%) !important;
-}
-
-/* topbar */
-html[data-theme="glass-light"] .topbar,
-body[data-theme="glass-light"] .topbar {
-  color: hsl(var(--foreground) / 0.92) !important;
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.3),
-      rgba(255, 255, 255, 0.13)
-    ) !important;
-  border: 1px solid rgba(255, 255, 255, 0.34) !important;
-  border-radius: var(--gd-radius-panel) !important;
-  box-shadow:
-    0 16px 44px rgba(40, 40, 80, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
-  backdrop-filter: blur(16px) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(145%) !important;
-}
-
-html[data-theme="glass-light"] .topbar-title h1,
-body[data-theme="glass-light"] .topbar-title h1,
-html[data-theme="glass-light"] .sidebar-brand-title,
-body[data-theme="glass-light"] .sidebar-brand-title {
-  color: hsl(var(--foreground) / 0.92) !important;
-}
-
-html[data-theme="glass-light"] .topbar-title p,
-body[data-theme="glass-light"] .topbar-title p,
-html[data-theme="glass-light"] .sidebar-brand-subtitle,
-body[data-theme="glass-light"] .sidebar-brand-subtitle,
-html[data-theme="glass-light"] .sidebar-section-title,
-body[data-theme="glass-light"] .sidebar-section-title {
-  color: hsl(var(--muted-foreground) / 0.72) !important;
-}
-
-/* widgets */
-html[data-theme="glass-light"] .glass-card,
-body[data-theme="glass-light"] .glass-card {
-  color: hsl(var(--foreground) / 0.9) !important;
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.3),
-      rgba(255, 255, 255, 0.12)
-    ) !important;
-  border: 1px solid rgba(255, 255, 255, 0.36) !important;
-  border-radius: var(--gd-radius-widget) !important;
-  box-shadow:
-    0 18px 46px rgba(40, 40, 80, 0.09),
-    inset 0 1px 0 rgba(255, 255, 255, 0.56) !important;
-  backdrop-filter: blur(14px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(150%) !important;
-}
-
-/* inner panels */
-html[data-theme="glass-light"] .today-focus-main,
-html[data-theme="glass-light"] .today-focus-hero,
-html[data-theme="glass-light"] .today-focus-section,
-html[data-theme="glass-light"] .today-focus-block,
-html[data-theme="glass-light"] .today-mini-main,
-html[data-theme="glass-light"] .today-mini-next,
-html[data-theme="glass-light"] .today-tasks-progress,
-html[data-theme="glass-light"] .calendar-event-item,
-html[data-theme="glass-light"] .calendar-event-card,
-html[data-theme="glass-light"] .calendar-mini-card,
-html[data-theme="glass-light"] .career-list-item,
-html[data-theme="glass-light"] .memo-note-item,
-html[data-theme="glass-light"] .alert-item,
-html[data-theme="glass-light"] .journal-section,
-html[data-theme="glass-light"] .study-card,
-body[data-theme="glass-light"] .today-focus-main,
-body[data-theme="glass-light"] .today-focus-hero,
-body[data-theme="glass-light"] .today-focus-section,
-body[data-theme="glass-light"] .today-focus-block,
-body[data-theme="glass-light"] .today-mini-main,
-body[data-theme="glass-light"] .today-mini-next,
-body[data-theme="glass-light"] .today-tasks-progress,
-body[data-theme="glass-light"] .calendar-event-item,
-body[data-theme="glass-light"] .calendar-event-card,
-body[data-theme="glass-light"] .calendar-mini-card,
-body[data-theme="glass-light"] .career-list-item,
-body[data-theme="glass-light"] .memo-note-item,
-body[data-theme="glass-light"] .alert-item,
-body[data-theme="glass-light"] .journal-section,
-body[data-theme="glass-light"] .study-card {
-  background: rgba(255, 255, 255, 0.2) !important;
-  border: 1px solid rgba(255, 255, 255, 0.28) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.36),
-    0 10px 24px rgba(40, 40, 80, 0.055) !important;
-  backdrop-filter: blur(10px) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(145%) !important;
-}
-
-/* buttons / inputs */
-html[data-theme="glass-light"] .glass-button,
-html[data-theme="glass-light"] .theme-segmented-control,
-html[data-theme="glass-light"] .theme-select-mobile,
-html[data-theme="glass-light"] input,
-html[data-theme="glass-light"] textarea,
-html[data-theme="glass-light"] select,
-body[data-theme="glass-light"] .glass-button,
-body[data-theme="glass-light"] .theme-segmented-control,
-body[data-theme="glass-light"] .theme-select-mobile,
-body[data-theme="glass-light"] input,
-body[data-theme="glass-light"] textarea,
-body[data-theme="glass-light"] select {
-  color: hsl(var(--foreground) / 0.86) !important;
-  background: rgba(255, 255, 255, 0.22) !important;
-  border-color: rgba(255, 255, 255, 0.34) !important;
-  backdrop-filter: blur(10px) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(145%) !important;
-}
-
-html[data-theme="glass-light"] .theme-segment-button.is-active,
-body[data-theme="glass-light"] .theme-segment-button.is-active,
-html[data-theme="glass-light"] .glass-button.is-active,
-body[data-theme="glass-light"] .glass-button.is-active {
-  color: hsl(var(--foreground) / 0.94) !important;
-  background: rgba(255, 255, 255, 0.5) !important;
-}
-
-/* settings preview */
-.settings-theme-preview-glass-light {
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.34),
-      rgba(255, 255, 255, 0.12)
-    ) !important;
-  border: 1px solid rgba(255, 255, 255, 0.44) !important;
-}
-
-.settings-theme-preview-glass-light > span {
-  background: rgba(255, 255, 255, 0.52) !important;
-}
-
-/* 실제 투명 데스크탑 모드에서만 배경 제거 */
-html.desktop-transparent[data-theme="glass-light"] body,
-body.desktop-transparent[data-theme="glass-light"] {
-  background: transparent !important;
-}
-
-html.desktop-transparent[data-theme="glass-light"] .bg-glass-gradient,
-body.desktop-transparent[data-theme="glass-light"] .bg-glass-gradient {
-  background: transparent !important;
-}
-
-html[data-theme="glass-dark"] body,
-body[data-theme="glass-dark"],
-html.theme-glass-dark body,
-body.theme-glass-dark {
-  background:
-    radial-gradient(circle at 16% 14%, rgba(81, 154, 255, 0.18), transparent 24%),
-    radial-gradient(circle at 82% 18%, rgba(178, 112, 255, 0.14), transparent 22%),
-    radial-gradient(circle at 72% 84%, rgba(255, 118, 210, 0.1), transparent 26%),
-    radial-gradient(circle at 12% 10%, rgba(172, 194, 255, 0.12), transparent 30%),
-    linear-gradient(135deg, #0d111b, #171d2b 48%, #101623) !important;
-}
-
-html[data-theme="glass-dark"],
-body[data-theme="glass-dark"],
-html.theme-glass-dark,
-body.theme-glass-dark {
-  --gd-dark-text-strong: rgba(244, 247, 255, 0.96);
-  --gd-dark-text: rgba(235, 241, 255, 0.92);
-  --gd-dark-subtext: rgba(198, 208, 235, 0.76);
-  --gd-dark-faint: rgba(180, 190, 218, 0.62);
+html.desktop-transparent[data-theme="glass-dark"],
+body.desktop-transparent[data-theme="glass-dark"] {
   --gd-dark-shell-bg:
-    linear-gradient(180deg, rgba(18, 24, 40, 0.2), rgba(9, 13, 22, 0.1));
-  --gd-dark-shell-border: rgba(162, 181, 232, 0.16);
-  --gd-dark-shell-shadow:
-    0 18px 42px rgba(3, 6, 16, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-
-  --gd-dark-card-bg:
-    linear-gradient(145deg, rgba(22, 29, 46, 0.22), rgba(10, 14, 24, 0.1));
-  --gd-dark-card-border: rgba(164, 183, 233, 0.16);
-  --gd-dark-card-shadow:
-    0 18px 46px rgba(3, 6, 16, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-
-  /* Dark interior surface
-     Inner cards use an opaque blue-charcoal layer like Mood rows, while the
-     outer widget remains translucent glass. This separation keeps white text
-     readable without turning the whole dashboard black.
-     / 바깥 위젯은 유리로 남기고 내부 카드만 짙은 청회색으로 고정한다. */
-  --gd-dark-panel-bg:
-    linear-gradient(145deg, rgba(34, 40, 61, 0.62), rgba(16, 20, 33, 0.54));
-  --gd-dark-panel-border: rgba(174, 190, 232, 0.2);
-  --gd-dark-panel-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 10px 24px rgba(3, 6, 16, 0.2);
-
-  --gd-dark-control-bg:
-    linear-gradient(145deg, rgba(42, 49, 72, 0.78), rgba(19, 24, 38, 0.7));
-  --gd-dark-control-border: rgba(184, 199, 236, 0.24);
-  --gd-dark-active-fill:
     linear-gradient(
-      135deg,
-      rgba(54, 68, 110, 0.72),
-      rgba(71, 103, 153, 0.46) 38%,
-      rgba(122, 82, 156, 0.44) 74%,
-      rgba(43, 54, 95, 0.78)
+      180deg,
+      rgba(20, 25, 40, 0.18),
+      rgba(8, 11, 20, 0.08)
     );
-  --gd-scrollbar-track: rgba(21, 28, 46, 0.38);
-  --gd-scrollbar-thumb: rgba(151, 172, 230, 0.34);
-  --gd-scrollbar-thumb-hover: rgba(181, 197, 244, 0.48);
-  --gd-scrollbar-border: rgba(12, 16, 27, 0.32);
 
-  --gd-dark-modal-bg:
-    linear-gradient(145deg, rgba(18, 24, 40, 0.86), rgba(8, 12, 22, 0.72));
-  --gd-dark-modal-border: rgba(182, 201, 247, 0.22);
-  --gd-dark-floating-bg:
-    linear-gradient(145deg, rgb(18 20 30 / 0.38), rgb(255 255 255 / 0.04));
-  --gd-dark-floating-border: rgb(255 255 255 / 0.12);
-  --gd-dark-floating-shadow:
-    0 36px 110px -48px rgb(0 0 0 / 0.52),
-    inset 0 1px 0 rgb(255 255 255 / 0.09);
-  --gd-dark-floating-titlebar-bg:
-    linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.02));
-  --gd-dark-floating-titlebar-border: rgb(255 255 255 / 0.09);
-}
+  --gd-dark-shell-border:
+    rgba(190, 205, 245, 0.15);
 
-html[data-theme="glass-dark"] .bg-glass-gradient,
-body[data-theme="glass-dark"] .bg-glass-gradient,
-html.theme-glass-dark .bg-glass-gradient,
-body.theme-glass-dark .bg-glass-gradient {
-  background:
-    radial-gradient(circle at 18% 14%, rgba(92, 170, 255, 0.12), transparent 24%),
-    radial-gradient(circle at 82% 18%, rgba(190, 128, 255, 0.1), transparent 22%),
-    radial-gradient(circle at 70% 82%, rgba(255, 132, 214, 0.08), transparent 24%),
-    linear-gradient(135deg, rgba(18, 24, 40, 0.76), rgba(10, 14, 24, 0.36)) !important;
-}
+  --gd-dark-shell-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 18px 46px rgba(0, 0, 0, 0.16);
 
-/* final theme overrides: active sidebar + journal accents */
-html[data-theme="glass-dark"] .glass-panel,
-html[data-theme="glass-dark"] .liquid-shell,
-html[data-theme="glass-dark"] .app-shell,
-html[data-theme="glass-dark"] .dashboard-shell,
-html[data-theme="glass-dark"] .workspace-shell,
-html[data-theme="glass-dark"] .desktop-shell,
-html[data-theme="glass-dark"] .main-shell,
-body[data-theme="glass-dark"] .glass-panel,
-body[data-theme="glass-dark"] .liquid-shell,
-body[data-theme="glass-dark"] .app-shell,
-body[data-theme="glass-dark"] .dashboard-shell,
-body[data-theme="glass-dark"] .workspace-shell,
-body[data-theme="glass-dark"] .desktop-shell,
-body[data-theme="glass-dark"] .main-shell,
-html.theme-glass-dark .glass-panel,
-html.theme-glass-dark .liquid-shell,
-html.theme-glass-dark .app-shell,
-html.theme-glass-dark .dashboard-shell,
-html.theme-glass-dark .workspace-shell,
-html.theme-glass-dark .desktop-shell,
-html.theme-glass-dark .main-shell,
-body.theme-glass-dark .glass-panel,
-body.theme-glass-dark .liquid-shell,
-body.theme-glass-dark .app-shell,
-body.theme-glass-dark .dashboard-shell,
-body.theme-glass-dark .workspace-shell,
-body.theme-glass-dark .desktop-shell,
-body.theme-glass-dark .main-shell {
-  background: var(--gd-dark-shell-bg) !important;
-  border-color: var(--gd-dark-shell-border) !important;
-  box-shadow: var(--gd-dark-shell-shadow) !important;
-  backdrop-filter: blur(8px) saturate(122%) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(122%) !important;
-}
 
-html[data-theme="glass-dark"] .app-sidebar,
-html[data-theme="glass-dark"] .sidebar,
-body[data-theme="glass-dark"] .app-sidebar,
-body[data-theme="glass-dark"] .sidebar,
-html.theme-glass-dark .app-sidebar,
-html.theme-glass-dark .sidebar,
-body.theme-glass-dark .app-sidebar,
-body.theme-glass-dark .sidebar {
-  background: var(--gd-dark-shell-bg) !important;
-  border-right-color: var(--gd-dark-shell-border) !important;
-  backdrop-filter: blur(10px) saturate(124%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(124%) !important;
-}
-
-html[data-theme="glass-dark"] .topbar,
-body[data-theme="glass-dark"] .topbar,
-html.theme-glass-dark .topbar,
-body.theme-glass-dark .topbar {
-  background: var(--gd-dark-shell-bg) !important;
-  border-color: var(--gd-dark-shell-border) !important;
-  border-radius: 20px 20px 0 0 !important;
-  box-shadow: var(--gd-dark-shell-shadow) !important;
-  backdrop-filter: blur(10px) saturate(124%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(124%) !important;
-}
-
-html[data-theme="glass-dark"] .glass-card,
-body[data-theme="glass-dark"] .glass-card,
-html.theme-glass-dark .glass-card,
-body.theme-glass-dark .glass-card {
-  color: var(--gd-dark-text) !important;
-  background: var(--gd-dark-card-bg) !important;
-  border-color: var(--gd-dark-card-border) !important;
-  box-shadow: var(--gd-dark-card-shadow) !important;
-  backdrop-filter: blur(12px) saturate(126%) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(126%) !important;
-}
-
-html[data-theme="glass-dark"] .today-focus-main,
-html[data-theme="glass-dark"] .today-focus-hero,
-html[data-theme="glass-dark"] .today-focus-section,
-html[data-theme="glass-dark"] .today-focus-block,
-html[data-theme="glass-dark"] .today-mini-main,
-html[data-theme="glass-dark"] .today-mini-next,
-html[data-theme="glass-dark"] .today-tasks-progress,
-html[data-theme="glass-dark"] .calendar-event-item,
-html[data-theme="glass-dark"] .calendar-event-card,
-html[data-theme="glass-dark"] .calendar-mini-card,
-html[data-theme="glass-dark"] .career-list-item,
-html[data-theme="glass-dark"] .memo-note-item,
-html[data-theme="glass-dark"] .alert-item,
-html[data-theme="glass-dark"] .journal-section,
-html[data-theme="glass-dark"] .study-card,
-body[data-theme="glass-dark"] .today-focus-main,
-body[data-theme="glass-dark"] .today-focus-hero,
-body[data-theme="glass-dark"] .today-focus-section,
-body[data-theme="glass-dark"] .today-focus-block,
-body[data-theme="glass-dark"] .today-mini-main,
-body[data-theme="glass-dark"] .today-mini-next,
-body[data-theme="glass-dark"] .today-tasks-progress,
-body[data-theme="glass-dark"] .calendar-event-item,
-body[data-theme="glass-dark"] .calendar-event-card,
-body[data-theme="glass-dark"] .calendar-mini-card,
-body[data-theme="glass-dark"] .career-list-item,
-body[data-theme="glass-dark"] .memo-note-item,
-body[data-theme="glass-dark"] .alert-item,
-body[data-theme="glass-dark"] .journal-section,
-body[data-theme="glass-dark"] .study-card,
-html.theme-glass-dark .today-focus-main,
-html.theme-glass-dark .today-focus-hero,
-html.theme-glass-dark .today-focus-section,
-html.theme-glass-dark .today-focus-block,
-html.theme-glass-dark .today-mini-main,
-html.theme-glass-dark .today-mini-next,
-html.theme-glass-dark .today-tasks-progress,
-html.theme-glass-dark .calendar-event-item,
-html.theme-glass-dark .calendar-event-card,
-html.theme-glass-dark .calendar-mini-card,
-html.theme-glass-dark .career-list-item,
-html.theme-glass-dark .memo-note-item,
-html.theme-glass-dark .alert-item,
-html.theme-glass-dark .journal-section,
-html.theme-glass-dark .study-card,
-body.theme-glass-dark .today-focus-main,
-body.theme-glass-dark .today-focus-hero,
-body.theme-glass-dark .today-focus-section,
-body.theme-glass-dark .today-focus-block,
-body.theme-glass-dark .today-mini-main,
-body.theme-glass-dark .today-mini-next,
-body.theme-glass-dark .today-tasks-progress,
-body.theme-glass-dark .calendar-event-item,
-body.theme-glass-dark .calendar-event-card,
-body.theme-glass-dark .calendar-mini-card,
-body.theme-glass-dark .career-list-item,
-body.theme-glass-dark .memo-note-item,
-body.theme-glass-dark .alert-item,
-body.theme-glass-dark .journal-section,
-body.theme-glass-dark .study-card {
-  background: var(--gd-dark-panel-bg) !important;
-  border-color: var(--gd-dark-panel-border) !important;
-  box-shadow: var(--gd-dark-panel-shadow) !important;
-  backdrop-filter: blur(8px) saturate(122%) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(122%) !important;
-}
-
-html[data-theme="glass-dark"] .sidebar-tab-item.is-active .sidebar-tab-main,
-body[data-theme="glass-dark"] .sidebar-tab-item.is-active .sidebar-tab-main,
-html.theme-glass-dark .sidebar-tab-item.is-active .sidebar-tab-main,
-body.theme-glass-dark .sidebar-tab-item.is-active .sidebar-tab-main {
-  color: var(--gd-dark-text-strong) !important;
-  background: var(--gd-dark-active-fill) !important;
-  border-color: rgba(169, 198, 255, 0.26) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 14px 30px rgba(8, 12, 30, 0.34) !important;
-}
-
-html[data-theme="glass-dark"] .sidebar-tab-item.is-active .sidebar-tab-icon,
-html[data-theme="glass-dark"] .sidebar-tab-item.is-active .sidebar-tab-label,
-html[data-theme="glass-dark"] .sidebar-tab-item.is-active .sidebar-tab-main span:last-child,
-body[data-theme="glass-dark"] .sidebar-tab-item.is-active .sidebar-tab-icon,
-body[data-theme="glass-dark"] .sidebar-tab-item.is-active .sidebar-tab-label,
-body[data-theme="glass-dark"] .sidebar-tab-item.is-active .sidebar-tab-main span:last-child,
-html.theme-glass-dark .sidebar-tab-item.is-active .sidebar-tab-icon,
-html.theme-glass-dark .sidebar-tab-item.is-active .sidebar-tab-label,
-html.theme-glass-dark .sidebar-tab-item.is-active .sidebar-tab-main span:last-child,
-body.theme-glass-dark .sidebar-tab-item.is-active .sidebar-tab-icon,
-body.theme-glass-dark .sidebar-tab-item.is-active .sidebar-tab-label,
-body.theme-glass-dark .sidebar-tab-item.is-active .sidebar-tab-main span:last-child {
-  color: var(--gd-dark-text-strong) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label,
-body[data-theme="glass-dark"] .journal-score-grid label,
-html.theme-glass-dark .journal-score-grid label,
-body.theme-glass-dark .journal-score-grid label {
-  border-color: rgba(153, 177, 238, 0.18) !important;
-  background: rgba(33, 39, 61, 0.22) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 10px 20px rgba(4, 8, 22, 0.18) !important;
-}
-
-html[data-theme="glass-dark"] .memo-workspace,
-html[data-theme="glass-dark"] .memo-list-panel,
-html[data-theme="glass-dark"] .memo-title-input,
-html[data-theme="glass-dark"] .memo-title-view,
-html[data-theme="glass-dark"] .memo-editor,
-html[data-theme="glass-dark"] .memo-tool-button,
-html[data-theme="glass-dark"] .memo-mini-button,
-html[data-theme="glass-dark"] .memo-select,
-body[data-theme="glass-dark"] .memo-workspace,
-body[data-theme="glass-dark"] .memo-list-panel,
-body[data-theme="glass-dark"] .memo-title-input,
-body[data-theme="glass-dark"] .memo-title-view,
-body[data-theme="glass-dark"] .memo-editor,
-body[data-theme="glass-dark"] .memo-tool-button,
-body[data-theme="glass-dark"] .memo-mini-button,
-body[data-theme="glass-dark"] .memo-select,
-html.theme-glass-dark .memo-workspace,
-html.theme-glass-dark .memo-list-panel,
-html.theme-glass-dark .memo-title-input,
-html.theme-glass-dark .memo-title-view,
-html.theme-glass-dark .memo-editor,
-html.theme-glass-dark .memo-tool-button,
-html.theme-glass-dark .memo-mini-button,
-html.theme-glass-dark .memo-select,
-body.theme-glass-dark .memo-workspace,
-body.theme-glass-dark .memo-list-panel,
-body.theme-glass-dark .memo-title-input,
-body.theme-glass-dark .memo-title-view,
-body.theme-glass-dark .memo-editor,
-body.theme-glass-dark .memo-tool-button,
-body.theme-glass-dark .memo-mini-button,
-body.theme-glass-dark .memo-select {
-  color: var(--gd-dark-text) !important;
-}
-
-html[data-theme="glass-dark"] .memo-workspace,
-body[data-theme="glass-dark"] .memo-workspace,
-html.theme-glass-dark .memo-workspace,
-body.theme-glass-dark .memo-workspace {
-  background: var(--gd-dark-panel-bg) !important;
-}
-
-html[data-theme="glass-dark"] .memo-list-panel,
-body[data-theme="glass-dark"] .memo-list-panel,
-html.theme-glass-dark .memo-list-panel,
-body.theme-glass-dark .memo-list-panel {
-  background: var(--gd-dark-panel-bg) !important;
-  border-right-color: var(--gd-dark-panel-border) !important;
-}
-
-html[data-theme="glass-dark"] .memo-widget-list-popover,
-body[data-theme="glass-dark"] .memo-widget-list-popover,
-html.theme-glass-dark .memo-widget-list-popover,
-body.theme-glass-dark .memo-widget-list-popover {
-  background:
+  /* Widget */
+  --gd-dark-card-bg:
     linear-gradient(
       145deg,
-      rgba(29, 34, 52, 0.94),
-      rgba(42, 38, 62, 0.9)
-    ) !important;
-  border-color: rgba(196, 208, 246, 0.2) !important;
-  box-shadow:
-    0 22px 56px rgba(2, 5, 14, 0.42),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(34px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(150%) !important;
-}
+      rgba(26, 32, 50, 0.24),
+      rgba(8, 12, 22, 0.10)
+    );
 
-html[data-theme="glass-dark"] .memo-note-item:hover,
-body[data-theme="glass-dark"] .memo-note-item:hover,
-html.theme-glass-dark .memo-note-item:hover,
-body.theme-glass-dark .memo-note-item:hover {
-  background: rgba(73, 88, 133, 0.18) !important;
-}
+  --gd-dark-card-border:
+    rgba(180, 197, 238, 0.17);
 
-html[data-theme="glass-dark"] .memo-note-item.is-active,
-body[data-theme="glass-dark"] .memo-note-item.is-active,
-html.theme-glass-dark .memo-note-item.is-active,
-body.theme-glass-dark .memo-note-item.is-active {
-  background: rgba(74, 89, 138, 0.22) !important;
-  border-color: rgba(158, 178, 235, 0.18) !important;
-}
+  --gd-dark-card-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.075),
+    0 16px 38px rgba(0, 0, 0, 0.14);
 
-html[data-theme="glass-dark"] .memo-tool-button,
-html[data-theme="glass-dark"] .memo-mini-button,
-html[data-theme="glass-dark"] .memo-select,
-body[data-theme="glass-dark"] .memo-tool-button,
-body[data-theme="glass-dark"] .memo-mini-button,
-body[data-theme="glass-dark"] .memo-select,
-html.theme-glass-dark .memo-tool-button,
-html.theme-glass-dark .memo-mini-button,
-html.theme-glass-dark .memo-select,
-body.theme-glass-dark .memo-tool-button,
-body.theme-glass-dark .memo-mini-button,
-body.theme-glass-dark .memo-select {
-  background: var(--gd-dark-control-bg) !important;
-  border-color: var(--gd-dark-control-border) !important;
-}
 
-html[data-theme="glass-dark"] .memo-color-area,
-body[data-theme="glass-dark"] .memo-color-area,
-html.theme-glass-dark .memo-color-area,
-body.theme-glass-dark .memo-color-area {
-  background: linear-gradient(135deg, rgba(22, 27, 43, 0.34), rgba(10, 14, 24, 0.14)) !important;
-  border-color: rgba(152, 171, 222, 0.14) !important;
-}
-
-html[data-theme="glass-dark"] .memo-table-context-menu,
-body[data-theme="glass-dark"] .memo-table-context-menu,
-html.theme-glass-dark .memo-table-context-menu,
-body.theme-glass-dark .memo-table-context-menu {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(29, 35, 55, 0.92),
-      rgba(16, 21, 35, 0.88)
-    ) !important;
-  border-color: rgba(166, 184, 233, 0.18) !important;
-  box-shadow:
-    0 22px 44px -18px rgba(2, 4, 12, 0.54),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-
-html[data-theme="glass-dark"] .memo-table-context-item,
-body[data-theme="glass-dark"] .memo-table-context-item,
-html.theme-glass-dark .memo-table-context-item,
-body.theme-glass-dark .memo-table-context-item {
-  color: var(--gd-dark-text) !important;
-}
-
-html[data-theme="glass-dark"] .memo-table-context-item:hover,
-body[data-theme="glass-dark"] .memo-table-context-item:hover,
-html.theme-glass-dark .memo-table-context-item:hover,
-body.theme-glass-dark .memo-table-context-item:hover {
-  background: rgba(71, 84, 125, 0.34) !important;
-}
-
-html[data-theme="glass-dark"] .memo-table-context-divider,
-body[data-theme="glass-dark"] .memo-table-context-divider,
-html.theme-glass-dark .memo-table-context-divider,
-body.theme-glass-dark .memo-table-context-divider {
-  background: rgba(167, 184, 233, 0.16) !important;
-}
-
-html[data-theme="glass-dark"] .memo-editor,
-body[data-theme="glass-dark"] .memo-editor,
-html.theme-glass-dark .memo-editor,
-body.theme-glass-dark .memo-editor {
-  color: var(--memo-dark-text, rgba(241, 244, 255, 0.94)) !important;
-  font-weight: 380 !important;
-  line-height: 1.68 !important;
-  background: var(
-    --memo-dark-paper,
-    linear-gradient(
-      180deg,
-      rgba(71, 64, 89, 0.84),
-      rgba(53, 63, 92, 0.78) 38%,
-      rgba(46, 73, 89, 0.72) 100%
-    )
-  ) !important;
-  border-color: var(--memo-dark-border, rgba(214, 224, 255, 0.2)) !important;
-  box-shadow:
-    0 16px 42px rgba(2, 4, 12, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
-}
-
-html[data-theme="glass-dark"] .memo-title-input,
-html[data-theme="glass-dark"] .memo-title-view,
-body[data-theme="glass-dark"] .memo-title-input,
-body[data-theme="glass-dark"] .memo-title-view,
-html.theme-glass-dark .memo-title-input,
-html.theme-glass-dark .memo-title-view,
-body.theme-glass-dark .memo-title-input,
-body.theme-glass-dark .memo-title-view {
-  color: var(--gd-dark-text) !important;
-  font-weight: 600 !important;
-}
-
-html[data-theme="glass-dark"] .memo-editor td,
-html[data-theme="glass-dark"] .memo-editor th,
-body[data-theme="glass-dark"] .memo-editor td,
-body[data-theme="glass-dark"] .memo-editor th,
-html.theme-glass-dark .memo-editor td,
-html.theme-glass-dark .memo-editor th,
-body.theme-glass-dark .memo-editor td,
-body.theme-glass-dark .memo-editor th {
-  color: var(--memo-table-ink, rgba(243, 246, 255, 0.94)) !important;
-  border-color: color-mix(in srgb, var(--memo-table-ink, rgba(243, 246, 255, 0.94)) 68%, transparent) !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-}
-
-html[data-theme="glass-dark"] .memo-editor table,
-body[data-theme="glass-dark"] .memo-editor table,
-html.theme-glass-dark .memo-editor table,
-body.theme-glass-dark .memo-editor table {
-  border-color: color-mix(in srgb, var(--memo-table-ink, rgba(243, 246, 255, 0.94)) 68%, transparent) !important;
-}
-
-html[data-theme="glass-dark"] .journal-summary-card,
-html[data-theme="glass-dark"] .journal-score-inline,
-html[data-theme="glass-dark"] .journal-date-nav button,
-html[data-theme="glass-dark"] .journal-date-nav input,
-html[data-theme="glass-dark"] .journal-add-row input,
-html[data-theme="glass-dark"] .journal-clip-row input,
-html[data-theme="glass-dark"] .journal-mood-select,
-html[data-theme="glass-dark"] .journal-section textarea,
-html[data-theme="glass-dark"] .journal-task-item,
-html[data-theme="glass-dark"] .journal-task-check,
-html[data-theme="glass-dark"] .journal-task-delete,
-html[data-theme="glass-dark"] .journal-task-delete-select,
-html[data-theme="glass-dark"] .journal-task-delete-confirm button,
-body[data-theme="glass-dark"] .journal-summary-card,
-body[data-theme="glass-dark"] .journal-score-inline,
-body[data-theme="glass-dark"] .journal-date-nav button,
-body[data-theme="glass-dark"] .journal-date-nav input,
-body[data-theme="glass-dark"] .journal-add-row input,
-body[data-theme="glass-dark"] .journal-clip-row input,
-body[data-theme="glass-dark"] .journal-mood-select,
-body[data-theme="glass-dark"] .journal-section textarea,
-body[data-theme="glass-dark"] .journal-task-item,
-body[data-theme="glass-dark"] .journal-task-check,
-body[data-theme="glass-dark"] .journal-task-delete,
-body[data-theme="glass-dark"] .journal-task-delete-select,
-body[data-theme="glass-dark"] .journal-task-delete-confirm button,
-html.theme-glass-dark .journal-summary-card,
-html.theme-glass-dark .journal-score-inline,
-html.theme-glass-dark .journal-date-nav button,
-html.theme-glass-dark .journal-date-nav input,
-html.theme-glass-dark .journal-add-row input,
-html.theme-glass-dark .journal-clip-row input,
-html.theme-glass-dark .journal-mood-select,
-html.theme-glass-dark .journal-section textarea,
-html.theme-glass-dark .journal-task-item,
-html.theme-glass-dark .journal-task-check,
-html.theme-glass-dark .journal-task-delete,
-html.theme-glass-dark .journal-task-delete-select,
-html.theme-glass-dark .journal-task-delete-confirm button,
-body.theme-glass-dark .journal-summary-card,
-body.theme-glass-dark .journal-score-inline,
-body.theme-glass-dark .journal-date-nav button,
-body.theme-glass-dark .journal-date-nav input,
-body.theme-glass-dark .journal-add-row input,
-body.theme-glass-dark .journal-clip-row input,
-body.theme-glass-dark .journal-mood-select,
-body.theme-glass-dark .journal-section textarea,
-body.theme-glass-dark .journal-task-item,
-body.theme-glass-dark .journal-task-check,
-body.theme-glass-dark .journal-task-delete,
-body.theme-glass-dark .journal-task-delete-select,
-body.theme-glass-dark .journal-task-delete-confirm button {
-  /* Shared widget surface aliases preserve Glass Dark here and let Aurora's
-     compatibility class resolve to Aurora tokens instead. */
-  background: var(--gd-widget-panel-bg) !important;
-  border-color: var(--gd-widget-panel-border) !important;
-  color: rgba(234, 240, 255, 0.9) !important;
-  box-shadow: var(--gd-widget-panel-shadow) !important;
-}
-
-html[data-theme="glass-dark"] .journal-section,
-body[data-theme="glass-dark"] .journal-section,
-html.theme-glass-dark .journal-section,
-body.theme-glass-dark .journal-section {
-  background: var(--gd-widget-panel-bg) !important;
-  border-color: var(--gd-widget-panel-border) !important;
-}
-
-html[data-theme="glass-dark"] .journal-summary-card span,
-html[data-theme="glass-dark"] .journal-score-inline small,
-html[data-theme="glass-dark"] .journal-section-title,
-body[data-theme="glass-dark"] .journal-summary-card span,
-body[data-theme="glass-dark"] .journal-score-inline small,
-body[data-theme="glass-dark"] .journal-section-title,
-html.theme-glass-dark .journal-summary-card span,
-html.theme-glass-dark .journal-score-inline small,
-html.theme-glass-dark .journal-section-title,
-body.theme-glass-dark .journal-summary-card span,
-body.theme-glass-dark .journal-score-inline small,
-body.theme-glass-dark .journal-section-title {
-  color: rgba(198, 208, 235, 0.68) !important;
-}
-
-html[data-theme="glass-dark"] .journal-summary-card strong,
-html[data-theme="glass-dark"] .journal-task-item input,
-html[data-theme="glass-dark"] .journal-section textarea,
-html[data-theme="glass-dark"] .journal-date-nav input,
-body[data-theme="glass-dark"] .journal-summary-card strong,
-body[data-theme="glass-dark"] .journal-task-item input,
-body[data-theme="glass-dark"] .journal-section textarea,
-body[data-theme="glass-dark"] .journal-date-nav input,
-html.theme-glass-dark .journal-summary-card strong,
-html.theme-glass-dark .journal-task-item input,
-html.theme-glass-dark .journal-section textarea,
-html.theme-glass-dark .journal-date-nav input,
-body.theme-glass-dark .journal-summary-card strong,
-body.theme-glass-dark .journal-task-item input,
-body.theme-glass-dark .journal-section textarea,
-body.theme-glass-dark .journal-date-nav input {
-  color: rgba(237, 242, 255, 0.92) !important;
-}
-
-html[data-theme="glass-dark"] .settings-modal-window,
-body[data-theme="glass-dark"] .settings-modal-window,
-html.theme-glass-dark .settings-modal-window,
-body.theme-glass-dark .settings-modal-window {
-  background:
+  /* Inner Panel */
+  --gd-dark-panel-bg:
     linear-gradient(
       145deg,
-      rgba(16, 21, 35, 0.76),
-      rgba(9, 13, 22, 0.54)
-    ) !important;
-  border-color: rgba(168, 186, 236, 0.18) !important;
-  backdrop-filter: blur(10px) saturate(122%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(122%) !important;
-}
+      rgba(37, 44, 66, 0.27),
+      rgba(13, 18, 30, 0.15)
+    );
 
-html[data-theme="glass-dark"] .settings-section,
-html[data-theme="glass-dark"] .settings-theme-card,
-body[data-theme="glass-dark"] .settings-section,
-body[data-theme="glass-dark"] .settings-theme-card,
-html.theme-glass-dark .settings-section,
-html.theme-glass-dark .settings-theme-card,
-body.theme-glass-dark .settings-section,
-body.theme-glass-dark .settings-theme-card {
-  background:
+  --gd-dark-panel-border:
+    rgba(183, 200, 239, 0.16);
+
+  --gd-dark-panel-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.065),
+    0 10px 24px rgba(0, 0, 0, 0.12);
+
+
+  /* Buttons / Controls */
+  --gd-dark-control-bg:
     linear-gradient(
       145deg,
-      rgba(23, 29, 47, 0.34),
-      rgba(10, 14, 24, 0.14)
-    ) !important;
-  border-color: rgba(162, 181, 232, 0.14) !important;
-  backdrop-filter: blur(6px) saturate(118%) !important;
-  -webkit-backdrop-filter: blur(6px) saturate(118%) !important;
+      rgba(43, 51, 76, 0.34),
+      rgba(17, 22, 36, 0.20)
+    );
+
+  --gd-dark-control-border:
+    rgba(188, 202, 238, 0.18);
+
+
+  /* Shared widget aliases가 존재하는 경우에도 Tauri Glass로 통일 */
+  --gd-widget-panel-bg:
+    linear-gradient(
+      145deg,
+      rgba(37, 44, 66, 0.27),
+      rgba(13, 18, 30, 0.15)
+    );
+
+  --gd-widget-panel-border:
+    rgba(183, 200, 239, 0.16);
+
+  --gd-widget-panel-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.065),
+    0 10px 24px rgba(0, 0, 0, 0.12);
 }
 
-html[data-theme="glass-dark"] .settings-modal-window,
-html[data-theme="glass-dark"] .settings-section,
-body[data-theme="glass-dark"] .settings-modal-window,
-body[data-theme="glass-dark"] .settings-section,
-html.theme-glass-dark .settings-modal-window,
-html.theme-glass-dark .settings-section,
-body.theme-glass-dark .settings-modal-window,
-body.theme-glass-dark .settings-section {
-  color: var(--gd-dark-text) !important;
-}
 
-html[data-theme="glass-dark"] .settings-modal-window,
-body[data-theme="glass-dark"] .settings-modal-window,
-html.theme-glass-dark .settings-modal-window,
-body.theme-glass-dark .settings-modal-window {
-  background:
-    radial-gradient(circle at 16% 14%, rgba(120, 152, 212, 0.08), transparent 28%),
-    radial-gradient(circle at 84% 18%, rgba(172, 184, 218, 0.06), transparent 26%),
-    var(--gd-dark-modal-bg) !important;
-  border-color: var(--gd-dark-modal-border) !important;
-  box-shadow:
-    0 44px 140px -34px rgba(2, 4, 12, 0.72),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
-  backdrop-filter: blur(28px) saturate(144%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(144%) !important;
-}
+/* ============================================================
+   2. ROOT / BODY / APP STAGE
 
-html[data-theme="glass-dark"] .settings-modal-backdrop,
-body[data-theme="glass-dark"] .settings-modal-backdrop,
-html.theme-glass-dark .settings-modal-backdrop,
-body.theme-glass-dark .settings-modal-backdrop {
+   기존 Glass Dark의 남색 wallpaper/gradient를
+   Tauri에서만 완전히 제거한다.
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-dark"],
+html.desktop-transparent[data-theme="glass-dark"] body,
+body.desktop-transparent[data-theme="glass-dark"],
+html.desktop-transparent[data-theme="glass-dark"] #root,
+body.desktop-transparent[data-theme="glass-dark"] #root,
+
+html.desktop-transparent[data-theme="glass-dark"] .app-mode-stage,
+body.desktop-transparent[data-theme="glass-dark"] .app-mode-stage,
+
+html.desktop-transparent[data-theme="glass-dark"] .tauri-app-window,
+body.desktop-transparent[data-theme="glass-dark"] .tauri-app-window,
+
+html.desktop-transparent[data-theme="glass-dark"] .tauri-glassday-root,
+body.desktop-transparent[data-theme="glass-dark"] .tauri-glassday-root {
   background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+
+/* ============================================================
+   3. 기존 Web Preview용 Background 제거
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient,
+body.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  box-shadow: none !important;
+}
+
+
+/* ============================================================
+   4. APP SHELL
+
+   Glassday 전체를 받치는 큰 남색 판을 제거한다.
+
+   IMPORTANT:
+   Sidebar / Topbar / Widgets까지 제거하는 게 아니다.
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-dark"] .app-shell-surface,
+body.desktop-transparent[data-theme="glass-dark"] .app-shell-surface,
+
+html.desktop-transparent[data-theme="glass-dark"]
+  .app-shell-surface.glass-panel,
+
+body.desktop-transparent[data-theme="glass-dark"]
+  .app-shell-surface.glass-panel,
+
+html.desktop-transparent[data-theme="glass-dark"]
+  .app-shell-surface.liquid-shell,
+
+body.desktop-transparent[data-theme="glass-dark"]
+  .app-shell-surface.liquid-shell {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  /*
+   * 전체 shell을 한 장으로 blur하지 않는다.
+   * 그래야 커다란 검은 필름을 씌운 느낌이 사라진다.
+   */
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+
+  border-color:
+    rgba(190, 205, 245, 0.13) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 20px 52px rgba(0, 0, 0, 0.13) !important;
 }
 
-html[data-theme="glass-dark"] .settings-modal-header,
-body[data-theme="glass-dark"] .settings-modal-header,
-html.theme-glass-dark .settings-modal-header,
-body.theme-glass-dark .settings-modal-header {
-  border-bottom-color: rgba(154, 168, 198, 0.14) !important;
+
+/* ============================================================
+   5. SHELL 내부 구조 Layer
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-dark"] .app-shell-columns,
+html.desktop-transparent[data-theme="glass-dark"] .app-shell-main-column,
+html.desktop-transparent[data-theme="glass-dark"] .app-shell-main,
+
+body.desktop-transparent[data-theme="glass-dark"] .app-shell-columns,
+body.desktop-transparent[data-theme="glass-dark"] .app-shell-main-column,
+body.desktop-transparent[data-theme="glass-dark"] .app-shell-main {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+
+/* ============================================================
+   6. SIDEBAR
+   Smoked Glass
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-dark"] .app-sidebar,
+html.desktop-transparent[data-theme="glass-dark"] .sidebar,
+
+body.desktop-transparent[data-theme="glass-dark"] .app-sidebar,
+body.desktop-transparent[data-theme="glass-dark"] .sidebar {
+  color: var(--gd-dark-text) !important;
+
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.05),
-      rgba(255, 255, 255, 0.01)
+      rgba(25, 31, 48, 0.24),
+      rgba(8, 12, 22, 0.11)
     ) !important;
+
+  border-right:
+    1px solid rgba(190, 205, 245, 0.14) !important;
+
+  box-shadow:
+    inset -1px 0 0 rgba(255, 255, 255, 0.025) !important;
+
+  backdrop-filter:
+    blur(20px)
+    saturate(128%) !important;
+
+  -webkit-backdrop-filter:
+    blur(20px)
+    saturate(128%) !important;
 }
 
-html[data-theme="glass-dark"] .settings-modal-icon,
-body[data-theme="glass-dark"] .settings-modal-icon,
-html.theme-glass-dark .settings-modal-icon,
-body.theme-glass-dark .settings-modal-icon {
+
+/* ============================================================
+   7. TOPBAR
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-dark"] .topbar,
+body.desktop-transparent[data-theme="glass-dark"] .topbar {
+  color: var(--gd-dark-text) !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(28, 34, 52, 0.23),
+      rgba(10, 14, 25, 0.10)
+    ) !important;
+
+  border:
+    1px solid rgba(190, 205, 245, 0.14) !important;
+
+  border-radius:
+    20px 20px 0 0 !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 12px 32px rgba(0, 0, 0, 0.11) !important;
+
+  backdrop-filter:
+    blur(20px)
+    saturate(128%) !important;
+
+  -webkit-backdrop-filter:
+    blur(20px)
+    saturate(128%) !important;
+}
+
+
+/* ============================================================
+   8. MAIN WIDGETS
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-dark"] .glass-card,
+body.desktop-transparent[data-theme="glass-dark"] .glass-card {
+  color: var(--gd-dark-text) !important;
+
   background:
     linear-gradient(
       145deg,
-      rgba(45, 52, 73, 0.78),
-      rgba(22, 27, 40, 0.44)
+      rgba(31, 38, 58, 0.25),
+      rgba(8, 12, 22, 0.11)
     ) !important;
-  border-color: rgba(161, 176, 208, 0.16) !important;
-}
 
-html[data-theme="glass-dark"] .settings-section,
-body[data-theme="glass-dark"] .settings-section,
-html.theme-glass-dark .settings-section,
-body.theme-glass-dark .settings-section {
-  background:
-    radial-gradient(circle at 14% 18%, rgba(114, 141, 190, 0.06), transparent 26%),
-    radial-gradient(circle at 84% 20%, rgba(132, 146, 178, 0.05), transparent 22%),
-    var(--gd-dark-panel-bg) !important;
-  border-color: var(--gd-dark-control-border) !important;
+  border:
+    1px solid rgba(187, 202, 242, 0.17) !important;
+
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 16px 36px -32px rgba(0, 0, 0, 0.42) !important;
-  backdrop-filter: blur(18px) saturate(134%) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(134%) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.075),
+    0 16px 38px rgba(0, 0, 0, 0.14) !important;
+
+  backdrop-filter:
+    blur(20px)
+    saturate(130%) !important;
+
+  -webkit-backdrop-filter:
+    blur(20px)
+    saturate(130%) !important;
 }
 
-html[data-theme="glass-dark"] .settings-modal-header h2,
-html[data-theme="glass-dark"] .settings-section-title,
-html[data-theme="glass-dark"] .settings-theme-card strong,
-body[data-theme="glass-dark"] .settings-modal-header h2,
-body[data-theme="glass-dark"] .settings-section-title,
-body[data-theme="glass-dark"] .settings-theme-card strong,
-html.theme-glass-dark .settings-modal-header h2,
-html.theme-glass-dark .settings-section-title,
-html.theme-glass-dark .settings-theme-card strong,
-body.theme-glass-dark .settings-modal-header h2,
-body.theme-glass-dark .settings-section-title,
-body.theme-glass-dark .settings-theme-card strong {
-  color: var(--gd-dark-text-strong) !important;
-}
 
-html[data-theme="glass-dark"] .settings-modal-header p,
-html[data-theme="glass-dark"] .settings-theme-card small,
-html[data-theme="glass-dark"] .settings-modal-body .text-muted-foreground,
-body[data-theme="glass-dark"] .settings-modal-header p,
-body[data-theme="glass-dark"] .settings-theme-card small,
-body[data-theme="glass-dark"] .settings-modal-body .text-muted-foreground,
-html.theme-glass-dark .settings-modal-header p,
-html.theme-glass-dark .settings-theme-card small,
-html.theme-glass-dark .settings-modal-body .text-muted-foreground,
-body.theme-glass-dark .settings-modal-header p,
-body.theme-glass-dark .settings-theme-card small,
-body.theme-glass-dark .settings-modal-body .text-muted-foreground {
-  color: var(--gd-dark-subtext) !important;
-}
+/* ============================================================
+   9. INNER PANELS
 
-html[data-theme="glass-dark"] .settings-theme-card,
-body[data-theme="glass-dark"] .settings-theme-card,
-html.theme-glass-dark .settings-theme-card,
-body.theme-glass-dark .settings-theme-card {
-  background:
-    radial-gradient(circle at 14% 16%, rgba(110, 138, 185, 0.05), transparent 22%),
-    radial-gradient(circle at 84% 18%, rgba(146, 157, 184, 0.04), transparent 20%),
-    var(--gd-dark-panel-bg) !important;
-  border-color: var(--gd-dark-control-border) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 12px 24px -20px rgba(0, 0, 0, 0.32) !important;
-}
+   기존 Dark에서는 이 부분이 상당히 불투명했음.
+   Tauri에서는 반투명 smoked glass로 낮춘다.
+============================================================ */
 
-html[data-theme="glass-dark"] .settings-theme-card.is-active,
-body[data-theme="glass-dark"] .settings-theme-card.is-active,
-html.theme-glass-dark .settings-theme-card.is-active,
-body.theme-glass-dark .settings-theme-card.is-active {
-  background:
-    radial-gradient(
-      circle at 14% 16%,
-      rgba(126, 170, 232, 0.1),
-      transparent 26%
-    ),
-    radial-gradient(
-      circle at 82% 18%,
-      rgba(171, 183, 219, 0.08),
-      transparent 24%
-    ),
-    rgba(72, 86, 118, 0.3) !important;
-  border-color: rgba(146, 165, 205, 0.28) !important;
-}
+html.desktop-transparent[data-theme="glass-dark"] .today-focus-main,
+html.desktop-transparent[data-theme="glass-dark"] .today-focus-hero,
+html.desktop-transparent[data-theme="glass-dark"] .today-focus-section,
+html.desktop-transparent[data-theme="glass-dark"] .today-focus-block,
+html.desktop-transparent[data-theme="glass-dark"] .today-mini-main,
+html.desktop-transparent[data-theme="glass-dark"] .today-mini-next,
+html.desktop-transparent[data-theme="glass-dark"] .today-tasks-progress,
+html.desktop-transparent[data-theme="glass-dark"] .calendar-event-item,
+html.desktop-transparent[data-theme="glass-dark"] .calendar-event-card,
+html.desktop-transparent[data-theme="glass-dark"] .calendar-mini-card,
+html.desktop-transparent[data-theme="glass-dark"] .career-list-item,
+html.desktop-transparent[data-theme="glass-dark"] .memo-note-item,
+html.desktop-transparent[data-theme="glass-dark"] .alert-item,
+html.desktop-transparent[data-theme="glass-dark"] .journal-section,
+html.desktop-transparent[data-theme="glass-dark"] .study-card,
 
-html[data-theme="glass-dark"] .settings-modal-window input,
-html[data-theme="glass-dark"] .settings-modal-window select,
-html[data-theme="glass-dark"] .settings-modal-window textarea,
-html[data-theme="glass-dark"] .settings-modal-window button,
-body[data-theme="glass-dark"] .settings-modal-window input,
-body[data-theme="glass-dark"] .settings-modal-window select,
-body[data-theme="glass-dark"] .settings-modal-window textarea,
-body[data-theme="glass-dark"] .settings-modal-window button,
-html.theme-glass-dark .settings-modal-window input,
-html.theme-glass-dark .settings-modal-window select,
-html.theme-glass-dark .settings-modal-window textarea,
-html.theme-glass-dark .settings-modal-window button,
-body.theme-glass-dark .settings-modal-window input,
-body.theme-glass-dark .settings-modal-window select,
-body.theme-glass-dark .settings-modal-window textarea,
-body.theme-glass-dark .settings-modal-window button {
-  color: rgba(239, 244, 255, 0.92) !important;
-  background: var(--gd-dark-control-bg) !important;
-  border-color: var(--gd-dark-control-border) !important;
-  backdrop-filter: blur(12px) saturate(132%) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(132%) !important;
-}
-
-html[data-theme="glass-dark"] .settings-action-card,
-html[data-theme="glass-dark"] .settings-sync-box,
-html[data-theme="glass-dark"] .settings-custom-font-item,
-html[data-theme="glass-dark"] .settings-status,
-body[data-theme="glass-dark"] .settings-action-card,
-body[data-theme="glass-dark"] .settings-sync-box,
-body[data-theme="glass-dark"] .settings-custom-font-item,
-body[data-theme="glass-dark"] .settings-status,
-html.theme-glass-dark .settings-action-card,
-html.theme-glass-dark .settings-sync-box,
-html.theme-glass-dark .settings-custom-font-item,
-html.theme-glass-dark .settings-status,
-body.theme-glass-dark .settings-action-card,
-body.theme-glass-dark .settings-sync-box,
-body.theme-glass-dark .settings-custom-font-item,
-body.theme-glass-dark .settings-status {
-  background: var(--gd-dark-control-bg) !important;
-  border-color: var(--gd-dark-control-border) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 12px 28px rgba(0, 0, 0, 0.28) !important;
-  backdrop-filter: blur(16px) saturate(134%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(134%) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(1),
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(1),
-html.theme-glass-dark .journal-score-grid label:nth-child(1),
-body.theme-glass-dark .journal-score-grid label:nth-child(1) {
-  background: linear-gradient(135deg, rgba(71, 63, 91, 0.5), rgba(55, 72, 100, 0.28), rgba(45, 82, 90, 0.18)) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(2),
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(2),
-html.theme-glass-dark .journal-score-grid label:nth-child(2),
-body.theme-glass-dark .journal-score-grid label:nth-child(2) {
-  background: linear-gradient(135deg, rgba(46, 73, 104, 0.48), rgba(65, 68, 104, 0.28), rgba(85, 70, 104, 0.18)) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(3),
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(3),
-html.theme-glass-dark .journal-score-grid label:nth-child(3),
-body.theme-glass-dark .journal-score-grid label:nth-child(3) {
-  background: linear-gradient(135deg, rgba(98, 81, 58, 0.48), rgba(92, 64, 79, 0.24), rgba(57, 69, 97, 0.2)) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(4),
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(4),
-html.theme-glass-dark .journal-score-grid label:nth-child(4),
-body.theme-glass-dark .journal-score-grid label:nth-child(4) {
-  background: linear-gradient(135deg, rgba(41, 87, 83, 0.48), rgba(47, 72, 97, 0.24), rgba(73, 67, 104, 0.18)) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(1) input,
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(1) input,
-html.theme-glass-dark .journal-score-grid label:nth-child(1) input,
-body.theme-glass-dark .journal-score-grid label:nth-child(1) input {
-  accent-color: rgb(140, 129, 166) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(2) input,
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(2) input,
-html.theme-glass-dark .journal-score-grid label:nth-child(2) input,
-body.theme-glass-dark .journal-score-grid label:nth-child(2) input {
-  accent-color: rgb(116, 137, 168) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(3) input,
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(3) input,
-html.theme-glass-dark .journal-score-grid label:nth-child(3) input,
-body.theme-glass-dark .journal-score-grid label:nth-child(3) input {
-  accent-color: rgb(160, 133, 108) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(4) input,
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(4) input,
-html.theme-glass-dark .journal-score-grid label:nth-child(4) input,
-body.theme-glass-dark .journal-score-grid label:nth-child(4) input {
-  accent-color: rgb(110, 148, 143) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(1) b,
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(1) b,
-html.theme-glass-dark .journal-score-grid label:nth-child(1) b,
-body.theme-glass-dark .journal-score-grid label:nth-child(1) b {
-  color: rgb(185, 177, 206) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(2) b,
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(2) b,
-html.theme-glass-dark .journal-score-grid label:nth-child(2) b,
-body.theme-glass-dark .journal-score-grid label:nth-child(2) b {
-  color: rgb(168, 184, 206) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(3) b,
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(3) b,
-html.theme-glass-dark .journal-score-grid label:nth-child(3) b,
-body.theme-glass-dark .journal-score-grid label:nth-child(3) b {
-  color: rgb(204, 185, 163) !important;
-}
-
-html[data-theme="glass-dark"] .journal-score-grid label:nth-child(4) b,
-body[data-theme="glass-dark"] .journal-score-grid label:nth-child(4) b,
-html.theme-glass-dark .journal-score-grid label:nth-child(4) b,
-body.theme-glass-dark .journal-score-grid label:nth-child(4) b {
-  color: rgb(170, 198, 194) !important;
-}
-
-html[data-theme="glass-dark"] .calendar-current-label,
-body[data-theme="glass-dark"] .calendar-current-label,
-html.theme-glass-dark .calendar-current-label,
-body.theme-glass-dark .calendar-current-label {
-  color: rgba(228, 235, 255, 0.92) !important;
-}
-
-html[data-theme="glass-dark"] .calendar-view-button,
-body[data-theme="glass-dark"] .calendar-view-button,
-html.theme-glass-dark .calendar-view-button,
-body.theme-glass-dark .calendar-view-button {
-  color: rgba(193, 204, 235, 0.76) !important;
-}
-
-html[data-theme="glass-dark"] .calendar-view-button:hover,
-body[data-theme="glass-dark"] .calendar-view-button:hover,
-html.theme-glass-dark .calendar-view-button:hover,
-body.theme-glass-dark .calendar-view-button:hover {
-  color: rgba(237, 242, 255, 0.92) !important;
-}
-
-html[data-theme="glass-dark"] .calendar-view-button.is-active,
-body[data-theme="glass-dark"] .calendar-view-button.is-active,
-html.theme-glass-dark .calendar-view-button.is-active,
-body.theme-glass-dark .calendar-view-button.is-active {
-  color: rgba(248, 250, 255, 0.96) !important;
-}
-
-html[data-theme="glass-dark"] .calendar-date-input,
-html[data-theme="glass-dark"] .calendar-nav-button,
-body[data-theme="glass-dark"] .calendar-date-input,
-body[data-theme="glass-dark"] .calendar-nav-button,
-html.theme-glass-dark .calendar-date-input,
-html.theme-glass-dark .calendar-nav-button,
-body.theme-glass-dark .calendar-date-input,
-body.theme-glass-dark .calendar-nav-button {
-  color: rgba(236, 242, 255, 0.92) !important;
+body.desktop-transparent[data-theme="glass-dark"] .today-focus-main,
+body.desktop-transparent[data-theme="glass-dark"] .today-focus-hero,
+body.desktop-transparent[data-theme="glass-dark"] .today-focus-section,
+body.desktop-transparent[data-theme="glass-dark"] .today-focus-block,
+body.desktop-transparent[data-theme="glass-dark"] .today-mini-main,
+body.desktop-transparent[data-theme="glass-dark"] .today-mini-next,
+body.desktop-transparent[data-theme="glass-dark"] .today-tasks-progress,
+body.desktop-transparent[data-theme="glass-dark"] .calendar-event-item,
+body.desktop-transparent[data-theme="glass-dark"] .calendar-event-card,
+body.desktop-transparent[data-theme="glass-dark"] .calendar-mini-card,
+body.desktop-transparent[data-theme="glass-dark"] .career-list-item,
+body.desktop-transparent[data-theme="glass-dark"] .memo-note-item,
+body.desktop-transparent[data-theme="glass-dark"] .alert-item,
+body.desktop-transparent[data-theme="glass-dark"] .journal-section,
+body.desktop-transparent[data-theme="glass-dark"] .study-card {
   background:
     linear-gradient(
       145deg,
-      rgba(40, 47, 72, 0.52),
-      rgba(20, 26, 43, 0.3)
+      rgba(42, 49, 72, 0.28),
+      rgba(14, 18, 30, 0.16)
     ) !important;
-  border-color: rgba(171, 188, 236, 0.18) !important;
-}
 
-html[data-theme="glass-dark"] .calendar-event-item,
-body[data-theme="glass-dark"] .calendar-event-item,
-html.theme-glass-dark .calendar-event-item,
-body.theme-glass-dark .calendar-event-item {
-  color: rgba(234, 240, 255, 0.94) !important;
-  background:
-    linear-gradient(
-      145deg,
-      rgba(38, 44, 67, 0.42),
-      rgba(18, 24, 38, 0.22)
-    ) !important;
-  border-color: rgba(177, 193, 238, 0.2) !important;
+  border-color:
+    rgba(187, 202, 239, 0.15) !important;
+
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 12px 24px rgba(4, 8, 18, 0.16) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 9px 22px rgba(0, 0, 0, 0.11) !important;
+
+  backdrop-filter:
+    blur(16px)
+    saturate(126%) !important;
+
+  -webkit-backdrop-filter:
+    blur(16px)
+    saturate(126%) !important;
 }
 
-html[data-theme="glass-dark"] .calendar-event-title,
-body[data-theme="glass-dark"] .calendar-event-title,
-html.theme-glass-dark .calendar-event-title,
-body.theme-glass-dark .calendar-event-title {
-  color: rgba(244, 247, 255, 0.97) !important;
-}
 
-html[data-theme="glass-dark"] .calendar-event-time,
-body[data-theme="glass-dark"] .calendar-event-time,
-html.theme-glass-dark .calendar-event-time,
-body.theme-glass-dark .calendar-event-time {
-  color: rgba(201, 211, 238, 0.86) !important;
-}
+/* ============================================================
+   10. COMMON DASHBOARD PANELS
+============================================================ */
 
-html[data-theme="glass-dark"] .calendar-event-location,
-body[data-theme="glass-dark"] .calendar-event-location,
-html.theme-glass-dark .calendar-event-location,
-body.theme-glass-dark .calendar-event-location {
-  color: rgba(188, 199, 227, 0.74) !important;
-}
-
-html[data-theme="glass-dark"] .calendar-career-badge,
-body[data-theme="glass-dark"] .calendar-career-badge,
-html.theme-glass-dark .calendar-career-badge,
-body.theme-glass-dark .calendar-career-badge {
-  color: rgba(247, 242, 255, 0.94) !important;
-  background: rgba(144, 118, 201, 0.24) !important;
-  border-color: rgba(196, 174, 241, 0.28) !important;
-}
-
-html[data-theme="glass-dark"] .calendar-pending-badge,
-body[data-theme="glass-dark"] .calendar-pending-badge,
-html.theme-glass-dark .calendar-pending-badge,
-body.theme-glass-dark .calendar-pending-badge {
-  color: rgba(255, 242, 206, 0.94) !important;
-  background: rgba(148, 118, 48, 0.24) !important;
-  border-color: rgba(222, 199, 142, 0.22) !important;
-}
-
-html[data-theme="glass-dark"] .calendar-empty-state,
-body[data-theme="glass-dark"] .calendar-empty-state,
-html.theme-glass-dark .calendar-empty-state,
-body.theme-glass-dark .calendar-empty-state,
-html[data-theme="glass-dark"] .calendar-sync-preview .text-muted-foreground,
-body[data-theme="glass-dark"] .calendar-sync-preview .text-muted-foreground,
-html.theme-glass-dark .calendar-sync-preview .text-muted-foreground,
-body.theme-glass-dark .calendar-sync-preview .text-muted-foreground {
-  color: rgba(191, 202, 230, 0.76) !important;
-}
-
-html[data-theme="glass-dark"] .calendar-sync-preview,
-body[data-theme="glass-dark"] .calendar-sync-preview,
-html.theme-glass-dark .calendar-sync-preview,
-body.theme-glass-dark .calendar-sync-preview {
-  color: rgba(239, 244, 255, 0.92) !important;
-}
-
-/* =========================================================
-   Dashboard widget interior normalization
-   ---------------------------------------------------------
-   Several widgets previously kept light-theme white overlays after Glass Dark
-   was selected. Large information groups use the shared dark panel recipe;
-   compact rows and controls use the slightly denser control recipe.
-   / 위젯 내부에 남아 있던 밝은 흰색 레이어만 다크 토큰으로 교체한다.
-     다른 테마와 의미 색상(활성 필터, 카테고리 표식)은 변경하지 않는다.
-========================================================= */
-html[data-theme="glass-dark"] :is(
+html.desktop-transparent[data-theme="glass-dark"] :is(
   .career-summary-card,
   .money-summary-panel,
   .money-budget-panel,
@@ -1256,7 +374,8 @@ html[data-theme="glass-dark"] :is(
   .money-recent-panel,
   .money-detail-card
 ),
-body[data-theme="glass-dark"] :is(
+
+body.desktop-transparent[data-theme="glass-dark"] :is(
   .career-summary-card,
   .money-summary-panel,
   .money-budget-panel,
@@ -1264,12 +383,31 @@ body[data-theme="glass-dark"] :is(
   .money-recent-panel,
   .money-detail-card
 ) {
-  background: var(--gd-dark-panel-bg) !important;
-  border-color: var(--gd-dark-panel-border) !important;
-  box-shadow: var(--gd-dark-panel-shadow) !important;
+  background:
+    var(--gd-dark-panel-bg) !important;
+
+  border-color:
+    var(--gd-dark-panel-border) !important;
+
+  box-shadow:
+    var(--gd-dark-panel-shadow) !important;
+
+  backdrop-filter:
+    blur(16px)
+    saturate(126%) !important;
+
+  -webkit-backdrop-filter:
+    blur(16px)
+    saturate(126%) !important;
 }
 
-html[data-theme="glass-dark"] :is(
+
+/* ============================================================
+   11. CONTROLS
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-dark"] :is(
+  .glass-button,
   .career-icon-button,
   .career-filter-pill:not(.is-active),
   .career-status-pill,
@@ -1288,7 +426,9 @@ html[data-theme="glass-dark"] :is(
   .health-metric-card,
   .health-program-card
 ),
-body[data-theme="glass-dark"] :is(
+
+body.desktop-transparent[data-theme="glass-dark"] :is(
+  .glass-button,
   .career-icon-button,
   .career-filter-pill:not(.is-active),
   .career-status-pill,
@@ -1307,107 +447,139 @@ body[data-theme="glass-dark"] :is(
   .health-metric-card,
   .health-program-card
 ) {
-  background: var(--gd-dark-control-bg) !important;
-  border-color: var(--gd-dark-control-border) !important;
+  background:
+    var(--gd-dark-control-bg) !important;
+
+  border-color:
+    var(--gd-dark-control-border) !important;
+
+  backdrop-filter:
+    blur(14px)
+    saturate(126%) !important;
+
+  -webkit-backdrop-filter:
+    blur(14px)
+    saturate(126%) !important;
 }
 
-html[data-theme="glass-dark"] :is(.money-budget-track, .health-progress-track),
-body[data-theme="glass-dark"] :is(.money-budget-track, .health-progress-track) {
-  background: rgba(7, 11, 22, 0.48) !important;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.24);
-}
 
-html[data-theme="glass-dark"] :is(
-  .career-summary-card strong,
-  .money-summary-copy strong,
-  .money-budget-mini strong,
-  .money-top-category strong,
-  .money-transaction-copy strong,
-  .money-transaction-side > strong
-),
-body[data-theme="glass-dark"] :is(
-  .career-summary-card strong,
-  .money-summary-copy strong,
-  .money-budget-mini strong,
-  .money-top-category strong,
-  .money-transaction-copy strong,
-  .money-transaction-side > strong
-) {
-  color: rgba(244, 247, 255, 0.96) !important;
-}
+/* ============================================================
+   12. INPUTS
+============================================================ */
 
-html[data-theme="glass-dark"] :is(
-  .career-summary-card span,
-  .career-filter-pill:not(.is-active),
-  .money-summary-copy span,
-  .money-summary-copy em,
-  .money-panel-heading span,
-  .money-top-category span,
-  .money-transaction-copy span
-),
-body[data-theme="glass-dark"] :is(
-  .career-summary-card span,
-  .career-filter-pill:not(.is-active),
-  .money-summary-copy span,
-  .money-summary-copy em,
-  .money-panel-heading span,
-  .money-top-category span,
-  .money-transaction-copy span
-) {
-  color: rgba(197, 208, 236, 0.8) !important;
-}
+html.desktop-transparent[data-theme="glass-dark"] input,
+html.desktop-transparent[data-theme="glass-dark"] textarea,
+html.desktop-transparent[data-theme="glass-dark"] select,
 
-html[data-theme="glass-dark"],
-body[data-theme="glass-dark"],
-html.theme-glass-dark,
-body.theme-glass-dark {
-  scrollbar-color: rgba(129, 149, 196, 0.55) rgba(10, 14, 26, 0.16);
-}
+body.desktop-transparent[data-theme="glass-dark"] input,
+body.desktop-transparent[data-theme="glass-dark"] textarea,
+body.desktop-transparent[data-theme="glass-dark"] select {
+  color:
+    var(--gd-dark-text) !important;
 
-html[data-theme="glass-dark"] ::-webkit-scrollbar,
-body[data-theme="glass-dark"] ::-webkit-scrollbar,
-html.theme-glass-dark ::-webkit-scrollbar,
-body.theme-glass-dark ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-html[data-theme="glass-dark"] ::-webkit-scrollbar-track,
-body[data-theme="glass-dark"] ::-webkit-scrollbar-track,
-html.theme-glass-dark ::-webkit-scrollbar-track,
-body.theme-glass-dark ::-webkit-scrollbar-track {
-  background: rgba(10, 14, 26, 0.14);
-  border-radius: 999px;
-}
-
-html[data-theme="glass-dark"] ::-webkit-scrollbar-thumb,
-body[data-theme="glass-dark"] ::-webkit-scrollbar-thumb,
-html.theme-glass-dark ::-webkit-scrollbar-thumb,
-body.theme-glass-dark ::-webkit-scrollbar-thumb {
   background:
     linear-gradient(
-      180deg,
-      rgba(126, 145, 196, 0.54),
-      rgba(92, 109, 156, 0.44)
-    );
-  border: 2px solid transparent;
-  border-radius: 999px;
-  background-clip: padding-box;
+      145deg,
+      rgba(40, 48, 70, 0.30),
+      rgba(15, 20, 33, 0.18)
+    ) !important;
+
+  border-color:
+    rgba(188, 202, 238, 0.18) !important;
+
+  backdrop-filter:
+    blur(14px)
+    saturate(126%) !important;
+
+  -webkit-backdrop-filter:
+    blur(14px)
+    saturate(126%) !important;
+}
+
+
+/* ============================================================
+   13. ACTIVE STATE
+
+   Dark Theme identity는 유지하되 너무 불투명하지 않게.
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-dark"]
+  .sidebar-tab-item.is-active
+  .sidebar-tab-main,
+
+body.desktop-transparent[data-theme="glass-dark"]
+  .sidebar-tab-item.is-active
+  .sidebar-tab-main {
+  color:
+    var(--gd-dark-text-strong) !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(70, 85, 130, 0.50),
+      rgba(73, 105, 153, 0.31) 38%,
+      rgba(122, 82, 156, 0.29) 74%,
+      rgba(43, 54, 95, 0.48)
+    ) !important;
+
+  border-color:
+    rgba(169, 198, 255, 0.22) !important;
+
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 4px 16px rgba(5, 8, 20, 0.22);
+    0 12px 28px rgba(0, 0, 0, 0.18) !important;
 }
 
-html[data-theme="glass-dark"] ::-webkit-scrollbar-thumb:hover,
-body[data-theme="glass-dark"] ::-webkit-scrollbar-thumb:hover,
-html.theme-glass-dark ::-webkit-scrollbar-thumb:hover,
-body.theme-glass-dark ::-webkit-scrollbar-thumb:hover {
+
+/* ============================================================
+   14. SETTINGS
+
+   Settings는 내용이 많으므로 dashboard보다 조금 더 진하게 유지.
+   그래도 Tauri에서는 solid dark panel이 아니라 glass.
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-dark"] .settings-modal-window,
+body.desktop-transparent[data-theme="glass-dark"] .settings-modal-window {
   background:
     linear-gradient(
-      180deg,
-      rgba(145, 165, 220, 0.62),
-      rgba(104, 122, 176, 0.54)
-    );
-  border: 2px solid transparent;
-  background-clip: padding-box;
+      145deg,
+      rgba(23, 28, 44, 0.60),
+      rgba(7, 11, 20, 0.42)
+    ) !important;
+
+  border-color:
+    rgba(185, 201, 241, 0.19) !important;
+
+  backdrop-filter:
+    blur(28px)
+    saturate(134%) !important;
+
+  -webkit-backdrop-filter:
+    blur(28px)
+    saturate(134%) !important;
+}
+
+
+html.desktop-transparent[data-theme="glass-dark"] .settings-section,
+html.desktop-transparent[data-theme="glass-dark"] .settings-theme-card,
+
+body.desktop-transparent[data-theme="glass-dark"] .settings-section,
+body.desktop-transparent[data-theme="glass-dark"] .settings-theme-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(39, 46, 68, 0.40),
+      rgba(13, 17, 29, 0.24)
+    ) !important;
+
+  border-color:
+    rgba(180, 197, 235, 0.17) !important;
+
+  backdrop-filter:
+    blur(18px)
+    saturate(128%) !important;
+
+  -webkit-backdrop-filter:
+    blur(18px)
+    saturate(128%) !important;
 }

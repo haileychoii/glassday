@@ -73,7 +73,19 @@ export const AppShell = ({
    */
 
   const isTauriApp = isTauri();
+useEffect(() => {
+  const root = document.documentElement;
 
+  if (isTauriApp) {
+    root.classList.add("desktop-transparent");
+  } else {
+    root.classList.remove("desktop-transparent");
+  }
+
+  return () => {
+    root.classList.remove("desktop-transparent");
+  };
+}, [isTauriApp]);
   /*
    * Tauri에서는 layout 선택 개념이 필요 없다.
    * 실제 1080 x 720 Tauri Window 자체가 Laptop viewport다.

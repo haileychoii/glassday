@@ -737,3 +737,325 @@ body[data-theme="glass-light"] ::-webkit-scrollbar-thumb:hover {
   border: 2px solid transparent;
   background-clip: padding-box;
 }
+
+
+/* ============================================================
+   TAURI ONLY — BACKGROUNDLESS GLASS LIGHT
+   ------------------------------------------------------------
+   WEB / Vercel:
+   - 기존 Glass Light 디자인 그대로 유지
+
+   TAURI:
+   - Window 아래 전체 배경판 제거
+   - 실제 Desktop이 바로 뒤에 보임
+   - Sidebar / Topbar / Widgets만 Glass Surface로 유지
+   ============================================================ */
+
+
+/* ============================================================
+   1. TAURI ROOT / STAGE
+   전체 화면을 받치는 배경은 완전히 투명
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-light"],
+html.desktop-transparent[data-theme="glass-light"] body,
+body.desktop-transparent[data-theme="glass-light"],
+html.desktop-transparent[data-theme="glass-light"] #root,
+body.desktop-transparent[data-theme="glass-light"] #root,
+html.desktop-transparent[data-theme="glass-light"] .app-mode-stage,
+body.desktop-transparent[data-theme="glass-light"] .app-mode-stage,
+html.desktop-transparent[data-theme="glass-light"] .tauri-app-window,
+body.desktop-transparent[data-theme="glass-light"] .tauri-app-window,
+html.desktop-transparent[data-theme="glass-light"] .tauri-glassday-root,
+body.desktop-transparent[data-theme="glass-light"] .tauri-glassday-root {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+
+/* ============================================================
+   2. 기존 Web용 Gradient Background 제거
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-light"] .bg-glass-gradient,
+body.desktop-transparent[data-theme="glass-light"] .bg-glass-gradient {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  box-shadow: none !important;
+}
+
+
+/* ============================================================
+   3. APP SHELL
+
+   이게 중요함.
+
+   Glassday 전체 뒤를 받치는 큰 흰색/회색 판을 제거한다.
+
+   Sidebar / Topbar / Widgets는 아래에서 다시 Glass로 만들어지므로
+   전체 UI가 사라지는 것이 아니다.
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-light"] .app-shell-surface,
+body.desktop-transparent[data-theme="glass-light"] .app-shell-surface,
+
+html.desktop-transparent[data-theme="glass-light"]
+  .app-shell-surface.glass-panel,
+
+body.desktop-transparent[data-theme="glass-light"]
+  .app-shell-surface.glass-panel,
+
+html.desktop-transparent[data-theme="glass-light"]
+  .app-shell-surface.liquid-shell,
+
+body.desktop-transparent[data-theme="glass-light"]
+  .app-shell-surface.liquid-shell {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  /*
+   * 전체 화면을 한꺼번에 blur하면
+   * 회색 필름을 덮은 느낌이 생기므로 제거.
+   */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+
+  /*
+   * 앱의 원래 둥근 외곽 형태는 살짝 남김.
+   */
+  border-color: rgba(255, 255, 255, 0.22) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 18px 46px rgba(44, 54, 86, 0.07) !important;
+}
+
+
+/* ============================================================
+   4. 구조용 내부 Layer도 투명
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-light"] .app-shell-columns,
+html.desktop-transparent[data-theme="glass-light"] .app-shell-main-column,
+html.desktop-transparent[data-theme="glass-light"] .app-shell-main,
+
+body.desktop-transparent[data-theme="glass-light"] .app-shell-columns,
+body.desktop-transparent[data-theme="glass-light"] .app-shell-main-column,
+body.desktop-transparent[data-theme="glass-light"] .app-shell-main {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+
+/* ============================================================
+   5. SIDEBAR
+   밝은 Frosted Glass
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-light"] .app-sidebar,
+html.desktop-transparent[data-theme="glass-light"] .sidebar,
+
+body.desktop-transparent[data-theme="glass-light"] .app-sidebar,
+body.desktop-transparent[data-theme="glass-light"] .sidebar {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.18),
+      rgba(255, 255, 255, 0.065)
+    ) !important;
+
+  border-right:
+    1px solid rgba(255, 255, 255, 0.28) !important;
+
+  box-shadow:
+    inset -1px 0 0 rgba(255, 255, 255, 0.06) !important;
+
+  backdrop-filter:
+    blur(18px)
+    saturate(138%) !important;
+
+  -webkit-backdrop-filter:
+    blur(18px)
+    saturate(138%) !important;
+}
+
+
+/* ============================================================
+   6. TOPBAR
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-light"] .topbar,
+body.desktop-transparent[data-theme="glass-light"] .topbar {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.19),
+      rgba(255, 255, 255, 0.07)
+    ) !important;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.28) !important;
+
+  border-radius:
+    20px 20px 0 0 !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    0 10px 28px rgba(75, 86, 130, 0.045) !important;
+
+  backdrop-filter:
+    blur(18px)
+    saturate(138%) !important;
+
+  -webkit-backdrop-filter:
+    blur(18px)
+    saturate(138%) !important;
+}
+
+
+/* ============================================================
+   7. WIDGETS
+   배경 없이 유리 카드만 떠 있는 핵심 부분
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-light"] .glass-card,
+body.desktop-transparent[data-theme="glass-light"] .glass-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.20),
+      rgba(255, 255, 255, 0.075)
+    ) !important;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.34) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.48),
+    0 14px 34px rgba(60, 72, 110, 0.065) !important;
+
+  backdrop-filter:
+    blur(18px)
+    saturate(136%) !important;
+
+  -webkit-backdrop-filter:
+    blur(18px)
+    saturate(136%) !important;
+}
+
+
+/* ============================================================
+   8. INNER GLASS SURFACES
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-light"] .today-focus-main,
+html.desktop-transparent[data-theme="glass-light"] .today-focus-hero,
+html.desktop-transparent[data-theme="glass-light"] .today-focus-section,
+html.desktop-transparent[data-theme="glass-light"] .today-focus-block,
+html.desktop-transparent[data-theme="glass-light"] .today-mini-main,
+html.desktop-transparent[data-theme="glass-light"] .today-mini-next,
+html.desktop-transparent[data-theme="glass-light"] .today-tasks-progress,
+html.desktop-transparent[data-theme="glass-light"] .calendar-event-item,
+html.desktop-transparent[data-theme="glass-light"] .calendar-event-card,
+html.desktop-transparent[data-theme="glass-light"] .calendar-mini-card,
+html.desktop-transparent[data-theme="glass-light"] .career-list-item,
+html.desktop-transparent[data-theme="glass-light"] .memo-note-item,
+html.desktop-transparent[data-theme="glass-light"] .alert-item,
+html.desktop-transparent[data-theme="glass-light"] .journal-section,
+html.desktop-transparent[data-theme="glass-light"] .study-card,
+
+body.desktop-transparent[data-theme="glass-light"] .today-focus-main,
+body.desktop-transparent[data-theme="glass-light"] .today-focus-hero,
+body.desktop-transparent[data-theme="glass-light"] .today-focus-section,
+body.desktop-transparent[data-theme="glass-light"] .today-focus-block,
+body.desktop-transparent[data-theme="glass-light"] .today-mini-main,
+body.desktop-transparent[data-theme="glass-light"] .today-mini-next,
+body.desktop-transparent[data-theme="glass-light"] .today-tasks-progress,
+body.desktop-transparent[data-theme="glass-light"] .calendar-event-item,
+body.desktop-transparent[data-theme="glass-light"] .calendar-event-card,
+body.desktop-transparent[data-theme="glass-light"] .calendar-mini-card,
+body.desktop-transparent[data-theme="glass-light"] .career-list-item,
+body.desktop-transparent[data-theme="glass-light"] .memo-note-item,
+body.desktop-transparent[data-theme="glass-light"] .alert-item,
+body.desktop-transparent[data-theme="glass-light"] .journal-section,
+body.desktop-transparent[data-theme="glass-light"] .study-card {
+  background:
+    rgba(255, 255, 255, 0.12) !important;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.28) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    0 8px 20px rgba(60, 70, 105, 0.035) !important;
+
+  backdrop-filter:
+    blur(14px)
+    saturate(132%) !important;
+
+  -webkit-backdrop-filter:
+    blur(14px)
+    saturate(132%) !important;
+}
+
+
+/* ============================================================
+   9. BUTTON / INPUT
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-light"] .glass-button,
+html.desktop-transparent[data-theme="glass-light"] input,
+html.desktop-transparent[data-theme="glass-light"] textarea,
+html.desktop-transparent[data-theme="glass-light"] select,
+
+body.desktop-transparent[data-theme="glass-light"] .glass-button,
+body.desktop-transparent[data-theme="glass-light"] input,
+body.desktop-transparent[data-theme="glass-light"] textarea,
+body.desktop-transparent[data-theme="glass-light"] select {
+  background:
+    rgba(255, 255, 255, 0.18) !important;
+
+  border-color:
+    rgba(255, 255, 255, 0.34) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34) !important;
+
+  backdrop-filter:
+    blur(12px)
+    saturate(130%) !important;
+
+  -webkit-backdrop-filter:
+    blur(12px)
+    saturate(130%) !important;
+}
+
+
+/* ============================================================
+   10. ACTIVE / HOLOGRAPHIC STATE
+
+   기존 Glass Light의 holographic identity는 유지
+============================================================ */
+
+html.desktop-transparent[data-theme="glass-light"]
+  .sidebar-tab-item.is-active
+  .sidebar-tab-main,
+
+body.desktop-transparent[data-theme="glass-light"]
+  .sidebar-tab-item.is-active
+  .sidebar-tab-main {
+  background:
+    var(--gd-glass-light-holo-surface) !important;
+
+  border-color:
+    rgba(255, 255, 255, 0.62) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.68),
+    0 10px 24px rgba(119, 155, 205, 0.14) !important;
+}
