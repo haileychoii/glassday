@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "glassday",
+  "productName": "Glassday",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "com.glassday.app",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
@@ -12,11 +12,20 @@
   "app": {
     "windows": [
       {
-        "title": "glassday",
-        "width": 800,
-        "height": 600,
+        "label": "main",
+        "title": "Glassday",
+        "width": 1080,
+        "height": 720,
+        "minWidth": 900,
+        "minHeight": 600,
         "resizable": true,
-        "fullscreen": false
+        "fullscreen": false,
+        "decorations": false,
+        "transparent": true,
+        "center": true,
+        "minimizable": true,
+        "maximizable": true,
+        "closable": true
       }
     ],
     "security": {

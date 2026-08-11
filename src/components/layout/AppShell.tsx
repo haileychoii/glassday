@@ -3,50 +3,46 @@
  * [Figma Mapping] Layout / App Shell
  * ============================================================
  *
- * 화면 역할:
- * - Sidebar, Topbar, Dashboard Content의 공통 배치 Frame이다.
- * - Wide에서는 viewport를 채우고, Laptop에서는 1080 x 720 preview window 안에
- *   동일한 shellContent를 렌더링한다.
+ * WEB
+ * - Wide / Laptop layout preview를 기존 방식으로 유지한다.
+ * - Laptop에서는 1080 x 720 preview frame을 사용한다.
  *
- * 렌더링 위치:
- * - Parent: `src/App.tsx`
- * - Children: `Sidebar.tsx`, `Topbar.tsx`, `DashboardGrid.tsx`
- *
- * 저장 연결:
- * - `glassday.sidebar.collapsed`: Sidebar Component Variant
- * - `glassday.laptopPreview.position.v1`: Laptop preview의 canvas 위치
- *
- * 스타일 연결:
- * - `src/styles/layout.css`: Sidebar/Topbar/Shell 기본 배치
- * - `src/styles/layout-modes.css`: Wide/Laptop frame 차이
- * - 각 Theme CSS: shell surface와 desktop chrome override
- *
- * Figma 구조:
- * - Root Stage
- *   - Laptop Preview Chrome (Laptop Variant only)
- *   - App Shell / Horizontal Auto Layout
- *     - Sidebar / Fixed width
- *     - Main Column / Fill container
+ * TAURI
+ * - 무조건 Laptop layout을 사용한다.
+ * - 웹용 Laptop Preview Chrome을 렌더링하지 않는다.
+ * - 실제 Glassday App Shell이 Tauri window 전체를 직접 채운다.
  * ============================================================
  */
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from "react";
+
+import { isTauri } from "@tauri-apps/api/core";
+
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
-import type { DashboardLayoutMode, DashboardTab } from "../../types/workspace";
-// import { PixelDesktopDecor } from "./PixelDesktopDecor";
+
+import type {
+  DashboardLayoutMode,
+  DashboardTab,
+} from "../../types/workspace";
 
 const SIDEBAR_COLLAPSED_STORAGE_KEY = "glassday.sidebar.collapsed";
-const LAPTOP_FRAME_POSITION_STORAGE_KEY = "glassday.laptopPreview.position.v1";
+const LAPTOP_FRAME_POSITION_STORAGE_KEY =
+  "glassday.laptopPreview.position.v1";
 
 type AppShellProps = {
-  /** DashboardGrid를 포함하는 Main Content. Shell은 내용의 데이터에 관여하지 않는다. */
   children: ReactNode;
-  /** Sidebar Tab 편집과 Grid drag/resize UI를 동시에 전환한다. */
   editMode: boolean;
-  /** Wide viewport 또는 고정 Laptop preview Frame을 선택한다. */
   layoutMode: DashboardLayoutMode;
   tabs: DashboardTab[];
   activeTabId: string;
+
   onChangeLayoutMode: (mode: DashboardLayoutMode) => void;
   onToggleEditMode: () => void;
   onOpenSettings: () => void;
@@ -56,14 +52,6 @@ type AppShellProps = {
   onRemoveTab: (tabId: string) => void;
 };
 
-/**
- * AppShell
- *
- * Figma Component: `App Shell`
- * Variants: `Wide / Laptop`, `Sidebar Expanded / Collapsed`.
- * Laptop chrome의 drag는 preview 위치만 바꾸며 Dashboard Grid layout에는
- * 영향을 주지 않는다.
- */
 export const AppShell = ({
   children,
   editMode,
@@ -78,39 +66,34 @@ export const AppShell = ({
   onRenameTab,
   onRemoveTab,
 }: AppShellProps) => {
+  /*
+   * =========================================================
+   * Runtime
+   * =========================================================
+   */
+
+  const isTauriApp = isTauri();
+
+  /*
+   * Tauri에서는 layout 선택 개념이 필요 없다.
+   * 실제 1080 x 720 Tauri Window 자체가 Laptop viewport다.
+   */
+  const effectiveLayoutMode: DashboardLayoutMode = isTauriApp
+    ? "laptop"
+    : layoutMode;
+
+  /*
+   * =========================================================
+   * Sidebar state
+   * =========================================================
+   */
+
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     if (typeof window === "undefined") return false;
 
-    return window.localStorage.getItem(SIDEBAR_COLLAPSED_STORAGE_KEY) === "true";
-  });
-  const dragStateRef = useRef<{
-    pointerId: number;
-    startX: number;
-    startY: number;
-    originX: number;
-    originY: number;
-  } | null>(null);
-  const [laptopFramePosition, setLaptopFramePosition] = useState(() => {
-    if (typeof window === "undefined") {
-      return { x: 0, y: 0 };
-    }
-
-    try {
-      const raw = window.localStorage.getItem(LAPTOP_FRAME_POSITION_STORAGE_KEY);
-
-      if (!raw) {
-        return { x: 0, y: 0 };
-      }
-
-      const parsed = JSON.parse(raw) as { x?: number; y?: number };
-
-      return {
-        x: typeof parsed.x === "number" ? parsed.x : 0,
-        y: typeof parsed.y === "number" ? parsed.y : 0,
-      };
-    } catch {
-      return { x: 0, y: 0 };
-    }
+    return (
+      window.localStorage.getItem(SIDEBAR_COLLAPSED_STORAGE_KEY) === "true"
+    );
   });
 
   useEffect(() => {
@@ -122,16 +105,85 @@ export const AppShell = ({
     );
   }, [sidebarCollapsed]);
 
+  /*
+   * =========================================================
+   * WEB Laptop Preview position
+   *
+   * Tauri에서는 사용하지 않는다.
+   * Vercel/Web Laptop Preview 기능을 유지하기 위해 남겨둔다.
+   * =========================================================
+   */
+
+  const dragStateRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
+  } | null>(null);
+
+  const [laptopFramePosition, setLaptopFramePosition] = useState(() => {
+    if (typeof window === "undefined") {
+      return {
+        x: 0,
+        y: 0,
+      };
+    }
+
+    try {
+      const raw = window.localStorage.getItem(
+        LAPTOP_FRAME_POSITION_STORAGE_KEY
+      );
+
+      if (!raw) {
+        return {
+          x: 0,
+          y: 0,
+        };
+      }
+
+      const parsed = JSON.parse(raw) as {
+        x?: number;
+        y?: number;
+      };
+
+      return {
+        x: typeof parsed.x === "number" ? parsed.x : 0,
+        y: typeof parsed.y === "number" ? parsed.y : 0,
+      };
+    } catch {
+      return {
+        x: 0,
+        y: 0,
+      };
+    }
+  });
+
   useEffect(() => {
+    /*
+     * Tauri에서는 Preview frame 위치를 저장할 필요가 없다.
+     */
+    if (isTauriApp) return;
+
     if (typeof window === "undefined") return;
 
     window.localStorage.setItem(
       LAPTOP_FRAME_POSITION_STORAGE_KEY,
       JSON.stringify(laptopFramePosition)
     );
-  }, [laptopFramePosition]);
+  }, [isTauriApp, laptopFramePosition]);
 
-  const startLaptopFrameDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
+  /*
+   * =========================================================
+   * WEB Laptop Preview drag
+   * =========================================================
+   */
+
+  const startLaptopFrameDrag = (
+    event: ReactPointerEvent<HTMLDivElement>
+  ) => {
+    if (isTauriApp) return;
+
     dragStateRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,
@@ -143,12 +195,25 @@ export const AppShell = ({
     event.currentTarget.setPointerCapture(event.pointerId);
   };
 
-  const moveLaptopFrameDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
-    const dragState = dragStateRef.current;
-    if (!dragState || dragState.pointerId !== event.pointerId) return;
+  const moveLaptopFrameDrag = (
+    event: ReactPointerEvent<HTMLDivElement>
+  ) => {
+    if (isTauriApp) return;
 
-    const nextX = Math.max(0, dragState.originX + (event.clientX - dragState.startX));
-    const nextY = Math.max(0, dragState.originY + (event.clientY - dragState.startY));
+    const dragState = dragStateRef.current;
+
+    if (!dragState) return;
+    if (dragState.pointerId !== event.pointerId) return;
+
+    const nextX = Math.max(
+      0,
+      dragState.originX + (event.clientX - dragState.startX)
+    );
+
+    const nextY = Math.max(
+      0,
+      dragState.originY + (event.clientY - dragState.startY)
+    );
 
     setLaptopFramePosition({
       x: nextX,
@@ -156,98 +221,177 @@ export const AppShell = ({
     });
   };
 
-  const finishLaptopFrameDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (dragStateRef.current?.pointerId !== event.pointerId) return;
+  const finishLaptopFrameDrag = (
+    event: ReactPointerEvent<HTMLDivElement>
+  ) => {
+    if (isTauriApp) return;
+
+    if (dragStateRef.current?.pointerId !== event.pointerId) {
+      return;
+    }
 
     dragStateRef.current = null;
+
     event.currentTarget.releasePointerCapture(event.pointerId);
   };
 
-  /* Shared Shell Content:
-     Wide와 Laptop에서 같은 Sidebar/Topbar/Grid DOM을 재사용한다. Figma에서도
-     두 Page가 동일 Component instance를 사용하고 크기 Token만 달라야 한다. */
+  /*
+   * =========================================================
+   * Actual Glassday App
+   *
+   * WEB / TAURI 모두 동일한 실제 App DOM을 사용한다.
+   * =========================================================
+   */
+
   const shellContent = (
+  <div
+    className={[
+      "glass-panel liquid-shell rounded-[2.2rem] overflow-hidden app-shell-surface",
+      effectiveLayoutMode === "laptop"
+        ? "is-laptop h-full min-h-0"
+        : "is-wide min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
+      isTauriApp ? "is-tauri-app-surface" : "",
+    ].join(" ")}
+    data-sidebar-collapsed={sidebarCollapsed ? "true" : "false"}
+  >
     <div
       className={[
-        "glass-panel liquid-shell rounded-[2.2rem] overflow-hidden app-shell-surface",
-        layoutMode === "laptop"
-          ? "is-laptop h-full min-h-0"
-          : "is-wide min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
+        "flex app-shell-columns",
+        effectiveLayoutMode === "laptop"
+          ? "h-full min-h-0"
+          : "min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
       ].join(" ")}
-      data-sidebar-collapsed={sidebarCollapsed ? "true" : "false"}
     >
-      <div
-        className={[
-          "flex app-shell-columns",
-          layoutMode === "laptop"
-            ? "h-full min-h-0"
-            : "min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
-        ].join(" ")}
-      >
-        {/* Figma Component: Sidebar / Fixed width / Expanded-Collapsed Variant */}
-        <Sidebar
+      <Sidebar
+        tabs={tabs}
+        activeTabId={activeTabId}
+        editMode={editMode}
+        collapsed={sidebarCollapsed}
+        onToggleCollapsed={() =>
+          setSidebarCollapsed((current) => !current)
+        }
+        onSelectTab={onSelectTab}
+        onAddTab={onAddTab}
+        onRenameTab={onRenameTab}
+        onRemoveTab={onRemoveTab}
+      />
+
+      <div className="app-shell-main-column flex-1 min-w-0 flex flex-col">
+        <Topbar
+          editMode={editMode}
+          layoutMode={effectiveLayoutMode}
           tabs={tabs}
           activeTabId={activeTabId}
-          editMode={editMode}
-          collapsed={sidebarCollapsed}
-          onToggleCollapsed={() =>
-            setSidebarCollapsed((current) => !current)
+          onChangeLayoutMode={
+            isTauriApp ? () => undefined : onChangeLayoutMode
           }
+          onToggleEditMode={onToggleEditMode}
+          onOpenSettings={onOpenSettings}
           onSelectTab={onSelectTab}
           onAddTab={onAddTab}
           onRenameTab={onRenameTab}
           onRemoveTab={onRemoveTab}
         />
 
-        <div className="app-shell-main-column flex-1 min-w-0 flex flex-col">
-          {/* Figma Component: Topbar / Horizontal Auto Layout / Space Between */}
-          <Topbar
-            editMode={editMode}
-            layoutMode={layoutMode}
-            tabs={tabs}
-            activeTabId={activeTabId}
-            onChangeLayoutMode={onChangeLayoutMode}
-            onToggleEditMode={onToggleEditMode}
-            onOpenSettings={onOpenSettings}
-            onSelectTab={onSelectTab}
-            onAddTab={onAddTab}
-            onRenameTab={onRenameTab}
-            onRemoveTab={onRemoveTab}
-          />
-
-          {/* Scroll Container: Dashboard 전체 세로 스크롤은 이 Main Frame이 담당한다. */}
-          <main
-            className="app-shell-main flex-1 !overflow-y-auto !overflow-x-hidden bg-transparent"
-          >
-            {children}
-          </main>
-        </div>
+        <main className="app-shell-main flex-1 !overflow-y-auto !overflow-x-hidden bg-transparent">
+          {children}
+        </main>
       </div>
     </div>
-  );
+  </div>
+);
+
+  /*
+   * =========================================================
+   * TAURI
+   * =========================================================
+   *
+   * 중요:
+   *
+   * Preview frame 없음.
+   * Preview chrome 없음.
+   * Preview 위치 이동 없음.
+   *
+   * Tauri Window 1080 x 720
+   *         =
+   * Glassday App 1080 x 720
+   */
+
+  if (isTauriApp) {
+    return (
+      <div
+        // className={[
+        //   "app-mode-stage",
+        //   "is-laptop-mode",
+        //   "is-tauri-mode",
+        //   "relative",
+        //   "w-screen",
+        //   "h-screen",
+        //   "overflow-hidden",
+        //   "bg-background",
+        //   "text-foreground",
+        // ].join(" ")}
+        className = "tauri-app-window"
+        data-layout-mode="laptop"
+        data-runtime="tauri"
+      >
+        {/*
+         * 기존 Glassday gradient는 유지하되
+         * 이제 preview 밖 배경이 아니라 실제 앱 window 배경이다.
+         */}
+        {/* <div className="absolute inset-0 bg-glass-gradient" /> */}
+
+        {/* <div className="relative z-10 w-full h-full">
+          {shellContent}
+        </div> */}
+        {shellContent}
+      </div>
+    );
+  }
+
+  /*
+   * =========================================================
+   * WEB / VERCEL
+   * =========================================================
+   *
+   * 기존 Preview 기능은 그대로 유지한다.
+   */
 
   return (
     <div
       className={[
-        "app-mode-stage min-h-screen relative overflow-hidden bg-background text-foreground",
-        layoutMode === "laptop" ? "is-laptop-mode" : "is-wide-mode",
+        "app-mode-stage",
+        "min-h-screen",
+        "relative",
+        "overflow-hidden",
+        "bg-background",
+        "text-foreground",
+        effectiveLayoutMode === "laptop"
+          ? "is-laptop-mode"
+          : "is-wide-mode",
       ].join(" ")}
-      data-layout-mode={layoutMode}
+      data-layout-mode={effectiveLayoutMode}
+      data-runtime="web"
     >
       <div className="fixed inset-0 bg-glass-gradient" />
-      {/* <PixelDesktopDecor /> */}
 
-      {layoutMode === "laptop" ? (
-        /* Figma Frame: Laptop Preview / movable desktop canvas object.
-           브라우저 viewport가 아니라 이 고정 Frame 크기가 내부 반응형 기준이다. */
+      {effectiveLayoutMode === "laptop" ? (
+        /*
+         * ====================================================
+         * WEB Laptop Preview
+         * ====================================================
+         */
         <div className="laptop-preview-stage relative z-10">
           <div
             className="laptop-preview-frame"
             style={{
-              transform: `translate(${laptopFramePosition.x}px, ${laptopFramePosition.y}px)`,
+              transform: `translate(
+                ${laptopFramePosition.x}px,
+                ${laptopFramePosition.y}px
+              )`,
             }}
           >
-            {/* Figma Component: Desktop Window Title Bar / drag handle */}
+            {/* WEB 전용 Laptop Preview Chrome */}
             <div
               className="laptop-preview-chrome"
               onPointerDown={startLaptopFrameDrag}
@@ -264,20 +408,34 @@ export const AppShell = ({
               </div>
 
               <div className="laptop-preview-chrome-center">
-                <span className="laptop-preview-title">Glassday Laptop App</span>
-                <span className="laptop-preview-subtitle">1080 x 720 preview</span>
+                <span className="laptop-preview-title">
+                  Glassday Laptop App
+                </span>
+
+                <span className="laptop-preview-subtitle">
+                  1080 x 720 preview
+                </span>
               </div>
 
               <div className="laptop-preview-chrome-side laptop-preview-chrome-right">
-                <span className="laptop-preview-mode-pill">Laptop Mode</span>
+                <span className="laptop-preview-mode-pill">
+                  Laptop Mode
+                </span>
               </div>
             </div>
 
-            {/* Figma Frame: Window Content / 실제 App Shell instance */}
-            <div className="laptop-preview-window">{shellContent}</div>
+            {/* 실제 Glassday App */}
+            <div className="laptop-preview-window">
+              {shellContent}
+            </div>
           </div>
         </div>
       ) : (
+        /*
+         * ====================================================
+         * WEB Wide
+         * ====================================================
+         */
         <div className="relative z-10 min-h-screen p-2 md:p-3">
           {shellContent}
         </div>

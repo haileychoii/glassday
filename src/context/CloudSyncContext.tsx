@@ -54,6 +54,9 @@ import {
   DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
 } from "../constants/dashboardStorage";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { isTauri } from "@tauri-apps/api/core";
+
+import type { DashboardLayoutMode } from "../types/workspace";
 
 type SyncStatus =
   | "disabled"
@@ -84,8 +87,22 @@ const STORAGE_TABLE = "user_storage_snapshots";
 const REMOTE_REFRESH_INTERVAL_MS = 30_000;
 const CloudSyncContext = createContext<CloudSyncContextValue | null>(null);
 
-/* OAuth 왕복 전 현재 Wide/Laptop mode를 URL과 임시 key에 보존한다. */
-const readCurrentLayoutModeForAuth = () => {
+/*
+ * OAuth redirect용 layout 처리.
+ *
+ * WEB:
+ * - 기존 Wide/Laptop 상태를 그대로 보존한다.
+ *
+ * TAURI:
+ * - Window 자체가 Laptop App이므로 layout 선택 상태를 복원하지 않는다.
+ * - 항상 laptop으로 고정한다.
+ * - 과거 Web에서 저장된 "wide" 값이 Tauri에 침범하지 못하게 한다.
+ */
+const readCurrentLayoutModeForAuth = (): DashboardLayoutMode => {
+  if (isTauri()) {
+    return "laptop";
+  }
+
   const params = new URLSearchParams(window.location.search);
   const urlMode = params.get("layout");
 
@@ -95,16 +112,55 @@ const readCurrentLayoutModeForAuth = () => {
 
   const savedMode = window.localStorage.getItem(DASHBOARD_LAYOUT_MODE_KEY);
 
-  return savedMode === "wide" || savedMode === "laptop" ? savedMode : "laptop";
+  return savedMode === "wide" || savedMode === "laptop"
+    ? savedMode
+    : "laptop";
 };
 
 const getAuthRedirectUrl = () => {
   const url = new URL(window.location.href);
-  const layoutMode = readCurrentLayoutModeForAuth();
 
   url.hash = "";
+
+  /*
+   * =========================================================
+   * TAURI
+   * =========================================================
+   *
+   * Desktop App에서는 OAuth 전후 모두 laptop으로 고정.
+   * Web Preview의 Wide/Laptop 복원 로직을 사용하지 않는다.
+   */
+  if (isTauri()) {
+    url.searchParams.set("layout", "laptop");
+
+    window.localStorage.setItem(
+      DASHBOARD_LAYOUT_MODE_KEY,
+      "laptop"
+    );
+
+    window.localStorage.setItem(
+      DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
+      "laptop"
+    );
+
+    return url.toString();
+  }
+
+  /*
+   * =========================================================
+   * WEB / VERCEL
+   * =========================================================
+   *
+   * 기존 동작 그대로.
+   */
+  const layoutMode = readCurrentLayoutModeForAuth();
+
   url.searchParams.set("layout", layoutMode);
-  window.localStorage.setItem(DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY, layoutMode);
+
+  window.localStorage.setItem(
+    DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
+    layoutMode
+  );
 
   return url.toString();
 };
