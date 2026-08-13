@@ -20,16 +20,12 @@
 
 import {
   LayoutGrid,
-  Minus,
   Monitor,
   Settings,
   Sparkles,
-  Square,
-  X,
 } from "lucide-react";
 
 import { isTauri } from "@tauri-apps/api/core";
-import { getCurrentWindow } from "@tauri-apps/api/window";
 
 import { cn } from "../../lib/utils";
 import type {
@@ -75,30 +71,6 @@ export const Topbar = ({
    */
   const isTauriApp = isTauri();
 
-  /*
-   * =========================================================
-   * Tauri Window Controls
-   * =========================================================
-   */
-
-  const minimizeWindow = async () => {
-    if (!isTauriApp) return;
-
-    await getCurrentWindow().minimize();
-  };
-
-  const toggleMaximizeWindow = async () => {
-    if (!isTauriApp) return;
-
-    await getCurrentWindow().toggleMaximize();
-  };
-
-  const closeWindow = async () => {
-    if (!isTauriApp) return;
-
-    await getCurrentWindow().close();
-  };
-
   return (
     <header
       className={cn(
@@ -143,6 +115,7 @@ export const Topbar = ({
             <div
               className="tauri-topbar-drag-region"
               data-tauri-drag-region
+              title="Drag Glassday"
               aria-hidden="true"
             />
           )}
@@ -254,64 +227,8 @@ export const Topbar = ({
               </span>
             </button>
 
-            {/* ===============================================
-                TAURI ONLY: Window Controls
-            =============================================== */}
-
-            {isTauriApp && (
-              <div
-                className="tauri-window-controls"
-                aria-label="Window controls"
-              >
-                {/* Minimize */}
-
-                <button
-                  type="button"
-                  className="tauri-window-control"
-                  onClick={minimizeWindow}
-                  title="Minimize"
-                  aria-label="Minimize window"
-                >
-                  <Minus
-                    size={14}
-                    strokeWidth={1.8}
-                  />
-                </button>
-
-                {/* Maximize */}
-
-                <button
-                  type="button"
-                  className="tauri-window-control"
-                  onClick={toggleMaximizeWindow}
-                  title="Maximize"
-                  aria-label="Maximize window"
-                >
-                  <Square
-                    size={11}
-                    strokeWidth={1.7}
-                  />
-                </button>
-
-                {/* Close */}
-
-                <button
-                  type="button"
-                  className={cn(
-                    "tauri-window-control",
-                    "tauri-window-control-close"
-                  )}
-                  onClick={closeWindow}
-                  title="Close"
-                  aria-label="Close window"
-                >
-                  <X
-                    size={15}
-                    strokeWidth={1.8}
-                  />
-                </button>
-              </div>
-            )}
+            {/* Tauri widget mode keeps only real app actions here.
+                Tauri 위젯 모드에서는 창 버튼을 렌더링하지 않고 Settings/Edit만 남긴다. */}
           </div>
         </div>
 
