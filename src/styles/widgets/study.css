@@ -593,6 +593,89 @@
     0 2px 7px color-mix(in srgb, var(--study-subject-color) 24%, transparent);
 }
 
+/* Mac Core subject color preservation
+   mac-core.css uses strong system-material overrides for rows and inputs.
+   These rules restore semantic planner colors without losing the macOS shape.
+   / mac-core에서도 시간표 색, 과목칩 색, 색상 picker가 실제 과목 색을 보여준다. */
+:is(
+    html[data-theme="mac-core"],
+    body[data-theme="mac-core"],
+    html.theme-mac-core,
+    body.theme-mac-core
+  )
+  .study10-subject-tool.is-active {
+  border-color: color-mix(in srgb, var(--study-subject-color) 64%, #8e8e93 36%) !important;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--study-subject-color) 22%, white 78%),
+      color-mix(in srgb, var(--study-subject-color) 12%, white 88%)
+    ) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.88),
+    inset 0 0 0 1px color-mix(in srgb, var(--study-subject-color) 24%, transparent) !important;
+}
+
+:is(
+    html[data-theme="mac-core"],
+    body[data-theme="mac-core"],
+    html.theme-mac-core,
+    body.theme-mac-core
+  )
+  :is(.study10-subject-dot, .study10-task-color) {
+  background: var(--study-subject-color) !important;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--study-subject-color) 40%, white 60%) !important;
+}
+
+:is(
+    html[data-theme="mac-core"],
+    body[data-theme="mac-core"],
+    html.theme-mac-core,
+    body.theme-mac-core
+  )
+  .study10-slot.is-filled {
+  border-color: color-mix(in srgb, var(--study-subject-color) 70%, #8e8e93 30%) !important;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--study-subject-color) 82%, white 18%),
+      color-mix(in srgb, var(--study-subject-color) 70%, #f5f5f7 30%)
+    ) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.42),
+    0 2px 7px -4px color-mix(in srgb, var(--study-subject-color) 62%, transparent) !important;
+}
+
+:is(
+    html[data-theme="mac-core"],
+    body[data-theme="mac-core"],
+    html.theme-mac-core,
+    body.theme-mac-core
+  )
+  .study10-task-row {
+  border-color: color-mix(in srgb, var(--study-subject-color) 20%, rgb(60 60 67 / 0.17)) !important;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--study-subject-color) 10%, white 90%),
+      color-mix(in srgb, var(--study-subject-color) 5%, white 95%)
+    ) !important;
+}
+
+:is(
+    html[data-theme="mac-core"],
+    body[data-theme="mac-core"],
+    html.theme-mac-core,
+    body.theme-mac-core
+  )
+  .study10-subject-color-field input[type="color"] {
+  background: var(--study-subject-color) !important;
+  border: 1px solid color-mix(in srgb, var(--study-subject-color) 56%, #8e8e93 44%) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.52),
+    0 1px 3px rgb(22 24 32 / 0.12) !important;
+}
+
 /* Task and note column */
 .study10-side-stack {
   min-width: 0;
