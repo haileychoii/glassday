@@ -1456,3 +1456,328 @@ body,
   background: rgb(255 190 207 / 0.92) !important;
   border-color: rgb(255 218 227 / 0.76) !important;
 }
+
+/* Pixel Desk widget internals
+   Restore the raised Win98-style surface language after widget-level CSS loads.
+   Korean: 위젯 내부 카드/패널은 납작한 1px 테두리가 아니라 밝은 위/왼쪽,
+   어두운 아래/오른쪽으로 눌림과 돌출감이 보이도록 마지막 override에서 통일한다. */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) {
+  --pixel-inner-face: #d8d8cc;
+  --pixel-inner-face-bright: #ecece2;
+  --pixel-inner-face-soft: #e3e3d7;
+  --pixel-inner-shadow: #707068;
+  --pixel-inner-dark: #404040;
+  --pixel-inner-mid: #8a8a82;
+  --pixel-inner-light: #ffffff;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(
+    .career-summary-card,
+    .career-list-item,
+    .career-board-column,
+    .career-board-card,
+    .career-detail-section,
+    .career-empty-box,
+    .career-attachment-item,
+    .money-overview-hero,
+    .money-summary-panel,
+    .money-budget-panel,
+    .money-chart-card,
+    .money-recent-panel,
+    .money-visual-panel,
+    .money-detail-card,
+    .money-list-card,
+    .money-wishlist-card,
+    .money-wishlist-add-card,
+    .money-recurring-row,
+    .money-category-row,
+    .money-transaction-row,
+    .journal-section,
+    .journal-summary-card,
+    .journal-score-strip-card,
+    .journal-task-item,
+    .journal-clip-item,
+    .journal-library-item,
+    .journal-empty-box,
+    .memo-list-panel,
+    .memo-workspace,
+    .memo-toolbar,
+    .memo-editor-toolbar,
+    .memo-note-item,
+    .mood-row,
+    .study10-summary-card,
+    .study10-date-control,
+    .study10-timer,
+    .study10-panel,
+    .study10-task-row,
+    .study10-note-panel,
+    .study10-empty,
+    .study10-subject-dialog
+  ) {
+  border-radius: 0 !important;
+  background: var(--pixel-inner-face) !important;
+  border-top: 2px solid var(--pixel-inner-light) !important;
+  border-left: 2px solid var(--pixel-inner-light) !important;
+  border-right: 2px solid var(--pixel-inner-dark) !important;
+  border-bottom: 2px solid var(--pixel-inner-dark) !important;
+  box-shadow:
+    inset 1px 1px 0 var(--pixel-inner-face-bright),
+    inset -1px -1px 0 var(--pixel-inner-mid) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transform: none !important;
+}
+
+/* Pixel Desk recessed fields
+   Text areas and editor surfaces are input wells, so they should read as inset
+   instead of raised controls. / 입력칸과 긴 작성 영역은 안쪽으로 파인 면으로 구분한다. */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(
+    .career-field input,
+    .career-field select,
+    .career-textarea,
+    .career-auto-textarea,
+    .career-cover-answer-textarea,
+    .career-cover-strategy-textarea,
+    .career-cover-question-input,
+    .career-cover-limit-field input,
+    .money-budget-editor,
+    .money-form input,
+    .money-form select,
+    .money-form textarea,
+    .journal-section textarea,
+    .journal-add-row input,
+    .journal-mood-select,
+    .memo-editor,
+    .memo-title-input,
+    .memo-save-input,
+    .memo-select,
+    .memo-font-select,
+    .memo-size-select,
+    .study10-estimate-input,
+    .study10-note-panel textarea,
+    .study10-subject-control input,
+    .study10-subject-dialog-field input
+  ) {
+  border-radius: 0 !important;
+  color: #111111 !important;
+  background: #f7f7ef !important;
+  border-top: 2px solid var(--pixel-inner-dark) !important;
+  border-left: 2px solid var(--pixel-inner-dark) !important;
+  border-right: 2px solid var(--pixel-inner-light) !important;
+  border-bottom: 2px solid var(--pixel-inner-light) !important;
+  box-shadow:
+    inset 1px 1px 0 var(--pixel-inner-mid),
+    inset -1px -1px 0 #dfdfd2 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Pixel Desk compact controls
+   Icon buttons, filter chips, and small selectors share one raised affordance.
+   Korean: 작은 버튼/필터/칩도 같은 입체 버튼 문법을 쓰게 해 들쑥날쑥함을 줄인다. */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(
+    .career-icon-button,
+    .career-small-button,
+    .career-danger-button,
+    .career-delete-button,
+    .career-filter-pill,
+    .career-view-toggle button,
+    .career-dday-pill,
+    .career-status-pill,
+    .money-icon-button,
+    .money-action-button,
+    .money-secondary-button,
+    .money-danger-button,
+    .money-submit-button,
+    .money-section-tab,
+    .money-pill,
+    .journal-date-nav button,
+    .journal-score-stepper button,
+    .journal-task-check,
+    .journal-task-delete-select,
+    .journal-task-delete-confirm,
+    .memo-tool-button,
+    .memo-mini-button,
+    .memo-compact-toggle,
+    .memo-list-close,
+    .memo-note-delete,
+    .memo-save-option,
+    .memo-color-chip,
+    .mood-reset-button,
+    .mood-dot,
+    .study10-icon-button,
+    .study10-today-button,
+    .study10-add-button,
+    .study10-subject-tool,
+    .study10-subject-add-tool,
+    .study10-timer-button,
+    .study10-task-check,
+    .study10-task-delete,
+    .study10-subject-dialog-apply,
+    .study10-subject-dialog-close
+  ) {
+  border-radius: 0 !important;
+  background: var(--pixel-inner-face-soft) !important;
+  border-top: 2px solid var(--pixel-inner-light) !important;
+  border-left: 2px solid var(--pixel-inner-light) !important;
+  border-right: 2px solid var(--pixel-inner-dark) !important;
+  border-bottom: 2px solid var(--pixel-inner-dark) !important;
+  box-shadow:
+    inset 1px 1px 0 #f5f5ec,
+    inset -1px -1px 0 var(--pixel-inner-mid) !important;
+  transform: none !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(
+    .career-filter-pill.is-active,
+    .career-view-toggle button.is-active,
+    .money-section-tab.is-active,
+    .memo-note-item.is-active,
+    .memo-save-option.is-active,
+    .mood-dot-active,
+    .study10-subject-tool.is-active,
+    .study10-icon-button.is-active,
+    .study10-today-button:active,
+    .study10-timer-button:active,
+    .study10-task-check.is-checked
+  ) {
+  background: #c8c8bc !important;
+  border-top-color: var(--pixel-inner-dark) !important;
+  border-left-color: var(--pixel-inner-dark) !important;
+  border-right-color: var(--pixel-inner-light) !important;
+  border-bottom-color: var(--pixel-inner-light) !important;
+  box-shadow:
+    inset 1px 1px 0 var(--pixel-inner-shadow),
+    inset -1px -1px 0 #eeeee4 !important;
+}
+
+/* Pixel Desk color surfaces
+   Keep user data color visible, but blend it into the same bevel material.
+   Korean: Study/Mood 색상은 죽이지 않고 Pixel 표면 안에 자연스럽게 섞는다. */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .study10-slot:not(.is-filled) {
+  border-radius: 0 !important;
+  background: #efefe4 !important;
+  border-top: 2px solid var(--pixel-inner-light) !important;
+  border-left: 2px solid var(--pixel-inner-light) !important;
+  border-right: 2px solid var(--pixel-inner-shadow) !important;
+  border-bottom: 2px solid var(--pixel-inner-shadow) !important;
+  box-shadow:
+    inset 1px 1px 0 #fafaf2,
+    inset -1px -1px 0 #a0a098 !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .study10-slot.is-filled {
+  border-radius: 0 !important;
+  border-top: 2px solid color-mix(in srgb, var(--study-subject-color) 24%, #ffffff 76%) !important;
+  border-left: 2px solid color-mix(in srgb, var(--study-subject-color) 24%, #ffffff 76%) !important;
+  border-right: 2px solid color-mix(in srgb, var(--study-subject-color) 42%, #555555 58%) !important;
+  border-bottom: 2px solid color-mix(in srgb, var(--study-subject-color) 42%, #555555 58%) !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--study-subject-color) 18%, #ffffff 82%),
+    inset -1px -1px 0 color-mix(in srgb, var(--study-subject-color) 44%, #888880 56%) !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .mood-row {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--mood-accent) 16%, #eeeee4 84%),
+      color-mix(in srgb, var(--mood-accent) 22%, #cfcfc4 78%)
+    ) !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .mood-dot-active {
+  background: var(--mood-accent) !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--mood-accent) 10%, #ffffff 90%),
+    inset -1px -1px 0 color-mix(in srgb, var(--mood-accent) 46%, #555555 54%) !important;
+}
