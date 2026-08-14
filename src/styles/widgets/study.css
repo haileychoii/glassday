@@ -1283,8 +1283,9 @@
 /* Pixel Desk planner color repair
    The OS-style reset above intentionally flattens Study panels, but filled
    timeline cells and selected subject chips still carry planner meaning.
-   Keep those semantic colors visible after the pixel material reset. /
-   10분 칸을 드래그해 채운 뒤에도 과목 색상이 지워지지 않도록 마지막에 복원한다. */
+   Pixel surfaces should use muted OS tints instead of raw pastel blocks, so
+   the timetable still reads as one window. / 10분 칸의 과목 의미는 유지하되
+   픽셀 회색 UI와 어우러지도록 원색을 낮춘 팔레트로 섞는다. */
 :where(
     html[data-theme="pixel-desk"],
     body[data-theme="pixel-desk"],
@@ -1297,9 +1298,15 @@
   )
   .study10-subject-tool.is-active {
   background:
-    color-mix(in srgb, var(--study-subject-color) 42%, #e8e8dc 58%) !important;
-  border-color: #404040 !important;
-  box-shadow: none !important;
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--study-subject-color) 26%, #f1eee0 74%),
+      color-mix(in srgb, var(--study-subject-color) 22%, #d8d8cc 78%)
+    ) !important;
+  border-color: color-mix(in srgb, var(--study-subject-color) 20%, #606060 80%) !important;
+  box-shadow:
+    inset 1px 1px 0 #f8f8ef,
+    inset -1px -1px 0 #8f8f86 !important;
 }
 
 :where(
@@ -1313,9 +1320,16 @@
     body.theme-pixel
   )
   .study10-slot.is-filled {
-  background: var(--study-subject-color) !important;
-  border-color: #404040 !important;
-  box-shadow: none !important;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--study-subject-color) 34%, #f2efdf 66%),
+      color-mix(in srgb, var(--study-subject-color) 30%, #d8d8cc 70%)
+    ) !important;
+  border-color: color-mix(in srgb, var(--study-subject-color) 24%, #505050 76%) !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--study-subject-color) 10%, #ffffff 90%),
+    inset -1px -1px 0 color-mix(in srgb, var(--study-subject-color) 18%, #8a8a82 82%) !important;
 }
 
 :where(
@@ -1329,8 +1343,12 @@
     body.theme-pixel
   )
   :is(.study10-subject-dot, .study10-task-color) {
-  background: var(--study-subject-color) !important;
+  background:
+    color-mix(in srgb, var(--study-subject-color) 72%, #d8d8cc 28%) !important;
   border-radius: 0 !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--study-subject-color) 10%, #ffffff 90%),
+    inset -1px -1px 0 color-mix(in srgb, var(--study-subject-color) 22%, #707068 78%) !important;
 }
 
 :where(
@@ -1345,7 +1363,9 @@
   )
   .study10-task-row {
   background:
-    color-mix(in srgb, var(--study-subject-color, #e8e8dc) 16%, #e8e8dc 84%) !important;
+    color-mix(in srgb, var(--study-subject-color, #e8e8dc) 12%, #e8e8dc 88%) !important;
+  border-color:
+    color-mix(in srgb, var(--study-subject-color, #606060) 14%, #606060 86%) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
