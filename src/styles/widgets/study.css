@@ -1280,6 +1280,74 @@
   backdrop-filter: none;
 }
 
+/* Pixel Desk planner color repair
+   The OS-style reset above intentionally flattens Study panels, but filled
+   timeline cells and selected subject chips still carry planner meaning.
+   Keep those semantic colors visible after the pixel material reset. /
+   10분 칸을 드래그해 채운 뒤에도 과목 색상이 지워지지 않도록 마지막에 복원한다. */
+:where(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .study10-subject-tool.is-active {
+  background:
+    color-mix(in srgb, var(--study-subject-color) 42%, #e8e8dc 58%) !important;
+  border-color: #404040 !important;
+  box-shadow: none !important;
+}
+
+:where(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .study10-slot.is-filled {
+  background: var(--study-subject-color) !important;
+  border-color: #404040 !important;
+  box-shadow: none !important;
+}
+
+:where(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  :is(.study10-subject-dot, .study10-task-color) {
+  background: var(--study-subject-color) !important;
+  border-radius: 0 !important;
+}
+
+:where(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .study10-task-row {
+  background:
+    color-mix(in srgb, var(--study-subject-color, #e8e8dc) 16%, #e8e8dc 84%) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .study10-progress span,
   .study10-subject-tool,

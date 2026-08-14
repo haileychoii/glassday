@@ -172,11 +172,13 @@ html.theme-pixel .mood-row,
 body.theme-pixel .mood-row {
   padding: 5px 7px;
   border-radius: 0;
-  background: #e8e8dc;
-  border-top: 1px solid #ffffff;
-  border-left: 1px solid #ffffff;
-  border-right: 1px solid #606060;
-  border-bottom: 1px solid #606060;
+  /* Pixel rows use the same flat panel grammar as Study and Memo internals.
+     The subtle metric tint keeps Mood useful without mixing raised bevels
+     with flat borders. / Mood도 동일한 1px 평면 패널 위에 지표색만 얹는다. */
+  background:
+    color-mix(in srgb, var(--mood-accent) 18%, #e8e8dc 82%) !important;
+  border: 1px solid #606060 !important;
+  box-shadow: none !important;
 }
 
 html[data-theme="pixel-desk"] .mood-dot,
@@ -185,7 +187,18 @@ html.theme-pixel-desk .mood-dot,
 body.theme-pixel-desk .mood-dot,
 html.theme-pixel .mood-dot,
 body.theme-pixel .mood-dot {
-  background: #b8b8b0;
+  background: color-mix(in srgb, var(--mood-accent) 20%, #b8b8b0 80%);
+  border-radius: 0;
+}
+
+html[data-theme="pixel-desk"] .mood-dot-active,
+body[data-theme="pixel-desk"] .mood-dot-active,
+html.theme-pixel-desk .mood-dot-active,
+body.theme-pixel-desk .mood-dot-active,
+html.theme-pixel .mood-dot-active,
+body.theme-pixel .mood-dot-active {
+  background: var(--mood-accent) !important;
+  box-shadow: none !important;
 }
 
 html[data-theme="mac-core"] .mood-row,

@@ -2582,6 +2582,104 @@ body.theme-glass-dark
   border-radius: 0 !important;
 }
 
+/* Pixel Desk memo surface normalization
+   Memo has list, toolbar, and editor subframes from several interaction modes.
+   In Pixel Desk they should all use the same flat 1px panel language, while
+   the memo paper color remains note-owned. / 메모 내부 프레임을 평면 픽셀 패널로
+   통일하고, 실제 종이 색상은 각 메모 데이터가 계속 담당한다. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .memo-widget
+  :is(
+    .memo-list-panel,
+    .memo-workspace,
+    .memo-toolbar,
+    .memo-editor-toolbar,
+    .memo-note-item,
+    .memo-select,
+    .memo-tool-button,
+    .memo-mini-button,
+    .memo-compact-toggle,
+    .memo-list-close,
+    .memo-note-delete
+  ) {
+  border-radius: 0 !important;
+  border: 1px solid #606060 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .memo-widget
+  :is(.memo-list-panel, .memo-workspace, .memo-toolbar, .memo-editor-toolbar) {
+  background: #d8d8cc !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .memo-widget
+  :is(.memo-note-item, .memo-select, .memo-tool-button, .memo-mini-button, .memo-compact-toggle, .memo-list-close, .memo-note-delete) {
+  background: #e8e8dc !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .memo-widget
+  .memo-note-item.is-active {
+  background:
+    color-mix(in srgb, var(--memo-note-surface-active, #fff1a8) 34%, #e8e8dc 66%) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .memo-widget
+  :is(.memo-color-chip, .memo-note-color, .memo-note-color-chip, .memo-note-accent, .memo-note-color-dot) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
 /* =========================================================
    31. FLOATING WINDOW READABILITY GUARD
    Floating memo windows should feel glassy, but the dashboard behind them
