@@ -116,24 +116,6 @@ const getMemoPreview = (memo: MemoNotePreview) => {
   return plain || "No memo content yet.";
 };
 
-const readPinnedMemos = (): MemoNotePreview[] => {
-  try {
-    const rawV2 = localStorage.getItem("glassday.memo.notes.v2");
-    const rawV1 = localStorage.getItem("glassday.memo.notes.v1");
-    const raw = rawV2 || rawV1;
-
-    if (!raw) return [];
-
-    const parsed = JSON.parse(raw) as MemoNotePreview[];
-
-    return parsed
-      .filter((memo) => memo.pinned)
-      .sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0));
-  } catch {
-    return [];
-  }
-};
-
 /* Today Focus is a cross-widget summary surface.
    Each block here should either summarize local state or deep-link the user
    into the owning widget (calendar, career, memo). */
@@ -147,6 +129,14 @@ export const TodayFocusWidget = () => {
   const { value: focusTasks, setValue: setFocusTasks } = useLocalStorage<
     FocusTask[]
   >("glassday.todayFocus.tasks.v1", defaultFocusTasks);
+  const { value: memoNotesV2 } = useLocalStorage<MemoNotePreview[]>(
+    "glassday.memo.notes.v2",
+    []
+  );
+  const { value: memoNotesV1 } = useLocalStorage<MemoNotePreview[]>(
+    "glassday.memo.notes.v1",
+    []
+  );
 
   const todayEvents = useMemo(() => {
     return calendarEvents
@@ -173,7 +163,18 @@ export const TodayFocusWidget = () => {
       .slice(0, 4);
   }, [careerApplications, today]);
 
-  const pinnedMemos = useMemo(() => readPinnedMemos().slice(0, 2), []);
+  const pinnedMemos = useMemo(() => {
+    /* Live pinned memo reader:
+       useLocalStorage subscribes to the same storage event bridge used by
+       MemoWidget and CloudSync. Pin/unpin changes therefore refresh Today
+       Focus without a reload. / 메모 pin 변경이 즉시 Today Focus에 반영된다. */
+    const source = memoNotesV2.length > 0 ? memoNotesV2 : memoNotesV1;
+
+    return source
+      .filter((memo) => memo.pinned)
+      .sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0))
+      .slice(0, 2);
+  }, [memoNotesV1, memoNotesV2]);
 
   const completedTasks = focusTasks.filter((task) => task.done).length;
   const taskProgress =

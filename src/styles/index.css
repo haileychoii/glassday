@@ -24,6 +24,7 @@
 @import "./controls.css";
 @import "./dashboard-grid.css";
 @import "./overlays.css";
+@import "./command.css";
 
 /* 3. Theme palettes and cross-theme surface variables */
 @import "./themes/pastel.css";

@@ -31,10 +31,13 @@
 import { useEffect, useState } from "react";
 
 import { AppShell } from "./components/layout/AppShell";
+import { CommandPalette } from "./components/command/CommandPalette";
 import { DashboardGrid } from "./components/grid/DashboardGrid";
 import { DashboardDataProvider } from "./context/DashboardDataContext";
 import { CloudSyncProvider } from "./context/CloudSyncContext";
+import { QuickCapture } from "./components/quick-capture/QuickCapture";
 import { SettingsModal } from "./components/settings/SettingsModal";
+import { GlobalSyncIndicator } from "./components/sync/GlobalSyncIndicator";
 import {
   DASHBOARD_LAYOUT_MODE_KEY,
   DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
@@ -72,6 +75,9 @@ const readLayoutModeFromUrl = (): DashboardLayoutMode | null => {
 function App() {
   const [editMode, setEditMode] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [quickCaptureOpen, setQuickCaptureOpen] = useState(false);
+  const [captureStatus, setCaptureStatus] = useState("");
   const [layoutMode, setLayoutMode] = useState<DashboardLayoutMode>(() => {
     if (typeof window === "undefined") return "wide";
 
@@ -145,6 +151,45 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    /* Keyboard command hub:
+       Ctrl/Cmd+K opens navigation and search. Ctrl/Cmd+Shift+Space and
+       Ctrl/Cmd+N open Quick Capture. Keep this at the app root so every
+       workspace shares the same desktop-like shortcuts. / 앱 어디서든 같은
+       단축키가 동작하도록 루트에서만 처리한다. */
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const hasCommandModifier = event.metaKey || event.ctrlKey;
+      if (!hasCommandModifier) return;
+
+      const target = event.target as HTMLElement | null;
+      const isTyping =
+        target?.tagName === "INPUT" ||
+        target?.tagName === "TEXTAREA" ||
+        target?.isContentEditable;
+
+      if (event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setCommandPaletteOpen(true);
+        return;
+      }
+
+      if ((event.shiftKey && event.code === "Space") || event.key.toLowerCase() === "n") {
+        if (isTyping && event.key.toLowerCase() === "n") return;
+
+        event.preventDefault();
+        setQuickCaptureOpen(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
     const handleOpenWidget = (event: Event) => {
       const customEvent = event as CustomEvent<OpenWidgetDetail>;
       const detail = customEvent.detail;
@@ -211,6 +256,38 @@ function App() {
           open={settingsOpen}
           onClose={() => setSettingsOpen(false)}
         />
+
+        <CommandPalette
+          open={commandPaletteOpen}
+          editMode={editMode}
+          layoutMode={layoutMode}
+          tabs={tabs}
+          activeTabId={activeTabId}
+          onClose={() => setCommandPaletteOpen(false)}
+          onOpenSettings={() => setSettingsOpen(true)}
+          onOpenQuickCapture={() => setQuickCaptureOpen(true)}
+          onToggleEditMode={() => setEditMode((prev) => !prev)}
+          onSelectTab={setActiveTabId}
+          onChangeLayoutMode={setLayoutMode}
+        />
+
+        <QuickCapture
+          open={quickCaptureOpen}
+          onClose={() => setQuickCaptureOpen(false)}
+          onCaptured={setCaptureStatus}
+        />
+
+        <GlobalSyncIndicator />
+
+        {captureStatus && (
+          <div
+            className="quick-capture-toast"
+            role="status"
+            onAnimationEnd={() => setCaptureStatus("")}
+          >
+            {captureStatus}
+          </div>
+        )}
       </DashboardDataProvider>
     </CloudSyncProvider>
   );
