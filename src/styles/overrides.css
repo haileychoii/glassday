@@ -1701,8 +1701,9 @@ body,
 }
 
 /* Pixel Desk color surfaces
-   Keep user data color visible, but blend it into the same bevel material.
-   Korean: Study/Mood 색상은 죽이지 않고 Pixel 표면 안에 자연스럽게 섞는다. */
+   Keep user data color legible and distinct while retaining the bevel frame.
+   Korean: Study/Mood 색상은 베이지에 묻히지 않게 충분히 살리고,
+   입체 테두리만 Pixel 표면으로 맞춘다. */
 :where(
   html[data-theme="pixel-desk"],
   body[data-theme="pixel-desk"],
@@ -1737,13 +1738,83 @@ body,
 )
   .study10-slot.is-filled {
   border-radius: 0 !important;
-  border-top: 2px solid color-mix(in srgb, var(--study-subject-color) 24%, #ffffff 76%) !important;
-  border-left: 2px solid color-mix(in srgb, var(--study-subject-color) 24%, #ffffff 76%) !important;
-  border-right: 2px solid color-mix(in srgb, var(--study-subject-color) 42%, #555555 58%) !important;
-  border-bottom: 2px solid color-mix(in srgb, var(--study-subject-color) 42%, #555555 58%) !important;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--study-subject-color) 78%, #fff7de 22%),
+      color-mix(in srgb, var(--study-subject-color) 68%, #cfcfc4 32%)
+    ) !important;
+  border-top: 2px solid color-mix(in srgb, var(--study-subject-color) 28%, #ffffff 72%) !important;
+  border-left: 2px solid color-mix(in srgb, var(--study-subject-color) 28%, #ffffff 72%) !important;
+  border-right: 2px solid color-mix(in srgb, var(--study-subject-color) 56%, #404040 44%) !important;
+  border-bottom: 2px solid color-mix(in srgb, var(--study-subject-color) 56%, #404040 44%) !important;
   box-shadow:
-    inset 1px 1px 0 color-mix(in srgb, var(--study-subject-color) 18%, #ffffff 82%),
-    inset -1px -1px 0 color-mix(in srgb, var(--study-subject-color) 44%, #888880 56%) !important;
+    inset 1px 1px 0 color-mix(in srgb, var(--study-subject-color) 28%, #ffffff 72%),
+    inset -1px -1px 0 color-mix(in srgb, var(--study-subject-color) 62%, #707068 38%) !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .study10-subject-tool.is-active {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--study-subject-color) 54%, #fff7de 46%),
+      color-mix(in srgb, var(--study-subject-color) 42%, #d8d8cc 58%)
+    ) !important;
+  border-top-color: color-mix(in srgb, var(--study-subject-color) 18%, #ffffff 82%) !important;
+  border-left-color: color-mix(in srgb, var(--study-subject-color) 18%, #ffffff 82%) !important;
+  border-right-color: color-mix(in srgb, var(--study-subject-color) 48%, #404040 52%) !important;
+  border-bottom-color: color-mix(in srgb, var(--study-subject-color) 48%, #404040 52%) !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .study10-task-row {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--study-subject-color, #d8d8cc) 34%, #f3f0df 66%),
+      color-mix(in srgb, var(--study-subject-color, #d8d8cc) 24%, #d8d8cc 76%)
+    ) !important;
+  border-top-color: color-mix(in srgb, var(--study-subject-color, #ffffff) 16%, #ffffff 84%) !important;
+  border-left-color: color-mix(in srgb, var(--study-subject-color, #ffffff) 16%, #ffffff 84%) !important;
+  border-right-color: color-mix(in srgb, var(--study-subject-color, #404040) 32%, #404040 68%) !important;
+  border-bottom-color: color-mix(in srgb, var(--study-subject-color, #404040) 32%, #404040 68%) !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(.study10-subject-dot, .study10-task-color) {
+  background: var(--study-subject-color) !important;
+  border-radius: 0 !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--study-subject-color) 16%, #ffffff 84%),
+    inset -1px -1px 0 color-mix(in srgb, var(--study-subject-color) 64%, #505050 36%) !important;
 }
 
 :where(
@@ -1760,9 +1831,30 @@ body,
   background:
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--mood-accent) 16%, #eeeee4 84%),
-      color-mix(in srgb, var(--mood-accent) 22%, #cfcfc4 78%)
+      color-mix(in srgb, var(--mood-accent) 44%, #f1eee0 56%),
+      color-mix(in srgb, var(--mood-accent) 34%, #cfcfc4 66%)
     ) !important;
+  border-top-color: color-mix(in srgb, var(--mood-accent) 14%, #ffffff 86%) !important;
+  border-left-color: color-mix(in srgb, var(--mood-accent) 14%, #ffffff 86%) !important;
+  border-right-color: color-mix(in srgb, var(--mood-accent) 46%, #404040 54%) !important;
+  border-bottom-color: color-mix(in srgb, var(--mood-accent) 46%, #404040 54%) !important;
+}
+
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .mood-dot {
+  background: color-mix(in srgb, var(--mood-accent) 54%, #b8b8b0 46%) !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--mood-accent) 12%, #ffffff 88%),
+    inset -1px -1px 0 color-mix(in srgb, var(--mood-accent) 42%, #606060 58%) !important;
 }
 
 :where(
@@ -1778,6 +1870,6 @@ body,
   .mood-dot-active {
   background: var(--mood-accent) !important;
   box-shadow:
-    inset 1px 1px 0 color-mix(in srgb, var(--mood-accent) 10%, #ffffff 90%),
-    inset -1px -1px 0 color-mix(in srgb, var(--mood-accent) 46%, #555555 54%) !important;
+    inset 1px 1px 0 color-mix(in srgb, var(--mood-accent) 18%, #ffffff 82%),
+    inset -1px -1px 0 color-mix(in srgb, var(--mood-accent) 70%, #404040 30%) !important;
 }
