@@ -2482,3 +2482,259 @@ body,
     0 0 0 1px rgb(255 255 255 / 0.72),
     0 3px 8px -6px currentColor !important;
 }
+
+/* Pixel Desk final polish
+   This file loads after widget CSS, so Pixel-only corrections live here when
+   widget-level rules flatten the retro desktop material. / 위젯 CSS가 나중에
+   테두리만 남기는 경우, Pixel 테마에서만 마지막에 입체감을 되살린다. */
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .dashboard-grid-item
+  > .glass-card
+  > .widget-frame__header {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .dashboard-grid-item
+  > .glass-card
+  > .widget-frame__header
+  > .widget-frame__title-group {
+  flex: 1 1 auto !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  margin-right: auto !important;
+  text-align: left !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .dashboard-grid-item
+  > .glass-card
+  > .widget-frame__header
+  :is(.widget-frame__copy, .glass-card-copy, .widget-card-copy) {
+  align-items: flex-start !important;
+  justify-content: center !important;
+  text-align: left !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .dashboard-grid-item
+  > .glass-card
+  > .widget-frame__header
+  :is(.widget-frame__title, .glass-card-title, .widget-card-title),
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .dashboard-grid-item
+  > .glass-card
+  > .widget-frame__header
+  :is(.widget-frame__subtitle, .glass-card-subtitle, .widget-card-subtitle) {
+  width: 100% !important;
+  text-align: left !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  :is(
+    .journal-summary-card,
+    .journal-section,
+    .journal-task,
+    .journal-task-empty,
+    .alert-item,
+    .alert-summary-card,
+    .today-focus-hero,
+    .today-focus-section,
+    .today-focus-task,
+    .today-focus-mini-item,
+    .today-focus-career-item,
+    .today-focus-memo,
+    .today-focus-empty,
+    .calendar-event-item,
+    .calendar-mini-card,
+    .calendar-month-day-cell,
+    .calendar-week-timeline,
+    .career-card,
+    .career-list-item,
+    .career-summary-card,
+    .money-summary-panel,
+    .money-budget-panel,
+    .money-visual-panel,
+    .money-recent-panel,
+    .money-detail-card,
+    .money-transaction-row,
+    .memo-list-panel,
+    .memo-workspace,
+    .memo-note-item,
+    .mood-row,
+    .health-metric-card,
+    .health-program-card,
+    .study-hero,
+    .study-subject-card,
+    .study-input-panel,
+    .study-goal-panel,
+    .study-week-panel,
+    .study-task-panel,
+    .study-record-list-panel,
+    .study-task,
+    .study-record-item,
+    .study-empty
+  ) {
+  border-radius: 0 !important;
+  background:
+    linear-gradient(180deg, #eeeeea 0%, #d8d8cc 100%) !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #5f5f5f !important;
+  border-bottom: 2px solid #5f5f5f !important;
+  box-shadow:
+    inset 1px 1px 0 #f7f7f7,
+    inset -1px -1px 0 #9b9b94,
+    1px 1px 0 #b0b0aa !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  :is(
+    input,
+    textarea,
+    select,
+    .calendar-date-input,
+    .memo-editor,
+    .calendar-view-toggle,
+    .money-budget-track,
+    .money-store-track,
+    .study10-timeline-grid,
+    .today-focus-ring
+  ) {
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow:
+    inset 1px 1px 0 #808080,
+    inset -1px -1px 0 #f7f7f7 !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  :is(
+    button,
+    .glass-button,
+    .calendar-nav-button,
+    .calendar-view-button,
+    .money-pill,
+    .study10-subject-tool,
+    .study10-tool-button,
+    .journal-date-button,
+    .journal-score-stepper button,
+    .mood-step-button
+  ) {
+  border-radius: 0 !important;
+  background:
+    linear-gradient(180deg, #eeeeea 0%, #c0c0c0 100%) !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    inset 1px 1px 0 #dfdfdf,
+    inset -1px -1px 0 #808080 !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  :is(
+    button:active,
+    .glass-button:active,
+    .calendar-view-button.is-active,
+    .money-pill.is-active,
+    .study10-subject-tool.is-active
+  ) {
+  border-top-color: #404040 !important;
+  border-left-color: #404040 !important;
+  border-right-color: #ffffff !important;
+  border-bottom-color: #ffffff !important;
+  box-shadow:
+    inset 1px 1px 0 #808080,
+    inset -1px -1px 0 #dfdfdf !important;
+}

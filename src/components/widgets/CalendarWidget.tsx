@@ -66,6 +66,19 @@ const formatHeaderLabel = (selectedDate: string, view: CalendarView) => {
   return selectedDate.slice(0, 7);
 };
 
+const formatCalendarSubtitle = (selectedDate: string) => {
+  /* Header date label:
+     Keep the dashboard subtitle compact for Pixel Desk and other dense themes.
+     Korean: 위젯 타이틀 아래가 비지 않도록 날짜와 3글자 영문 요일을 표시한다. */
+  const weekday = new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+  })
+    .format(new Date(`${selectedDate}T00:00:00`))
+    .toUpperCase();
+
+  return `${selectedDate} · ${weekday.slice(0, 3)}`;
+};
+
 type DashboardDataWithCareerDetail = ReturnType<typeof useDashboardData> & {
   openCareerDetail?: (id: string) => void;
 };
@@ -228,7 +241,7 @@ export const CalendarWidget = () => {
       <GlassCard
         className="calendar-widget calendar-widget-card"
         title="Calendar"
-        subtitle="Manual events + career application windows"
+        subtitle={formatCalendarSubtitle(selectedDate)}
         // Keep the calendar title/subtitle explicit so theme-specific overrides
         // cannot accidentally wash out the header when the widget gets narrow.
         titleStyle={{ color: "hsl(var(--foreground) / 0.96)" }}
