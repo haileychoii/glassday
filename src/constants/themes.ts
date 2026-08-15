@@ -117,6 +117,14 @@ export const applyTheme = (theme: ThemeId) => {
   body.classList.remove("theme-glass");
   root.classList.remove("theme-glass-dark");
   body.classList.remove("theme-glass-dark");
+  // Legacy pixel aliases
+  // Old builds used these compatibility classes. If they stay on the root,
+  // Pixel CSS can still match after selecting Mac Core. / 이전 Pixel alias가
+  // 남으면 Mac Core에서도 파란 Pixel 타이틀바가 계속 보이므로 함께 제거한다.
+  root.classList.remove("theme-pixel");
+  body.classList.remove("theme-pixel");
+  root.classList.remove("pixel-desk");
+  body.classList.remove("pixel-desk");
 
   root.classList.add(`theme-${theme}`);
   body.classList.add(`theme-${theme}`);
