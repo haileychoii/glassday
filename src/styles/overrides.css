@@ -1478,6 +1478,8 @@ body,
   --pixel-inner-dark: #404040;
   --pixel-inner-mid: #8a8a82;
   --pixel-inner-light: #ffffff;
+  --pixel-panel-edge: #989890;
+  --pixel-panel-edge-soft: #b8b8ae;
 }
 
 :where(
@@ -1545,6 +1547,68 @@ body,
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   transform: none !important;
+}
+
+/* Pixel Desk passive panels
+   Large content cards should not look like black-outlined boxes. Keep the
+   bevel, but use softer gray edges so Career and Money cards sit inside the
+   window instead of fighting the title bars. / 큰 정보 패널의 검정 외곽선을
+   중간 회색 베벨로 낮춰 내부 요소가 더 자연스럽게 어우러지게 한다. */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(
+    .career-list-item,
+    .career-board-card,
+    .career-board-column,
+    .career-detail-section,
+    .career-empty-box,
+    .career-attachment-item,
+    .money-overview-hero,
+    .money-summary-panel,
+    .money-budget-panel,
+    .money-chart-card,
+    .money-recent-panel,
+    .money-visual-panel,
+    .money-detail-card,
+    .money-list-card,
+    .money-wishlist-card,
+    .money-wishlist-add-card,
+    .money-recurring-row,
+    .money-category-row,
+    .money-transaction-row,
+    .journal-section,
+    .journal-summary-card,
+    .journal-score-strip-card,
+    .journal-task-item,
+    .journal-clip-item,
+    .journal-library-item,
+    .journal-empty-box,
+    .memo-list-panel,
+    .memo-workspace,
+    .memo-note-item,
+    .study10-summary-card,
+    .study10-date-control,
+    .study10-timer,
+    .study10-panel,
+    .study10-note-panel,
+    .study10-empty
+  ) {
+  background: #d7d7cf !important;
+  border-top: 1px solid #f7f7ef !important;
+  border-left: 1px solid #f7f7ef !important;
+  border-right: 1px solid var(--pixel-panel-edge) !important;
+  border-bottom: 1px solid var(--pixel-panel-edge) !important;
+  box-shadow:
+    inset 1px 1px 0 #e9e9df,
+    inset -1px -1px 0 var(--pixel-panel-edge-soft) !important;
 }
 
 /* Pixel Desk recessed fields
@@ -1665,6 +1729,30 @@ body,
     inset 1px 1px 0 #f5f5ec,
     inset -1px -1px 0 var(--pixel-inner-mid) !important;
   transform: none !important;
+}
+
+/* Pixel Desk metadata chips
+   Status tags are information, not primary controls, so they use a lighter
+   bevel than action buttons. / 상태/금액 칩은 클릭 버튼보다 덜 검게 보여야 한다. */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(.career-dday-pill, .career-status-pill, .money-pill) {
+  background: #e2e2d8 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #a4a49a !important;
+  border-bottom: 1px solid #a4a49a !important;
+  box-shadow:
+    inset 1px 1px 0 #f2f2e8,
+    inset -1px -1px 0 #c0c0b6 !important;
 }
 
 :where(
