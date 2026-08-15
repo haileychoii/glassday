@@ -366,14 +366,107 @@ export const defaultMoneyData: MoneyData = {
   updatedAt: getIsoNow(),
 };
 
-const normalizeTransaction = (transaction: MoneyTransaction): MoneyTransaction => ({
-  ...transaction,
-  amount: Number.isFinite(transaction.amount) ? transaction.amount : 0,
-  category: isMoneyCategory(transaction.category) ? transaction.category : "Other",
-  expenseType: transaction.expenseType ?? "one-time",
-  createdAt: transaction.createdAt ?? getIsoNow(),
-  updatedAt: transaction.updatedAt ?? transaction.createdAt ?? getIsoNow(),
-});
+const getTransactionRecoverySeed = (
+  transaction: MoneyTransaction,
+  index: number
+) =>
+  [
+    index,
+    transaction.name,
+    transaction.amount,
+    transaction.date,
+    transaction.category,
+    transaction.subcategory ?? "",
+    transaction.store ?? "",
+    transaction.channel ?? "",
+    transaction.expenseType ?? "",
+    transaction.note ?? "",
+    transaction.createdAt ?? "",
+  ].join("\u001f");
+
+const createStableRecoveryId = (
+  transaction: MoneyTransaction,
+  index: number
+) => {
+  const seed = getTransactionRecoverySeed(transaction, index);
+  let hash = 0;
+
+  for (let charIndex = 0; charIndex < seed.length; charIndex += 1) {
+    hash = (hash * 31 + seed.charCodeAt(charIndex)) | 0;
+  }
+
+  return `money-transaction-recovered-${index}-${Math.abs(hash).toString(36)}`;
+};
+
+const getTransactionDuplicateKey = (transaction: MoneyTransaction) =>
+  [
+    transaction.id ?? "",
+    transaction.name,
+    transaction.amount,
+    transaction.date,
+    transaction.category,
+    transaction.subcategory ?? "",
+    transaction.store ?? "",
+    transaction.channel ?? "",
+    transaction.expenseType ?? "",
+    transaction.note ?? "",
+    transaction.wishlistItemId ?? "",
+    transaction.createdAt ?? "",
+  ].join("\u001f");
+
+const normalizeTransaction = (
+  transaction: MoneyTransaction,
+  index: number,
+  usedIds: Set<string>
+): MoneyTransaction => {
+  const rawId =
+    typeof transaction.id === "string" ? transaction.id.trim() : "";
+  let id = rawId;
+
+  /* Storage repair:
+     Older or repeated writes can leave rows without an id or with the same id.
+     Each visible row must own one stable id so deleting one row cannot delete
+     every duplicated-looking row. / id가 비거나 겹쳐도 삭제 기준은 항상 한
+     행만 가리키도록 복구 id를 붙인다. */
+  if (!id || usedIds.has(id)) {
+    id = createStableRecoveryId(transaction, index);
+  }
+
+  while (usedIds.has(id)) {
+    id = `${id}-next`;
+  }
+
+  usedIds.add(id);
+
+  return {
+    ...transaction,
+    id,
+    amount: Number.isFinite(transaction.amount) ? transaction.amount : 0,
+    category: isMoneyCategory(transaction.category) ? transaction.category : "Other",
+    expenseType: transaction.expenseType ?? "one-time",
+    createdAt: transaction.createdAt ?? getIsoNow(),
+    updatedAt: transaction.updatedAt ?? transaction.createdAt ?? getIsoNow(),
+  };
+};
+
+const normalizeTransactions = (
+  transactions: MoneyTransaction[]
+): MoneyTransaction[] => {
+  const seenDuplicateRows = new Set<string>();
+  const usedIds = new Set<string>();
+
+  return transactions.reduce<MoneyTransaction[]>((items, transaction, index) => {
+    const duplicateKey = getTransactionDuplicateKey(transaction);
+
+    if (seenDuplicateRows.has(duplicateKey)) {
+      return items;
+    }
+
+    seenDuplicateRows.add(duplicateKey);
+    items.push(normalizeTransaction(transaction, index, usedIds));
+    return items;
+  }, []);
+};
 
 const normalizeWishlistItem = (item: MoneyWishlistItem): MoneyWishlistItem => ({
   ...item,
@@ -406,7 +499,7 @@ export const normalizeMoneyData = (value: MoneyStorageShape): MoneyData => {
     version: 2,
     monthlyBudget: budget,
     transactions: Array.isArray(value.transactions)
-      ? value.transactions.map(normalizeTransaction)
+      ? normalizeTransactions(value.transactions)
       : defaultMoneyData.transactions,
     wishlist: Array.isArray(value.wishlist)
       ? value.wishlist.map(normalizeWishlistItem)

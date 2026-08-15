@@ -1,14 +1,14 @@
 
 /* ============================================================
-   TAURI ONLY — BACKGROUNDLESS GLASS DARK
+   TAURI ONLY — NEUTRAL GLASS DARK
    ------------------------------------------------------------
    WEB / Vercel
    - 기존 Glass Dark 배경과 디자인 그대로 유지
 
    TAURI
-   - 앱 전체를 받치는 dark background 제거
-   - 실제 Windows Desktop이 뒤로 보임
-   - Sidebar / Topbar / Widget만 smoked glass로 유지
+   - 검은색/차콜 기반의 투명 glass material
+   - 실제 Windows Desktop이 뒤로 보이되 텍스트는 blur로 흐려짐
+   - Aurora처럼 남색/보라색 tint를 넣지 않음
    ============================================================ */
 
 
@@ -16,7 +16,7 @@
    1. TAURI DARK MATERIAL TOKENS
 
    기존 Glass Dark는 내부 panel/control이 상당히 불투명하다.
-   Tauri에서만 보다 투명한 smoked-glass 값으로 재정의한다.
+   Tauri에서는 색을 검정 계열로 제한하고 opacity/blur로만 깊이를 만든다.
 ============================================================ */
 
 html.desktop-transparent[data-theme="glass-dark"],
@@ -24,12 +24,12 @@ body.desktop-transparent[data-theme="glass-dark"] {
   --gd-dark-shell-bg:
     linear-gradient(
       180deg,
-      rgba(24, 30, 48, 0.62),
-      rgba(10, 14, 26, 0.48)
+      rgba(16, 16, 18, 0.64),
+      rgba(0, 0, 0, 0.50)
     );
 
   --gd-dark-shell-border:
-    rgba(210, 224, 255, 0.25);
+    rgba(255, 255, 255, 0.18);
 
   --gd-dark-shell-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
@@ -41,12 +41,12 @@ body.desktop-transparent[data-theme="glass-dark"] {
   --gd-dark-card-bg:
     linear-gradient(
       145deg,
-      rgba(35, 42, 64, 0.66),
-      rgba(13, 18, 32, 0.48)
+      rgba(28, 28, 30, 0.68),
+      rgba(4, 4, 6, 0.48)
     );
 
   --gd-dark-card-border:
-    rgba(214, 226, 255, 0.23);
+    rgba(255, 255, 255, 0.17);
 
   --gd-dark-card-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.13),
@@ -57,12 +57,12 @@ body.desktop-transparent[data-theme="glass-dark"] {
   --gd-dark-panel-bg:
     linear-gradient(
       145deg,
-      rgba(50, 58, 84, 0.58),
-      rgba(18, 24, 40, 0.42)
+      rgba(42, 42, 44, 0.58),
+      rgba(8, 8, 10, 0.42)
     );
 
   --gd-dark-panel-border:
-    rgba(210, 224, 255, 0.22);
+    rgba(255, 255, 255, 0.16);
 
   --gd-dark-panel-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
@@ -73,24 +73,24 @@ body.desktop-transparent[data-theme="glass-dark"] {
   --gd-dark-control-bg:
     linear-gradient(
       145deg,
-      rgba(60, 70, 100, 0.58),
-      rgba(22, 28, 44, 0.42)
+      rgba(54, 54, 56, 0.58),
+      rgba(10, 10, 12, 0.42)
     );
 
   --gd-dark-control-border:
-    rgba(214, 226, 255, 0.23);
+    rgba(255, 255, 255, 0.17);
 
 
   /* Shared widget aliases가 존재하는 경우에도 Tauri Glass로 통일 */
   --gd-widget-panel-bg:
     linear-gradient(
       145deg,
-      rgba(50, 58, 84, 0.58),
-      rgba(18, 24, 40, 0.42)
+      rgba(42, 42, 44, 0.58),
+      rgba(8, 8, 10, 0.42)
     );
 
   --gd-widget-panel-border:
-    rgba(210, 224, 255, 0.22);
+    rgba(255, 255, 255, 0.16);
 
   --gd-widget-panel-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
@@ -167,18 +167,16 @@ body.desktop-transparent[data-theme="glass-dark"]
      smoked-glass surface. / 배경은 보이되 뒤의 글자가 그대로 읽히지 않게
      앱 전체에 색과 blur가 있는 glass 막을 둔다. */
   background:
-    radial-gradient(circle at 16% 8%, rgba(126, 168, 255, 0.16), transparent 34%),
-    radial-gradient(circle at 86% 14%, rgba(218, 155, 255, 0.12), transparent 30%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%),
     var(--gd-dark-shell-bg) !important;
-  background-color: rgba(12, 16, 28, 0.54) !important;
+  background-color: rgba(0, 0, 0, 0.52) !important;
   background-image:
-    radial-gradient(circle at 16% 8%, rgba(126, 168, 255, 0.16), transparent 34%),
-    radial-gradient(circle at 86% 14%, rgba(218, 155, 255, 0.12), transparent 30%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%),
     var(--gd-dark-shell-bg) !important;
 
   /*
-   * 전체 shell을 한 장으로 blur하지 않는다.
-   * 그래야 커다란 검은 필름을 씌운 느낌이 사라진다.
+   * The shell owns one neutral black blur layer.
+   * Korean: 남색/보라 tint 없이 검정 유리 막만 만들어 뒤 배경 텍스트를 흐린다.
    */
   backdrop-filter:
     blur(36px)
@@ -191,7 +189,7 @@ body.desktop-transparent[data-theme="glass-dark"]
     brightness(0.9) !important;
 
   border-color:
-    rgba(190, 205, 245, 0.13) !important;
+    rgba(255, 255, 255, 0.13) !important;
 
   box-shadow:
     var(--gd-dark-shell-shadow) !important;
@@ -230,12 +228,12 @@ body.desktop-transparent[data-theme="glass-dark"] .sidebar {
   background:
     linear-gradient(
       180deg,
-      rgba(28, 36, 58, 0.72),
-      rgba(12, 16, 30, 0.58)
+      rgba(26, 26, 28, 0.72),
+      rgba(2, 2, 4, 0.58)
     ) !important;
 
   border-right:
-    1px solid rgba(190, 205, 245, 0.14) !important;
+    1px solid rgba(255, 255, 255, 0.12) !important;
 
   box-shadow:
     inset -1px 0 0 rgba(255, 255, 255, 0.025) !important;
@@ -261,12 +259,12 @@ body.desktop-transparent[data-theme="glass-dark"] .topbar {
   background:
     linear-gradient(
       180deg,
-      rgba(32, 40, 62, 0.72),
-      rgba(14, 18, 32, 0.54)
+      rgba(30, 30, 32, 0.72),
+      rgba(4, 4, 6, 0.54)
     ) !important;
 
   border:
-    1px solid rgba(190, 205, 245, 0.14) !important;
+    1px solid rgba(255, 255, 255, 0.12) !important;
 
   border-radius:
     20px 20px 0 0 !important;
@@ -296,12 +294,12 @@ body.desktop-transparent[data-theme="glass-dark"] .glass-card {
   background:
     linear-gradient(
       145deg,
-      rgba(35, 42, 64, 0.66),
-      rgba(13, 18, 32, 0.48)
+      rgba(28, 28, 30, 0.68),
+      rgba(4, 4, 6, 0.48)
     ) !important;
 
   border:
-    1px solid rgba(187, 202, 242, 0.17) !important;
+    1px solid rgba(255, 255, 255, 0.14) !important;
 
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.075),
@@ -358,12 +356,12 @@ body.desktop-transparent[data-theme="glass-dark"] .study-card {
   background:
     linear-gradient(
       145deg,
-      rgba(52, 61, 88, 0.58),
-      rgba(20, 26, 42, 0.42)
+      rgba(42, 42, 44, 0.58),
+      rgba(8, 8, 10, 0.42)
     ) !important;
 
   border-color:
-    rgba(187, 202, 239, 0.15) !important;
+    rgba(255, 255, 255, 0.13) !important;
 
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
@@ -497,12 +495,12 @@ body.desktop-transparent[data-theme="glass-dark"] select {
   background:
     linear-gradient(
       145deg,
-      rgba(56, 66, 94, 0.58),
-      rgba(20, 26, 42, 0.42)
+      rgba(48, 48, 50, 0.58),
+      rgba(8, 8, 10, 0.42)
     ) !important;
 
   border-color:
-    rgba(188, 202, 238, 0.18) !important;
+    rgba(255, 255, 255, 0.16) !important;
 
   backdrop-filter:
     blur(24px)
@@ -533,14 +531,13 @@ body.desktop-transparent[data-theme="glass-dark"]
   background:
     linear-gradient(
       135deg,
-      rgba(70, 85, 130, 0.50),
-      rgba(73, 105, 153, 0.31) 38%,
-      rgba(122, 82, 156, 0.29) 74%,
-      rgba(43, 54, 95, 0.48)
+      rgba(255, 255, 255, 0.16),
+      rgba(74, 74, 76, 0.24) 42%,
+      rgba(0, 0, 0, 0.34)
     ) !important;
 
   border-color:
-    rgba(169, 198, 255, 0.22) !important;
+    rgba(255, 255, 255, 0.2) !important;
 
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
@@ -560,12 +557,12 @@ body.desktop-transparent[data-theme="glass-dark"] .settings-modal-window {
   background:
     linear-gradient(
       145deg,
-      rgba(23, 28, 44, 0.60),
-      rgba(7, 11, 20, 0.42)
+      rgba(24, 24, 26, 0.66),
+      rgba(2, 2, 4, 0.46)
     ) !important;
 
   border-color:
-    rgba(185, 201, 241, 0.19) !important;
+    rgba(255, 255, 255, 0.17) !important;
 
   backdrop-filter:
     blur(28px)
@@ -585,12 +582,12 @@ body.desktop-transparent[data-theme="glass-dark"] .settings-theme-card {
   background:
     linear-gradient(
       145deg,
-      rgba(39, 46, 68, 0.40),
-      rgba(13, 17, 29, 0.24)
+      rgba(42, 42, 44, 0.46),
+      rgba(8, 8, 10, 0.28)
     ) !important;
 
   border-color:
-    rgba(180, 197, 235, 0.17) !important;
+    rgba(255, 255, 255, 0.15) !important;
 
   backdrop-filter:
     blur(18px)

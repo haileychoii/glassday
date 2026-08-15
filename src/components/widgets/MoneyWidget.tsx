@@ -25,7 +25,7 @@
  * - Overlay states: Wishlist Detail, Purchase Dialog, Add forms
  * ============================================================
  */
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { CSSProperties, FormEvent } from "react";
 import {
   CalendarDays,
@@ -477,6 +477,15 @@ export const MoneyWidget = () => {
   const [wishlistDraft, setWishlistDraft] = useState(createDefaultWishlistDraft);
   const [recurringDraft, setRecurringDraft] = useState(createDefaultRecurringDraft);
   const [purchaseDraft, setPurchaseDraft] = useState<PurchaseDraft | null>(null);
+  /* Expense submit guard:
+     Floating windows can receive fast Enter/click repeats before React paints the
+     reset form. Keep the guard local to Money so legitimate repeated purchases
+     can still be added after a short pause. / 같은 입력이 즉시 여러 번 저장되는
+     것을 막되, 나중에 같은 금액을 다시 쓰는 건 허용한다. */
+  const lastExpenseSubmitRef = useRef<{
+    signature: string;
+    submittedAt: number;
+  } | null>(null);
 
   const { value: storedMoney, setValue: setStoredMoney } =
     useLocalStorage<MoneyStorageShape>("glassday.money", defaultMoneyData);
@@ -592,7 +601,33 @@ export const MoneyWidget = () => {
     const amount = parseMoneyAmount(expenseDraft.amount);
     if (!expenseDraft.name.trim() || amount <= 0 || !expenseDraft.date) return;
 
-    const now = new Date().toISOString();
+    const submittedAt = Date.now();
+    const expenseSignature = [
+      expenseDraft.name.trim(),
+      amount,
+      expenseDraft.date,
+      expenseDraft.category,
+      expenseDraft.subcategory.trim(),
+      expenseDraft.store.trim() || "Other",
+      expenseDraft.channel,
+      expenseDraft.expenseType,
+      expenseDraft.note.trim(),
+    ].join("\u001f");
+    const lastSubmit = lastExpenseSubmitRef.current;
+
+    if (
+      lastSubmit?.signature === expenseSignature &&
+      submittedAt - lastSubmit.submittedAt < 1200
+    ) {
+      return;
+    }
+
+    lastExpenseSubmitRef.current = {
+      signature: expenseSignature,
+      submittedAt,
+    };
+
+    const now = new Date(submittedAt).toISOString();
     const transaction: MoneyTransaction = {
       id: createId("money-transaction"),
       name: expenseDraft.name.trim(),
@@ -608,10 +643,34 @@ export const MoneyWidget = () => {
       updatedAt: now,
     };
 
-    setMoneyData((prev) => ({
-      ...prev,
-      transactions: [transaction, ...prev.transactions],
-    }));
+    setMoneyData((prev) => {
+      /* Storage-level duplicate guard:
+         If a submit event is replayed while localStorage/cloud listeners are
+         refreshing state, keep only one recent identical transaction. */
+      const recentDuplicate = prev.transactions.some((item) => {
+        const createdAt = Date.parse(item.createdAt);
+        return (
+          item.name === transaction.name &&
+          item.amount === transaction.amount &&
+          item.date === transaction.date &&
+          item.category === transaction.category &&
+          (item.subcategory ?? "") === (transaction.subcategory ?? "") &&
+          (item.store ?? "Other") === (transaction.store ?? "Other") &&
+          (item.channel ?? "offline") === (transaction.channel ?? "offline") &&
+          item.expenseType === transaction.expenseType &&
+          (item.note ?? "") === (transaction.note ?? "") &&
+          Number.isFinite(createdAt) &&
+          Math.abs(submittedAt - createdAt) < 2000
+        );
+      });
+
+      if (recentDuplicate) return prev;
+
+      return {
+        ...prev,
+        transactions: [transaction, ...prev.transactions],
+      };
+    });
     setExpenseDraft(createDefaultExpenseDraft());
   };
 

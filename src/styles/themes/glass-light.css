@@ -746,9 +746,9 @@ body[data-theme="glass-light"] ::-webkit-scrollbar-thumb:hover {
    - 기존 Glass Light 디자인 그대로 유지
 
    TAURI:
-   - Window 아래 전체 배경판 제거
-   - 실제 Desktop이 바로 뒤에 보임
-   - Sidebar / Topbar / Widgets만 Glass Surface로 유지
+   - Window 아래 solid 배경판 제거
+   - 실제 Desktop은 보이되 밝은 우윳빛 blur 막으로 흐림
+   - Sidebar / Topbar / Widgets는 같은 frosted material로 유지
    ============================================================ */
 
 
@@ -813,16 +813,24 @@ html.desktop-transparent[data-theme="glass-light"]
 
 body.desktop-transparent[data-theme="glass-light"]
   .app-shell-surface.liquid-shell {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
+  /* Tauri light glass backplate
+     A soft milky layer keeps wallpaper visible but gives the app one coherent
+     frosted-glass body. / 배경은 남기되 앱 전체가 흰 유리 한 장처럼 보이게 한다. */
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.10)) !important;
+  background-color: rgba(255, 255, 255, 0.16) !important;
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.10)) !important;
 
-  /*
-   * 전체 화면을 한꺼번에 blur하면
-   * 회색 필름을 덮은 느낌이 생기므로 제거.
-   */
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  backdrop-filter:
+    blur(30px)
+    saturate(150%)
+    brightness(1.06) !important;
+
+  -webkit-backdrop-filter:
+    blur(30px)
+    saturate(150%)
+    brightness(1.06) !important;
 
   /*
    * 앱의 원래 둥근 외곽 형태는 살짝 남김.
@@ -865,8 +873,8 @@ body.desktop-transparent[data-theme="glass-light"] .sidebar {
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.18),
-      rgba(255, 255, 255, 0.065)
+      rgba(255, 255, 255, 0.32),
+      rgba(255, 255, 255, 0.14)
     ) !important;
 
   border-right:
@@ -876,12 +884,12 @@ body.desktop-transparent[data-theme="glass-light"] .sidebar {
     inset -1px 0 0 rgba(255, 255, 255, 0.06) !important;
 
   backdrop-filter:
-    blur(18px)
-    saturate(138%) !important;
+    blur(26px)
+    saturate(146%) !important;
 
   -webkit-backdrop-filter:
-    blur(18px)
-    saturate(138%) !important;
+    blur(26px)
+    saturate(146%) !important;
 }
 
 
@@ -894,8 +902,8 @@ body.desktop-transparent[data-theme="glass-light"] .topbar {
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.19),
-      rgba(255, 255, 255, 0.07)
+      rgba(255, 255, 255, 0.34),
+      rgba(255, 255, 255, 0.14)
     ) !important;
 
   border:
@@ -909,12 +917,12 @@ body.desktop-transparent[data-theme="glass-light"] .topbar {
     0 10px 28px rgba(75, 86, 130, 0.045) !important;
 
   backdrop-filter:
-    blur(18px)
-    saturate(138%) !important;
+    blur(26px)
+    saturate(146%) !important;
 
   -webkit-backdrop-filter:
-    blur(18px)
-    saturate(138%) !important;
+    blur(26px)
+    saturate(146%) !important;
 }
 
 
@@ -928,8 +936,8 @@ body.desktop-transparent[data-theme="glass-light"] .glass-card {
   background:
     linear-gradient(
       145deg,
-      rgba(255, 255, 255, 0.20),
-      rgba(255, 255, 255, 0.075)
+      rgba(255, 255, 255, 0.34),
+      rgba(255, 255, 255, 0.14)
     ) !important;
 
   border:
@@ -940,12 +948,12 @@ body.desktop-transparent[data-theme="glass-light"] .glass-card {
     0 14px 34px rgba(60, 72, 110, 0.065) !important;
 
   backdrop-filter:
-    blur(18px)
-    saturate(136%) !important;
+    blur(28px)
+    saturate(146%) !important;
 
   -webkit-backdrop-filter:
-    blur(18px)
-    saturate(136%) !important;
+    blur(28px)
+    saturate(146%) !important;
 }
 
 
@@ -985,7 +993,7 @@ body.desktop-transparent[data-theme="glass-light"] .alert-item,
 body.desktop-transparent[data-theme="glass-light"] .journal-section,
 body.desktop-transparent[data-theme="glass-light"] .study-card {
   background:
-    rgba(255, 255, 255, 0.12) !important;
+    rgba(255, 255, 255, 0.20) !important;
 
   border:
     1px solid rgba(255, 255, 255, 0.28) !important;
@@ -995,12 +1003,12 @@ body.desktop-transparent[data-theme="glass-light"] .study-card {
     0 8px 20px rgba(60, 70, 105, 0.035) !important;
 
   backdrop-filter:
-    blur(14px)
-    saturate(132%) !important;
+    blur(22px)
+    saturate(140%) !important;
 
   -webkit-backdrop-filter:
-    blur(14px)
-    saturate(132%) !important;
+    blur(22px)
+    saturate(140%) !important;
 }
 
 
@@ -1018,7 +1026,7 @@ body.desktop-transparent[data-theme="glass-light"] input,
 body.desktop-transparent[data-theme="glass-light"] textarea,
 body.desktop-transparent[data-theme="glass-light"] select {
   background:
-    rgba(255, 255, 255, 0.18) !important;
+    rgba(255, 255, 255, 0.26) !important;
 
   border-color:
     rgba(255, 255, 255, 0.34) !important;
@@ -1027,12 +1035,12 @@ body.desktop-transparent[data-theme="glass-light"] select {
     inset 0 1px 0 rgba(255, 255, 255, 0.34) !important;
 
   backdrop-filter:
-    blur(12px)
-    saturate(130%) !important;
+    blur(18px)
+    saturate(138%) !important;
 
   -webkit-backdrop-filter:
-    blur(12px)
-    saturate(130%) !important;
+    blur(18px)
+    saturate(138%) !important;
 }
 
 

@@ -49,6 +49,12 @@ body.theme-aurora {
       rgba(144, 74, 215, 0.38) 72%,
       rgba(38, 59, 118, 0.68)
     );
+  /* Aurora wallpaper hook:
+     Replace this custom property when the user picks a personal photo.
+     Korean: 직접 넣을 사진은 여기 변수만 바꾸면 배경 레이어 전체에 반영된다. */
+  --aurora-wallpaper-image: url("/glass-background/glass4.jpeg");
+  --aurora-wallpaper-overlay:
+    linear-gradient(135deg, rgba(6, 10, 20, 0.18), rgba(6, 10, 20, 0.44));
 
   color: hsl(var(--foreground) / 0.94);
 }
@@ -69,8 +75,8 @@ body[data-theme="aurora"] .bg-glass-gradient,
 html.theme-aurora .bg-glass-gradient,
 body.theme-aurora .bg-glass-gradient {
   background:
-    linear-gradient(135deg, rgba(6, 10, 20, 0.18), rgba(6, 10, 20, 0.44)),
-    url("/glass-background/glass4.jpeg") center / cover no-repeat !important;
+    var(--aurora-wallpaper-overlay),
+    var(--aurora-wallpaper-image) center / cover no-repeat !important;
 }
 
 html[data-theme="aurora"] .bg-glass-gradient::after,
