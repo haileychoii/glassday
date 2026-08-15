@@ -2938,3 +2938,57 @@ body,
   justify-self: center !important;
   align-self: center !important;
 }
+
+/* =========================================================
+   Mac Core / Career floating close button final safety
+   mac-core.css is imported before widget CSS, so this late override keeps the
+   functional red traffic-light visible after generic Career button rules.
+   Mac Core에서 Career 전용 portal 닫기 버튼이 다른 위젯 버튼 규칙에 묻히지 않게 한다.
+========================================================= */
+:is(
+    html[data-theme="mac-core"],
+    body[data-theme="mac-core"],
+    html.theme-mac-core,
+    body.theme-mac-core
+  )
+  .career-floating-titlebar
+  .career-floating-close-button {
+  position: absolute !important;
+  top: 24px !important;
+  left: 14px !important;
+  width: 18px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 5 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: rgb(92 19 18 / 0.9) !important;
+  background: #ff5f57 !important;
+  border: 1px solid rgb(148 38 35 / 0.3) !important;
+  border-radius: 999px !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.42),
+    0 1px 2px rgb(0 0 0 / 0.08) !important;
+}
+
+:is(
+    html[data-theme="mac-core"],
+    body[data-theme="mac-core"],
+    html.theme-mac-core,
+    body.theme-mac-core
+  )
+  .career-floating-titlebar
+  .career-floating-close-button
+  svg {
+  width: 9px !important;
+  height: 9px !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  stroke-width: 2.4 !important;
+}

@@ -1160,7 +1160,9 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                   <button
                     type="button"
                     onClick={closeWindow}
-                    className="career-icon-button"
+                    className="career-icon-button career-floating-close-button"
+                    aria-label="Close career detail"
+                    title="Close"
                   >
                     <X className="w-4 h-4" />
                   </button>
