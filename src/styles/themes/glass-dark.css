@@ -24,76 +24,77 @@ body.desktop-transparent[data-theme="glass-dark"] {
   --gd-dark-shell-bg:
     linear-gradient(
       180deg,
-      rgba(20, 25, 40, 0.18),
-      rgba(8, 11, 20, 0.08)
+      rgba(24, 30, 48, 0.62),
+      rgba(10, 14, 26, 0.48)
     );
 
   --gd-dark-shell-border:
-    rgba(190, 205, 245, 0.15);
+    rgba(210, 224, 255, 0.25);
 
   --gd-dark-shell-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 18px 46px rgba(0, 0, 0, 0.16);
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.035),
+    0 28px 80px rgba(0, 0, 0, 0.32);
 
 
   /* Widget */
   --gd-dark-card-bg:
     linear-gradient(
       145deg,
-      rgba(26, 32, 50, 0.24),
-      rgba(8, 12, 22, 0.10)
+      rgba(35, 42, 64, 0.66),
+      rgba(13, 18, 32, 0.48)
     );
 
   --gd-dark-card-border:
-    rgba(180, 197, 238, 0.17);
+    rgba(214, 226, 255, 0.23);
 
   --gd-dark-card-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.075),
-    0 16px 38px rgba(0, 0, 0, 0.14);
+    inset 0 1px 0 rgba(255, 255, 255, 0.13),
+    0 20px 54px rgba(0, 0, 0, 0.28);
 
 
   /* Inner Panel */
   --gd-dark-panel-bg:
     linear-gradient(
       145deg,
-      rgba(37, 44, 66, 0.27),
-      rgba(13, 18, 30, 0.15)
+      rgba(50, 58, 84, 0.58),
+      rgba(18, 24, 40, 0.42)
     );
 
   --gd-dark-panel-border:
-    rgba(183, 200, 239, 0.16);
+    rgba(210, 224, 255, 0.22);
 
   --gd-dark-panel-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.065),
-    0 10px 24px rgba(0, 0, 0, 0.12);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 12px 32px rgba(0, 0, 0, 0.22);
 
 
   /* Buttons / Controls */
   --gd-dark-control-bg:
     linear-gradient(
       145deg,
-      rgba(43, 51, 76, 0.34),
-      rgba(17, 22, 36, 0.20)
+      rgba(60, 70, 100, 0.58),
+      rgba(22, 28, 44, 0.42)
     );
 
   --gd-dark-control-border:
-    rgba(188, 202, 238, 0.18);
+    rgba(214, 226, 255, 0.23);
 
 
   /* Shared widget aliases가 존재하는 경우에도 Tauri Glass로 통일 */
   --gd-widget-panel-bg:
     linear-gradient(
       145deg,
-      rgba(37, 44, 66, 0.27),
-      rgba(13, 18, 30, 0.15)
+      rgba(50, 58, 84, 0.58),
+      rgba(18, 24, 40, 0.42)
     );
 
   --gd-widget-panel-border:
-    rgba(183, 200, 239, 0.16);
+    rgba(210, 224, 255, 0.22);
 
   --gd-widget-panel-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.065),
-    0 10px 24px rgba(0, 0, 0, 0.12);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 12px 32px rgba(0, 0, 0, 0.22);
 }
 
 
@@ -161,23 +162,39 @@ html.desktop-transparent[data-theme="glass-dark"]
 
 body.desktop-transparent[data-theme="glass-dark"]
   .app-shell-surface.liquid-shell {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
+  /* Tauri glass backplate
+     Keep the desktop visible, but blur code/text behind the app into a tinted
+     smoked-glass surface. / 배경은 보이되 뒤의 글자가 그대로 읽히지 않게
+     앱 전체에 색과 blur가 있는 glass 막을 둔다. */
+  background:
+    radial-gradient(circle at 16% 8%, rgba(126, 168, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 86% 14%, rgba(218, 155, 255, 0.12), transparent 30%),
+    var(--gd-dark-shell-bg) !important;
+  background-color: rgba(12, 16, 28, 0.54) !important;
+  background-image:
+    radial-gradient(circle at 16% 8%, rgba(126, 168, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 86% 14%, rgba(218, 155, 255, 0.12), transparent 30%),
+    var(--gd-dark-shell-bg) !important;
 
   /*
    * 전체 shell을 한 장으로 blur하지 않는다.
    * 그래야 커다란 검은 필름을 씌운 느낌이 사라진다.
    */
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  backdrop-filter:
+    blur(36px)
+    saturate(150%)
+    brightness(0.9) !important;
+
+  -webkit-backdrop-filter:
+    blur(36px)
+    saturate(150%)
+    brightness(0.9) !important;
 
   border-color:
     rgba(190, 205, 245, 0.13) !important;
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.055),
-    0 20px 52px rgba(0, 0, 0, 0.13) !important;
+    var(--gd-dark-shell-shadow) !important;
 }
 
 
@@ -213,8 +230,8 @@ body.desktop-transparent[data-theme="glass-dark"] .sidebar {
   background:
     linear-gradient(
       180deg,
-      rgba(25, 31, 48, 0.24),
-      rgba(8, 12, 22, 0.11)
+      rgba(28, 36, 58, 0.72),
+      rgba(12, 16, 30, 0.58)
     ) !important;
 
   border-right:
@@ -224,12 +241,12 @@ body.desktop-transparent[data-theme="glass-dark"] .sidebar {
     inset -1px 0 0 rgba(255, 255, 255, 0.025) !important;
 
   backdrop-filter:
-    blur(20px)
-    saturate(128%) !important;
+    blur(34px)
+    saturate(148%) !important;
 
   -webkit-backdrop-filter:
-    blur(20px)
-    saturate(128%) !important;
+    blur(34px)
+    saturate(148%) !important;
 }
 
 
@@ -244,8 +261,8 @@ body.desktop-transparent[data-theme="glass-dark"] .topbar {
   background:
     linear-gradient(
       180deg,
-      rgba(28, 34, 52, 0.23),
-      rgba(10, 14, 25, 0.10)
+      rgba(32, 40, 62, 0.72),
+      rgba(14, 18, 32, 0.54)
     ) !important;
 
   border:
@@ -259,12 +276,12 @@ body.desktop-transparent[data-theme="glass-dark"] .topbar {
     0 12px 32px rgba(0, 0, 0, 0.11) !important;
 
   backdrop-filter:
-    blur(20px)
-    saturate(128%) !important;
+    blur(34px)
+    saturate(150%) !important;
 
   -webkit-backdrop-filter:
-    blur(20px)
-    saturate(128%) !important;
+    blur(34px)
+    saturate(150%) !important;
 }
 
 
@@ -279,8 +296,8 @@ body.desktop-transparent[data-theme="glass-dark"] .glass-card {
   background:
     linear-gradient(
       145deg,
-      rgba(31, 38, 58, 0.25),
-      rgba(8, 12, 22, 0.11)
+      rgba(35, 42, 64, 0.66),
+      rgba(13, 18, 32, 0.48)
     ) !important;
 
   border:
@@ -291,12 +308,12 @@ body.desktop-transparent[data-theme="glass-dark"] .glass-card {
     0 16px 38px rgba(0, 0, 0, 0.14) !important;
 
   backdrop-filter:
-    blur(20px)
-    saturate(130%) !important;
+    blur(38px)
+    saturate(152%) !important;
 
   -webkit-backdrop-filter:
-    blur(20px)
-    saturate(130%) !important;
+    blur(38px)
+    saturate(152%) !important;
 }
 
 
@@ -341,8 +358,8 @@ body.desktop-transparent[data-theme="glass-dark"] .study-card {
   background:
     linear-gradient(
       145deg,
-      rgba(42, 49, 72, 0.28),
-      rgba(14, 18, 30, 0.16)
+      rgba(52, 61, 88, 0.58),
+      rgba(20, 26, 42, 0.42)
     ) !important;
 
   border-color:
@@ -353,12 +370,12 @@ body.desktop-transparent[data-theme="glass-dark"] .study-card {
     0 9px 22px rgba(0, 0, 0, 0.11) !important;
 
   backdrop-filter:
-    blur(16px)
-    saturate(126%) !important;
+    blur(30px)
+    saturate(146%) !important;
 
   -webkit-backdrop-filter:
-    blur(16px)
-    saturate(126%) !important;
+    blur(30px)
+    saturate(146%) !important;
 }
 
 
@@ -393,12 +410,12 @@ body.desktop-transparent[data-theme="glass-dark"] :is(
     var(--gd-dark-panel-shadow) !important;
 
   backdrop-filter:
-    blur(16px)
-    saturate(126%) !important;
+    blur(30px)
+    saturate(146%) !important;
 
   -webkit-backdrop-filter:
-    blur(16px)
-    saturate(126%) !important;
+    blur(30px)
+    saturate(146%) !important;
 }
 
 
@@ -454,12 +471,12 @@ body.desktop-transparent[data-theme="glass-dark"] :is(
     var(--gd-dark-control-border) !important;
 
   backdrop-filter:
-    blur(14px)
-    saturate(126%) !important;
+    blur(26px)
+    saturate(146%) !important;
 
   -webkit-backdrop-filter:
-    blur(14px)
-    saturate(126%) !important;
+    blur(26px)
+    saturate(146%) !important;
 }
 
 
@@ -480,20 +497,20 @@ body.desktop-transparent[data-theme="glass-dark"] select {
   background:
     linear-gradient(
       145deg,
-      rgba(40, 48, 70, 0.30),
-      rgba(15, 20, 33, 0.18)
+      rgba(56, 66, 94, 0.58),
+      rgba(20, 26, 42, 0.42)
     ) !important;
 
   border-color:
     rgba(188, 202, 238, 0.18) !important;
 
   backdrop-filter:
-    blur(14px)
-    saturate(126%) !important;
+    blur(24px)
+    saturate(144%) !important;
 
   -webkit-backdrop-filter:
-    blur(14px)
-    saturate(126%) !important;
+    blur(24px)
+    saturate(144%) !important;
 }
 
 
