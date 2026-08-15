@@ -41,6 +41,7 @@ export type CalendarEvent = {
   /** 원본 Career record와 Calendar projection을 연결하는 id. */
   sourceId?: string;
   careerApplicationId?: string;
+  careerStageId?: string;
   color?: string;
   googleEventId?: string;
   googleSyncStatus?: GoogleSyncStatus;
@@ -57,14 +58,29 @@ export type CareerStatus =
 
 export type CareerPriority = "high" | "medium" | "low";
 
-export type CareerStageStatus = "todo" | "doing" | "done";
+export type CareerStageStatus = "todo" | "doing" | "done" | "skipped";
+
+export type CareerStageKind =
+  | "document-submit"
+  | "document-result"
+  | "written-exam"
+  | "interview-1"
+  | "interview-2"
+  | "interview-3"
+  | "final-result"
+  | "other";
 
 export type CareerStage = {
   id: string;
   label: string;
   status: CareerStageStatus;
+  kind?: CareerStageKind;
   date?: string;
+  time?: string;
+  endDate?: string;
+  endTime?: string;
   notes?: string;
+  calendarSync?: boolean;
 };
 
 export type CoverLetterStatus = "todo" | "drafting" | "done";

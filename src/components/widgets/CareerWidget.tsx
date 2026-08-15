@@ -52,6 +52,9 @@ import { prepareLocalImageDataUrl } from "../../lib/localImage";
 import type {
   CareerImageAttachment,
   CareerItem,
+  CareerStage,
+  CareerStageKind,
+  CareerStageStatus,
   CareerStatus,
   CoverLetterItem,
 } from "../../types/dashboard";
@@ -98,6 +101,39 @@ const createCoverLetterId = () => {
 
   return `cl-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
+
+const createCareerStageId = () => {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+
+  return `career-stage-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+
+const careerStageOptions: {
+  kind: CareerStageKind;
+  label: string;
+  defaultTime: string;
+}[] = [
+  { kind: "document-submit", label: "서류 제출", defaultTime: "23:59" },
+  { kind: "document-result", label: "서류 발표", defaultTime: "10:00" },
+  { kind: "written-exam", label: "필기 전형", defaultTime: "09:00" },
+  { kind: "interview-1", label: "1차 면접", defaultTime: "10:00" },
+  { kind: "interview-2", label: "2차 면접", defaultTime: "10:00" },
+  { kind: "interview-3", label: "3차 면접", defaultTime: "10:00" },
+  { kind: "final-result", label: "최종 결과", defaultTime: "10:00" },
+  { kind: "other", label: "기타 일정", defaultTime: "10:00" },
+];
+
+const careerStageStatusOptions: {
+  value: CareerStageStatus;
+  label: string;
+}[] = [
+  { value: "todo", label: "예정" },
+  { value: "doing", label: "진행중" },
+  { value: "done", label: "완료/합격" },
+  { value: "skipped", label: "없음/생략" },
+];
 
 const CAREER_IMAGE_LIMIT = 8;
 const CAREER_IMAGE_MAX_INPUT_BYTES = 12 * 1024 * 1024;
@@ -261,6 +297,17 @@ const normalizeCareer = (item: CareerItem): CareerItem => ({
   noteImages: Array.isArray(item.noteImages) ? item.noteImages : [],
   coverLetterQuestions: item.coverLetterQuestions ?? [],
   coverLetterItems: item.coverLetterItems ?? [],
+  stages: (item.stages ?? []).map((stage) => ({
+    ...stage,
+    status: stage.status ?? "todo",
+    kind: stage.kind ?? "other",
+    date: stage.date ?? "",
+    time: stage.time ?? "",
+    endDate: stage.endDate ?? "",
+    endTime: stage.endTime ?? "",
+    notes: stage.notes ?? "",
+    calendarSync: stage.calendarSync ?? true,
+  })),
   notes: item.notes ?? "",
 });
 
@@ -557,6 +604,72 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
       ...current,
       [field]: "",
     }));
+  };
+
+  const getCareerStages = (item: CareerItem): CareerStage[] => {
+    return (item.stages ?? []).map((stage) => ({
+      ...stage,
+      status: stage.status ?? "todo",
+      kind: stage.kind ?? "other",
+      date: stage.date ?? "",
+      time: stage.time ?? "",
+      endDate: stage.endDate ?? "",
+      endTime: stage.endTime ?? "",
+      notes: stage.notes ?? "",
+      calendarSync: stage.calendarSync ?? true,
+    }));
+  };
+
+  const addCareerStage = (kind: CareerStageKind) => {
+    if (!selectedItem) return;
+
+    const template =
+      careerStageOptions.find((option) => option.kind === kind) ??
+      careerStageOptions[careerStageOptions.length - 1];
+
+    /* Selection schedule rows
+       Each row is a Career-owned record first, then optionally projected into
+       Calendar. / Career 원본에 먼저 저장하고 날짜가 있으면 Calendar로 동기화합니다. */
+    updateSelectedItem({
+      stages: [
+        ...getCareerStages(selectedItem),
+        {
+          id: createCareerStageId(),
+          kind: template.kind,
+          label: template.label,
+          status: "todo",
+          date: "",
+          time: template.defaultTime,
+          endDate: "",
+          endTime: "",
+          notes: "",
+          calendarSync: true,
+        },
+      ],
+    });
+  };
+
+  const updateCareerStage = (
+    stageId: string,
+    patch: Partial<CareerStage>
+  ) => {
+    if (!selectedItem) return;
+
+    updateSelectedItem({
+      stages: getCareerStages(selectedItem).map((stage) =>
+        stage.id === stageId ? { ...stage, ...patch } : stage
+      ),
+    });
+  };
+
+  const removeCareerStage = (stageId: string) => {
+    if (!selectedItem) return;
+
+    updateSelectedItem({
+      stages: getCareerStages(selectedItem).filter(
+        (stage) => stage.id !== stageId
+      ),
+    });
   };
 
   /* Career attachment gallery
@@ -1255,6 +1368,235 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                   <div className="career-window-preview">
                     <CalendarDays className="w-4 h-4" />
                     {formatApplicationWindow(selectedItem)}
+                  </div>
+                </section>
+
+                <section className="career-detail-section career-stage-section">
+                  <div className="career-section-row">
+                    <div>
+                      <div className="career-section-title">
+                        Selection Schedule · Calendar Sync
+                      </div>
+                      <p className="career-section-subtitle">
+                        서류 발표, 필기, 면접 날짜를 기록하면 Calendar에
+                        자동으로 같이 보여.
+                      </p>
+                    </div>
+
+                    <div className="career-stage-add-row">
+                      {careerStageOptions
+                        .filter((option) =>
+                          [
+                            "document-result",
+                            "written-exam",
+                            "interview-1",
+                            "interview-2",
+                            "other",
+                          ].includes(option.kind)
+                        )
+                        .map((option) => (
+                          <button
+                            key={option.kind}
+                            type="button"
+                            onClick={() => addCareerStage(option.kind)}
+                            className="career-small-button"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                            {option.label}
+                          </button>
+                        ))}
+                    </div>
+                  </div>
+
+                  <div className="career-stage-list">
+                    {getCareerStages(selectedItem).length === 0 ? (
+                      <div className="career-empty-box">
+                        아직 전형 일정이 없어. 필요한 단계만 추가해.
+                      </div>
+                    ) : (
+                      getCareerStages(selectedItem).map((stage, index) => (
+                        <article key={stage.id} className="career-stage-item">
+                          <div className="career-stage-marker-wrap">
+                            <span
+                              className={`career-stage-marker status-${stage.status}`}
+                            >
+                              {index + 1}
+                            </span>
+                            <span className="career-stage-line" />
+                          </div>
+
+                          <div className="career-stage-card">
+                            <div className="career-stage-top">
+                              <select
+                                value={stage.kind ?? "other"}
+                                onChange={(event) => {
+                                  const kind = event.target
+                                    .value as CareerStageKind;
+                                  const template =
+                                    careerStageOptions.find(
+                                      (option) => option.kind === kind
+                                    ) ?? careerStageOptions[0];
+
+                                  updateCareerStage(stage.id, {
+                                    kind,
+                                    label:
+                                      stage.label === "" ||
+                                      careerStageOptions.some(
+                                        (option) =>
+                                          option.label === stage.label
+                                      )
+                                        ? template.label
+                                        : stage.label,
+                                    time: stage.time || template.defaultTime,
+                                  });
+                                }}
+                                className="career-stage-kind"
+                                aria-label="전형 종류"
+                              >
+                                {careerStageOptions.map((option) => (
+                                  <option
+                                    key={option.kind}
+                                    value={option.kind}
+                                  >
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
+
+                              <input
+                                value={stage.label}
+                                onChange={(event) =>
+                                  updateCareerStage(stage.id, {
+                                    label: event.target.value,
+                                  })
+                                }
+                                className="career-stage-title-input"
+                                placeholder="전형 이름"
+                              />
+
+                              <select
+                                value={stage.status}
+                                onChange={(event) =>
+                                  updateCareerStage(stage.id, {
+                                    status: event.target
+                                      .value as CareerStageStatus,
+                                    calendarSync:
+                                      event.target.value === "skipped"
+                                        ? false
+                                        : stage.calendarSync,
+                                  })
+                                }
+                                className="career-stage-status"
+                                aria-label="전형 상태"
+                              >
+                                {careerStageStatusOptions.map((option) => (
+                                  <option
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
+
+                              <button
+                                type="button"
+                                onClick={() => removeCareerStage(stage.id)}
+                                className="career-stage-delete"
+                                title="Delete selection schedule"
+                                aria-label={`${stage.label || "전형 일정"} 삭제`}
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+
+                            <div className="career-stage-bottom">
+                              <label className="career-field">
+                                <span>Date</span>
+                                <input
+                                  type="date"
+                                  value={stage.date ?? ""}
+                                  onChange={(event) =>
+                                    updateCareerStage(stage.id, {
+                                      date: event.target.value,
+                                    })
+                                  }
+                                />
+                              </label>
+
+                              <label className="career-field">
+                                <span>Time</span>
+                                <input
+                                  type="time"
+                                  value={stage.time ?? ""}
+                                  onChange={(event) =>
+                                    updateCareerStage(stage.id, {
+                                      time: event.target.value,
+                                    })
+                                  }
+                                />
+                              </label>
+
+                              <label className="career-field">
+                                <span>End Date</span>
+                                <input
+                                  type="date"
+                                  value={stage.endDate ?? ""}
+                                  onChange={(event) =>
+                                    updateCareerStage(stage.id, {
+                                      endDate: event.target.value,
+                                    })
+                                  }
+                                />
+                              </label>
+
+                              <label className="career-field">
+                                <span>End Time</span>
+                                <input
+                                  type="time"
+                                  value={stage.endTime ?? ""}
+                                  onChange={(event) =>
+                                    updateCareerStage(stage.id, {
+                                      endTime: event.target.value,
+                                    })
+                                  }
+                                />
+                              </label>
+                            </div>
+
+                            <div className="career-stage-note-row">
+                              <label className="career-field career-stage-note-field">
+                                <span>Notes / 기타</span>
+                                <textarea
+                                  value={stage.notes ?? ""}
+                                  onChange={(event) =>
+                                    updateCareerStage(stage.id, {
+                                      notes: event.target.value,
+                                    })
+                                  }
+                                  className="career-stage-memo"
+                                  placeholder="시험 장소, 준비물, 링크, 발표 확인 방법..."
+                                />
+                              </label>
+
+                              <label className="career-stage-sync-toggle">
+                                <input
+                                  type="checkbox"
+                                  checked={stage.calendarSync !== false}
+                                  disabled={stage.status === "skipped"}
+                                  onChange={(event) =>
+                                    updateCareerStage(stage.id, {
+                                      calendarSync: event.target.checked,
+                                    })
+                                  }
+                                />
+                                Calendar sync
+                              </label>
+                            </div>
+                          </div>
+                        </article>
+                      ))
+                    )}
                   </div>
                 </section>
 

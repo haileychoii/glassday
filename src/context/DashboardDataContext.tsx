@@ -65,10 +65,27 @@ const createId = () => {
 };
 
 const createDefaultStages = (): CareerStage[] => [
-  { id: createId(), label: "서류", status: "todo" },
-  { id: createId(), label: "필기", status: "todo" },
-  { id: createId(), label: "면접", status: "todo" },
-  { id: createId(), label: "결과", status: "todo" },
+  {
+    id: createId(),
+    label: "서류 제출",
+    status: "todo",
+    kind: "document-submit",
+  },
+  {
+    id: createId(),
+    label: "서류 발표",
+    status: "todo",
+    kind: "document-result",
+  },
+  {
+    id: createId(),
+    label: "필기 전형",
+    status: "todo",
+    kind: "written-exam",
+  },
+  { id: createId(), label: "1차 면접", status: "todo", kind: "interview-1" },
+  { id: createId(), label: "2차 면접", status: "todo", kind: "interview-2" },
+  { id: createId(), label: "최종 결과", status: "todo", kind: "final-result" },
 ];
 
 const normalizeStringArray = (value: unknown): string[] => {
@@ -86,11 +103,29 @@ const normalizeStages = (value: unknown): CareerStage[] => {
     id: typeof item?.id === "string" ? item.id : createId(),
     label: typeof item?.label === "string" ? item.label : "Stage",
     status:
-      item?.status === "doing" || item?.status === "done"
+      item?.status === "doing" ||
+      item?.status === "done" ||
+      item?.status === "skipped"
         ? item.status
         : "todo",
+    kind:
+      item?.kind === "document-submit" ||
+      item?.kind === "document-result" ||
+      item?.kind === "written-exam" ||
+      item?.kind === "interview-1" ||
+      item?.kind === "interview-2" ||
+      item?.kind === "interview-3" ||
+      item?.kind === "final-result" ||
+      item?.kind === "other"
+        ? item.kind
+        : "other",
     date: typeof item?.date === "string" ? item.date : "",
+    time: typeof item?.time === "string" ? item.time : "",
+    endDate: typeof item?.endDate === "string" ? item.endDate : "",
+    endTime: typeof item?.endTime === "string" ? item.endTime : "",
     notes: typeof item?.notes === "string" ? item.notes : "",
+    calendarSync:
+      typeof item?.calendarSync === "boolean" ? item.calendarSync : true,
   }));
 };
 
@@ -377,48 +412,107 @@ const createCareerCalendarEvent = (career: CareerItem): CalendarEvent | null => 
   };
 };
 
+const addOneHour = (time: string) => {
+  const [hour = "09", minute = "00"] = time.split(":");
+  const totalMinutes =
+    Number.parseInt(hour, 10) * 60 + Number.parseInt(minute, 10) + 60;
+  const nextHour = Math.floor((totalMinutes % (24 * 60)) / 60);
+  const nextMinute = totalMinutes % 60;
+
+  return `${String(nextHour).padStart(2, "0")}:${String(nextMinute).padStart(
+    2,
+    "0"
+  )}`;
+};
+
+const createCareerStageCalendarEvent = (
+  career: CareerItem,
+  stage: CareerStage
+): CalendarEvent | null => {
+  if (!stage.date || stage.calendarSync === false) return null;
+
+  const startTime = stage.time || "09:00";
+  const endDate = stage.endDate || stage.date;
+  const endTime = stage.endTime || addOneHour(startTime);
+
+  return {
+    id: `career-${career.id}-stage-${stage.id}`,
+    title: `${career.company || "Company"} · ${stage.label || "Career Step"}`,
+    startDate: stage.date,
+    startTime,
+    endDate,
+    endTime,
+    location: career.location,
+    notes: [
+      career.role,
+      stage.status === "skipped" ? "Status: skipped" : "",
+      stage.notes,
+      career.postingUrl ? `Posting: ${career.postingUrl}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n"),
+    source: "career",
+    sourceId: career.id,
+    careerApplicationId: career.id,
+    careerStageId: stage.id,
+    color: career.calendarColor ?? getPastelColorById(career.id),
+    googleSyncStatus: "not_synced",
+  };
+};
+
+const createCareerCalendarEvents = (career: CareerItem): CalendarEvent[] => {
+  /* Career Calendar projection
+     One application can now own the application window plus each selection
+     schedule. / 지원 기간과 전형별 일정을 같은 Career 원본에서 캘린더로 펼칩니다. */
+  return [
+    createCareerCalendarEvent(career),
+    ...(career.stages ?? []).map((stage) =>
+      createCareerStageCalendarEvent(career, stage)
+    ),
+  ].filter((event): event is CalendarEvent => Boolean(event));
+};
+
 const syncCareerEventIntoCalendar = (
   career: CareerItem,
   events: CalendarEvent[]
 ): CalendarEvent[] => {
-  const careerEvent = createCareerCalendarEvent(career);
-
-  if (!careerEvent) {
-    return events.filter(
-      (event) =>
-        !(
-          event.source === "career" &&
-          (event.sourceId === career.id ||
-            event.careerApplicationId === career.id)
-        )
-    );
-  }
-
-  const exists = events.some(
+  const careerEvents = createCareerCalendarEvents(career);
+  const existingCareerEvents = events.filter(
     (event) =>
       event.source === "career" &&
       (event.sourceId === career.id ||
         event.careerApplicationId === career.id)
   );
+  const existingById = new Map(
+    existingCareerEvents.map((event) => [event.id, event])
+  );
 
-  if (!exists) {
-    return [...events, careerEvent];
-  }
+  const manualEvents = events.filter(
+    (event) =>
+      !(
+        event.source === "career" &&
+        (event.sourceId === career.id ||
+          event.careerApplicationId === career.id)
+      )
+  );
 
-  return events.map((event) =>
-    event.source === "career" &&
-    (event.sourceId === career.id ||
-      event.careerApplicationId === career.id)
-      ? {
-          ...event,
-          ...careerEvent,
-          googleEventId: event.googleEventId,
-          googleSyncStatus:
-            event.googleEventId && event.googleSyncStatus === "synced"
-              ? "pending"
-              : event.googleSyncStatus ?? "not_synced",
-        }
-      : event
+  return manualEvents.concat(
+    careerEvents.map((careerEvent) => {
+      const existingEvent = existingById.get(careerEvent.id);
+
+      if (!existingEvent) return careerEvent;
+
+      return {
+        ...existingEvent,
+        ...careerEvent,
+        googleEventId: existingEvent.googleEventId,
+        googleSyncStatus:
+          existingEvent.googleEventId &&
+          existingEvent.googleSyncStatus === "synced"
+            ? "pending"
+            : existingEvent.googleSyncStatus ?? "not_synced",
+      };
+    })
   );
 };
 
@@ -523,6 +617,7 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
       source: patch.source ?? "manual",
       sourceId: patch.sourceId,
       careerApplicationId: patch.careerApplicationId,
+      careerStageId: patch.careerStageId,
       color: patch.color ?? getPastelColorById(eventId),
       googleEventId: patch.googleEventId,
       googleSyncStatus: patch.googleSyncStatus ?? "not_synced",
@@ -562,6 +657,27 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
 
           if (career.id !== careerId) return career;
 
+          if (updatedEvent.careerStageId) {
+            return normalizeCareerItem({
+              ...career,
+              stages: (career.stages ?? []).map((stage) =>
+                stage.id === updatedEvent.careerStageId
+                  ? {
+                      ...stage,
+                      date: updatedEvent.startDate,
+                      time: updatedEvent.startTime,
+                      endDate: updatedEvent.endDate,
+                      endTime: updatedEvent.endTime,
+                      notes: updatedEvent.notes,
+                    }
+                  : stage
+              ),
+              location: updatedEvent.location,
+              calendarColor: updatedEvent.color ?? career.calendarColor,
+              updatedAt: new Date().toISOString(),
+            });
+          }
+
           return normalizeCareerItem({
             ...career,
             applicationStartDate: updatedEvent.startDate,
@@ -593,6 +709,21 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
           const career = normalizeCareerItem(item);
 
           if (career.id !== careerId) return career;
+
+          if (target.careerStageId) {
+            return normalizeCareerItem({
+              ...career,
+              stages: (career.stages ?? []).map((stage) =>
+                stage.id === target.careerStageId
+                  ? {
+                      ...stage,
+                      calendarSync: false,
+                    }
+                  : stage
+              ),
+              updatedAt: new Date().toISOString(),
+            });
+          }
 
           return normalizeCareerItem({
             ...career,

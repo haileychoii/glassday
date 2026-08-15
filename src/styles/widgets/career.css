@@ -1688,6 +1688,135 @@
 }
 
 /* =========================================================
+   Career Selection Schedule — Career-owned calendar milestones
+   - The data lives on CareerItem.stages and is projected into Calendar.
+   - Career에 저장된 전형 일정을 Calendar로 펼쳐 보여주는 편집 UI입니다.
+========================================================= */
+
+.career-stage-section {
+  min-width: 0;
+}
+
+.career-stage-add-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.career-stage-card {
+  min-width: 0;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 20px;
+  background:
+    linear-gradient(145deg, hsl(0 0% 100% / 0.36), hsl(0 0% 100% / 0.18));
+  border: 1px solid hsl(0 0% 100% / 0.42);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.48),
+    0 10px 26px hsl(240 30% 20% / 0.05);
+  backdrop-filter: blur(22px) saturate(132%);
+  -webkit-backdrop-filter: blur(22px) saturate(132%);
+}
+
+.career-stage-top {
+  grid-template-columns: 132px minmax(0, 1fr) 118px 34px;
+  align-items: center;
+}
+
+.career-stage-kind,
+.career-stage-title-input,
+.career-stage-status,
+.career-stage-date,
+.career-stage-memo,
+.career-stage-card .career-field input {
+  width: 100%;
+  min-width: 0;
+  border-radius: 16px;
+  border: 1px solid hsl(0 0% 100% / 0.5);
+  background: hsl(0 0% 100% / 0.36);
+  color: hsl(var(--foreground) / 0.78);
+  outline: none;
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+}
+
+.career-stage-kind,
+.career-stage-title-input,
+.career-stage-status,
+.career-stage-card .career-field input {
+  height: 36px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+.career-stage-bottom {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.career-stage-note-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 10px;
+}
+
+.career-stage-note-field {
+  min-width: 0;
+}
+
+.career-stage-memo {
+  min-height: 58px;
+  padding: 10px 12px;
+  resize: vertical;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.career-stage-sync-toggle {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 850;
+  color: hsl(var(--foreground) / 0.66);
+  background: hsl(0 0% 100% / 0.28);
+  border: 1px solid hsl(0 0% 100% / 0.42);
+}
+
+.career-stage-sync-toggle input {
+  width: 14px;
+  height: 14px;
+  accent-color: hsl(var(--primary));
+}
+
+.career-stage-marker.status-skipped {
+  color: hsl(var(--foreground) / 0.42);
+  background: hsl(0 0% 90% / 0.5);
+}
+
+@media (max-width: 900px) {
+  .career-stage-add-row {
+    justify-content: flex-start;
+  }
+
+  .career-stage-top,
+  .career-stage-bottom,
+  .career-stage-note-row {
+    grid-template-columns: 1fr;
+  }
+
+  .career-stage-sync-toggle {
+    justify-self: start;
+  }
+}
+
+/* =========================================================
    Career Cover Letter — wide horizontal editor
 ========================================================= */
 
