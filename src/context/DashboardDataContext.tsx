@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * ============================================================
  * [Figma Mapping] Shared Dashboard Data / Calendar + Career

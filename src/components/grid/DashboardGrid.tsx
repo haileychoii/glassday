@@ -30,7 +30,7 @@
  * - Edit Overlay / Selected · Collision Variants
  * ============================================================
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
   ComponentType,
   CSSProperties,
@@ -500,58 +500,58 @@ export const DashboardGrid = ({
     });
   }, [collidingWidgetIds, onEditValidationChange]);
 
-  const getGridMetrics = (breakpoint: Breakpoint) => {
-    const cols = GRID_COLS[breakpoint];
-    const columnWidth = (width - gridGap * (cols - 1)) / cols;
+  const getGridMetrics = useCallback(
+    (breakpoint: Breakpoint) => {
+      const cols = GRID_COLS[breakpoint];
+      const columnWidth = (width - gridGap * (cols - 1)) / cols;
 
-    return {
-      cols,
-      columnStep: columnWidth + gridGap,
-      rowStep: rowHeight + gridGap,
-    };
-  };
-
-  const commitInteractionLayout = (
-    session: EditInteraction,
-    clientX: number,
-    clientY: number
-  ) => {
-    const { cols, columnStep, rowStep } = getGridMetrics(session.breakpoint);
-    const deltaColumns = Math.round(
-      (clientX - session.startClientX) / columnStep
-    );
-    const deltaRows = Math.round(
-      (clientY - session.startClientY) / rowStep
-    );
-    const startItem = session.startItem;
-    let nextItem: GridLayoutItem = { ...startItem };
-
-    if (session.mode === "move") {
-      nextItem = {
-        ...nextItem,
-        x: clamp(startItem.x + deltaColumns, 0, cols - startItem.w),
-        y: Math.max(0, startItem.y + deltaRows),
+      return {
+        cols,
+        columnStep: columnWidth + gridGap,
+        rowStep: rowHeight + gridGap,
       };
-    } else {
-      const handle = session.handle ?? "se";
-      let nextX = startItem.x;
-      let nextY = startItem.y;
-      let nextW = startItem.w;
-      let nextH = startItem.h;
-      const minWidth = startItem.minW ?? 2;
-      const minHeight = startItem.minH ?? 3;
+    },
+    [gridGap, rowHeight, width]
+  );
 
-      if (handle.includes("e")) {
-        nextW = clamp(
-          startItem.w + deltaColumns,
-          Math.min(minWidth, cols - startItem.x),
-          cols - startItem.x
-        );
-      }
+  const commitInteractionLayout = useCallback(
+    (session: EditInteraction, clientX: number, clientY: number) => {
+      const { cols, columnStep, rowStep } = getGridMetrics(session.breakpoint);
+      const deltaColumns = Math.round(
+        (clientX - session.startClientX) / columnStep
+      );
+      const deltaRows = Math.round(
+        (clientY - session.startClientY) / rowStep
+      );
+      const startItem = session.startItem;
+      let nextItem: GridLayoutItem = { ...startItem };
 
-      if (handle.includes("s")) {
-        nextH = Math.max(minHeight, startItem.h + deltaRows);
-      }
+      if (session.mode === "move") {
+        nextItem = {
+          ...nextItem,
+          x: clamp(startItem.x + deltaColumns, 0, cols - startItem.w),
+          y: Math.max(0, startItem.y + deltaRows),
+        };
+      } else {
+        const handle = session.handle ?? "se";
+        let nextX = startItem.x;
+        let nextY = startItem.y;
+        let nextW = startItem.w;
+        let nextH = startItem.h;
+        const minWidth = startItem.minW ?? 2;
+        const minHeight = startItem.minH ?? 3;
+
+        if (handle.includes("e")) {
+          nextW = clamp(
+            startItem.w + deltaColumns,
+            Math.min(minWidth, cols - startItem.x),
+            cols - startItem.x
+          );
+        }
+
+        if (handle.includes("s")) {
+          nextH = Math.max(minHeight, startItem.h + deltaRows);
+        }
 
       if (handle.includes("w")) {
         const maxLeftDelta = startItem.x;
@@ -593,8 +593,10 @@ export const DashboardGrid = ({
     };
 
     session.lastLayouts = nextLayouts;
-    setDraftLayouts(nextLayouts);
-  };
+      setDraftLayouts(nextLayouts);
+    },
+    [getGridMetrics]
+  );
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
@@ -648,7 +650,7 @@ export const DashboardGrid = ({
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [layoutMode, onLayoutsChange, width]);
+  }, [commitInteractionLayout, layoutMode, onLayoutsChange, width]);
 
   const continuePointerInteraction = (event: ReactPointerEvent<HTMLElement>) => {
     const session = interactionRef.current;

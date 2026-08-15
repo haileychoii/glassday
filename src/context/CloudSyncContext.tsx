@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * ============================================================
  * [Data Flow] Supabase Authentication + Cloud Snapshot Sync
@@ -534,7 +535,11 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!session?.user || !supabase) return;
 
-    void synchronizeWithRemote("initial");
+    const initialSyncId = window.setTimeout(() => {
+      void synchronizeWithRemote("initial");
+    }, 0);
+
+    return () => window.clearTimeout(initialSyncId);
   }, [session, synchronizeWithRemote]);
 
   useEffect(() => {

@@ -278,7 +278,23 @@ const SpendingDonut = ({
 }) => {
   const radius = 43;
   const circumference = 2 * Math.PI * radius;
-  let offset = 0;
+  const segments = items.map((item, index) => {
+    const dash = total > 0 ? (item.amount / total) * circumference : 0;
+    const previousDash = items
+      .slice(0, index)
+      .reduce(
+        (sum, previousItem) =>
+          sum +
+          (total > 0 ? (previousItem.amount / total) * circumference : 0),
+        0
+      );
+
+    return {
+      ...item,
+      dash,
+      strokeDashoffset: -previousDash,
+    };
+  });
 
   return (
     <div className="money-donut">
@@ -292,11 +308,7 @@ const SpendingDonut = ({
           strokeWidth="14"
         />
 
-        {items.map((item) => {
-          const dash = total > 0 ? (item.amount / total) * circumference : 0;
-          const strokeDashoffset = -offset;
-          offset += dash;
-
+        {segments.map((item) => {
           return (
             <circle
               key={item.key}
@@ -307,8 +319,8 @@ const SpendingDonut = ({
               stroke={item.color}
               strokeWidth={selectedCategory === item.key ? 16 : 14}
               strokeLinecap="round"
-              strokeDasharray={`${dash} ${circumference}`}
-              strokeDashoffset={strokeDashoffset}
+              strokeDasharray={`${item.dash} ${circumference}`}
+              strokeDashoffset={item.strokeDashoffset}
               className={cn(
                 "money-donut-segment",
                 selectedCategory === item.key && "is-selected"

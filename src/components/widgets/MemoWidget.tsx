@@ -620,7 +620,7 @@ export const MemoWidget = () => {
     ) {
       windowEditorRef.current.innerHTML = activeNote.html;
     }
-  }, [activeNote?.id, activeNote?.html, memoWindowOpen]);
+  }, [activeNote, memoWindowOpen]);
 
   useEffect(() => {
     if (!saveDialogOpen) return;

@@ -26,7 +26,7 @@
  * - Theme/font/storage key와 Supabase schema는 이 UI의 visual 변경과 별도 contract다.
  * ============================================================
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -88,40 +88,7 @@ type SettingsModalProps = {
   onClose: () => void;
 };
 
-const THEME_STORAGE_KEY = "glassday.theme";
 const SETTINGS_WINDOW_POSITION_STORAGE_KEY = "glassday.settingsWindow.position.v1";
-
-// const forceApplyTheme = (nextTheme: ThemeId) => {
-//   applyTheme(nextTheme);
-
-//   if (typeof document === "undefined") return;
-
-//   const root = document.documentElement;
-//   const body = document.body;
-
-//   themeOptions.forEach((item) => {
-//     root.classList.remove(`theme-${item.id}`);
-//     body.classList.remove(`theme-${item.id}`);
-//   });
-
-//   root.classList.add(`theme-${nextTheme}`);
-//   body.classList.add(`theme-${nextTheme}`);
-
-//   root.setAttribute("data-theme", nextTheme);
-//   body.setAttribute("data-theme", nextTheme);
-
-//   window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
-
-//   window.dispatchEvent(
-//     new CustomEvent("glassday-theme-change", {
-//       detail: nextTheme,
-//     })
-//   );
-// };
-
-const forceApplyTheme = (nextTheme: ThemeId) => {
-  applyTheme(nextTheme);
-};
 
 const renderThemePreview = (themeId: ThemeId) => (
   <span
@@ -223,16 +190,24 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       return { x: 0, y: 0 };
     }
   });
-  const appFontOptions = useMemo(() => getAppFontOptions(), [customFonts]);
+  const appFontOptions = getAppFontOptions();
 
   useEffect(() => {
     if (!open) return;
 
-    setTheme(getCurrentTheme());
-    setAppFont(getSavedAppFont());
-    setDefaultMemoFont(getSavedDefaultMemoFont());
-    setScrollbarsVisible(getSavedScrollbarVisibility());
-    setCustomFonts(getSavedCustomFonts());
+    /* Open snapshot refresh
+       Settings may be changed by theme/font events while the modal is closed.
+       Deferring this avoids a synchronous setState-in-effect lint violation.
+       모달을 열 때 최신 저장값을 읽되 렌더 직후 연쇄 setState는 피합니다. */
+    const refreshId = window.setTimeout(() => {
+      setTheme(getCurrentTheme());
+      setAppFont(getSavedAppFont());
+      setDefaultMemoFont(getSavedDefaultMemoFont());
+      setScrollbarsVisible(getSavedScrollbarVisibility());
+      setCustomFonts(getSavedCustomFonts());
+    }, 0);
+
+    return () => window.clearTimeout(refreshId);
   }, [open]);
 
   useEffect(() => {

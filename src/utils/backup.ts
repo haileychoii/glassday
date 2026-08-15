@@ -20,7 +20,6 @@ import {
   applyGlassdayStorageSnapshot,
   createGlassdayStorageSnapshot,
   getGlassdayLocalStorageKeys,
-  GLASSDAY_STORAGE_PREFIX,
   type GlassdayStorageSnapshot,
 } from "../lib/glassdayStorage";
 

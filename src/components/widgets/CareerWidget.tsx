@@ -386,7 +386,11 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
   useEffect(() => {
     if (selectedFromContext) {
-      setOptimisticSelectedItem(null);
+      const clearOptimisticId = window.setTimeout(() => {
+        setOptimisticSelectedItem(null);
+      }, 0);
+
+      return () => window.clearTimeout(clearOptimisticId);
     }
   }, [selectedFromContext]);
 

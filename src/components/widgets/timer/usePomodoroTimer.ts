@@ -421,7 +421,10 @@ export const usePomodoroTimer = () => {
       return;
     }
 
-    setNow(Date.now());
+    const syncNowId =
+      window.setTimeout(() => {
+        setNow(Date.now());
+      }, 0);
 
     const intervalId =
       window.setInterval(() => {
@@ -429,6 +432,7 @@ export const usePomodoroTimer = () => {
       }, 1000);
 
     return () => {
+      window.clearTimeout(syncNowId);
       window.clearInterval(intervalId);
     };
   }, [pomodoro.isRunning]);

@@ -163,7 +163,7 @@ export const StudyWidget = () => {
   const [taskText, setTaskText] = useState("");
   const [taskEstimate, setTaskEstimate] = useState("30");
   const [detailOpen, setDetailOpen] = useState(false);
-  const [timerNow, setTimerNow] = useState(Date.now());
+  const [timerNow, setTimerNow] = useState(() => Date.now());
   const [subjectDraft, setSubjectDraft] = useState<StudySubjectDraft | null>(
     null
   );
@@ -328,9 +328,13 @@ export const StudyWidget = () => {
   }, [selectedTool]);
 
   useEffect(() => {
-    setTimelineHistory([]);
+    const resetId = window.setTimeout(() => {
+      setTimelineHistory([]);
+    }, 0);
     paintingRef.current = false;
     paintedSlotsRef.current.clear();
+
+    return () => window.clearTimeout(resetId);
   }, [selectedDate]);
 
   /* Persist the migration immediately.
@@ -350,9 +354,12 @@ export const StudyWidget = () => {
   useEffect(() => {
     if (!activeTimer) return;
 
-    setTimerNow(Date.now());
+    const syncNowId = window.setTimeout(() => setTimerNow(Date.now()), 0);
     const timerId = window.setInterval(() => setTimerNow(Date.now()), 1000);
-    return () => window.clearInterval(timerId);
+    return () => {
+      window.clearTimeout(syncNowId);
+      window.clearInterval(timerId);
+    };
   }, [activeTimer]);
 
   useEffect(() => {

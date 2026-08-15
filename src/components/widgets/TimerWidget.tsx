@@ -97,7 +97,11 @@ const TimerSurface = ({
   } as CSSProperties;
 
   useEffect(() => {
-    setDraftFocusMinutes(String(pomodoro.focusMinutes || 25));
+    const syncDraftId = window.setTimeout(() => {
+      setDraftFocusMinutes(String(pomodoro.focusMinutes || 25));
+    }, 0);
+
+    return () => window.clearTimeout(syncDraftId);
   }, [pomodoro.focusMinutes]);
 
   useEffect(() => {
