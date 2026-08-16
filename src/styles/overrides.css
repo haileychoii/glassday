@@ -2992,3 +2992,344 @@ body,
   visibility: visible !important;
   stroke-width: 2.4 !important;
 }
+
+/* =========================================================
+   Pixel Desk final restore — solid bevels + readable semantic colors
+   The earlier Pixel block is intentionally broad, but it also forced modern
+   gradients onto every button and muted Study/Mood colors. This final layer
+   restores a single 90s desktop grammar: solid face, raised/inset bevels, and
+   visibly colored data cells.
+   픽셀 테마 마지막 보정: 버튼 그라데이션을 제거하고 Study/Mood 색을 다시
+   선명하게 살리며, 내부 요소는 모두 같은 입체 베벨 문법으로 맞춘다.
+========================================================= */
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  :is(
+    .journal-section,
+    .journal-summary-card,
+    .journal-score-strip-card,
+    .journal-task-item,
+    .journal-clip-item,
+    .journal-library-item,
+    .journal-empty-box,
+    .mood-row,
+    .study10-summary-card,
+    .study10-date-control,
+    .study10-timer,
+    .study10-panel,
+    .study10-note-panel,
+    .study10-task-row,
+    .study10-empty,
+    .memo-workspace,
+    .memo-note-item,
+    .money-summary-panel,
+    .money-budget-panel,
+    .money-visual-panel,
+    .money-recent-panel,
+    .money-detail-card,
+    .money-transaction-row,
+    .career-list-item,
+    .career-summary-card
+  ) {
+  border-radius: 0 !important;
+  background: #d8d8cc !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #606060 !important;
+  border-bottom: 2px solid #606060 !important;
+  box-shadow:
+    inset 1px 1px 0 #eeeee4,
+    inset -1px -1px 0 #9c9c94 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  :is(
+    button,
+    .glass-button,
+    .calendar-nav-button,
+    .calendar-view-button,
+    .career-icon-button,
+    .career-small-button,
+    .career-filter-pill,
+    .money-icon-button,
+    .money-action-button,
+    .money-secondary-button,
+    .money-submit-button,
+    .money-pill,
+    .journal-date-nav button,
+    .journal-score-stepper button,
+    .journal-add-row button,
+    .journal-clip-row button,
+    .journal-task-check,
+    .memo-tool-button,
+    .memo-mini-button,
+    .memo-save-option,
+    .mood-reset-button,
+    .mood-dot,
+    .study10-icon-button,
+    .study10-today-button,
+    .study10-add-button,
+    .study10-subject-tool,
+    .study10-subject-add-tool,
+    .study10-timer-button,
+    .study10-task-check,
+    .study10-task-delete,
+    .study10-subject-dialog-apply,
+    .study10-subject-dialog-close
+  ) {
+  border-radius: 0 !important;
+  color: #000000 !important;
+  background: #d4d0c8 !important;
+  background-image: none !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    inset 1px 1px 0 #eeeeea,
+    inset -1px -1px 0 #808080 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  :is(
+    button:active,
+    .glass-button:active,
+    .calendar-view-button.is-active,
+    .career-filter-pill.is-active,
+    .money-pill.is-active,
+    .memo-save-option.is-active,
+    .study10-icon-button.is-active,
+    .study10-subject-tool.is-active,
+    .study10-today-button:active,
+    .study10-timer-button:active,
+    .study10-task-check.is-checked,
+    .mood-dot-active
+  ) {
+  background-image: none !important;
+  border-top-color: #404040 !important;
+  border-left-color: #404040 !important;
+  border-right-color: #ffffff !important;
+  border-bottom-color: #ffffff !important;
+  box-shadow:
+    inset 1px 1px 0 #808080,
+    inset -1px -1px 0 #eeeeea !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  :is(
+    input,
+    textarea,
+    select,
+    .calendar-date-input,
+    .memo-editor,
+    .money-budget-track,
+    .money-store-track,
+    .study10-timeline-grid,
+    .today-focus-ring
+  ) {
+  border-radius: 0 !important;
+  background: #fffef4 !important;
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow:
+    inset 1px 1px 0 #808080,
+    inset -1px -1px 0 #f7f7ef !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .study10-slot:not(.is-filled) {
+  background: #eeeede !important;
+  background-image: none !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  box-shadow:
+    inset 1px 1px 0 #fafaf0,
+    inset -1px -1px 0 #aaa9a0 !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .study10-slot.is-filled {
+  background:
+    color-mix(in srgb, var(--study-subject-color) 72%, #e8e4d0 28%) !important;
+  background-image: none !important;
+  border-top: 2px solid color-mix(in srgb, var(--study-subject-color) 30%, #ffffff 70%) !important;
+  border-left: 2px solid color-mix(in srgb, var(--study-subject-color) 30%, #ffffff 70%) !important;
+  border-right: 2px solid color-mix(in srgb, var(--study-subject-color) 62%, #303030 38%) !important;
+  border-bottom: 2px solid color-mix(in srgb, var(--study-subject-color) 62%, #303030 38%) !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--study-subject-color) 24%, #ffffff 76%),
+    inset -1px -1px 0 color-mix(in srgb, var(--study-subject-color) 66%, #686860 34%) !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .study10-subject-tool.is-active {
+  background:
+    color-mix(in srgb, var(--study-subject-color) 54%, #d4d0c8 46%) !important;
+  background-image: none !important;
+  color: #000000 !important;
+  border-top-color: color-mix(in srgb, var(--study-subject-color) 18%, #ffffff 82%) !important;
+  border-left-color: color-mix(in srgb, var(--study-subject-color) 18%, #ffffff 82%) !important;
+  border-right-color: color-mix(in srgb, var(--study-subject-color) 48%, #404040 52%) !important;
+  border-bottom-color: color-mix(in srgb, var(--study-subject-color) 48%, #404040 52%) !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .study10-task-row {
+  background:
+    color-mix(in srgb, var(--study-subject-color, #d4d0c8) 36%, #d8d8cc 64%) !important;
+  background-image: none !important;
+  border-top-color: color-mix(in srgb, var(--study-subject-color, #ffffff) 18%, #ffffff 82%) !important;
+  border-left-color: color-mix(in srgb, var(--study-subject-color, #ffffff) 18%, #ffffff 82%) !important;
+  border-right-color: color-mix(in srgb, var(--study-subject-color, #505050) 36%, #505050 64%) !important;
+  border-bottom-color: color-mix(in srgb, var(--study-subject-color, #505050) 36%, #505050 64%) !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  :is(.study10-subject-dot, .study10-task-color) {
+  background: var(--study-subject-color) !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--study-subject-color) 16%, #ffffff 84%),
+    inset -1px -1px 0 color-mix(in srgb, var(--study-subject-color) 64%, #505050 36%) !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .mood-row {
+  background: color-mix(in srgb, var(--mood-accent) 48%, #d8d8cc 52%) !important;
+  background-image: none !important;
+  border-top-color: color-mix(in srgb, var(--mood-accent) 18%, #ffffff 82%) !important;
+  border-left-color: color-mix(in srgb, var(--mood-accent) 18%, #ffffff 82%) !important;
+  border-right-color: color-mix(in srgb, var(--mood-accent) 54%, #404040 46%) !important;
+  border-bottom-color: color-mix(in srgb, var(--mood-accent) 54%, #404040 46%) !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--mood-accent) 12%, #ffffff 88%),
+    inset -1px -1px 0 color-mix(in srgb, var(--mood-accent) 36%, #8f8f86 64%) !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .mood-dot {
+  background: color-mix(in srgb, var(--mood-accent) 34%, #d4d0c8 66%) !important;
+  background-image: none !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .mood-dot-active {
+  background: var(--mood-accent) !important;
+  background-image: none !important;
+}
