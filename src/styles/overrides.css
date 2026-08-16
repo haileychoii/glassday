@@ -3333,3 +3333,112 @@ body,
   background: var(--mood-accent) !important;
   background-image: none !important;
 }
+
+/* Pixel Desk Memo restore
+   Memo owns note paper color/font through CSS variables, so it should not be
+   treated like a generic text input. Keep the OS bevel frame, then hand the
+   editor surface back to the active memo palette.
+   메모는 노트별 종이색/폰트가 의미를 가지므로 일반 input 흰색 강제에서 제외한다. */
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .memo-widget
+  .memo-workspace {
+  background: #d4d0c8 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #606060 !important;
+  border-bottom: 2px solid #606060 !important;
+  box-shadow:
+    inset 1px 1px 0 #eeeee4,
+    inset -1px -1px 0 #9c9c94 !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .memo-widget
+  :is(.memo-toolbar, .memo-editor-toolbar) {
+  background: #d4d0c8 !important;
+  background-image: none !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #808080 !important;
+  border-bottom: 1px solid #808080 !important;
+  box-shadow:
+    inset 1px 1px 0 #eeeee4,
+    inset -1px -1px 0 #aaa9a0 !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .memo-widget
+  :is(.memo-title-input, .memo-title-view) {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: var(--memo-title-color, #111111) !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .memo-widget
+  .memo-editor-shell {
+  background: #d4d0c8 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .memo-widget
+  .memo-editor {
+  background: var(--memo-paper-surface, #fff7cf) !important;
+  background-image: none !important;
+  color: var(--memo-editor-color, #111111) !important;
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow:
+    inset 1px 1px 0 #808080,
+    inset -1px -1px 0 color-mix(in srgb, var(--memo-paper-border, #ffffff) 42%, #f7f7ef 58%) !important;
+}

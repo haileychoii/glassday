@@ -29,6 +29,7 @@ import {
   BriefcaseBusiness,
   CalendarDays,
   Check,
+  ChevronDown,
   ExternalLink,
   FileText,
   GripHorizontal,
@@ -350,6 +351,11 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     useState<CareerItem | null>(null);
   const [viewMode, setViewMode] = useState<CareerViewMode>("list");
   const [statusFilter, setStatusFilter] = useState<CareerStatus | "All">("All");
+  // Cover letter rows can get long, so each prompt keeps its own folded state.
+  // 자소서 문항별로 답변/전략 영역만 접어 리스트 스캔성을 유지한다.
+  const [collapsedCoverItems, setCollapsedCoverItems] = useState<
+    Record<string, boolean>
+  >({});
   const [imageErrors, setImageErrors] = useState<Record<CareerImageField, string>>({
     jobImages: "",
     noteImages: "",
@@ -885,10 +891,23 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
       (item) => item.id !== itemId
     );
 
+    setCollapsedCoverItems((current) => {
+      const next = { ...current };
+      delete next[itemId];
+      return next;
+    });
+
     updateSelectedItem({
       coverLetterItems: nextItems,
       coverLetterQuestions: nextItems.map((item) => item.question),
     });
+  };
+
+  const toggleCoverLetterItem = (itemId: string) => {
+    setCollapsedCoverItems((current) => ({
+      ...current,
+      [itemId]: !current[itemId],
+    }));
   };
 
   const renderCareerCard = (item: CareerItem, compact = false) => {
@@ -1642,6 +1661,9 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                         const isOverLimit =
                           typeof answerLimit === "number" &&
                           answerCount > answerLimit;
+                        const isCollapsed = Boolean(
+                          collapsedCoverItems[item.id]
+                        );
 
                         return (
                           <article
@@ -1649,6 +1671,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                             className={[
                               "career-cover-wide-row",
                               isOverLimit ? "is-over-limit" : "",
+                              isCollapsed ? "is-collapsed" : "",
                             ]
                               .filter(Boolean)
                               .join(" ")}
@@ -1671,6 +1694,17 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                                 className="career-cover-question-input career-auto-textarea"
                                 placeholder={`${index + 1}. 자소서 문항 입력`}
                               />
+
+                              <button
+                                type="button"
+                                onClick={() => toggleCoverLetterItem(item.id)}
+                                className="career-cover-collapse-toggle"
+                                aria-expanded={!isCollapsed}
+                                title={isCollapsed ? "답변 펼치기" : "답변 접기"}
+                              >
+                                <ChevronDown className="w-3.5 h-3.5" />
+                                {isCollapsed ? "펼치기" : "접기"}
+                              </button>
 
                               <button
                                 type="button"
@@ -1724,69 +1758,71 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                               </button>
                             </div>
 
-                            <div className="career-cover-writing-line">
-                              <label className="career-cover-writing-field">
-                                <div className="career-cover-writing-header">
-                                  <span>Answer</span>
+                            {!isCollapsed && (
+                              <div className="career-cover-writing-line">
+                                <label className="career-cover-writing-field">
+                                  <div className="career-cover-writing-header">
+                                    <span>Answer</span>
 
-                                  <strong
-                                    className={isOverLimit ? "is-over" : ""}
-                                  >
-                                    {answerCount}
-                                    {typeof answerLimit === "number"
-                                      ? ` / ${answerLimit}`
-                                      : " chars"}
-                                  </strong>
-                                </div>
-
-                                <textarea
-                                  value={item.answer ?? ""}
-                                  rows={4}
-                                  onInput={handleAutoGrowTextarea}
-                                  onFocus={(event) =>
-                                    autoGrowTextarea(event.currentTarget)
-                                  }
-                                  onChange={(event) =>
-                                    updateCoverLetterItem(item.id, {
-                                      answer: event.target.value,
-                                    })
-                                  }
-                                  className="career-cover-answer-textarea career-auto-textarea"
-                                  placeholder="여기에 실제 답변 초안 작성"
-                                />
-
-                                {isOverLimit && (
-                                  <div className="career-cover-limit-warning">
-                                    공백 포함{" "}
-                                    {answerCount - (answerLimit ?? 0)}자 초과
+                                    <strong
+                                      className={isOverLimit ? "is-over" : ""}
+                                    >
+                                      {answerCount}
+                                      {typeof answerLimit === "number"
+                                        ? ` / ${answerLimit}`
+                                        : " chars"}
+                                    </strong>
                                   </div>
-                                )}
-                              </label>
 
-                              <label className="career-cover-writing-field">
-                                <div className="career-cover-writing-header">
-                                  <span>Strategy</span>
-                                  <strong>Memo</strong>
-                                </div>
+                                  <textarea
+                                    value={item.answer ?? ""}
+                                    rows={4}
+                                    onInput={handleAutoGrowTextarea}
+                                    onFocus={(event) =>
+                                      autoGrowTextarea(event.currentTarget)
+                                    }
+                                    onChange={(event) =>
+                                      updateCoverLetterItem(item.id, {
+                                        answer: event.target.value,
+                                      })
+                                    }
+                                    className="career-cover-answer-textarea career-auto-textarea"
+                                    placeholder="여기에 실제 답변 초안 작성"
+                                  />
 
-                                <textarea
-                                  value={item.strategy ?? item.memo ?? ""}
-                                  rows={3}
-                                  onInput={handleAutoGrowTextarea}
-                                  onFocus={(event) =>
-                                    autoGrowTextarea(event.currentTarget)
-                                  }
-                                  onChange={(event) =>
-                                    updateCoverLetterItem(item.id, {
-                                      strategy: event.target.value,
-                                      memo: event.target.value,
-                                    })
-                                  }
-                                  className="career-cover-strategy-textarea career-auto-textarea"
-                                  placeholder="키워드, 구조, 강조할 경험, 분량 전략"
-                                />
-                              </label>
-                            </div>
+                                  {isOverLimit && (
+                                    <div className="career-cover-limit-warning">
+                                      공백 포함{" "}
+                                      {answerCount - (answerLimit ?? 0)}자 초과
+                                    </div>
+                                  )}
+                                </label>
+
+                                <label className="career-cover-writing-field">
+                                  <div className="career-cover-writing-header">
+                                    <span>Strategy</span>
+                                    <strong>Memo</strong>
+                                  </div>
+
+                                  <textarea
+                                    value={item.strategy ?? item.memo ?? ""}
+                                    rows={3}
+                                    onInput={handleAutoGrowTextarea}
+                                    onFocus={(event) =>
+                                      autoGrowTextarea(event.currentTarget)
+                                    }
+                                    onChange={(event) =>
+                                      updateCoverLetterItem(item.id, {
+                                        strategy: event.target.value,
+                                        memo: event.target.value,
+                                      })
+                                    }
+                                    className="career-cover-strategy-textarea career-auto-textarea"
+                                    placeholder="키워드, 구조, 강조할 경험, 분량 전략"
+                                  />
+                                </label>
+                              </div>
+                            )}
                           </article>
                         );
                       })

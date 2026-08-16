@@ -587,19 +587,23 @@
   grid-template-columns: minmax(280px, 0.92fr) minmax(320px, 1.08fr);
 }
 
-.money-wishlist-add-card {
+.money-wishlist-add-card,
+.money-expense-add-card {
   grid-column: 1 / -1;
 }
 
-.money-wishlist-add-card.is-collapsed {
+.money-wishlist-add-card.is-collapsed,
+.money-expense-add-card.is-collapsed {
   padding-block: 12px;
 }
 
-.money-wishlist-add-card.is-collapsed .money-section-heading {
+.money-wishlist-add-card.is-collapsed .money-section-heading,
+.money-expense-add-card.is-collapsed .money-section-heading {
   align-items: center;
 }
 
-.money-wishlist-toggle {
+.money-wishlist-toggle,
+.money-expense-toggle {
   min-height: 32px;
   white-space: nowrap;
 }

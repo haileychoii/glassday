@@ -477,6 +477,9 @@ export const MoneyWidget = () => {
   const [section, setSection] = useState<MoneySection>("overview");
   const [spendingView, setSpendingView] = useState<MoneySpendingView>("All");
   const [wishlistView, setWishlistView] = useState<MoneyWishlistView>("All");
+  // Expense creation is opt-in inside the floating window to keep the ledger compact.
+  // 지출 입력폼이 항상 펼쳐져 공간을 차지하지 않도록 토글 상태로 관리한다.
+  const [expenseFormOpen, setExpenseFormOpen] = useState(false);
   const [wishlistFormOpen, setWishlistFormOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<MoneyCategory | null>(
     null
@@ -684,6 +687,7 @@ export const MoneyWidget = () => {
       };
     });
     setExpenseDraft(createDefaultExpenseDraft());
+    setExpenseFormOpen(false);
   };
 
   const applyQuickTemplate = (template: (typeof quickExpenseTemplates)[number]) => {
@@ -698,6 +702,7 @@ export const MoneyWidget = () => {
       amount: "",
       date: todayInput(),
     }));
+    setExpenseFormOpen(true);
     openMoneyDetail("spending");
   };
 
@@ -1109,137 +1114,169 @@ export const MoneyWidget = () => {
 
           {section === "spending" && (
             <div className="money-spending-layout">
-              <section className="money-detail-card money-form-card">
+              <section
+                className={cn(
+                  "money-detail-card money-form-card money-expense-add-card",
+                  !expenseFormOpen && "is-collapsed"
+                )}
+              >
                 <div className="money-section-heading">
                   <div>
                     <span className="money-kicker">Database</span>
                     <h3>Add Expense</h3>
+                    <p>
+                      Keep the form closed until you are entering a new spend.
+                    </p>
                   </div>
-                </div>
 
-                <div className="money-quick-add">
-                  {quickExpenseTemplates.map((template) => (
-                    <button
-                      key={template.label}
-                      type="button"
-                      onClick={() => applyQuickTemplate(template)}
-                    >
-                      {template.label}
-                    </button>
-                  ))}
-                </div>
-
-                <form className="money-form" onSubmit={addExpense}>
-                  <label>
-                    <span>Name</span>
-                    <input
-                      value={expenseDraft.name}
-                      onChange={(event) =>
-                        updateExpenseDraft("name", event.target.value)
-                      }
-                      placeholder="Lunch, cafe, webtoon cookies..."
-                    />
-                  </label>
-
-                  <label>
-                    <span>Amount</span>
-                    <input
-                      type="number"
-                      min={0}
-                      value={expenseDraft.amount}
-                      onChange={(event) =>
-                        updateExpenseDraft("amount", event.target.value)
-                      }
-                      placeholder="0"
-                    />
-                  </label>
-
-                  <label>
-                    <span>Date</span>
-                    <input
-                      type="date"
-                      value={expenseDraft.date}
-                      onChange={(event) =>
-                        updateExpenseDraft("date", event.target.value)
-                      }
-                    />
-                  </label>
-
-                  <label>
-                    <span>Category</span>
-                    <CategorySelect
-                      value={expenseDraft.category}
-                      onChange={(value) => updateExpenseDraft("category", value)}
-                    />
-                  </label>
-
-                  <label>
-                    <span>Subcategory</span>
-                    <input
-                      value={expenseDraft.subcategory}
-                      onChange={(event) =>
-                        updateExpenseDraft("subcategory", event.target.value)
-                      }
-                      list="money-subcategories"
-                    />
-                  </label>
-
-                  <label>
-                    <span>Store</span>
-                    <StoreInput
-                      value={expenseDraft.store}
-                      onChange={(value) => updateExpenseDraft("store", value)}
-                    />
-                  </label>
-
-                  <label>
-                    <span>Channel</span>
-                    <select
-                      value={expenseDraft.channel}
-                      onChange={(event) =>
-                        updateExpenseDraft(
-                          "channel",
-                          event.target.value as MoneyChannel
-                        )
-                      }
-                    >
-                      <option value="online">online</option>
-                      <option value="offline">offline</option>
-                    </select>
-                  </label>
-
-                  <label>
-                    <span>Expense Type</span>
-                    <select
-                      value={expenseDraft.expenseType}
-                      onChange={(event) =>
-                        updateExpenseDraft(
-                          "expenseType",
-                          event.target.value as MoneyExpenseType
-                        )
-                      }
-                    >
-                      <option value="fixed">fixed</option>
-                      <option value="variable">variable</option>
-                      <option value="one-time">one-time</option>
-                    </select>
-                  </label>
-
-                  <label className="money-form-wide">
-                    <span>Note</span>
-                    <textarea
-                      value={expenseDraft.note}
-                      onChange={(event) =>
-                        updateExpenseDraft("note", event.target.value)
-                      }
-                      placeholder="Optional memo"
-                    />
-                  </label>
-
-                  <button type="submit" className="money-submit-button">
-                    Add Expense
+                  <button
+                    type="button"
+                    onClick={() => setExpenseFormOpen((prev) => !prev)}
+                    className="money-secondary-button money-expense-toggle"
+                  >
+                    {expenseFormOpen ? (
+                      <X className="w-3.5 h-3.5" />
+                    ) : (
+                      <Plus className="w-3.5 h-3.5" />
+                    )}
+                    {expenseFormOpen ? "Hide" : "Add Expense"}
                   </button>
-                </form>
+                </div>
+
+                {expenseFormOpen && (
+                  <>
+                    <div className="money-quick-add">
+                      {quickExpenseTemplates.map((template) => (
+                        <button
+                          key={template.label}
+                          type="button"
+                          onClick={() => applyQuickTemplate(template)}
+                        >
+                          {template.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    <form className="money-form" onSubmit={addExpense}>
+                      <label>
+                        <span>Name</span>
+                        <input
+                          value={expenseDraft.name}
+                          onChange={(event) =>
+                            updateExpenseDraft("name", event.target.value)
+                          }
+                          placeholder="Lunch, cafe, webtoon cookies..."
+                        />
+                      </label>
+
+                      <label>
+                        <span>Amount</span>
+                        <input
+                          type="number"
+                          min={0}
+                          value={expenseDraft.amount}
+                          onChange={(event) =>
+                            updateExpenseDraft("amount", event.target.value)
+                          }
+                          placeholder="0"
+                        />
+                      </label>
+
+                      <label>
+                        <span>Date</span>
+                        <input
+                          type="date"
+                          value={expenseDraft.date}
+                          onChange={(event) =>
+                            updateExpenseDraft("date", event.target.value)
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        <span>Category</span>
+                        <CategorySelect
+                          value={expenseDraft.category}
+                          onChange={(value) =>
+                            updateExpenseDraft("category", value)
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        <span>Subcategory</span>
+                        <input
+                          value={expenseDraft.subcategory}
+                          onChange={(event) =>
+                            updateExpenseDraft(
+                              "subcategory",
+                              event.target.value
+                            )
+                          }
+                          list="money-subcategories"
+                        />
+                      </label>
+
+                      <label>
+                        <span>Store</span>
+                        <StoreInput
+                          value={expenseDraft.store}
+                          onChange={(value) =>
+                            updateExpenseDraft("store", value)
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        <span>Channel</span>
+                        <select
+                          value={expenseDraft.channel}
+                          onChange={(event) =>
+                            updateExpenseDraft(
+                              "channel",
+                              event.target.value as MoneyChannel
+                            )
+                          }
+                        >
+                          <option value="online">online</option>
+                          <option value="offline">offline</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        <span>Expense Type</span>
+                        <select
+                          value={expenseDraft.expenseType}
+                          onChange={(event) =>
+                            updateExpenseDraft(
+                              "expenseType",
+                              event.target.value as MoneyExpenseType
+                            )
+                          }
+                        >
+                          <option value="fixed">fixed</option>
+                          <option value="variable">variable</option>
+                          <option value="one-time">one-time</option>
+                        </select>
+                      </label>
+
+                      <label className="money-form-wide">
+                        <span>Note</span>
+                        <textarea
+                          value={expenseDraft.note}
+                          onChange={(event) =>
+                            updateExpenseDraft("note", event.target.value)
+                          }
+                          placeholder="Optional memo"
+                        />
+                      </label>
+
+                      <button type="submit" className="money-submit-button">
+                        Add Expense
+                      </button>
+                    </form>
+                  </>
+                )}
 
                 <datalist id="money-subcategories">
                   {getSubcategories(expenseDraft.category).map((subcategory) => (
