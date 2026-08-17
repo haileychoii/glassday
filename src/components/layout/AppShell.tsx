@@ -86,10 +86,12 @@ useEffect(() => {
     root.classList.remove("desktop-transparent");
   };
 }, [isTauriApp]);
-  /*
-   * Tauri에서는 layout 선택 개념이 필요 없다.
-   * 실제 1080 x 720 Tauri Window 자체가 Laptop viewport다.
-   */
+  
+/*
+ * Tauri에서는 layout 선택 개념이 필요 없다.
+ * Tauri에서는 항상 Laptop layout variant를 사용하되,
+ * 실제 viewport 크기는 현재 native window 크기를 따른다.
+ */
   const effectiveLayoutMode: DashboardLayoutMode = isTauriApp
     ? "laptop"
     : layoutMode;
@@ -255,25 +257,20 @@ useEffect(() => {
    * =========================================================
    */
 
-  const shellContent = (
+const shellContent = (
   <div
     className={[
       "glass-panel liquid-shell rounded-[2.2rem] overflow-hidden app-shell-surface",
       effectiveLayoutMode === "laptop"
         ? "is-laptop h-full min-h-0"
-        : "is-wide min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
+        : "is-wide h-[calc(100vh-1rem)] md:h-[calc(100vh-1.5rem)] min-h-0",
       isTauriApp ? "is-tauri-app-surface" : "",
-    ].join(" ")}
+    ]
+      .filter(Boolean)
+      .join(" ")}
     data-sidebar-collapsed={sidebarCollapsed ? "true" : "false"}
   >
-    <div
-      className={[
-        "flex app-shell-columns",
-        effectiveLayoutMode === "laptop"
-          ? "h-full min-h-0"
-          : "min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
-      ].join(" ")}
-    >
+    <div className="flex app-shell-columns h-full min-h-0">
       <Sidebar
         tabs={tabs}
         activeTabId={activeTabId}
@@ -288,7 +285,7 @@ useEffect(() => {
         onRemoveTab={onRemoveTab}
       />
 
-      <div className="app-shell-main-column flex-1 min-w-0 flex flex-col">
+      <div className="app-shell-main-column flex-1 min-w-0 min-h-0 flex flex-col">
         <Topbar
           editMode={editMode}
           layoutMode={effectiveLayoutMode}
@@ -305,7 +302,7 @@ useEffect(() => {
           onRemoveTab={onRemoveTab}
         />
 
-        <main className="app-shell-main flex-1 !overflow-y-auto !overflow-x-hidden bg-transparent">
+        <main className="app-shell-main flex-1 min-h-0 overflow-y-auto overflow-x-hidden bg-transparent">
           {children}
         </main>
       </div>
@@ -375,12 +372,12 @@ useEffect(() => {
         "app-mode-stage",
         "min-h-screen",
         "relative",
-        "overflow-hidden",
+        // "overflow-hidden",
         "bg-background",
         "text-foreground",
         effectiveLayoutMode === "laptop"
-          ? "is-laptop-mode"
-          : "is-wide-mode",
+          ? "is-laptop-mode overflow-hidden"
+          : "is-wide-mode overflow-x-hidden",
       ].join(" ")}
       data-layout-mode={effectiveLayoutMode}
       data-runtime="web"
@@ -448,7 +445,7 @@ useEffect(() => {
          * WEB Wide
          * ====================================================
          */
-        <div className="relative z-10 min-h-screen p-2 md:p-3">
+        <div className="relative z-10 h-screen p-2 md:p-3">
           {shellContent}
         </div>
       )}

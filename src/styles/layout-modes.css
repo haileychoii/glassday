@@ -63,7 +63,8 @@
 }
 
 .app-shell-surface.is-wide {
-  min-height: 100vh;
+  min-height: 0;
+  height: 100%;
 }
 
 .app-shell-surface.is-laptop {
