@@ -263,14 +263,21 @@ const shellContent = (
       "glass-panel liquid-shell rounded-[2.2rem] overflow-hidden app-shell-surface",
       effectiveLayoutMode === "laptop"
         ? "is-laptop h-full min-h-0"
-        : "is-wide h-[calc(100vh-1rem)] md:h-[calc(100vh-1.5rem)] min-h-0",
+        : "is-wide min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
       isTauriApp ? "is-tauri-app-surface" : "",
     ]
       .filter(Boolean)
       .join(" ")}
     data-sidebar-collapsed={sidebarCollapsed ? "true" : "false"}
   >
-    <div className="flex app-shell-columns h-full min-h-0">
+    <div
+      className={[
+        "flex app-shell-columns",
+        effectiveLayoutMode === "laptop"
+          ? "h-full min-h-0"
+          : "min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
+      ].join(" ")}
+    >
       <Sidebar
         tabs={tabs}
         activeTabId={activeTabId}
@@ -285,7 +292,12 @@ const shellContent = (
         onRemoveTab={onRemoveTab}
       />
 
-      <div className="app-shell-main-column flex-1 min-w-0 min-h-0 flex flex-col">
+      <div
+        className={[
+          "app-shell-main-column flex-1 min-w-0 flex flex-col",
+          effectiveLayoutMode === "laptop" ? "min-h-0" : "",
+        ].join(" ")}
+      >
         <Topbar
           editMode={editMode}
           layoutMode={effectiveLayoutMode}
@@ -302,7 +314,14 @@ const shellContent = (
           onRemoveTab={onRemoveTab}
         />
 
-        <main className="app-shell-main flex-1 min-h-0 overflow-y-auto overflow-x-hidden bg-transparent">
+        <main
+          className={[
+            "app-shell-main flex-1 min-w-0 bg-transparent",
+            effectiveLayoutMode === "laptop"
+              ? "min-h-0 overflow-y-auto overflow-x-hidden"
+              : "overflow-visible",
+          ].join(" ")}
+        >
           {children}
         </main>
       </div>
