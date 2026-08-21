@@ -3084,3 +3084,127 @@ body.theme-glass-dark .calendar-floating-window .event-color-picker {
   border-color: rgb(190 208 250 / 0.18) !important;
   color: rgb(239 244 255 / 0.92) !important;
 }
+
+/* Calendar density + color input polish
+   Month/Week keeps the saved events intact but collapses overflow into +N
+   affordances, matching Google Calendar-style dense schedules.
+   많은 일정은 데이터는 유지하고 화면에서만 +N으로 압축해 작은 위젯 높이를 지킨다. */
+.calendar-month-more-chip,
+.calendar-week-more-bar,
+.calendar-week-more-timed {
+  min-width: 0 !important;
+  border-radius: 999px !important;
+  border: 1px solid hsl(0 0% 100% / 0.48) !important;
+  background: hsl(0 0% 100% / 0.38) !important;
+  color: hsl(var(--foreground) / 0.62) !important;
+  font-size: 9px !important;
+  font-weight: 850 !important;
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.54) !important;
+}
+
+.calendar-month-more-chip {
+  height: 18px !important;
+  padding: 0 7px !important;
+  line-height: 18px !important;
+  text-align: left !important;
+}
+
+.calendar-week-all-day {
+  min-height: 68px !important;
+}
+
+.calendar-week-all-day-grid {
+  align-items: start !important;
+  grid-auto-rows: 24px !important;
+  row-gap: 3px !important;
+}
+
+.calendar-week-more-bar {
+  height: 22px !important;
+  padding: 0 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.calendar-week-grid {
+  min-height: 792px !important;
+}
+
+.calendar-week-times {
+  grid-template-rows: repeat(18, 44px) !important;
+}
+
+.calendar-week-hour-line {
+  height: 44px !important;
+}
+
+.calendar-week-more-timed {
+  position: sticky !important;
+  top: 4px !important;
+  left: 6px !important;
+  z-index: 5 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 18px !important;
+  padding: 0 7px !important;
+}
+
+.event-color-picker {
+  align-items: center !important;
+}
+
+.event-color-custom-chip {
+  position: relative !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  color: hsl(var(--foreground) / 0.58) !important;
+  background: hsl(0 0% 100% / 0.48) !important;
+  border: 2px solid hsl(0 0% 100% / 0.82) !important;
+  box-shadow:
+    0 4px 12px hsl(220 20% 20% / 0.1),
+    inset 0 1px 0 hsl(0 0% 100% / 0.86) !important;
+}
+
+.event-color-custom-chip input {
+  position: absolute !important;
+  inset: 0 !important;
+  opacity: 0 !important;
+  cursor: pointer !important;
+}
+
+.event-color-hex-field {
+  min-width: 104px !important;
+  display: inline-grid !important;
+  grid-template-columns: auto minmax(72px, 1fr) !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 3px 6px !important;
+  border-radius: 999px !important;
+  background: hsl(0 0% 100% / 0.28) !important;
+  border: 1px solid hsl(0 0% 100% / 0.42) !important;
+}
+
+.event-color-hex-field span {
+  font-size: 9px !important;
+  font-weight: 850 !important;
+  color: hsl(var(--foreground) / 0.44) !important;
+}
+
+.event-color-hex-field input {
+  width: 78px !important;
+  height: 22px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  color: hsl(var(--foreground) / 0.74) !important;
+}

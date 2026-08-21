@@ -60,6 +60,8 @@ export type CareerPriority = "high" | "medium" | "low";
 
 export type CareerStageStatus = "todo" | "doing" | "done" | "skipped";
 
+export type CareerStageDateMode = "single" | "range";
+
 export type CareerStageKind =
   | "document-submit"
   | "document-result"
@@ -75,6 +77,8 @@ export type CareerStage = {
   label: string;
   status: CareerStageStatus;
   kind?: CareerStageKind;
+  /** Calendar projection mode: one-day milestones or multi-day ranges. */
+  dateMode?: CareerStageDateMode;
   date?: string;
   time?: string;
   endDate?: string;

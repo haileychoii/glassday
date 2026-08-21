@@ -37,7 +37,11 @@ import {
   type OpenCalendarEventDetail,
 } from "../../constants/widgetNavigation";
 import type { CalendarEvent, CalendarView } from "../../types/dashboard";
-import { getEventColor, getPastelColorById } from "../../constants/colors";
+import {
+  getEventColor,
+  getPastelColorById,
+  getRandomPastelEventColor,
+} from "../../constants/colors";
 import { EventColorPicker } from "./calendar/EventColorPicker";
 import { MonthCalendar } from "./calendar/MonthCalendar";
 import { WeekTimeline } from "./calendar/WeekTimeline";
@@ -200,7 +204,7 @@ export const CalendarWidget = () => {
       endDate: selectedDate,
       endTime: "10:00",
       source: "manual",
-      color: getPastelColorById(eventId),
+      color: getRandomPastelEventColor(),
     });
 
     setEditingId(newEvent.id);
@@ -409,7 +413,7 @@ export const CalendarWidget = () => {
         open={Boolean(editingEvent)}
         title={
           editingEvent?.source === "career"
-            ? "Career Application Window"
+            ? "Career Schedule"
             : "Calendar Event"
         }
         subtitle={

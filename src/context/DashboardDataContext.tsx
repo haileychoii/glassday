@@ -36,7 +36,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { getPastelColorById } from "../constants/colors";
+import {
+  getPastelColorById,
+  getRandomPastelEventColor,
+} from "../constants/colors";
 import type {
   CalendarEvent,
   CareerAttachmentLink,
@@ -89,6 +92,17 @@ const createDefaultStages = (): CareerStage[] => [
   { id: createId(), label: "최종 결과", status: "todo", kind: "final-result" },
 ];
 
+const normalizeCareerStageDateMode = (
+  item: Partial<CareerStage>
+): CareerStage["dateMode"] => {
+  if (item.dateMode === "range") return "range";
+  if (item.dateMode === "single") return "single";
+
+  return item.endDate && item.date && item.endDate !== item.date
+    ? "range"
+    : "single";
+};
+
 const normalizeStringArray = (value: unknown): string[] => {
   if (!Array.isArray(value)) return [];
 
@@ -120,6 +134,7 @@ const normalizeStages = (value: unknown): CareerStage[] => {
       item?.kind === "other"
         ? item.kind
         : "other",
+    dateMode: normalizeCareerStageDateMode(item),
     date: typeof item?.date === "string" ? item.date : "",
     time: typeof item?.time === "string" ? item.time : "",
     endDate: typeof item?.endDate === "string" ? item.endDate : "",
@@ -383,36 +398,6 @@ const normalizeCareerItem = (item: Partial<CareerItem>): CareerItem => {
   };
 };
 
-const createCareerCalendarEvent = (career: CareerItem): CalendarEvent | null => {
-  const startDate = career.applicationStartDate || career.applicationEndDate;
-  const endDate = career.applicationEndDate || career.applicationStartDate;
-
-  if (!startDate && !endDate) return null;
-
-  return {
-    id: `career-${career.id}`,
-    title: `${career.company || "Company"} · Application Window`,
-    startDate: startDate || endDate,
-    startTime: career.applicationStartTime || "09:00",
-    endDate: endDate || startDate,
-    endTime: career.applicationEndTime || "23:59",
-    location: career.location,
-    notes: [
-      career.role,
-      career.postingUrl ? `Posting: ${career.postingUrl}` : "",
-      career.jobDescription,
-      career.notes,
-    ]
-      .filter(Boolean)
-      .join("\n"),
-    source: "career",
-    sourceId: career.id,
-    careerApplicationId: career.id,
-    color: career.calendarColor ?? getPastelColorById(career.id),
-    googleSyncStatus: "not_synced",
-  };
-};
-
 const addOneHour = (time: string) => {
   const [hour = "09", minute = "00"] = time.split(":");
   const totalMinutes =
@@ -433,7 +418,8 @@ const createCareerStageCalendarEvent = (
   if (!stage.date || stage.calendarSync === false) return null;
 
   const startTime = stage.time || "09:00";
-  const endDate = stage.endDate || stage.date;
+  const isSingleDay = stage.dateMode !== "range";
+  const endDate = isSingleDay ? stage.date : stage.endDate || stage.date;
   const endTime = stage.endTime || addOneHour(startTime);
 
   return {
@@ -463,14 +449,50 @@ const createCareerStageCalendarEvent = (
 
 const createCareerCalendarEvents = (career: CareerItem): CalendarEvent[] => {
   /* Career Calendar projection
-     One application can now own the application window plus each selection
-     schedule. / 지원 기간과 전형별 일정을 같은 Career 원본에서 캘린더로 펼칩니다. */
-  return [
-    createCareerCalendarEvent(career),
-    ...(career.stages ?? []).map((stage) =>
-      createCareerStageCalendarEvent(career, stage)
-    ),
-  ].filter((event): event is CalendarEvent => Boolean(event));
+     Calendar now shows only actionable selection schedule rows. The broad
+     application window remains visible inside Career so Calendar does not get
+     noisy. / 캘린더에는 서류발표·면접 같은 상세 일정만 동기화합니다. */
+  return (career.stages ?? [])
+    .map((stage) => createCareerStageCalendarEvent(career, stage))
+    .filter((event): event is CalendarEvent => Boolean(event));
+};
+
+const getCareerDedupeKey = (career: CareerItem) =>
+  [
+    career.company.trim().toLowerCase(),
+    career.role.trim().toLowerCase(),
+    career.postingUrl.trim().toLowerCase(),
+  ].join("|");
+
+const dedupeCareerApplications = (items: CareerItem[]) => {
+  /* Local-first duplicate guard
+     Some old snapshots contain the same company/role more than once. Keep the
+     latest edited record per company+role+posting URL so the dashboard shows
+     one company card while preserving genuinely different roles.
+     같은 회사/직무/공고 URL이면 가장 최근 수정본 하나만 남긴다. */
+  const byKey = new Map<string, CareerItem>();
+
+  items.map(normalizeCareerItem).forEach((career) => {
+    const key = getCareerDedupeKey(career) || career.id;
+    const current = byKey.get(key);
+
+    if (!current) {
+      byKey.set(key, career);
+      return;
+    }
+
+    const currentTime = Date.parse(current.updatedAt ?? current.createdAt ?? "");
+    const nextTime = Date.parse(career.updatedAt ?? career.createdAt ?? "");
+
+    if (
+      (Number.isFinite(nextTime) ? nextTime : 0) >=
+      (Number.isFinite(currentTime) ? currentTime : 0)
+    ) {
+      byKey.set(key, career);
+    }
+  });
+
+  return Array.from(byKey.values());
 };
 
 const syncCareerEventIntoCalendar = (
@@ -576,14 +598,21 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
     color: event.color ?? getPastelColorById(event.id),
   }));
 
-  const careerApplications = rawCareerApplications.map(normalizeCareerItem);
+  const careerApplications = dedupeCareerApplications(rawCareerApplications);
+
+  useEffect(() => {
+    const deduped = dedupeCareerApplications(rawCareerApplications);
+
+    if (deduped.length !== rawCareerApplications.length) {
+      setCareerApplications(deduped);
+    }
+  }, [rawCareerApplications, setCareerApplications]);
 
   useEffect(() => {
     /* Career의 지원 기간을 Calendar event로 투영한다.
        Figma에서는 서로 다른 Component지만 데이터 record는 연결되어 있다. */
     setCalendarEvents((prev) =>
-      rawCareerApplications
-        .map(normalizeCareerItem)
+      dedupeCareerApplications(rawCareerApplications)
         .reduce<CalendarEvent[]>(
           (events, career) => syncCareerEventIntoCalendar(career, events),
           prev.map((event) => ({
@@ -619,7 +648,7 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
       sourceId: patch.sourceId,
       careerApplicationId: patch.careerApplicationId,
       careerStageId: patch.careerStageId,
-      color: patch.color ?? getPastelColorById(eventId),
+      color: patch.color ?? getRandomPastelEventColor(),
       googleEventId: patch.googleEventId,
       googleSyncStatus: patch.googleSyncStatus ?? "not_synced",
     };
@@ -665,6 +694,11 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
                 stage.id === updatedEvent.careerStageId
                   ? {
                       ...stage,
+                      dateMode:
+                        updatedEvent.endDate &&
+                        updatedEvent.endDate !== updatedEvent.startDate
+                          ? "range"
+                          : "single",
                       date: updatedEvent.startDate,
                       time: updatedEvent.startTime,
                       endDate: updatedEvent.endDate,
@@ -750,7 +784,7 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
       status: "Preparing",
       priority: "medium",
       starred: false,
-      calendarColor: patch.calendarColor ?? getPastelColorById(id),
+      calendarColor: patch.calendarColor ?? getRandomPastelEventColor(),
       ...patch,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

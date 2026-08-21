@@ -47,12 +47,17 @@ type RangeSegment = CalendarEvent & {
 };
 
 type HoverPreview = {
-  event: CalendarEvent;
+  title: string;
+  lines: string[];
+  badge?: string;
+  notes?: string;
   x: number;
   y: number;
 };
 
 const weekdayLabels = ["월", "화", "수", "목", "금", "토", "일"];
+const MAX_RANGE_LANES = 2;
+const MAX_SINGLE_EVENTS = 2;
 
 const pad2 = (value: number) => String(value).padStart(2, "0");
 
@@ -239,7 +244,13 @@ export const MonthCalendar = ({
     mouseEvent: ReactMouseEvent<HTMLElement>
   ) => {
     setHoverPreview({
-      event,
+      title: event.title,
+      lines: [
+        `${event.startDate} ${event.startTime} → ${event.endDate} ${event.endTime}`,
+        event.location,
+      ].filter(Boolean),
+      badge: event.source === "career" ? "Career Application" : undefined,
+      notes: event.notes,
       x: mouseEvent.clientX,
       y: mouseEvent.clientY,
     });
@@ -250,7 +261,26 @@ export const MonthCalendar = ({
     mouseEvent: ReactMouseEvent<HTMLElement>
   ) => {
     setHoverPreview({
-      event,
+      title: event.title,
+      lines: [
+        `${event.startDate} ${event.startTime} → ${event.endDate} ${event.endTime}`,
+        event.location,
+      ].filter(Boolean),
+      badge: event.source === "career" ? "Career Application" : undefined,
+      notes: event.notes,
+      x: mouseEvent.clientX,
+      y: mouseEvent.clientY,
+    });
+  };
+
+  const showMorePreview = (
+    title: string,
+    eventsToPreview: CalendarEvent[],
+    mouseEvent: ReactMouseEvent<HTMLElement>
+  ) => {
+    setHoverPreview({
+      title,
+      lines: eventsToPreview.map(formatPreviewLine),
       x: mouseEvent.clientX,
       y: mouseEvent.clientY,
     });
@@ -278,9 +308,12 @@ export const MonthCalendar = ({
               : Math.max(
                   ...weekRangeSegments.map((segment) => segment.laneIndex + 1)
                 );
+          const visibleRangeSegments = weekRangeSegments.filter(
+            (segment) => segment.laneIndex < MAX_RANGE_LANES
+          );
 
           const weekStyle = {
-            "--range-lanes": String(rangeLaneCount),
+            "--range-lanes": String(Math.min(rangeLaneCount, MAX_RANGE_LANES)),
           } as CSSProperties;
 
           return (
@@ -295,12 +328,24 @@ export const MonthCalendar = ({
                 const daySingleEvents = singleDayEvents.filter(
                   (event) => event.startDate === day.date
                 );
+                const visibleSingleEvents = daySingleEvents.slice(
+                  0,
+                  MAX_SINGLE_EVENTS
+                );
 
                 const dayRangeCount = weekRangeSegments.filter((segment) =>
                   doesSegmentTouchColumn(segment, dayColumn)
                 ).length;
 
                 const dayEventCount = daySingleEvents.length + dayRangeCount;
+                const hiddenEvents = [
+                  ...daySingleEvents.slice(MAX_SINGLE_EVENTS),
+                  ...weekRangeSegments.filter(
+                    (segment) =>
+                      segment.laneIndex >= MAX_RANGE_LANES &&
+                      doesSegmentTouchColumn(segment, dayColumn)
+                  ),
+                ];
 
                 return (
                   <div
@@ -334,7 +379,7 @@ export const MonthCalendar = ({
                     </div>
 
                     <div className="calendar-month-single-events">
-                      {daySingleEvents.slice(0, 3).map((event) => (
+                      {visibleSingleEvents.map((event) => (
                         <button
                           key={event.id}
                           type="button"
@@ -366,13 +411,41 @@ export const MonthCalendar = ({
                           {event.title}
                         </button>
                       ))}
+
+                      {hiddenEvents.length > 0 && (
+                        <button
+                          type="button"
+                          className="calendar-month-more-chip"
+                          onMouseEnter={(mouseEvent) =>
+                            showMorePreview(
+                              `+${hiddenEvents.length} schedules`,
+                              hiddenEvents,
+                              mouseEvent
+                            )
+                          }
+                          onMouseMove={(mouseEvent) =>
+                            showMorePreview(
+                              `+${hiddenEvents.length} schedules`,
+                              hiddenEvents,
+                              mouseEvent
+                            )
+                          }
+                          onMouseLeave={() => setHoverPreview(null)}
+                          onClick={(clickEvent) => {
+                            clickEvent.stopPropagation();
+                            handleDateSelect(day.date);
+                          }}
+                        >
+                          +{hiddenEvents.length}
+                        </button>
+                      )}
                     </div>
                   </div>
                 );
               })}
 
               <div className="calendar-month-range-layer">
-                {weekRangeSegments.map((event) => {
+                {visibleRangeSegments.map((event) => {
 
                   const hasSingleOverlap = singleDayEvents.some(
                     (singleEvent) =>
@@ -437,33 +510,40 @@ export const MonthCalendar = ({
           style={getPreviewPosition(hoverPreview)}
         >
           <div className="calendar-month-event-preview-title">
-            {hoverPreview.event.title}
+            {hoverPreview.title}
           </div>
 
-          <div className="calendar-month-event-preview-time">
-            {hoverPreview.event.startDate} {hoverPreview.event.startTime} →{" "}
-            {hoverPreview.event.endDate} {hoverPreview.event.endTime}
-          </div>
-
-          {hoverPreview.event.location && (
-            <div className="calendar-month-event-preview-line">
-              {hoverPreview.event.location}
+          {hoverPreview.lines.map((line) => (
+            <div key={line} className="calendar-month-event-preview-time">
+              {line}
             </div>
-          )}
+          ))}
 
-          {hoverPreview.event.source === "career" && (
+          {hoverPreview.badge && (
             <div className="calendar-month-event-preview-badge">
-              Career Application
+              {hoverPreview.badge}
             </div>
           )}
 
-          {hoverPreview.event.notes && (
+          {hoverPreview.notes && (
             <div className="calendar-month-event-preview-notes">
-              {hoverPreview.event.notes}
+              {hoverPreview.notes}
             </div>
           )}
         </div>
       )}
     </div>
   );
+};
+
+const formatPreviewLine = (event: CalendarEvent) => {
+  const dateText =
+    event.startDate === event.endDate
+      ? event.startDate
+      : `${event.startDate} → ${event.endDate}`;
+  const timeText = event.startTime
+    ? `${event.startTime}${event.endTime ? `-${event.endTime}` : ""}`
+    : "All day";
+
+  return `${event.title} · ${dateText} · ${timeText}`;
 };

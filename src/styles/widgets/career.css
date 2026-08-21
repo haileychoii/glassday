@@ -1752,7 +1752,9 @@
 }
 
 .career-stage-bottom {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* Schedule mode is the first control so users can choose milestone vs range
+     before filling dates. / 하루 일정과 기간 일정을 먼저 고르게 한다. */
+  grid-template-columns: 120px repeat(4, minmax(0, 1fr));
 }
 
 .career-stage-note-row {

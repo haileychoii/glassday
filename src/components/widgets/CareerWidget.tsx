@@ -280,6 +280,53 @@ const getDdayTone = (date: string) => {
   return "normal";
 };
 
+type CareerNextSchedule = {
+  label: string;
+  date: string;
+  dday: number;
+  tone: ReturnType<typeof getDdayTone>;
+};
+
+const getCareerScheduleCandidates = (item: CareerItem): CareerNextSchedule[] => {
+  const stageSchedules = (item.stages ?? [])
+    .filter((stage) => stage.status !== "skipped" && stage.date)
+    .map((stage) => ({
+      label: stage.label || "전형 일정",
+      date: stage.date ?? "",
+    }));
+
+  const fallbackSchedules =
+    item.applicationEndDate || item.deadline
+      ? [
+          {
+            label: "서류 전형",
+            date: item.applicationEndDate || item.deadline,
+          },
+        ]
+      : [];
+
+  return [...stageSchedules, ...fallbackSchedules]
+    .map((schedule) => {
+      const dday = getDday(schedule.date);
+
+      if (dday === null) return null;
+
+      return {
+        ...schedule,
+        dday,
+        tone: getDdayTone(schedule.date),
+      };
+    })
+    .filter(
+      (schedule): schedule is CareerNextSchedule =>
+        schedule !== null && schedule.dday >= 0
+    )
+    .sort((a, b) => a.dday - b.dday);
+};
+
+const getNextCareerSchedule = (item: CareerItem) =>
+  getCareerScheduleCandidates(item)[0] ?? null;
+
 const normalizeCareer = (item: CareerItem): CareerItem => ({
   ...item,
   company: item.company ?? "New Company",
@@ -302,6 +349,11 @@ const normalizeCareer = (item: CareerItem): CareerItem => ({
     ...stage,
     status: stage.status ?? "todo",
     kind: stage.kind ?? "other",
+    dateMode:
+      stage.dateMode === "range" ||
+      (stage.endDate && stage.date && stage.endDate !== stage.date)
+        ? "range"
+        : "single",
     date: stage.date ?? "",
     time: stage.time ?? "",
     endDate: stage.endDate ?? "",
@@ -454,8 +506,8 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
   const sortedItems = useMemo(() => {
     return [...normalizedItems].sort((a, b) => {
-      const aTone = getDdayTone(a.deadline);
-      const bTone = getDdayTone(b.deadline);
+      const aSchedule = getNextCareerSchedule(a);
+      const bSchedule = getNextCareerSchedule(b);
 
       const toneScore = (tone: string) => {
         if (tone === "urgent") return 4;
@@ -465,7 +517,13 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
         return 0;
       };
 
-      return toneScore(bTone) - toneScore(aTone);
+      const scoreDiff =
+        toneScore(bSchedule?.tone ?? "none") -
+        toneScore(aSchedule?.tone ?? "none");
+
+      if (scoreDiff !== 0) return scoreDiff;
+
+      return (aSchedule?.dday ?? 9999) - (bSchedule?.dday ?? 9999);
     });
   }, [normalizedItems]);
 
@@ -497,9 +555,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
       (item) => item.status === "Interview"
     ).length;
 
-    const urgent = normalizedItems.filter((item) =>
-      ["urgent", "soon"].includes(getDdayTone(item.deadline))
-    ).length;
+    const urgent = normalizedItems.filter((item) => {
+      const schedule = getNextCareerSchedule(item);
+      return schedule ? ["urgent", "soon"].includes(schedule.tone) : false;
+    }).length;
 
     return {
       total: normalizedItems.length,
@@ -621,6 +680,11 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
       ...stage,
       status: stage.status ?? "todo",
       kind: stage.kind ?? "other",
+      dateMode:
+        stage.dateMode === "range" ||
+        (stage.endDate && stage.date && stage.endDate !== stage.date)
+          ? "range"
+          : "single",
       date: stage.date ?? "",
       time: stage.time ?? "",
       endDate: stage.endDate ?? "",
@@ -648,6 +712,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
           kind: template.kind,
           label: template.label,
           status: "todo",
+          dateMode: "single",
           date: "",
           time: template.defaultTime,
           endDate: "",
@@ -911,7 +976,8 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
   };
 
   const renderCareerCard = (item: CareerItem, compact = false) => {
-    const ddayTone = getDdayTone(item.deadline);
+    const nextSchedule = getNextCareerSchedule(item);
+    const ddayTone = nextSchedule?.tone ?? "none";
     const coverLetterCount =
       item.coverLetterItems?.length ?? item.coverLetterQuestions?.length ?? 0;
 
@@ -940,7 +1006,9 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
           <div className="career-list-side">
             <span className={`career-dday-pill ${ddayTone}`}>
-              {getDdayLabel(item.deadline)}
+              {nextSchedule
+                ? `${nextSchedule.label} · ${getDdayLabel(nextSchedule.date)}`
+                : "No date"}
             </span>
 
             <button
@@ -977,7 +1045,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
           <span>
             <CalendarDays className="w-3 h-3" />
-            {item.applicationEndDate ? "Synced" : "No date"}
+            {nextSchedule ? "Synced" : "No date"}
           </span>
         </div>
       </article>
@@ -1537,6 +1605,33 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
                             <div className="career-stage-bottom">
                               <label className="career-field">
+                                <span>Schedule Type</span>
+                                <select
+                                  value={stage.dateMode ?? "single"}
+                                  onChange={(event) => {
+                                    const dateMode = event.target
+                                      .value as CareerStage["dateMode"];
+
+                                    updateCareerStage(stage.id, {
+                                      dateMode,
+                                      endDate:
+                                        dateMode === "single"
+                                          ? stage.date ?? ""
+                                          : stage.endDate,
+                                      endTime:
+                                        dateMode === "single"
+                                          ? stage.endTime || stage.time
+                                          : stage.endTime,
+                                    });
+                                  }}
+                                  aria-label="전형 일정 하루 또는 기간 선택"
+                                >
+                                  <option value="single">하루</option>
+                                  <option value="range">기간</option>
+                                </select>
+                              </label>
+
+                              <label className="career-field">
                                 <span>Date</span>
                                 <input
                                   type="date"
@@ -1544,6 +1639,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                                   onChange={(event) =>
                                     updateCareerStage(stage.id, {
                                       date: event.target.value,
+                                      endDate:
+                                        stage.dateMode === "range"
+                                          ? stage.endDate
+                                          : event.target.value,
                                     })
                                   }
                                 />
@@ -1557,23 +1656,29 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                                   onChange={(event) =>
                                     updateCareerStage(stage.id, {
                                       time: event.target.value,
+                                      endTime:
+                                        stage.dateMode === "range"
+                                          ? stage.endTime
+                                          : stage.endTime || event.target.value,
                                     })
                                   }
                                 />
                               </label>
 
-                              <label className="career-field">
-                                <span>End Date</span>
-                                <input
-                                  type="date"
-                                  value={stage.endDate ?? ""}
-                                  onChange={(event) =>
-                                    updateCareerStage(stage.id, {
-                                      endDate: event.target.value,
-                                    })
-                                  }
-                                />
-                              </label>
+                              {stage.dateMode === "range" && (
+                                <label className="career-field">
+                                  <span>End Date</span>
+                                  <input
+                                    type="date"
+                                    value={stage.endDate ?? ""}
+                                    onChange={(event) =>
+                                      updateCareerStage(stage.id, {
+                                        endDate: event.target.value,
+                                      })
+                                    }
+                                  />
+                                </label>
+                              )}
 
                               <label className="career-field">
                                 <span>End Time</span>

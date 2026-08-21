@@ -12,6 +12,7 @@
  */
 import { useMemo } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
+import { getEventColor as getCalendarEventColor } from "../../../constants/colors";
 
 type WeekTimelineProps = {
   events: CalendarEvent[];
@@ -56,11 +57,14 @@ type WeekDay = {
 type RangeBar = CalendarEvent & {
   startColumn: number;
   endColumn: number;
+  laneIndex: number;
 };
 
 const START_HOUR = 7;
 const END_HOUR = 25;
-const HOUR_HEIGHT = 54;
+const HOUR_HEIGHT = 44;
+const MAX_ALL_DAY_LANES = 2;
+const MAX_TIMED_EVENTS_PER_DAY = 5;
 
 const weekdayLabels = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -131,16 +135,6 @@ const doesEventOverlapWeek = (
   return event.startDate <= weekEnd && event.endDate >= weekStart;
 };
 
-const getEventColor = (event: CalendarEvent) => {
-  if (event.color) return event.color;
-
-  if (event.source === "career") {
-    return "linear-gradient(135deg, hsl(248 100% 94% / 0.9), hsl(220 100% 96% / 0.82))";
-  }
-
-  return "linear-gradient(135deg, hsl(210 100% 94% / 0.9), hsl(220 100% 97% / 0.84))";
-};
-
 /** 주간 event를 시간 좌표로 변환해 day column에 배치하는 Calendar child component. */
 export const WeekTimeline = ({
   events,
@@ -173,9 +167,15 @@ export const WeekTimeline = ({
   }, [weekStart, todayString, baseDate]);
 
   const rangeEvents = useMemo<RangeBar[]>(() => {
+    const laneEnds: number[] = [];
+
     return events
       .filter((event) => isRangeEvent(event))
       .filter((event) => doesEventOverlapWeek(event, weekStart, weekEnd))
+      .sort((a, b) => {
+        if (a.startDate !== b.startDate) return a.startDate.localeCompare(b.startDate);
+        return b.endDate.localeCompare(a.endDate);
+      })
       .map((event) => {
         const rawStartIndex = weekDays.findIndex(
           (day) => day.date === event.startDate
@@ -194,13 +194,34 @@ export const WeekTimeline = ({
         const endIndex =
           rawEndIndex === -1 ? (event.endDate > weekEnd ? 6 : 0) : rawEndIndex;
 
+        const startColumn = startIndex + 1;
+        const endColumn = endIndex + 2;
+        let laneIndex = laneEnds.findIndex(
+          (laneEndColumn) => laneEndColumn <= startColumn
+        );
+
+        if (laneIndex === -1) {
+          laneIndex = laneEnds.length;
+          laneEnds.push(endColumn);
+        } else {
+          laneEnds[laneIndex] = endColumn;
+        }
+
         return {
           ...event,
-          startColumn: startIndex + 1,
-          endColumn: endIndex + 2,
+          startColumn,
+          endColumn,
+          laneIndex,
         };
       });
   }, [events, weekDays, weekStart, weekEnd]);
+
+  const visibleRangeEvents = rangeEvents.filter(
+    (event) => event.laneIndex < MAX_ALL_DAY_LANES
+  );
+  const hiddenRangeEvents = rangeEvents.filter(
+    (event) => event.laneIndex >= MAX_ALL_DAY_LANES
+  );
 
   const timedEvents = useMemo(() => {
     return events
@@ -256,7 +277,8 @@ export const WeekTimeline = ({
           {rangeEvents.length === 0 ? (
             <div className="calendar-week-all-day-empty">No range events</div>
           ) : (
-            rangeEvents.map((event) => (
+            <>
+            {visibleRangeEvents.map((event) => (
               <button
                 key={event.id}
                 type="button"
@@ -268,14 +290,32 @@ export const WeekTimeline = ({
                   .join(" ")}
                 style={{
                   gridColumn: `${event.startColumn} / ${event.endColumn}`,
-                  background: getEventColor(event),
+                  gridRow: `${event.laneIndex + 1}`,
+                  background: getCalendarEventColor(event),
                 }}
                 onClick={() => handleEventClick(event)}
                 title={`${event.title} · ${event.startDate} → ${event.endDate}`}
               >
                 {event.title}
               </button>
-            ))
+            ))}
+
+            {hiddenRangeEvents.length > 0 && (
+              <button
+                type="button"
+                className="calendar-week-more-bar"
+                style={{ gridColumn: "1 / -1", gridRow: MAX_ALL_DAY_LANES + 1 }}
+                title={hiddenRangeEvents
+                  .map(
+                    (event) =>
+                      `${event.title} · ${event.startDate} → ${event.endDate}`
+                  )
+                  .join("\n")}
+              >
+                +{hiddenRangeEvents.length}
+              </button>
+            )}
+            </>
           )}
         </div>
       </div>
@@ -295,6 +335,11 @@ export const WeekTimeline = ({
               const dayEvents = timedEvents.filter(
                 (event) => event.startDate === day.date
               );
+              const visibleDayEvents = dayEvents.slice(
+                0,
+                MAX_TIMED_EVENTS_PER_DAY
+              );
+              const hiddenDayEvents = dayEvents.slice(MAX_TIMED_EVENTS_PER_DAY);
 
               return (
                 <button
@@ -312,7 +357,7 @@ export const WeekTimeline = ({
                     <div key={label} className="calendar-week-hour-line" />
                   ))}
 
-                  {dayEvents.map((event) => (
+                  {visibleDayEvents.map((event) => (
                     <button
                       key={event.id}
                       type="button"
@@ -325,7 +370,7 @@ export const WeekTimeline = ({
                       style={{
                         top: getEventTop(event),
                         height: getEventHeight(event),
-                        background: getEventColor(event),
+                        background: getCalendarEventColor(event),
                       }}
                       onClick={(clickEvent) => {
                         clickEvent.stopPropagation();
@@ -340,6 +385,20 @@ export const WeekTimeline = ({
                       </span>
                     </button>
                   ))}
+
+                  {hiddenDayEvents.length > 0 && (
+                    <span
+                      className="calendar-week-more-timed"
+                      title={hiddenDayEvents
+                        .map(
+                          (event) =>
+                            `${event.title} · ${event.startTime}-${event.endTime}`
+                        )
+                        .join("\n")}
+                    >
+                      +{hiddenDayEvents.length}
+                    </span>
+                  )}
                 </button>
               );
             })}
