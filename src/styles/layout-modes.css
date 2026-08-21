@@ -63,8 +63,11 @@
 }
 
 .app-shell-surface.is-wide {
+  /* Wide web owns document-level scrolling: the shell must grow with the
+     React Grid height instead of staying locked to the initial viewport.
+     웹 wide에서는 전체 페이지가 스크롤되어야 하므로 100% 높이 고정을 피한다. */
   min-height: 0;
-  height: 100%;
+  height: auto;
 }
 
 .app-shell-surface.is-laptop {

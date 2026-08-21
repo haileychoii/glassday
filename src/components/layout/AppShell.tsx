@@ -464,7 +464,7 @@ const shellContent = (
          * WEB Wide
          * ====================================================
          */
-        <div className="relative z-10 h-screen p-2 md:p-3">
+        <div className="relative z-10 min-h-screen p-2 md:p-3">
           {shellContent}
         </div>
       )}
