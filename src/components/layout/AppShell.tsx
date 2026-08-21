@@ -260,9 +260,15 @@ useEffect(() => {
 const shellContent = (
   <div
     className={[
-      "glass-panel liquid-shell rounded-[2.2rem] overflow-hidden app-shell-surface",
+      /*
+       * Shell clipping is mode-specific.
+       * - Laptop/Tauri keeps the rounded app window clipped.
+       * - Web Wide lets the React Grid height reach the document so the whole
+       *   dashboard can scroll naturally. / wide에서는 전체 페이지 스크롤 유지.
+       */
+      "glass-panel liquid-shell rounded-[2.2rem] app-shell-surface",
       effectiveLayoutMode === "laptop"
-        ? "is-laptop h-full min-h-0"
+        ? "is-laptop h-full min-h-0 overflow-hidden"
         : "is-wide min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
       isTauriApp ? "is-tauri-app-surface" : "",
     ]
@@ -319,7 +325,7 @@ const shellContent = (
             "app-shell-main flex-1 min-w-0 bg-transparent",
             effectiveLayoutMode === "laptop"
               ? "min-h-0 overflow-y-auto overflow-x-hidden"
-              : "overflow-visible",
+              : "min-h-0 overflow-visible",
           ].join(" ")}
         >
           {children}

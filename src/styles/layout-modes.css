@@ -66,8 +66,25 @@
   /* Wide web owns document-level scrolling: the shell must grow with the
      React Grid height instead of staying locked to the initial viewport.
      웹 wide에서는 전체 페이지가 스크롤되어야 하므로 100% 높이 고정을 피한다. */
+  min-height: calc(100vh - 1rem);
+  height: auto;
+  overflow: visible;
+}
+
+@media (min-width: 768px) {
+  .app-shell-surface.is-wide {
+    min-height: calc(100vh - 1.5rem);
+  }
+}
+
+.app-shell-surface.is-wide .app-shell-columns,
+.app-shell-surface.is-wide .app-shell-main-column,
+.app-shell-surface.is-wide .app-shell-main {
+  /* Wide scroll chain: React Grid -> main -> columns -> shell -> document.
+     여기서 height를 고정하면 dashboard-rgl의 inline height가 body로 전달되지 않는다. */
   min-height: 0;
   height: auto;
+  overflow: visible;
 }
 
 .app-shell-surface.is-laptop {

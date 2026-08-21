@@ -229,6 +229,47 @@ body,
 }
 
 /* =========================================================
+   3-1. Wide web document scroll repair
+   Wide mode is a normal browser dashboard, so the page should scroll when
+   React Grid grows taller than the viewport. Laptop/Tauri below still keep
+   their clipped app-window behavior. / wide 전체 스크롤 복구용 최종 보정.
+========================================================= */
+
+.app-mode-stage.is-wide-mode .app-shell-surface.is-wide,
+.app-mode-stage.is-wide-mode .glass-panel.is-wide,
+.app-mode-stage.is-wide-mode .liquid-shell.is-wide {
+  min-height: calc(100vh - 1rem) !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+@media (min-width: 768px) {
+  .app-mode-stage.is-wide-mode .app-shell-surface.is-wide,
+  .app-mode-stage.is-wide-mode .glass-panel.is-wide,
+  .app-mode-stage.is-wide-mode .liquid-shell.is-wide {
+    min-height: calc(100vh - 1.5rem) !important;
+  }
+}
+
+.app-mode-stage.is-wide-mode .app-shell-surface.is-wide > .app-shell-columns,
+.app-mode-stage.is-wide-mode .app-shell-surface.is-wide .app-shell-main-column,
+.app-mode-stage.is-wide-mode .app-shell-surface.is-wide .app-shell-main,
+.app-mode-stage.is-wide-mode .dashboard-tab-space,
+.app-mode-stage.is-wide-mode .dashboard-edit-canvas,
+.app-mode-stage.is-wide-mode .dashboard-rgl {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.app-mode-stage.is-wide-mode .app-shell-surface.is-wide > .app-shell-columns,
+.app-mode-stage.is-wide-mode .app-shell-surface.is-wide .app-shell-main-column,
+.app-mode-stage.is-wide-mode .app-shell-surface.is-wide .app-shell-main {
+  min-height: 0 !important;
+}
+
+/* =========================================================
    4. Laptop preview viewport isolation
    The laptop mode should react only to the dashboard frame size,
    not to the outer browser viewport media queries.
