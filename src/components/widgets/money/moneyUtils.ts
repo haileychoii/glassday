@@ -123,6 +123,49 @@ export const moneyStoreDefaults = [
   "Other",
 ];
 
+const normalizeComparableLabel = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, "")
+    .replace(/[·.]/g, "");
+
+const moneyLabelAliases = new Map<string, string>(
+  [
+    ["쿠팡", "Coupang"],
+    ["coupang", "Coupang"],
+    ["에이블리", "Ably"],
+    ["ably", "Ably"],
+    ["무신사", "Musinsa"],
+    ["무신사스토어", "Musinsa"],
+    ["musinsa", "Musinsa"],
+    ["musinsastore", "Musinsa"],
+    ["올리브영", "Olive Young"],
+    ["oliveyoung", "Olive Young"],
+  ].map(([alias, canonical]) => [normalizeComparableLabel(alias), canonical])
+);
+
+export const normalizeMoneyLabel = (value: string) => {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+
+  return moneyLabelAliases.get(normalizeComparableLabel(trimmed)) ?? trimmed;
+};
+
+export const normalizeMoneyHashtags = (value: string | string[] | undefined) => {
+  const rawItems = Array.isArray(value) ? value : (value ?? "").split(/[,\s]+/);
+  const seen = new Set<string>();
+
+  return rawItems.reduce<string[]>((tags, item) => {
+    const normalized = item.trim().replace(/^#+/, "");
+    if (!normalized || seen.has(normalized.toLowerCase())) return tags;
+
+    seen.add(normalized.toLowerCase());
+    tags.push(normalized);
+    return tags;
+  }, []);
+};
+
 export const spendingViews: MoneySpendingView[] = [
   "All",
   "Purchases",
@@ -381,6 +424,7 @@ const getTransactionRecoverySeed = (
     transaction.channel ?? "",
     transaction.expenseType ?? "",
     transaction.note ?? "",
+    (transaction.hashtags ?? []).join(","),
     transaction.createdAt ?? "",
   ].join("\u001f");
 
@@ -410,6 +454,7 @@ const getTransactionDuplicateKey = (transaction: MoneyTransaction) =>
     transaction.channel ?? "",
     transaction.expenseType ?? "",
     transaction.note ?? "",
+    (transaction.hashtags ?? []).join(","),
     transaction.wishlistItemId ?? "",
     transaction.createdAt ?? "",
   ].join("\u001f");
@@ -443,7 +488,12 @@ const normalizeTransaction = (
     id,
     amount: Number.isFinite(transaction.amount) ? transaction.amount : 0,
     category: isMoneyCategory(transaction.category) ? transaction.category : "Other",
+    subcategory: transaction.subcategory
+      ? normalizeMoneyLabel(transaction.subcategory)
+      : undefined,
+    store: transaction.store ? normalizeMoneyLabel(transaction.store) : undefined,
     expenseType: transaction.expenseType ?? "one-time",
+    hashtags: normalizeMoneyHashtags(transaction.hashtags),
     createdAt: transaction.createdAt ?? getIsoNow(),
     updatedAt: transaction.updatedAt ?? transaction.createdAt ?? getIsoNow(),
   };
@@ -666,10 +716,13 @@ export const createTransactionFromWishlist = (
     amount: patch.amount,
     date: patch.date,
     category: patch.category,
-    subcategory: patch.subcategory,
-    store: patch.store,
-    channel: patch.store === "Offline" ? "offline" : "online",
+    subcategory: patch.subcategory
+      ? normalizeMoneyLabel(patch.subcategory)
+      : undefined,
+    store: normalizeMoneyLabel(patch.store),
+    channel: normalizeMoneyLabel(patch.store) === "Offline" ? "offline" : "online",
     expenseType: "one-time",
+    hashtags: [],
     wishlistItemId: item.id,
     createdAt: now,
     updatedAt: now,

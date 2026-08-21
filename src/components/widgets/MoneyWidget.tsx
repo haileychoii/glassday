@@ -80,6 +80,8 @@ import {
   groupTransactionsByDate,
   moneyCategories,
   moneyStoreDefaults,
+  normalizeMoneyHashtags,
+  normalizeMoneyLabel,
   normalizeMoneyData,
   parseMoneyAmount,
   quickExpenseTemplates,
@@ -99,6 +101,7 @@ type ExpenseDraft = {
   store: string;
   channel: MoneyChannel;
   expenseType: MoneyExpenseType;
+  hashtags: string;
   note: string;
 };
 
@@ -143,6 +146,7 @@ const createDefaultExpenseDraft = (): ExpenseDraft => ({
   store: "Offline",
   channel: "offline",
   expenseType: "variable",
+  hashtags: "",
   note: "",
 });
 
@@ -190,6 +194,38 @@ const splitImages = (value: string) => {
     .split(/[\n,]/)
     .map((item) => item.trim())
     .filter(Boolean);
+};
+
+const tagsToDraftValue = (tags?: string[]) =>
+  (tags ?? []).map((tag) => `#${tag}`).join(" ");
+
+const createExpenseDraftFromTransaction = (
+  transaction: MoneyTransaction
+): ExpenseDraft => ({
+  name: transaction.name,
+  amount: String(transaction.amount),
+  date: transaction.date,
+  category: transaction.category,
+  subcategory: transaction.subcategory ?? "",
+  store: transaction.store ?? "Other",
+  channel: transaction.channel ?? "offline",
+  expenseType: transaction.expenseType,
+  hashtags: tagsToDraftValue(transaction.hashtags),
+  note: transaction.note ?? "",
+});
+
+const getUniqueMoneyOptions = (items: string[]) => {
+  const seen = new Set<string>();
+
+  return items.reduce<string[]>((options, item) => {
+    const normalized = normalizeMoneyLabel(item);
+    const key = normalized.toLowerCase();
+    if (!normalized || seen.has(key)) return options;
+
+    seen.add(key);
+    options.push(normalized);
+    return options;
+  }, []);
 };
 
 const getMonthDeltaLabel = (current: number, previous: number) => {
@@ -255,12 +291,47 @@ const StoreInput = ({
     <input
       value={value}
       onChange={(event) => onChange(event.target.value)}
+      onBlur={(event) => onChange(normalizeMoneyLabel(event.target.value))}
       list="money-store-defaults"
       className={className}
       placeholder="Store"
     />
   </>
 );
+
+const SubcategoryInput = ({
+  value,
+  onChange,
+  category,
+  options,
+  scope,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  category: MoneyCategory;
+  options: string[];
+  scope: string;
+}) => {
+  const listId = `money-subcategories-${scope}-${category.toLowerCase()}`;
+
+  return (
+    <>
+      <input
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        onBlur={(event) => onChange(normalizeMoneyLabel(event.target.value))}
+        list={listId}
+        placeholder="Type or choose"
+      />
+
+      <datalist id={listId}>
+        {options.map((subcategory) => (
+          <option key={subcategory} value={subcategory} />
+        ))}
+      </datalist>
+    </>
+  );
+};
 
 /* SVG donut chart.
    No chart dependency is used; each transaction category becomes one circle
@@ -402,9 +473,11 @@ const StoreBars = ({ items }: { items: ReturnType<typeof getStoreBreakdown> }) =
 const TransactionList = ({
   transactions,
   onDelete,
+  onEdit,
 }: {
   transactions: MoneyTransaction[];
   onDelete?: (id: string) => void;
+  onEdit?: (transaction: MoneyTransaction) => void;
 }) => {
   const groups = groupTransactionsByDate(transactions);
 
@@ -426,7 +499,12 @@ const TransactionList = ({
               const category = getCategoryDefinition(transaction.category);
 
               return (
-                <article key={transaction.id} className="money-transaction-row">
+                <button
+                  key={transaction.id}
+                  type="button"
+                  className="money-transaction-row"
+                  onClick={() => onEdit?.(transaction)}
+                >
                   <span
                     className="money-transaction-mark"
                     style={{ backgroundColor: category.color }}
@@ -435,6 +513,11 @@ const TransactionList = ({
                   <div className="money-transaction-copy">
                     <strong>{transaction.name}</strong>
                     <span>{getTransactionMeta(transaction)}</span>
+                    {transaction.hashtags && transaction.hashtags.length > 0 && (
+                      <em className="money-transaction-tags">
+                        {transaction.hashtags.map((tag) => `#${tag}`).join(" ")}
+                      </em>
+                    )}
                   </div>
 
                   <div className="money-transaction-side">
@@ -442,7 +525,10 @@ const TransactionList = ({
                     {onDelete && (
                       <button
                         type="button"
-                        onClick={() => onDelete(transaction.id)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onDelete(transaction.id);
+                        }}
                         className="money-icon-button"
                         title="Delete transaction"
                       >
@@ -450,7 +536,7 @@ const TransactionList = ({
                       </button>
                     )}
                   </div>
-                </article>
+                </button>
               );
             })}
           </div>
@@ -484,11 +570,19 @@ export const MoneyWidget = () => {
   const [selectedCategory, setSelectedCategory] = useState<MoneyCategory | null>(
     null
   );
+  const [selectedExpenseTag, setSelectedExpenseTag] = useState<string | null>(
+    null
+  );
   const [selectedWishlistId, setSelectedWishlistId] = useState<string | null>(
     null
   );
   const [purchaseItemId, setPurchaseItemId] = useState<string | null>(null);
+  const [editingTransactionId, setEditingTransactionId] = useState<string | null>(
+    null
+  );
   const [expenseDraft, setExpenseDraft] = useState(createDefaultExpenseDraft);
+  const [editingExpenseDraft, setEditingExpenseDraft] =
+    useState<ExpenseDraft | null>(null);
   const [wishlistDraft, setWishlistDraft] = useState(createDefaultWishlistDraft);
   const [recurringDraft, setRecurringDraft] = useState(createDefaultRecurringDraft);
   const [purchaseDraft, setPurchaseDraft] = useState<PurchaseDraft | null>(null);
@@ -536,11 +630,48 @@ export const MoneyWidget = () => {
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 3);
   const filteredSpending = filterTransactionsByView(money.transactions, spendingView);
+  const expenseTagOptions = useMemo(
+    () =>
+      getUniqueMoneyOptions(
+        money.transactions.flatMap((transaction) => transaction.hashtags ?? [])
+      ),
+    [money.transactions]
+  );
+  const visibleSpending = selectedExpenseTag
+    ? filteredSpending.filter((transaction) =>
+        (transaction.hashtags ?? []).some(
+          (tag) => tag.toLowerCase() === selectedExpenseTag.toLowerCase()
+        )
+      )
+    : filteredSpending;
+  const subcategoryOptionsByCategory = useMemo(() => {
+    return moneyCategories.reduce<Record<MoneyCategory, string[]>>(
+      (options, category) => {
+        options[category.id] = getUniqueMoneyOptions([
+          ...getSubcategories(category.id),
+          ...money.transactions
+            .filter((transaction) => transaction.category === category.id)
+            .map((transaction) => transaction.subcategory ?? ""),
+          ...money.wishlist
+            .filter((item) => item.category === category.id)
+            .map((item) => item.subcategory ?? ""),
+          ...money.recurring
+            .filter((item) => item.category === category.id)
+            .map((item) => item.subcategory ?? ""),
+        ]);
+
+        return options;
+      },
+      {} as Record<MoneyCategory, string[]>
+    );
+  }, [money.recurring, money.transactions, money.wishlist]);
   const filteredWishlist = filterWishlistByView(money.wishlist, wishlistView);
   const selectedWishlist =
     money.wishlist.find((item) => item.id === selectedWishlistId) ?? null;
   const purchaseItem =
     money.wishlist.find((item) => item.id === purchaseItemId) ?? null;
+  const editingTransaction =
+    money.transactions.find((item) => item.id === editingTransactionId) ?? null;
 
   const updateExpenseDraft = <K extends keyof ExpenseDraft>(
     key: K,
@@ -552,7 +683,30 @@ export const MoneyWidget = () => {
         return {
           ...prev,
           category,
-          subcategory: getSubcategories(category)[0] ?? "",
+          subcategory: subcategoryOptionsByCategory[category][0] ?? "",
+        };
+      }
+
+      return {
+        ...prev,
+        [key]: value,
+      };
+    });
+  };
+
+  const updateEditingExpenseDraft = <K extends keyof ExpenseDraft>(
+    key: K,
+    value: ExpenseDraft[K]
+  ) => {
+    setEditingExpenseDraft((prev) => {
+      if (!prev) return prev;
+
+      if (key === "category") {
+        const category = value as MoneyCategory;
+        return {
+          ...prev,
+          category,
+          subcategory: subcategoryOptionsByCategory[category][0] ?? "",
         };
       }
 
@@ -573,7 +727,7 @@ export const MoneyWidget = () => {
         return {
           ...prev,
           category,
-          subcategory: getSubcategories(category)[0] ?? "",
+          subcategory: subcategoryOptionsByCategory[category][0] ?? "",
         };
       }
 
@@ -617,15 +771,19 @@ export const MoneyWidget = () => {
     if (!expenseDraft.name.trim() || amount <= 0 || !expenseDraft.date) return;
 
     const submittedAt = Date.now();
+    const subcategory = normalizeMoneyLabel(expenseDraft.subcategory);
+    const store = normalizeMoneyLabel(expenseDraft.store) || "Other";
+    const hashtags = normalizeMoneyHashtags(expenseDraft.hashtags);
     const expenseSignature = [
       expenseDraft.name.trim(),
       amount,
       expenseDraft.date,
       expenseDraft.category,
-      expenseDraft.subcategory.trim(),
-      expenseDraft.store.trim() || "Other",
+      subcategory,
+      store,
       expenseDraft.channel,
       expenseDraft.expenseType,
+      hashtags.join(","),
       expenseDraft.note.trim(),
     ].join("\u001f");
     const lastSubmit = lastExpenseSubmitRef.current;
@@ -649,10 +807,11 @@ export const MoneyWidget = () => {
       amount,
       date: expenseDraft.date,
       category: expenseDraft.category,
-      subcategory: expenseDraft.subcategory.trim() || undefined,
-      store: expenseDraft.store.trim() || "Other",
+      subcategory: subcategory || undefined,
+      store,
       channel: expenseDraft.channel,
       expenseType: expenseDraft.expenseType,
+      hashtags,
       note: expenseDraft.note.trim() || undefined,
       createdAt: now,
       updatedAt: now,
@@ -673,6 +832,8 @@ export const MoneyWidget = () => {
           (item.store ?? "Other") === (transaction.store ?? "Other") &&
           (item.channel ?? "offline") === (transaction.channel ?? "offline") &&
           item.expenseType === transaction.expenseType &&
+          (item.hashtags ?? []).join(",") ===
+            (transaction.hashtags ?? []).join(",") &&
           (item.note ?? "") === (transaction.note ?? "") &&
           Number.isFinite(createdAt) &&
           Math.abs(submittedAt - createdAt) < 2000
@@ -700,6 +861,7 @@ export const MoneyWidget = () => {
       channel: template.store === "Offline" ? "offline" : "online",
       expenseType: template.expenseType,
       amount: "",
+      hashtags: "",
       date: todayInput(),
     }));
     setExpenseFormOpen(true);
@@ -711,6 +873,59 @@ export const MoneyWidget = () => {
       ...prev,
       transactions: prev.transactions.filter((transaction) => transaction.id !== id),
     }));
+    if (editingTransactionId === id) {
+      setEditingTransactionId(null);
+      setEditingExpenseDraft(null);
+    }
+  };
+
+  const openTransactionEditor = (transaction: MoneyTransaction) => {
+    setEditingTransactionId(transaction.id);
+    setEditingExpenseDraft(createExpenseDraftFromTransaction(transaction));
+    setDetailOpen(true);
+  };
+
+  const closeTransactionEditor = () => {
+    setEditingTransactionId(null);
+    setEditingExpenseDraft(null);
+  };
+
+  const saveEditedTransaction = (event: FormEvent) => {
+    event.preventDefault();
+    if (!editingTransactionId || !editingExpenseDraft) return;
+
+    const amount = parseMoneyAmount(editingExpenseDraft.amount);
+    if (!editingExpenseDraft.name.trim() || amount <= 0 || !editingExpenseDraft.date) {
+      return;
+    }
+
+    const subcategory = normalizeMoneyLabel(editingExpenseDraft.subcategory);
+    const store = normalizeMoneyLabel(editingExpenseDraft.store) || "Other";
+    const hashtags = normalizeMoneyHashtags(editingExpenseDraft.hashtags);
+
+    setMoneyData((prev) => ({
+      ...prev,
+      transactions: prev.transactions.map((transaction) =>
+        transaction.id === editingTransactionId
+          ? {
+              ...transaction,
+              name: editingExpenseDraft.name.trim(),
+              amount,
+              date: editingExpenseDraft.date,
+              category: editingExpenseDraft.category,
+              subcategory: subcategory || undefined,
+              store,
+              channel: editingExpenseDraft.channel,
+              expenseType: editingExpenseDraft.expenseType,
+              hashtags,
+              note: editingExpenseDraft.note.trim() || undefined,
+              updatedAt: new Date().toISOString(),
+            }
+          : transaction
+      ),
+    }));
+
+    closeTransactionEditor();
   };
 
   const addWishlistItem = (event: FormEvent) => {
@@ -726,8 +941,8 @@ export const MoneyWidget = () => {
         ? parseMoneyAmount(wishlistDraft.expectedPrice)
         : undefined,
       category: wishlistDraft.category,
-      subcategory: wishlistDraft.subcategory.trim() || undefined,
-      store: wishlistDraft.store.trim() || undefined,
+      subcategory: normalizeMoneyLabel(wishlistDraft.subcategory) || undefined,
+      store: normalizeMoneyLabel(wishlistDraft.store) || undefined,
       url: wishlistDraft.url.trim() || undefined,
       images: splitImages(wishlistDraft.images),
       status: wishlistDraft.status,
@@ -799,9 +1014,10 @@ export const MoneyWidget = () => {
                   status: "purchased",
                   purchasedAt: purchaseDraft.purchasedDate,
                   purchasedPrice: amount,
-                  store: purchaseDraft.store,
+                  store: normalizeMoneyLabel(purchaseDraft.store),
                   category: purchaseDraft.category,
-                  subcategory: purchaseDraft.subcategory,
+                  subcategory:
+                    normalizeMoneyLabel(purchaseDraft.subcategory) || undefined,
                 }
               : candidate
           ),
@@ -811,9 +1027,12 @@ export const MoneyWidget = () => {
       const transaction = createTransactionFromWishlist(item, {
         amount,
         date: purchaseDraft.purchasedDate,
-        store: purchaseDraft.store.trim() || item.store || "Other",
+        store:
+          normalizeMoneyLabel(purchaseDraft.store) ||
+          normalizeMoneyLabel(item.store ?? "") ||
+          "Other",
         category: purchaseDraft.category,
-        subcategory: purchaseDraft.subcategory.trim() || undefined,
+        subcategory: normalizeMoneyLabel(purchaseDraft.subcategory) || undefined,
       });
 
       return {
@@ -826,9 +1045,10 @@ export const MoneyWidget = () => {
                 status: "purchased",
                 purchasedAt: purchaseDraft.purchasedDate,
                 purchasedPrice: amount,
-                store: purchaseDraft.store,
+                store: normalizeMoneyLabel(purchaseDraft.store),
                 category: purchaseDraft.category,
-                subcategory: purchaseDraft.subcategory,
+                subcategory:
+                  normalizeMoneyLabel(purchaseDraft.subcategory) || undefined,
                 transactionId: transaction.id,
               }
             : candidate
@@ -852,7 +1072,7 @@ export const MoneyWidget = () => {
       name: recurringDraft.name.trim(),
       amount,
       category: recurringDraft.category,
-      subcategory: recurringDraft.subcategory.trim() || undefined,
+      subcategory: normalizeMoneyLabel(recurringDraft.subcategory) || undefined,
       billingDay: Math.min(31, Math.max(1, Number(recurringDraft.billingDay) || 1)),
       active: recurringDraft.active,
     };
@@ -973,7 +1193,10 @@ export const MoneyWidget = () => {
               </button>
             </div>
 
-            <TransactionList transactions={recentTransactions} />
+            <TransactionList
+              transactions={recentTransactions}
+              onEdit={openTransactionEditor}
+            />
           </section>
         </div>
       </GlassCard>
@@ -1107,7 +1330,10 @@ export const MoneyWidget = () => {
                     <h3>Category detail</h3>
                   </div>
                 </div>
-                <TransactionList transactions={selectedCategoryTransactions.slice(0, 8)} />
+                <TransactionList
+                  transactions={selectedCategoryTransactions.slice(0, 8)}
+                  onEdit={openTransactionEditor}
+                />
               </section>
             </div>
           )}
@@ -1205,15 +1431,14 @@ export const MoneyWidget = () => {
 
                       <label>
                         <span>Subcategory</span>
-                        <input
+                        <SubcategoryInput
                           value={expenseDraft.subcategory}
-                          onChange={(event) =>
-                            updateExpenseDraft(
-                              "subcategory",
-                              event.target.value
-                            )
+                          onChange={(value) =>
+                            updateExpenseDraft("subcategory", value)
                           }
-                          list="money-subcategories"
+                          category={expenseDraft.category}
+                          options={subcategoryOptionsByCategory[expenseDraft.category]}
+                          scope="expense-add"
                         />
                       </label>
 
@@ -1261,6 +1486,17 @@ export const MoneyWidget = () => {
                       </label>
 
                       <label className="money-form-wide">
+                        <span>Hashtags</span>
+                        <input
+                          value={expenseDraft.hashtags}
+                          onChange={(event) =>
+                            updateExpenseDraft("hashtags", event.target.value)
+                          }
+                          placeholder="#career #coupon #refund"
+                        />
+                      </label>
+
+                      <label className="money-form-wide">
                         <span>Note</span>
                         <textarea
                           value={expenseDraft.note}
@@ -1277,12 +1513,6 @@ export const MoneyWidget = () => {
                     </form>
                   </>
                 )}
-
-                <datalist id="money-subcategories">
-                  {getSubcategories(expenseDraft.category).map((subcategory) => (
-                    <option key={subcategory} value={subcategory} />
-                  ))}
-                </datalist>
               </section>
 
               <section className="money-detail-card money-list-card">
@@ -1306,9 +1536,43 @@ export const MoneyWidget = () => {
                   ))}
                 </div>
 
+                {expenseTagOptions.length > 0 && (
+                  <div className="money-hashtag-filter-row" aria-label="Expense hashtag filters">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedExpenseTag(null)}
+                      className={cn(
+                        "money-pill",
+                        selectedExpenseTag === null && "is-active"
+                      )}
+                    >
+                      #All
+                    </button>
+
+                    {expenseTagOptions.map((tag) => (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() =>
+                          setSelectedExpenseTag((current) =>
+                            current === tag ? null : tag
+                          )
+                        }
+                        className={cn(
+                          "money-pill",
+                          selectedExpenseTag === tag && "is-active"
+                        )}
+                      >
+                        #{tag}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 <TransactionList
-                  transactions={filteredSpending}
+                  transactions={visibleSpending}
                   onDelete={removeTransaction}
+                  onEdit={openTransactionEditor}
                 />
               </section>
             </div>
@@ -1391,11 +1655,14 @@ export const MoneyWidget = () => {
 
                     <label>
                       <span>Subcategory</span>
-                      <input
+                      <SubcategoryInput
                         value={wishlistDraft.subcategory}
-                        onChange={(event) =>
-                          updateWishlistDraft("subcategory", event.target.value)
+                        onChange={(value) =>
+                          updateWishlistDraft("subcategory", value)
                         }
+                        category={wishlistDraft.category}
+                        options={subcategoryOptionsByCategory[wishlistDraft.category]}
+                        scope="wishlist-add"
                       />
                     </label>
 
@@ -1721,11 +1988,14 @@ export const MoneyWidget = () => {
 
                   <label>
                     <span>Subcategory</span>
-                    <input
+                    <SubcategoryInput
                       value={recurringDraft.subcategory}
-                      onChange={(event) =>
-                        updateRecurringDraft("subcategory", event.target.value)
+                      onChange={(value) =>
+                        updateRecurringDraft("subcategory", value)
                       }
+                      category={recurringDraft.category}
+                      options={subcategoryOptionsByCategory[recurringDraft.category]}
+                      scope="recurring-add"
                     />
                   </label>
 
@@ -1893,7 +2163,7 @@ export const MoneyWidget = () => {
                         ? {
                             ...prev,
                             category: value,
-                            subcategory: getSubcategories(value)[0] ?? "",
+                            subcategory: subcategoryOptionsByCategory[value][0] ?? "",
                           }
                         : prev
                     )
@@ -1903,18 +2173,21 @@ export const MoneyWidget = () => {
 
               <label>
                 <span>Subcategory</span>
-                <input
+                <SubcategoryInput
                   value={purchaseDraft.subcategory}
-                  onChange={(event) =>
+                  onChange={(value) =>
                     setPurchaseDraft((prev) =>
                       prev
                         ? {
                             ...prev,
-                            subcategory: event.target.value,
+                            subcategory: value,
                           }
                         : prev
                     )
                   }
+                  category={purchaseDraft.category}
+                  options={subcategoryOptionsByCategory[purchaseDraft.category]}
+                  scope="purchase"
                 />
               </label>
 
@@ -1924,6 +2197,183 @@ export const MoneyWidget = () => {
               </button>
             </form>
           </div>
+        )}
+      </FloatingWindow>
+
+      <FloatingWindow
+        open={Boolean(editingTransaction && editingExpenseDraft)}
+        title="Edit Expense"
+        subtitle={editingTransaction?.name ?? "Transaction detail"}
+        storageKey="glassday.money.expenseEditor.rect.v1"
+        defaultRect={{ x: 180, y: 110, w: 560, h: 620 }}
+        minWidth={360}
+        minHeight={420}
+        className="money-floating-window money-expense-editor-window"
+        titlebarClassName="money-floating-titlebar"
+        onClose={closeTransactionEditor}
+      >
+        {editingExpenseDraft && (
+          <form className="money-detail money-expense-editor-form" onSubmit={saveEditedTransaction}>
+            <div className="money-section-heading">
+              <div>
+                <span className="money-kicker">Transaction</span>
+                <h3>{editingExpenseDraft.name || "Expense"}</h3>
+                <p>Click a spending row to reopen this editor.</p>
+              </div>
+            </div>
+
+            <div className="money-form">
+              <label>
+                <span>Name</span>
+                <input
+                  value={editingExpenseDraft.name}
+                  onChange={(event) =>
+                    updateEditingExpenseDraft("name", event.target.value)
+                  }
+                />
+              </label>
+
+              <label>
+                <span>Amount</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={editingExpenseDraft.amount}
+                  onChange={(event) =>
+                    updateEditingExpenseDraft("amount", event.target.value)
+                  }
+                />
+              </label>
+
+              <label>
+                <span>Date</span>
+                <input
+                  type="date"
+                  value={editingExpenseDraft.date}
+                  onChange={(event) =>
+                    updateEditingExpenseDraft("date", event.target.value)
+                  }
+                />
+              </label>
+
+              <label>
+                <span>Category</span>
+                <CategorySelect
+                  value={editingExpenseDraft.category}
+                  onChange={(value) =>
+                    updateEditingExpenseDraft("category", value)
+                  }
+                />
+              </label>
+
+              <label>
+                <span>Subcategory</span>
+                <SubcategoryInput
+                  value={editingExpenseDraft.subcategory}
+                  onChange={(value) =>
+                    updateEditingExpenseDraft("subcategory", value)
+                  }
+                  category={editingExpenseDraft.category}
+                  options={
+                    subcategoryOptionsByCategory[editingExpenseDraft.category]
+                  }
+                  scope="expense-edit"
+                />
+              </label>
+
+              <label>
+                <span>Store</span>
+                <StoreInput
+                  value={editingExpenseDraft.store}
+                  onChange={(value) =>
+                    updateEditingExpenseDraft("store", value)
+                  }
+                />
+              </label>
+
+              <label>
+                <span>Channel</span>
+                <select
+                  value={editingExpenseDraft.channel}
+                  onChange={(event) =>
+                    updateEditingExpenseDraft(
+                      "channel",
+                      event.target.value as MoneyChannel
+                    )
+                  }
+                >
+                  <option value="online">online</option>
+                  <option value="offline">offline</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Expense Type</span>
+                <select
+                  value={editingExpenseDraft.expenseType}
+                  onChange={(event) =>
+                    updateEditingExpenseDraft(
+                      "expenseType",
+                      event.target.value as MoneyExpenseType
+                    )
+                  }
+                >
+                  <option value="fixed">fixed</option>
+                  <option value="variable">variable</option>
+                  <option value="one-time">one-time</option>
+                </select>
+              </label>
+
+              <label className="money-form-wide">
+                <span>Hashtags</span>
+                <input
+                  value={editingExpenseDraft.hashtags}
+                  onChange={(event) =>
+                    updateEditingExpenseDraft("hashtags", event.target.value)
+                  }
+                  placeholder="#career #coupon #refund"
+                />
+              </label>
+
+              <label className="money-form-wide">
+                <span>Note</span>
+                <textarea
+                  value={editingExpenseDraft.note}
+                  onChange={(event) =>
+                    updateEditingExpenseDraft("note", event.target.value)
+                  }
+                  placeholder="Optional memo"
+                />
+              </label>
+            </div>
+
+            <div className="money-editor-actions">
+              {editingTransaction && (
+                <button
+                  type="button"
+                  onClick={() => removeTransaction(editingTransaction.id)}
+                  className="money-danger-button"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete
+                </button>
+              )}
+
+              <div>
+                <button
+                  type="button"
+                  onClick={closeTransactionEditor}
+                  className="money-secondary-button"
+                >
+                  Cancel
+                </button>
+
+                <button type="submit" className="money-submit-button">
+                  Save Expense
+                </button>
+              </div>
+            </div>
+          </form>
         )}
       </FloatingWindow>
     </>

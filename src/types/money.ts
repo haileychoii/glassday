@@ -65,6 +65,8 @@ export type MoneyTransaction = {
   channel?: MoneyChannel;
   expenseType: MoneyExpenseType;
   note?: string;
+  /** User-defined spending tags. Stored without # for stable filtering. */
+  hashtags?: string[];
   wishlistItemId?: string;
   createdAt: string;
   updatedAt: string;

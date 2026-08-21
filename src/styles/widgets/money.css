@@ -809,8 +809,14 @@
   grid-template-columns: 7px minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--gd-space-sm);
+  text-align: left;
   background: hsl(0 0% 100% / 0.2);
   border: 1px solid hsl(0 0% 100% / 0.3);
+}
+
+.money-transaction-row:hover {
+  background: hsl(0 0% 100% / 0.32);
+  transform: translateY(-1px);
 }
 
 .money-transaction-mark {
@@ -844,6 +850,24 @@
   color: hsl(var(--muted-foreground) / 0.72);
 }
 
+.money-transaction-tags {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 850;
+  color: hsl(var(--primary) / 0.72);
+}
+
+.money-hashtag-filter-row {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gd-space-xs);
+}
+
 .money-transaction-side {
   display: inline-flex;
   align-items: center;
@@ -854,6 +878,25 @@
   font-size: 12px;
   font-weight: 900;
   white-space: nowrap;
+}
+
+.money-expense-editor-form {
+  padding: 18px;
+  display: grid;
+  gap: var(--gd-widget-stack-gap);
+}
+
+.money-editor-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gd-widget-stack-gap);
+}
+
+.money-editor-actions > div {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gd-space-xs);
 }
 
 /* =========================================================
