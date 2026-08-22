@@ -632,21 +632,33 @@
   border-radius: 0;
 }
 
+/* Retro 98 preview
+   Mirrors the real pink desktop skin instead of the old teal Win98 mock.
+   Settings에서 보이는 작은 그림이 실제 Retro 테마의 핑크 격자/창 질감과
+   같아야 사용자가 테마를 고를 때 덜 헷갈린다. */
 .settings-theme-preview-retro {
   background:
-    linear-gradient(180deg, #008080 0, #008080 18%, #0e6f82 18%, #0d6673 100%);
+    linear-gradient(rgb(244 139 195 / 0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(244 139 195 / 0.28) 1px, transparent 1px),
+    radial-gradient(circle at 88% 18%, rgb(255 255 255 / 0.84), transparent 18px),
+    linear-gradient(180deg, #fff2f9 0%, #ffd8ec 100%);
+  background-size:
+    14px 14px,
+    14px 14px,
+    auto,
+    auto;
   padding: 6px;
 }
 
 .settings-theme-preview-retro .settings-preview-window {
-  background: #c0c0c0;
+  background: #fff8fc;
   border-top: 2px solid #ffffff;
   border-left: 2px solid #ffffff;
-  border-right: 2px solid #404040;
-  border-bottom: 2px solid #404040;
+  border-right: 2px solid #5a4457;
+  border-bottom: 2px solid #5a4457;
   box-shadow:
-    inset 1px 1px 0 #dfdfdf,
-    2px 2px 0 rgb(0 0 0 / 0.28);
+    inset 1px 1px 0 #ffe9f5,
+    3px 3px 0 rgb(90 68 87 / 0.3);
   border-radius: 0;
 }
 
@@ -654,8 +666,8 @@
   height: 17px;
   min-height: 17px;
   padding: 0 4px;
-  background: linear-gradient(90deg, #000080, #1084d0);
-  border-bottom: 2px solid #7f7f7f;
+  background: linear-gradient(90deg, #f399c8 0%, #dc6ca9 68%, #8da7f5 100%);
+  border-bottom: 2px solid #5a4457;
 }
 
 .settings-theme-preview-retro .settings-preview-lights {
@@ -666,18 +678,18 @@
   width: 8px;
   height: 8px;
   border-radius: 0;
-  background: #c0c0c0;
+  background: #ffe8f5;
   border-top: 1px solid #ffffff;
   border-left: 1px solid #ffffff;
-  border-right: 1px solid #404040;
-  border-bottom: 1px solid #404040;
+  border-right: 1px solid #5a4457;
+  border-bottom: 1px solid #5a4457;
 }
 
 .settings-theme-preview-retro .settings-preview-title-chip {
   width: 30px;
   height: 4px;
   border-radius: 0;
-  background: #dcecff;
+  background: #fff9fd;
 }
 
 .settings-theme-preview-retro .settings-preview-body {
@@ -691,11 +703,11 @@
 
 .settings-theme-preview-retro .settings-preview-sidebar,
 .settings-theme-preview-retro .settings-preview-panel {
-  background: #f4f1df;
+  background: linear-gradient(180deg, #fff9fd 0%, #ffe5f2 100%);
   border-top: 1px solid #ffffff;
   border-left: 1px solid #ffffff;
-  border-right: 1px solid #808080;
-  border-bottom: 1px solid #808080;
+  border-right: 1px solid #c880ac;
+  border-bottom: 1px solid #c880ac;
   border-radius: 0;
 }
 

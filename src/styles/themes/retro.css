@@ -1206,3 +1206,147 @@ body.theme-retro {
   border-right: 2px solid #26384d !important;
   border-bottom: 2px solid #26384d !important;
 }
+
+/* ============================================================
+   Retro 98 comfort pass
+   The first pink skin was too saturated across every large surface. This
+   final layer keeps the Y2K/Win98 reference, but lets the main workspace read
+   as a cream retro desktop with pink chrome accents. / 큰 배경까지 전부 진한
+   핑크로 밀면 Settings preview와 실제 사용 화면이 모두 부담스러워져서,
+   창/버튼의 포인트만 핑크로 남기고 작업 영역은 밝은 레트로 종이 톤으로 정리한다.
+   ============================================================ */
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
+  --retro-bg: #fff1f8;
+  --retro-panel: #f3e6ed;
+  --retro-panel-light: #fffafd;
+  --retro-panel-dark: #d68ab5;
+  --retro-panel-darker: #594457;
+  --retro-window: #fff9fd;
+  --retro-title: #f49ac9;
+  --retro-title-2: #da6aa7;
+  --retro-title-3: #8faaf7;
+  --retro-text: #263348;
+  --retro-muted: #6e6176;
+  --retro-cream: #fff9fd;
+  --retro-field: #ffffff;
+  --retro-client: #fff4fa;
+  --retro-raised-border:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #d58ab5;
+  --retro-sunken-border:
+    inset 1px 1px 0 #8c7288,
+    inset -1px -1px 0 #ffffff;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro),
+html[data-theme="retro"] body,
+body[data-theme="retro"],
+html.theme-retro body,
+body.theme-retro {
+  background:
+    linear-gradient(rgb(244 139 195 / 0.24) 2px, transparent 2px),
+    linear-gradient(90deg, rgb(244 139 195 / 0.24) 2px, transparent 2px),
+    radial-gradient(circle at 12% 12%, rgb(255 255 255 / 0.86), transparent 20%),
+    radial-gradient(circle at 84% 10%, rgb(255 255 255 / 0.62), transparent 18%),
+    linear-gradient(180deg, #fff5fb 0%, #ffe1f1 58%, #ffd2ea 100%) !important;
+  background-size:
+    34px 34px,
+    34px 34px,
+    auto,
+    auto,
+    auto !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.app-shell-surface, .glass-panel, .liquid-shell, .app-shell, .dashboard-shell, .dashboard-layout, .app-layout) {
+  background:
+    linear-gradient(180deg, #fff8fc 0%, #f4e5ed 100%) !important;
+  border-top-color: #ffffff !important;
+  border-left-color: #ffffff !important;
+  border-right-color: #594457 !important;
+  border-bottom-color: #594457 !important;
+  box-shadow:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #d7a2c0,
+    7px 7px 0 rgb(89 68 87 / 0.24) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.sidebar, aside, .topbar) {
+  background:
+    linear-gradient(180deg, #fffafd 0%, #f4dfe9 100%) !important;
+  border-color: #594457 !important;
+  box-shadow:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #d8abc5 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card, .floating-window, .settings-modal-window, .memo-window, .memo-floating-window) {
+  background:
+    linear-gradient(180deg, #fffafd 0%, #fff0f8 100%) !important;
+  border-top-color: #ffffff !important;
+  border-left-color: #ffffff !important;
+  border-right-color: #594457 !important;
+  border-bottom-color: #594457 !important;
+  box-shadow:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #d8abc5,
+    5px 5px 0 rgb(89 68 87 / 0.34) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-header, .widget-card-header, .widget-frame__header, .floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
+  background:
+    linear-gradient(90deg, #f49ac9 0%, #da6aa7 68%, #8faaf7 100%) !important;
+  border-bottom-color: #594457 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-body, .widget-frame__body, .floating-window-body, .settings-modal-body) {
+  background:
+    linear-gradient(180deg, #fffafd 0%, #fff4fa 100%) !important;
+  border-top-color: #8c7288 !important;
+  border-left-color: #8c7288 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(
+    .money-detail-card,
+    .memo-workspace,
+    .memo-list-panel,
+    .memo-note-item,
+    .calendar-modal-body,
+    .calendar-detail-grid,
+    .career-detail-section,
+    .career-summary-card,
+    .calendar-event-item,
+    .alert-item,
+    .settings-section,
+    .settings-theme-card,
+    .today-focus-section,
+    .today-focus-main,
+    .study-overview-panel,
+    .study-input-panel,
+    .study-week-panel,
+    .daily-journal-section,
+    .mood-row
+  ) {
+  background:
+    linear-gradient(180deg, #fffdfd 0%, #fff0f8 100%) !important;
+  border-right-color: #d58ab5 !important;
+  border-bottom-color: #d58ab5 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button, .glass-button, .money-action-button, .money-icon-button, .money-secondary-button, .money-submit-button, .calendar-nav-button, .calendar-view-button, .career-icon-button, .career-small-button, .theme-segment-button) {
+  background:
+    linear-gradient(180deg, #fffafd 0%, #ffd4ea 100%) !important;
+  border-right-color: #594457 !important;
+  border-bottom-color: #594457 !important;
+  box-shadow:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #d58ab5,
+    2px 2px 0 rgb(89 68 87 / 0.26) !important;
+}
