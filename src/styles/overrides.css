@@ -229,44 +229,53 @@ body,
 }
 
 /* =========================================================
-   3-1. Wide web document scroll repair
-   Wide mode is a normal browser dashboard, so the page should scroll when
-   React Grid grows taller than the viewport. Laptop/Tauri below still keep
-   their clipped app-window behavior. / wide 전체 스크롤 복구용 최종 보정.
+   3-1. Wide web app-window scroll repair
+   Wide mode should still feel like a desktop workspace, not a giant page
+   board. Keep the glass shell clipped and let only the dashboard main pane
+   scroll. / 이전 document-scroll 보정으로 생긴 큰 판 느낌을 여기서 차단.
 ========================================================= */
+
+.app-mode-stage.is-wide-mode {
+  height: 100vh !important;
+  min-height: 100vh !important;
+  overflow: hidden !important;
+}
 
 .app-mode-stage.is-wide-mode .app-shell-surface.is-wide,
 .app-mode-stage.is-wide-mode .glass-panel.is-wide,
 .app-mode-stage.is-wide-mode .liquid-shell.is-wide {
-  min-height: calc(100vh - 1rem) !important;
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
+  min-height: 0 !important;
+  height: calc(100vh - 1rem) !important;
+  max-height: calc(100vh - 1rem) !important;
+  overflow: hidden !important;
 }
 
 @media (min-width: 768px) {
   .app-mode-stage.is-wide-mode .app-shell-surface.is-wide,
   .app-mode-stage.is-wide-mode .glass-panel.is-wide,
   .app-mode-stage.is-wide-mode .liquid-shell.is-wide {
-    min-height: calc(100vh - 1.5rem) !important;
+    height: calc(100vh - 1.5rem) !important;
+    max-height: calc(100vh - 1.5rem) !important;
   }
 }
 
 .app-mode-stage.is-wide-mode .app-shell-surface.is-wide > .app-shell-columns,
-.app-mode-stage.is-wide-mode .app-shell-surface.is-wide .app-shell-main-column,
-.app-mode-stage.is-wide-mode .app-shell-surface.is-wide .app-shell-main,
-.app-mode-stage.is-wide-mode .dashboard-tab-space,
-.app-mode-stage.is-wide-mode .dashboard-edit-canvas,
-.app-mode-stage.is-wide-mode .dashboard-rgl {
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
+.app-mode-stage.is-wide-mode .app-shell-surface.is-wide .app-shell-main-column {
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
 }
 
-.app-mode-stage.is-wide-mode .app-shell-surface.is-wide > .app-shell-columns,
-.app-mode-stage.is-wide-mode .app-shell-surface.is-wide .app-shell-main-column,
 .app-mode-stage.is-wide-mode .app-shell-surface.is-wide .app-shell-main {
   min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* =========================================================

@@ -263,13 +263,13 @@ const shellContent = (
       /*
        * Shell clipping is mode-specific.
        * - Laptop/Tauri keeps the rounded app window clipped.
-       * - Web Wide lets the React Grid height reach the document so the whole
-       *   dashboard can scroll naturally. / wide에서는 전체 페이지 스크롤 유지.
+       * - Web Wide keeps the same app-window feeling and lets only the main
+       *   dashboard pane scroll. / wide에서도 큰 판처럼 퍼지지 않게 내부 스크롤.
        */
-      "glass-panel liquid-shell rounded-[2.2rem] app-shell-surface",
+      "glass-panel liquid-shell rounded-[2.2rem] overflow-hidden app-shell-surface",
       effectiveLayoutMode === "laptop"
         ? "is-laptop h-full min-h-0 overflow-hidden"
-        : "is-wide min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
+        : "is-wide h-[calc(100vh-1rem)] md:h-[calc(100vh-1.5rem)] min-h-0",
       isTauriApp ? "is-tauri-app-surface" : "",
     ]
       .filter(Boolean)
@@ -281,7 +281,7 @@ const shellContent = (
         "flex app-shell-columns",
         effectiveLayoutMode === "laptop"
           ? "h-full min-h-0"
-          : "min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
+          : "h-full min-h-0",
       ].join(" ")}
     >
       <Sidebar
@@ -301,7 +301,7 @@ const shellContent = (
       <div
         className={[
           "app-shell-main-column flex-1 min-w-0 flex flex-col",
-          effectiveLayoutMode === "laptop" ? "min-h-0" : "",
+          "min-h-0",
         ].join(" ")}
       >
         <Topbar
@@ -325,7 +325,7 @@ const shellContent = (
             "app-shell-main flex-1 min-w-0 bg-transparent",
             effectiveLayoutMode === "laptop"
               ? "min-h-0 overflow-y-auto overflow-x-hidden"
-              : "min-h-0 overflow-visible",
+              : "min-h-0 overflow-y-auto overflow-x-hidden",
           ].join(" ")}
         >
           {children}
