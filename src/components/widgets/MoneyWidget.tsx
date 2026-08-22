@@ -70,13 +70,10 @@ import {
   getBudgetPercentage,
   getCategoryBreakdown,
   getCategoryDefinition,
-  getCurrentMonthKey,
   getMonthLabel,
-  getPreviousMonthKey,
   getStoreBreakdown,
   getSubcategories,
   getTotalAmount,
-  getTransactionsForMonth,
   groupTransactionsByDate,
   moneyCategories,
   moneyStoreDefaults,
@@ -135,7 +132,230 @@ type PurchaseDraft = {
   subcategory: string;
 };
 
+type MoneyPeriodPreset = "month" | "week" | "two-weeks" | "today" | "custom";
+
+type MoneyDateRange = {
+  start: string;
+  end: string;
+  label: string;
+};
+
+type MoneyDisplayTransaction = MoneyTransaction & {
+  /**
+   * Virtual row generated from a recurring expense for the selected period.
+   * It is not persisted as a transaction, so deleting/editing it should route
+   * users to Recurring instead. / 반복 지출은 기간 조회 시점에만 만들어지는
+   * 표시용 행이며 localStorage transaction으로 복제하지 않는다.
+   */
+  isRecurringProjection?: boolean;
+  recurringExpenseId?: string;
+};
+
 const todayInput = () => new Date().toISOString().slice(0, 10);
+
+const parseInputDate = (value: string) => {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
+const formatInputDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const addDays = (date: Date, days: number) => {
+  const next = new Date(date);
+  next.setDate(next.getDate() + days);
+  return next;
+};
+
+const getMonthRangeFromDate = (date: Date): MoneyDateRange => {
+  const start = new Date(date.getFullYear(), date.getMonth(), 1);
+  const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+  return {
+    start: formatInputDate(start),
+    end: formatInputDate(end),
+    label: getMonthLabel(formatInputDate(start).slice(0, 7)),
+  };
+};
+
+const getWeekStart = (date: Date) => {
+  const day = date.getDay();
+  const mondayOffset = day === 0 ? -6 : 1 - day;
+  return addDays(date, mondayOffset);
+};
+
+const getMoneyPeriodRange = (
+  preset: MoneyPeriodPreset,
+  customStart: string,
+  customEnd: string
+): MoneyDateRange => {
+  const today = parseInputDate(todayInput());
+
+  if (preset === "today") {
+    const date = formatInputDate(today);
+    return { start: date, end: date, label: "Today" };
+  }
+
+  if (preset === "week") {
+    const start = getWeekStart(today);
+    const end = addDays(start, 6);
+    return {
+      start: formatInputDate(start),
+      end: formatInputDate(end),
+      label: "This week",
+    };
+  }
+
+  if (preset === "two-weeks") {
+    const end = today;
+    const start = addDays(today, -13);
+    return {
+      start: formatInputDate(start),
+      end: formatInputDate(end),
+      label: "Last 2 weeks",
+    };
+  }
+
+  if (preset === "custom") {
+    const safeStart = customStart || todayInput();
+    const safeEnd = customEnd || safeStart;
+    const [start, end] =
+      safeStart <= safeEnd ? [safeStart, safeEnd] : [safeEnd, safeStart];
+
+    return {
+      start,
+      end,
+      label: `${start} - ${end}`,
+    };
+  }
+
+  return getMonthRangeFromDate(today);
+};
+
+const getPreviousMoneyRange = (range: MoneyDateRange): MoneyDateRange => {
+  const startDate = parseInputDate(range.start);
+  const endDate = parseInputDate(range.end);
+  const dayCount =
+    Math.floor(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+    ) + 1;
+  const previousEnd = addDays(startDate, -1);
+  const previousStart = addDays(previousEnd, -(dayCount - 1));
+
+  return {
+    start: formatInputDate(previousStart),
+    end: formatInputDate(previousEnd),
+    label: "Previous period",
+  };
+};
+
+const getTransactionsForRange = (
+  transactions: MoneyTransaction[],
+  range: MoneyDateRange
+) => {
+  return transactions.filter(
+    (transaction) => transaction.date >= range.start && transaction.date <= range.end
+  );
+};
+
+const getRecurringProjectionDate = (
+  year: number,
+  monthIndex: number,
+  billingDay: number
+) => {
+  const lastDay = new Date(year, monthIndex + 1, 0).getDate();
+  return formatInputDate(new Date(year, monthIndex, Math.min(billingDay, lastDay)));
+};
+
+const hasMatchingManualFixedExpense = (
+  transactions: MoneyTransaction[],
+  recurring: MoneyRecurringExpense,
+  date: string
+) => {
+  return transactions.some(
+    (transaction) =>
+      transaction.date === date &&
+      transaction.name === recurring.name &&
+      transaction.amount === recurring.amount &&
+      transaction.category === recurring.category &&
+      (transaction.subcategory ?? "") === (recurring.subcategory ?? "") &&
+      transaction.expenseType === "fixed"
+  );
+};
+
+const projectRecurringTransactions = (
+  recurringItems: MoneyRecurringExpense[],
+  transactions: MoneyTransaction[],
+  range: MoneyDateRange
+): MoneyDisplayTransaction[] => {
+  const rangeStart = parseInputDate(range.start);
+  const rangeEnd = parseInputDate(range.end);
+  const projections: MoneyDisplayTransaction[] = [];
+
+  recurringItems
+    .filter((item) => item.active)
+    .forEach((item) => {
+      for (
+        let cursor = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1);
+        cursor <= rangeEnd;
+        cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1)
+      ) {
+        const date = getRecurringProjectionDate(
+          cursor.getFullYear(),
+          cursor.getMonth(),
+          item.billingDay
+        );
+
+        if (date < range.start || date > range.end) continue;
+        if (hasMatchingManualFixedExpense(transactions, item, date)) continue;
+
+        projections.push({
+          id: `money-recurring-projection-${item.id}-${date}`,
+          name: item.name,
+          amount: item.amount,
+          date,
+          category: item.category,
+          subcategory: item.subcategory,
+          store: "Recurring",
+          channel: "offline",
+          expenseType: "fixed",
+          note: "Projected from recurring fixed cost",
+          createdAt: date,
+          updatedAt: date,
+          isRecurringProjection: true,
+          recurringExpenseId: item.id,
+        });
+      }
+    });
+
+  return projections;
+};
+
+const getMoneyTransactionsForRange = (
+  transactions: MoneyTransaction[],
+  recurringItems: MoneyRecurringExpense[],
+  range: MoneyDateRange
+): MoneyDisplayTransaction[] => {
+  return [
+    ...getTransactionsForRange(transactions, range),
+    ...projectRecurringTransactions(recurringItems, transactions, range),
+  ];
+};
+
+const moneyPeriodOptions: Array<{
+  id: MoneyPeriodPreset;
+  label: string;
+}> = [
+  { id: "month", label: "This month" },
+  { id: "week", label: "This week" },
+  { id: "two-weeks", label: "Last 2 weeks" },
+  { id: "today", label: "Today" },
+  { id: "custom", label: "Custom" },
+];
 
 const createDefaultExpenseDraft = (): ExpenseDraft => ({
   name: "",
@@ -228,14 +448,14 @@ const getUniqueMoneyOptions = (items: string[]) => {
   }, []);
 };
 
-const getMonthDeltaLabel = (current: number, previous: number) => {
-  if (previous <= 0) return "No last month data";
+const getPeriodDeltaLabel = (current: number, previous: number) => {
+  if (previous <= 0) return "No previous period data";
 
   const diff = current - previous;
   const sign = diff >= 0 ? "+" : "-";
   const percent = Math.round((Math.abs(diff) / previous) * 100);
 
-  return `${sign}${formatWon(Math.abs(diff))} · ${percent}% vs last month`;
+  return `${sign}${formatWon(Math.abs(diff))} · ${percent}% vs previous period`;
 };
 
 const getTransactionMeta = (transaction: MoneyTransaction) => {
@@ -449,13 +669,38 @@ const CategoryLegend = ({
   </div>
 );
 
+const moneyStoreBarColors = [
+  "#ff3b30",
+  "#ff6b45",
+  "#ff9f0a",
+  "#ffd60a",
+  "#34c759",
+  "#30d5c8",
+  "#0a84ff",
+  "#5856d6",
+];
+
+const getMoneyStoreBarFill = (index: number) => {
+  const color = moneyStoreBarColors[index] ?? moneyStoreBarColors.at(-1) ?? "#0a84ff";
+
+  return `linear-gradient(90deg, ${color}, color-mix(in srgb, ${color} 58%, #ffffff 42%))`;
+};
+
 const StoreBars = ({ items }: { items: ReturnType<typeof getStoreBreakdown> }) => (
   <div className="money-store-bars">
     {items.length === 0 ? (
       <div className="money-empty">No store spending yet.</div>
     ) : (
-      items.slice(0, 8).map((item) => (
-        <div key={item.key} className="money-store-row">
+      items.slice(0, 8).map((item, index) => (
+        <div
+          key={item.key}
+          className="money-store-row"
+          style={
+            {
+              "--money-bar-fill": getMoneyStoreBarFill(index),
+            } as CSSProperties
+          }
+        >
           <span>{item.label}</span>
           <div className="money-store-track">
             <div
@@ -475,11 +720,17 @@ const TransactionList = ({
   onDelete,
   onEdit,
 }: {
-  transactions: MoneyTransaction[];
+  transactions: MoneyDisplayTransaction[];
   onDelete?: (id: string) => void;
   onEdit?: (transaction: MoneyTransaction) => void;
 }) => {
-  const groups = groupTransactionsByDate(transactions);
+  /* groupTransactionsByDate only needs the MoneyTransaction fields. The
+     optional projection metadata is preserved on the original row objects,
+     so this cast keeps the display-only recurring marker available here. */
+  const groups = groupTransactionsByDate(transactions) as Array<{
+    date: string;
+    transactions: MoneyDisplayTransaction[];
+  }>;
 
   if (groups.length === 0) {
     return <div className="money-empty">No transactions for this view.</div>;
@@ -502,8 +753,14 @@ const TransactionList = ({
                 <button
                   key={transaction.id}
                   type="button"
-                  className="money-transaction-row"
-                  onClick={() => onEdit?.(transaction)}
+                  className={cn(
+                    "money-transaction-row",
+                    transaction.isRecurringProjection && "is-recurring-projection"
+                  )}
+                  onClick={() => {
+                    if (transaction.isRecurringProjection) return;
+                    onEdit?.(transaction);
+                  }}
                 >
                   <span
                     className="money-transaction-mark"
@@ -513,6 +770,11 @@ const TransactionList = ({
                   <div className="money-transaction-copy">
                     <strong>{transaction.name}</strong>
                     <span>{getTransactionMeta(transaction)}</span>
+                    {transaction.isRecurringProjection && (
+                      <em className="money-transaction-tags">
+                        recurring fixed cost
+                      </em>
+                    )}
                     {transaction.hashtags && transaction.hashtags.length > 0 && (
                       <em className="money-transaction-tags">
                         {transaction.hashtags.map((tag) => `#${tag}`).join(" ")}
@@ -522,7 +784,7 @@ const TransactionList = ({
 
                   <div className="money-transaction-side">
                     <strong>{formatWon(transaction.amount)}</strong>
-                    {onDelete && (
+                    {onDelete && !transaction.isRecurringProjection && (
                       <button
                         type="button"
                         onClick={(event) => {
@@ -573,6 +835,10 @@ export const MoneyWidget = () => {
   const [selectedExpenseTag, setSelectedExpenseTag] = useState<string | null>(
     null
   );
+  const defaultCustomRange = getMonthRangeFromDate(parseInputDate(todayInput()));
+  const [periodPreset, setPeriodPreset] = useState<MoneyPeriodPreset>("month");
+  const [customStart, setCustomStart] = useState(defaultCustomRange.start);
+  const [customEnd, setCustomEnd] = useState(defaultCustomRange.end);
   const [selectedWishlistId, setSelectedWishlistId] = useState<string | null>(
     null
   );
@@ -607,35 +873,51 @@ export const MoneyWidget = () => {
     setStoredMoney((prev) => touchMoneyData(updater(normalizeMoneyData(prev))));
   };
 
-  const currentMonth = getCurrentMonthKey();
-  const previousMonth = getPreviousMonthKey(currentMonth);
-  const monthTransactions = useMemo(
-    () => getTransactionsForMonth(money.transactions, currentMonth),
-    [money.transactions, currentMonth]
+  const selectedRange = useMemo(
+    () => getMoneyPeriodRange(periodPreset, customStart, customEnd),
+    [customEnd, customStart, periodPreset]
   );
-  const previousMonthTransactions = useMemo(
-    () => getTransactionsForMonth(money.transactions, previousMonth),
-    [money.transactions, previousMonth]
+  const previousRange = useMemo(
+    () => getPreviousMoneyRange(selectedRange),
+    [selectedRange]
+  );
+  const periodTransactions = useMemo(
+    () =>
+      getMoneyTransactionsForRange(
+        money.transactions,
+        money.recurring,
+        selectedRange
+      ),
+    [money.recurring, money.transactions, selectedRange]
+  );
+  const previousPeriodTransactions = useMemo(
+    () =>
+      getMoneyTransactionsForRange(
+        money.transactions,
+        money.recurring,
+        previousRange
+      ),
+    [money.recurring, money.transactions, previousRange]
   );
 
-  const totalSpent = getTotalAmount(monthTransactions);
-  const previousSpent = getTotalAmount(previousMonthTransactions);
+  const totalSpent = getTotalAmount(periodTransactions);
+  const previousSpent = getTotalAmount(previousPeriodTransactions);
   const budgetPercent = getBudgetPercentage(totalSpent, money.monthlyBudget);
-  const categoryBreakdown = getCategoryBreakdown(monthTransactions);
-  const storeBreakdown = getStoreBreakdown(monthTransactions);
+  const categoryBreakdown = getCategoryBreakdown(periodTransactions);
+  const storeBreakdown = getStoreBreakdown(periodTransactions);
   const selectedCategoryTransactions = selectedCategory
-    ? monthTransactions.filter((transaction) => transaction.category === selectedCategory)
-    : monthTransactions;
-  const recentTransactions = [...money.transactions]
+    ? periodTransactions.filter((transaction) => transaction.category === selectedCategory)
+    : periodTransactions;
+  const recentTransactions = [...periodTransactions]
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 3);
-  const filteredSpending = filterTransactionsByView(money.transactions, spendingView);
+  const filteredSpending = filterTransactionsByView(periodTransactions, spendingView);
   const expenseTagOptions = useMemo(
     () =>
       getUniqueMoneyOptions(
-        money.transactions.flatMap((transaction) => transaction.hashtags ?? [])
+        periodTransactions.flatMap((transaction) => transaction.hashtags ?? [])
       ),
-    [money.transactions]
+    [periodTransactions]
   );
   const visibleSpending = selectedExpenseTag
     ? filteredSpending.filter((transaction) =>
@@ -1113,7 +1395,7 @@ export const MoneyWidget = () => {
       {/* Figma Component: Money Compact Widget / container 크기별 summary density Variant */}
       <GlassCard
         title="Money"
-        subtitle={`${getMonthLabel(currentMonth)} · ${formatWon(totalSpent)} spent`}
+        subtitle={`${selectedRange.label} · ${formatWon(totalSpent)} spent`}
         icon={<Wallet className="w-4 h-4" />}
         className="money-widget"
         actions={
@@ -1145,9 +1427,9 @@ export const MoneyWidget = () => {
           {/* Figma Frame: Monthly Summary + Budget usage */}
           <section className="money-summary-panel">
             <div className="money-summary-copy">
-              <span>{getMonthLabel(currentMonth)}</span>
+              <span>{selectedRange.label}</span>
               <strong>{formatWon(totalSpent)}</strong>
-              <em>{getMonthDeltaLabel(totalSpent, previousSpent)}</em>
+              <em>{getPeriodDeltaLabel(totalSpent, previousSpent)}</em>
             </div>
 
             <div className="money-budget-mini">
@@ -1180,7 +1462,7 @@ export const MoneyWidget = () => {
 
             <div className="money-top-category">
               <span>Top category</span>
-              <strong>{getTopCategoryLabel(monthTransactions)}</strong>
+              <strong>{getTopCategoryLabel(periodTransactions)}</strong>
             </div>
           </section>
 
@@ -1252,14 +1534,57 @@ export const MoneyWidget = () => {
             )}
           </nav>
 
+          {/* Range Filter:
+             Overview, charts, store bars, and Spending list all read this
+             range. 기본값은 현재 월이며 사용자가 주/2주/오늘/직접 기간으로
+             빠르게 전환할 수 있다. */}
+          <section className="money-period-control" aria-label="Money period filter">
+            <div className="money-period-buttons">
+              {moneyPeriodOptions.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => setPeriodPreset(option.id)}
+                  className={cn(
+                    "money-pill",
+                    periodPreset === option.id && "is-active"
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+
+            {periodPreset === "custom" && (
+              <div className="money-period-custom">
+                <label>
+                  <span>Start</span>
+                  <input
+                    type="date"
+                    value={customStart}
+                    onChange={(event) => setCustomStart(event.target.value)}
+                  />
+                </label>
+                <label>
+                  <span>End</span>
+                  <input
+                    type="date"
+                    value={customEnd}
+                    onChange={(event) => setCustomEnd(event.target.value)}
+                  />
+                </label>
+              </div>
+            )}
+          </section>
+
           {section === "overview" && (
             <div className="money-overview-grid">
               <section className="money-detail-card money-overview-hero">
                 <div>
-                  <span className="money-kicker">Current month</span>
-                  <h3>{getMonthLabel(currentMonth)}</h3>
+                  <span className="money-kicker">Selected period</span>
+                  <h3>{selectedRange.label}</h3>
                   <strong>{formatWon(totalSpent)}</strong>
-                  <p>{getMonthDeltaLabel(totalSpent, previousSpent)}</p>
+                  <p>{getPeriodDeltaLabel(totalSpent, previousSpent)}</p>
                 </div>
 
                 <label className="money-budget-editor">

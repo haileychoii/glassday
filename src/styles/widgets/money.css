@@ -479,7 +479,7 @@
 .money-store-fill {
   height: 100%;
   border-radius: inherit;
-  background: hsl(var(--primary) / 0.42);
+  background: var(--money-bar-fill, hsl(var(--primary) / 0.42));
 }
 
 /* =========================================================
@@ -556,6 +556,59 @@
   gap: var(--gd-space-xs);
   font-size: 11px;
   font-weight: 850;
+}
+
+/* Period filter
+   The selected date range is the source for overview totals, charts, store
+   bars, and the spending ledger. / 기간 버튼 하나로 합계와 시각화, 소비 내역이
+   모두 같은 범위를 보도록 상단에 가벼운 필터를 둔다. */
+.money-period-control {
+  flex: 0 0 auto;
+  min-width: 0;
+  display: grid;
+  gap: var(--gd-space-xs);
+  padding: 8px;
+  border-radius: 16px;
+  background: hsl(0 0% 100% / 0.18);
+  border: 1px solid hsl(0 0% 100% / 0.34);
+}
+
+.money-period-buttons {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gd-space-xs);
+}
+
+.money-period-custom {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 160px));
+  gap: var(--gd-space-xs);
+}
+
+.money-period-custom label {
+  min-width: 0;
+}
+
+.money-period-custom span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 10px;
+  font-weight: 850;
+  color: hsl(var(--muted-foreground) / 0.76);
+}
+
+.money-period-custom input {
+  width: 100%;
+  min-width: 0;
+  min-height: 32px;
+  border-radius: 12px;
+  border: 1px solid hsl(0 0% 100% / 0.38);
+  background: hsl(0 0% 100% / 0.26);
+  padding: 0 var(--gd-space-sm);
+  color: hsl(var(--foreground) / 0.82);
+  font-size: 11px;
+  font-weight: 750;
 }
 
 .money-overview-grid,
@@ -817,6 +870,20 @@
 .money-transaction-row:hover {
   background: hsl(0 0% 100% / 0.32);
   transform: translateY(-1px);
+}
+
+.money-transaction-row.is-recurring-projection {
+  cursor: default;
+  background:
+    linear-gradient(
+      135deg,
+      hsl(155 70% 92% / 0.42),
+      hsl(0 0% 100% / 0.22)
+    );
+}
+
+.money-transaction-row.is-recurring-projection:hover {
+  transform: none;
 }
 
 .money-transaction-mark {

@@ -2101,6 +2101,7 @@ body,
     .money-detail-card,
     .money-chart-card,
     .money-list-card,
+    .money-period-control,
     .money-wishlist-card,
     .money-wishlist-add-card,
     .money-recurring-row,
@@ -2150,6 +2151,93 @@ body,
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.74),
     0 1px 2px rgb(22 24 32 / 0.04) !important;
+}
+
+/* Mac Core row boundaries
+   Career rows were visually blending together because the white surface and
+   very light border had almost the same value. Keep the Apple-like subtlety,
+   but make every repeated row carry the same separator. / 한 항목만 테두리가
+   있는 것처럼 보이지 않도록 모든 career row의 외곽선을 같은 강도로 보정한다. */
+:where(
+  html[data-theme="mac-core"],
+  body[data-theme="mac-core"],
+  html.theme-mac-core,
+  body.theme-mac-core
+)
+  .career-list-item {
+  background: rgb(255 255 255 / 0.92) !important;
+  border: 1px solid rgb(60 60 67 / 0.16) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.82),
+    0 2px 6px -5px rgb(22 24 32 / 0.2) !important;
+}
+
+/* Mac Core memo color bridge
+   MemoWidget writes per-note color variables inline. This late layer must
+   respect those variables after the native Mac surface reset above. / 메모에서
+   선택한 종이색과 목록색이 Mac Core의 흰 패널에 덮이지 않도록 다시 연결한다. */
+:where(
+  html[data-theme="mac-core"],
+  body[data-theme="mac-core"],
+  html.theme-mac-core,
+  body.theme-mac-core
+)
+  .memo-note-item {
+  background:
+    color-mix(
+      in srgb,
+      var(--memo-note-surface, rgb(255 255 255 / 0.92)) 88%,
+      #ffffff 12%
+    ) !important;
+  border-color:
+    color-mix(
+      in srgb,
+      var(--memo-note-border, rgb(60 60 67 / 0.16)) 72%,
+      rgb(60 60 67 / 0.16) 28%
+    ) !important;
+}
+
+:where(
+  html[data-theme="mac-core"],
+  body[data-theme="mac-core"],
+  html.theme-mac-core,
+  body.theme-mac-core
+)
+  .memo-note-item.is-active {
+  background:
+    color-mix(
+      in srgb,
+      var(--memo-note-surface-active, var(--memo-note-surface, #ffffff)) 90%,
+      #ffffff 10%
+    ) !important;
+  border-color:
+    color-mix(
+      in srgb,
+      var(--memo-note-border, #0a84ff) 60%,
+      #0a84ff 40%
+    ) !important;
+}
+
+:where(
+  html[data-theme="mac-core"],
+  body[data-theme="mac-core"],
+  html.theme-mac-core,
+  body.theme-mac-core
+)
+  :is(.memo-workspace, .memo-editor, .memo-window-editor) {
+  background:
+    color-mix(
+      in srgb,
+      var(--memo-paper-surface, var(--memo-paper-color, #ffffff)) 92%,
+      #ffffff 8%
+    ) !important;
+  color: var(--memo-editor-color, var(--mac-text, #1d1d1f)) !important;
+  border-color:
+    color-mix(
+      in srgb,
+      var(--memo-paper-border, rgb(60 60 67 / 0.16)) 70%,
+      rgb(60 60 67 / 0.16) 30%
+    ) !important;
 }
 
 :where(
@@ -2515,7 +2603,8 @@ body,
   body.theme-mac-core
 )
   :is(.money-budget-fill, .money-store-fill) {
-  background: linear-gradient(90deg, #64d2ff, #0a84ff) !important;
+  background:
+    var(--money-bar-fill, linear-gradient(90deg, #64d2ff, #0a84ff)) !important;
   border-radius: 999px !important;
   box-shadow: 0 4px 12px -8px rgb(10 132 255 / 0.72) !important;
 }
