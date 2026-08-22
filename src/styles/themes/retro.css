@@ -1208,34 +1208,36 @@ body.theme-retro {
 }
 
 /* ============================================================
-   Retro 98 flat pink pass
-   The previous pink skin used too many glossy gradients. This final layer
-   keeps the Y2K/Win98 reference but returns the chrome to flatter OS panels:
-   solid titlebars, raised borders, and a simple pink grid desktop. / 핑크
-   레트로 느낌은 유지하되 그라데이션 과다 사용을 줄여 실제 오래된 창 UI처럼
-   단색 표면과 입체 테두리가 먼저 보이도록 정리한다.
+   Retro 98 pink desktop pass
+   Reference target: pink Y2K desktop wallpaper + gray retro OS windows.
+   Keep broad working surfaces neutral gray/white, then reserve pink for
+   titlebars, small accents, and the desktop background. / 레퍼런스처럼 배경은
+   핑크지만 실제 창 내부는 회색 OS 패널과 흰 입력칸이어야 하므로 큰 표면의
+   핑크 사용을 줄이고 타이틀바/포인트에만 핑크를 남긴다.
    ============================================================ */
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
-  --retro-bg: #fff1f8;
-  --retro-panel: #f3e6ed;
-  --retro-panel-light: #fffafd;
-  --retro-panel-dark: #d68ab5;
-  --retro-panel-darker: #594457;
-  --retro-window: #fff9fd;
-  --retro-title: #f49ac9;
-  --retro-title-2: #da6aa7;
-  --retro-title-3: #8faaf7;
-  --retro-text: #263348;
-  --retro-muted: #6e6176;
-  --retro-cream: #fff9fd;
+  --retro-bg: #ffe7f2;
+  --retro-panel: #d7d7d7;
+  --retro-panel-light: #f5f5f5;
+  --retro-panel-dark: #8d8d8d;
+  --retro-panel-darker: #3f4650;
+  --retro-window: #d7d7d7;
+  --retro-title: #f59bc5;
+  --retro-title-2: #f7b4d4;
+  --retro-title-3: #d9578d;
+  --retro-text: #202833;
+  --retro-muted: #5e6470;
+  --retro-cream: #ffffff;
   --retro-field: #ffffff;
-  --retro-client: #fff4fa;
+  --retro-client: #f8f8f8;
+  --retro-pink-soft: #ffd8ea;
+  --retro-mint: #c9eadc;
   --retro-raised-border:
     inset 1px 1px 0 #ffffff,
-    inset -1px -1px 0 #d58ab5;
+    inset -1px -1px 0 #8d8d8d;
   --retro-sunken-border:
-    inset 1px 1px 0 #8c7288,
+    inset 1px 1px 0 #6e6e6e,
     inset -1px -1px 0 #ffffff;
 }
 
@@ -1245,10 +1247,14 @@ body[data-theme="retro"],
 html.theme-retro body,
 body.theme-retro {
   background:
-    linear-gradient(rgb(244 139 195 / 0.24) 2px, transparent 2px),
-    linear-gradient(90deg, rgb(244 139 195 / 0.24) 2px, transparent 2px),
-    #ffeaf5 !important;
+    radial-gradient(circle at 8% 10%, rgb(255 255 255 / 0.78) 0 10px, transparent 38px),
+    radial-gradient(circle at 84% 18%, rgb(255 255 255 / 0.58) 0 18px, transparent 68px),
+    linear-gradient(rgb(235 123 179 / 0.2) 2px, transparent 2px),
+    linear-gradient(90deg, rgb(235 123 179 / 0.2) 2px, transparent 2px),
+    #ffe7f2 !important;
   background-size:
+    auto,
+    auto,
     34px 34px,
     34px 34px,
     auto !important;
@@ -1256,50 +1262,65 @@ body.theme-retro {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.app-shell-surface, .glass-panel, .liquid-shell, .app-shell, .dashboard-shell, .dashboard-layout, .app-layout) {
-  background: #fff8fc !important;
+  background: var(--retro-panel) !important;
   border-top-color: #ffffff !important;
   border-left-color: #ffffff !important;
-  border-right-color: #594457 !important;
-  border-bottom-color: #594457 !important;
+  border-right-color: var(--retro-panel-darker) !important;
+  border-bottom-color: var(--retro-panel-darker) !important;
   box-shadow:
     inset 1px 1px 0 #ffffff,
-    inset -1px -1px 0 #d7a2c0,
-    7px 7px 0 rgb(89 68 87 / 0.24) !important;
+    inset -1px -1px 0 var(--retro-panel-dark),
+    7px 7px 0 rgb(63 70 80 / 0.26) !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.sidebar, aside, .topbar) {
-  background: #f4e3ec !important;
-  border-color: #594457 !important;
+  background: var(--retro-panel) !important;
+  border-color: var(--retro-panel-darker) !important;
   box-shadow:
     inset 1px 1px 0 #ffffff,
-    inset -1px -1px 0 #d8abc5 !important;
+    inset -1px -1px 0 var(--retro-panel-dark) !important;
+}
+
+/* Main application topbar should feel like the menu strip in the reference,
+   not a loud pink titlebar. / 사용자가 말한 탑바 그라데이션 이질감을 줄이기 위해
+   앱 상단바는 민트빛 OS 메뉴 스트립으로 분리한다. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .topbar {
+  background: #c6ead8 !important;
+  border-top-color: #f3fff9 !important;
+  border-left-color: #f3fff9 !important;
+  border-right-color: #50695f !important;
+  border-bottom-color: #50695f !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card, .floating-window, .settings-modal-window, .memo-window, .memo-floating-window) {
-  background: #fff9fd !important;
+  background: var(--retro-window) !important;
   border-top-color: #ffffff !important;
   border-left-color: #ffffff !important;
-  border-right-color: #594457 !important;
-  border-bottom-color: #594457 !important;
+  border-right-color: var(--retro-panel-darker) !important;
+  border-bottom-color: var(--retro-panel-darker) !important;
   box-shadow:
     inset 1px 1px 0 #ffffff,
-    inset -1px -1px 0 #d8abc5,
-    5px 5px 0 rgb(89 68 87 / 0.34) !important;
+    inset -1px -1px 0 var(--retro-panel-dark),
+    5px 5px 0 rgb(63 70 80 / 0.32) !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-header, .widget-card-header, .widget-frame__header, .floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
   background: #f49ac9 !important;
-  border-bottom-color: #594457 !important;
+  border-bottom-color: var(--retro-panel-darker) !important;
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 0.72),
+    inset -1px -1px 0 rgb(161 73 118 / 0.42) !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-body, .widget-frame__body, .floating-window-body, .settings-modal-body) {
-  background: #fffafd !important;
-  border-top-color: #8c7288 !important;
-  border-left-color: #8c7288 !important;
+  background: #f8f8f8 !important;
+  border-top-color: #6e6e6e !important;
+  border-left-color: #6e6e6e !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
@@ -1324,18 +1345,34 @@ body.theme-retro {
     .daily-journal-section,
     .mood-row
   ) {
-  background: #fff6fb !important;
-  border-right-color: #d58ab5 !important;
-  border-bottom-color: #d58ab5 !important;
+  background: #ffffff !important;
+  border-right-color: var(--retro-panel-dark) !important;
+  border-bottom-color: var(--retro-panel-dark) !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(button, .glass-button, .money-action-button, .money-icon-button, .money-secondary-button, .money-submit-button, .calendar-nav-button, .calendar-view-button, .career-icon-button, .career-small-button, .theme-segment-button) {
-  background: #ffe1f0 !important;
-  border-right-color: #594457 !important;
-  border-bottom-color: #594457 !important;
+  background: var(--retro-panel) !important;
+  border-right-color: var(--retro-panel-darker) !important;
+  border-bottom-color: var(--retro-panel-darker) !important;
   box-shadow:
     inset 1px 1px 0 #ffffff,
-    inset -1px -1px 0 #d58ab5,
-    2px 2px 0 rgb(89 68 87 / 0.26) !important;
+    inset -1px -1px 0 var(--retro-panel-dark),
+    2px 2px 0 rgb(63 70 80 / 0.2) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button.is-active, .glass-button.is-active, .calendar-view-button.is-active, .theme-segment-button.is-active, .money-section-tab.is-active) {
+  background: var(--retro-title) !important;
+  color: #ffffff !important;
+  text-shadow: 1px 1px 0 #a14976 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(input, textarea, select, .memo-editor, .memo-window-editor, [contenteditable="true"].memo-editor) {
+  background: #ffffff !important;
+  border-top-color: #6e6e6e !important;
+  border-left-color: #6e6e6e !important;
+  border-right-color: #ffffff !important;
+  border-bottom-color: #ffffff !important;
 }
