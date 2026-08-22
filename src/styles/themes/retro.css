@@ -947,3 +947,262 @@ body.theme-retro .calendar-event-time {
   color: var(--retro-text) !important;
   opacity: 1 !important;
 }
+
+/* ============================================================
+   Retro Window final skin: pink Y2K desktop
+   This layer intentionally sits last and only retunes material/color/chrome.
+   The layout and widget behavior above stay intact. / 사용자가 준 레퍼런스처럼
+   핑크 격자 바탕, glossy titlebar, thick retro buttons로 최종 톤을 맞춘다.
+   ============================================================ */
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
+  --retro-bg: #ffd7ee;
+  --retro-panel: #ffd1e8;
+  --retro-panel-light: #fff7fc;
+  --retro-panel-dark: #db7fb4;
+  --retro-panel-darker: #26384d;
+  --retro-window: #fff7fb;
+  --retro-title: #ff8fc5;
+  --retro-title-2: #f55aa4;
+  --retro-title-3: #7fa0f5;
+  --retro-text: #253348;
+  --retro-muted: #6b5a73;
+  --retro-white: #ffffff;
+  --retro-cream: #fff7fb;
+  --retro-field: #ffffff;
+  --retro-client: #ffeaf5;
+  --retro-yellow: #ffe5a7;
+  --retro-mint: #d9fff5;
+  --retro-blue: #dce8ff;
+  --retro-pink: #ffd1e8;
+  --retro-raised-border:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #d870a9;
+  --retro-sunken-border:
+    inset 1px 1px 0 #8f6485,
+    inset -1px -1px 0 #ffffff;
+
+  color: var(--retro-text) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro),
+html[data-theme="retro"] body,
+body[data-theme="retro"],
+html.theme-retro body,
+body.theme-retro {
+  background:
+    radial-gradient(circle at 8% 8%, rgb(255 255 255 / 0.78), transparent 18%),
+    radial-gradient(circle at 86% 10%, rgb(255 255 255 / 0.62), transparent 20%),
+    linear-gradient(rgb(244 139 195 / 0.34) 2px, transparent 2px),
+    linear-gradient(90deg, rgb(244 139 195 / 0.34) 2px, transparent 2px),
+    linear-gradient(180deg, #ffe2f1 0%, #ffd0e9 56%, #ffc0df 100%) !important;
+  background-size:
+    auto,
+    auto,
+    34px 34px,
+    34px 34px,
+    auto !important;
+  color: var(--retro-text) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.app-shell-surface, .glass-panel, .liquid-shell, .app-shell, .dashboard-shell, .dashboard-layout, .app-layout) {
+  background:
+    linear-gradient(180deg, #ffe8f4 0%, #ffc8e3 100%) !important;
+  border-top: 2px solid #fff9fd !important;
+  border-left: 2px solid #fff9fd !important;
+  border-right: 2px solid #26384d !important;
+  border-bottom: 2px solid #26384d !important;
+  box-shadow:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #cf73aa,
+    8px 8px 0 rgb(38 56 77 / 0.28) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.sidebar, aside, .topbar) {
+  background:
+    linear-gradient(180deg, #ffeef7 0%, #ffc7e2 100%) !important;
+  color: var(--retro-text) !important;
+  border-color: #26384d !important;
+  box-shadow:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #cf73aa !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .topbar {
+  min-height: 68px !important;
+  border-bottom: 2px solid #26384d !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.topbar h1, .topbar-title h1) {
+  color: var(--retro-text) !important;
+  text-shadow: 1px 1px 0 #ffffff !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.topbar p, .topbar-title p, .text-muted-foreground) {
+  color: var(--retro-muted) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card, .floating-window, .settings-modal-window, .memo-window, .memo-floating-window) {
+  background:
+    linear-gradient(180deg, #fff7fb 0%, #ffe0ef 100%) !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #26384d !important;
+  border-bottom: 2px solid #26384d !important;
+  box-shadow:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #d870a9,
+    5px 5px 0 rgb(38 56 77 / 0.42) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-header, .widget-card-header, .widget-frame__header, .floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
+  color: #ffffff !important;
+  background:
+    linear-gradient(180deg, #ffbee0 0%, #ff88bf 48%, #e84f9a 100%) !important;
+  border-bottom: 2px solid #26384d !important;
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 0.82),
+    inset -1px -1px 0 rgb(120 37 86 / 0.42) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3, .floating-window-title, .settings-modal-header h2) {
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  text-shadow: 1px 1px 0 #7a2f5f !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle, .widget-frame__header p, .floating-window-subtitle, .settings-modal-header p) {
+  color: rgb(255 255 255 / 0.86) !important;
+  text-shadow: 1px 1px 0 rgb(122 47 95 / 0.52) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-icon, .widget-card-icon, .widget-frame__icon, .settings-modal-icon) {
+  color: #ffffff !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-body, .widget-frame__body, .floating-window-body, .settings-modal-body) {
+  background:
+    linear-gradient(180deg, #fff7fb 0%, #ffe8f4 100%) !important;
+  border-top: 2px solid #8f6485 !important;
+  border-left: 2px solid #8f6485 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow:
+    inset 1px 1px 0 #cb9fbd,
+    inset -1px -1px 0 #ffffff !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(
+    .money-detail-card,
+    .memo-workspace,
+    .memo-list-panel,
+    .memo-note-item,
+    .calendar-modal-body,
+    .calendar-detail-grid,
+    .career-detail-section,
+    .career-summary-card,
+    .calendar-event-item,
+    .alert-item,
+    .settings-section,
+    .settings-theme-card,
+    .today-focus-section,
+    .today-focus-main,
+    .study-overview-panel,
+    .study-input-panel,
+    .study-week-panel,
+    .daily-journal-section,
+    .mood-row
+  ) {
+  background:
+    linear-gradient(180deg, #fff9fd 0%, #ffe1f0 100%) !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #d870a9 !important;
+  border-bottom: 2px solid #d870a9 !important;
+  box-shadow:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #ef9fca !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button, .glass-button, .money-action-button, .money-icon-button, .money-secondary-button, .money-submit-button, .calendar-nav-button, .calendar-view-button, .career-icon-button, .career-small-button, .theme-segment-button) {
+  color: var(--retro-text) !important;
+  background:
+    linear-gradient(180deg, #fff3fa 0%, #ffb5d7 100%) !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #26384d !important;
+  border-bottom: 2px solid #26384d !important;
+  box-shadow:
+    inset 1px 1px 0 #ffffff,
+    inset -1px -1px 0 #d870a9,
+    2px 2px 0 rgb(38 56 77 / 0.35) !important;
+  text-shadow: 1px 1px 0 rgb(255 255 255 / 0.72) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button:active, button.is-active, .glass-button.is-active, .calendar-view-button.is-active, .theme-segment-button.is-active, .money-section-tab.is-active, .theme-card.is-active) {
+  color: #ffffff !important;
+  background:
+    linear-gradient(180deg, #e84f9a 0%, #b73e7a 100%) !important;
+  border-top: 2px solid #26384d !important;
+  border-left: 2px solid #26384d !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: var(--retro-sunken-border) !important;
+  text-shadow: 1px 1px 0 #6f244f !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(input, textarea, select, .memo-editor, .memo-window-editor, [contenteditable="true"].memo-editor) {
+  background: #ffffff !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid #8f6485 !important;
+  border-left: 2px solid #8f6485 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow:
+    inset 1px 1px 0 #cb9fbd,
+    inset -1px -1px 0 #ffffff !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.calendar-range-chip, .calendar-month-single-chip) {
+  background:
+    color-mix(in srgb, var(--event-color, #ffd1e8) 72%, #ffffff 28%) !important;
+  color: var(--retro-text) !important;
+  border: 1px solid #d870a9 !important;
+  box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.72) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  ::-webkit-scrollbar-track {
+  background: #ffe1f0 !important;
+  border: 1px solid #d870a9 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  ::-webkit-scrollbar-thumb {
+  background:
+    linear-gradient(180deg, #ffb9dc, #f36fad) !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #26384d !important;
+  border-bottom: 2px solid #26384d !important;
+}

@@ -81,7 +81,7 @@ export const themeOptions: ThemeOption[] = [
   {
     id: "retro",
     label: "Retro 98",
-    description: "Win 98 inspired retro theme",
+    description: "Pink Y2K retro window theme",
   },
 ];
 
