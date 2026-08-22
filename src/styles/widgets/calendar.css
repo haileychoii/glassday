@@ -3208,3 +3208,86 @@ body.theme-glass-dark .calendar-floating-window .event-color-picker {
   font-weight: 800 !important;
   color: hsl(var(--foreground) / 0.74) !important;
 }
+
+/* =========================================================
+   Pixel Desk final event color bridge
+   Calendar has several late responsive rules and the Pixel theme has hard
+   Win98 panel backgrounds. Keep event surfaces data-colored in every view.
+   / Month, Week, Day 모두 일정별 --event-color가 마지막에 보이도록 한다.
+========================================================= */
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(
+    .calendar-event-item,
+    .calendar-week-event,
+    .calendar-week-range-bar,
+    .calendar-range-chip,
+    .calendar-month-single-chip
+  ) {
+  background:
+    color-mix(in srgb, var(--event-color, #fff3b0) 86%, #ffffff 14%) !important;
+  color: #111111 !important;
+  border-radius: 0 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #606060 !important;
+  border-bottom: 1px solid #606060 !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--event-color, #fff3b0) 28%, #ffffff 72%) !important;
+  filter: saturate(1.05) brightness(1.02) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .calendar-range-chip {
+  opacity: 0.72 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(.calendar-event-item:hover, .calendar-week-event:hover, .calendar-week-range-bar:hover, .calendar-month-single-chip:hover, .calendar-range-chip:hover) {
+  background:
+    color-mix(in srgb, var(--event-color, #fff3b0) 96%, #ffffff 4%) !important;
+  opacity: 0.96 !important;
+  filter: saturate(1.18) brightness(1.03) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(.calendar-event-item, .calendar-week-event, .calendar-week-range-bar, .calendar-month-single-chip)
+  :is(strong, span, .calendar-event-title, .calendar-event-time, .calendar-event-location) {
+  color: #111111 !important;
+}

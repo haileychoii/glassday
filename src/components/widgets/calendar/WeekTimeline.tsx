@@ -11,6 +11,7 @@
  * ============================================================
  */
 import { useMemo } from "react";
+import type { CSSProperties } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
 import { getEventColor as getCalendarEventColor } from "../../../constants/colors";
 
@@ -288,11 +289,16 @@ export const WeekTimeline = ({
                 ]
                   .filter(Boolean)
                   .join(" ")}
-                style={{
-                  gridColumn: `${event.startColumn} / ${event.endColumn}`,
-                  gridRow: `${event.laneIndex + 1}`,
-                  background: getCalendarEventColor(event),
-                }}
+                style={
+                  {
+                    /* Expose the event color to theme CSS while preserving the
+                       inline fill used by modern themes. / Pixel Desk 색 복구용. */
+                    "--event-color": getCalendarEventColor(event),
+                    gridColumn: `${event.startColumn} / ${event.endColumn}`,
+                    gridRow: `${event.laneIndex + 1}`,
+                    background: getCalendarEventColor(event),
+                  } as CSSProperties
+                }
                 onClick={() => handleEventClick(event)}
                 title={`${event.title} · ${event.startDate} → ${event.endDate}`}
               >
@@ -367,11 +373,14 @@ export const WeekTimeline = ({
                       ]
                         .filter(Boolean)
                         .join(" ")}
-                      style={{
-                        top: getEventTop(event),
-                        height: getEventHeight(event),
-                        background: getCalendarEventColor(event),
-                      }}
+                      style={
+                        {
+                          "--event-color": getCalendarEventColor(event),
+                          top: getEventTop(event),
+                          height: getEventHeight(event),
+                          background: getCalendarEventColor(event),
+                        } as CSSProperties
+                      }
                       onClick={(clickEvent) => {
                         clickEvent.stopPropagation();
                         handleEventClick(event);

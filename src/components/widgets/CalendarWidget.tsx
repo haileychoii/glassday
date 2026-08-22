@@ -18,6 +18,7 @@
  * ============================================================
  */
 import { useEffect, useMemo, useState } from "react";
+import type { CSSProperties } from "react";
 import {
   CalendarDays,
   ChevronLeft,
@@ -357,9 +358,16 @@ export const CalendarWidget = () => {
                     onClick={() => openEvent(event)}
                     className="calendar-event-item"
                     title={`${event.title} · ${formatEventTime(event)}`}
-                    style={{
-                      borderLeft: `6px solid ${getEventColor(event)}aa`,
-                    }}
+                    style={
+                      {
+                        /* Theme bridge:
+                           Pixel Desk/Retro CSS reads --event-color for event
+                           surfaces. The border remains inline for modern
+                           themes. / 테마별 일정 색상 표시용 공통 변수. */
+                        "--event-color": getEventColor(event),
+                        borderLeft: `6px solid ${getEventColor(event)}aa`,
+                      } as CSSProperties
+                    }
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
