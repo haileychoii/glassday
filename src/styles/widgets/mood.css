@@ -172,13 +172,21 @@ html.theme-pixel .mood-row,
 body.theme-pixel .mood-row {
   padding: 5px 7px;
   border-radius: 0;
-  /* Pixel rows use the same flat panel grammar as Study and Memo internals.
-     The subtle metric tint keeps Mood useful without mixing raised bevels
-     with flat borders. / Mood도 동일한 1px 평면 패널 위에 지표색만 얹는다. */
+  /* Pixel Desk mood rows use Win98 raised panels while keeping the metric
+     color visible. / 회색 평면 패널이 아니라 지표색이 보이는 입체 패널로 둔다. */
   background:
-    color-mix(in srgb, var(--mood-accent) 18%, #e8e8dc 82%) !important;
-  border: 1px solid #606060 !important;
-  box-shadow: none !important;
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--mood-accent) 32%, #f4f4ec 68%),
+      color-mix(in srgb, var(--mood-accent) 22%, #d4d0c8 78%)
+    ) !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow:
+    inset 1px 1px 0 #f7f7f7,
+    inset -1px -1px 0 #808080 !important;
 }
 
 html[data-theme="pixel-desk"] .mood-dot,
@@ -187,8 +195,12 @@ html.theme-pixel-desk .mood-dot,
 body.theme-pixel-desk .mood-dot,
 html.theme-pixel .mood-dot,
 body.theme-pixel .mood-dot {
-  background: color-mix(in srgb, var(--mood-accent) 20%, #b8b8b0 80%);
+  background: color-mix(in srgb, var(--mood-accent) 16%, #b8b8b0 84%);
   border-radius: 0;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
 }
 
 html[data-theme="pixel-desk"] .mood-dot-active,
@@ -198,7 +210,13 @@ body.theme-pixel-desk .mood-dot-active,
 html.theme-pixel .mood-dot-active,
 body.theme-pixel .mood-dot-active {
   background: var(--mood-accent) !important;
-  box-shadow: none !important;
+  border-top-color: #ffffff !important;
+  border-left-color: #ffffff !important;
+  border-right-color: #404040 !important;
+  border-bottom-color: #404040 !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--mood-accent) 50%, #ffffff 50%),
+    inset -1px -1px 0 color-mix(in srgb, var(--mood-accent) 72%, #404040 28%) !important;
 }
 
 html[data-theme="mac-core"] .mood-row,

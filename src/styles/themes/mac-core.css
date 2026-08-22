@@ -57,6 +57,7 @@
     system-ui,
     "Segoe UI",
     sans-serif;
+  --glassday-app-font: var(--mac-font-stack);
 
   --mac-text: #1d1d1f;
   --mac-title-text: #111114;
@@ -128,11 +129,11 @@
   --gd-scrollbar-border: transparent;
 
   color: var(--mac-text) !important;
-  font-family: var(--mac-font-stack) !important;
+  font-family: var(--glassday-app-font) !important;
 }
 
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) * {
-  font-family: var(--mac-font-stack) !important;
+  font-family: var(--glassday-app-font) !important;
 }
 
 /* Memo content uses the selected memo font, not the interface font. */

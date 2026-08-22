@@ -44,6 +44,21 @@
   --input: 0 0% 100%;
   --ring: 240 100% 25%;
 
+  /* Default Pixel Desk type
+     Settings writes --glassday-app-font inline, so this is only the theme
+     default. / 사용자가 Settings에서 고른 폰트가 있으면 그 값이 우선한다. */
+  --pixel-font-stack:
+    "Mona12",
+    "MonaS12",
+    "RoundedFixedsys",
+    "NeoDunggeunmo",
+    "DungGeunMo",
+    "MS Sans Serif",
+    "Tahoma",
+    "Arial",
+    sans-serif;
+  --glassday-app-font: var(--pixel-font-stack);
+
   --gd-radius-app: 0px;
   --gd-radius-panel: 0px;
   --gd-radius-widget: 0px;
@@ -58,13 +73,7 @@
   --app-radius-button: 0px;
   --app-radius-chip: 0px;
 
-  font-family:
-    "NeoDunggeunmo",
-    "DungGeunMo",
-    "MS Sans Serif",
-    "Tahoma",
-    "Arial",
-    sans-serif !important;
+  font-family: var(--glassday-app-font) !important;
 }
 
 /* =========================================================
@@ -104,13 +113,7 @@
   background: #008080 !important;
   background-image: none !important;
   color: #000000 !important;
-  font-family:
-    "NeoDunggeunmo",
-    "DungGeunMo",
-    "MS Sans Serif",
-    "Tahoma",
-    "Arial",
-    sans-serif !important;
+  font-family: var(--glassday-app-font) !important;
 }
 
 /* 배경 장식 제거 */
@@ -663,14 +666,8 @@
   html.theme-pixel,
   body.theme-pixel
 ) .memo-title-input {
-  font-family:
-    "NeoDunggeunmo",
-    "DungGeunMo",
-    "MS Sans Serif",
-    "Tahoma",
-    "Arial",
-    sans-serif !important;
-  letter-spacing: -0.01em !important;
+  font-family: var(--glassday-app-font) !important;
+  letter-spacing: 0 !important;
   text-shadow: none !important;
 }
 
@@ -1518,7 +1515,7 @@
   justify-content: center !important;
 
   font-family:
-    "NeoDunggeunmo",
+    "Mona12",
     "MS Sans Serif",
     "Tahoma",
     sans-serif !important;

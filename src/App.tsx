@@ -42,7 +42,12 @@ import {
   DASHBOARD_LAYOUT_MODE_KEY,
   DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
 } from "./constants/dashboardStorage";
-import { applyAppFont, getSavedAppFont, loadSavedCustomFonts } from "./constants/fonts";
+import {
+  applyAppFont,
+  getSavedAppFont,
+  hasUserSelectedAppFont,
+  loadSavedCustomFonts,
+} from "./constants/fonts";
 import { applyTheme, getCurrentTheme } from "./constants/themes";
 import {
   applyScrollbarVisibility,
@@ -110,7 +115,16 @@ function App() {
 
   useEffect(() => {
     void loadSavedCustomFonts();
-    applyAppFont(getSavedAppFont());
+    const appFontWasUserSelected = hasUserSelectedAppFont();
+
+    /* Startup font restore
+       Theme defaults are allowed to change between Pixel Desk, Mac Core, and
+       modern themes until the user explicitly chooses a Settings font. / 기본
+       폰트를 사용자 선택값처럼 저장하지 않는다. */
+    applyAppFont(getSavedAppFont(), {
+      persist: appFontWasUserSelected,
+      markUserChoice: false,
+    });
     applyTheme(getCurrentTheme());
     applyScrollbarVisibility(getSavedScrollbarVisibility());
   }, []);

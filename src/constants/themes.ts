@@ -21,6 +21,12 @@
  *   모두 함께 확인해야 한다.
  * ============================================================
  */
+import {
+  applyAppFont,
+  getDefaultAppFontForTheme,
+  hasUserSelectedAppFont,
+} from "./fonts";
+
 export type ThemeId =
   | "pastel"
   | "glass-light"
@@ -138,6 +144,17 @@ export const applyTheme = (theme: ThemeId) => {
 
   root.setAttribute("data-theme", theme);
   body.setAttribute("data-theme", theme);
+
+  /* Theme default font handoff
+     Pixel Desk and Mac Core provide a native-looking default font, but the
+     user's Settings font choice must win after they choose one. / 테마 기본값과
+     사용자 선택값을 분리한다. */
+  if (!hasUserSelectedAppFont()) {
+    applyAppFont(getDefaultAppFontForTheme(theme), {
+      persist: false,
+      markUserChoice: false,
+    });
+  }
 
   window.localStorage.setItem(THEME_STORAGE_KEY, theme);
 

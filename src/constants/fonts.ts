@@ -51,6 +51,7 @@ export const APP_FONT_STORAGE_KEY = "glassday.ui.font.v1";
 export const MEMO_DEFAULT_FONT_STORAGE_KEY = "glassday.memo.default-font.v1";
 export const CUSTOM_WEB_FONTS_STORAGE_KEY = "glassday.custom.web-fonts.v1";
 export const FONT_CHANGE_EVENT = "glassday-fonts-change";
+const APP_FONT_USER_SELECTED_KEY = "glassday.ui.font.user-selected.v1";
 
 const defaultSansFallback =
   "Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif";
@@ -60,6 +61,10 @@ const defaultMonoFallback =
   "'D2Coding', 'NeoDunggeunmo', 'Courier New', monospace";
 const defaultHandwritingFallback =
   "'OngleipKonkon', 'Kyobo Handwriting 2020', cursive";
+const pixelDeskFallback =
+  "'Mona12', 'MonaS12', 'RoundedFixedsys', 'NeoDunggeunmo', 'MS Sans Serif', Tahoma, Arial, sans-serif";
+const macCoreFallback =
+  "'Apple SD Gothic Neo', AppleGothic, -apple-system, BlinkMacSystemFont, 'SF Pro KR', 'SF Pro Text', 'Helvetica Neue', Inter, ui-sans-serif, system-ui, 'Segoe UI', sans-serif";
 
 export const DEFAULT_APP_FONT = defaultSansFallback;
 export const DEFAULT_MEMO_FONT = defaultSansFallback;
@@ -87,6 +92,8 @@ const builtInFontGroups: FontGroup[] = [
       font("Cafe24 Ssurround", "'Cafe24Ssurround'"),
       font("Cafe24 Ssurround Air", "'Cafe24SsurroundAir'"),
       font("School Safety HalfMoon", "'SchoolSafetyHalfMoon'"),
+      font("Mona12", "'Mona12'", pixelDeskFallback),
+      font("MonaS12", "'MonaS12'", pixelDeskFallback),
       font("Rounded Fixedsys", "'RoundedFixedsys'", defaultMonoFallback),
       font("NeoDunggeunmo", "'NeoDunggeunmo'", defaultMonoFallback),
       font("D2Coding", "'D2Coding'", defaultMonoFallback),
@@ -145,6 +152,8 @@ const uiPriorityLabels = new Set([
   "Cafe24 Ssurround",
   "Cafe24 Ssurround Air",
   "School Safety HalfMoon",
+  "Mona12",
+  "MonaS12",
   "Rounded Fixedsys",
   "NeoDunggeunmo",
   "D2Coding",
@@ -243,7 +252,12 @@ export const getAppFontOptions = (): FontOption[] => {
 export const getSavedAppFont = (): string => {
   if (typeof window === "undefined") return DEFAULT_APP_FONT;
 
-  return window.localStorage.getItem(APP_FONT_STORAGE_KEY) || DEFAULT_APP_FONT;
+  if (hasUserSelectedAppFont()) {
+    return window.localStorage.getItem(APP_FONT_STORAGE_KEY) || DEFAULT_APP_FONT;
+  }
+
+  const theme = document.documentElement.getAttribute("data-theme");
+  return getDefaultAppFontForTheme(theme);
 };
 
 export const getSavedDefaultMemoFont = (): string => {
@@ -255,15 +269,61 @@ export const getSavedDefaultMemoFont = (): string => {
   );
 };
 
-export const applyAppFont = (fontValue: string) => {
+export const getDefaultAppFontForTheme = (theme: string | null | undefined) => {
+  switch (theme) {
+    case "pixel-desk":
+      return pixelDeskFallback;
+    case "mac-core":
+      return macCoreFallback;
+    default:
+      return DEFAULT_APP_FONT;
+  }
+};
+
+export const hasUserSelectedAppFont = () => {
+  if (typeof window === "undefined") return false;
+
+  if (window.localStorage.getItem(APP_FONT_USER_SELECTED_KEY) === "true") {
+    return true;
+  }
+
+  const saved = window.localStorage.getItem(APP_FONT_STORAGE_KEY);
+  if (!saved) return false;
+
+  /* Migration guard:
+     Old builds stored the startup default as if it were a user choice. Treat
+     only non-default legacy values as selected. / 기존 기본값 저장은 선택으로 보지 않는다. */
+  const defaultValues = new Set([
+    DEFAULT_APP_FONT,
+    pixelDeskFallback,
+    macCoreFallback,
+  ]);
+
+  return !defaultValues.has(saved);
+};
+
+export const applyAppFont = (
+  fontValue: string,
+  options: { persist?: boolean; markUserChoice?: boolean } = {}
+) => {
   if (typeof document === "undefined" || typeof window === "undefined") return;
 
   const root = document.documentElement;
   const body = document.body;
+  const persist = options.persist ?? true;
+  const markUserChoice = options.markUserChoice ?? persist;
 
   root.style.setProperty("--glassday-app-font", fontValue);
   body.style.setProperty("--glassday-app-font", fontValue);
-  window.localStorage.setItem(APP_FONT_STORAGE_KEY, fontValue);
+
+  if (persist) {
+    window.localStorage.setItem(APP_FONT_STORAGE_KEY, fontValue);
+  }
+
+  if (markUserChoice) {
+    window.localStorage.setItem(APP_FONT_USER_SELECTED_KEY, "true");
+  }
+
   dispatchFontChange();
 };
 
