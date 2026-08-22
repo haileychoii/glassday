@@ -1208,12 +1208,12 @@ body.theme-retro {
 }
 
 /* ============================================================
-   Retro 98 comfort pass
-   The first pink skin was too saturated across every large surface. This
-   final layer keeps the Y2K/Win98 reference, but lets the main workspace read
-   as a cream retro desktop with pink chrome accents. / 큰 배경까지 전부 진한
-   핑크로 밀면 Settings preview와 실제 사용 화면이 모두 부담스러워져서,
-   창/버튼의 포인트만 핑크로 남기고 작업 영역은 밝은 레트로 종이 톤으로 정리한다.
+   Retro 98 flat pink pass
+   The previous pink skin used too many glossy gradients. This final layer
+   keeps the Y2K/Win98 reference but returns the chrome to flatter OS panels:
+   solid titlebars, raised borders, and a simple pink grid desktop. / 핑크
+   레트로 느낌은 유지하되 그라데이션 과다 사용을 줄여 실제 오래된 창 UI처럼
+   단색 표면과 입체 테두리가 먼저 보이도록 정리한다.
    ============================================================ */
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
@@ -1247,21 +1247,16 @@ body.theme-retro {
   background:
     linear-gradient(rgb(244 139 195 / 0.24) 2px, transparent 2px),
     linear-gradient(90deg, rgb(244 139 195 / 0.24) 2px, transparent 2px),
-    radial-gradient(circle at 12% 12%, rgb(255 255 255 / 0.86), transparent 20%),
-    radial-gradient(circle at 84% 10%, rgb(255 255 255 / 0.62), transparent 18%),
-    linear-gradient(180deg, #fff5fb 0%, #ffe1f1 58%, #ffd2ea 100%) !important;
+    #ffeaf5 !important;
   background-size:
     34px 34px,
     34px 34px,
-    auto,
-    auto,
     auto !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.app-shell-surface, .glass-panel, .liquid-shell, .app-shell, .dashboard-shell, .dashboard-layout, .app-layout) {
-  background:
-    linear-gradient(180deg, #fff8fc 0%, #f4e5ed 100%) !important;
+  background: #fff8fc !important;
   border-top-color: #ffffff !important;
   border-left-color: #ffffff !important;
   border-right-color: #594457 !important;
@@ -1274,8 +1269,7 @@ body.theme-retro {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.sidebar, aside, .topbar) {
-  background:
-    linear-gradient(180deg, #fffafd 0%, #f4dfe9 100%) !important;
+  background: #f4e3ec !important;
   border-color: #594457 !important;
   box-shadow:
     inset 1px 1px 0 #ffffff,
@@ -1284,8 +1278,7 @@ body.theme-retro {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card, .floating-window, .settings-modal-window, .memo-window, .memo-floating-window) {
-  background:
-    linear-gradient(180deg, #fffafd 0%, #fff0f8 100%) !important;
+  background: #fff9fd !important;
   border-top-color: #ffffff !important;
   border-left-color: #ffffff !important;
   border-right-color: #594457 !important;
@@ -1298,15 +1291,13 @@ body.theme-retro {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-header, .widget-card-header, .widget-frame__header, .floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
-  background:
-    linear-gradient(90deg, #f49ac9 0%, #da6aa7 68%, #8faaf7 100%) !important;
+  background: #f49ac9 !important;
   border-bottom-color: #594457 !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-body, .widget-frame__body, .floating-window-body, .settings-modal-body) {
-  background:
-    linear-gradient(180deg, #fffafd 0%, #fff4fa 100%) !important;
+  background: #fffafd !important;
   border-top-color: #8c7288 !important;
   border-left-color: #8c7288 !important;
 }
@@ -1333,16 +1324,14 @@ body.theme-retro {
     .daily-journal-section,
     .mood-row
   ) {
-  background:
-    linear-gradient(180deg, #fffdfd 0%, #fff0f8 100%) !important;
+  background: #fff6fb !important;
   border-right-color: #d58ab5 !important;
   border-bottom-color: #d58ab5 !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(button, .glass-button, .money-action-button, .money-icon-button, .money-secondary-button, .money-submit-button, .calendar-nav-button, .calendar-view-button, .career-icon-button, .career-small-button, .theme-segment-button) {
-  background:
-    linear-gradient(180deg, #fffafd 0%, #ffd4ea 100%) !important;
+  background: #ffe1f0 !important;
   border-right-color: #594457 !important;
   border-bottom-color: #594457 !important;
   box-shadow:
