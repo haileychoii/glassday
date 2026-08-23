@@ -3581,3 +3581,231 @@ body,
     inset 1px 1px 0 #808080,
     inset -1px -1px 0 color-mix(in srgb, var(--memo-paper-border, #ffffff) 42%, #f7f7ef 58%) !important;
 }
+
+/* Pixel Desk window title correction
+   English: Career uses a custom floating portal and Pixel Desk draws fake
+   Win95 controls with pseudo-elements on dashboard cards. This late block keeps
+   those two window-title systems readable after every widget-level override.
+   한국어: Career 상세창 제목은 한 줄 Windows 타이틀바로 압축하고, 카드의
+   최소화/최대화/X 장식은 더 작은 박스 안에서 가운데에 보이도록 정리한다. */
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .glass-card::after {
+  content: "_ □ ×" !important;
+  top: 7px !important;
+  right: 7px !important;
+  width: 52px !important;
+  min-width: 52px !important;
+  height: 17px !important;
+  min-height: 17px !important;
+  padding: 0 3px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  letter-spacing: 2px !important;
+  line-height: 15px !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .career-floating-titlebar {
+  min-height: 30px !important;
+  height: 30px !important;
+  padding: 3px 4px 3px 7px !important;
+  gap: 6px !important;
+  align-items: center !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .career-floating-title {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  gap: 5px !important;
+  align-items: center !important;
+  overflow: hidden !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .career-floating-title
+  > svg {
+  width: 12px !important;
+  height: 12px !important;
+  flex: 0 0 12px !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .career-floating-title
+  > div {
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  overflow: hidden !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .career-floating-title
+  .career-modal-kicker {
+  flex: 0 0 auto !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  line-height: 12px !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .career-floating-title
+  h2 {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  line-height: 12px !important;
+  letter-spacing: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .career-floating-title
+  p {
+  display: none !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .career-floating-titlebar
+  .career-modal-actions {
+  flex: 0 0 auto !important;
+  gap: 3px !important;
+  align-items: center !important;
+  margin-left: 6px !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .career-floating-titlebar
+  .career-icon-button {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .career-floating-titlebar
+  .career-icon-button
+  svg {
+  width: 11px !important;
+  height: 11px !important;
+  margin: 0 !important;
+}
