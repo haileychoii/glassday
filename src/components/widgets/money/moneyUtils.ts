@@ -530,10 +530,19 @@ const normalizeRecurringExpense = (
   item: MoneyRecurringExpense
 ): MoneyRecurringExpense => ({
   ...item,
-  amount: Number.isFinite(item.amount) ? item.amount : 0,
+  /* Recurring storage repair:
+     Older localStorage snapshots may have saved form values as strings or may
+     not have had an explicit `active` field yet. Overview projections should
+     still count those rows when the user already entered a day and amount.
+     예전 저장값의 금액/활성 상태가 조금 느슨해도 반복 지출이 Overview에서
+     누락되지 않도록 여기서 한 번 더 canonical shape로 맞춘다. */
+  amount: Number.isFinite(Number(item.amount)) ? Number(item.amount) : 0,
   category: isMoneyCategory(item.category) ? item.category : "Other",
+  subcategory: item.subcategory
+    ? normalizeMoneyLabel(item.subcategory)
+    : undefined,
   billingDay: Math.min(31, Math.max(1, Math.round(item.billingDay || 1))),
-  active: Boolean(item.active),
+  active: item.active !== false,
 });
 
 export const normalizeMoneyData = (value: MoneyStorageShape): MoneyData => {

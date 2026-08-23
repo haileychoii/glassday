@@ -902,6 +902,16 @@ export const MoneyWidget = () => {
 
   const totalSpent = getTotalAmount(periodTransactions);
   const previousSpent = getTotalAmount(previousPeriodTransactions);
+  /* Overview recurring bridge:
+     `periodTransactions` already includes virtual recurring rows. Keep a
+     derived count/total beside the main total so the floating overview makes
+     that projection visible instead of feeling like only manual expenses count.
+     반복 지출은 저장된 거래가 아니라 조회 기간에 투영된 행이므로, 합계에
+     포함되었는지 사용자가 바로 확인할 수 있게 별도 보조 문구를 만든다. */
+  const recurringProjectionTransactions = periodTransactions.filter(
+    (transaction) => transaction.isRecurringProjection
+  );
+  const recurringProjectionTotal = getTotalAmount(recurringProjectionTransactions);
   const budgetPercent = getBudgetPercentage(totalSpent, money.monthlyBudget);
   const categoryBreakdown = getCategoryBreakdown(periodTransactions);
   const storeBreakdown = getStoreBreakdown(periodTransactions);
@@ -1585,6 +1595,12 @@ export const MoneyWidget = () => {
                   <h3>{selectedRange.label}</h3>
                   <strong>{formatWon(totalSpent)}</strong>
                   <p>{getPeriodDeltaLabel(totalSpent, previousSpent)}</p>
+                  {recurringProjectionTransactions.length > 0 && (
+                    <p>
+                      Includes {recurringProjectionTransactions.length} recurring ·{" "}
+                      {formatWon(recurringProjectionTotal)}
+                    </p>
+                  )}
                 </div>
 
                 <label className="money-budget-editor">
