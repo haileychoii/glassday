@@ -973,6 +973,25 @@
   padding: 0;
   display: block;
   border-radius: 0;
+  font-size: 21px;
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+
+.today-focus-career-item {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.today-focus-career-item > div {
+  min-width: 0 !important;
+}
+
+.today-focus-dday {
+  justify-self: end !important;
+  align-self: center !important;
 }
 
 @container today-focus-widget (max-width: 430px) {

@@ -923,7 +923,6 @@ export const StudyWidget = () => {
                   aria-label="Add study task"
                 >
                   <Plus />
-                  <span>추가</span>
                 </button>
               </form>
 

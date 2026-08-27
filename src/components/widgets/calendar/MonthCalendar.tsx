@@ -49,6 +49,7 @@ type RangeSegment = CalendarEvent & {
 type HoverPreview = {
   title: string;
   lines: string[];
+  events?: CalendarEvent[];
   badge?: string;
   notes?: string;
   x: number;
@@ -281,6 +282,7 @@ export const MonthCalendar = ({
     setHoverPreview({
       title,
       lines: eventsToPreview.map(formatPreviewLine),
+      events: eventsToPreview,
       x: mouseEvent.clientX,
       y: mouseEvent.clientY,
     });
@@ -430,7 +432,6 @@ export const MonthCalendar = ({
                               mouseEvent
                             )
                           }
-                          onMouseLeave={() => setHoverPreview(null)}
                           onClick={(clickEvent) => {
                             clickEvent.stopPropagation();
                             handleDateSelect(day.date);
@@ -508,16 +509,38 @@ export const MonthCalendar = ({
         <div
           className="calendar-month-event-preview"
           style={getPreviewPosition(hoverPreview)}
+          onMouseLeave={() => setHoverPreview(null)}
         >
           <div className="calendar-month-event-preview-title">
             {hoverPreview.title}
           </div>
 
-          {hoverPreview.lines.map((line) => (
-            <div key={line} className="calendar-month-event-preview-time">
-              {line}
+          {hoverPreview.events ? (
+            <div className="calendar-overflow-preview-list">
+              {hoverPreview.events.map((event) => (
+                <button
+                  key={event.id}
+                  type="button"
+                  className="calendar-overflow-preview-item"
+                  onMouseDown={(mouseEvent) => mouseEvent.preventDefault()}
+                  onClick={(clickEvent) => {
+                    clickEvent.stopPropagation();
+                    setHoverPreview(null);
+                    handleEventClick(event);
+                  }}
+                >
+                  <strong>{event.title}</strong>
+                  <span>{formatPreviewLine(event)}</span>
+                </button>
+              ))}
             </div>
-          ))}
+          ) : (
+            hoverPreview.lines.map((line) => (
+              <div key={line} className="calendar-month-event-preview-time">
+                {line}
+              </div>
+            ))
+          )}
 
           {hoverPreview.badge && (
             <div className="calendar-month-event-preview-badge">

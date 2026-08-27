@@ -10,8 +10,8 @@
  * 좁은 container에서는 timeline 자체가 내부 scroll 영역이 된다.
  * ============================================================
  */
-import { useMemo } from "react";
-import type { CSSProperties } from "react";
+import { useMemo, useState } from "react";
+import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
 import { getEventColor as getCalendarEventColor } from "../../../constants/colors";
 
@@ -45,6 +45,9 @@ type WeekTimelineProps = {
    */
   onSelectEvent?: (event: CalendarEvent) => void;
   onEventClick?: (event: CalendarEvent) => void;
+  editMode?: boolean;
+  selectedEventId?: string | null;
+  onCreateBlock?: (draft: WeekBlockDraft) => void;
 };
 
 type WeekDay = {
@@ -61,11 +64,34 @@ type RangeBar = CalendarEvent & {
   laneIndex: number;
 };
 
+export type WeekBlockDraft = {
+  startDate: string;
+  startTime: string;
+  endDate: string;
+  endTime: string;
+};
+
+type WeekDraftSelection = {
+  startDate: string;
+  startSlot: number;
+  endDate: string;
+  endSlot: number;
+};
+
+type WeekOverflowPreview = {
+  title: string;
+  events: CalendarEvent[];
+  x: number;
+  y: number;
+};
+
 const START_HOUR = 7;
 const END_HOUR = 25;
 const HOUR_HEIGHT = 44;
 const MAX_ALL_DAY_LANES = 2;
 const MAX_TIMED_EVENTS_PER_DAY = 5;
+const SLOT_MINUTES = 30;
+const SLOT_HEIGHT = HOUR_HEIGHT / 2;
 
 const weekdayLabels = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -120,6 +146,47 @@ const getEventHeight = (event: CalendarEvent) => {
   return Math.max(34, (duration / 60) * HOUR_HEIGHT);
 };
 
+const getSlotCount = () => ((END_HOUR - START_HOUR) * 60) / SLOT_MINUTES;
+
+const getSlotFromPointer = (
+  event: ReactPointerEvent<HTMLElement>,
+  element: HTMLElement
+) => {
+  const rect = element.getBoundingClientRect();
+  const y = Math.min(Math.max(0, event.clientY - rect.top), rect.height);
+  const slot = Math.floor(y / SLOT_HEIGHT);
+
+  return Math.min(Math.max(0, slot), getSlotCount() - 1);
+};
+
+const slotToTime = (slot: number) => {
+  const minutes = Math.min(START_HOUR * 60 + slot * SLOT_MINUTES, 23 * 60 + 59);
+  const hour = Math.floor(minutes / 60);
+  const minute = minutes % 60;
+
+  return `${pad2(hour)}:${pad2(minute)}`;
+};
+
+const normalizeSelection = (selection: WeekDraftSelection): WeekBlockDraft => {
+  const startsBeforeEnd =
+    selection.startDate < selection.endDate ||
+    (selection.startDate === selection.endDate &&
+      selection.startSlot <= selection.endSlot);
+  const firstDate = startsBeforeEnd ? selection.startDate : selection.endDate;
+  const lastDate = startsBeforeEnd ? selection.endDate : selection.startDate;
+  const firstSlot = startsBeforeEnd ? selection.startSlot : selection.endSlot;
+  const lastSlot = startsBeforeEnd ? selection.endSlot : selection.startSlot;
+  const endSlot =
+    firstDate === lastDate ? Math.max(firstSlot + 1, lastSlot + 1) : lastSlot + 1;
+
+  return {
+    startDate: firstDate,
+    startTime: slotToTime(firstSlot),
+    endDate: lastDate,
+    endTime: slotToTime(endSlot),
+  };
+};
+
 const isRangeEvent = (event: CalendarEvent) => {
   return event.startDate !== event.endDate;
 };
@@ -146,7 +213,14 @@ export const WeekTimeline = ({
   onDateSelect,
   onSelectEvent,
   onEventClick,
+  editMode = false,
+  selectedEventId = null,
+  onCreateBlock,
 }: WeekTimelineProps) => {
+  const [draftSelection, setDraftSelection] =
+    useState<WeekDraftSelection | null>(null);
+  const [overflowPreview, setOverflowPreview] =
+    useState<WeekOverflowPreview | null>(null);
   const baseDate = selectedDate ?? currentDate ?? toDateString(new Date());
   const weekStart = weekStartDate ?? getMonday(baseDate);
   const weekEnd = addDays(weekStart, 6);
@@ -240,6 +314,71 @@ export const WeekTimeline = ({
     (onEventClick ?? onSelectEvent)?.(event);
   };
 
+  const showOverflowPreview = (
+    title: string,
+    previewEvents: CalendarEvent[],
+    pointerEvent: ReactPointerEvent<HTMLElement>
+  ) => {
+    setOverflowPreview({
+      title,
+      events: previewEvents,
+      x: pointerEvent.clientX,
+      y: pointerEvent.clientY,
+    });
+  };
+
+  const beginBlockSelection = (
+    day: WeekDay,
+    pointerEvent: ReactPointerEvent<HTMLButtonElement>
+  ) => {
+    if (!editMode || !onCreateBlock) {
+      handleDateSelect(day.date);
+      return;
+    }
+
+    /*
+     * Weekly edit grid:
+     * Pointer selection is snapped to 30-minute blocks only during quick draw.
+     * The detail modal keeps native time inputs, so arbitrary minutes remain
+     * editable after creation. / 블록 생성은 빠르게 잡기 위한 30분 단위이고,
+     * 상세창에서는 11분 같은 세부 시간도 그대로 수정 가능하다.
+     */
+    pointerEvent.preventDefault();
+    pointerEvent.currentTarget.setPointerCapture(pointerEvent.pointerId);
+    const slot = getSlotFromPointer(pointerEvent, pointerEvent.currentTarget);
+    setDraftSelection({
+      startDate: day.date,
+      startSlot: slot,
+      endDate: day.date,
+      endSlot: slot,
+    });
+  };
+
+  const updateBlockSelection = (
+    day: WeekDay,
+    pointerEvent: ReactPointerEvent<HTMLButtonElement>
+  ) => {
+    if (!draftSelection || !editMode) return;
+
+    const slot = getSlotFromPointer(pointerEvent, pointerEvent.currentTarget);
+    setDraftSelection((current) =>
+      current
+        ? {
+            ...current,
+            endDate: day.date,
+            endSlot: slot,
+          }
+        : current
+    );
+  };
+
+  const finishBlockSelection = () => {
+    if (!draftSelection || !onCreateBlock) return;
+
+    onCreateBlock(normalizeSelection(draftSelection));
+    setDraftSelection(null);
+  };
+
   const hourLabels = useMemo(() => {
     return Array.from({ length: END_HOUR - START_HOUR }, (_, index) => {
       const hour = START_HOUR + index;
@@ -311,12 +450,21 @@ export const WeekTimeline = ({
                 type="button"
                 className="calendar-week-more-bar"
                 style={{ gridColumn: "1 / -1", gridRow: MAX_ALL_DAY_LANES + 1 }}
-                title={hiddenRangeEvents
-                  .map(
-                    (event) =>
-                      `${event.title} · ${event.startDate} → ${event.endDate}`
+                onPointerEnter={(pointerEvent) =>
+                  showOverflowPreview(
+                    `+${hiddenRangeEvents.length} range schedules`,
+                    hiddenRangeEvents,
+                    pointerEvent
                   )
-                  .join("\n")}
+                }
+                onPointerMove={(pointerEvent) =>
+                  showOverflowPreview(
+                    `+${hiddenRangeEvents.length} range schedules`,
+                    hiddenRangeEvents,
+                    pointerEvent
+                  )
+                }
+                onPointerDown={(pointerEvent) => pointerEvent.stopPropagation()}
               >
                 +{hiddenRangeEvents.length}
               </button>
@@ -351,14 +499,30 @@ export const WeekTimeline = ({
                 <button
                   key={day.date}
                   type="button"
-                  onClick={() => handleDateSelect(day.date)}
+                  onPointerDown={(pointerEvent) =>
+                    beginBlockSelection(day, pointerEvent)
+                  }
+                  onPointerMove={(pointerEvent) =>
+                    updateBlockSelection(day, pointerEvent)
+                  }
+                  onPointerUp={finishBlockSelection}
+                  onPointerCancel={() => setDraftSelection(null)}
                   className={[
                     "calendar-week-day-column",
                     day.isSelected ? "is-selected" : "",
+                    editMode ? "is-editing" : "",
                   ]
                     .filter(Boolean)
                     .join(" ")}
                 >
+                  {editMode && (
+                    <div className="calendar-week-edit-grid" aria-hidden="true">
+                      {Array.from({ length: getSlotCount() }, (_, slotIndex) => (
+                        <span key={slotIndex} />
+                      ))}
+                    </div>
+                  )}
+
                   {hourLabels.map((label) => (
                     <div key={label} className="calendar-week-hour-line" />
                   ))}
@@ -370,6 +534,7 @@ export const WeekTimeline = ({
                       className={[
                         "calendar-week-event",
                         event.source === "career" ? "is-career" : "",
+                        selectedEventId === event.id ? "is-focused" : "",
                       ]
                         .filter(Boolean)
                         .join(" ")}
@@ -385,6 +550,9 @@ export const WeekTimeline = ({
                         clickEvent.stopPropagation();
                         handleEventClick(event);
                       }}
+                      onPointerDown={(pointerEvent) =>
+                        pointerEvent.stopPropagation()
+                      }
                       title={`${event.title} · ${event.startTime}-${event.endTime}`}
                     >
                       <strong>{event.title}</strong>
@@ -395,18 +563,53 @@ export const WeekTimeline = ({
                     </button>
                   ))}
 
-                  {hiddenDayEvents.length > 0 && (
+                  {draftSelection && draftSelection.startDate === day.date && (
                     <span
+                      className="calendar-week-edit-selection"
+                      style={
+                        {
+                          top:
+                            Math.min(
+                              draftSelection.startSlot,
+                              draftSelection.endSlot
+                            ) * SLOT_HEIGHT,
+                          height:
+                            (Math.abs(
+                              draftSelection.endSlot -
+                                draftSelection.startSlot
+                            ) +
+                              1) *
+                            SLOT_HEIGHT,
+                        } as CSSProperties
+                      }
+                    />
+                  )}
+
+                  {hiddenDayEvents.length > 0 && (
+                    <button
+                      type="button"
                       className="calendar-week-more-timed"
-                      title={hiddenDayEvents
-                        .map(
-                          (event) =>
-                            `${event.title} · ${event.startTime}-${event.endTime}`
+                      onPointerEnter={(pointerEvent) =>
+                        showOverflowPreview(
+                          `+${hiddenDayEvents.length} timed schedules`,
+                          hiddenDayEvents,
+                          pointerEvent
                         )
-                        .join("\n")}
+                      }
+                      onPointerMove={(pointerEvent) =>
+                        showOverflowPreview(
+                          `+${hiddenDayEvents.length} timed schedules`,
+                          hiddenDayEvents,
+                          pointerEvent
+                        )
+                      }
+                      onClick={(clickEvent) => clickEvent.stopPropagation()}
+                      onPointerDown={(pointerEvent) =>
+                        pointerEvent.stopPropagation()
+                      }
                     >
                       +{hiddenDayEvents.length}
-                    </span>
+                    </button>
                   )}
                 </button>
               );
@@ -414,6 +617,38 @@ export const WeekTimeline = ({
           </div>
         </div>
       </div>
+
+      {overflowPreview && (
+        <div
+          className="calendar-overflow-preview"
+          style={{
+            left: Math.min(overflowPreview.x + 14, window.innerWidth - 320),
+            top: Math.min(overflowPreview.y + 14, window.innerHeight - 190),
+          }}
+          onPointerLeave={() => setOverflowPreview(null)}
+        >
+          <strong>{overflowPreview.title}</strong>
+          <div className="calendar-overflow-preview-list">
+            {overflowPreview.events.map((event) => (
+              <button
+                key={event.id}
+                type="button"
+                className="calendar-overflow-preview-item"
+                onClick={() => {
+                  setOverflowPreview(null);
+                  handleEventClick(event);
+                }}
+              >
+                <strong>{event.title}</strong>
+                <span>
+                  {event.startDate} {event.startTime} → {event.endDate}{" "}
+                  {event.endTime}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

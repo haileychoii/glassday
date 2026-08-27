@@ -12,7 +12,6 @@
  * - Types: src/types/money.ts
  * - Domain helpers/migration: src/components/widgets/money/moneyUtils.ts
  * - Persistence: useLocalStorage / glassday.money
- * - Floating shell: src/components/common/FloatingWindow.tsx
  * - Style: src/styles/widgets/money.css + theme/responsive overrides
  *
  * Data relation:
@@ -32,7 +31,6 @@ import {
   Check,
   ExternalLink,
   Heart,
-  Maximize2,
   Plus,
   ReceiptText,
   Repeat,
@@ -42,7 +40,6 @@ import {
   X,
 } from "lucide-react";
 
-import { FloatingWindow } from "../common/FloatingWindow";
 import { GlassCard } from "../glass/GlassCard";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
@@ -468,12 +465,6 @@ const getTransactionMeta = (transaction: MoneyTransaction) => {
     .join(" · ");
 };
 
-const getTopCategoryLabel = (transactions: MoneyTransaction[]) => {
-  const [topCategory] = getCategoryBreakdown(transactions);
-  if (!topCategory) return "No spending yet";
-  return `${topCategory.label} · ${formatWon(topCategory.amount)}`;
-};
-
 /* Shared controls stay local to MoneyWidget because they are tightly bound to
    the Money category/store catalogs and are not a new design system. */
 const CategorySelect = ({
@@ -670,20 +661,20 @@ const CategoryLegend = ({
 );
 
 const moneyStoreBarColors = [
-  "#ff3b30",
-  "#ff6b45",
-  "#ff9f0a",
-  "#ffd60a",
-  "#34c759",
-  "#30d5c8",
-  "#0a84ff",
-  "#5856d6",
+  "#f0a6b7",
+  "#f5bd8c",
+  "#f3d28d",
+  "#b8d99a",
+  "#a6d9d0",
+  "#9fc4ef",
+  "#c3b0e9",
+  "#d7b7d9",
 ];
 
 const getMoneyStoreBarFill = (index: number) => {
-  const color = moneyStoreBarColors[index] ?? moneyStoreBarColors.at(-1) ?? "#0a84ff";
+  const color = moneyStoreBarColors[index] ?? moneyStoreBarColors.at(-1) ?? "#9fc4ef";
 
-  return `linear-gradient(90deg, ${color}, color-mix(in srgb, ${color} 58%, #ffffff 42%))`;
+  return `linear-gradient(90deg, color-mix(in srgb, ${color} 78%, #ffffff 22%), color-mix(in srgb, ${color} 48%, #ffffff 52%))`;
 };
 
 const StoreBars = ({ items }: { items: ReturnType<typeof getStoreBreakdown> }) => (
@@ -817,15 +808,14 @@ const Stars = ({ value }: { value: number }) => (
 
 /**
  * MoneyWidget
- * 하나의 MoneyData Source of Truth를 compact Widget과 Floating Detail이 공유한다.
+ * 하나의 MoneyData Source of Truth를 inline widget detail이 직접 사용한다.
  * section/filter/selected item/form draft는 일시적인 UI state이고 MoneyData만 저장된다.
  */
 export const MoneyWidget = () => {
-  const [detailOpen, setDetailOpen] = useState(false);
   const [section, setSection] = useState<MoneySection>("overview");
   const [spendingView, setSpendingView] = useState<MoneySpendingView>("All");
   const [wishlistView, setWishlistView] = useState<MoneyWishlistView>("All");
-  // Expense creation is opt-in inside the floating window to keep the ledger compact.
+  // Expense creation is opt-in inside the widget to keep the ledger compact.
   // 지출 입력폼이 항상 펼쳐져 공간을 차지하지 않도록 토글 상태로 관리한다.
   const [expenseFormOpen, setExpenseFormOpen] = useState(false);
   const [wishlistFormOpen, setWishlistFormOpen] = useState(false);
@@ -918,9 +908,6 @@ export const MoneyWidget = () => {
   const selectedCategoryTransactions = selectedCategory
     ? periodTransactions.filter((transaction) => transaction.category === selectedCategory)
     : periodTransactions;
-  const recentTransactions = [...periodTransactions]
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 3);
   const filteredSpending = filterTransactionsByView(periodTransactions, spendingView);
   const expenseTagOptions = useMemo(
     () =>
@@ -1051,11 +1038,6 @@ export const MoneyWidget = () => {
     });
   };
 
-  const openMoneyDetail = (nextSection: MoneySection) => {
-    setSection(nextSection);
-    setDetailOpen(true);
-  };
-
   const addExpense = (event?: FormEvent) => {
     event?.preventDefault();
 
@@ -1157,7 +1139,7 @@ export const MoneyWidget = () => {
       date: todayInput(),
     }));
     setExpenseFormOpen(true);
-    openMoneyDetail("spending");
+    setSection("spending");
   };
 
   const removeTransaction = (id: string) => {
@@ -1174,7 +1156,7 @@ export const MoneyWidget = () => {
   const openTransactionEditor = (transaction: MoneyTransaction) => {
     setEditingTransactionId(transaction.id);
     setEditingExpenseDraft(createExpenseDraftFromTransaction(transaction));
-    setDetailOpen(true);
+    setSection("spending");
   };
 
   const closeTransactionEditor = () => {
@@ -1412,7 +1394,10 @@ export const MoneyWidget = () => {
           <div className="money-widget-actions">
             <button
               type="button"
-              onClick={() => openMoneyDetail("spending")}
+              onClick={() => {
+                setSection("spending");
+                setExpenseFormOpen(true);
+              }}
               className="glass-button money-action-button"
               title="Add expense"
               aria-label="Add expense"
@@ -1420,101 +1405,8 @@ export const MoneyWidget = () => {
               <Plus className="w-3.5 h-3.5" />
               <span>Expense</span>
             </button>
-
-            <button
-              type="button"
-              onClick={() => openMoneyDetail("overview")}
-              className="glass-button money-icon-button"
-              title="Open money detail"
-              aria-label="Open money detail"
-            >
-              <Maximize2 className="w-3.5 h-3.5" />
-            </button>
           </div>
         }
-      >
-        <div className="money-dashboard">
-          {/* Figma Frame: Monthly Summary + Budget usage */}
-          <section className="money-summary-panel">
-            <div className="money-summary-copy">
-              <span>{selectedRange.label}</span>
-              <strong>{formatWon(totalSpent)}</strong>
-              <em>{getPeriodDeltaLabel(totalSpent, previousSpent)}</em>
-            </div>
-
-            <div className="money-budget-mini">
-              <span>Budget</span>
-              <strong>{budgetPercent}%</strong>
-            </div>
-          </section>
-
-          <section className="money-budget-panel">
-            <div className="money-panel-heading">
-              <span>Monthly budget</span>
-              <strong>{formatWon(money.monthlyBudget)}</strong>
-            </div>
-            <div className="money-budget-track">
-              <div
-                className="money-budget-fill"
-                style={{ width: `${budgetPercent}%` }}
-              />
-            </div>
-          </section>
-
-          {/* Figma Frame: Category Visualization / Donut + Top Category */}
-          <section className="money-visual-panel">
-            <SpendingDonut
-              items={categoryBreakdown}
-              total={totalSpent}
-              selectedCategory={selectedCategory}
-              onSelect={setSelectedCategory}
-            />
-
-            <div className="money-top-category">
-              <span>Top category</span>
-              <strong>{getTopCategoryLabel(periodTransactions)}</strong>
-            </div>
-          </section>
-
-          {/* Scroll/List Frame: Recent Transaction Row instances */}
-          <section className="money-recent-panel">
-            <div className="money-panel-heading">
-              <span>Recent spending</span>
-              <button type="button" onClick={() => openMoneyDetail("spending")}>
-                View all
-              </button>
-            </div>
-
-            <TransactionList
-              transactions={recentTransactions}
-              onEdit={openTransactionEditor}
-            />
-          </section>
-        </div>
-      </GlassCard>
-
-      {/* Figma Component: Money Detail Floating Window / 4 section Variants */}
-      <FloatingWindow
-        open={detailOpen}
-        title="Money"
-        subtitle="Personal finance, spending, wishlist, recurring"
-        storageKey="glassday.money.detailWindow.rect.v1"
-        defaultRect={{ x: 120, y: 72, w: 1060, h: 740 }}
-        minWidth={380}
-        minHeight={320}
-        className="money-floating-window"
-        titlebarClassName="money-floating-titlebar"
-        actions={
-          <button
-            type="button"
-            onClick={() => setSection("spending")}
-            className="glass-button money-action-button"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            Expense
-          </button>
-        }
-        onClose={() => setDetailOpen(false)}
       >
         <datalist id="money-store-defaults">
           {moneyStoreDefaults.map((store) => (
@@ -1915,6 +1807,191 @@ export const MoneyWidget = () => {
                   onDelete={removeTransaction}
                   onEdit={openTransactionEditor}
                 />
+
+                {editingExpenseDraft && (
+                  <form
+                    className="money-detail-card money-expense-editor-form"
+                    onSubmit={saveEditedTransaction}
+                  >
+                    <div className="money-section-heading">
+                      <div>
+                        <span className="money-kicker">Inline edit</span>
+                        <h3>{editingExpenseDraft.name || "Expense"}</h3>
+                        <p>
+                          Save here after selecting a spending row. No floating
+                          window is opened.
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={closeTransactionEditor}
+                        className="money-icon-button"
+                        aria-label="Close expense editor"
+                        title="Close"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    <div className="money-form">
+                      <label>
+                        <span>Name</span>
+                        <input
+                          value={editingExpenseDraft.name}
+                          onChange={(event) =>
+                            updateEditingExpenseDraft("name", event.target.value)
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        <span>Amount</span>
+                        <input
+                          type="number"
+                          min={0}
+                          value={editingExpenseDraft.amount}
+                          onChange={(event) =>
+                            updateEditingExpenseDraft("amount", event.target.value)
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        <span>Date</span>
+                        <input
+                          type="date"
+                          value={editingExpenseDraft.date}
+                          onChange={(event) =>
+                            updateEditingExpenseDraft("date", event.target.value)
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        <span>Category</span>
+                        <CategorySelect
+                          value={editingExpenseDraft.category}
+                          onChange={(value) =>
+                            updateEditingExpenseDraft("category", value)
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        <span>Subcategory</span>
+                        <SubcategoryInput
+                          value={editingExpenseDraft.subcategory}
+                          onChange={(value) =>
+                            updateEditingExpenseDraft("subcategory", value)
+                          }
+                          category={editingExpenseDraft.category}
+                          options={
+                            subcategoryOptionsByCategory[
+                              editingExpenseDraft.category
+                            ]
+                          }
+                          scope="expense-edit"
+                        />
+                      </label>
+
+                      <label>
+                        <span>Store</span>
+                        <StoreInput
+                          value={editingExpenseDraft.store}
+                          onChange={(value) =>
+                            updateEditingExpenseDraft("store", value)
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        <span>Channel</span>
+                        <select
+                          value={editingExpenseDraft.channel}
+                          onChange={(event) =>
+                            updateEditingExpenseDraft(
+                              "channel",
+                              event.target.value as MoneyChannel
+                            )
+                          }
+                        >
+                          <option value="online">online</option>
+                          <option value="offline">offline</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        <span>Expense Type</span>
+                        <select
+                          value={editingExpenseDraft.expenseType}
+                          onChange={(event) =>
+                            updateEditingExpenseDraft(
+                              "expenseType",
+                              event.target.value as MoneyExpenseType
+                            )
+                          }
+                        >
+                          <option value="fixed">fixed</option>
+                          <option value="variable">variable</option>
+                          <option value="one-time">one-time</option>
+                        </select>
+                      </label>
+
+                      <label className="money-form-wide">
+                        <span>Hashtags</span>
+                        <input
+                          value={editingExpenseDraft.hashtags}
+                          onChange={(event) =>
+                            updateEditingExpenseDraft(
+                              "hashtags",
+                              event.target.value
+                            )
+                          }
+                          placeholder="#career #coupon #refund"
+                        />
+                      </label>
+
+                      <label className="money-form-wide">
+                        <span>Note</span>
+                        <textarea
+                          value={editingExpenseDraft.note}
+                          onChange={(event) =>
+                            updateEditingExpenseDraft("note", event.target.value)
+                          }
+                          placeholder="Optional memo"
+                        />
+                      </label>
+                    </div>
+
+                    <div className="money-editor-actions">
+                      {editingTransaction && (
+                        <button
+                          type="button"
+                          onClick={() => removeTransaction(editingTransaction.id)}
+                          className="money-danger-button"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          Delete
+                        </button>
+                      )}
+
+                      <div>
+                        <button
+                          type="button"
+                          onClick={closeTransactionEditor}
+                          className="money-secondary-button"
+                        >
+                          Cancel
+                        </button>
+
+                        <button type="submit" className="money-submit-button">
+                          Save Expense
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                )}
               </section>
             </div>
           )}
@@ -2539,184 +2616,7 @@ export const MoneyWidget = () => {
             </form>
           </div>
         )}
-      </FloatingWindow>
-
-      <FloatingWindow
-        open={Boolean(editingTransaction && editingExpenseDraft)}
-        title="Edit Expense"
-        subtitle={editingTransaction?.name ?? "Transaction detail"}
-        storageKey="glassday.money.expenseEditor.rect.v1"
-        defaultRect={{ x: 180, y: 110, w: 560, h: 620 }}
-        minWidth={360}
-        minHeight={420}
-        className="money-floating-window money-expense-editor-window"
-        titlebarClassName="money-floating-titlebar"
-        onClose={closeTransactionEditor}
-      >
-        {editingExpenseDraft && (
-          <form className="money-detail money-expense-editor-form" onSubmit={saveEditedTransaction}>
-            <div className="money-section-heading">
-              <div>
-                <span className="money-kicker">Transaction</span>
-                <h3>{editingExpenseDraft.name || "Expense"}</h3>
-                <p>Click a spending row to reopen this editor.</p>
-              </div>
-            </div>
-
-            <div className="money-form">
-              <label>
-                <span>Name</span>
-                <input
-                  value={editingExpenseDraft.name}
-                  onChange={(event) =>
-                    updateEditingExpenseDraft("name", event.target.value)
-                  }
-                />
-              </label>
-
-              <label>
-                <span>Amount</span>
-                <input
-                  type="number"
-                  min={0}
-                  value={editingExpenseDraft.amount}
-                  onChange={(event) =>
-                    updateEditingExpenseDraft("amount", event.target.value)
-                  }
-                />
-              </label>
-
-              <label>
-                <span>Date</span>
-                <input
-                  type="date"
-                  value={editingExpenseDraft.date}
-                  onChange={(event) =>
-                    updateEditingExpenseDraft("date", event.target.value)
-                  }
-                />
-              </label>
-
-              <label>
-                <span>Category</span>
-                <CategorySelect
-                  value={editingExpenseDraft.category}
-                  onChange={(value) =>
-                    updateEditingExpenseDraft("category", value)
-                  }
-                />
-              </label>
-
-              <label>
-                <span>Subcategory</span>
-                <SubcategoryInput
-                  value={editingExpenseDraft.subcategory}
-                  onChange={(value) =>
-                    updateEditingExpenseDraft("subcategory", value)
-                  }
-                  category={editingExpenseDraft.category}
-                  options={
-                    subcategoryOptionsByCategory[editingExpenseDraft.category]
-                  }
-                  scope="expense-edit"
-                />
-              </label>
-
-              <label>
-                <span>Store</span>
-                <StoreInput
-                  value={editingExpenseDraft.store}
-                  onChange={(value) =>
-                    updateEditingExpenseDraft("store", value)
-                  }
-                />
-              </label>
-
-              <label>
-                <span>Channel</span>
-                <select
-                  value={editingExpenseDraft.channel}
-                  onChange={(event) =>
-                    updateEditingExpenseDraft(
-                      "channel",
-                      event.target.value as MoneyChannel
-                    )
-                  }
-                >
-                  <option value="online">online</option>
-                  <option value="offline">offline</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Expense Type</span>
-                <select
-                  value={editingExpenseDraft.expenseType}
-                  onChange={(event) =>
-                    updateEditingExpenseDraft(
-                      "expenseType",
-                      event.target.value as MoneyExpenseType
-                    )
-                  }
-                >
-                  <option value="fixed">fixed</option>
-                  <option value="variable">variable</option>
-                  <option value="one-time">one-time</option>
-                </select>
-              </label>
-
-              <label className="money-form-wide">
-                <span>Hashtags</span>
-                <input
-                  value={editingExpenseDraft.hashtags}
-                  onChange={(event) =>
-                    updateEditingExpenseDraft("hashtags", event.target.value)
-                  }
-                  placeholder="#career #coupon #refund"
-                />
-              </label>
-
-              <label className="money-form-wide">
-                <span>Note</span>
-                <textarea
-                  value={editingExpenseDraft.note}
-                  onChange={(event) =>
-                    updateEditingExpenseDraft("note", event.target.value)
-                  }
-                  placeholder="Optional memo"
-                />
-              </label>
-            </div>
-
-            <div className="money-editor-actions">
-              {editingTransaction && (
-                <button
-                  type="button"
-                  onClick={() => removeTransaction(editingTransaction.id)}
-                  className="money-danger-button"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  Delete
-                </button>
-              )}
-
-              <div>
-                <button
-                  type="button"
-                  onClick={closeTransactionEditor}
-                  className="money-secondary-button"
-                >
-                  Cancel
-                </button>
-
-                <button type="submit" className="money-submit-button">
-                  Save Expense
-                </button>
-              </div>
-            </div>
-          </form>
-        )}
-      </FloatingWindow>
+      </GlassCard>
     </>
   );
 };

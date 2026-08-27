@@ -1,23 +1,22 @@
 /* ============================================================
    [Figma Mapping] Money Widget + Finance Detail
    TSX: src/components/widgets/MoneyWidget.tsx
-   Compact Frames: Summary, Budget, Donut, Recent Transactions.
-   Detail Variants: Overview / Spending / Wishlist / Recurring.
+   Inline Frames: Overview / Spending / Wishlist / Recurring.
    Repeated Components: .money-detail-card, Transaction Row, Wishlist Card, Form Field.
-   Money root/container query가 Widget density를 정하고 Floating body는 별도 Scroll Container다.
+   Money root/container query가 Widget density를 정하고 detail body가 자체 Scroll Container다.
    Category chart color는 moneyUtils data palette이며 Theme surface token과 구분한다.
    ============================================================ */
 /* =========================================================
    MONEY WIDGET
    Personal finance surfaces for:
-   - compact dashboard summary
+   - inline dashboard detail
    - spending transaction database
    - wishlist purchase flow
    - recurring expense model
 
    Figma-friendly naming:
-   money-dashboard     = compact widget body
-   money-detail-card   = repeated panels inside the floating window
+   money-detail        = widget-owned scroll body
+   money-detail-card   = repeated panels inside the widget detail
    money-form          = shared input grid
    money-section-tabs  = Overview / Spending / Wishlist / Recurring nav
 ========================================================= */
@@ -45,6 +44,21 @@
   display: grid;
   grid-template-rows: minmax(0, 1fr);
   overflow-y: hidden;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+/* Inline detail shell
+   Money no longer opens its own floating window. The previous detail content
+   now lives directly inside the widget body, so the widget body owns scrolling
+   and each section consumes normal full-width flow instead of reserving empty
+   edit space beside the ledger. / 플로팅창을 없애고 위젯 내부에서 바로 관리한다. */
+.money-widget .money-detail {
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  padding: 0 2px 4px;
+  overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
 }
@@ -631,7 +645,10 @@
   grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
 }
 
-.money-spending-layout,
+.money-spending-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .money-recurring-layout {
   grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.22fr);
 }

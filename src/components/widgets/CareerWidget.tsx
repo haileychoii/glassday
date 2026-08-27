@@ -1178,11 +1178,23 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
         createPortal(
           <div
             className="career-floating-layer"
+            onPointerDown={(event) => {
+              /*
+               * Floating dismiss contract:
+               * Career owns a custom movable portal instead of the shared
+               * FloatingWindow shell, so it mirrors the same outside-click
+               * behavior here. 한국어: 창 바깥을 누르면 현재 입력값은 이미
+               * controlled state에 저장되어 있으므로 detail 창만 닫는다.
+               */
+              if (event.target === event.currentTarget) {
+                closeWindow();
+              }
+            }}
             style={{
               position: "fixed",
               inset: 0,
               zIndex: 99999,
-              pointerEvents: "none",
+              pointerEvents: "auto",
             }}
           >
             <div

@@ -25,6 +25,7 @@ import {
   ChevronRight,
   ExternalLink,
   Lock,
+  Pencil,
   Plus,
   Trash2,
 } from "lucide-react";
@@ -45,7 +46,7 @@ import {
 } from "../../constants/colors";
 import { EventColorPicker } from "./calendar/EventColorPicker";
 import { MonthCalendar } from "./calendar/MonthCalendar";
-import { WeekTimeline } from "./calendar/WeekTimeline";
+import { WeekTimeline, type WeekBlockDraft } from "./calendar/WeekTimeline";
 import {
   addDays,
   addMonths,
@@ -107,6 +108,7 @@ export const CalendarWidget = () => {
   const [view, setView] = useState<CalendarView>("day");
   const [selectedDate, setSelectedDate] = useState(toLocalDateInput());
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [weekEditMode, setWeekEditMode] = useState(false);
 
   const editingEvent = editingId
     ? calendarEvents.find((event) => event.id === editingId) ?? null
@@ -208,6 +210,30 @@ export const CalendarWidget = () => {
       color: getRandomPastelEventColor(),
     });
 
+    setEditingId(newEvent.id);
+  };
+
+  const createManualEventFromWeekBlock = (draft: WeekBlockDraft) => {
+    /*
+     * Week quick-draw bridge:
+     * The WeekTimeline only knows about visual slot selection. CalendarWidget
+     * owns the persisted event creation and opens the normal editor afterward.
+     * 한국어: 주간 화면에서 드래그한 30분 블록은 여기서 실제 일정으로 저장하고,
+     * 바로 상세창을 열어 제목/분 단위 시간을 자유롭게 수정하게 한다.
+     */
+    const eventId = `manual-${Date.now()}`;
+    const newEvent = addCalendarEvent({
+      id: eventId,
+      title: "New Event",
+      startDate: draft.startDate,
+      startTime: draft.startTime,
+      endDate: draft.endDate,
+      endTime: draft.endTime,
+      source: "manual",
+      color: getRandomPastelEventColor(),
+    });
+
+    setSelectedDate(draft.startDate);
     setEditingId(newEvent.id);
   };
 
@@ -313,6 +339,23 @@ export const CalendarWidget = () => {
                 </button>
               ))}
             </div>
+
+            {view === "week" && (
+              <button
+                type="button"
+                onClick={() => setWeekEditMode((current) => !current)}
+                className={cn(
+                  "calendar-week-edit-toggle",
+                  weekEditMode && "is-active"
+                )}
+                aria-pressed={weekEditMode}
+                aria-label="Toggle weekly block edit mode"
+                title="Toggle weekly block edit mode"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+                <span>Edit</span>
+              </button>
+            )}
           </div>
 
           <div className="calendar-current-label">
@@ -344,6 +387,9 @@ export const CalendarWidget = () => {
                 events={visibleEvents}
                 onSelectDate={setSelectedDate}
                 onEventClick={openEvent}
+                editMode={weekEditMode}
+                selectedEventId={editingId}
+                onCreateBlock={createManualEventFromWeekBlock}
               />
             ) : (
               <div className="calendar-event-list">
