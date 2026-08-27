@@ -260,16 +260,10 @@ useEffect(() => {
 const shellContent = (
   <div
     className={[
-      /*
-       * Shell clipping is mode-specific.
-       * - Laptop/Tauri keeps the rounded app window clipped.
-       * - Web Wide keeps the same app-window feeling and lets only the main
-       *   dashboard pane scroll. / wide에서도 큰 판처럼 퍼지지 않게 내부 스크롤.
-       */
       "glass-panel liquid-shell rounded-[2.2rem] overflow-hidden app-shell-surface",
       effectiveLayoutMode === "laptop"
-        ? "is-laptop h-full min-h-0 overflow-hidden"
-        : "is-wide h-[calc(100vh-1rem)] md:h-[calc(100vh-1.5rem)] min-h-0",
+        ? "is-laptop h-full min-h-0"
+        : "is-wide min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
       isTauriApp ? "is-tauri-app-surface" : "",
     ]
       .filter(Boolean)
@@ -281,7 +275,7 @@ const shellContent = (
         "flex app-shell-columns",
         effectiveLayoutMode === "laptop"
           ? "h-full min-h-0"
-          : "h-full min-h-0",
+          : "min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
       ].join(" ")}
     >
       <Sidebar
@@ -301,7 +295,7 @@ const shellContent = (
       <div
         className={[
           "app-shell-main-column flex-1 min-w-0 flex flex-col",
-          "min-h-0",
+          effectiveLayoutMode === "laptop" ? "min-h-0" : "",
         ].join(" ")}
       >
         <Topbar
@@ -325,7 +319,7 @@ const shellContent = (
             "app-shell-main flex-1 min-w-0 bg-transparent",
             effectiveLayoutMode === "laptop"
               ? "min-h-0 overflow-y-auto overflow-x-hidden"
-              : "min-h-0 overflow-y-auto overflow-x-hidden",
+              : "overflow-visible",
           ].join(" ")}
         >
           {children}
@@ -397,7 +391,7 @@ const shellContent = (
         "app-mode-stage",
         "min-h-screen",
         "relative",
-        // "overflow-hidden",
+       
         "bg-background",
         "text-foreground",
         effectiveLayoutMode === "laptop"
