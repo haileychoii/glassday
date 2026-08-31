@@ -237,6 +237,20 @@ export const CalendarWidget = () => {
     setEditingId(newEvent.id);
   };
 
+  const resizeEventFromWeekBlock = (
+    event: CalendarEvent,
+    draft: WeekBlockDraft
+  ) => {
+    updateCalendarEvent(event.id, {
+      startDate: draft.startDate,
+      startTime: draft.startTime,
+      endDate: draft.endDate,
+      endTime: draft.endTime,
+    });
+    setSelectedDate(draft.startDate);
+    setEditingId(event.id);
+  };
+
   const updateEditingEvent = (patch: Partial<CalendarEvent>) => {
     if (!editingEvent) return;
 
@@ -390,6 +404,7 @@ export const CalendarWidget = () => {
                 editMode={weekEditMode}
                 selectedEventId={editingId}
                 onCreateBlock={createManualEventFromWeekBlock}
+                onResizeEvent={resizeEventFromWeekBlock}
               />
             ) : (
               <div className="calendar-event-list">

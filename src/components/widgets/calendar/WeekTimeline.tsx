@@ -10,7 +10,7 @@
  * 좁은 container에서는 timeline 자체가 내부 scroll 영역이 된다.
  * ============================================================
  */
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
 import { getEventColor as getCalendarEventColor } from "../../../constants/colors";
@@ -48,6 +48,7 @@ type WeekTimelineProps = {
   editMode?: boolean;
   selectedEventId?: string | null;
   onCreateBlock?: (draft: WeekBlockDraft) => void;
+  onResizeEvent?: (event: CalendarEvent, draft: WeekBlockDraft) => void;
 };
 
 type WeekDay = {
@@ -76,6 +77,10 @@ type WeekDraftSelection = {
   startSlot: number;
   endDate: string;
   endSlot: number;
+};
+
+type WeekResizeSelection = WeekDraftSelection & {
+  event: CalendarEvent;
 };
 
 type WeekOverflowPreview = {
@@ -167,7 +172,17 @@ const slotToTime = (slot: number) => {
   return `${pad2(hour)}:${pad2(minute)}`;
 };
 
-const normalizeSelection = (selection: WeekDraftSelection): WeekBlockDraft => {
+const timeToSlot = (time: string, mode: "start" | "end") => {
+  const minutes = getTimeMinutes(time);
+  const rawSlot = (minutes - START_HOUR * 60) / SLOT_MINUTES;
+  const slot = mode === "end" ? Math.ceil(rawSlot) - 1 : Math.floor(rawSlot);
+
+  return Math.min(Math.max(0, slot), getSlotCount() - 1);
+};
+
+const normalizeSelection = (
+  selection: WeekDraftSelection | WeekResizeSelection
+): WeekBlockDraft => {
   const startsBeforeEnd =
     selection.startDate < selection.endDate ||
     (selection.startDate === selection.endDate &&
@@ -185,6 +200,30 @@ const normalizeSelection = (selection: WeekDraftSelection): WeekBlockDraft => {
     endDate: lastDate,
     endTime: slotToTime(endSlot),
   };
+};
+
+const getSelectionSegmentStyle = (
+  selection: WeekDraftSelection | WeekResizeSelection,
+  date: string
+) => {
+  const startsBeforeEnd =
+    selection.startDate < selection.endDate ||
+    (selection.startDate === selection.endDate &&
+      selection.startSlot <= selection.endSlot);
+  const firstDate = startsBeforeEnd ? selection.startDate : selection.endDate;
+  const lastDate = startsBeforeEnd ? selection.endDate : selection.startDate;
+  const firstSlot = startsBeforeEnd ? selection.startSlot : selection.endSlot;
+  const lastSlot = startsBeforeEnd ? selection.endSlot : selection.startSlot;
+
+  if (date < firstDate || date > lastDate) return null;
+
+  const startSlot = date === firstDate ? firstSlot : 0;
+  const endSlot = date === lastDate ? lastSlot : getSlotCount() - 1;
+
+  return {
+    top: startSlot * SLOT_HEIGHT,
+    height: (Math.max(startSlot, endSlot) - startSlot + 1) * SLOT_HEIGHT,
+  } as CSSProperties;
 };
 
 const isRangeEvent = (event: CalendarEvent) => {
@@ -216,9 +255,13 @@ export const WeekTimeline = ({
   editMode = false,
   selectedEventId = null,
   onCreateBlock,
+  onResizeEvent,
 }: WeekTimelineProps) => {
+  const daysRef = useRef<HTMLDivElement | null>(null);
   const [draftSelection, setDraftSelection] =
     useState<WeekDraftSelection | null>(null);
+  const [resizeSelection, setResizeSelection] =
+    useState<WeekResizeSelection | null>(null);
   const [overflowPreview, setOverflowPreview] =
     useState<WeekOverflowPreview | null>(null);
   const baseDate = selectedDate ?? currentDate ?? toDateString(new Date());
@@ -327,6 +370,19 @@ export const WeekTimeline = ({
     });
   };
 
+  const getDateFromPointer = (pointerEvent: ReactPointerEvent<HTMLElement>) => {
+    if (!daysRef.current) return null;
+
+    const rect = daysRef.current.getBoundingClientRect();
+    const dayWidth = rect.width / weekDays.length;
+    const index = Math.min(
+      Math.max(0, Math.floor((pointerEvent.clientX - rect.left) / dayWidth)),
+      weekDays.length - 1
+    );
+
+    return weekDays[index]?.date ?? null;
+  };
+
   const beginBlockSelection = (
     day: WeekDay,
     pointerEvent: ReactPointerEvent<HTMLButtonElement>
@@ -361,11 +417,12 @@ export const WeekTimeline = ({
     if (!draftSelection || !editMode) return;
 
     const slot = getSlotFromPointer(pointerEvent, pointerEvent.currentTarget);
+    const pointerDate = getDateFromPointer(pointerEvent) ?? day.date;
     setDraftSelection((current) =>
       current
         ? {
             ...current,
-            endDate: day.date,
+            endDate: pointerDate,
             endSlot: slot,
           }
         : current
@@ -377,6 +434,75 @@ export const WeekTimeline = ({
 
     onCreateBlock(normalizeSelection(draftSelection));
     setDraftSelection(null);
+  };
+
+  const beginEventResize = (
+    event: CalendarEvent,
+    pointerEvent: ReactPointerEvent<HTMLSpanElement>
+  ) => {
+    if (!editMode || !onResizeEvent) return;
+
+    pointerEvent.preventDefault();
+    pointerEvent.stopPropagation();
+    pointerEvent.currentTarget.setPointerCapture(pointerEvent.pointerId);
+    setResizeSelection({
+      event,
+      startDate: event.startDate,
+      startSlot: timeToSlot(event.startTime, "start"),
+      endDate: event.endDate,
+      endSlot: timeToSlot(event.endTime, "end"),
+    });
+  };
+
+  const updateEventResize = (
+    pointerEvent: ReactPointerEvent<HTMLSpanElement>
+  ) => {
+    if (!resizeSelection || !editMode) return;
+
+    pointerEvent.preventDefault();
+    pointerEvent.stopPropagation();
+
+    const targetColumn = pointerEvent.currentTarget.closest(
+      ".calendar-week-day-column"
+    );
+    if (!(targetColumn instanceof HTMLElement)) return;
+
+    const slot = getSlotFromPointer(pointerEvent, targetColumn);
+    const pointerDate =
+      getDateFromPointer(pointerEvent) ?? resizeSelection.endDate;
+
+    setResizeSelection((current) =>
+      current
+        ? {
+            ...current,
+            endDate: pointerDate,
+            endSlot: slot,
+          }
+        : current
+    );
+  };
+
+  const finishEventResize = () => {
+    if (!resizeSelection || !onResizeEvent) return;
+
+    const draft = normalizeSelection(resizeSelection);
+    const hasChanged =
+      draft.startDate !== resizeSelection.event.startDate ||
+      draft.startTime !== resizeSelection.event.startTime ||
+      draft.endDate !== resizeSelection.event.endDate ||
+      draft.endTime !== resizeSelection.event.endTime;
+
+    setResizeSelection(null);
+
+    if (!hasChanged) return;
+
+    const ok = window.confirm(
+      `${resizeSelection.event.title} 일정 시간을 ${draft.startDate} ${draft.startTime} → ${draft.endDate} ${draft.endTime}로 변경할까요?`
+    );
+
+    if (ok) {
+      onResizeEvent(resizeSelection.event, draft);
+    }
   };
 
   const hourLabels = useMemo(() => {
@@ -484,7 +610,7 @@ export const WeekTimeline = ({
             ))}
           </div>
 
-          <div className="calendar-week-days">
+          <div className="calendar-week-days" ref={daysRef}>
             {weekDays.map((day) => {
               const dayEvents = timedEvents.filter(
                 (event) => event.startDate === day.date
@@ -560,30 +686,42 @@ export const WeekTimeline = ({
                         {event.startTime}
                         {event.endTime ? `–${event.endTime}` : ""}
                       </span>
+                      {editMode && (
+                        <span
+                          className="calendar-week-event-resize-handle"
+                          aria-hidden="true"
+                          onPointerDown={(pointerEvent) =>
+                            beginEventResize(event, pointerEvent)
+                          }
+                          onPointerMove={updateEventResize}
+                          onPointerUp={finishEventResize}
+                          onPointerCancel={() => setResizeSelection(null)}
+                        />
+                      )}
                     </button>
                   ))}
 
-                  {draftSelection && draftSelection.startDate === day.date && (
-                    <span
-                      className="calendar-week-edit-selection"
-                      style={
-                        {
-                          top:
-                            Math.min(
-                              draftSelection.startSlot,
-                              draftSelection.endSlot
-                            ) * SLOT_HEIGHT,
-                          height:
-                            (Math.abs(
-                              draftSelection.endSlot -
-                                draftSelection.startSlot
-                            ) +
-                              1) *
-                            SLOT_HEIGHT,
-                        } as CSSProperties
-                      }
-                    />
-                  )}
+                  {draftSelection &&
+                    getSelectionSegmentStyle(draftSelection, day.date) && (
+                      <span
+                        className="calendar-week-edit-selection"
+                        style={
+                          getSelectionSegmentStyle(draftSelection, day.date) ??
+                          undefined
+                        }
+                      />
+                    )}
+
+                  {resizeSelection &&
+                    getSelectionSegmentStyle(resizeSelection, day.date) && (
+                      <span
+                        className="calendar-week-edit-selection is-resizing"
+                        style={
+                          getSelectionSegmentStyle(resizeSelection, day.date) ??
+                          undefined
+                        }
+                      />
+                    )}
 
                   {hiddenDayEvents.length > 0 && (
                     <button

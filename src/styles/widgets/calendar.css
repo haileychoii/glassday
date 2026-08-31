@@ -3281,11 +3281,35 @@ body.theme-glass-dark .calendar-floating-window .event-color-picker {
   z-index: 2;
 }
 
+.calendar-week-edit-selection.is-resizing {
+  background: hsl(42 90% 60% / 0.2);
+  border-color: hsl(42 84% 48% / 0.44);
+}
+
 .calendar-week-event:hover,
 .calendar-week-event.is-focused {
   outline: 2px solid hsl(var(--primary) / 0.38);
   outline-offset: 2px;
   filter: brightness(1.03) saturate(1.04);
+}
+
+.calendar-week-event-resize-handle {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 3px;
+  height: 7px;
+  border-radius: 999px;
+  background: hsl(0 0% 100% / 0.5);
+  border: 1px solid hsl(var(--foreground) / 0.12);
+  cursor: ns-resize;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.calendar-week-event:hover .calendar-week-event-resize-handle,
+.calendar-week-event.is-focused .calendar-week-event-resize-handle {
+  opacity: 1;
 }
 
 .event-color-picker {
