@@ -4,8 +4,8 @@
  * ============================================================
  *
  * 화면 역할:
- * - Grid에서는 월 지출/예산/category/recent transaction을 compact summary로 보여준다.
- * - Floating Detail에서는 Overview, Spending, Wishlist, Recurring 전체 기능을 제공한다.
+ * - Grid 안의 기본 위젯 본문에서 Overview, Spending, Wishlist, Recurring 전체 기능을 제공한다.
+ * - 지출 항목을 누르면 같은 Spending 흐름 아래에 inline editor가 열리고 별도 floating 창은 쓰지 않는다.
  *
  * 연결:
  * - Renderer: DashboardGrid (WidgetId: money, legacy alias: wealth)
@@ -19,9 +19,9 @@
  *   두 record를 연결한다. chart/total/list는 같은 transactions 배열에서 파생된다.
  *
  * Figma 구조:
- * - Compact Widget: Summary, Budget, Donut, Recent List
- * - Detail: Section Tabs + Overview/Spending/Wishlist/Recurring Variant
- * - Overlay states: Wishlist Detail, Purchase Dialog, Add forms
+ * - Inline Detail: Section Tabs + Overview/Spending/Wishlist/Recurring Variant
+ * - Inline Edit: Spending row -> Expense Editor
+ * - Overlay states: Wishlist purchase confirmation only
  * ============================================================
  */
 import { useMemo, useRef, useState } from "react";

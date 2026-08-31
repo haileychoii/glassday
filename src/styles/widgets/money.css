@@ -49,8 +49,8 @@
 }
 
 /* Inline detail shell
-   Money no longer opens its own floating window. The previous detail content
-   now lives directly inside the widget body, so the widget body owns scrolling
+   Money now renders its full finance surface directly inside the widget body,
+   so the widget body owns scrolling
    and each section consumes normal full-width flow instead of reserving empty
    edit space beside the ledger. / 플로팅창을 없애고 위젯 내부에서 바로 관리한다. */
 .money-widget .money-detail {
@@ -497,38 +497,18 @@
 }
 
 /* =========================================================
-   4. Floating detail layout
+   4. Inline detail layout
+   Money used to rely on a floating detail shell. The widget now owns its
+   complete detail surface, so scrolling and responsive behavior live here.
+   / Money는 별도 플로팅창 없이 기본 위젯 본문에서 전체 내용을 보여준다.
 ========================================================= */
-
-.money-floating-window {
-  max-width: calc(100vw - 28px);
-  background:
-    linear-gradient(145deg, hsl(0 0% 100% / 0.94), hsl(250 36% 96% / 0.84));
-  border-color: hsl(0 0% 100% / 0.82);
-  box-shadow:
-    0 42px 120px -54px hsl(230 28% 12% / 0.48),
-    inset 0 1px 0 hsl(0 0% 100% / 0.88);
-  backdrop-filter: blur(54px) saturate(174%);
-  -webkit-backdrop-filter: blur(54px) saturate(174%);
-}
-
-.money-floating-window .floating-window-body {
-  height: 100%;
-  min-height: 0;
-  display: grid;
-  grid-template-rows: minmax(0, 1fr);
-  overflow: hidden;
-  overflow-x: hidden;
-  container-type: size;
-  container-name: money-detail-panel;
-  overscroll-behavior: contain;
-  scrollbar-gutter: auto;
-}
 
 .money-detail {
   height: 100%;
   max-height: 100%;
   min-height: 0;
+  container-type: size;
+  container-name: money-detail-panel;
   display: flex;
   flex-direction: column;
   gap: var(--gd-widget-section-gap);
@@ -546,7 +526,7 @@
   /*
    * Fixed navigation rail: the detail body owns vertical scrolling, so this
    * tab row must never collapse when the selected section is taller than the
-   * floating window. 상세 내용이 길어져도 탭 높이는 유지한다.
+   * inline widget viewport. 상세 내용이 길어져도 탭 높이는 유지한다.
    */
   flex: 0 0 auto;
   flex-wrap: wrap;
@@ -1293,9 +1273,9 @@
   }
 }
 
-/* Floating detail responsive rules use the floating body container. This keeps
-   Money usable when the user resizes only the floating window, even if the
-   browser or laptop preview frame stays the same size. */
+/* Inline detail responsive rules use the widget-owned detail container. This
+   keeps Money usable when only the widget cell changes size, preventing empty
+   side gutters or overlapping forms. / 위젯 내부 크기 기준으로 반응형 처리한다. */
 @container money-detail-panel (max-width: 820px) {
   .money-overview-grid,
   .money-spending-layout,
@@ -1546,35 +1526,6 @@ body.theme-glass-dark .money-detail-card {
   background:
     linear-gradient(145deg, rgb(35 42 62 / 0.76), rgb(17 23 38 / 0.64));
   border-color: rgb(184 202 246 / 0.22);
-}
-
-html[data-theme="glass-light"] .money-floating-window,
-body[data-theme="glass-light"] .money-floating-window,
-html.theme-glass-light .money-floating-window,
-body.theme-glass-light .money-floating-window {
-  background:
-    linear-gradient(145deg, rgb(255 255 255 / 0.9), rgb(246 243 255 / 0.78)) !important;
-  border-color: rgb(255 255 255 / 0.78) !important;
-  backdrop-filter: blur(48px) saturate(166%) !important;
-  -webkit-backdrop-filter: blur(48px) saturate(166%) !important;
-}
-
-html[data-theme="glass-dark"] .money-floating-window,
-body[data-theme="glass-dark"] .money-floating-window,
-html.theme-glass-dark .money-floating-window,
-body.theme-glass-dark .money-floating-window,
-html[data-theme="aurora"] .money-floating-window,
-body[data-theme="aurora"] .money-floating-window,
-html.theme-aurora .money-floating-window,
-body.theme-aurora .money-floating-window {
-  background:
-    linear-gradient(145deg, rgb(27 34 52 / 0.93), rgb(12 17 30 / 0.9)) !important;
-  border-color: rgb(186 205 248 / 0.24) !important;
-  box-shadow:
-    0 40px 116px -48px rgb(0 0 0 / 0.62),
-    inset 0 1px 0 rgb(255 255 255 / 0.12) !important;
-  backdrop-filter: blur(48px) saturate(158%) !important;
-  -webkit-backdrop-filter: blur(48px) saturate(158%) !important;
 }
 
 html[data-theme="glass-dark"] .money-purchase-dialog,

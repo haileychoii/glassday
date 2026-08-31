@@ -510,25 +510,31 @@
    ================================ */
 
 .calendar-week-timeline {
+  --calendar-week-outer-line: hsl(var(--foreground) / 0.14);
+  --calendar-week-major-line: hsl(var(--foreground) / 0.12);
+  --calendar-week-minor-line: hsl(var(--foreground) / 0.075);
+  --calendar-week-column-line: hsl(var(--foreground) / 0.095);
+
   flex: 1;
   min-height: 0;
   display: grid;
   grid-template-rows: auto 1fr;
   overflow: hidden;
   border-radius: 22px;
-  border: 1px solid hsl(0 0% 100% / 0.42);
-  background: hsl(0 0% 100% / 0.12);
+  border: 1px solid var(--calendar-week-outer-line);
+  background:
+    linear-gradient(180deg, hsl(0 0% 100% / 0.12), hsl(0 0% 100% / 0.07));
 }
 
 .calendar-week-header {
   display: grid;
   grid-template-columns: 48px repeat(7, minmax(86px, 1fr));
   min-width: 650px;
-  border-bottom: 1px solid hsl(0 0% 100% / 0.38);
+  border-bottom: 1px solid var(--calendar-week-major-line);
 }
 
 .calendar-week-time-spacer {
-  border-right: 1px solid hsl(0 0% 100% / 0.32);
+  border-right: 1px solid var(--calendar-week-column-line);
 }
 
 .calendar-week-day-header {
@@ -539,7 +545,7 @@
   align-items: center;
   gap: 2px;
   font-size: 11px;
-  border-right: 1px solid hsl(0 0% 100% / 0.28);
+  border-right: 1px solid var(--calendar-week-column-line);
 }
 
 .calendar-week-day-header strong {
@@ -568,7 +574,7 @@
 .calendar-week-times {
   display: grid;
   grid-template-rows: repeat(18, 54px);
-  border-right: 1px solid hsl(0 0% 100% / 0.32);
+  border-right: 1px solid var(--calendar-week-column-line);
 }
 
 .calendar-week-time {
@@ -586,7 +592,7 @@
 
 .calendar-week-day-column {
   position: relative;
-  border-right: 1px solid hsl(0 0% 100% / 0.25);
+  border-right: 1px solid var(--calendar-week-column-line);
 }
 
 .calendar-week-day-column.is-selected {
@@ -595,7 +601,22 @@
 
 .calendar-week-hour-line {
   height: 54px;
-  border-bottom: 1px solid hsl(0 0% 100% / 0.22);
+  border-bottom: 1px solid var(--calendar-week-major-line);
+  /*
+   * Time-reading guide:
+   * Every theme receives both hour and half-hour lines. Theme overrides can
+   * change color, but should not remove these structural dividers.
+   * 한국어: weekly 보기에서 시간 위치를 바로 읽을 수 있도록 모든 테마에
+   * 시간선과 30분 보조선을 기본으로 제공한다.
+   */
+  background-image:
+    linear-gradient(
+      to bottom,
+      transparent calc(50% - 0.5px),
+      var(--calendar-week-minor-line) calc(50% - 0.5px),
+      var(--calendar-week-minor-line) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    );
 }
 
 .calendar-week-event {
