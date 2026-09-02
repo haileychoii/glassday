@@ -1382,37 +1382,40 @@ body.theme-retro {
    Final theme layer for the pink 95/98 desktop variant.
    It keeps widget structure intact and only normalizes visual chrome:
    - solid pink titlebars, no mismatched gradients
-   - gray raised OS panels and white client areas
+   - pink raised OS panels and soft blush client areas
    - Mona bitmap default while Settings/user memo fonts can still override
    - memo paper color remains data-owned via --memo-paper-surface
    ========================================================= */
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
-  --background: 335 78% 94%;
-  --foreground: 219 20% 17%;
-  --card: 0 0% 84%;
-  --card-foreground: 219 20% 17%;
-  --primary: 331 58% 61%;
-  --muted-foreground: 222 13% 42%;
-  --border: 215 10% 29%;
+  --background: 335 88% 93%;
+  --foreground: 327 30% 24%;
+  --card: 331 68% 88%;
+  --card-foreground: 327 30% 24%;
+  --primary: 331 76% 62%;
+  --muted-foreground: 329 24% 45%;
+  --border: 329 38% 49%;
 
-  --retro-bg: #ffe6f2;
-  --retro-panel: #d9d9d9;
-  --retro-panel-light: #ffffff;
-  --retro-panel-mid: #eeeeee;
-  --retro-panel-dark: #8f8f98;
-  --retro-panel-darker: #374052;
-  --retro-window: #d9d9d9;
-  --retro-title: #e88ab8;
-  --retro-title-2: #bf5e91;
-  --retro-text: #263244;
-  --retro-muted: #677082;
+  --retro-bg: #ffd9ec;
+  --retro-panel: #f8bfd9;
+  --retro-panel-light: #fff8fc;
+  --retro-panel-mid: #ffd7e9;
+  --retro-panel-dark: #d37ca8;
+  --retro-panel-darker: #7e3e62;
+  --retro-window: #fbd0e3;
+  --retro-title: #e85f9f;
+  --retro-title-2: #b64f82;
+  --retro-title-3: #f4a3c9;
+  --retro-text: #4f2940;
+  --retro-muted: #8b5d75;
   --retro-white: #ffffff;
-  --retro-field: #ffffff;
-  --retro-client: #f8f8f8;
-  --retro-cream: #ffffff;
-  --retro-pink-soft: #ffd8ea;
-  --retro-mint: #cbeede;
-  --retro-blue: #dce9ff;
+  --retro-field: #fffafd;
+  --retro-client: #fff0f8;
+  --retro-cream: #fff7fb;
+  --retro-pink-soft: #ffd1e8;
+  --retro-mint: #ffd4e8;
+  --retro-blue: #f0d8ff;
+  --retro-menu: #ffd1e6;
+  --retro-menu-border: #c56b99;
   --retro-control-height: 25px;
   --retro-titlebar-height: 29px;
   --retro-titlebar-control-height: 21px;
@@ -1444,14 +1447,16 @@ body[data-theme="retro"],
 html.theme-retro body,
 body.theme-retro {
   background:
-    linear-gradient(rgb(226 122 172 / 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(226 122 172 / 0.2) 1px, transparent 1px),
+    linear-gradient(rgb(226 91 157 / 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(226 91 157 / 0.22) 1px, transparent 1px),
     radial-gradient(circle at 14% 18%, rgb(255 255 255 / 0.74) 0 10px, transparent 11px 48px),
-    radial-gradient(circle at 84% 14%, rgb(255 255 255 / 0.54) 0 16px, transparent 17px 68px),
+    radial-gradient(circle at 84% 14%, rgb(255 235 247 / 0.72) 0 16px, transparent 17px 68px),
+    radial-gradient(circle at 78% 78%, rgb(245 145 190 / 0.16) 0 26px, transparent 27px 96px),
     var(--retro-bg) !important;
   background-size:
     28px 28px,
     28px 28px,
+    auto,
     auto,
     auto,
     auto !important;
@@ -1462,8 +1467,8 @@ body.theme-retro {
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.bg-glass-gradient, #root) {
   background:
-    linear-gradient(rgb(226 122 172 / 0.18) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(226 122 172 / 0.18) 1px, transparent 1px),
+    linear-gradient(rgb(226 91 157 / 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(226 91 157 / 0.2) 1px, transparent 1px),
     var(--retro-bg) !important;
   background-size:
     28px 28px,
@@ -1493,15 +1498,15 @@ body.theme-retro {
   min-height: 58px !important;
   height: auto !important;
   padding-block: 10px !important;
-  background: var(--retro-mint) !important;
+  background: var(--retro-menu) !important;
   color: var(--retro-text) !important;
-  border-top: 2px solid #f4fff9 !important;
-  border-left: 2px solid #f4fff9 !important;
-  border-right: 2px solid #5d746a !important;
-  border-bottom: 2px solid #5d746a !important;
+  border-top: 2px solid var(--retro-white) !important;
+  border-left: 2px solid var(--retro-white) !important;
+  border-right: 2px solid var(--retro-menu-border) !important;
+  border-bottom: 2px solid var(--retro-menu-border) !important;
   box-shadow:
     inset 1px 1px 0 rgb(255 255 255 / 0.75),
-    inset -1px -1px 0 rgb(92 116 106 / 0.48) !important;
+    inset -1px -1px 0 rgb(197 107 153 / 0.48) !important;
   overflow: visible !important;
 }
 
@@ -1712,6 +1717,91 @@ body.theme-retro {
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .memo-note-item.is-active {
   background: var(--memo-note-surface-active, var(--retro-pink-soft)) !important;
+}
+
+/* Career list density
+   Retro's compact bitmap type should not collapse Career rows into thin strips.
+   These rows stay chunky enough to read company, role, metadata, and D-day at a
+   glance while preserving the raised Win95 panel shape. / Career 목록은 매일
+   보는 핵심 정보라서 레트로 폰트가 작아져도 카드 두께와 패딩을 유지한다. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .career-widget
+  .career-summary-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: start !important;
+  gap: 8px !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .career-widget
+  .career-summary-card {
+  min-height: 64px !important;
+  padding: 10px 12px !important;
+  display: grid !important;
+  align-content: center !important;
+  gap: 4px !important;
+  background: #ffe4f1 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .career-widget
+  .career-summary-card
+  strong {
+  font-size: 17px !important;
+  line-height: 1.05 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .career-widget
+  .career-summary-card
+  span {
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .career-widget
+  .career-list {
+  gap: 8px !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .career-widget
+  .career-list-item {
+  min-height: 78px !important;
+  padding: 12px 13px !important;
+  gap: 9px !important;
+  align-content: center !important;
+  background: var(--retro-cream) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .career-widget
+  .career-list-title {
+  gap: 3px !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .career-widget
+  .career-list-title
+  strong {
+  font-size: 13px !important;
+  line-height: 1.18 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .career-widget
+  .career-list-title
+  span {
+  font-size: 10.5px !important;
+  line-height: 1.2 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .career-widget
+  .career-list-meta {
+  gap: 5px !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
