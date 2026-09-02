@@ -63,6 +63,8 @@ const defaultHandwritingFallback =
   "'OngleipKonkon', 'Kyobo Handwriting 2020', cursive";
 const pixelDeskFallback =
   "'Mona12', 'MonaS12', 'RoundedFixedsys', 'NeoDunggeunmo', 'MS Sans Serif', Tahoma, Arial, sans-serif";
+const retroFallback =
+  "'Mona12', 'MonaS12', 'RoundedFixedsys', 'NeoDunggeunmo', 'MS Sans Serif', Tahoma, Arial, sans-serif";
 const macCoreFallback =
   "'Apple SD Gothic Neo', AppleGothic, -apple-system, BlinkMacSystemFont, 'SF Pro KR', 'SF Pro Text', 'Helvetica Neue', Inter, ui-sans-serif, system-ui, 'Segoe UI', sans-serif";
 
@@ -273,6 +275,8 @@ export const getDefaultAppFontForTheme = (theme: string | null | undefined) => {
   switch (theme) {
     case "pixel-desk":
       return pixelDeskFallback;
+    case "retro":
+      return retroFallback;
     case "mac-core":
       return macCoreFallback;
     default:
@@ -296,6 +300,7 @@ export const hasUserSelectedAppFont = () => {
   const defaultValues = new Set([
     DEFAULT_APP_FONT,
     pixelDeskFallback,
+    retroFallback,
     macCoreFallback,
   ]);
 

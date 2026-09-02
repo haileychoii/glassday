@@ -24,6 +24,7 @@ import {
   CheckCircle2,
   Clock3,
   FileText,
+  RefreshCw,
   Sparkles,
 } from "lucide-react";
 
@@ -362,10 +363,11 @@ export const AlertCenterWidget = () => {
         <button
           type="button"
           onClick={() => setRefreshKey((prev) => prev + 1)}
-          className="glass-button h-8 px-3 text-xs"
+          className="glass-button h-8 w-8 px-0"
           aria-label="Refresh alerts"
+          title="Refresh alerts"
         >
-          Refresh
+          <RefreshCw className="w-3.5 h-3.5" />
         </button>
       }
     >

@@ -1376,3 +1376,460 @@ body.theme-retro {
   border-right-color: #ffffff !important;
   border-bottom-color: #ffffff !important;
 }
+
+/* =========================================================
+   Retro Pink Pixel reset
+   Final theme layer for the pink 95/98 desktop variant.
+   It keeps widget structure intact and only normalizes visual chrome:
+   - solid pink titlebars, no mismatched gradients
+   - gray raised OS panels and white client areas
+   - Mona bitmap default while Settings/user memo fonts can still override
+   - memo paper color remains data-owned via --memo-paper-surface
+   ========================================================= */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
+  --background: 335 78% 94%;
+  --foreground: 219 20% 17%;
+  --card: 0 0% 84%;
+  --card-foreground: 219 20% 17%;
+  --primary: 331 58% 61%;
+  --muted-foreground: 222 13% 42%;
+  --border: 215 10% 29%;
+
+  --retro-bg: #ffe6f2;
+  --retro-panel: #d9d9d9;
+  --retro-panel-light: #ffffff;
+  --retro-panel-mid: #eeeeee;
+  --retro-panel-dark: #8f8f98;
+  --retro-panel-darker: #374052;
+  --retro-window: #d9d9d9;
+  --retro-title: #e88ab8;
+  --retro-title-2: #bf5e91;
+  --retro-text: #263244;
+  --retro-muted: #677082;
+  --retro-white: #ffffff;
+  --retro-field: #ffffff;
+  --retro-client: #f8f8f8;
+  --retro-cream: #ffffff;
+  --retro-pink-soft: #ffd8ea;
+  --retro-mint: #cbeede;
+  --retro-blue: #dce9ff;
+  --retro-control-height: 25px;
+  --retro-titlebar-height: 29px;
+  --retro-titlebar-control-height: 21px;
+  --retro-window-gap: 4px;
+  --retro-font-stack:
+    "Mona12",
+    "MonaS12",
+    "RoundedFixedsys",
+    "NeoDunggeunmo",
+    "MS Sans Serif",
+    Tahoma,
+    Arial,
+    sans-serif;
+  --retro-raised-border:
+    inset 1px 1px 0 var(--retro-white),
+    inset -1px -1px 0 var(--retro-panel-dark);
+  --retro-sunken-border:
+    inset 1px 1px 0 #6f7480,
+    inset -1px -1px 0 var(--retro-white);
+
+  color: var(--retro-text) !important;
+  font-family: var(--glassday-app-font, var(--retro-font-stack)) !important;
+  letter-spacing: 0 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro),
+html[data-theme="retro"] body,
+body[data-theme="retro"],
+html.theme-retro body,
+body.theme-retro {
+  background:
+    linear-gradient(rgb(226 122 172 / 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(226 122 172 / 0.2) 1px, transparent 1px),
+    radial-gradient(circle at 14% 18%, rgb(255 255 255 / 0.74) 0 10px, transparent 11px 48px),
+    radial-gradient(circle at 84% 14%, rgb(255 255 255 / 0.54) 0 16px, transparent 17px 68px),
+    var(--retro-bg) !important;
+  background-size:
+    28px 28px,
+    28px 28px,
+    auto,
+    auto,
+    auto !important;
+  color: var(--retro-text) !important;
+  font-family: var(--glassday-app-font, var(--retro-font-stack)) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.bg-glass-gradient, #root) {
+  background:
+    linear-gradient(rgb(226 122 172 / 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(226 122 172 / 0.18) 1px, transparent 1px),
+    var(--retro-bg) !important;
+  background-size:
+    28px 28px,
+    28px 28px,
+    auto !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.app-shell-surface, .glass-panel, .liquid-shell, .app-shell, .dashboard-shell, .dashboard-layout, .app-layout) {
+  border-radius: 0 !important;
+  background: var(--retro-panel) !important;
+  border-top: 2px solid var(--retro-white) !important;
+  border-left: 2px solid var(--retro-white) !important;
+  border-right: 2px solid var(--retro-panel-darker) !important;
+  border-bottom: 2px solid var(--retro-panel-darker) !important;
+  box-shadow:
+    inset 1px 1px 0 var(--retro-panel-mid),
+    inset -1px -1px 0 var(--retro-panel-dark),
+    6px 6px 0 rgb(55 64 82 / 0.26) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Main topbar is a menu strip, not another glossy titlebar. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .topbar {
+  min-height: 58px !important;
+  height: auto !important;
+  padding-block: 10px !important;
+  background: var(--retro-mint) !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid #f4fff9 !important;
+  border-left: 2px solid #f4fff9 !important;
+  border-right: 2px solid #5d746a !important;
+  border-bottom: 2px solid #5d746a !important;
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 0.75),
+    inset -1px -1px 0 rgb(92 116 106 / 0.48) !important;
+  overflow: visible !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.topbar h1, .topbar-title h1) {
+  color: var(--retro-text) !important;
+  font-size: 18px !important;
+  line-height: 1.15 !important;
+  text-shadow: 1px 1px 0 var(--retro-white) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.topbar p, .topbar-title p, .text-muted-foreground) {
+  color: var(--retro-muted) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card, .floating-window, .settings-modal-window, .memo-window, .memo-floating-window) {
+  border-radius: 0 !important;
+  background: var(--retro-window) !important;
+  color: var(--retro-text) !important;
+  font-family: var(--glassday-app-font, var(--retro-font-stack)) !important;
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+  border-top: 2px solid var(--retro-white) !important;
+  border-left: 2px solid var(--retro-white) !important;
+  border-right: 2px solid var(--retro-panel-darker) !important;
+  border-bottom: 2px solid var(--retro-panel-darker) !important;
+  box-shadow:
+    var(--retro-raised-border),
+    4px 4px 0 rgb(55 64 82 / 0.34) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .glass-card.widget-frame {
+  display: grid !important;
+  grid-template-rows: var(--retro-titlebar-height) minmax(0, 1fr) !important;
+  overflow: hidden !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-header, .widget-card-header, .widget-frame__header, .floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
+  height: var(--retro-titlebar-height) !important;
+  min-height: var(--retro-titlebar-height) !important;
+  padding: 3px 5px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 6px !important;
+  overflow: hidden !important;
+  color: var(--retro-white) !important;
+  background: var(--retro-title) !important;
+  border-bottom: 2px solid var(--retro-panel-darker) !important;
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 0.34),
+    inset -1px -1px 0 rgb(141 55 98 / 0.54) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.widget-frame__title-group, .glass-card-title-group, .widget-card-title-group) {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.widget-frame__copy, .glass-card-copy, .widget-card-copy) {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3, .floating-window-title, .settings-modal-header h2) {
+  max-width: 100% !important;
+  margin: 0 !important;
+  color: var(--retro-white) !important;
+  font-family: var(--glassday-app-font, var(--retro-font-stack)) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  line-height: 12px !important;
+  letter-spacing: 0 !important;
+  text-shadow: 1px 1px 0 var(--retro-title-2) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle, .widget-frame__header p, .floating-window-subtitle, .settings-modal-header p) {
+  max-width: 100% !important;
+  margin: 0 !important;
+  color: rgb(255 255 255 / 0.86) !important;
+  font-size: 8px !important;
+  font-weight: 700 !important;
+  line-height: 9px !important;
+  letter-spacing: 0 !important;
+  text-shadow: 1px 1px 0 var(--retro-title-2) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-icon, .widget-card-icon, .widget-frame__icon, .settings-modal-icon) {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  flex: 0 0 18px !important;
+  color: var(--retro-white) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-icon svg, .widget-card-icon svg, .widget-frame__icon svg) {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-actions, .widget-frame__actions) {
+  min-width: 0 !important;
+  height: var(--retro-titlebar-control-height) !important;
+  align-items: center !important;
+  gap: 3px !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-body, .widget-frame__body, .floating-window-body, .settings-modal-body) {
+  min-height: 0 !important;
+  margin: var(--retro-window-gap) !important;
+  padding: 7px !important;
+  overflow: auto !important;
+  background: var(--retro-client) !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid #727884 !important;
+  border-left: 2px solid #727884 !important;
+  border-right: 2px solid var(--retro-white) !important;
+  border-bottom: 2px solid var(--retro-white) !important;
+  box-shadow: var(--retro-sunken-border) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(
+    .money-detail-card,
+    .memo-list-panel,
+    .memo-toolbar,
+    .memo-editor-toolbar,
+    .calendar-modal-body,
+    .calendar-detail-grid,
+    .career-detail-section,
+    .career-summary-card,
+    .calendar-event-item,
+    .alert-item,
+    .settings-section,
+    .settings-theme-card,
+    .today-focus-section,
+    .today-focus-main,
+    .study-overview-panel,
+    .study-input-panel,
+    .study-week-panel,
+    .daily-journal-section,
+    .mood-row
+  ) {
+  border-radius: 0 !important;
+  background: var(--retro-cream) !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid var(--retro-white) !important;
+  border-left: 2px solid var(--retro-white) !important;
+  border-right: 2px solid var(--retro-panel-dark) !important;
+  border-bottom: 2px solid var(--retro-panel-dark) !important;
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 0.74),
+    inset -1px -1px 0 rgb(143 143 152 / 0.34) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Memo note colors are content data, so the Retro skin must not flatten them. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .memo-workspace {
+  background: var(--memo-paper-surface, var(--retro-panel)) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .memo-note-item {
+  border-radius: 0 !important;
+  background: var(--memo-note-surface, var(--retro-client)) !important;
+  border-top: 2px solid var(--retro-white) !important;
+  border-left: 2px solid var(--retro-white) !important;
+  border-right: 2px solid var(--retro-panel-dark) !important;
+  border-bottom: 2px solid var(--retro-panel-dark) !important;
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 0.7),
+    inset -1px -1px 0 rgb(143 143 152 / 0.28) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .memo-note-item.is-active {
+  background: var(--memo-note-surface-active, var(--retro-pink-soft)) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.memo-color-chip, .memo-note-color, .memo-note-color-chip, .memo-note-accent, .memo-note-color-dot) {
+  border-radius: 0 !important;
+  background: var(--memo-note-surface, var(--memo-paper-surface, var(--retro-pink-soft))) !important;
+  border-top: 1px solid var(--retro-white) !important;
+  border-left: 1px solid var(--retro-white) !important;
+  border-right: 1px solid var(--retro-panel-dark) !important;
+  border-bottom: 1px solid var(--retro-panel-dark) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(input, textarea, select) {
+  min-height: var(--retro-control-height) !important;
+  border-radius: 0 !important;
+  background: var(--retro-field) !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid #727884 !important;
+  border-left: 2px solid #727884 !important;
+  border-right: 2px solid var(--retro-white) !important;
+  border-bottom: 2px solid var(--retro-white) !important;
+  box-shadow:
+    inset 1px 1px 0 var(--retro-panel-dark),
+    inset -1px -1px 0 var(--retro-panel-light) !important;
+  font-family: var(--glassday-app-font, var(--retro-font-stack)) !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.memo-editor, .memo-window-editor, [contenteditable="true"].memo-editor) {
+  min-height: 0 !important;
+  border-radius: 0 !important;
+  background: var(--memo-paper-surface, var(--retro-field)) !important;
+  color: var(--memo-editor-color, var(--retro-text)) !important;
+  border-top: 2px solid #727884 !important;
+  border-left: 2px solid #727884 !important;
+  border-right: 2px solid color-mix(in srgb, var(--memo-paper-border, #ffffff) 35%, #ffffff 65%) !important;
+  border-bottom: 2px solid color-mix(in srgb, var(--memo-paper-border, #ffffff) 35%, #ffffff 65%) !important;
+  box-shadow:
+    inset 1px 1px 0 rgb(118 124 136 / 0.76),
+    inset -1px -1px 0 rgb(255 255 255 / 0.9) !important;
+  font-family: var(--memo-title-font, inherit) !important;
+  line-height: 1.55 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.memo-title-input, .memo-title-view, .memo-editor, .memo-editor *) {
+  font-family: var(--memo-title-font, var(--memo-font-family, inherit)) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button, .glass-button, .money-action-button, .money-icon-button, .money-secondary-button, .money-submit-button, .calendar-nav-button, .calendar-view-button, .career-icon-button, .career-small-button, .theme-segment-button, .memo-tool-button, .memo-mini-button) {
+  min-height: var(--retro-control-height) !important;
+  border-radius: 0 !important;
+  background: var(--retro-panel) !important;
+  color: var(--retro-text) !important;
+  border-top: 2px solid var(--retro-white) !important;
+  border-left: 2px solid var(--retro-white) !important;
+  border-right: 2px solid var(--retro-panel-darker) !important;
+  border-bottom: 2px solid var(--retro-panel-darker) !important;
+  box-shadow: var(--retro-raised-border) !important;
+  transform: none !important;
+  text-shadow: none !important;
+  font-family: var(--glassday-app-font, var(--retro-font-stack)) !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.widget-frame__actions > button, .widget-frame__actions > .glass-button, .floating-window-actions .glass-button, .settings-close-button) {
+  width: var(--retro-titlebar-control-height) !important;
+  min-width: var(--retro-titlebar-control-height) !important;
+  height: var(--retro-titlebar-control-height) !important;
+  min-height: var(--retro-titlebar-control-height) !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button:active, button.is-active, .glass-button.is-active, .calendar-view-button.is-active, .theme-segment-button.is-active, .money-section-tab.is-active, .theme-card.is-active) {
+  color: var(--retro-white) !important;
+  background: var(--retro-title-2) !important;
+  border-top: 2px solid var(--retro-panel-darker) !important;
+  border-left: 2px solid var(--retro-panel-darker) !important;
+  border-right: 2px solid var(--retro-white) !important;
+  border-bottom: 2px solid var(--retro-white) !important;
+  box-shadow: var(--retro-sunken-border) !important;
+  text-shadow: 1px 1px 0 rgb(98 43 74 / 0.8) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.calendar-range-chip, .calendar-month-single-chip, .calendar-week-event) {
+  background:
+    color-mix(in srgb, var(--event-color, var(--retro-pink-soft)) 66%, #ffffff 34%) !important;
+  color: var(--retro-text) !important;
+  border: 1px solid color-mix(in srgb, var(--event-color, var(--retro-title)) 54%, var(--retro-panel-darker) 46%) !important;
+  box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.68) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  ::-webkit-scrollbar-track {
+  background: var(--retro-panel) !important;
+  border-top: 1px solid #727884 !important;
+  border-left: 1px solid #727884 !important;
+  border-right: 1px solid var(--retro-white) !important;
+  border-bottom: 1px solid var(--retro-white) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  ::-webkit-scrollbar-thumb {
+  background: #f1a7ca !important;
+  border-top: 2px solid var(--retro-white) !important;
+  border-left: 2px solid var(--retro-white) !important;
+  border-right: 2px solid var(--retro-panel-darker) !important;
+  border-bottom: 2px solid var(--retro-panel-darker) !important;
+}

@@ -3333,6 +3333,65 @@ body.theme-glass-dark .calendar-floating-window .event-color-picker {
   opacity: 1;
 }
 
+/* Week time-grid clarity
+   This is the all-theme readability layer for Weekly view. The base component
+   renders hour guides as elements; this layer adds quiet 30-minute rails to the
+   day columns themselves so time placement remains readable in glass, Mac,
+   Pixel, and Retro themes. / 모든 테마에서 주간 보기의 1시간선과 30분 보조선이
+   보이도록 컬럼 배경에 시간표 기준선을 추가한다. */
+.calendar-week-timeline {
+  --calendar-week-major-line: hsl(var(--foreground) / 0.16);
+  --calendar-week-minor-line: hsl(var(--foreground) / 0.08);
+  --calendar-week-column-line: hsl(var(--foreground) / 0.12);
+}
+
+.calendar-week-grid {
+  border-top: 1px solid var(--calendar-week-major-line);
+}
+
+.calendar-week-time {
+  border-bottom: 1px solid var(--calendar-week-major-line);
+  background:
+    linear-gradient(
+      to bottom,
+      transparent calc(50% - 0.5px),
+      var(--calendar-week-minor-line) calc(50% - 0.5px),
+      var(--calendar-week-minor-line) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    );
+}
+
+.calendar-week-day-column {
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 21px,
+      var(--calendar-week-minor-line) 21px,
+      var(--calendar-week-minor-line) 22px,
+      transparent 22px,
+      transparent 43px,
+      var(--calendar-week-major-line) 43px,
+      var(--calendar-week-major-line) 44px
+    );
+}
+
+.calendar-week-day-column.is-selected {
+  background-image:
+    linear-gradient(hsl(var(--primary) / 0.06), hsl(var(--primary) / 0.06)),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 21px,
+      var(--calendar-week-minor-line) 21px,
+      var(--calendar-week-minor-line) 22px,
+      transparent 22px,
+      transparent 43px,
+      var(--calendar-week-major-line) 43px,
+      var(--calendar-week-major-line) 44px
+    );
+}
+
 .event-color-picker {
   align-items: center !important;
 }
