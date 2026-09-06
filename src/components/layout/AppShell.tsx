@@ -348,30 +348,17 @@ const shellContent = (
   if (isTauriApp) {
     return (
       <div
-        // className={[
-        //   "app-mode-stage",
-        //   "is-laptop-mode",
-        //   "is-tauri-mode",
-        //   "relative",
-        //   "w-screen",
-        //   "h-screen",
-        //   "overflow-hidden",
-        //   "bg-background",
-        //   "text-foreground",
-        // ].join(" ")}
-        className = "tauri-app-window"
+        className="tauri-app-window"
         data-layout-mode="laptop"
         data-runtime="tauri"
       >
         {/*
-         * 기존 Glassday gradient는 유지하되
-         * 이제 preview 밖 배경이 아니라 실제 앱 window 배경이다.
+         * Tauri Surface
+         * English: The native transparent window hosts the real app directly;
+         * no web preview frame or fake preview chrome is rendered here.
+         * Korean: Tauri에서는 미리보기 프레임 없이 실제 Glassday surface가
+         * 창 전체를 차지하므로, desktop-only CSS는 .tauri-app-window 아래로만 둔다.
          */}
-        {/* <div className="absolute inset-0 bg-glass-gradient" /> */}
-
-        {/* <div className="relative z-10 w-full h-full">
-          {shellContent}
-        </div> */}
         {shellContent}
       </div>
     );

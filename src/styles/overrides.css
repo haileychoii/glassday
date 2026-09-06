@@ -3729,3 +3729,104 @@ body,
   padding: 0 !important;
   box-sizing: border-box !important;
 }
+
+/* Tauri desktop type density:
+   English: The native app uses the same laptop layout as the web preview, but
+   in a real always-on desktop window the previous type scale felt oversized.
+   This late layer trims only text density under the Tauri host, so web wide,
+   laptop preview, theme selection, and saved widget data stay unchanged.
+   Korean: Tauri 실제 앱에서만 글씨를 1px 안팎으로 낮춰 오래 띄워두기 좋은
+   밀도로 맞춘다. 메모 본문처럼 사용자가 직접 글꼴/크기를 정하는 영역은
+   건드리지 않는다. */
+.tauri-app-window {
+  --gd-tauri-type-root: 15px;
+  --gd-tauri-type-topbar-title: 15px;
+  --gd-tauri-type-widget-title: 11px;
+  --gd-tauri-type-widget-subtitle: 9.5px;
+  --gd-tauri-type-control: 10.5px;
+  --gd-tauri-type-body: 11px;
+  --gd-tauri-type-meta: 9.5px;
+
+  font-size: var(--gd-tauri-type-root);
+}
+
+.tauri-app-window > .app-shell-surface {
+  /* Tauri density tokens
+     English: Reduce chrome height only in the desktop shell; the web laptop
+     preview keeps its larger design-review scale.
+     Korean: 실제 데스크톱 앱에서만 헤더/컨트롤 높이를 살짝 낮춘다. */
+  --gd-topbar-min-height: 46px;
+  --gd-widget-header-row-min-height: 28px;
+  --gd-control-height-sm: 26px;
+  --gd-control-height-md: 28px;
+}
+
+.tauri-app-window .topbar,
+.tauri-app-window .topbar-inner {
+  min-height: var(--gd-topbar-min-height) !important;
+}
+
+.tauri-app-window .topbar-title h1 {
+  font-size: var(--gd-tauri-type-topbar-title) !important;
+}
+
+.tauri-app-window .topbar-action-button {
+  height: 26px !important;
+  font-size: var(--gd-tauri-type-control) !important;
+}
+
+.tauri-app-window
+  :is(.glass-card-title, .widget-card-title, .widget-frame__title) {
+  font-size: var(--gd-tauri-type-widget-title) !important;
+  line-height: 1.15 !important;
+}
+
+.tauri-app-window
+  :is(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle) {
+  font-size: var(--gd-tauri-type-widget-subtitle) !important;
+  line-height: 1.2 !important;
+}
+
+.tauri-app-window
+  :is(
+    button,
+    input,
+    textarea,
+    select,
+    .calendar-date-input,
+    .career-filter-pill,
+    .money-pill,
+    .calendar-view-button,
+    .layout-mode-button
+  ) {
+  font-size: var(--gd-tauri-type-control) !important;
+}
+
+.tauri-app-window
+  :is(
+    .career-list-title strong,
+    .calendar-event-title,
+    .money-transaction-title,
+    .memo-note-title,
+    .study10-task-title,
+    .today-focus-task input,
+    .journal-task input,
+    .mood-row-title
+  ) {
+  font-size: var(--gd-tauri-type-body) !important;
+}
+
+.tauri-app-window
+  :is(
+    .career-list-title span,
+    .career-list-meta span,
+    .calendar-event-time,
+    .money-transaction-meta,
+    .memo-note-preview,
+    .study10-task-meta,
+    .today-focus-mini-meta,
+    .mood-row-subtitle
+  ) {
+  font-size: var(--gd-tauri-type-meta) !important;
+  line-height: 1.2 !important;
+}
