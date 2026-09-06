@@ -89,3 +89,81 @@
 body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
   bottom: calc(80px + env(safe-area-inset-bottom));
 }
+
+/* [Figma Mapping] Mac Core / Mobile Widget Header
+   GlassCard.tsx owns the title, subtitle and actions. Paint the real header
+   instead of the desktop's fixed 38px decoration so wrapped rows remain inside
+   the toolbar. / 모바일에서만 제목 배경과 구분선이 실제 헤더 높이를 따릅니다.
+   Settings font selection is inherited; no font family is forced here. */
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .glass-card::before {
+  content: none;
+}
+
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__header {
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--mac-widget-header-bg);
+  border-bottom: 1px solid rgb(60 60 67 / 0.12);
+}
+
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__title-group {
+  flex: 1 1 150px;
+  align-items: center;
+}
+
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__copy {
+  justify-content: center;
+  gap: 2px;
+}
+
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__header h3 {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__header p {
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__actions {
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Date navigation gets its own row instead of squeezing the Journal title.
+   Keep editable fields at 16px to avoid Safari focus zoom; touch targets stay
+   44px even though the title typography is compact. / 날짜 잘림과 자동 확대 방지. */
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .daily-journal-widget .widget-frame__actions {
+  flex-basis: 100%;
+}
+
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .journal-date-nav {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  width: 100%;
+  gap: 8px;
+}
+
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .journal-date-nav :is(button, input) {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  font-size: 16px;
+  font-weight: 500;
+}
