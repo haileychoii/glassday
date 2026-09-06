@@ -10,7 +10,7 @@
  * 렌더링 위치:
  * - Parent: `src/App.tsx` → `AppShell.tsx`의 Main Scroll Container
  * - Registry metadata: `src/constants/widgets.ts`
- * - Component map: 이 파일의 `widgetMap`
+ * - Component instances: ../widgets/WidgetRenderer.tsx
  * - Default layout: `src/components/grid/gridDefaults.ts`
  * - Persisted layout: `src/hooks/useDashboardTabs.ts`
  *
@@ -36,7 +36,6 @@ import type {
   CSSProperties,
   MouseEvent as ReactMouseEvent,
   PointerEvent as ReactPointerEvent,
-  ReactNode,
 } from "react";
 import { Responsive } from "react-grid-layout/legacy";
 
@@ -49,17 +48,7 @@ import type {
   WidgetMeta,
 } from "../../types/workspace";
 
-import { TodayFocusWidget } from "../widgets/TodayFocusWidget";
-import { AlertCenterWidget } from "../widgets/AlertCenterWidget";
-import { DailyJournalWidget } from "../widgets/DailyJournalWidget";
-import { CalendarWidget } from "../widgets/CalendarWidget";
-import { MemoWidget } from "../widgets/MemoWidget";
-import { StudyWidget } from "../widgets/StudyWidget";
-import { TimerWidget } from "../widgets/TimerWidget";
-import { CareerWidget } from "../widgets/CareerWidget";
-import { HealthWidget } from "../widgets/HealthWidget";
-import { MoneyWidget } from "../widgets/MoneyWidget";
-import { MoodWidget } from "../widgets/MoodWidget";
+import { WidgetSlot } from "../widgets/WidgetSlot";
 
 import { defaultLayoutsByMode } from "./gridDefaults";
 import { allWidgetIds, widgetRegistry } from "../../constants/widgets";
@@ -135,28 +124,6 @@ type EditInteraction = {
   startItem: GridLayoutItem;
   startLayouts: Layouts;
   lastLayouts: Layouts;
-};
-
-/**
- * Widget Component Map
- *
- * 저장된 widgetId를 실제 React node로 바꾼다. `widgetRegistry`는 picker용
- * metadata만 제공하므로 새 위젯 추가 시 두 파일과 gridDefaults를 함께 수정한다.
- * `wealth`는 기존 저장 데이터 호환을 위해 MoneyWidget으로 연결되는 alias다.
- */
-const widgetMap: Partial<Record<WidgetId, ReactNode>> = {
-  today: <TodayFocusWidget />,
-  alerts: <AlertCenterWidget />,
-  journal: <DailyJournalWidget />,
-  calendar: <CalendarWidget />,
-  memo: <MemoWidget />,
-  study: <StudyWidget />,
-  timer: <TimerWidget />,
-  career: <CareerWidget />,
-  health: <HealthWidget />,
-  money: <MoneyWidget />,
-  wealth: <MoneyWidget />,
-  mood: <MoodWidget />,
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => {
@@ -948,22 +915,15 @@ export const DashboardGrid = ({
                   </>
                 )}
 
-                {widgetMap[widgetId] ?? (
-                  <div className="glass-card unknown-widget-card">
-                    Unknown widget: {widgetId}
-                  </div>
-                )}
+                {/* Shared instance remains mounted when this grid is replaced
+                    by MobileDashboard. 기존 좌표와 Edit overlay는 그대로입니다. */}
+                <WidgetSlot widgetId={widgetId} editMode={editMode} />
               </div>
             );
           })}
         </ResponsiveGridLayout>
       </div>
 
-      {/* Global Career detail host
-          Career's normal widget owns the portal when it is visible. Other
-          workspaces mount only the detail renderer so Calendar events can open
-          the same floating window without adding Career to that grid. */}
-      {!activeWidgetIds.includes("career") && <CareerWidget detailOnly />}
     </div>
   );
 };

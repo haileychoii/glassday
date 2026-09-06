@@ -54,4 +54,6 @@
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";
 @import "./overrides.css";
+/* Runtime-scoped Mobile Web shell; no desktop theme overrides. */
+@import "./mobile.css";
 

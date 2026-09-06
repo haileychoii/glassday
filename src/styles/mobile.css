@@ -1,0 +1,91 @@
+/* [Figma Mapping] Mobile Web shell only
+   Connections: MobileLayout / MobileNavigation / MobileDashboard.
+   Existing theme tokens and Widget CSS remain the visual source of truth.
+   모바일 전용 클래스에만 적용하며 desktop 좌표/밀도 토큰은 변경하지 않습니다. */
+.mobile-layout {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-width: 0;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  isolation: isolate;
+}
+
+.mobile-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: calc(8px + env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left));
+  border-bottom: 1px solid hsl(var(--foreground) / 0.14);
+}
+.mobile-heading { flex: 1; min-width: 0; }
+.mobile-heading > span { font-size: 12px; opacity: 0.7; }
+.mobile-heading h1 { margin: 0; font-size: 18px; line-height: 1.4; overflow-wrap: anywhere; }
+.mobile-header-actions { display: flex; flex: none; gap: 2px; }
+.mobile-header-actions button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* One shell scroller; widget-local lists retain their existing scroll behavior.
+   이번 단계에서는 긴 위젯 편집기의 내부 스크롤까지 바꾸지 않습니다. */
+.mobile-main { min-height: 0; min-width: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior-y: contain; }
+.mobile-dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  padding: 12px max(12px, env(safe-area-inset-right)) 24px max(12px, env(safe-area-inset-left));
+}
+.mobile-widget-slot {
+  min-width: 0;
+  height: clamp(380px, 72svh, 640px);
+  /* Explicit stage-one frame height supports existing size container queries.
+     모바일 전용 표시 높이이며 Dashboard layout이나 저장값에 반영하지 않습니다. */
+}
+.mobile-navigation {
+  display: flex;
+  min-width: 0;
+  gap: 2px;
+  overflow-x: auto;
+  padding: 6px max(6px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+  border-top: 1px solid hsl(var(--foreground) / 0.14);
+}
+.mobile-navigation-item {
+  flex: 1 0 58px;
+  min-width: 0;
+  max-width: 120px;
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.mobile-navigation-item span { max-width: 100%; font-size: 12px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mobile-navigation-item[aria-current="page"] { background: hsl(var(--primary) / 0.18); }
+.mobile-layout button:focus-visible { outline: 2px solid hsl(var(--foreground)); outline-offset: -3px; }
+.mobile-empty { padding: 20px 0; font-size: 14px; }
+
+/* Root-level status overlays must not cover the mobile navigation.
+   이 두 요소는 App의 형제 overlay이므로 모바일 shell 존재 여부로 범위를 제한합니다. */
+body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
+  bottom: calc(80px + env(safe-area-inset-bottom));
+}

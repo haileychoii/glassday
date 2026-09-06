@@ -31,6 +31,10 @@
 import { useEffect, useState } from "react";
 
 import { AppShell } from "./components/layout/AppShell";
+import { MobileLayout } from "./components/layout/MobileLayout";
+import { MobileDashboard } from "./components/mobile/MobileDashboard";
+import { WidgetRenderer } from "./components/widgets/WidgetRenderer";
+import { useResponsiveLayout } from "./hooks/useResponsiveLayout";
 import { CommandPalette } from "./components/command/CommandPalette";
 import { DashboardGrid } from "./components/grid/DashboardGrid";
 import { DashboardDataProvider } from "./context/DashboardDataContext";
@@ -78,6 +82,7 @@ const readLayoutModeFromUrl = (): DashboardLayoutMode | null => {
  * 해당하며, Wide/Laptop은 별도 기능이 아니라 동일 UI의 Layout Variant다.
  */
 function App() {
+  const isMobileWeb = useResponsiveLayout();
   const [editMode, setEditMode] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
@@ -241,29 +246,45 @@ function App() {
        useLocalStorage가 동일 데이터를 다시 읽는 순서다. */
     <CloudSyncProvider>
       <DashboardDataProvider>
-        {/* Figma Frame: App Shell / Sidebar + Topbar + Dashboard Content */}
-        <AppShell
-          editMode={editMode}
-          layoutMode={layoutMode}
-          tabs={tabs}
-          activeTabId={activeTabId}
-          onChangeLayoutMode={setLayoutMode}
-          onToggleEditMode={() => setEditMode((prev) => !prev)}
-          onOpenSettings={() => setSettingsOpen(true)}
-          onSelectTab={setActiveTabId}
-          onAddTab={addTab}
-          onRenameTab={renameTab}
-          onRemoveTab={removeTab}
-        >
-          <DashboardGrid
-            editMode={editMode}
-            layoutMode={layoutMode}
-            activeTab={activeTab}
-            onLayoutsChange={updateActiveTabLayouts}
-            onAddWidget={addWidgetToActiveTab}
-            onRemoveWidget={removeWidgetFromActiveTab}
-          />
-        </AppShell>
+        {/* Shared widget lifetime: changing shells moves slots, not widget state.
+            breakpoint 전환은 저장된 Wide/Laptop 설정을 변경하지 않습니다. */}
+        <WidgetRenderer widgetIds={activeTab.widgetIds}>
+          {isMobileWeb ? (
+            <MobileLayout
+              tabs={tabs}
+              activeTabId={activeTabId}
+              onSelectTab={setActiveTabId}
+              onOpenSearch={() => setCommandPaletteOpen(true)}
+              onOpenQuickCapture={() => setQuickCaptureOpen(true)}
+              onOpenSettings={() => setSettingsOpen(true)}
+            >
+              <MobileDashboard activeTab={activeTab} />
+            </MobileLayout>
+          ) : (
+            <AppShell
+              editMode={editMode}
+              layoutMode={layoutMode}
+              tabs={tabs}
+              activeTabId={activeTabId}
+              onChangeLayoutMode={setLayoutMode}
+              onToggleEditMode={() => setEditMode((prev) => !prev)}
+              onOpenSettings={() => setSettingsOpen(true)}
+              onSelectTab={setActiveTabId}
+              onAddTab={addTab}
+              onRenameTab={renameTab}
+              onRemoveTab={removeTab}
+            >
+              <DashboardGrid
+                editMode={editMode}
+                layoutMode={layoutMode}
+                activeTab={activeTab}
+                onLayoutsChange={updateActiveTabLayouts}
+                onAddWidget={addWidgetToActiveTab}
+                onRemoveWidget={removeWidgetFromActiveTab}
+              />
+            </AppShell>
+          )}
+        </WidgetRenderer>
 
         {/* Figma Overlay: Settings Floating Window / Dashboard Grid와 형제 계층 */}
         <SettingsModal
