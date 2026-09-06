@@ -1074,15 +1074,22 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={addCareerItem}
-            className="career-icon-button"
-            title="Add application"
-            aria-label="Add career application"
-          >
-            <Plus className="w-4 h-4" />
-          </button>
+          {/* Header Action Slot
+             English: Career now uses the shared widget-frame action wrapper so
+             theme chrome can reserve space for the add button consistently.
+             Korean: Pixel Desk의 가짜 윈도우 버튼과 겹치지 않도록 공통
+             액션 영역으로 감싸 버튼 위치를 안정화한다. */}
+          <div className="glass-card-actions widget-frame__actions career-widget-actions">
+            <button
+              type="button"
+              onClick={addCareerItem}
+              className="career-icon-button"
+              title="Add application"
+              aria-label="Add career application"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* Figma Frame: Pipeline Summary / Three-column responsive grid */}

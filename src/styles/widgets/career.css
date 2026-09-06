@@ -61,15 +61,31 @@
   color: hsl(var(--foreground) / 0.66);
 }
 
+.career-widget-actions {
+  /* Header Action Slot
+     English: Keep the add button in the same semantic action area used by
+     other widgets so every theme can align it without one-off header hacks.
+     Korean: 위젯별 헤더 구조를 맞춰 Pixel Desk처럼 장식이 강한 테마에서도
+     버튼이 오른쪽에서 잘리지 않도록 한다. */
+  flex: 0 0 auto;
+  min-width: max-content;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.career-widget-actions > .career-icon-button,
 .career-widget-header > .career-icon-button {
   flex: 0 0 30px;
   width: 30px;
   height: 30px;
   min-width: 30px;
-  margin-left: auto;
+  margin-left: 0;
   align-self: center;
 }
 
+.career-widget-actions > .career-icon-button svg,
 .career-widget-header > .career-icon-button svg {
   width: 14px;
   height: 14px;
@@ -1132,6 +1148,7 @@
     justify-content: space-between !important;
   }
 
+  .career-widget-actions > .career-icon-button,
   .career-widget-header > .career-icon-button {
     width: 30px !important;
     height: 30px !important;
@@ -2168,6 +2185,7 @@ body.theme-pixel-desk .career-cover-question-input {
     width: 100% !important;
   }
 
+  .career-widget-actions > .career-icon-button,
   .career-widget-header > .career-icon-button {
     width: 30px !important;
     height: 30px !important;
@@ -2177,6 +2195,7 @@ body.theme-pixel-desk .career-cover-question-input {
     flex: 0 0 30px !important;
   }
 
+  .career-widget-actions > .career-icon-button svg,
   .career-widget-header > .career-icon-button svg {
     width: 14px !important;
     height: 14px !important;

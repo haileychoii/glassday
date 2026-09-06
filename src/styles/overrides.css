@@ -3640,3 +3640,92 @@ body,
   .mood-dot-active {
   background: var(--mood-accent) !important;
 }
+
+/* Pixel Desk Career add-button guard:
+   English: The faux Win95 titlebar controls are drawn with glass-card
+   pseudo-elements, so Career's real add action needs its own stable action
+   slot and right-side breathing room.
+   Korean: 가짜 최소화/최대화/X 장식과 실제 + 버튼이 같은 오른쪽 공간을
+   공유하지 않도록 Career 헤더 액션 영역을 따로 고정한다. */
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .dashboard-grid-item
+  > .career-widget
+  > .career-widget-header {
+  min-width: 0 !important;
+  overflow: visible !important;
+  padding-right: 0 !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .dashboard-grid-item
+  > .career-widget
+  > .career-widget-header
+  > .career-widget-title-wrap {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .dashboard-grid-item
+  > .career-widget
+  > .career-widget-header
+  > .career-widget-actions {
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  margin-left: 6px !important;
+  margin-right: 0 !important;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 40 !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .dashboard-grid-item
+  > .career-widget
+  > .career-widget-header
+  > .career-widget-actions
+  > .career-icon-button {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  flex-basis: 28px !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
