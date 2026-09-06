@@ -3642,11 +3642,30 @@ body,
 }
 
 /* Pixel Desk Career add-button guard:
-   English: The faux Win95 titlebar controls are drawn with glass-card
-   pseudo-elements, so Career's real add action needs its own stable action
-   slot and right-side breathing room.
-   Korean: 가짜 최소화/최대화/X 장식과 실제 + 버튼이 같은 오른쪽 공간을
-   공유하지 않도록 Career 헤더 액션 영역을 따로 고정한다. */
+   English: Career renders its four rows directly inside the card instead of
+   using the shared body wrapper. The generic Career reset therefore removed
+   Pixel Desk's 30px titlebar inset and placed the real header underneath the
+   faux Win95 chrome. Restore that inset first, then keep the add action in a
+   stable slot below the decorative controls.
+   Korean: Career는 공통 body wrapper 없이 카드에 네 행을 직접 그리므로,
+   공통 padding 초기화가 Pixel 타이틀바 여백까지 없애 제목과 + 버튼이
+   파란 장식 아래에 숨었다. 카드 첫 행을 타이틀바 아래로 다시 내린다. */
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .dashboard-grid-item
+  > .career-widget {
+  padding: 30px 0 0 !important;
+  box-sizing: border-box !important;
+}
+
 :is(
     html[data-theme="pixel-desk"],
     body[data-theme="pixel-desk"],
@@ -3829,4 +3848,35 @@ body,
   ) {
   font-size: var(--gd-tauri-type-meta) !important;
   line-height: 1.2 !important;
+}
+
+/* Tauri window corner contract:
+   English: The native window is transparent, so non-retro themes must also
+   clear every document backplate behind the rounded app surface. Pixel Desk
+   and Retro intentionally keep their square 95/98 window silhouette.
+   Korean: shell만 둥글게 해도 html/body 배경이 남아 있으면 네 모서리가
+   사각형으로 보인다. 일반 테마는 바깥 배경을 투명하게 비우고, Pixel과
+   Pink Retro만 예외적으로 각진 창 외형을 유지한다. */
+html.desktop-transparent:not([data-theme="pixel-desk"]):not([data-theme="retro"]),
+html.desktop-transparent:not([data-theme="pixel-desk"]):not([data-theme="retro"]) body,
+html.desktop-transparent:not([data-theme="pixel-desk"]):not([data-theme="retro"]) #root,
+html.desktop-transparent:not([data-theme="pixel-desk"]):not([data-theme="retro"]) .tauri-app-window {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+html.desktop-transparent:not([data-theme="pixel-desk"]):not([data-theme="retro"])
+  .tauri-app-window
+  > .app-shell-surface {
+  border-radius: 22px !important;
+  overflow: hidden !important;
+  clip-path: inset(0 round 22px);
+}
+
+html.desktop-transparent:is([data-theme="pixel-desk"], [data-theme="retro"])
+  .tauri-app-window
+  > .app-shell-surface {
+  border-radius: 0 !important;
+  clip-path: none !important;
 }
