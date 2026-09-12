@@ -2036,6 +2036,30 @@
   border-bottom: 2px solid #000000 !important;
 }
 
+/* Settings title legibility
+   Target the actual heading because shared Settings typography can assign its
+   own foreground color after the titlebar color is inherited. / 공통 Settings
+   글자색과 충돌해도 Pixel Desk 제목은 흰색 픽셀 음영을 유지한다. */
+:where(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) :is(
+  .settings-modal-header h2,
+  .settings-header h2,
+  .settings-titlebar h2
+) {
+  color: #ffffff !important;
+  text-shadow:
+    1px 1px 0 #000000,
+    0 -1px 0 rgb(255 255 255 / 0.18) !important;
+}
+
 /* =========================================================
    Memo-specific
 ========================================================= */
