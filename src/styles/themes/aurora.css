@@ -104,6 +104,29 @@ body.theme-aurora :is(.glass-panel, .liquid-shell, .app-shell, .dashboard-shell,
   -webkit-backdrop-filter: blur(26px) saturate(156%) !important;
 }
 
+/* Tauri Aurora wallpaper bridge
+   English: Web Aurora paints the photo on `.bg-glass-gradient`, but Tauri
+   intentionally does not render that web-preview layer. Paint the same photo
+   and dark overlays on the real native app surface so Aurora keeps its
+   original desktop appearance instead of falling back to a navy shell.
+   Korean: Tauri에는 웹 전용 배경 div가 없으므로 기존 사진과 어두운 막을
+   실제 앱 surface에 직접 연결한다. 위젯 glass 재질은 아래 규칙을 그대로
+   사용하며, Aurora 이외의 테마에는 영향을 주지 않는다. */
+html.desktop-transparent[data-theme="aurora"]
+  .tauri-app-window
+  > .app-shell-surface,
+body.desktop-transparent[data-theme="aurora"]
+  .tauri-app-window
+  > .app-shell-surface {
+  background:
+    radial-gradient(circle at 16% 10%, rgba(113, 197, 255, 0.22), transparent 32%),
+    radial-gradient(circle at 80% 12%, rgba(195, 122, 255, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(7, 10, 18, 0.18), rgba(7, 10, 18, 0.54)),
+    var(--aurora-wallpaper-overlay),
+    var(--aurora-wallpaper-image) center / cover no-repeat !important;
+  background-color: #0a0c12 !important;
+}
+
 html[data-theme="aurora"] :is(.topbar, aside),
 body[data-theme="aurora"] :is(.topbar, aside),
 html.theme-aurora :is(.topbar, aside),
