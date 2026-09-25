@@ -3172,24 +3172,43 @@ body.theme-glass-dark .calendar-floating-window .event-color-picker {
 }
 
 /* Calendar overflow popover
-   Shared by Month + Week +N affordances. It turns hidden schedule counts into
-   clickable rows that open the existing event editor instead of acting as a
-   passive tooltip. / 겹친 일정 +N을 실제 편집 가능한 목록으로 바꾼다. */
+   Month keeps its compact hover preview. Week +N uses a body-level dialog so
+   the complete period list remains open until the user chooses an event or
+   closes it. / Week의 +N 목록은 위젯 overflow에 잘리지 않는 고정 창이다. */
 .calendar-overflow-preview,
 .calendar-month-event-preview {
   z-index: 100000 !important;
 }
 
-.calendar-overflow-preview {
+.calendar-overflow-layer {
   position: fixed;
-  width: min(310px, calc(100vw - 24px));
-  padding: 10px;
+  inset: 0;
+  z-index: 99999;
   display: grid;
-  gap: 8px;
+  place-items: center;
+  padding: 18px;
+  background: hsl(230 22% 8% / 0.2);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.calendar-overflow-preview {
+  position: relative;
+  width: min(440px, calc(100vw - 36px));
+  max-height: min(560px, calc(100vh - 36px));
+  padding: 12px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
+  overflow: hidden;
   border: 1px solid hsl(0 0% 100% / 0.48);
   border-radius: 16px;
-  background:
-    linear-gradient(145deg, hsl(var(--card) / 0.92), hsl(var(--card) / 0.78));
+  /* Portal-safe surface
+     English: this dialog is rendered under body, outside the widget token
+     scope. Use a concrete opaque surface here and theme it explicitly below.
+     Korean: 위젯 밖으로 이동한 창에서도 배경 변수가 사라지지 않도록
+     기본 불투명 표면을 직접 지정하고 아래에서 테마별로 덮어쓴다. */
+  background: linear-gradient(145deg, rgb(255 255 255 / 0.98), rgb(241 240 247 / 0.97));
   box-shadow:
     0 18px 46px hsl(230 22% 18% / 0.24),
     inset 0 1px 0 hsl(0 0% 100% / 0.58);
@@ -3197,15 +3216,57 @@ body.theme-glass-dark .calendar-floating-window .event-color-picker {
   -webkit-backdrop-filter: blur(18px) saturate(130%);
 }
 
-.calendar-overflow-preview > strong {
-  font-size: 11px;
+.calendar-overflow-title-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.calendar-overflow-title-row > div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.calendar-overflow-title-row strong {
+  overflow: hidden;
+  color: hsl(var(--foreground) / 0.92);
+  font-size: 12px;
   font-weight: 900;
-  color: hsl(var(--foreground) / 0.88);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-overflow-title-row span {
+  color: hsl(var(--muted-foreground) / 0.76);
+  font-size: 9.5px;
+  font-weight: 700;
+}
+
+.calendar-overflow-close {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid hsl(0 0% 100% / 0.42);
+  border-radius: 10px;
+  background: hsl(0 0% 100% / 0.3);
+  color: hsl(var(--foreground) / 0.78);
+}
+
+.calendar-overflow-close:hover {
+  background: hsl(0 0% 100% / 0.5);
+  color: hsl(var(--foreground) / 0.96);
 }
 
 .calendar-overflow-preview-list {
   display: grid;
   gap: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .calendar-overflow-preview-item {
@@ -3221,13 +3282,32 @@ body.theme-glass-dark .calendar-floating-window .event-color-picker {
   color: hsl(var(--foreground) / 0.78);
 }
 
+.calendar-overflow-preview .calendar-overflow-preview-item {
+  grid-template-columns: 5px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 9px;
+}
+
+.calendar-overflow-event-color {
+  width: 5px;
+  min-height: 34px;
+  border-radius: 999px;
+}
+
+.calendar-overflow-event-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
 .calendar-overflow-preview-item:hover {
   background: hsl(0 0% 100% / 0.48);
   color: hsl(var(--foreground) / 0.94);
 }
 
 .calendar-overflow-preview-item strong,
-.calendar-overflow-preview-item span {
+.calendar-overflow-event-copy > span,
+.calendar-month-event-preview .calendar-overflow-preview-item > span {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3239,10 +3319,74 @@ body.theme-glass-dark .calendar-floating-window .event-color-picker {
   font-weight: 850;
 }
 
-.calendar-overflow-preview-item span {
+.calendar-overflow-event-copy > span {
   font-size: 9.5px;
   font-weight: 700;
   color: hsl(var(--muted-foreground) / 0.78);
+}
+
+/* Theme-owned overflow windows
+   Each legacy desktop theme keeps its own window material while the modern
+   themes stay readable above a busy dashboard. / 테마 고유 창 질감을 유지한다. */
+:is(
+  html[data-theme="glass-dark"],
+  body[data-theme="glass-dark"],
+  html.theme-glass-dark,
+  body.theme-glass-dark,
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) .calendar-overflow-preview {
+  background: linear-gradient(145deg, rgb(35 38 48 / 0.98), rgb(18 20 28 / 0.97)) !important;
+  border-color: rgb(255 255 255 / 0.2) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk
+) .calendar-overflow-preview {
+  border: 2px solid #000 !important;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  box-shadow:
+    inset 1px 1px 0 #fff,
+    inset -1px -1px 0 #808080,
+    4px 4px 0 rgb(0 0 0 / 0.28) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(
+  html[data-theme="retro"],
+  body[data-theme="retro"],
+  html.theme-retro,
+  body.theme-retro
+) .calendar-overflow-preview {
+  border-color: #9e4f78 !important;
+  border-radius: 2px !important;
+  background: #f8d9e8 !important;
+  box-shadow:
+    inset 1px 1px 0 #fff5fa,
+    inset -1px -1px 0 #b96a91,
+    4px 4px 0 rgb(102 46 75 / 0.28) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+@media (max-width: 520px) {
+  .calendar-overflow-layer {
+    align-items: end;
+    padding: 10px;
+  }
+
+  .calendar-overflow-preview {
+    width: 100%;
+    max-height: min(70vh, 520px);
+    border-radius: 14px;
+  }
 }
 
 /* Week edit blocks

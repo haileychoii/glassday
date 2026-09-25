@@ -609,8 +609,12 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
   }, [rawCareerApplications, setCareerApplications]);
 
   useEffect(() => {
-    /* Career의 지원 기간을 Calendar event로 투영한다.
-       Figma에서는 서로 다른 Component지만 데이터 record는 연결되어 있다. */
+    /* Career schedule projection
+       English: only concrete selection stages are projected. Legacy overall
+       application-window fields stay in storage for snapshot compatibility but
+       never create Calendar noise.
+       Korean: 기존 전체 지원기간 값은 데이터 호환용으로만 보존하고, 캘린더에는
+       사용자가 입력한 서류 접수·발표·면접 같은 실제 전형 일정만 표시한다. */
     setCalendarEvents((prev) =>
       dedupeCareerApplications(rawCareerApplications)
         .reduce<CalendarEvent[]>(

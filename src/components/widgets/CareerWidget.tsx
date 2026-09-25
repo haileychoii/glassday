@@ -5,7 +5,7 @@
  *
  * 화면 역할:
  * - 지원 현황을 Summary, List, Board로 표시하고 선택한 지원 건을 Floating Detail에서 편집한다.
- * - 지원 기간은 Calendar event와 양방향 연결되며 detail은 Calendar에서도 열 수 있다.
+ * - 전형별 일정만 Calendar event와 양방향 연결되며 detail은 Calendar에서도 열 수 있다.
  *
  * 연결:
  * - Renderer/Detail host: src/components/grid/DashboardGrid.tsx (WidgetId: career)
@@ -288,24 +288,12 @@ type CareerNextSchedule = {
 };
 
 const getCareerScheduleCandidates = (item: CareerItem): CareerNextSchedule[] => {
-  const stageSchedules = (item.stages ?? [])
+  return (item.stages ?? [])
     .filter((stage) => stage.status !== "skipped" && stage.date)
     .map((stage) => ({
       label: stage.label || "전형 일정",
       date: stage.date ?? "",
-    }));
-
-  const fallbackSchedules =
-    item.applicationEndDate || item.deadline
-      ? [
-          {
-            label: "서류 전형",
-            date: item.applicationEndDate || item.deadline,
-          },
-        ]
-      : [];
-
-  return [...stageSchedules, ...fallbackSchedules]
+    }))
     .map((schedule) => {
       const dday = getDday(schedule.date);
 
@@ -370,19 +358,6 @@ const normalizeCareer = (item: CareerItem): CareerItem => ({
    3) the floating detail window owns long-form editing, notes, and cover letters
    4) windowState + dragRef are UI-only state; application data stays in
       DashboardDataContext so it can sync across layouts/devices. */
-const formatApplicationWindow = (item: CareerItem) => {
-  if (!item.applicationStartDate && !item.applicationEndDate) {
-    return "지원기간 미입력";
-  }
-
-  const startDate = item.applicationStartDate || item.applicationEndDate;
-  const endDate = item.applicationEndDate || item.applicationStartDate;
-
-  return `${startDate} ${item.applicationStartTime || "09:00"} → ${endDate} ${
-    item.applicationEndTime || "23:59"
-  }`;
-};
-
 /**
  * CareerWidget
  * DashboardDataContext의 CareerItem을 편집한다. List/Board는 같은 record의 presentation
@@ -583,8 +558,6 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
         status: "Preparing",
         postingUrl: "",
         jobDescription: "",
-        applicationStartTime: "09:00",
-        applicationEndTime: "23:59",
         coverLetterItems: [],
         coverLetterQuestions: [],
       })
@@ -1334,16 +1307,28 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                     </label>
 
                     <label className="career-field">
-                      <span>Deadline</span>
+                      <span>Location</span>
                       <input
-                        type="date"
-                        value={selectedItem.deadline}
+                        value={selectedItem.location}
                         onChange={(event) =>
                           updateSelectedItem({
-                            deadline: event.target.value,
-                            applicationEndDate: event.target.value,
+                            location: event.target.value,
                           })
                         }
+                        placeholder="Seoul, Remote..."
+                      />
+                    </label>
+
+                    <label className="career-field">
+                      <span>Work Type</span>
+                      <input
+                        value={selectedItem.workType}
+                        onChange={(event) =>
+                          updateSelectedItem({
+                            workType: event.target.value,
+                          })
+                        }
+                        placeholder="신입 / 인턴 / 정규직..."
                       />
                     </label>
 
@@ -1383,115 +1368,15 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                   )}
                 </section>
 
-                <section className="career-detail-section">
-                  <div className="career-section-title">
-                    Application Window · Calendar Sync
-                  </div>
-
-                  <div className="career-sync-note">
-                    End Date 또는 Start Date를 입력하면 Calendar에{" "}
-                    <strong>
-                      {selectedItem.company || "Company"} · Application Window
-                    </strong>
-                    로 자동 생성돼.
-                  </div>
-
-                  <div className="career-detail-grid">
-                    <label className="career-field">
-                      <span>Start Date</span>
-                      <input
-                        type="date"
-                        value={selectedItem.applicationStartDate}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            applicationStartDate: event.target.value,
-                          })
-                        }
-                      />
-                    </label>
-
-                    <label className="career-field">
-                      <span>Start Time</span>
-                      <input
-                        type="time"
-                        value={selectedItem.applicationStartTime}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            applicationStartTime: event.target.value,
-                          })
-                        }
-                      />
-                    </label>
-
-                    <label className="career-field">
-                      <span>End Date</span>
-                      <input
-                        type="date"
-                        value={selectedItem.applicationEndDate}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            applicationEndDate: event.target.value,
-                            deadline: event.target.value,
-                          })
-                        }
-                      />
-                    </label>
-
-                    <label className="career-field">
-                      <span>End Time</span>
-                      <input
-                        type="time"
-                        value={selectedItem.applicationEndTime}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            applicationEndTime: event.target.value,
-                          })
-                        }
-                      />
-                    </label>
-
-                    <label className="career-field">
-                      <span>Location</span>
-                      <input
-                        value={selectedItem.location}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            location: event.target.value,
-                          })
-                        }
-                        placeholder="Seoul, Remote..."
-                      />
-                    </label>
-
-                    <label className="career-field">
-                      <span>Work Type</span>
-                      <input
-                        value={selectedItem.workType}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            workType: event.target.value,
-                          })
-                        }
-                        placeholder="신입 / 인턴 / 정규직..."
-                      />
-                    </label>
-                  </div>
-
-                  <div className="career-window-preview">
-                    <CalendarDays className="w-4 h-4" />
-                    {formatApplicationWindow(selectedItem)}
-                  </div>
-                </section>
-
                 <section className="career-detail-section career-stage-section">
                   <div className="career-section-row">
                     <div>
                       <div className="career-section-title">
-                        Selection Schedule · Calendar Sync
+                        전형 일정 · Calendar Sync
                       </div>
                       <p className="career-section-subtitle">
-                        서류 발표, 필기, 면접 날짜를 기록하면 Calendar에
-                        자동으로 같이 보여.
+                        서류 접수 기간, 발표일, 필기와 면접처럼 실제로 아는
+                        일정만 입력해. 각 일정은 Calendar에 자동으로 같이 보여.
                       </p>
                     </div>
 
@@ -1624,7 +1509,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
                             <div className="career-stage-bottom">
                               <label className="career-field">
-                                <span>Schedule Type</span>
+                                <span>일정 방식</span>
                                 <select
                                   value={stage.dateMode ?? "single"}
                                   onChange={(event) => {
@@ -1651,7 +1536,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                               </label>
 
                               <label className="career-field">
-                                <span>Date</span>
+                                <span>시작 날짜</span>
                                 <input
                                   type="date"
                                   value={stage.date ?? ""}
@@ -1668,7 +1553,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                               </label>
 
                               <label className="career-field">
-                                <span>Time</span>
+                                <span>시작 시간</span>
                                 <input
                                   type="time"
                                   value={stage.time ?? ""}
@@ -1686,7 +1571,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
                               {stage.dateMode === "range" && (
                                 <label className="career-field">
-                                  <span>End Date</span>
+                                  <span>종료 날짜</span>
                                   <input
                                     type="date"
                                     value={stage.endDate ?? ""}
@@ -1700,7 +1585,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                               )}
 
                               <label className="career-field">
-                                <span>End Time</span>
+                                <span>종료 시간</span>
                                 <input
                                   type="time"
                                   value={stage.endTime ?? ""}

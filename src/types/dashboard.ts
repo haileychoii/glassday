@@ -136,11 +136,16 @@ export type CareerItem = {
 
   location: string;
   workType: string;
+  /** @deprecated Legacy overall deadline. New UI stores dates in `stages`. */
   deadline: string;
 
+  /** @deprecated Legacy snapshot fields. New UI stores dates in `stages`. */
   applicationStartDate: string;
+  /** @deprecated Legacy snapshot fields. New UI stores dates in `stages`. */
   applicationStartTime: string;
+  /** @deprecated Legacy snapshot fields. New UI stores dates in `stages`. */
   applicationEndDate: string;
+  /** @deprecated Legacy snapshot fields. New UI stores dates in `stages`. */
   applicationEndTime: string;
 
   postingUrl: string;

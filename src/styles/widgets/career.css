@@ -1538,29 +1538,6 @@
   box-shadow: 0 6px 16px hsl(230 30% 20% / 0.16);
 }
 
-.career-sync-note,
-.career-window-preview {
-  margin-bottom: 12px;
-  padding: 11px 12px;
-  border-radius: 18px;
-  font-size: 12px;
-  line-height: 1.45;
-  color: hsl(var(--foreground) / 0.68);
-  background: hsl(0 0% 100% / 0.34);
-  border: 1px solid hsl(0 0% 100% / 0.42);
-  backdrop-filter: blur(24px) saturate(136%);
-  -webkit-backdrop-filter: blur(24px) saturate(136%);
-}
-
-.career-window-preview {
-  margin-top: 12px;
-  margin-bottom: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 800;
-}
-
 .career-stage-list,
 .career-cl-list,
 .career-link-list,
@@ -2818,32 +2795,6 @@ body.theme-pixel-desk .career-cover-question-input {
     min-height: 86px !important;
   }
 
-  .career-sync-note,
-  .career-window-preview {
-    margin-bottom: 8px !important;
-
-    padding: 8px 9px !important;
-
-    border-radius: 12px !important;
-
-    font-size: 8.5px !important;
-    line-height: 1.45 !important;
-  }
-
-  .career-window-preview {
-    margin-top: 8px !important;
-    margin-bottom: 0 !important;
-
-    gap: 5px !important;
-  }
-
-  .career-window-preview svg {
-    width: 11px !important;
-    height: 11px !important;
-
-    flex: 0 0 auto !important;
-  }
-
   /* =======================================================
      16. COVER LETTER MOBILE
   ======================================================= */
@@ -3099,20 +3050,12 @@ body.theme-glass-dark .career-review-item textarea {
   color: rgb(243 245 255 / 0.94) !important;
 }
 
-html[data-theme="glass-dark"] .career-sync-note,
-html[data-theme="glass-dark"] .career-window-preview,
 html[data-theme="glass-dark"] .career-cl-item,
 html[data-theme="glass-dark"] .career-review-item,
-body[data-theme="glass-dark"] .career-sync-note,
-body[data-theme="glass-dark"] .career-window-preview,
 body[data-theme="glass-dark"] .career-cl-item,
 body[data-theme="glass-dark"] .career-review-item,
-html.theme-glass-dark .career-sync-note,
-html.theme-glass-dark .career-window-preview,
 html.theme-glass-dark .career-cl-item,
 html.theme-glass-dark .career-review-item,
-body.theme-glass-dark .career-sync-note,
-body.theme-glass-dark .career-window-preview,
 body.theme-glass-dark .career-cl-item,
 body.theme-glass-dark .career-review-item {
   background: rgb(28 32 46 / 0.58) !important;

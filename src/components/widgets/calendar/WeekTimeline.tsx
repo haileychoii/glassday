@@ -10,7 +10,9 @@
  * 좁은 container에서는 timeline 자체가 내부 scroll 영역이 된다.
  * ============================================================
  */
-import { useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
 import { getEventColor as getCalendarEventColor } from "../../../constants/colors";
@@ -83,11 +85,9 @@ type WeekResizeSelection = WeekDraftSelection & {
   event: CalendarEvent;
 };
 
-type WeekOverflowPreview = {
+type WeekOverflowDialog = {
   title: string;
   events: CalendarEvent[];
-  x: number;
-  y: number;
 };
 
 const START_HOUR = 7;
@@ -262,12 +262,32 @@ export const WeekTimeline = ({
     useState<WeekDraftSelection | null>(null);
   const [resizeSelection, setResizeSelection] =
     useState<WeekResizeSelection | null>(null);
-  const [overflowPreview, setOverflowPreview] =
-    useState<WeekOverflowPreview | null>(null);
+  const [overflowDialog, setOverflowDialog] =
+    useState<WeekOverflowDialog | null>(null);
+  const overflowCloseRef = useRef<HTMLButtonElement | null>(null);
   const baseDate = selectedDate ?? currentDate ?? toDateString(new Date());
   const weekStart = weekStartDate ?? getMonday(baseDate);
   const weekEnd = addDays(weekStart, 6);
   const todayString = toDateString(new Date());
+
+  useEffect(() => {
+    if (!overflowDialog) return;
+
+    const previousFocus = document.activeElement;
+    overflowCloseRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOverflowDialog(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      if (previousFocus instanceof HTMLElement) previousFocus.focus();
+    };
+  }, [overflowDialog]);
 
   const weekDays = useMemo<WeekDay[]>(() => {
     return Array.from({ length: 7 }, (_, index) => {
@@ -357,17 +377,14 @@ export const WeekTimeline = ({
     (onEventClick ?? onSelectEvent)?.(event);
   };
 
-  const showOverflowPreview = (
-    title: string,
-    previewEvents: CalendarEvent[],
-    pointerEvent: ReactPointerEvent<HTMLElement>
-  ) => {
-    setOverflowPreview({
-      title,
-      events: previewEvents,
-      x: pointerEvent.clientX,
-      y: pointerEvent.clientY,
-    });
+  /* Week overflow dialog
+     English: +N opens the complete schedule set for the represented week/day,
+     not only the rows hidden by the visual density limit. The dialog is
+     portalled to body so widget overflow cannot clip it.
+     Korean: +N을 누르면 생략된 일정뿐 아니라 해당 주/날짜의 전체 일정을
+     고정 목록으로 보여주며, 항목 클릭 시 기존 상세 편집 흐름으로 이동한다. */
+  const openOverflowDialog = (title: string, allEvents: CalendarEvent[]) => {
+    setOverflowDialog({ title, events: allEvents });
   };
 
   const getDateFromPointer = (pointerEvent: ReactPointerEvent<HTMLElement>) => {
@@ -385,7 +402,7 @@ export const WeekTimeline = ({
 
   const beginBlockSelection = (
     day: WeekDay,
-    pointerEvent: ReactPointerEvent<HTMLButtonElement>
+    pointerEvent: ReactPointerEvent<HTMLElement>
   ) => {
     if (!editMode || !onCreateBlock) {
       handleDateSelect(day.date);
@@ -412,7 +429,7 @@ export const WeekTimeline = ({
 
   const updateBlockSelection = (
     day: WeekDay,
-    pointerEvent: ReactPointerEvent<HTMLButtonElement>
+    pointerEvent: ReactPointerEvent<HTMLElement>
   ) => {
     if (!draftSelection || !editMode) return;
 
@@ -576,18 +593,10 @@ export const WeekTimeline = ({
                 type="button"
                 className="calendar-week-more-bar"
                 style={{ gridColumn: "1 / -1", gridRow: MAX_ALL_DAY_LANES + 1 }}
-                onPointerEnter={(pointerEvent) =>
-                  showOverflowPreview(
-                    `+${hiddenRangeEvents.length} range schedules`,
-                    hiddenRangeEvents,
-                    pointerEvent
-                  )
-                }
-                onPointerMove={(pointerEvent) =>
-                  showOverflowPreview(
-                    `+${hiddenRangeEvents.length} range schedules`,
-                    hiddenRangeEvents,
-                    pointerEvent
+                onClick={() =>
+                  openOverflowDialog(
+                    `${weekStart} - ${weekEnd} 전체 일정`,
+                    events
                   )
                 }
                 onPointerDown={(pointerEvent) => pointerEvent.stopPropagation()}
@@ -620,11 +629,17 @@ export const WeekTimeline = ({
                 MAX_TIMED_EVENTS_PER_DAY
               );
               const hiddenDayEvents = dayEvents.slice(MAX_TIMED_EVENTS_PER_DAY);
+              const allEventsForDay = events.filter(
+                (event) =>
+                  event.startDate <= day.date && event.endDate >= day.date
+              );
 
               return (
-                <button
+                <div
                   key={day.date}
-                  type="button"
+                  role="gridcell"
+                  tabIndex={0}
+                  aria-label={`${day.date} weekly schedule column`}
                   onPointerDown={(pointerEvent) =>
                     beginBlockSelection(day, pointerEvent)
                   }
@@ -633,6 +648,12 @@ export const WeekTimeline = ({
                   }
                   onPointerUp={finishBlockSelection}
                   onPointerCancel={() => setDraftSelection(null)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      handleDateSelect(day.date);
+                    }
+                  }}
                   className={[
                     "calendar-week-day-column",
                     day.isSelected ? "is-selected" : "",
@@ -727,21 +748,13 @@ export const WeekTimeline = ({
                     <button
                       type="button"
                       className="calendar-week-more-timed"
-                      onPointerEnter={(pointerEvent) =>
-                        showOverflowPreview(
-                          `+${hiddenDayEvents.length} timed schedules`,
-                          hiddenDayEvents,
-                          pointerEvent
-                        )
-                      }
-                      onPointerMove={(pointerEvent) =>
-                        showOverflowPreview(
-                          `+${hiddenDayEvents.length} timed schedules`,
-                          hiddenDayEvents,
-                          pointerEvent
-                        )
-                      }
-                      onClick={(clickEvent) => clickEvent.stopPropagation()}
+                      onClick={(clickEvent) => {
+                        clickEvent.stopPropagation();
+                        openOverflowDialog(
+                          `${day.date} 전체 일정`,
+                          allEventsForDay
+                        );
+                      }}
                       onPointerDown={(pointerEvent) =>
                         pointerEvent.stopPropagation()
                       }
@@ -749,44 +762,76 @@ export const WeekTimeline = ({
                       +{hiddenDayEvents.length}
                     </button>
                   )}
-                </button>
+                </div>
               );
             })}
           </div>
         </div>
       </div>
 
-      {overflowPreview && (
-        <div
-          className="calendar-overflow-preview"
-          style={{
-            left: Math.min(overflowPreview.x + 14, window.innerWidth - 320),
-            top: Math.min(overflowPreview.y + 14, window.innerHeight - 190),
-          }}
-          onPointerLeave={() => setOverflowPreview(null)}
-        >
-          <strong>{overflowPreview.title}</strong>
-          <div className="calendar-overflow-preview-list">
-            {overflowPreview.events.map((event) => (
-              <button
-                key={event.id}
-                type="button"
-                className="calendar-overflow-preview-item"
-                onClick={() => {
-                  setOverflowPreview(null);
-                  handleEventClick(event);
-                }}
-              >
-                <strong>{event.title}</strong>
-                <span>
-                  {event.startDate} {event.startTime} → {event.endDate}{" "}
-                  {event.endTime}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      {overflowDialog &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            className="calendar-overflow-layer"
+            role="presentation"
+            onPointerDown={() => setOverflowDialog(null)}
+          >
+            <section
+              className="calendar-overflow-preview"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="calendar-week-overflow-title"
+              onPointerDown={(event) => event.stopPropagation()}
+            >
+              <div className="calendar-overflow-title-row">
+                <div>
+                  <strong id="calendar-week-overflow-title">
+                    {overflowDialog.title}
+                  </strong>
+                  <span>{overflowDialog.events.length}개 일정</span>
+                </div>
+                <button
+                  ref={overflowCloseRef}
+                  type="button"
+                  className="calendar-overflow-close"
+                  onClick={() => setOverflowDialog(null)}
+                  aria-label="전체 일정 목록 닫기"
+                  title="Close"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <div className="calendar-overflow-preview-list">
+                {overflowDialog.events.map((event) => (
+                  <button
+                    key={event.id}
+                    type="button"
+                    className="calendar-overflow-preview-item"
+                    onClick={() => {
+                      setOverflowDialog(null);
+                      handleEventClick(event);
+                    }}
+                  >
+                    <span
+                      className="calendar-overflow-event-color"
+                      style={{ background: getCalendarEventColor(event) }}
+                      aria-hidden="true"
+                    />
+                    <span className="calendar-overflow-event-copy">
+                      <strong>{event.title}</strong>
+                      <span>
+                        {event.startDate} {event.startTime} → {event.endDate}{" "}
+                        {event.endTime}
+                      </span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
