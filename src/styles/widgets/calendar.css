@@ -2952,9 +2952,14 @@ body.theme-pixel-desk .career-cover-status-select option {
 }
 
 .calendar-floating-window {
+  /* Event editor readability
+     English: keep a subtle glass edge, but make the working surface opaque
+     enough that dashboard text cannot compete with labels and inputs.
+     Korean: 유리 느낌은 유지하되 뒤 대시보드 글자가 입력창과 겹쳐 보이지
+     않도록 새 일정 창의 표면 불투명도를 높인다. */
   background:
-    linear-gradient(145deg, hsl(0 0% 100% / 0.88), hsl(245 32% 96% / 0.74)) !important;
-  border-color: hsl(0 0% 100% / 0.72) !important;
+    linear-gradient(145deg, rgb(255 255 255 / 0.98), rgb(242 242 248 / 0.96)) !important;
+  border-color: rgb(255 255 255 / 0.86) !important;
   backdrop-filter: blur(34px) saturate(165%) !important;
   -webkit-backdrop-filter: blur(34px) saturate(165%) !important;
 }
@@ -2981,13 +2986,13 @@ body.theme-pixel-desk .career-cover-status-select option {
 
 .calendar-floating-window .calendar-field input,
 .calendar-floating-window .calendar-field textarea {
-  background: hsl(0 0% 100% / 0.48) !important;
-  border-color: hsl(0 0% 100% / 0.58) !important;
+  background: rgb(255 255 255 / 0.86) !important;
+  border-color: rgb(255 255 255 / 0.92) !important;
 }
 
 .calendar-floating-window .event-color-picker {
-  background: hsl(0 0% 100% / 0.34) !important;
-  border-color: hsl(0 0% 100% / 0.48) !important;
+  background: rgb(255 255 255 / 0.76) !important;
+  border-color: rgb(255 255 255 / 0.86) !important;
 }
 
 @container calendar-widget (max-width: 520px) {
@@ -3070,6 +3075,18 @@ body.theme-pixel-desk .career-cover-status-select option {
   container-name: calendar-floating-window;
 }
 
+/* Glass Light has a deliberately transparent generic floating-window rule.
+   The Calendar editor is a dense form, so it receives a more solid exception.
+   / 새 일정 작성창만은 읽기 쉬운 작업 표면을 우선한다. */
+html[data-theme="glass-light"] .calendar-floating-window,
+body[data-theme="glass-light"] .calendar-floating-window,
+html.theme-glass-light .calendar-floating-window,
+body.theme-glass-light .calendar-floating-window {
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.98), rgb(242 242 248 / 0.96)) !important;
+  border-color: rgb(255 255 255 / 0.86) !important;
+}
+
 @container calendar-floating-window (max-width: 620px) {
   .calendar-floating-window .calendar-detail-grid {
     grid-template-columns: 1fr !important;
@@ -3085,8 +3102,8 @@ body[data-theme="aurora"] .calendar-floating-window,
 html.theme-aurora .calendar-floating-window,
 body.theme-aurora .calendar-floating-window {
   background:
-    linear-gradient(145deg, rgb(25 31 49 / 0.86), rgb(10 14 25 / 0.78)) !important;
-  border-color: rgb(184 202 246 / 0.24) !important;
+    linear-gradient(145deg, rgb(28 32 43 / 0.98), rgb(12 15 22 / 0.96)) !important;
+  border-color: rgb(184 202 246 / 0.3) !important;
 }
 
 html[data-theme="glass-dark"] .calendar-floating-window .calendar-field input,
@@ -3100,9 +3117,21 @@ html.theme-glass-dark .calendar-floating-window .calendar-field textarea,
 html.theme-glass-dark .calendar-floating-window .event-color-picker,
 body.theme-glass-dark .calendar-floating-window .calendar-field input,
 body.theme-glass-dark .calendar-floating-window .calendar-field textarea,
-body.theme-glass-dark .calendar-floating-window .event-color-picker {
-  background: rgb(255 255 255 / 0.12) !important;
-  border-color: rgb(190 208 250 / 0.18) !important;
+body.theme-glass-dark .calendar-floating-window .event-color-picker,
+html[data-theme="aurora"] .calendar-floating-window .calendar-field input,
+html[data-theme="aurora"] .calendar-floating-window .calendar-field textarea,
+html[data-theme="aurora"] .calendar-floating-window .event-color-picker,
+body[data-theme="aurora"] .calendar-floating-window .calendar-field input,
+body[data-theme="aurora"] .calendar-floating-window .calendar-field textarea,
+body[data-theme="aurora"] .calendar-floating-window .event-color-picker,
+html.theme-aurora .calendar-floating-window .calendar-field input,
+html.theme-aurora .calendar-floating-window .calendar-field textarea,
+html.theme-aurora .calendar-floating-window .event-color-picker,
+body.theme-aurora .calendar-floating-window .calendar-field input,
+body.theme-aurora .calendar-floating-window .calendar-field textarea,
+body.theme-aurora .calendar-floating-window .event-color-picker {
+  background: rgb(255 255 255 / 0.22) !important;
+  border-color: rgb(190 208 250 / 0.28) !important;
   color: rgb(239 244 255 / 0.92) !important;
 }
 
