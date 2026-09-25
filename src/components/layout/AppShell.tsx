@@ -26,6 +26,10 @@ import { isTauri } from "@tauri-apps/api/core";
 
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
+import {
+  getSavedDesktopPin,
+  setDesktopPin,
+} from "../../utils/tauriDesktop";
 
 import type {
   DashboardLayoutMode,
@@ -73,6 +77,19 @@ export const AppShell = ({
    */
 
   const isTauriApp = isTauri();
+
+  useEffect(() => {
+    if (!isTauriApp) return;
+
+    /*
+     * Restore the user's desktop-widget position in the native z-order.
+     * Korean: 앱을 다시 켜도 Settings에서 고른 바탕화면 고정 상태를 복원한다.
+     */
+    void setDesktopPin(getSavedDesktopPin()).catch((error) => {
+      console.warn("Unable to restore Tauri desktop pin state", error);
+    });
+  }, [isTauriApp]);
+
 useEffect(() => {
   const root = document.documentElement;
 

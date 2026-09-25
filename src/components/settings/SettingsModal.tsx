@@ -40,6 +40,7 @@ import {
   LogOut,
   Mail,
   Palette,
+  Pin,
   RotateCcw,
   Settings,
   Trash2,
@@ -80,6 +81,11 @@ import {
   resetGlassdaySection,
 } from "../../utils/backup";
 import { useCloudSync } from "../../context/CloudSyncContext";
+import { isTauriApp } from "../../utils/runtime";
+import {
+  getSavedDesktopPin,
+  setDesktopPin,
+} from "../../utils/tauriDesktop";
 
 type SettingsModalProps = {
   /** App의 Settings button이 제어하는 open state. false면 portal을 만들지 않는다. */
@@ -157,6 +163,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const [scrollbarsVisible, setScrollbarsVisible] = useState(() =>
     getSavedScrollbarVisibility()
   );
+  const [desktopPinned, setDesktopPinned] = useState(() =>
+    getSavedDesktopPin()
+  );
   const [customFonts, setCustomFonts] = useState(() => getSavedCustomFonts());
   const [customFontLabel, setCustomFontLabel] = useState("");
   const [customFontFamily, setCustomFontFamily] = useState("");
@@ -204,6 +213,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       setAppFont(getSavedAppFont());
       setDefaultMemoFont(getSavedDefaultMemoFont());
       setScrollbarsVisible(getSavedScrollbarVisibility());
+      setDesktopPinned(getSavedDesktopPin());
       setCustomFonts(getSavedCustomFonts());
     }, 0);
 
@@ -341,6 +351,22 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     setScrollbarsVisible(visible);
     saveScrollbarVisibility(visible);
     setStatus(visible ? "Scrollbars are visible." : "Scrollbars are hidden.");
+  };
+
+  const handleDesktopPinChange = (pinned: boolean) => {
+    setDesktopPinned(pinned);
+
+    void setDesktopPin(pinned)
+      .then(() => {
+        setStatus(
+          pinned
+            ? "Glassday is pinned to the desktop."
+            : "Desktop pin is turned off."
+        );
+      })
+      .catch(() => {
+        setStatus("Desktop pin could not be updated.");
+      });
   };
 
   const handleAddCustomFont = async () => {
@@ -758,6 +784,61 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
               </div>
             </div>
           </section>
+
+          {isTauriApp && (
+            <section className="settings-section settings-card">
+              <div className="settings-section-title settings-card-title">
+                <Pin className="w-4 h-4" />
+                <span>Desktop</span>
+              </div>
+
+              {/*
+               * Desktop widget control
+               * English: Tauri-only control for keeping the whole Glassday
+               * window on the desktop below normal application windows.
+               * Korean: 휴대폰 위젯처럼 Glassday 전체 창을 바탕화면에 남겨두는
+               * Tauri 전용 설정이며 웹 버전에는 노출하지 않는다.
+               */}
+              <div className="settings-toggle-row">
+                <div>
+                  <strong>Pin to desktop</strong>
+                  <span>
+                    Keep Glassday visible on the desktop behind other windows.
+                  </span>
+                </div>
+
+                <div
+                  className="settings-toggle-group"
+                  role="group"
+                  aria-label="Desktop pin"
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleDesktopPinChange(true)}
+                    className={cn(
+                      "settings-toggle-button",
+                      desktopPinned && "is-active"
+                    )}
+                    aria-pressed={desktopPinned}
+                  >
+                    On
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleDesktopPinChange(false)}
+                    className={cn(
+                      "settings-toggle-button",
+                      !desktopPinned && "is-active"
+                    )}
+                    aria-pressed={!desktopPinned}
+                  >
+                    Off
+                  </button>
+                </div>
+              </div>
+            </section>
+          )}
 
           <section className="settings-section settings-card">
             <div className="settings-section-title settings-card-title">
