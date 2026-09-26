@@ -25,7 +25,8 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 import { GlassCard } from "../glass/GlassCard";
 import type {
@@ -46,8 +47,8 @@ import {
   getOrCreateJournalEntry,
   journalMoodLabels,
   journalMoodOptions,
-  loadJournalEntries,
-  saveJournalEntries,
+  JOURNAL_STORAGE_KEY,
+  normalizeJournalEntry,
   todayString,
   updateJournalEntry,
 } from "./journal/journalUtils";
@@ -58,9 +59,13 @@ const cx = (...classes: Array<string | false | null | undefined>) => {
 
 /** 날짜를 기준으로 JournalEntry를 편집하고 derived summary를 계산하는 Widget. */
 export const DailyJournalWidget = () => {
-  const [entries, setEntries] = useState<JournalEntry[]>(() =>
-    loadJournalEntries()
+  // Share the same persistence bridge as other widgets. Normalization remains in
+  // journalUtils.ts; no mount-time save can overwrite a newly restored snapshot.
+  // 한국어: 초기 표시에는 저장하지 않고, 입력할 때만 저장하며 복원·초기화를 바로 반영한다.
+  const { value: storedEntries, setValue: setEntries } = useLocalStorage<JournalEntry[]>(
+    JOURNAL_STORAGE_KEY, []
   );
+  const entries = useMemo(() => storedEntries.map(normalizeJournalEntry), [storedEntries]);
   const [selectedDate, setSelectedDate] = useState(todayString());
   const [newTaskText, setNewTaskText] = useState("");
   const [newTomorrowTaskText, setNewTomorrowTaskText] = useState("");
@@ -74,10 +79,6 @@ export const DailyJournalWidget = () => {
   const entry = useMemo(() => {
     return getOrCreateJournalEntry(entries, selectedDate);
   }, [entries, selectedDate]);
-
-  useEffect(() => {
-    saveJournalEntries(entries);
-  }, [entries]);
 
   const progress = getJournalProgress(entry);
   const doneTaskCount = getDoneTodayTaskCount(entry);

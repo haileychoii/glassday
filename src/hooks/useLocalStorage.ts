@@ -136,20 +136,18 @@ export const useLocalStorage = <T,>(
       // replay it. Connections: main.tsx enables StrictMode; glassdayStorage.ts
       // dispatches synchronous change events. 한국어: 저장과 알림을 한 번만 수행한다.
       const nextValue =
-          value instanceof Function ? value(currentValue.current) : value;
+        value instanceof Function ? value(currentValue.current) : value;
+      const safeNextValue = sanitizeValue<T>(nextValue, initialValue);
 
-        const safeNextValue = sanitizeValue<T>(nextValue, initialValue);
-
-        if (Object.is(safeNextValue, currentValue.current)) return;
-        publish(safeNextValue);
-        if (isBrowser()) {
-          try {
-            window.localStorage.setItem(key, JSON.stringify(safeNextValue));
-          } catch (error) {
-            console.warn(`useLocalStorage write error: ${key}`, error);
-          }
+      if (Object.is(safeNextValue, currentValue.current)) return;
+      publish(safeNextValue);
+      if (isBrowser()) {
+        try {
+          window.localStorage.setItem(key, JSON.stringify(safeNextValue));
+        } catch (error) {
+          console.warn(`useLocalStorage write error: ${key}`, error);
         }
-
+      }
     },
     [key, initialValue, publish]
   );

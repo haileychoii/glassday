@@ -8,6 +8,7 @@ import {
   patchLocalStorageEvents, GLASSDAY_STORAGE_EVENT, GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY,
   batchGlassdayStorageChanges, applyGlassdayStorageSnapshot, shouldSyncStorageChange,
 } from '../src/lib/glassdayStorage.ts';
+import { parseGlassdayBackup, importGlassdayBackupFile, resetGlassdayLayout, resetGlassdaySection } from '../src/utils/backup.ts';
 
 class MemoryStorage {
   getItem(key) { return Object.hasOwn(this, key) ? this[key] : null; }
@@ -80,4 +81,38 @@ test('UI and sync-marker events cannot schedule recursive uploads', () => {
   }
   assert.equal(shouldSyncStorageChange({ type: 'bulk', keys: ['glassday.dashboard.tabs.v1'] }), false);
   assert.equal(shouldSyncStorageChange({ type: 'remove', key: 'glassday.memo.notes.v2' }), true);
+});
+
+test('layout reset emits one event and preserves mode, theme, and content', () => {
+  for (const key of ['glassday.dashboard.tabs.v1', 'glassday.dashboard.activeTab.v1',
+    'glassday.dashboard.layoutMode.v1', 'glassday.theme', 'glassday.memo.notes.v2']) localStorage.setItem(key, 'keep');
+  events.length = 0;
+  resetGlassdayLayout();
+  assert.equal(localStorage.getItem('glassday.dashboard.tabs.v1'), null);
+  assert.equal(localStorage.getItem('glassday.dashboard.layoutMode.v1'), 'keep');
+  assert.equal(localStorage.getItem('glassday.memo.notes.v2'), 'keep');
+  assert.equal(localStorage.getItem('glassday.theme'), 'keep');
+  assert.equal(events.length, 1);
+  assert.equal(shouldSyncStorageChange(events[0]), false);
+});
+test('section reset cannot delete another namespace containing the section name', () => {
+  localStorage.setItem('glassday.memo.notes.v2', '[]');
+  localStorage.setItem('glassday.calendar.memo-note.v1', 'keep');
+  resetGlassdaySection('memo');
+  assert.equal(localStorage.getItem('glassday.memo.notes.v2'), null);
+  assert.equal(localStorage.getItem('glassday.calendar.memo-note.v1'), 'keep');
+});
+test('backup validation rejects arrays, future versions, and non-string values', () => {
+  const valid = { app: 'Glassday', version: 3, exportedAt: '2026-09-26T00:00:00Z', data: {} };
+  assert.equal(parseGlassdayBackup(JSON.stringify(valid)).version, 3);
+  for (const patch of [{ data: [] }, { version: 100 }, { data: { 'glassday.memo.notes.v2': [] } }]) {
+    assert.throws(() => parseGlassdayBackup(JSON.stringify({ ...valid, ...patch })));
+  }
+});
+test('cancelled import leaves existing data untouched', async () => {
+  localStorage.setItem('glassday.memo.notes.v2', '["original"]');
+  const backup = new File([JSON.stringify({ app: 'Glassday', version: 3,
+    exportedAt: '2026-09-26T00:00:00Z', data: { 'glassday.memo.notes.v2': '[]' } })], 'backup.json');
+  assert.equal(await importGlassdayBackupFile(backup, () => false), false);
+  assert.equal(localStorage.getItem('glassday.memo.notes.v2'), '["original"]');
 });

@@ -18,8 +18,10 @@
  */
 import {
   applyGlassdayStorageSnapshot,
+  batchGlassdayStorageChanges,
   createGlassdayStorageSnapshot,
   getGlassdayLocalStorageKeys,
+  GLASSDAY_STORAGE_SNAPSHOT_VERSION,
   type GlassdayStorageSnapshot,
 } from "../lib/glassdayStorage";
 
@@ -50,15 +52,35 @@ export const downloadGlassdayBackup = () => {
   URL.revokeObjectURL(url);
 };
 
-export const importGlassdayBackupFile = async (file: File) => {
-  const text = await file.text();
-  const parsed = JSON.parse(text) as GlassdayBackup;
-
-  if (parsed.app !== "Glassday" || !parsed.data) {
+/** Validate the entire envelope before touching storage. Legacy versions 1-3 use
+ * the same string map; glassdayStorage.ts still enforces its content allowlist.
+ * 한국어: 잘못된 파일은 일부만 덮어쓰지 않고, 쓰기 전에 전체 구조를 먼저 확인한다.
+ */
+export const parseGlassdayBackup = (text: string): GlassdayBackup => {
+  const parsed: unknown = JSON.parse(text);
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
     throw new Error("This is not a valid Glassday backup file.");
   }
+  const candidate = parsed as Partial<GlassdayBackup>;
+  if (
+    candidate.app !== "Glassday" || !Number.isInteger(candidate.version) ||
+    candidate.version < 1 || candidate.version > GLASSDAY_STORAGE_SNAPSHOT_VERSION ||
+    typeof candidate.exportedAt !== "string" || !Number.isFinite(Date.parse(candidate.exportedAt)) ||
+    !candidate.data || typeof candidate.data !== "object" || Array.isArray(candidate.data) ||
+    !Object.entries(candidate.data).every(([key, value]) =>
+      key.startsWith("glassday.") && typeof value === "string")
+  ) throw new Error("Unsupported or damaged Glassday backup file.");
+  return candidate as GlassdayBackup;
+};
 
+export const importGlassdayBackupFile = async (
+  file: File,
+  confirmOverwrite: () => boolean = () => true
+) => {
+  const parsed = parseGlassdayBackup(await file.text());
+  if (!confirmOverwrite()) return false;
   applyGlassdayStorageSnapshot(parsed);
+  return true;
 };
 
 export const resetGlassdayData = () => {
@@ -68,25 +90,20 @@ export const resetGlassdayData = () => {
 };
 
 export const resetGlassdaySection = (section: string) => {
-  getGlassdayLocalStorageKeys().forEach((key) => {
-    const lowerKey = key.toLowerCase();
-
-    if (lowerKey.includes(section.toLowerCase())) {
-      localStorage.removeItem(key);
-    }
+  // SettingsModal passes memo/study/journal/calendar; only that namespace changes.
+  // 한국어: contains 검색으로 다른 위젯의 키까지 삭제하지 않도록 접두사를 일치시킨다.
+  batchGlassdayStorageChanges(() => {
+    getGlassdayLocalStorageKeys().forEach((key) => {
+      if (key.startsWith(`glassday.${section.toLowerCase()}.`)) localStorage.removeItem(key);
+    });
   });
 };
 
 export const resetGlassdayLayout = () => {
-  getGlassdayLocalStorageKeys().forEach((key) => {
-    const lowerKey = key.toLowerCase();
-
-    if (
-      lowerKey.includes("layout") ||
-      lowerKey.includes("grid") ||
-      lowerKey.includes("dashboard")
-    ) {
-      localStorage.removeItem(key);
-    }
+  // useDashboardTabs owns these two keys and restores defaults on removal.
+  // 한국어: 화면 모드·테마·글꼴·위젯 내용은 유지하고 탭과 배치만 초기화한다.
+  batchGlassdayStorageChanges(() => {
+    localStorage.removeItem("glassday.dashboard.tabs.v1");
+    localStorage.removeItem("glassday.dashboard.activeTab.v1");
   });
 };
