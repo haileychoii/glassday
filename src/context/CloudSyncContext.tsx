@@ -47,7 +47,8 @@ import {
   getGlassdaySnapshotTimestamp,
   isCompatibleGlassdayStorageSnapshot,
   markGlassdayLocalSyncedAt,
-  patchLocalStorageEvents,
+  shouldSyncStorageChange,
+  type GlassdayStorageChangeDetail,
   type GlassdayStorageSnapshot,
 } from "../lib/glassdayStorage";
 import {
@@ -497,10 +498,6 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
   }, [setSyncState]);
 
   useEffect(() => {
-    patchLocalStorageEvents();
-  }, []);
-
-  useEffect(() => {
     if (!supabase) return;
 
     void supabase.auth.getSession().then(({ data, error }) => {
@@ -576,7 +573,11 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!session?.user || !supabase) return;
 
-    const handleStorageChange = () => {
+    const handleStorageChange = (event: Event) => {
+      // Use the snapshot allowlist from glassdayStorage.ts for upload triggers too.
+      // 한국어: 테마·탭 이동은 데이터 변경이 아니므로 900ms 업로드를 예약하지 않는다.
+      const detail = (event as CustomEvent<GlassdayStorageChangeDetail>).detail;
+      if (!shouldSyncStorageChange(detail)) return;
       if (suppressUploadRef.current) return;
 
       if (syncTimeoutRef.current) {

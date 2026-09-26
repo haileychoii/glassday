@@ -19,7 +19,7 @@
  *   임의로 변경하지 않는다.
  * ============================================================
  */
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import {
   GLASSDAY_STORAGE_EVENT,
@@ -85,6 +85,15 @@ export const useLocalStorage = <T,>(
   }, [key, initialValue]);
 
   const [storedValue, setStoredValue] = useState<T>(() => readValue());
+  const currentValue = useRef(storedValue);
+
+  // Update the synchronous cursor before notifying React. Repeated event-handler
+  // updates then compose, even before React commits the next render.
+  // 한국어: 같은 클릭에서 여러 번 수정해도 직전 결과를 기준으로 누적한다.
+  const publish = useCallback((next: T) => {
+    currentValue.current = next;
+    setStoredValue(next);
+  }, []);
 
   useEffect(() => {
     if (!isBrowser()) return;
@@ -96,18 +105,19 @@ export const useLocalStorage = <T,>(
       const changedKey = customEvent.detail?.key;
 
       if (
-        customEvent.detail?.type === "bulk" ||
-        changedKey === undefined ||
+        (customEvent.detail?.type === "bulk" &&
+          (!customEvent.detail.keys || customEvent.detail.keys.includes(key))) ||
+        !customEvent.detail ||
         changedKey === key
       ) {
-        setStoredValue(readValue());
+        publish(readValue());
       }
     };
 
     /* Cross-tab sync: 같은 origin의 다른 브라우저 탭에서 바뀐 값을 반영한다. */
     const handleNativeStorage = (event: StorageEvent) => {
-      if (event.key === null || event.key === key) {
-        setStoredValue(readValue());
+      if (event.storageArea === window.localStorage && (event.key === null || event.key === key)) {
+        publish(readValue());
       }
     };
 
@@ -118,16 +128,20 @@ export const useLocalStorage = <T,>(
       window.removeEventListener(GLASSDAY_STORAGE_EVENT, handleStorageChange);
       window.removeEventListener("storage", handleNativeStorage);
     };
-  }, [key, readValue]);
+  }, [key, readValue, publish]);
 
   const setValue: Dispatch<SetStateAction<T>> = useCallback(
     (value) => {
-      setStoredValue((prevValue) => {
-        const nextValue =
-          value instanceof Function ? value(prevValue) : value;
+      // Side effects must not run inside a React state updater: StrictMode may
+      // replay it. Connections: main.tsx enables StrictMode; glassdayStorage.ts
+      // dispatches synchronous change events. 한국어: 저장과 알림을 한 번만 수행한다.
+      const nextValue =
+          value instanceof Function ? value(currentValue.current) : value;
 
         const safeNextValue = sanitizeValue<T>(nextValue, initialValue);
 
+        if (Object.is(safeNextValue, currentValue.current)) return;
+        publish(safeNextValue);
         if (isBrowser()) {
           try {
             window.localStorage.setItem(key, JSON.stringify(safeNextValue));
@@ -136,10 +150,8 @@ export const useLocalStorage = <T,>(
           }
         }
 
-        return safeNextValue;
-      });
     },
-    [key, initialValue]
+    [key, initialValue, publish]
   );
 
   const resetValue = useCallback(() => {
@@ -151,8 +163,8 @@ export const useLocalStorage = <T,>(
       }
     }
 
-    setStoredValue(initialValue);
-  }, [key, initialValue]);
+    publish(initialValue);
+  }, [key, initialValue, publish]);
 
   const removeValue = useCallback(() => {
     if (isBrowser()) {
@@ -163,8 +175,8 @@ export const useLocalStorage = <T,>(
       }
     }
 
-    setStoredValue(initialValue);
-  }, [key, initialValue]);
+    publish(initialValue);
+  }, [key, initialValue, publish]);
 
   return {
     value: storedValue,

@@ -22,6 +22,11 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import "./styles/index.css";
 import App from "./App.tsx";
+import { patchLocalStorageEvents } from "./lib/glassdayStorage";
+
+// Install before any widget mounts, including local-only sessions.
+// 한국어: CloudSyncContext의 로그인 여부와 무관하게 같은 탭 저장 알림을 준비한다.
+patchLocalStorageEvents();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

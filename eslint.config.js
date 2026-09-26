@@ -6,7 +6,8 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // Rust/Tauri outputs are generated, not app source. / 빌드 산출물은 검사하지 않는다.
+  globalIgnores(['dist', 'src-tauri/target', 'src-tauri/gen']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

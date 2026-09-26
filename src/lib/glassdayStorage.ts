@@ -41,6 +41,8 @@ export type GlassdayStorageSnapshot = {
 
 export type GlassdayStorageChangeDetail = {
   key?: string;
+  /** Changed keys in a single restore/reset. / 일괄 작업에서 실제 바뀐 키만 전달한다. */
+  keys?: string[];
   type: "set" | "remove" | "bulk";
 };
 
@@ -86,7 +88,7 @@ const CLOUD_SYNC_MEANINGFUL_PREFIXES = [
   "glassday.study.planner.",
 ] as const;
 
-const isCloudSyncAllowedKey = (key: string) =>
+export const isCloudSyncAllowedKey = (key: string) =>
   CLOUD_SYNC_ALLOWED_PREFIXES.some((prefix) => key.startsWith(prefix));
 
 const isCloudSyncDashboardStateKey = (key: string) =>
@@ -194,11 +196,48 @@ export const emitGlassdayStorageChange = (
 ) => {
   if (!isBrowser()) return;
 
+  if (storageBatchDepth > 0) {
+    if (detail.key) pendingStorageKeys.add(detail.key);
+    detail.keys?.forEach((key) => pendingStorageKeys.add(key));
+    return;
+  }
+
   window.dispatchEvent(
     new CustomEvent<GlassdayStorageChangeDetail>(GLASSDAY_STORAGE_EVENT, {
       detail,
     })
   );
+};
+
+let storageBatchDepth = 0;
+const pendingStorageKeys = new Set<string>();
+
+/**
+ * Coalesce synchronous writes from backup.ts and snapshot restore into one event.
+ * useLocalStorage.ts reloads only affected records; CloudSyncContext.tsx can ignore
+ * layout-only changes. 한국어: 여러 항목을 복원해도 위젯마다 한 번만 갱신한다.
+ * `finally` publishes successful partial writes even if storage runs out of space.
+ */
+export const batchGlassdayStorageChanges = (write: () => void) => {
+  storageBatchDepth += 1;
+  try {
+    write();
+  } finally {
+    storageBatchDepth -= 1;
+    if (storageBatchDepth === 0 && pendingStorageKeys.size > 0) {
+      const keys = [...pendingStorageKeys];
+      pendingStorageKeys.clear();
+      emitGlassdayStorageChange({ type: "bulk", keys });
+    }
+  }
+};
+
+/** Shared with CloudSyncContext: UI preferences never require a data upload.
+ * 한국어: 테마·배치 변경은 해당 기기에만 저장하며 클라우드 재전송을 시작하지 않는다. */
+export const shouldSyncStorageChange = (detail?: GlassdayStorageChangeDetail) => {
+  if (!detail) return true;
+  if (detail.keys) return detail.keys.some(isCloudSyncAllowedKey);
+  return detail.key ? isCloudSyncAllowedKey(detail.key) : detail.type === "bulk";
 };
 
 export const createGlassdayStorageSnapshot = (): GlassdayStorageSnapshot => {
@@ -240,24 +279,19 @@ export const applyGlassdayStorageSnapshot = (
   const canApplyDashboardState =
     dashboardSchemaVersion >= DASHBOARD_STORAGE_SCHEMA_VERSION;
 
-  Object.entries(snapshot.data).forEach(([key, value]) => {
-    if (isCloudSyncDashboardStateKey(key) && !canApplyDashboardState) {
-      result.skippedIncompatibleDashboardState = true;
-      return;
-    }
+  batchGlassdayStorageChanges(() => {
+    Object.entries(snapshot.data).forEach(([key, value]) => {
+      if (isCloudSyncDashboardStateKey(key) && !canApplyDashboardState) {
+        result.skippedIncompatibleDashboardState = true;
+        return;
+      }
 
-    if (
-      key.startsWith(GLASSDAY_STORAGE_PREFIX) &&
-      isCloudSyncAllowedKey(key)
-    ) {
-      window.localStorage.setItem(key, value);
-    }
-  });
+      if (key.startsWith(GLASSDAY_STORAGE_PREFIX) && isCloudSyncAllowedKey(key)) {
+        window.localStorage.setItem(key, value);
+      }
+    });
 
-  markGlassdayLocalSyncedAt(syncedAt);
-
-  emitGlassdayStorageChange({
-    type: "bulk",
+    markGlassdayLocalSyncedAt(syncedAt);
   });
 
   return result;
@@ -283,7 +317,11 @@ export const patchLocalStorageEvents = () => {
     key: string,
     value: string
   ) {
+    // Do not wake widgets for identical writes or sessionStorage writes.
+    // 한국어: 세션 저장소와 실제 데이터 변경을 구분해 불필요한 재렌더를 막는다.
+    const previous = this.getItem(key);
     originalSetItem.call(this, key, value);
+    if (this !== window.localStorage || previous === String(value)) return;
 
     if (isCloudSyncAllowedKey(key)) {
       originalSetItem.call(
@@ -302,7 +340,9 @@ export const patchLocalStorageEvents = () => {
   };
 
   storageProto.removeItem = function patchedRemoveItem(key: string) {
+    const existed = this.getItem(key) !== null;
     originalRemoveItem.call(this, key);
+    if (this !== window.localStorage || !existed) return;
 
     if (isCloudSyncAllowedKey(key)) {
       originalSetItem.call(
@@ -321,10 +361,9 @@ export const patchLocalStorageEvents = () => {
   };
 
   storageProto.clear = function patchedClear() {
+    const keys = this === window.localStorage ? getGlassdayLocalStorageKeys() : [];
     originalClear.call(this);
-    emitGlassdayStorageChange({
-      type: "bulk",
-    });
+    if (keys.length > 0) emitGlassdayStorageChange({ type: "bulk", keys });
   };
 
   storageEventsPatched = true;
