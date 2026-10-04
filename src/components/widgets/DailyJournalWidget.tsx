@@ -65,7 +65,13 @@ export const DailyJournalWidget = () => {
   const { value: storedEntries, setValue: setEntries } = useLocalStorage<JournalEntry[]>(
     JOURNAL_STORAGE_KEY, []
   );
-  const entries = useMemo(() => storedEntries.map(normalizeJournalEntry), [storedEntries]);
+  // Wrap the normalizer because its second parameter is an optional fallback date,
+  // while Array.map passes a numeric index as its second callback argument.
+  // 한국어: map의 index가 날짜 인자로 잘못 전달되지 않도록 값만 명시적으로 넘긴다.
+  const entries = useMemo(
+    () => storedEntries.map((storedEntry) => normalizeJournalEntry(storedEntry)),
+    [storedEntries]
+  );
   const [selectedDate, setSelectedDate] = useState(todayString());
   const [newTaskText, setNewTaskText] = useState("");
   const [newTomorrowTaskText, setNewTomorrowTaskText] = useState("");

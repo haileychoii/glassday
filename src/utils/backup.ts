@@ -62,9 +62,10 @@ export const parseGlassdayBackup = (text: string): GlassdayBackup => {
     throw new Error("This is not a valid Glassday backup file.");
   }
   const candidate = parsed as Partial<GlassdayBackup>;
+  const version = candidate.version;
   if (
-    candidate.app !== "Glassday" || !Number.isInteger(candidate.version) ||
-    candidate.version < 1 || candidate.version > GLASSDAY_STORAGE_SNAPSHOT_VERSION ||
+    candidate.app !== "Glassday" || typeof version !== "number" || !Number.isInteger(version) ||
+    version < 1 || version > GLASSDAY_STORAGE_SNAPSHOT_VERSION ||
     typeof candidate.exportedAt !== "string" || !Number.isFinite(Date.parse(candidate.exportedAt)) ||
     !candidate.data || typeof candidate.data !== "object" || Array.isArray(candidate.data) ||
     !Object.entries(candidate.data).every(([key, value]) =>
