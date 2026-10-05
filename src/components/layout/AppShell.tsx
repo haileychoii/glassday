@@ -25,6 +25,7 @@ import {
 import { isTauri } from "@tauri-apps/api/core";
 
 import { Sidebar } from "./Sidebar";
+import { TauriResizeHandles } from "./TauriResizeHandles";
 import { Topbar } from "./Topbar";
 import {
   getSavedDesktopPin,
@@ -377,6 +378,14 @@ const shellContent = (
          * 창 전체를 차지하므로, desktop-only CSS는 .tauri-app-window 아래로만 둔다.
          */}
         {shellContent}
+
+        {/*
+         * Borderless native resize layer
+         * English: `TauriResizeHandles.tsx` restores the eight native resize
+         * directions that disappear when Tauri decorations are disabled.
+         * Korean: 보이는 테두리를 추가하지 않고 가장자리 드래그만 복원한다.
+         */}
+        <TauriResizeHandles />
       </div>
     );
   }

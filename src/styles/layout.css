@@ -1021,6 +1021,94 @@ body {
   background: transparent !important;
 }
 
+/* =========================================================
+   TAURI BORDERLESS WINDOW RESIZE HIT AREAS
+   ========================================================= */
+
+/*
+ * `TauriResizeHandles.tsx` owns behavior; this block owns hit-box geometry.
+ * The layer itself ignores input, while each invisible edge/corner enables it.
+ * 한국어: 화면 디자인은 그대로 두고 바깥 6px와 모서리 12px만 마우스로
+ * 잡을 수 있게 한다. 모서리는 더 큰 영역을 사용해 대각선 조절을 쉽게 한다.
+ */
+.tauri-resize-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.tauri-resize-handle {
+  position: absolute;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+}
+
+.tauri-resize-handle[data-resize-direction="North"] {
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.tauri-resize-handle[data-resize-direction="South"] {
+  bottom: 0;
+  left: 12px;
+  right: 12px;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.tauri-resize-handle[data-resize-direction="West"] {
+  top: 12px;
+  bottom: 12px;
+  left: 0;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.tauri-resize-handle[data-resize-direction="East"] {
+  top: 12px;
+  right: 0;
+  bottom: 12px;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.tauri-resize-handle[data-resize-direction="NorthWest"],
+.tauri-resize-handle[data-resize-direction="NorthEast"],
+.tauri-resize-handle[data-resize-direction="SouthWest"],
+.tauri-resize-handle[data-resize-direction="SouthEast"] {
+  width: 12px;
+  height: 12px;
+}
+
+.tauri-resize-handle[data-resize-direction="NorthWest"] {
+  top: 0;
+  left: 0;
+  cursor: nwse-resize;
+}
+
+.tauri-resize-handle[data-resize-direction="NorthEast"] {
+  top: 0;
+  right: 0;
+  cursor: nesw-resize;
+}
+
+.tauri-resize-handle[data-resize-direction="SouthWest"] {
+  bottom: 0;
+  left: 0;
+  cursor: nesw-resize;
+}
+
+.tauri-resize-handle[data-resize-direction="SouthEast"] {
+  right: 0;
+  bottom: 0;
+  cursor: nwse-resize;
+}
+
 
 /* =========================================================
    ACTUAL GLASSDAY WINDOW SURFACE
