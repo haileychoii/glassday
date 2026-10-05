@@ -13,11 +13,24 @@
  * ============================================================
  */
 
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 
 import { isTauriApp } from "./runtime";
 
 export const DESKTOP_PIN_STORAGE_KEY = "glassday.desktop.pin.v1";
+
+/**
+ * Keep this value aligned with `src-tauri/tauri.conf.json`.
+ * English: Logical pixels make the restored size consistent across Windows
+ * display scaling levels. Only the size is restored; the user's window
+ * position stays untouched.
+ * Korean: Windows 배율과 무관하게 같은 체감 크기로 돌아오도록 논리 픽셀을
+ * 사용한다. 창 위치는 사용자가 배치한 그대로 두고 크기만 초기값으로 복원한다.
+ */
+export const DEFAULT_TAURI_WINDOW_SIZE = {
+  width: 980,
+  height: 640,
+} as const;
 
 /**
  * Missing values default to true because the Tauri window configuration has
@@ -46,3 +59,20 @@ export const setDesktopPin = async (pinned: boolean) => {
   await getCurrentWindow().setAlwaysOnBottom(pinned);
 };
 
+/**
+ * Restore the native shell to the initial size declared in tauri.conf.json.
+ * English: SettingsModal calls this bridge instead of importing Tauri APIs
+ * directly, so browser builds never attempt to control a native window.
+ * Korean: SettingsModal이 Tauri API를 직접 호출하지 않고 이 함수를 거치므로
+ * 웹 빌드에서는 native window 제어가 실행되지 않는다.
+ */
+export const resetTauriWindowSize = async () => {
+  if (!isTauriApp) return;
+
+  await getCurrentWindow().setSize(
+    new LogicalSize(
+      DEFAULT_TAURI_WINDOW_SIZE.width,
+      DEFAULT_TAURI_WINDOW_SIZE.height
+    )
+  );
+};

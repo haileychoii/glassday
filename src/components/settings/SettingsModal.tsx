@@ -83,7 +83,9 @@ import {
 import { useCloudSync } from "../../context/CloudSyncContext";
 import { isTauriApp } from "../../utils/runtime";
 import {
+  DEFAULT_TAURI_WINDOW_SIZE,
   getSavedDesktopPin,
+  resetTauriWindowSize,
   setDesktopPin,
 } from "../../utils/tauriDesktop";
 
@@ -366,6 +368,25 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       })
       .catch(() => {
         setStatus("Desktop pin could not be updated.");
+      });
+  };
+
+  /**
+   * English: Restore only the native window size through tauriDesktop.ts;
+   * keeping native calls in that bridge protects the web Settings screen.
+   * Korean: 창 위치와 대시보드 데이터는 건드리지 않고 tauriDesktop.ts를 통해
+   * Tauri 기본 크기만 복원한다. 실패 메시지는 설정 창 안에서 바로 확인한다.
+   */
+  const handleResetDesktopSize = () => {
+    void resetTauriWindowSize()
+      .then(() => {
+        setStatus(
+          `Window restored to ${DEFAULT_TAURI_WINDOW_SIZE.width} x ${DEFAULT_TAURI_WINDOW_SIZE.height}.`
+        );
+      })
+      .catch((error: unknown) => {
+        console.warn("Unable to restore the default Tauri window size.", error);
+        setStatus("Window size could not be restored.");
       });
   };
 
@@ -834,6 +855,33 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                     Off
                   </button>
                 </div>
+              </div>
+
+              {/*
+               * Default window size
+               * English: Reuses the responsive toggle-row layout above so
+               * narrow Settings windows stack the label and action safely.
+               * Korean: 위의 반응형 행 구조를 재사용해 작은 창에서도 설명과
+               * 버튼이 겹치지 않으며, 누르면 980 x 640 크기로만 돌아간다.
+               */}
+              <div className="settings-toggle-row">
+                <div>
+                  <strong>Default window size</strong>
+                  <span>
+                    Restore Glassday to {DEFAULT_TAURI_WINDOW_SIZE.width} x{" "}
+                    {DEFAULT_TAURI_WINDOW_SIZE.height}.
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  className="settings-window-size-button"
+                  onClick={handleResetDesktopSize}
+                  aria-label="Restore default window size"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+                  Restore
+                </button>
               </div>
             </section>
           )}
