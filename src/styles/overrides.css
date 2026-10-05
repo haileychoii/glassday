@@ -3851,30 +3851,55 @@ body,
 }
 
 /* Tauri window corner contract:
-   English: The native window is transparent, so non-retro themes must also
-   clear every document backplate behind the rounded app surface. Pixel Desk
-   and Retro intentionally keep their square 95/98 window silhouette.
-   Korean: shell만 둥글게 해도 html/body 배경이 남아 있으면 네 모서리가
-   사각형으로 보인다. 일반 테마는 바깥 배경을 투명하게 비우고, Pixel과
-   Pink Retro만 예외적으로 각진 창 외형을 유지한다. */
-html.desktop-transparent:not([data-theme="pixel-desk"]):not([data-theme="retro"]),
-html.desktop-transparent:not([data-theme="pixel-desk"]):not([data-theme="retro"]) body,
-html.desktop-transparent:not([data-theme="pixel-desk"]):not([data-theme="retro"]) #root,
-html.desktop-transparent:not([data-theme="pixel-desk"]):not([data-theme="retro"]) .tauri-app-window {
+   English: `AppShell.tsx` renders `.tauri-app-window` as the native window host
+   and `.app-shell-surface` as its only visible child. Clipping just the child is
+   not sufficient because an internal sidebar, scrollbar, or theme backplate can
+   still paint across a lower corner in WebView2. Non-Pixel themes therefore use
+   a transparent 1px safety gutter and paint containment on both layers.
+   Korean: `AppShell.tsx`의 Tauri host와 실제 app surface를 함께 잘라서 내부
+   스크롤/배경 레이어가 아래 모서리를 사각형으로 다시 덮지 못하게 한다.
+   최신 디자인 규칙에 따라 각진 외곽은 Pixel Desk만 유지한다. */
+html.desktop-transparent:not([data-theme="pixel-desk"]),
+html.desktop-transparent:not([data-theme="pixel-desk"]) body,
+html.desktop-transparent:not([data-theme="pixel-desk"]) #root {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
 }
 
-html.desktop-transparent:not([data-theme="pixel-desk"]):not([data-theme="retro"])
-  .tauri-app-window
-  > .app-shell-surface {
-  border-radius: 22px !important;
+html.desktop-transparent:not([data-theme="pixel-desk"]) .tauri-app-window {
+  --gd-tauri-window-radius: 22px;
+
+  box-sizing: border-box;
+  padding: 1px;
+  border-radius: var(--gd-tauri-window-radius) !important;
   overflow: hidden !important;
-  clip-path: inset(0 round 22px);
+  clip-path: inset(0 round var(--gd-tauri-window-radius));
+  contain: paint;
 }
 
-html.desktop-transparent:is([data-theme="pixel-desk"], [data-theme="retro"])
+html.desktop-transparent:not([data-theme="pixel-desk"])
+  .tauri-app-window
+  > .app-shell-surface {
+  width: 100%;
+  height: 100%;
+  border-radius: calc(var(--gd-tauri-window-radius) - 1px) !important;
+  overflow: hidden !important;
+  clip-path: inset(0 round calc(var(--gd-tauri-window-radius) - 1px));
+  contain: paint;
+}
+
+/* Pixel Desk intentionally keeps the square Windows 95 silhouette.
+   한국어: Pixel Desk만 native host와 surface 모두 각진 창으로 유지한다. */
+html.desktop-transparent[data-theme="pixel-desk"] .tauri-app-window {
+  padding: 0;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+  clip-path: none !important;
+  contain: paint;
+}
+
+html.desktop-transparent[data-theme="pixel-desk"]
   .tauri-app-window
   > .app-shell-surface {
   border-radius: 0 !important;
