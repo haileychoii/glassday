@@ -1520,6 +1520,20 @@
   pointer-events: none !important;
 }
 
+/*
+ * Interactive +N preview / 클릭 가능한 숨은 일정 목록
+ * English: MonthCalendar.tsx portals this preview to body so fixed coordinates
+ * are not offset by react-grid-layout transforms. Only the +N list receives
+ * pointer input; ordinary event previews remain non-blocking.
+ * Korean: +N 목록만 마우스를 받아 상세 일정을 클릭할 수 있고, 일반 hover
+ * 설명창은 아래 요소의 마우스 동작을 막지 않는다.
+ */
+.calendar-month-event-preview.is-interactive {
+  max-height: min(360px, calc(100vh - 24px)) !important;
+  overflow: auto !important;
+  pointer-events: auto !important;
+}
+
 .calendar-month-event-preview-title {
   font-size: 14px !important;
   line-height: 1.28 !important;
@@ -3442,6 +3456,20 @@ body.theme-aurora .calendar-floating-window .event-color-picker {
   color: hsl(var(--primary));
 }
 
+/*
+ * Week toolbar fit / 주간 편집 버튼 폭 보정
+ * English: This is the third child of CalendarWidget.tsx's two-column toolbar.
+ * Grid auto-placement used to stretch it across a whole track, producing a
+ * large empty area inside the Edit pill.
+ * Korean: 2열 toolbar의 세 번째 요소가 한 열 전체로 늘어나던 문제를 막고
+ * Edit 글자와 아이콘에 필요한 실제 너비만 사용한다.
+ */
+.calendar-widget-toolbar > .calendar-week-edit-toggle {
+  grid-column: 1 / -1;
+  width: fit-content !important;
+  justify-self: start;
+}
+
 .calendar-week-day-column.is-editing {
   cursor: crosshair;
 }
@@ -3705,4 +3733,155 @@ body.theme-aurora .calendar-floating-window .event-color-picker {
   :is(.calendar-event-item, .calendar-week-event, .calendar-week-range-bar, .calendar-month-single-chip)
   :is(strong, span, .calendar-event-title, .calendar-event-time, .calendar-event-location) {
   color: #111111 !important;
+}
+
+/* =========================================================
+   Aurora calendar integration / Aurora 캘린더 재질 통합
+
+   English: These rules intentionally live after every generic Calendar layer.
+   Older compatibility rules include bright fallback surfaces for Week view;
+   this final theme bridge keeps the photo-backed Aurora material consistent.
+   Korean: 공통 캘린더의 밝은 호환 표면보다 뒤에서 Aurora 유리 재질을 확정해
+   Week/Month/탭이 배경 사진과 자연스럽게 이어지도록 한다.
+========================================================= */
+
+:is(
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) .calendar-view-toggle {
+  width: min(240px, 100%) !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 2px !important;
+  padding: 3px !important;
+  background: rgb(8 12 27 / 0.46) !important;
+  border-color: rgb(214 222 255 / 0.2) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.09),
+    0 8px 24px rgb(18 12 48 / 0.12) !important;
+}
+
+:is(
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) .calendar-view-button {
+  width: 100% !important;
+  min-width: 0 !important;
+  padding-inline: 10px !important;
+  color: rgb(226 232 255 / 0.68) !important;
+  border: 1px solid rgb(203 214 255 / 0.08) !important;
+}
+
+:is(
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) .calendar-view-button:not(.is-active):hover {
+  color: rgb(247 248 255 / 0.94) !important;
+  background: rgb(196 208 255 / 0.1) !important;
+  border-color: rgb(210 219 255 / 0.18) !important;
+}
+
+:is(
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) .calendar-view-button.is-active {
+  color: rgb(250 250 255 / 0.98) !important;
+  background: linear-gradient(145deg, rgb(106 113 218 / 0.72), rgb(121 83 181 / 0.62)) !important;
+  border-color: rgb(208 218 255 / 0.48) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.24),
+    0 8px 18px rgb(25 16 72 / 0.16) !important;
+}
+
+:is(
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) .calendar-week-timeline {
+  --calendar-week-outer-line: rgb(216 226 255 / 0.22);
+  --calendar-week-major-line: rgb(213 223 255 / 0.17);
+  --calendar-week-minor-line: rgb(202 214 255 / 0.09);
+  --calendar-week-column-line: rgb(213 223 255 / 0.13);
+  background: linear-gradient(180deg, rgb(17 22 43 / 0.62), rgb(9 13 29 / 0.46)) !important;
+  border-color: var(--calendar-week-outer-line) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 18px 40px rgb(16 10 42 / 0.1) !important;
+}
+
+:is(
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) :is(.calendar-week-header, .calendar-week-all-day) {
+  color: rgb(232 237 255 / 0.84) !important;
+  background: rgb(20 25 48 / 0.46) !important;
+  border-color: var(--calendar-week-major-line) !important;
+}
+
+:is(
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) :is(.calendar-week-day-header.is-selected, .calendar-week-day-column.is-selected) {
+  background-color: rgb(133 122 224 / 0.13) !important;
+}
+
+:is(
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) :is(.calendar-week-time, .calendar-week-all-day-label) {
+  color: rgb(220 228 255 / 0.58) !important;
+}
+
+:is(
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) :is(.calendar-month-day-cell, .calendar-month-event-preview) {
+  background: linear-gradient(145deg, rgb(27 33 58 / 0.64), rgb(13 18 35 / 0.5)) !important;
+  border-color: rgb(214 223 255 / 0.2) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 12px 28px rgb(20 12 54 / 0.1) !important;
+}
+
+:is(
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) .calendar-month-day-cell.is-selected {
+  border-color: rgb(186 196 255 / 0.36) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    0 0 0 1px rgb(143 129 232 / 0.15) !important;
+}
+
+:is(
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora
+) :is(
+  .calendar-month-event-preview-title,
+  .calendar-month-event-preview-time,
+  .calendar-month-event-preview-line,
+  .calendar-month-event-preview-notes
+) {
+  color: rgb(238 241 255 / 0.88) !important;
 }
