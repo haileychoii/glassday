@@ -1,43 +1,36 @@
-# Design QA: Aurora Calendar Refinement
+# Design QA: Pixel Desk Calendar Refinement
 
 ## Reference
 
-- Source screenshot: `C:\Users\jenny\OneDrive\사진\스크린샷\스크린샷 2026-10-09 130355.png`
-- Source screenshot: `C:\Users\jenny\OneDrive\사진\스크린샷\스크린샷 2026-10-09 130413.png`
-- Source screenshot: `C:\Users\jenny\OneDrive\사진\스크린샷\스크린샷 2026-10-09 130326.png`
-- Source screenshot: `C:\Users\jenny\AppData\Local\Temp\codex-clipboard-ee2ad7d9-bcb8-4abe-bb96-da6ab9721983.png`
-- Implementation capture: Codex IAB tab 2 at `http://127.0.0.1:4173/?layout=wide` (session-local browser capture; IAB does not create a workspace screenshot file).
+- Source screenshot: `C:\Users\jenny\AppData\Local\Temp\codex-clipboard-f849712a-2a82-44de-9f87-82563adce3af.png`
+- Source screenshot: `C:\Users\jenny\AppData\Local\Temp\codex-clipboard-fa5cf439-d552-400a-9af6-143a11a22fe3.png`
+- Source screenshot: `C:\Users\jenny\AppData\Local\Temp\codex-clipboard-d557505b-c384-4e0d-8880-05a1b62809a5.png`
 - Reference type: Defect screenshots plus the user's written target behavior, not a pixel-identical mockup.
 
 ## Environment
 
-- Viewports checked: `1221x972`, `855x745`, and the browser default viewport.
 - Layout mode: Wide dashboard.
-- Theme: Aurora.
-- Density: Desktop dashboard density with two widget columns.
+- Theme: Pixel Desk.
+- Build validation: `npm.cmd run lint` and `npm.cmd run build` passed.
+- Browser target: Codex in-app browser at `http://127.0.0.1:4173/?layout=wide`.
 
-## Interaction Checks
+## Implemented Checks
 
-- Day / Week / Month controls remain separated and readable.
-- Week Edit control uses content width and does not leave a large empty trailing area.
-- Week timeline keeps the dark Aurora glass surface and readable hour/half-hour guides.
-- Month `+2` overflow opens beside its date cell rather than at the page edge.
-- Overflow preview remains interactive long enough to select an event.
-- Selecting a hidden event opens the Calendar Event editor for that exact event.
-- Browser console error check: no errors.
+- Calendar title and add action use one explicit gutter and no longer touch the widget edge.
+- Week view removes the redundant date-range label because the seven day headers already show the dates.
+- Week day headers and the all-day lane use compact system-calendar heights.
+- Month view no longer forces a 420px desktop canvas in a narrow widget; all seven columns shrink together.
+- Month rows use compact container-relative sizing and no stable scrollbar gutter, keeping left and right spacing equal.
+- The current day has a persistent navy Pixel Desk focus frame and date badge.
+- Saved event colors remain visible at rest; hover increases saturation and adds a navy focus outline.
+- Generic Pixel button rules explicitly exclude calendar event buttons, so they cannot repaint event colors gray.
 
-## Visual Findings And Fixes
+## Visual Verification
 
-- Before: generic Calendar fallbacks forced a bright Week surface over Aurora.
-  After: a final Aurora bridge restores dark translucent Week and Month surfaces.
-- Before: transformed dashboard coordinates displaced the fixed month preview.
-  After: the preview renders through a body portal and clamps to the viewport near the pointer.
-- Before: the Week Edit control stretched across the toolbar grid.
-  After: it spans the toolbar row structurally but keeps `fit-content` width.
-- Before: dark outer shadows made Aurora borders look black and heavy.
-  After: shell, card, panel, topbar, and sidebar edges use softer lilac-white glass borders and lighter shadows.
+- A pre-final browser capture confirmed the compact Week geometry, hidden duplicate range label, and reduced all-day/header heights.
+- The final event-color specificity correction could not be re-captured because the local browser URL was rejected by the browser security policy.
+- No workaround or alternate browser surface was used after that rejection.
 
 ## Result
 
-`passed`
-
+`blocked`
