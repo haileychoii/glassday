@@ -304,7 +304,19 @@ export const CalendarWidget = () => {
           </button>
         }
       >
-        <div className="calendar-widget-frame">
+        <div
+          className={cn("calendar-widget-frame", `is-${view}-view`)}
+        >
+          {/*
+            Calendar view hook / 캘린더 보기 상태 연결점
+            English: calendar.css uses this class only for view-specific geometry,
+            such as removing the redundant Week range label in Pixel Desk. The
+            actual Day/Week/Month content still comes from MonthCalendar.tsx and
+            WeekTimeline.tsx below.
+            Korean: Pixel Desk에서 Week 날짜 범위처럼 중복되는 UI만 보기별로
+            정리한다. 실제 일정 렌더링은 아래 MonthCalendar.tsx와
+            WeekTimeline.tsx가 계속 담당하므로 데이터 동작에는 영향이 없다.
+          */}
           {/* Figma Frame: Date Toolbar / View Segmented Control */}
           <div className="calendar-widget-toolbar">
             <div className="flex items-center gap-1">

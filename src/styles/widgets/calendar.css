@@ -3885,3 +3885,504 @@ body.theme-aurora .calendar-floating-window .event-color-picker {
 ) {
   color: rgb(238 241 255 / 0.88) !important;
 }
+
+/* =========================================================
+   Pixel Desk calendar density and hierarchy / 픽셀 데스크 캘린더 밀도와 위계
+
+   English: CalendarWidget.tsx supplies `.is-week-view` / `.is-month-view`,
+   MonthCalendar.tsx supplies `.is-today`, and every event supplies
+   `--event-color`. These final rules translate those existing states into a
+   compact Windows 95-style system calendar without changing stored data.
+   Korean: CalendarWidget.tsx의 보기 상태, MonthCalendar.tsx의 오늘 상태,
+   일정 데이터의 `--event-color`를 이용해 저장 로직은 그대로 두고
+   Windows 95처럼 단정한 간격과 명확한 상태만 만든다.
+========================================================= */
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-widget-card {
+  --gd-calendar-month-gap: clamp(2px, 0.55cqw, 5px);
+  --gd-calendar-month-row-min: clamp(34px, 7.1cqw, 50px);
+  --gd-calendar-range-lane-size: clamp(5px, 0.95cqw, 7px);
+  --gd-calendar-month-chip-height: clamp(12px, 2.15cqw, 15px);
+}
+
+/* The title row and + action share one spacing system. This prevents the
+   action from touching the frame at narrow Tauri window sizes.
+   / 제목과 + 버튼에 같은 여백 기준을 적용해 작은 창에서도 붙지 않는다. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-widget-card > .glass-card-header {
+  min-height: 44px !important;
+  padding: 6px 12px 5px !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-widget-card > .glass-card-header .glass-card-actions {
+  flex: 0 0 auto !important;
+  margin: 0 1px 0 8px !important;
+  align-self: center !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-widget-card > .glass-card-header .glass-card-actions > .glass-button {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  padding: 0 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-widget-card > .glass-card-body {
+  padding: 8px 12px 12px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-widget-frame {
+  gap: 6px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-widget-toolbar {
+  gap: 8px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-widget-toolbar > div:first-child {
+  gap: 6px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) :is(.calendar-date-input, .calendar-nav-button) {
+  height: 34px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-view-toggle {
+  height: 38px !important;
+  padding: 4px !important;
+  gap: 4px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-view-button {
+  height: 28px !important;
+  min-width: 68px !important;
+  padding-inline: 10px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-current-label {
+  margin: 0 !important;
+  min-height: 18px !important;
+  line-height: 18px !important;
+}
+
+/* Week headers already show the full date for all seven days. Removing the
+   repeated range label shortens the path from Edit to the timeline.
+   / 주간 헤더가 날짜를 모두 보여주므로 중복 범위 문구를 숨긴다. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-widget-frame.is-week-view > .calendar-current-label {
+  display: none !important;
+}
+
+/* Month uses the available width instead of preserving a desktop-only 420px
+   canvas. Seven columns shrink together, so left and right gutters stay equal.
+   / 작은 창에서도 420px 고정판을 만들지 않고 월 전체가 함께 줄어든다. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-view-body.is-month-view {
+  overflow: hidden !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-view-body.is-month-view .calendar-month-board {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  flex: 0 1 auto !important;
+  grid-template-rows: 24px auto !important;
+  gap: 3px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-month-weekdays {
+  height: 24px !important;
+  margin: 0 !important;
+  gap: var(--gd-calendar-month-gap) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-month-weekday {
+  height: 24px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-month-weeks {
+  height: auto !important;
+  flex: 0 1 auto !important;
+  gap: var(--gd-calendar-month-gap) !important;
+  overflow: hidden !important;
+  scrollbar-gutter: auto !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-month-week-row {
+  flex: 0 0 calc(
+    var(--gd-calendar-month-row-min) +
+      (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
+  ) !important;
+  gap: var(--gd-calendar-month-gap) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-month-week-row > .calendar-month-day-cell {
+  padding: clamp(3px, 0.7cqw, 5px) !important;
+  border-radius: 0 !important;
+}
+
+/* A navy inset frame and number badge make today visible even when it is not
+   the selected browsing date. / 선택 여부와 무관하게 오늘을 즉시 찾는다. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-month-day-cell.is-today {
+  border-color: #000080 !important;
+  box-shadow:
+    inset 0 0 0 1px #000080,
+    inset 2px 2px 0 #ffffff,
+    inset -2px -2px 0 #808080 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-month-day-cell.is-today .calendar-month-day-top > span:first-child {
+  min-width: 18px !important;
+  padding: 1px 4px !important;
+  color: #ffffff !important;
+  background: #000080 !important;
+  text-align: center !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-month-day-cell.is-selected:not(.is-today) {
+  outline: 1px dotted #000000 !important;
+  outline-offset: -4px !important;
+}
+
+/* Event color is a resting-state cue, not a hover-only decoration. Hover adds
+   contrast while preserving the user's chosen color.
+   / 기본 상태에서도 색을 보이고 hover 때만 채도와 대비를 높인다. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) :is(
+  .calendar-event-item,
+  .calendar-week-event,
+  .calendar-week-range-bar,
+  .calendar-range-chip,
+  .calendar-month-single-chip
+) {
+  background: color-mix(in srgb, var(--event-color, #fff3b0) 88%, #d4d0c8 12%) !important;
+  opacity: 1 !important;
+  filter: saturate(0.92) brightness(1.02) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) :is(
+  .calendar-event-item:hover,
+  .calendar-week-event:hover,
+  .calendar-week-range-bar:hover,
+  .calendar-range-chip:hover,
+  .calendar-month-single-chip:hover
+) {
+  background: color-mix(in srgb, var(--event-color, #fff3b0) 97%, #ffffff 3%) !important;
+  opacity: 1 !important;
+  filter: saturate(1.12) brightness(1.01) !important;
+  outline: 1px solid #000080 !important;
+  outline-offset: -2px !important;
+}
+
+/* WeekTimeline.tsx renders both the seven-day header and the all-day lane.
+   Compacting both keeps the time grid visible without squeezing event text.
+   / 요일 헤더와 종일 영역을 함께 줄여 실제 시간표 공간을 확보한다. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-week-day-header {
+  height: 38px !important;
+  gap: 0 !important;
+  font-size: 9px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-week-day-header strong {
+  font-size: 11px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-week-all-day {
+  min-height: 44px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .calendar-week-all-day-grid {
+  min-height: 43px !important;
+  padding: 5px 4px !important;
+  grid-auto-rows: 22px !important;
+  align-items: center !important;
+}
+
+@container calendar-widget (max-width: 520px) {
+  :is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  ) .calendar-view-button {
+    min-width: 0 !important;
+    padding-inline: 6px !important;
+  }
+
+  :is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  ) .calendar-widget-card > .glass-card-body {
+    padding-inline: 8px !important;
+  }
+}
