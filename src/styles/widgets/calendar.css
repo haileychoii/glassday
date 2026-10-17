@@ -4119,9 +4119,17 @@ body.theme-aurora .calendar-floating-window .event-color-picker {
   width: 100% !important;
   min-width: 0 !important;
   max-width: 100% !important;
-  height: auto !important;
-  flex: 0 1 auto !important;
-  grid-template-rows: 24px auto !important;
+  /*
+    Fill available height / 남는 세로 공간 채우기
+    English: CalendarWidget.tsx already gives `.calendar-view-body` the
+    remaining widget height. The month board must opt into that flex space;
+    `height:auto` + `flex:0` left the large blank area seen in the screenshot.
+    Korean: CalendarWidget.tsx가 남은 높이를 계산하므로 월 보드가 그 공간을
+    받아야 한다. 내용 높이 고정 대신 요일 24px + 달력 가변 영역으로 나눈다.
+  */
+  height: 100% !important;
+  flex: 1 1 auto !important;
+  grid-template-rows: 24px minmax(0, 1fr) !important;
   gap: 3px !important;
 }
 
@@ -4163,10 +4171,13 @@ body.theme-aurora .calendar-floating-window .event-color-picker {
   html.theme-pixel,
   body.theme-pixel
 ) .calendar-month-weeks {
-  height: auto !important;
-  flex: 0 1 auto !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
   gap: var(--gd-calendar-month-gap) !important;
-  overflow: hidden !important;
+  /* When the widget becomes shorter than six readable rows, scroll inside the
+     calendar instead of clipping events. / 작은 창에서는 일정 겹침 대신 내부 스크롤. */
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
   scrollbar-gutter: auto !important;
 }
 
@@ -4180,7 +4191,9 @@ body.theme-aurora .calendar-floating-window .event-color-picker {
   html.theme-pixel,
   body.theme-pixel
 ) .calendar-month-week-row {
-  flex: 0 0 calc(
+  /* All six weeks share any extra height while each week keeps enough room for
+     its range lanes. / 남는 높이는 6주가 나눠 갖고 일정 lane 최소 높이는 유지. */
+  flex: 1 0 calc(
     var(--gd-calendar-month-row-min) +
       (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
   ) !important;
