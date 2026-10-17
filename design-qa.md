@@ -1,29 +1,29 @@
-# Design QA: Pixel Desk Month Height
+# Design QA: Sidebar Fold Button
 
 ## Reference
 
-- Source screenshot: `C:\Users\jenny\AppData\Local\Temp\codex-clipboard-96101e97-da94-47b5-a713-3368109dd3c2.png`
-- Reference type: Defect screenshot plus the user's written target behavior, not a pixel-identical mockup.
-
-## Environment
-
-- Layout mode: Wide dashboard.
-- Theme: Pixel Desk.
-- Build validation: `npm.cmd run build` and `git diff --check` passed.
-- Browser target: Google Chrome, as previously requested by the user.
+- Source screenshot: `C:\Users\jenny\AppData\Local\Temp\codex-clipboard-ec85df95-c189-460a-accd-88d2992c51c8.png`
+- Target: the sidebar fold control must be circular and centered on the collapsed sidebar rail in every theme.
 
 ## Implemented Checks
 
-- The month board now accepts the remaining height supplied by `CalendarWidget.tsx` instead of sizing itself only to its content.
-- The weekday header remains fixed at 24px while the six calendar weeks share all remaining vertical space.
-- Each week preserves its event-lane minimum height, preventing event labels from collapsing or overlapping.
-- When the widget is shorter than the minimum required by all six weeks, only the month grid scrolls vertically.
+- `Sidebar.tsx` continues to provide one semantic button and one Lucide panel icon for all themes.
+- Shared geometry fixes width, height, minimum size, aspect ratio, padding, and radius as one square control.
+- The collapsed brand row removes horizontal padding and uses a single centered grid track.
+- The icon uses block layout with no margin, preventing baseline or flex alignment drift.
+- Laptop mode retains its compact 22px size while preserving the same circle and center point.
+- Pixel Desk's generic square-button rule now excludes the sidebar fold control.
+- Theme files still own color, border, shadow, and hover surface styling.
+
+## Automated Verification
+
+- `npm.cmd run lint`: passed.
+- `npm.cmd run build`: passed.
+- `git diff --check`: passed.
 
 ## Visual Verification
 
-- The CSS flex and grid hierarchy was inspected against the rendered defect: `calendar-view-body` provides available height, `calendar-month-board` consumes it, and `calendar-month-weeks` distributes it.
-- Final Chrome capture is unavailable in the current computer-use environment, so visual verification cannot be marked as passed.
+- The supplied defect screenshot was inspected before implementation.
+- A final matching-state Chrome capture is unavailable in the current computer-use environment, so the visual comparison cannot be marked as passed.
 
-## Result
-
-`blocked`
+final result: blocked

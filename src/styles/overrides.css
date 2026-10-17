@@ -2689,8 +2689,8 @@ body,
     body.theme-pixel
   )
   :is(
-    button:not(.calendar-event-item):not(.calendar-week-event):not(.calendar-week-range-bar):not(.calendar-range-chip):not(.calendar-month-single-chip),
-    .glass-button,
+    button:not(.calendar-event-item):not(.calendar-week-event):not(.calendar-week-range-bar):not(.calendar-range-chip):not(.calendar-month-single-chip):not(.sidebar-collapse-button),
+    .glass-button:not(.sidebar-collapse-button),
     .calendar-nav-button,
     .calendar-view-button,
     .money-pill,
@@ -2854,89 +2854,63 @@ body,
   line-height: 1 !important;
 }
 
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .app-sidebar[data-collapsed="true"]
-  .sidebar-brand,
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .sidebar[data-collapsed="true"]
-  .sidebar-brand,
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .app-mode-stage.is-laptop-mode
-  .app-sidebar[data-collapsed="true"]
-  .sidebar-brand,
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .app-mode-stage.is-laptop-mode
-  .sidebar[data-collapsed="true"]
-  .sidebar-brand {
+/* =========================================================
+   Sidebar fold control / 사이드바 접기 버튼
+
+   English: `Sidebar.tsx` renders one shared collapse control for every theme.
+   Responsive and theme files may change its surface color, but geometry stays
+   here so the button cannot become oval or drift away from the rail center.
+   Korean: 모든 테마가 `Sidebar.tsx`의 같은 버튼을 사용한다. 색상과 테두리는
+   각 테마가 유지하되 크기, 원형, 아이콘 중앙 정렬은 이 최종 규칙이 보장한다.
+========================================================= */
+.sidebar-collapse-button {
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  flex: 0 0 28px !important;
+  aspect-ratio: 1 / 1 !important;
   padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  line-height: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.sidebar-collapse-button > svg {
+  display: block !important;
+  margin: 0 !important;
+  flex: none !important;
+}
+
+/* Removing side padding is important here: a single item inside the old
+   `space-between` brand row otherwise looks right-shifted after the title is
+   hidden. / 제목이 숨겨진 뒤 남은 버튼은 패딩 없이 레일 정중앙에 둔다. */
+.app-sidebar[data-collapsed="true"] .sidebar-brand,
+.sidebar[data-collapsed="true"] .sidebar-brand {
+  padding-inline: 0 !important;
   display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
   place-items: center !important;
   justify-content: center !important;
 }
 
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .app-sidebar[data-collapsed="true"]
-  .sidebar-collapse-button,
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .sidebar[data-collapsed="true"]
-  .sidebar-collapse-button {
+.app-sidebar[data-collapsed="true"] .sidebar-collapse-button,
+.sidebar[data-collapsed="true"] .sidebar-collapse-button {
   margin: 0 !important;
   justify-self: center !important;
   align-self: center !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-collapse-button {
+  width: 22px !important;
+  min-width: 22px !important;
+  max-width: 22px !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  flex-basis: 22px !important;
 }
 
 /* =========================================================
@@ -3065,8 +3039,8 @@ body,
     body.theme-pixel
   )
   :is(
-    button:not(.calendar-event-item):not(.calendar-week-event):not(.calendar-week-range-bar):not(.calendar-range-chip):not(.calendar-month-single-chip),
-    .glass-button,
+    button:not(.calendar-event-item):not(.calendar-week-event):not(.calendar-week-range-bar):not(.calendar-range-chip):not(.calendar-month-single-chip):not(.sidebar-collapse-button),
+    .glass-button:not(.sidebar-collapse-button),
     .calendar-nav-button,
     .calendar-view-button,
     .career-icon-button,
