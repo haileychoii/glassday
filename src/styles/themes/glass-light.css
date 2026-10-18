@@ -814,13 +814,15 @@ html.desktop-transparent[data-theme="glass-light"]
 body.desktop-transparent[data-theme="glass-light"]
   .app-shell-surface.liquid-shell {
   /* Tauri light glass backplate
-     A soft milky layer keeps wallpaper visible but gives the app one coherent
-     frosted-glass body. / 배경은 남기되 앱 전체가 흰 유리 한 장처럼 보이게 한다. */
+     English: Windows Acrylic (wired in src-tauri/src/lib.rs) blurs the real
+     desktop. This CSS layer supplies the soft white pigment and highlight.
+     Korean: 실제 바탕화면 흐림은 Rust Acrylic이 맡고, 이 레이어는 우윳빛과
+     유리 가장자리 반사광만 더한다. */
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.10)) !important;
-  background-color: rgba(255, 255, 255, 0.16) !important;
+    linear-gradient(135deg, rgba(255, 255, 255, 0.40), rgba(242, 247, 255, 0.16)) !important;
+  background-color: rgba(255, 255, 255, 0.20) !important;
   background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.10)) !important;
+    linear-gradient(135deg, rgba(255, 255, 255, 0.40), rgba(242, 247, 255, 0.16)) !important;
 
   backdrop-filter:
     blur(30px)
@@ -936,8 +938,8 @@ body.desktop-transparent[data-theme="glass-light"] .glass-card {
   background:
     linear-gradient(
       145deg,
-      rgba(255, 255, 255, 0.34),
-      rgba(255, 255, 255, 0.14)
+      rgba(255, 255, 255, 0.42),
+      rgba(240, 246, 255, 0.17)
     ) !important;
 
   border:
@@ -993,7 +995,7 @@ body.desktop-transparent[data-theme="glass-light"] .alert-item,
 body.desktop-transparent[data-theme="glass-light"] .journal-section,
 body.desktop-transparent[data-theme="glass-light"] .study-card {
   background:
-    rgba(255, 255, 255, 0.20) !important;
+    rgba(255, 255, 255, 0.27) !important;
 
   border:
     1px solid rgba(255, 255, 255, 0.28) !important;

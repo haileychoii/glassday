@@ -26,9 +26,11 @@
 
   --gd-inner-bg: hsl(0 0% 100% / 0.3);
   --gd-inner-border: hsl(0 0% 100% / 0.42);
+  --gd-inner-filter: blur(14px) saturate(150%);
   --gd-control-bg: hsl(0 0% 100% / 0.42);
   --gd-control-border: hsl(0 0% 100% / 0.54);
   --gd-control-active-bg: hsl(0 0% 100% / 0.72);
+  --gd-control-filter: blur(12px) saturate(145%);
 
   /* Shared widget interior surfaces
      Study and Daily Journal consume these semantic aliases, so both widgets
@@ -114,23 +116,31 @@ body.theme-glass-light {
   --primary: 258 88% 66%;
   --muted-foreground: 236 12% 48%;
 
-  --gd-app-bg: rgb(255 255 255 / 0.15);
-  --gd-app-border: rgb(255 255 255 / 0.32);
+  /* Strong frosted backplate
+     English: These filters blur any in-app wallpaper before translucent
+     pigment is added, matching the reference glass instead of clear plastic.
+     Korean: 배경을 먼저 충분히 흐리고 흰 막을 얹어 투명 비닐처럼 보이지 않게 한다. */
+  --gd-app-bg: linear-gradient(145deg, rgb(255 255 255 / 0.34), rgb(242 247 255 / 0.16));
+  --gd-app-border: rgb(255 255 255 / 0.48);
   --gd-app-shadow:
-    0 34px 110px -72px rgb(0 0 0 / 0.42),
-    inset 0 1px 0 rgb(255 255 255 / 0.46);
+    0 34px 110px -72px rgb(45 58 92 / 0.38),
+    inset 0 1px 0 rgb(255 255 255 / 0.68);
+  --gd-app-filter: blur(42px) saturate(138%) brightness(1.04);
 
-  --gd-surface-bg: linear-gradient(145deg, rgb(255 255 255 / 0.24), rgb(255 255 255 / 0.09));
-  --gd-surface-border: rgb(255 255 255 / 0.34);
+  --gd-surface-bg: linear-gradient(145deg, rgb(255 255 255 / 0.38), rgb(240 246 255 / 0.14));
+  --gd-surface-border: rgb(255 255 255 / 0.48);
   --gd-surface-shadow:
-    0 18px 48px rgb(20 24 40 / 0.14),
-    inset 0 1px 0 rgb(255 255 255 / 0.48);
+    0 18px 48px rgb(42 54 88 / 0.13),
+    inset 0 1px 0 rgb(255 255 255 / 0.7);
+  --gd-surface-filter: blur(34px) saturate(142%) brightness(1.03);
 
-  --gd-inner-bg: rgb(255 255 255 / 0.16);
-  --gd-inner-border: rgb(255 255 255 / 0.26);
-  --gd-control-bg: rgb(255 255 255 / 0.2);
-  --gd-control-border: rgb(255 255 255 / 0.32);
-  --gd-control-active-bg: rgb(255 255 255 / 0.5);
+  --gd-inner-bg: rgb(255 255 255 / 0.25);
+  --gd-inner-border: rgb(255 255 255 / 0.38);
+  --gd-inner-filter: blur(24px) saturate(136%) brightness(1.02);
+  --gd-control-bg: rgb(255 255 255 / 0.32);
+  --gd-control-border: rgb(255 255 255 / 0.44);
+  --gd-control-active-bg: rgb(255 255 255 / 0.62);
+  --gd-control-filter: blur(18px) saturate(132%);
 }
 
 html[data-theme="glass-dark"],
@@ -341,8 +351,8 @@ body[data-theme="glass-dark"] :is(.today-focus-main, .today-focus-hero, .today-f
   background: var(--gd-inner-bg) !important;
   border-color: var(--gd-inner-border) !important;
   box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.28) !important;
-  backdrop-filter: blur(14px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(150%) !important;
+  backdrop-filter: var(--gd-inner-filter) !important;
+  -webkit-backdrop-filter: var(--gd-inner-filter) !important;
 }
 
 html[data-theme="pastel"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select),
@@ -354,6 +364,8 @@ body[data-theme="glass-dark"] :is(.glass-button, .theme-segmented-control, .them
   color: hsl(var(--foreground) / 0.86) !important;
   background: var(--gd-control-bg) !important;
   border-color: var(--gd-control-border) !important;
+  backdrop-filter: var(--gd-control-filter) !important;
+  -webkit-backdrop-filter: var(--gd-control-filter) !important;
 }
 
 html[data-theme="pastel"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active),
