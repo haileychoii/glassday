@@ -4399,3 +4399,50 @@ body.theme-aurora .calendar-floating-window .event-color-picker {
     padding-inline: 8px !important;
   }
 }
+
+/* =========================================================
+   Month cell readability / 월간 셀 가독성
+
+   English: `MonthCalendar.tsx` supplies `.is-muted`, `.is-today`, and
+   `.is-selected`. This final shared layer improves only legibility across
+   themes; theme files still own fill, radius, shadow, and event colors.
+   Korean: `MonthCalendar.tsx`의 상태 class를 그대로 사용하고 셀 경계와
+   날짜 대비만 보강한다. 테마별 배경, 모서리, 그림자, 일정 색은 바꾸지 않는다.
+========================================================= */
+.calendar-widget-card .calendar-month-day-cell {
+  /* A faint inner divider remains readable on both light glass and dark
+     Aurora surfaces without repainting the theme border. / 테마 테두리 위에
+     아주 약한 안쪽 경계만 더해 인접한 날짜 칸을 쉽게 구분한다. */
+  outline: 1px solid color-mix(in srgb, currentColor 14%, transparent) !important;
+  outline-offset: -1px !important;
+  transition:
+    outline-color 140ms ease,
+    filter 140ms ease !important;
+}
+
+.calendar-widget-card .calendar-month-day-cell:hover {
+  outline-color: hsl(var(--primary) / 0.42) !important;
+  filter: brightness(1.025);
+}
+
+.calendar-widget-card .calendar-month-day-cell:focus-visible {
+  outline: 2px solid hsl(var(--primary) / 0.72) !important;
+  outline-offset: -2px !important;
+}
+
+/* Previous/next month dates remain secondary, but no longer fade so far that
+   their cell boundaries disappear. / 이전·다음 달은 보조 위계만 유지한다. */
+.calendar-widget-card .calendar-month-day-cell.is-muted {
+  opacity: 0.58 !important;
+}
+
+.calendar-widget-card
+  .calendar-month-day-cell:not(.is-today)
+  .calendar-month-day-top
+  > span:first-child {
+  color: hsl(var(--foreground) / 0.86) !important;
+}
+
+.calendar-widget-card .calendar-month-weekday {
+  font-weight: 800 !important;
+}
