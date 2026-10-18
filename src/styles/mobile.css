@@ -84,6 +84,93 @@
 .mobile-layout button:focus-visible { outline: 2px solid hsl(var(--foreground)); outline-offset: -3px; }
 .mobile-empty { padding: 20px 0; font-size: 14px; }
 
+/* Mobile Today Focus is a reading-first section, not a second scroll box.
+   Its parent slot can grow with the content so the page owns one predictable
+   scroll position. / Today Focus 내부 스크롤을 없애고 페이지 스크롤을 사용한다. */
+.mobile-widget-slot[data-widget-id="today"] {
+  height: auto;
+  min-height: 0;
+}
+
+.mobile-widget-slot[data-widget-id="today"] .today-focus-widget {
+  height: auto;
+  max-height: none;
+}
+
+.mobile-widget-slot[data-widget-id="today"] .today-focus-widget .glass-card-body {
+  overflow: visible;
+}
+
+/* Keep the promise of “Top 3” on a narrow screen while leaving the desktop
+   list untouched. / 모바일에서는 핵심 3개만 먼저 보여 정보 밀도를 낮춘다. */
+.mobile-widget-slot[data-widget-id="today"] .today-focus-task:nth-child(n + 4) {
+  display: none;
+}
+
+.mobile-widget-slot[data-widget-id="today"] .today-focus-task {
+  min-height: 44px;
+}
+
+.mobile-widget-slot[data-widget-id="today"] .today-focus-task-input {
+  min-width: 0;
+  font-size: 16px;
+}
+
+.mobile-widget-slot[data-widget-id="today"] .today-focus-grid {
+  grid-template-columns: minmax(0, 1fr);
+  overflow: visible;
+}
+
+/* Bottom navigation owns the primary capture action; the header button stays
+   available for discoverability but does not compete visually. / 하단 +를
+   엄지 영역의 주 행동으로 사용한다. */
+.mobile-navigation-capture {
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  margin: -12px 4px 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary) / 0.42);
+  border-radius: 999px;
+  box-shadow: 0 8px 20px hsl(var(--primary) / 0.24), inset 0 1px 0 hsl(0 0% 100% / 0.42);
+  cursor: pointer;
+}
+
+/* Quick Capture becomes a bottom sheet on phones so the keyboard and the
+   submit action stay close to the user's thumb. / 모바일에서는 중앙 모달을
+   하단 시트로 바꿔 입력 흐름을 짧게 유지한다. */
+body:has(.mobile-layout) .command-overlay:has(.quick-capture-panel) {
+  place-items: end center;
+  padding: 0;
+}
+
+body:has(.mobile-layout) .quick-capture-panel {
+  width: 100%;
+  max-height: min(84dvh, 680px);
+  border-radius: 24px 24px 0 0;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+body:has(.mobile-layout) .quick-capture-header {
+  padding-top: 14px;
+}
+
+body:has(.mobile-layout) .quick-capture-input {
+  min-height: 116px;
+  max-height: 30dvh;
+  font-size: 16px;
+}
+
+body:has(.mobile-layout) .quick-capture-submit {
+  min-height: 44px;
+  justify-content: center;
+}
+
 /* Root-level status overlays must not cover the mobile navigation.
    이 두 요소는 App의 형제 overlay이므로 모바일 shell 존재 여부로 범위를 제한합니다. */
 body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {

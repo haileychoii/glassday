@@ -44,7 +44,12 @@ export const MobileLayout = ({ tabs, activeTabId, onSelectTab, onOpenSearch,
       <div ref={scroller} className="mobile-main" role="main" aria-label={`${label} workspace`}>
         {children}
       </div>
-      <MobileNavigation tabs={tabs} activeTabId={activeTabId} onSelectTab={onSelectTab} />
+      <MobileNavigation
+        tabs={tabs}
+        activeTabId={activeTabId}
+        onSelectTab={onSelectTab}
+        onOpenQuickCapture={onOpenQuickCapture}
+      />
     </div>
   );
 };
