@@ -64,7 +64,7 @@ body.theme-aurora {
   /* Aurora wallpaper hook:
      Replace this custom property when the user picks a personal photo.
      Korean: 직접 넣을 사진은 여기 변수만 바꾸면 배경 레이어 전체에 반영된다. */
-  --aurora-wallpaper-image: url("/glass-background/glass4.jpeg");
+  --aurora-wallpaper-image: url("/glass-background/glass2.jpeg");
   --aurora-wallpaper-overlay:
     linear-gradient(135deg, rgba(6, 10, 20, 0.18), rgba(6, 10, 20, 0.44));
 

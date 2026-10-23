@@ -4577,3 +4577,71 @@ body.theme-aurora .calendar-floating-window .event-color-picker {
 .calendar-widget-card .calendar-month-weekday {
   font-weight: 800 !important;
 }
+
+/* =========================================================
+   Week shared horizontal scroll / 주간 보기 공통 가로 스크롤
+
+   Component connection:
+   WeekTimeline.tsx renders header, all-day, and timed rows as three siblings.
+   This parent-owned scroll width keeps all three on the same day columns.
+   좁은 위젯에서 각 행이 따로 잘리지 않고 같은 scrollLeft로 함께 이동한다.
+========================================================= */
+.calendar-week-timeline {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color:
+    hsl(var(--foreground) / 0.24)
+    hsl(0 0% 100% / 0.16);
+}
+
+.calendar-week-header,
+.calendar-week-all-day,
+.calendar-week-scroll {
+  width: max(
+    100%,
+    calc(
+      var(--gd-calendar-week-time-col) +
+        (var(--gd-calendar-week-day-min) * 7)
+    )
+  ) !important;
+  min-width: calc(
+    var(--gd-calendar-week-time-col) +
+      (var(--gd-calendar-week-day-min) * 7)
+  ) !important;
+}
+
+.calendar-week-all-day {
+  grid-template-columns:
+    var(--gd-calendar-week-time-col)
+    minmax(0, 1fr) !important;
+}
+
+.calendar-week-scroll {
+  /* The timeline parent owns horizontal movement; this child owns only time.
+     가로 overflow를 두 군데서 만들면 헤더와 시간이 어긋나므로 세로만 담당한다. */
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+.calendar-week-timeline::-webkit-scrollbar {
+  height: 9px;
+}
+
+.calendar-week-timeline::-webkit-scrollbar-track {
+  background: hsl(0 0% 100% / 0.16);
+  border-radius: 999px;
+}
+
+.calendar-week-timeline::-webkit-scrollbar-thumb {
+  min-width: 42px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+        hsl(var(--foreground) / 0.24),
+        hsl(var(--foreground) / 0.24)
+      )
+      padding-box;
+}
