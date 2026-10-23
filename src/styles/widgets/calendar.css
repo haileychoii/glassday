@@ -4401,6 +4401,137 @@ body.theme-aurora .calendar-floating-window .event-color-picker {
 }
 
 /* =========================================================
+   Week all-day priority + disclosure / 주간 종일 일정 우선순위
+
+   Component connection:
+   WeekTimeline.tsx calculates lane order with calendarUtils.ts, then exposes
+   the disclosure state and lane count here. / 정렬 로직은 TS에 두고 CSS는
+   접힘/펼침 높이와 시각적 중요도만 담당한다.
+========================================================= */
+.calendar-week-all-day {
+  min-height: calc(
+    14px + (var(--calendar-all-day-lanes, 1) * 27px)
+  ) !important;
+  transition: min-height 160ms ease, background-color 160ms ease !important;
+}
+
+.calendar-week-all-day.is-expanded {
+  background: hsl(0 0% 100% / 0.48) !important;
+}
+
+.calendar-week-all-day-label {
+  flex-direction: column !important;
+  gap: 4px !important;
+  padding: 6px 4px !important;
+}
+
+.calendar-week-all-day-label > span {
+  line-height: 1 !important;
+}
+
+.calendar-week-all-day-toggle {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 20px !important;
+  padding: 0 5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  border-radius: 999px !important;
+  border: 1px solid hsl(var(--foreground) / 0.12) !important;
+  background: hsl(0 0% 100% / 0.36) !important;
+  color: hsl(var(--foreground) / 0.64) !important;
+}
+
+.calendar-week-all-day-toggle small {
+  font-size: 8px !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+}
+
+.calendar-week-all-day-toggle svg {
+  width: 10px !important;
+  height: 10px !important;
+  flex: none !important;
+}
+
+.calendar-week-all-day-grid {
+  grid-auto-rows: 24px !important;
+  align-content: start !important;
+  row-gap: 3px !important;
+}
+
+.calendar-week-range-bar.is-priority-high {
+  border-color: hsl(350 72% 64% / 0.46) !important;
+  box-shadow:
+    inset 3px 0 0 hsl(350 72% 54% / 0.72),
+    inset 0 1px 0 hsl(0 0% 100% / 0.78),
+    0 10px 24px -18px hsl(350 46% 32% / 0.32) !important;
+}
+
+.calendar-priority-badge {
+  flex: none;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: hsl(350 78% 94% / 0.92);
+  color: hsl(350 58% 42% / 0.92);
+  font-size: 8px;
+  font-weight: 850;
+}
+
+.calendar-priority-control {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid hsl(var(--foreground) / 0.1);
+  border-radius: 10px;
+  background: hsl(0 0% 100% / 0.38);
+}
+
+.calendar-priority-option {
+  min-width: 0;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  color: hsl(var(--foreground) / 0.58);
+  font-size: 10px;
+  font-weight: 760;
+}
+
+.calendar-priority-option > span {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 999px;
+  background: hsl(var(--foreground) / 0.24);
+}
+
+.calendar-priority-option.is-high > span {
+  background: hsl(350 68% 58%);
+}
+
+.calendar-priority-option.is-medium > span {
+  background: hsl(214 64% 60%);
+}
+
+.calendar-priority-option.is-low > span {
+  background: hsl(150 34% 54%);
+}
+
+.calendar-priority-option.is-active {
+  border-color: hsl(var(--foreground) / 0.14);
+  background: hsl(0 0% 100% / 0.72);
+  color: hsl(var(--foreground) / 0.88);
+  box-shadow: 0 5px 14px -10px hsl(220 25% 20% / 0.34);
+}
+
+/* =========================================================
    Month cell readability / 월간 셀 가독성
 
    English: `MonthCalendar.tsx` supplies `.is-muted`, `.is-today`, and

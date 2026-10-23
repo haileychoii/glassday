@@ -38,7 +38,11 @@ import {
   OPEN_CALENDAR_EVENT,
   type OpenCalendarEventDetail,
 } from "../../constants/widgetNavigation";
-import type { CalendarEvent, CalendarView } from "../../types/dashboard";
+import type {
+  CalendarEvent,
+  CalendarPriority,
+  CalendarView,
+} from "../../types/dashboard";
 import {
   getEventColor,
   getPastelColorById,
@@ -55,6 +59,7 @@ import {
   formatEventTime,
   getMonthDates,
   getWeekDates,
+  normalizeCalendarPriority,
   sortEvents,
   toLocalDateInput,
 } from "./calendar/calendarUtils";
@@ -88,6 +93,15 @@ const formatCalendarSubtitle = (selectedDate: string) => {
 type DashboardDataWithCareerDetail = ReturnType<typeof useDashboardData> & {
   openCareerDetail?: (id: string) => void;
 };
+
+const calendarPriorityOptions: Array<{
+  value: CalendarPriority;
+  label: string;
+}> = [
+  { value: "high", label: "High" },
+  { value: "medium", label: "Normal" },
+  { value: "low", label: "Low" },
+];
 
 /* Calendar widget keeps one shared data model for:
    - manual calendar events
@@ -452,6 +466,10 @@ export const CalendarWidget = () => {
                           <span className="calendar-career-badge">Career</span>
                         )}
 
+                        {normalizeCalendarPriority(event.priority) === "high" && (
+                          <span className="calendar-priority-badge">High</span>
+                        )}
+
                         {event.googleSyncStatus === "pending" && (
                           <span className="calendar-pending-badge">Pending</span>
                         )}
@@ -537,6 +555,41 @@ export const CalendarWidget = () => {
                     Open Career Detail
                   </button>
                 )}
+
+                <div className="calendar-field">
+                  <span>Priority</span>
+                  <div
+                    className="calendar-priority-control"
+                    role="radiogroup"
+                    aria-label="Event priority"
+                  >
+                    {calendarPriorityOptions.map((option) => {
+                      const isSelected =
+                        normalizeCalendarPriority(editingEvent.priority) ===
+                        option.value;
+
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          role="radio"
+                          aria-checked={isSelected}
+                          className={cn(
+                            "calendar-priority-option",
+                            `is-${option.value}`,
+                            isSelected && "is-active"
+                          )}
+                          onClick={() =>
+                            updateEditingEvent({ priority: option.value })
+                          }
+                        >
+                          <span aria-hidden="true" />
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
                 <div className="calendar-detail-grid">
                   <label className="calendar-field">

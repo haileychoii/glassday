@@ -243,6 +243,7 @@ const defaultCalendarEvents: CalendarEvent[] = [
     location: "",
     notes: "",
     source: "manual",
+    priority: "medium",
     color: getPastelColorById("daily-work"),
     googleSyncStatus: "not_synced",
   },
@@ -256,6 +257,7 @@ const defaultCalendarEvents: CalendarEvent[] = [
     location: "",
     notes: "",
     source: "manual",
+    priority: "medium",
     color: getPastelColorById("daily-study"),
     googleSyncStatus: "not_synced",
   },
@@ -439,6 +441,7 @@ const createCareerStageCalendarEvent = (
       .filter(Boolean)
       .join("\n"),
     source: "career",
+    priority: career.priority ?? "medium",
     sourceId: career.id,
     careerApplicationId: career.id,
     careerStageId: stage.id,
@@ -596,6 +599,7 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
   const calendarEvents = rawCalendarEvents.map((event) => ({
     ...event,
     color: event.color ?? getPastelColorById(event.id),
+    priority: normalizePriority(event.priority),
   }));
 
   const careerApplications = dedupeCareerApplications(rawCareerApplications);
@@ -649,6 +653,7 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
       location: patch.location ?? "",
       notes: patch.notes ?? "",
       source: patch.source ?? "manual",
+      priority: normalizePriority(patch.priority),
       sourceId: patch.sourceId,
       careerApplicationId: patch.careerApplicationId,
       careerStageId: patch.careerStageId,
@@ -694,6 +699,7 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
           if (updatedEvent.careerStageId) {
             return normalizeCareerItem({
               ...career,
+              priority: updatedEvent.priority ?? career.priority,
               stages: (career.stages ?? []).map((stage) =>
                 stage.id === updatedEvent.careerStageId
                   ? {
@@ -719,6 +725,7 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
 
           return normalizeCareerItem({
             ...career,
+            priority: updatedEvent.priority ?? career.priority,
             applicationStartDate: updatedEvent.startDate,
             applicationStartTime: updatedEvent.startTime,
             applicationEndDate: updatedEvent.endDate,

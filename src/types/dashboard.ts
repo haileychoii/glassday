@@ -25,6 +25,13 @@ export type GoogleSyncStatus = "not_synced" | "pending" | "synced" | "error";
 
 export type CalendarEventSource = "manual" | "career" | "study" | "system";
 
+/**
+ * Calendar priority is intentionally shared with Career priority values.
+ * English: stored values stay stable while the UI labels `medium` as Normal.
+ * Korean: 저장값은 기존 Career와 맞추고 화면에서는 중간 단계를 Normal로 읽기 쉽게 표시한다.
+ */
+export type CalendarPriority = "high" | "medium" | "low";
+
 export type CalendarEvent = {
   /** Calendar list key이며 event color fallback 계산에도 사용되는 안정적인 id. */
   id: string;
@@ -38,6 +45,8 @@ export type CalendarEvent = {
   notes: string;
   /** manual/career 등 생성 경로를 구분하며 detail interaction을 결정한다. */
   source: CalendarEventSource;
+  /** Week/Day ordering signal. Missing legacy values are normalized to medium. */
+  priority?: CalendarPriority;
   /** 원본 Career record와 Calendar projection을 연결하는 id. */
   sourceId?: string;
   careerApplicationId?: string;
@@ -56,7 +65,7 @@ export type CareerStatus =
   | "Rejected"
   | "Completed";
 
-export type CareerPriority = "high" | "medium" | "low";
+export type CareerPriority = CalendarPriority;
 
 export type CareerStageStatus = "todo" | "doing" | "done" | "skipped";
 

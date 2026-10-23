@@ -11,11 +11,15 @@
  * ============================================================
  */
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
+import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
 import { getEventColor as getCalendarEventColor } from "../../../constants/colors";
+import {
+  normalizeCalendarPriority,
+  sortAllDayEvents,
+} from "./calendarUtils";
 
 type WeekTimelineProps = {
   events: CalendarEvent[];
@@ -264,11 +268,15 @@ export const WeekTimeline = ({
     useState<WeekResizeSelection | null>(null);
   const [overflowDialog, setOverflowDialog] =
     useState<WeekOverflowDialog | null>(null);
+  const [expandedAllDayWeek, setExpandedAllDayWeek] = useState<string | null>(
+    null
+  );
   const overflowCloseRef = useRef<HTMLButtonElement | null>(null);
   const baseDate = selectedDate ?? currentDate ?? toDateString(new Date());
   const weekStart = weekStartDate ?? getMonday(baseDate);
   const weekEnd = addDays(weekStart, 6);
   const todayString = toDateString(new Date());
+  const isAllDayExpanded = expandedAllDayWeek === weekStart;
 
   useEffect(() => {
     if (!overflowDialog) return;
@@ -307,13 +315,11 @@ export const WeekTimeline = ({
   const rangeEvents = useMemo<RangeBar[]>(() => {
     const laneEnds: number[] = [];
 
-    return events
-      .filter((event) => isRangeEvent(event))
-      .filter((event) => doesEventOverlapWeek(event, weekStart, weekEnd))
-      .sort((a, b) => {
-        if (a.startDate !== b.startDate) return a.startDate.localeCompare(b.startDate);
-        return b.endDate.localeCompare(a.endDate);
-      })
+    return sortAllDayEvents(
+      events
+        .filter((event) => isRangeEvent(event))
+        .filter((event) => doesEventOverlapWeek(event, weekStart, weekEnd))
+    )
       .map((event) => {
         const rawStartIndex = weekDays.findIndex(
           (day) => day.date === event.startDate
@@ -354,11 +360,15 @@ export const WeekTimeline = ({
       });
   }, [events, weekDays, weekStart, weekEnd]);
 
-  const visibleRangeEvents = rangeEvents.filter(
-    (event) => event.laneIndex < MAX_ALL_DAY_LANES
-  );
+  const visibleRangeEvents = isAllDayExpanded
+    ? rangeEvents
+    : rangeEvents.filter((event) => event.laneIndex < MAX_ALL_DAY_LANES);
   const hiddenRangeEvents = rangeEvents.filter(
     (event) => event.laneIndex >= MAX_ALL_DAY_LANES
+  );
+  const allDayLaneCount = Math.max(
+    1,
+    ...visibleRangeEvents.map((event) => event.laneIndex + 1)
   );
 
   const timedEvents = useMemo(() => {
@@ -553,8 +563,51 @@ export const WeekTimeline = ({
         ))}
       </div>
 
-      <div className="calendar-week-all-day">
-        <div className="calendar-week-all-day-label">All-day</div>
+      <div
+        className={[
+          "calendar-week-all-day",
+          isAllDayExpanded ? "is-expanded" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        style={
+          {
+            "--calendar-all-day-lanes": allDayLaneCount,
+          } as CSSProperties
+        }
+      >
+        <div className="calendar-week-all-day-label">
+          <span>All-day</span>
+          {hiddenRangeEvents.length > 0 && (
+            <button
+              type="button"
+              className="calendar-week-all-day-toggle"
+              aria-expanded={isAllDayExpanded}
+              aria-label={
+                isAllDayExpanded
+                  ? "Collapse all-day events"
+                  : `Show ${hiddenRangeEvents.length} more all-day events`
+              }
+              title={isAllDayExpanded ? "Collapse" : "Show all"}
+              onClick={() =>
+                setExpandedAllDayWeek((current) =>
+                  current === weekStart ? null : weekStart
+                )
+              }
+            >
+              <small>
+                {isAllDayExpanded
+                  ? rangeEvents.length
+                  : `${visibleRangeEvents.length}/${rangeEvents.length}`}
+              </small>
+              {isAllDayExpanded ? (
+                <ChevronUp aria-hidden="true" />
+              ) : (
+                <ChevronDown aria-hidden="true" />
+              )}
+            </button>
+          )}
+        </div>
 
         <div className="calendar-week-all-day-grid">
           {rangeEvents.length === 0 ? (
@@ -568,6 +621,9 @@ export const WeekTimeline = ({
                 className={[
                   "calendar-week-range-bar",
                   event.source === "career" ? "is-career" : "",
+                  normalizeCalendarPriority(event.priority) === "high"
+                    ? "is-priority-high"
+                    : "",
                 ]
                   .filter(Boolean)
                   .join(" ")}
@@ -588,22 +644,6 @@ export const WeekTimeline = ({
               </button>
             ))}
 
-            {hiddenRangeEvents.length > 0 && (
-              <button
-                type="button"
-                className="calendar-week-more-bar"
-                style={{ gridColumn: "1 / -1", gridRow: MAX_ALL_DAY_LANES + 1 }}
-                onClick={() =>
-                  openOverflowDialog(
-                    `${weekStart} - ${weekEnd} 전체 일정`,
-                    events
-                  )
-                }
-                onPointerDown={(pointerEvent) => pointerEvent.stopPropagation()}
-              >
-                +{hiddenRangeEvents.length}
-              </button>
-            )}
             </>
           )}
         </div>
