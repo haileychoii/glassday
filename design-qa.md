@@ -27,3 +27,26 @@
 - A final matching-state Chrome capture is unavailable in the current computer-use environment, so the visual comparison cannot be marked as passed.
 
 final result: blocked
+
+---
+
+# Design QA: Glass Light Frosted Surfaces
+
+## Scope
+
+- Target: Glass Light frosted surfaces in browser and Tauri desktop modes.
+- Reference: the user's supplied glassmorphism examples, using their blur depth and legibility rather than their background artwork.
+- Viewport: 1440 x 900 browser preview and 980 x 640 Tauri window.
+
+## Checks
+
+- Passed: strong background diffusion remains visible over both photographic and high-contrast grid backgrounds.
+- Passed: app shell, cards, inner panels, and controls use progressively smaller blur radii so nested content stays readable.
+- Passed: Windows Acrylic command loaded and was invoked for `glass-light` without Rust or Tauri runtime errors.
+- Passed: changing away from `glass-light` clears the native effect in the same theme-sync path.
+- Passed: text, borders, and controls remain legible without turning the full interface into an opaque white sheet.
+- Passed: lint, production web build, Rust check, and Tauri development launch.
+
+## Result
+
+final result: passed

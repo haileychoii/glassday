@@ -27,8 +27,10 @@ import { isTauri } from "@tauri-apps/api/core";
 import { Sidebar } from "./Sidebar";
 import { TauriResizeHandles } from "./TauriResizeHandles";
 import { Topbar } from "./Topbar";
+import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import {
   getSavedDesktopPin,
+  setNativeGlassLightEffect,
   setDesktopPin,
 } from "../../utils/tauriDesktop";
 
@@ -91,19 +93,49 @@ export const AppShell = ({
     });
   }, [isTauriApp]);
 
-useEffect(() => {
-  const root = document.documentElement;
+  useEffect(() => {
+    const root = document.documentElement;
 
-  if (isTauriApp) {
-    root.classList.add("desktop-transparent");
-  } else {
-    root.classList.remove("desktop-transparent");
-  }
+    if (isTauriApp) {
+      root.classList.add("desktop-transparent");
+    } else {
+      root.classList.remove("desktop-transparent");
+    }
 
-  return () => {
-    root.classList.remove("desktop-transparent");
-  };
-}, [isTauriApp]);
+    return () => {
+      root.classList.remove("desktop-transparent");
+    };
+  }, [isTauriApp]);
+
+  useEffect(() => {
+    if (!isTauriApp) return;
+
+    /*
+     * `applyTheme` in src/constants/themes.ts emits this event after updating
+     * the DOM. The native bridge mirrors only Glass Light to Windows Acrylic.
+     * 테마 DOM 변경 직후 같은 이벤트를 받아 네이티브 재질도 한 번에 맞춘다.
+     */
+    const syncNativeGlass = (theme: ThemeId) => {
+      void setNativeGlassLightEffect(theme === "glass-light").catch((error) => {
+        console.warn("Unable to update the native Glass Light effect", error);
+      });
+    };
+
+    const handleThemeChange = (event: Event) => {
+      const themeEvent = event as CustomEvent<ThemeId>;
+
+      if (themeEvent.detail) {
+        syncNativeGlass(themeEvent.detail);
+      }
+    };
+
+    syncNativeGlass(getCurrentTheme());
+    window.addEventListener("glassday-theme-change", handleThemeChange);
+
+    return () => {
+      window.removeEventListener("glassday-theme-change", handleThemeChange);
+    };
+  }, [isTauriApp]);
   
 /*
  * Tauri에서는 layout 선택 개념이 필요 없다.

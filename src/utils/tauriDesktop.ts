@@ -13,6 +13,7 @@
  * ============================================================
  */
 
+import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 
 import { isTauriApp } from "./runtime";
@@ -75,4 +76,21 @@ export const resetTauriWindowSize = async () => {
       DEFAULT_TAURI_WINDOW_SIZE.height
     )
   );
+};
+
+/**
+ * Synchronize Glass Light with the Rust Acrylic command in
+ * `src-tauri/src/lib.rs`.
+ *
+ * English: Browser previews keep using CSS backdrop-filter. Only the native
+ * shell invokes Windows Acrylic, and disabling the theme clears the effect so
+ * Pixel, Retro, Aurora, and the other themes keep their own material.
+ *
+ * Korean: 웹 미리보기는 CSS만 사용한다. Tauri에서만 Acrylic을 호출하고,
+ * 다른 테마로 바꾸면 즉시 해제해 각 테마의 표면이 서로 섞이지 않게 한다.
+ */
+export const setNativeGlassLightEffect = async (enabled: boolean) => {
+  if (!isTauriApp) return;
+
+  await invoke("set_native_glass_effect", { enabled });
 };

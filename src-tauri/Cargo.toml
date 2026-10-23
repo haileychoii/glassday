@@ -23,3 +23,8 @@ serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
 tauri = { version = "2.11.3", features = [] }
 tauri-plugin-log = "2"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+# Native Acrylic is required because CSS backdrop-filter cannot blur pixels
+# outside WebView2. / CSS로 접근할 수 없는 실제 Windows 바탕화면을 흐린다.
+window-vibrancy = "0.8.1"
