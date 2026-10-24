@@ -50,6 +50,11 @@ import type {
 
 import { useDashboardData } from "../../context/DashboardDataContext";
 import { prepareLocalImageDataUrl } from "../../lib/localImage";
+import {
+  getCareerDateDiff,
+  getNextCareerCardSchedule,
+  normalizeCareerPostingUrl,
+} from "./career/careerCardUtils";
 import type {
   CareerImageAttachment,
   CareerItem,
@@ -249,14 +254,7 @@ const getToday = () => {
 };
 
 const getDday = (date: string) => {
-  if (!date) return null;
-
-  const today = new Date(`${getToday()}T00:00:00`);
-  const target = new Date(`${date}T00:00:00`);
-
-  return Math.ceil(
-    (target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  return getCareerDateDiff(date, getToday());
 };
 
 const getDdayLabel = (date: string) => {
@@ -288,28 +286,16 @@ type CareerNextSchedule = {
 };
 
 const getCareerScheduleCandidates = (item: CareerItem): CareerNextSchedule[] => {
-  return (item.stages ?? [])
-    .filter((stage) => stage.status !== "skipped" && stage.date)
-    .map((stage) => ({
-      label: stage.label || "전형 일정",
-      date: stage.date ?? "",
-    }))
-    .map((schedule) => {
-      const dday = getDday(schedule.date);
+  const schedule = getNextCareerCardSchedule(item, getToday());
 
-      if (dday === null) return null;
-
-      return {
-        ...schedule,
-        dday,
-        tone: getDdayTone(schedule.date),
-      };
-    })
-    .filter(
-      (schedule): schedule is CareerNextSchedule =>
-        schedule !== null && schedule.dday >= 0
-    )
-    .sort((a, b) => a.dday - b.dday);
+  return schedule
+    ? [
+        {
+          ...schedule,
+          tone: getDdayTone(schedule.date),
+        },
+      ]
+    : [];
 };
 
 const getNextCareerSchedule = (item: CareerItem) =>
@@ -416,6 +402,9 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     (optimisticSelectedItem?.id === activeCareerDetailId
       ? optimisticSelectedItem
       : null);
+  const selectedPostingUrl = selectedItem
+    ? normalizeCareerPostingUrl(selectedItem.postingUrl)
+    : null;
 
   useEffect(() => {
     if (selectedFromContext) {
@@ -950,6 +939,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
   const renderCareerCard = (item: CareerItem, compact = false) => {
     const nextSchedule = getNextCareerSchedule(item);
+    const postingUrl = normalizeCareerPostingUrl(item.postingUrl);
     const ddayTone = nextSchedule?.tone ?? "none";
     const coverLetterCount =
       item.coverLetterItems?.length ?? item.coverLetterQuestions?.length ?? 0;
@@ -981,7 +971,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
             <span className={`career-dday-pill ${ddayTone}`}>
               {nextSchedule
                 ? `${nextSchedule.label} · ${getDdayLabel(nextSchedule.date)}`
-                : "No date"}
+                : "일정 미입력"}
             </span>
 
             <button
@@ -1000,15 +990,45 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
         </div>
 
         <div className="career-list-meta">
-          <span className={`career-status-pill status-${item.status.toLowerCase()}`}>
-            {item.status}
-          </span>
+          {/* Inline status combobox / 상세 창 없이 지원 상태를 즉시 변경합니다. */}
+          <label
+            className={`career-card-status-control status-${item.status.toLowerCase()}`}
+            onClick={(event) => event.stopPropagation()}
+            onPointerDown={(event) => event.stopPropagation()}
+          >
+            <span className="sr-only">{item.company} status</span>
+            <select
+              value={item.status}
+              onChange={(event) =>
+                updateCareerApplication(item.id, {
+                  status: event.target.value as CareerStatus,
+                })
+              }
+              aria-label={`${item.company} 지원 상태 변경`}
+            >
+              {statusOptions.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-3 h-3" aria-hidden="true" />
+          </label>
 
-          {item.postingUrl && (
-            <span>
+          {postingUrl && (
+            <a
+              className="career-posting-link"
+              href={postingUrl}
+              target="_blank"
+              rel="noreferrer"
+              title={postingUrl}
+              onClick={(event) => event.stopPropagation()}
+              onPointerDown={(event) => event.stopPropagation()}
+            >
               <Link2 className="w-3 h-3" />
               Posting
-            </span>
+              <ExternalLink className="w-3 h-3" aria-hidden="true" />
+            </a>
           )}
 
           <span>
@@ -1018,7 +1038,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
           <span>
             <CalendarDays className="w-3 h-3" />
-            {nextSchedule ? "Synced" : "No date"}
+            {nextSchedule ? "Synced" : "일정 미입력"}
           </span>
         </div>
       </article>
@@ -1219,12 +1239,12 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                 </div>
 
                 <div className="career-modal-actions">
-                  {selectedItem.postingUrl && (
+                  {selectedPostingUrl && (
                     <button
                       type="button"
                       onClick={() =>
                         window.open(
-                          selectedItem.postingUrl,
+                          selectedPostingUrl,
                           "_blank",
                           "noopener,noreferrer"
                         )

@@ -435,6 +435,72 @@
   border: 1px solid hsl(0 0% 100% / 0.36);
 }
 
+/* Career card quick actions / 카드 즉시 동작
+   CareerWidget.tsx의 Posting anchor와 status select는 상세 창을 열지 않고
+   각각 외부 공고 이동과 상태 변경을 수행합니다. */
+.career-card-status-control,
+.career-posting-link {
+  min-height: 24px;
+  border-radius: 999px;
+  border: 1px solid hsl(0 0% 100% / 0.5);
+  background: hsl(0 0% 100% / 0.34);
+  color: hsl(var(--foreground) / 0.66);
+}
+
+.career-card-status-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.career-card-status-control select {
+  min-width: 0;
+  height: 22px;
+  padding: 0 23px 0 8px;
+  appearance: none;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 800;
+  color: inherit;
+  background: transparent;
+}
+
+.career-card-status-control > svg {
+  position: absolute;
+  right: 7px;
+  pointer-events: none;
+  opacity: 0.72;
+}
+
+.career-card-status-control:focus-within {
+  border-color: hsl(var(--primary) / 0.58);
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.14);
+}
+
+.career-posting-link {
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 850;
+  border-color: hsl(var(--primary) / 0.32);
+  background: hsl(var(--primary) / 0.1);
+}
+
+.career-posting-link:hover,
+.career-posting-link:focus-visible {
+  color: hsl(var(--primary));
+  border-color: hsl(var(--primary) / 0.66);
+  background: hsl(var(--primary) / 0.18);
+  box-shadow: 0 4px 12px hsl(var(--primary) / 0.14);
+}
+
 .career-list-side {
   flex-direction: row;
   align-items: flex-start;
