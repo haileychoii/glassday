@@ -30,13 +30,14 @@ import {
   CalendarDays,
   Check,
   ChevronDown,
+  Eye,
   ExternalLink,
   FileText,
   GripHorizontal,
-  ImagePlus,
   LayoutGrid,
   Link2,
   List,
+  Paperclip,
   Plus,
   Trash2,
   X,
@@ -144,6 +145,12 @@ const careerStageStatusOptions: {
 const CAREER_IMAGE_LIMIT = 8;
 const CAREER_IMAGE_MAX_INPUT_BYTES = 12 * 1024 * 1024;
 const CAREER_IMAGE_MAX_EDGE = 1280;
+const CAREER_PDF_MAX_INPUT_BYTES = 2 * 1024 * 1024;
+
+const formatAttachmentSize = (size?: number) => {
+  if (!size) return "PDF";
+  return `${(size / (1024 * 1024)).toFixed(1)} MB PDF`;
+};
 
 const createJobImageId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -153,12 +160,39 @@ const createJobImageId = () => {
   return `career-image-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
-/* Local image preparation
-   Career adds attachment metadata after the shared resizer prepares a compact
-   WebP data URL. / 공통 변환 뒤 Career 항목에 필요한 이름과 ID만 붙입니다. */
-const prepareCareerImage = async (
+const readCareerFileAsDataUrl = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.onerror = () => reject(new Error(`${file.name}: 파일을 읽지 못했어.`));
+    reader.readAsDataURL(file);
+  });
+
+/* Local Career attachment preparation / Career 로컬 첨부 준비
+   Images reuse src/lib/localImage.ts for compact WebP conversion. PDFs keep
+   their original bytes under a strict localStorage-friendly size limit.
+   이미지는 공통 압축기를, PDF는 2MB 제한의 data URL 저장 방식을 사용합니다. */
+const prepareCareerAttachment = async (
   file: File
 ): Promise<CareerImageAttachment> => {
+  const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+
+  if (isPdf) {
+    if (file.size > CAREER_PDF_MAX_INPUT_BYTES) {
+      throw new Error(`${file.name}: PDF는 2MB 이하만 추가할 수 있어.`);
+    }
+
+    return {
+      id: createJobImageId(),
+      name: file.name,
+      dataUrl: await readCareerFileAsDataUrl(file),
+      kind: "pdf",
+      mimeType: "application/pdf",
+      size: file.size,
+      createdAt: new Date().toISOString(),
+    };
+  }
+
   return {
     id: createJobImageId(),
     name: file.name,
@@ -167,6 +201,9 @@ const prepareCareerImage = async (
       maxEdge: CAREER_IMAGE_MAX_EDGE,
       quality: 0.8,
     }),
+    kind: "image",
+    mimeType: file.type || "image/webp",
+    size: file.size,
     createdAt: new Date().toISOString(),
   };
 };
@@ -373,6 +410,8 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     jobImages: "",
     noteImages: "",
   });
+  const [previewAttachment, setPreviewAttachment] =
+    useState<CareerImageAttachment | null>(null);
 
   // Floating detail window geometry is intentionally separate from the dashboard
   // grid layout. Moving/resizing this editor should not push widgets around.
@@ -569,10 +608,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     updateCareerApplication(selectedItem.id, patch);
   };
 
-  /* Shared Career gallery actions
+  /* Shared Career attachment actions
      The field argument decides whether the attachment belongs to Application
      Core or Notes; validation, limits, and persistence remain identical.
-     field만 바꾸면 두 사진 영역이 같은 저장 규칙을 사용합니다. */
+     field만 바꾸면 두 첨부 영역이 같은 저장 규칙을 사용합니다. */
   const addCareerImages = async (
     event: ReactChangeEvent<HTMLInputElement>,
     field: CareerImageField
@@ -589,7 +628,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     if (availableSlots <= 0) {
       setImageErrors((current) => ({
         ...current,
-        [field]: `사진은 최대 ${CAREER_IMAGE_LIMIT}장까지 저장할 수 있어.`,
+        [field]: `파일은 최대 ${CAREER_IMAGE_LIMIT}개까지 저장할 수 있어.`,
       }));
       return;
     }
@@ -599,10 +638,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
     for (const file of files.slice(0, availableSlots)) {
       try {
-        preparedImages.push(await prepareCareerImage(file));
+        preparedImages.push(await prepareCareerAttachment(file));
       } catch (error) {
         errors.push(
-          error instanceof Error ? error.message : `${file.name}: 사진 추가 실패`
+          error instanceof Error ? error.message : `${file.name}: 첨부 실패`
         );
       }
     }
@@ -614,7 +653,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     }
 
     if (files.length > availableSlots) {
-      errors.push(`최대 ${CAREER_IMAGE_LIMIT}장까지만 저장했어.`);
+      errors.push(`최대 ${CAREER_IMAGE_LIMIT}개까지만 저장했어.`);
     }
 
     setImageErrors((current) => ({
@@ -711,8 +750,8 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
   /* Career attachment gallery
      Application Core and Notes intentionally render through one helper so
-     limits, controls, thumbnail sizing, and accessibility stay identical.
-     직무/메모 사진 UI를 한곳에서 관리해 이후 크기 수정도 동시에 반영됩니다. */
+     images and PDFs share limits, controls, and the in-app preview.
+     직무/메모 이미지와 PDF를 한곳에서 관리해 두 영역이 같은 방식으로 동작합니다. */
   const renderCareerImageGallery = (
     field: CareerImageField,
     title: string,
@@ -720,7 +759,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
   ) => {
     if (!selectedItem) return null;
 
-    const images = selectedItem[field] ?? [];
+    const attachments = selectedItem[field] ?? [];
 
     return (
       <div
@@ -732,16 +771,16 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
           <div>
             <strong>{title}</strong>
             <span>
-              {images.length} / {CAREER_IMAGE_LIMIT}장 · 클릭하면 크게 보기
+              {attachments.length} / {CAREER_IMAGE_LIMIT}개 · 앱 안에서 미리보기
             </span>
           </div>
 
           <label className="career-job-image-add">
-            <ImagePlus className="w-3.5 h-3.5" />
-            Add Photos
+            <Paperclip className="w-3.5 h-3.5" />
+            Add Files
             <input
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/jpeg,image/png,image/webp,application/pdf,.pdf"
               multiple
               onChange={(event) => void addCareerImages(event, field)}
             />
@@ -752,33 +791,49 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
           <div className="career-job-image-error">{imageErrors[field]}</div>
         )}
 
-        {images.length === 0 ? (
+        {attachments.length === 0 ? (
           <div className="career-job-image-empty">{emptyMessage}</div>
         ) : (
           <div className="career-job-image-grid">
-            {images.map((image) => (
-              <figure key={image.id} className="career-job-image-card">
-                <a
-                  href={image.dataUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  title={`${image.name} 크게 보기`}
+            {attachments.map((attachment) => {
+              const isPdf =
+                attachment.kind === "pdf" ||
+                attachment.dataUrl.startsWith("data:application/pdf");
+
+              return (
+              <figure key={attachment.id} className="career-job-image-card">
+                <button
+                  type="button"
+                  className="career-job-image-open"
+                  onClick={() => setPreviewAttachment(attachment)}
+                  title={`${attachment.name} 앱에서 미리보기`}
                 >
-                  <img src={image.dataUrl} alt={image.name} />
-                  <figcaption>{image.name}</figcaption>
-                </a>
+                  {isPdf ? (
+                    <span className="career-pdf-thumbnail" aria-hidden="true">
+                      <FileText className="w-6 h-6" />
+                      <small>{formatAttachmentSize(attachment.size)}</small>
+                    </span>
+                  ) : (
+                    <img src={attachment.dataUrl} alt="" />
+                  )}
+                  <figcaption>
+                    <span>{attachment.name}</span>
+                    <Eye className="w-3 h-3" aria-hidden="true" />
+                  </figcaption>
+                </button>
 
                 <button
                   type="button"
-                  onClick={() => removeCareerImage(field, image.id)}
+                  onClick={() => removeCareerImage(field, attachment.id)}
                   className="career-job-image-delete"
-                  title="Delete photo"
-                  aria-label={`${image.name} 삭제`}
+                  title="Delete attachment"
+                  aria-label={`${attachment.name} 삭제`}
                 >
                   <Trash2 className="w-3 h-3" />
                 </button>
               </figure>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -796,6 +851,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
   const closeWindow = () => {
     setOptimisticSelectedItem(null);
+    setPreviewAttachment(null);
     closeCareerDetail();
   };
 
@@ -996,7 +1052,6 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
             onClick={(event) => event.stopPropagation()}
             onPointerDown={(event) => event.stopPropagation()}
           >
-            <span className="sr-only">{item.company} status</span>
             <select
               value={item.status}
               onChange={(event) =>
@@ -1205,8 +1260,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                 top: windowState.y,
                 width: windowState.width,
                 height: windowState.height,
-                minWidth: 560,
-                minHeight: 540,
+                /* Match clampWindow on small screens so the detail editor never
+                   forces a 560px surface outside a phone-width viewport. */
+                minWidth: Math.min(560, window.innerWidth - 24),
+                minHeight: Math.min(540, window.innerHeight - 24),
                 display: "grid",
                 gridTemplateRows: "auto minmax(0, 1fr)",
                 overflow: "hidden",
@@ -1380,11 +1437,11 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                     </label>
                   </div>
 
-                  {/* Job detail photos stay beside the role description they explain. */}
+                  {/* Job files stay beside the role description they explain. */}
                   {renderCareerImageGallery(
                     "jobImages",
-                    "Job Detail Photos",
-                    "직무 설명 캡처, 조직도, 참고 이미지를 추가해봐."
+                    "Job Files",
+                    "공고 PDF, 직무 설명 캡처, 조직도와 참고 이미지를 추가해봐."
                   )}
                 </section>
 
@@ -1873,12 +1930,12 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                     placeholder="지원 전략, 자소서 방향, 면접 준비 메모..."
                   />
 
-                  {/* Notes photos belong to the same application snapshot as text.
-                      면접 메모 사진, 현장 자료, 손글씨 기록을 Notes와 함께 저장합니다. */}
+                  {/* Notes files belong to the same application snapshot as text.
+                      면접 PDF, 현장 사진, 손글씨 기록을 Notes와 함께 저장합니다. */}
                   {renderCareerImageGallery(
                     "noteImages",
-                    "Notes Photos",
-                    "메모와 함께 볼 사진이나 캡처를 추가해봐."
+                    "Notes Files",
+                    "메모와 함께 볼 PDF, 사진이나 캡처를 추가해봐."
                   )}
                 </section>
 
@@ -1909,6 +1966,79 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                 }}
               />
             </div>
+
+            {previewAttachment && (
+              <div
+                className="career-attachment-preview-layer"
+                role="dialog"
+                aria-modal="true"
+                aria-label={`${previewAttachment.name} preview`}
+                onPointerDown={(event) => {
+                  if (event.target === event.currentTarget) {
+                    setPreviewAttachment(null);
+                  }
+                }}
+              >
+                <div className="career-attachment-preview-window">
+                  <header>
+                    <div>
+                      <strong>{previewAttachment.name}</strong>
+                      <span>
+                        {previewAttachment.kind === "pdf" ||
+                        previewAttachment.dataUrl.startsWith(
+                          "data:application/pdf"
+                        )
+                          ? formatAttachmentSize(previewAttachment.size)
+                          : "Image"}
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="career-icon-button"
+                      onClick={() => setPreviewAttachment(null)}
+                      aria-label="Close attachment preview"
+                      title="Close preview"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </header>
+
+                  <div className="career-attachment-preview-body">
+                    {previewAttachment.kind === "pdf" ||
+                    previewAttachment.dataUrl.startsWith(
+                      "data:application/pdf"
+                    ) ? (
+                      <object
+                        data={previewAttachment.dataUrl}
+                        type="application/pdf"
+                        aria-label={`${previewAttachment.name} PDF preview`}
+                      >
+                        <p>
+                          이 환경에서 PDF 미리보기를 열 수 없어. 아래 버튼으로
+                          새 창에서 열어줘.
+                        </p>
+                      </object>
+                    ) : (
+                      <img
+                        src={previewAttachment.dataUrl}
+                        alt={previewAttachment.name}
+                      />
+                    )}
+                  </div>
+
+                  <a
+                    className="career-attachment-open-new"
+                    href={previewAttachment.dataUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Open in new window
+                  </a>
+                </div>
+              </div>
+            )}
           </div>,
           document.body
         )}

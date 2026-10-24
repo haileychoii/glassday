@@ -1561,15 +1561,20 @@
   border: 1px solid hsl(0 0% 100% / 0.5);
 }
 
-.career-job-image-card > a {
+.career-job-image-open {
   min-width: 0;
+  width: 100%;
+  padding: 0;
   display: grid;
   grid-template-rows: 92px auto;
   color: inherit;
-  text-decoration: none;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
 }
 
-.career-job-image-card img {
+.career-job-image-open > img {
   width: 100%;
   height: 92px;
   display: block;
@@ -1580,12 +1585,55 @@
 .career-job-image-card figcaption {
   min-width: 0;
   padding: 7px 9px;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
   font-size: 10px;
   font-weight: 750;
+  color: hsl(var(--foreground) / 0.7);
+}
+
+.career-job-image-card figcaption > span {
+  min-width: 0;
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: hsl(var(--foreground) / 0.7);
+}
+
+.career-job-image-card figcaption > svg {
+  flex: 0 0 auto;
+  opacity: 0.54;
+}
+
+.career-job-image-open:hover,
+.career-job-image-open:focus-visible {
+  background: hsl(var(--primary) / 0.08);
+}
+
+.career-job-image-open:hover figcaption > svg,
+.career-job-image-open:focus-visible figcaption > svg {
+  color: hsl(var(--primary));
+  opacity: 1;
+}
+
+.career-pdf-thumbnail {
+  min-width: 0;
+  height: 92px;
+  padding: 12px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 7px;
+  color: hsl(350 62% 48%);
+  background:
+    linear-gradient(145deg, hsl(350 100% 97% / 0.86), hsl(0 0% 100% / 0.46));
+}
+
+.career-pdf-thumbnail small {
+  font-size: 9px;
+  font-weight: 850;
+  color: hsl(var(--foreground) / 0.54);
 }
 
 .career-job-image-delete {
@@ -1602,6 +1650,116 @@
   background: hsl(0 0% 100% / 0.76);
   border: 1px solid hsl(0 0% 100% / 0.84);
   box-shadow: 0 6px 16px hsl(230 30% 20% / 0.16);
+}
+
+/* In-app attachment preview / 앱 내부 첨부 미리보기
+   CareerWidget.tsx renders this above its movable detail window so PDF/image
+   inspection does not navigate away from the current application record. */
+.career-attachment-preview-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  padding: clamp(12px, 3vw, 32px);
+  display: grid;
+  place-items: center;
+  background: hsl(225 24% 12% / 0.54);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.career-attachment-preview-window {
+  width: min(920px, 96vw);
+  height: min(760px, 92vh);
+  min-height: 0;
+  padding: 12px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  border-radius: 20px;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background) / 0.94);
+  border: 1px solid hsl(0 0% 100% / 0.62);
+  box-shadow: 0 28px 90px hsl(225 36% 10% / 0.42);
+}
+
+.career-attachment-preview-window > header {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.career-attachment-preview-window > header > div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.career-attachment-preview-window > header strong,
+.career-attachment-preview-window > header span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.career-attachment-preview-window > header strong {
+  font-size: 13px;
+}
+
+.career-attachment-preview-window > header span {
+  font-size: 10px;
+  color: hsl(var(--muted-foreground));
+}
+
+.career-attachment-preview-body {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: hsl(0 0% 100% / 0.72);
+  border: 1px solid hsl(var(--border) / 0.54);
+}
+
+.career-attachment-preview-body object,
+.career-attachment-preview-body img {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.career-attachment-preview-body img {
+  object-fit: contain;
+}
+
+.career-attachment-open-new {
+  justify-self: end;
+  min-height: 32px;
+  padding: 0 11px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: hsl(var(--foreground) / 0.72);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 800;
+  background: hsl(0 0% 100% / 0.42);
+  border: 1px solid hsl(var(--border) / 0.62);
+}
+
+@media (max-width: 640px) {
+  .career-attachment-preview-layer {
+    padding: 8px;
+  }
+
+  .career-attachment-preview-window {
+    width: 100%;
+    height: min(760px, 96vh);
+    border-radius: 14px;
+  }
 }
 
 .career-stage-list,

@@ -121,15 +121,18 @@ export type CareerInterviewReview = {
   notes: string;
 };
 
-/* Career image attachment
-   Job-detail and Notes galleries share this model and the same CareerItem
-   snapshot used by Wide/Laptop and cloud sync.
-   직무 사진과 메모 사진은 레이아웃별로 나뉘지 않고 같은 지원 항목에 저장됩니다. */
+/* Career file attachment
+   The historical type name and jobImages/noteImages keys stay unchanged for
+   saved-data compatibility. New records identify image/PDF explicitly.
+   기존 사진 저장 키는 유지하고 kind로 이미지와 PDF를 구분합니다. */
 export type CareerImageAttachment = {
   id: string;
   name: string;
   dataUrl: string;
   createdAt: string;
+  kind?: "image" | "pdf";
+  mimeType?: string;
+  size?: number;
 };
 
 export type CareerItem = {

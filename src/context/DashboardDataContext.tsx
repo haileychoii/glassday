@@ -898,18 +898,25 @@ export const useDashboardData = () => {
   return context;
 };
 
-/* Career image migration
-   Older saved careers have no image arrays. Both job and Notes attachments use
-   this guard so malformed data cannot block an old local/cloud snapshot.
-   이전 저장 데이터에 사진 필드가 없어도 두 갤러리 모두 빈 배열로 안전하게 복구됩니다. */
+/* Career attachment migration
+   Older snapshots contain image-only records without kind/mimeType. New PDF
+   entries use the same arrays so desktop, web, backup, and cloud sync keep one
+   source of truth. / 예전 사진은 image로 추론하고 PDF data URL도 보존합니다. */
 const normalizeCareerImages = (value: unknown): CareerImageAttachment[] => {
   if (!Array.isArray(value)) return [];
 
   return value.flatMap((item) => {
+    const isImage =
+      typeof item?.dataUrl === "string" &&
+      item.dataUrl.startsWith("data:image/");
+    const isPdf =
+      typeof item?.dataUrl === "string" &&
+      item.dataUrl.startsWith("data:application/pdf");
+
     if (
       typeof item?.id !== "string" ||
       typeof item?.dataUrl !== "string" ||
-      !item.dataUrl.startsWith("data:image/")
+      (!isImage && !isPdf)
     ) {
       return [];
     }
@@ -917,8 +924,21 @@ const normalizeCareerImages = (value: unknown): CareerImageAttachment[] => {
     return [
       {
         id: item.id,
-        name: typeof item?.name === "string" ? item.name : "Job image",
+        name:
+          typeof item?.name === "string"
+            ? item.name
+            : isPdf
+              ? "Career document.pdf"
+              : "Career image",
         dataUrl: item.dataUrl,
+        kind: isPdf ? "pdf" : "image",
+        mimeType:
+          typeof item?.mimeType === "string"
+            ? item.mimeType
+            : isPdf
+              ? "application/pdf"
+              : item.dataUrl.slice(5, item.dataUrl.indexOf(";")),
+        size: typeof item?.size === "number" ? item.size : undefined,
         createdAt:
           typeof item?.createdAt === "string"
             ? item.createdAt
