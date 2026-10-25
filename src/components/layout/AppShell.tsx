@@ -31,7 +31,7 @@ import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import {
   applyDefaultTauriZoom,
   getSavedDesktopPin,
-  setNativeGlassLightEffect,
+  setNativeGlassEffect,
   setDesktopPin,
 } from "../../utils/tauriDesktop";
 
@@ -124,12 +124,19 @@ export const AppShell = ({
 
     /*
      * `applyTheme` in src/constants/themes.ts emits this event after updating
-     * the DOM. The native bridge mirrors only Glass Light to Windows Acrylic.
-     * 테마 DOM 변경 직후 같은 이벤트를 받아 네이티브 재질도 한 번에 맞춘다.
+     * the DOM. The native bridge gives Light and Dark different Acrylic tints.
+     * 테마 DOM 변경 직후 같은 이벤트를 받아 Light/Dark 네이티브 재질을 맞춘다.
      */
     const syncNativeGlass = (theme: ThemeId) => {
-      void setNativeGlassLightEffect(theme === "glass-light").catch((error) => {
-        console.warn("Unable to update the native Glass Light effect", error);
+      const mode =
+        theme === "glass-light"
+          ? "light"
+          : theme === "glass-dark"
+            ? "dark"
+            : "off";
+
+      void setNativeGlassEffect(mode).catch((error) => {
+        console.warn("Unable to update the native glass effect", error);
       });
     };
 

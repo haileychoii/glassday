@@ -819,29 +819,40 @@ body.desktop-transparent[data-theme="glass-light"]
      Korean: 실제 바탕화면 흐림은 Rust Acrylic이 맡고, 이 레이어는 우윳빛과
      유리 가장자리 반사광만 더한다. */
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.40), rgba(242, 247, 255, 0.16)) !important;
-  background-color: rgba(255, 255, 255, 0.20) !important;
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.25),
+      rgba(195, 232, 255, 0.16) 48%,
+      rgba(255, 205, 236, 0.12)
+    ) !important;
+  background-color: rgba(248, 251, 255, 0.10) !important;
   background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.40), rgba(242, 247, 255, 0.16)) !important;
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.25),
+      rgba(195, 232, 255, 0.16) 48%,
+      rgba(255, 205, 236, 0.12)
+    ) !important;
 
   backdrop-filter:
-    blur(30px)
-    saturate(150%)
-    brightness(1.06) !important;
+    blur(38px)
+    saturate(158%)
+    brightness(1.04) !important;
 
   -webkit-backdrop-filter:
-    blur(30px)
-    saturate(150%)
-    brightness(1.06) !important;
+    blur(38px)
+    saturate(158%)
+    brightness(1.04) !important;
 
   /*
    * 앱의 원래 둥근 외곽 형태는 살짝 남김.
    */
-  border-color: rgba(255, 255, 255, 0.22) !important;
+  border-color: rgba(255, 255, 255, 0.52) !important;
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 18px 46px rgba(44, 54, 86, 0.07) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.68),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 28px 72px rgba(31, 43, 72, 0.16) !important;
 }
 
 
@@ -875,23 +886,24 @@ body.desktop-transparent[data-theme="glass-light"] .sidebar {
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.32),
-      rgba(255, 255, 255, 0.14)
+      rgba(224, 243, 255, 0.22),
+      rgba(255, 222, 242, 0.09)
     ) !important;
 
   border-right:
-    1px solid rgba(255, 255, 255, 0.28) !important;
+    1px solid rgba(255, 255, 255, 0.34) !important;
 
   box-shadow:
-    inset -1px 0 0 rgba(255, 255, 255, 0.06) !important;
+    inset -1px 0 0 rgba(255, 255, 255, 0.16),
+    10px 0 34px rgba(46, 61, 92, 0.08) !important;
 
   backdrop-filter:
-    blur(26px)
-    saturate(146%) !important;
+    blur(34px)
+    saturate(154%) !important;
 
   -webkit-backdrop-filter:
-    blur(26px)
-    saturate(146%) !important;
+    blur(34px)
+    saturate(154%) !important;
 }
 
 
@@ -904,27 +916,27 @@ body.desktop-transparent[data-theme="glass-light"] .topbar {
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.34),
-      rgba(255, 255, 255, 0.14)
+      rgba(224, 243, 255, 0.23),
+      rgba(255, 222, 242, 0.10)
     ) !important;
 
   border:
-    1px solid rgba(255, 255, 255, 0.28) !important;
+    1px solid rgba(255, 255, 255, 0.38) !important;
 
   border-radius:
     20px 20px 0 0 !important;
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.42),
-    0 10px 28px rgba(75, 86, 130, 0.045) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    0 12px 30px rgba(47, 61, 94, 0.10) !important;
 
   backdrop-filter:
-    blur(26px)
-    saturate(146%) !important;
+    blur(34px)
+    saturate(154%) !important;
 
   -webkit-backdrop-filter:
-    blur(26px)
-    saturate(146%) !important;
+    blur(34px)
+    saturate(154%) !important;
 }
 
 
@@ -937,25 +949,27 @@ html.desktop-transparent[data-theme="glass-light"] .glass-card,
 body.desktop-transparent[data-theme="glass-light"] .glass-card {
   background:
     linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.42),
-      rgba(240, 246, 255, 0.17)
+      135deg,
+      rgba(255, 255, 255, 0.25),
+      rgba(199, 233, 255, 0.17) 52%,
+      rgba(255, 210, 239, 0.12)
     ) !important;
 
   border:
-    1px solid rgba(255, 255, 255, 0.34) !important;
+    1px solid rgba(255, 255, 255, 0.46) !important;
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.48),
-    0 14px 34px rgba(60, 72, 110, 0.065) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -1px 0 rgba(202, 218, 240, 0.12),
+    0 18px 42px rgba(42, 55, 88, 0.14) !important;
 
   backdrop-filter:
-    blur(28px)
-    saturate(146%) !important;
+    blur(36px)
+    saturate(158%) !important;
 
   -webkit-backdrop-filter:
-    blur(28px)
-    saturate(146%) !important;
+    blur(36px)
+    saturate(158%) !important;
 }
 
 
@@ -995,22 +1009,22 @@ body.desktop-transparent[data-theme="glass-light"] .alert-item,
 body.desktop-transparent[data-theme="glass-light"] .journal-section,
 body.desktop-transparent[data-theme="glass-light"] .study-card {
   background:
-    rgba(255, 255, 255, 0.27) !important;
+    linear-gradient(145deg, rgba(255, 255, 255, 0.17), rgba(226, 238, 252, 0.06)) !important;
 
   border:
-    1px solid rgba(255, 255, 255, 0.28) !important;
+    1px solid rgba(255, 255, 255, 0.32) !important;
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.34),
-    0 8px 20px rgba(60, 70, 105, 0.035) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.48),
+    0 10px 24px rgba(47, 62, 94, 0.08) !important;
 
   backdrop-filter:
-    blur(22px)
-    saturate(140%) !important;
+    blur(28px)
+    saturate(150%) !important;
 
   -webkit-backdrop-filter:
-    blur(22px)
-    saturate(140%) !important;
+    blur(28px)
+    saturate(150%) !important;
 }
 
 
@@ -1028,13 +1042,14 @@ body.desktop-transparent[data-theme="glass-light"] input,
 body.desktop-transparent[data-theme="glass-light"] textarea,
 body.desktop-transparent[data-theme="glass-light"] select {
   background:
-    rgba(255, 255, 255, 0.26) !important;
+    linear-gradient(145deg, rgba(255, 255, 255, 0.20), rgba(230, 240, 252, 0.08)) !important;
 
   border-color:
-    rgba(255, 255, 255, 0.34) !important;
+    rgba(255, 255, 255, 0.38) !important;
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.34) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    0 6px 16px rgba(49, 64, 94, 0.07) !important;
 
   backdrop-filter:
     blur(18px)
@@ -1068,4 +1083,51 @@ body.desktop-transparent[data-theme="glass-light"]
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.68),
     0 10px 24px rgba(119, 155, 205, 0.14) !important;
+}
+
+/* Tauri settings depth / Tauri 설정창 깊이
+   English: The modal is one material step denser than dashboard cards, while
+   the backdrop softly blurs the dashboard instead of painting a flat veil.
+   Korean: 설정창은 위젯보다 한 단계 진한 유리로 두고, 뒤 화면은 단색 막이
+   아니라 약한 blur로 분리해 입력 항목과 배경이 서로 섞이지 않게 한다. */
+html.desktop-transparent[data-theme="glass-light"] .settings-modal-backdrop {
+  background: rgba(29, 39, 59, 0.20) !important;
+  backdrop-filter: blur(22px) saturate(108%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(108%) !important;
+}
+
+html.desktop-transparent[data-theme="glass-light"] .settings-modal-window {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.76),
+      rgba(205, 232, 255, 0.46) 56%,
+      rgba(255, 216, 241, 0.34)
+    ) !important;
+  border-color: rgba(255, 255, 255, 0.56) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.76),
+    inset 0 -1px 0 rgba(185, 205, 231, 0.12),
+    0 36px 96px rgba(29, 41, 68, 0.28) !important;
+  backdrop-filter: blur(46px) saturate(158%) brightness(1.02) !important;
+  -webkit-backdrop-filter: blur(46px) saturate(158%) brightness(1.02) !important;
+}
+
+html.desktop-transparent[data-theme="glass-light"] :is(
+  .settings-section,
+  .settings-card,
+  .settings-theme-card,
+  .settings-action-card,
+  .settings-sync-box,
+  .settings-custom-font-item,
+  .settings-status
+) {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.52), rgba(211, 233, 252, 0.28)) !important;
+  border-color: rgba(255, 255, 255, 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 12px 28px rgba(43, 57, 88, 0.10) !important;
+  backdrop-filter: blur(28px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
 }
