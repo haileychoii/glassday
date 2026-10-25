@@ -54,6 +54,108 @@
   /* Explicit stage-one frame height supports existing size container queries.
      모바일 전용 표시 높이이며 Dashboard layout이나 저장값에 반영하지 않습니다. */
 }
+
+/* Small-screen typography contract
+   Widget internals still come from their existing components, but the shared
+   frame gets a smaller, non-overlapping title row on phones. / 모바일에서는
+   위젯 기능은 공유하고 헤더 밀도만 낮춰 제목과 테두리가 겹치지 않게 한다. */
+.mobile-widget-slot > .glass-card,
+.mobile-widget-slot > .career-widget {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.mobile-widget-slot > .glass-card > .widget-frame__header,
+.mobile-widget-slot > .career-widget > .widget-frame__header {
+  min-height: 0;
+  padding: 9px 10px 8px;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.mobile-widget-slot .widget-frame__title-group,
+.mobile-widget-slot .widget-frame__copy {
+  min-height: 0;
+}
+
+.mobile-widget-slot .widget-frame__title-group {
+  align-items: flex-start;
+}
+
+.mobile-widget-slot .widget-frame__copy {
+  gap: 1px;
+}
+
+.mobile-widget-slot .widget-frame__header h3 {
+  max-width: 100%;
+  font-size: 12px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.mobile-widget-slot .widget-frame__header p {
+  max-width: 100%;
+  font-size: 10px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.mobile-widget-slot .widget-frame__icon {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+}
+
+/* Mac Core used the desktop minimum header height on a narrow viewport.
+   Let the title row size itself so text sits inside the widget frame rather
+   than on its border. / 데스크톱 최소 높이를 해제해 제목이 테두리에 걸리지 않게 한다. */
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout
+  .widget-frame__header {
+  min-height: 0;
+  align-items: flex-start;
+}
+
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout
+  .widget-frame__title-group,
+:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout
+  .widget-frame__copy {
+  min-height: 0;
+}
+
+/* Pixel Desk keeps its square bevel, but the phone version uses a compact
+   type scale and slightly less internal padding so the bevel frames content
+   instead of crowding it. / Pixel Desk 모바일은 픽셀 프레임은 유지하고
+   글씨와 여백만 줄여 내부 요소가 프레임 밖으로 밀리지 않게 한다. */
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout {
+  font-size: 12px;
+}
+
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .mobile-dashboard {
+  gap: 10px;
+  padding-inline: 8px;
+}
+
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .mobile-widget-slot > .glass-card > .widget-frame__header,
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .mobile-widget-slot > .career-widget > .widget-frame__header {
+  padding: 7px 8px 6px;
+  gap: 5px;
+}
+
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .widget-frame__header h3 {
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .widget-frame__header p {
+  font-size: 9px;
+  line-height: 1.2;
+}
 .mobile-navigation {
   display: flex;
   min-width: 0;

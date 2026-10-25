@@ -620,18 +620,72 @@ body,
   }
 
   .topbar-mobile-workspace-list {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    min-width: 0;
-    padding-bottom: 2px;
+    /* This rule is intentionally later than responsive.css: overrides.css
+       used to turn the one-tap workspace grid back into a horizontal scroller.
+       Keep the whole workspace set visible so a phone user never has to swipe
+       a navigation bar before finding a tab. / responsive.css의 한 줄 그리드
+       규칙을 다시 flex 스크롤로 덮어쓰지 않도록 마지막 계층에서 고정한다. */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: 5px;
+    width: 100%;
+    overflow: visible;
+    overflow-x: visible;
+    overflow-y: visible;
+    padding-bottom: 0;
     scrollbar-width: none;
   }
 
   .topbar-mobile-workspace-list::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Compact fallback shell for 768-920px web widths. The dedicated
+     MobileLayout owns widths below 768px; this only prevents the existing
+     responsive desktop shell from becoming oversized on small browsers. /
+     768~920px 구간의 기존 웹 셸도 모바일처럼 읽히도록 압축한다. */
+  .app-mode-stage .topbar-inner {
+    padding-top: 7px !important;
+  }
+
+  .app-mode-stage .topbar-title h1 {
+    font-size: 16px !important;
+    line-height: 1.2 !important;
+  }
+
+  .app-mode-stage .topbar-title p {
+    display: none !important;
+  }
+
+  .app-mode-stage .topbar-actions {
+    gap: 5px !important;
+    padding-top: 6px !important;
+  }
+
+  .app-mode-stage .topbar-action-button,
+  .app-mode-stage .layout-mode-button {
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+  }
+
+  .app-mode-stage .topbar-mobile-workspaces .sidebar-tab-main {
+    width: 100%;
+    min-width: 0;
+    height: 36px;
+    padding-inline: 6px;
+    gap: 5px;
+    font-size: 11px;
+  }
+
+  .app-mode-stage .topbar-mobile-workspaces .sidebar-tab-label,
+  .app-mode-stage .topbar-mobile-workspaces .sidebar-tab-main span:last-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
