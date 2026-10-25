@@ -14,8 +14,8 @@
       {
         "label": "main",
         "title": "Glassday",
-        "width": 980,
-        "height": 640,
+        "width": 864,
+        "height": 576,
         "minWidth": 520,
         "minHeight": 360,
         "resizable": true,

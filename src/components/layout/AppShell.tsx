@@ -29,6 +29,7 @@ import { TauriResizeHandles } from "./TauriResizeHandles";
 import { Topbar } from "./Topbar";
 import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import {
+  applyDefaultTauriZoom,
   getSavedDesktopPin,
   setNativeGlassLightEffect,
   setDesktopPin,
@@ -90,6 +91,17 @@ export const AppShell = ({
      */
     void setDesktopPin(getSavedDesktopPin()).catch((error) => {
       console.warn("Unable to restore Tauri desktop pin state", error);
+    });
+  }, [isTauriApp]);
+
+  useEffect(() => {
+    if (!isTauriApp) return;
+
+    /* Vercel Laptop 80% parity / 웹 Laptop 80%와 동일한 렌더 배율
+       Source: DEFAULT_TAURI_ZOOM in src/utils/tauriDesktop.ts. Keeping this
+       native-only prevents the Vercel preview itself from being scaled twice. */
+    void applyDefaultTauriZoom().catch((error) => {
+      console.warn("Unable to apply the default Tauri zoom", error);
     });
   }, [isTauriApp]);
 
@@ -390,9 +402,9 @@ const shellContent = (
    * Preview chrome 없음.
    * Preview 위치 이동 없음.
    *
-   * Tauri Window 1080 x 720
+   * Native Window 864 x 576 + WebView Zoom 80%
    *         =
-   * Glassday App 1080 x 720
+   * Vercel Laptop App 1080 x 720 at browser zoom 80%
    */
 
   if (isTauriApp) {

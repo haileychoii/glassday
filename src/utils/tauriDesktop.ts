@@ -14,6 +14,7 @@
  */
 
 import { invoke } from "@tauri-apps/api/core";
+import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 
 import { isTauriApp } from "./runtime";
@@ -28,10 +29,33 @@ export const DESKTOP_PIN_STORAGE_KEY = "glassday.desktop.pin.v1";
  * Korean: Windows 배율과 무관하게 같은 체감 크기로 돌아오도록 논리 픽셀을
  * 사용한다. 창 위치는 사용자가 배치한 그대로 두고 크기만 초기값으로 복원한다.
  */
-export const DEFAULT_TAURI_WINDOW_SIZE = {
-  width: 980,
-  height: 640,
+export const LAPTOP_REFERENCE_SIZE = {
+  width: 1080,
+  height: 720,
 } as const;
+
+export const DEFAULT_TAURI_ZOOM = 0.8;
+
+/* Vercel Laptop at 80% / Vercel Laptop 80%와 같은 실제 점유 크기
+   1080 x 720 multiplied by 0.8 becomes an 864 x 576 native window. Keeping
+   the formula here prevents tauri.conf.json, Settings, and reset logic from
+   drifting into different defaults. */
+export const DEFAULT_TAURI_WINDOW_SIZE = {
+  width: Math.round(LAPTOP_REFERENCE_SIZE.width * DEFAULT_TAURI_ZOOM),
+  height: Math.round(LAPTOP_REFERENCE_SIZE.height * DEFAULT_TAURI_ZOOM),
+} as const;
+
+/**
+ * Match the native WebView to the browser's 80% page zoom.
+ * English: Native size alone only reduces the viewport; WebView zoom also
+ * scales type, controls, spacing, and media-query coordinates like Vercel.
+ * Korean: 창 크기뿐 아니라 글자·간격·컨트롤까지 웹 80%와 같게 축소한다.
+ */
+export const applyDefaultTauriZoom = async () => {
+  if (!isTauriApp) return;
+
+  await getCurrentWebview().setZoom(DEFAULT_TAURI_ZOOM);
+};
 
 /**
  * Missing values default to true because the Tauri window configuration has
@@ -70,12 +94,15 @@ export const setDesktopPin = async (pinned: boolean) => {
 export const resetTauriWindowSize = async () => {
   if (!isTauriApp) return;
 
-  await getCurrentWindow().setSize(
-    new LogicalSize(
-      DEFAULT_TAURI_WINDOW_SIZE.width,
-      DEFAULT_TAURI_WINDOW_SIZE.height
-    )
-  );
+  await Promise.all([
+    getCurrentWindow().setSize(
+      new LogicalSize(
+        DEFAULT_TAURI_WINDOW_SIZE.width,
+        DEFAULT_TAURI_WINDOW_SIZE.height
+      )
+    ),
+    applyDefaultTauriZoom(),
+  ]);
 };
 
 /**
