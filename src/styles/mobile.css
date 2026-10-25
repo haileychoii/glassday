@@ -15,6 +15,23 @@
   isolation: isolate;
 }
 
+/* Mobile is a task surface, not a miniature desktop canvas. Keep one page
+   scroll, full-width touch targets, and predictable horizontal bounds for all
+   widgets. / 모바일은 축소된 데스크톱이 아니라 한 손으로 쓰는 작업 화면이다.
+   위젯은 한 열, 페이지는 한 곳만 스크롤하도록 고정한다. */
+.mobile-layout,
+.mobile-layout * {
+  box-sizing: border-box;
+}
+
+.mobile-layout .glass-card,
+.mobile-layout .career-widget,
+.mobile-layout .unknown-widget-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
 .mobile-header {
   display: flex;
   align-items: center;
@@ -45,12 +62,12 @@
 .mobile-dashboard {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 16px;
-  padding: 12px max(12px, env(safe-area-inset-right)) 24px max(12px, env(safe-area-inset-left));
+  gap: 12px;
+  padding: 10px max(10px, env(safe-area-inset-right)) 22px max(10px, env(safe-area-inset-left));
 }
 .mobile-widget-slot {
   min-width: 0;
-  height: clamp(380px, 72svh, 640px);
+  height: clamp(300px, 64svh, 560px);
   /* Explicit stage-one frame height supports existing size container queries.
      모바일 전용 표시 높이이며 Dashboard layout이나 저장값에 반영하지 않습니다. */
 }
@@ -185,6 +202,34 @@
 .mobile-navigation-item[aria-current="page"] { background: hsl(var(--primary) / 0.18); }
 .mobile-layout button:focus-visible { outline: 2px solid hsl(var(--foreground)); outline-offset: -3px; }
 .mobile-empty { padding: 20px 0; font-size: 14px; }
+
+@media (max-width: 420px) {
+  /* At 320-420px, leave enough width for Korean labels and icon buttons while
+     keeping the browser safe-area inset visible. / 작은 휴대폰에서는 좌우
+     여백을 줄이고도 버튼의 최소 터치 영역은 유지한다. */
+  .mobile-header {
+    padding-inline: max(8px, env(safe-area-inset-left)) max(8px, env(safe-area-inset-right));
+  }
+
+  .mobile-heading h1 {
+    font-size: 16px;
+  }
+
+  .mobile-header-actions button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mobile-navigation-item {
+    flex-basis: 52px;
+    min-height: 46px;
+    padding-inline: 3px;
+  }
+
+  .mobile-navigation-item span {
+    font-size: 11px;
+  }
+}
 
 /* Mobile Today Focus is a reading-first section, not a second scroll box.
    Its parent slot can grow with the content so the page owns one predictable
