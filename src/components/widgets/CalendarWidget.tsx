@@ -25,6 +25,7 @@ import {
   ChevronRight,
   ExternalLink,
   Lock,
+  Maximize2,
   Pencil,
   Plus,
   Trash2,
@@ -94,6 +95,15 @@ type DashboardDataWithCareerDetail = ReturnType<typeof useDashboardData> & {
   openCareerDetail?: (id: string) => void;
 };
 
+type CalendarWidgetProps = {
+  /** Dashboard shows a summary; the FloatingWindow renders the full calendar. */
+  presentation?: "compact" | "detail";
+  /** Compact navigation state is forwarded when opening the full calendar. */
+  initialDate?: string;
+  /** A summary event can open directly in the existing full event editor. */
+  initialEventId?: string;
+};
+
 const calendarPriorityOptions: Array<{
   value: CalendarPriority;
   label: string;
@@ -108,7 +118,11 @@ const calendarPriorityOptions: Array<{
    - career application windows mirrored into calendar view
    The wide/laptop modes only change presentation, not this data flow. */
 /** Calendar view state와 선택된 event detail state를 함께 관리한다. */
-export const CalendarWidget = () => {
+export const CalendarWidget = ({
+  presentation = "compact",
+  initialDate,
+  initialEventId,
+}: CalendarWidgetProps = {}) => {
   const dashboardData = useDashboardData() as DashboardDataWithCareerDetail;
 
   const {
@@ -120,8 +134,13 @@ export const CalendarWidget = () => {
   } = dashboardData;
 
   const [view, setView] = useState<CalendarView>("day");
-  const [selectedDate, setSelectedDate] = useState(toLocalDateInput());
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState(
+    initialDate ?? toLocalDateInput()
+  );
+  const [editingId, setEditingId] = useState<string | null>(
+    initialEventId ?? null
+  );
+  const [detailOpen, setDetailOpen] = useState(false);
   const [weekEditMode, setWeekEditMode] = useState(false);
 
   const editingEvent = editingId
@@ -140,6 +159,10 @@ export const CalendarWidget = () => {
 
       setSelectedDate(targetEvent.startDate);
       setEditingId(targetEvent.id);
+
+      if (presentation === "compact") {
+        setDetailOpen(true);
+      }
     };
 
     window.addEventListener(OPEN_CALENDAR_EVENT, handleOpenCalendarEvent);
@@ -147,7 +170,7 @@ export const CalendarWidget = () => {
     return () => {
       window.removeEventListener(OPEN_CALENDAR_EVENT, handleOpenCalendarEvent);
     };
-  }, [calendarEvents]);
+  }, [calendarEvents, presentation]);
 
   const visibleEvents = useMemo(() => {
     // Normalize first so manual and career-synced events render through
@@ -294,6 +317,171 @@ export const CalendarWidget = () => {
     setEditingId(null);
     openCareerDetail(careerId);
   };
+
+  if (presentation === "compact") {
+    const upcomingEndDate = addDays(selectedDate, 7);
+    const upcomingEvents = sortEvents(calendarEvents)
+      .filter((event) => eventTouchesRange(event, selectedDate, upcomingEndDate))
+      .slice(0, 4);
+    const highPriorityCount = upcomingEvents.filter(
+      (event) => normalizeCalendarPriority(event.priority) === "high"
+    ).length;
+
+    const openCompactEvent = (event: CalendarEvent) => {
+      if (event.source === "career") {
+        openEvent(event);
+        return;
+      }
+
+      setSelectedDate(event.startDate);
+      setEditingId(event.id);
+      setDetailOpen(true);
+    };
+
+    const addFromCompact = () => {
+      createManualEvent();
+      setDetailOpen(true);
+    };
+
+    return (
+      <>
+        <GlassCard
+          className="calendar-widget calendar-compact-widget"
+          title="Calendar"
+          subtitle={formatCalendarSubtitle(selectedDate)}
+          titleStyle={{ color: "hsl(var(--foreground) / 0.96)" }}
+          subtitleStyle={{ color: "hsl(var(--muted-foreground) / 0.82)" }}
+          icon={<CalendarDays className="w-4 h-4" />}
+          actions={
+            <div className="calendar-compact-actions">
+              <button
+                type="button"
+                onClick={() => setDetailOpen(true)}
+                className="glass-button"
+                title="전체 캘린더 열기"
+                aria-label="Open full calendar"
+              >
+                <Maximize2 aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={addFromCompact}
+                className="glass-button"
+                title="일정 추가"
+                aria-label="Add calendar event"
+              >
+                <Plus aria-hidden="true" />
+              </button>
+            </div>
+          }
+        >
+          {/* Compact calendar / 작은 대시보드 캘린더
+              MonthCalendar.tsx and WeekTimeline.tsx remain in the detail Variant;
+              this surface only reads the same DashboardDataContext event list. */}
+          <div className="calendar-compact-content">
+            <div className="calendar-compact-date-nav">
+              <button
+                type="button"
+                onClick={() => setSelectedDate((date) => addDays(date, -1))}
+                aria-label="Previous day"
+              >
+                <ChevronLeft aria-hidden="true" />
+              </button>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(event) => setSelectedDate(event.target.value)}
+                aria-label="Select calendar date"
+              />
+              <button
+                type="button"
+                onClick={() => setSelectedDate((date) => addDays(date, 1))}
+                aria-label="Next day"
+              >
+                <ChevronRight aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="calendar-compact-metrics">
+              <div>
+                <span>Today</span>
+                <strong>{dayEvents.length}</strong>
+              </div>
+              <div>
+                <span>Next 7 days</span>
+                <strong>{upcomingEvents.length}</strong>
+              </div>
+              <div>
+                <span>Priority</span>
+                <strong>{highPriorityCount}</strong>
+              </div>
+            </div>
+
+            <section className="calendar-compact-list" aria-label="Upcoming events">
+              {upcomingEvents.length === 0 ? (
+                <button
+                  type="button"
+                  className="calendar-compact-empty"
+                  onClick={addFromCompact}
+                >
+                  예정된 일정이 없습니다.
+                </button>
+              ) : (
+                upcomingEvents.map((event) => (
+                  <button
+                    key={event.id}
+                    type="button"
+                    className="calendar-compact-event"
+                    onClick={() => openCompactEvent(event)}
+                    title={`${event.title} · ${formatEventTime(event)}`}
+                    style={
+                      {
+                        "--event-color": getEventColor(event),
+                      } as CSSProperties
+                    }
+                  >
+                    <span className="calendar-compact-color" />
+                    <span className="calendar-compact-event-copy">
+                      <strong>{event.title}</strong>
+                      <small>{event.startDate} · {formatEventTime(event)}</small>
+                    </span>
+                    {normalizeCalendarPriority(event.priority) === "high" && (
+                      <span className="calendar-compact-priority">High</span>
+                    )}
+                  </button>
+                ))
+              )}
+            </section>
+          </div>
+        </GlassCard>
+
+        {/* Full calendar / 전체 캘린더
+            The existing Day/Week/Month editor is reused as a detail instance,
+            so no event model or editing behavior is duplicated. */}
+        <FloatingWindow
+          open={detailOpen}
+          title="Calendar"
+          subtitle={formatCalendarSubtitle(selectedDate)}
+          storageKey="glassday.calendar.detailWindow.rect.v1"
+          defaultRect={{ x: 96, y: 48, w: 880, h: 680 }}
+          minWidth={420}
+          minHeight={500}
+          className="calendar-detail-window"
+          onClose={() => {
+            setDetailOpen(false);
+            setEditingId(null);
+          }}
+        >
+          <CalendarWidget
+            key={`${selectedDate}-${editingId ?? "calendar"}`}
+            presentation="detail"
+            initialDate={selectedDate}
+            initialEventId={editingId ?? undefined}
+          />
+        </FloatingWindow>
+      </>
+    );
+  }
 
   return (
     <>
