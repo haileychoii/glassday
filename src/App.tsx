@@ -33,6 +33,7 @@ import { useEffect, useState } from "react";
 import { AppShell } from "./components/layout/AppShell";
 import { CommandPalette } from "./components/command/CommandPalette";
 import { DashboardGrid } from "./components/grid/DashboardGrid";
+import { HomeOverview } from "./components/home/HomeOverview";
 import { DashboardDataProvider } from "./context/DashboardDataContext";
 import { CloudSyncProvider } from "./context/CloudSyncContext";
 import { QuickCapture } from "./components/quick-capture/QuickCapture";
@@ -61,6 +62,9 @@ import { GLASSDAY_STORAGE_EVENT } from "./lib/glassdayStorage";
 import { useDashboardTabs } from "./hooks/useDashboardTabs";
 import type { DashboardLayoutMode } from "./types/workspace";
 
+const HOME_VIEW_MODE_STORAGE_KEY = "glassday.dashboard.homeView.v1";
+type HomeViewMode = "overview" | "widgets";
+
 const readLayoutModeFromUrl = (): DashboardLayoutMode | null => {
   if (typeof window === "undefined") return null;
 
@@ -83,6 +87,13 @@ function App() {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [quickCaptureOpen, setQuickCaptureOpen] = useState(false);
   const [captureStatus, setCaptureStatus] = useState("");
+  const [homeViewMode, setHomeViewMode] = useState<HomeViewMode>(() => {
+    if (typeof window === "undefined") return "overview";
+
+    return window.localStorage.getItem(HOME_VIEW_MODE_STORAGE_KEY) === "widgets"
+      ? "widgets"
+      : "overview";
+  });
   const [layoutMode, setLayoutMode] = useState<DashboardLayoutMode>(() => {
     if (typeof window === "undefined") return "wide";
 
@@ -139,6 +150,14 @@ function App() {
     nextUrl.searchParams.set("layout", layoutMode);
     window.history.replaceState({}, "", nextUrl);
   }, [layoutMode]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    // UI preference only / 화면 보기 방식만 저장한다.
+    // Widget data and the user's grid coordinates remain in their existing keys.
+    window.localStorage.setItem(HOME_VIEW_MODE_STORAGE_KEY, homeViewMode);
+  }, [homeViewMode]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -221,6 +240,14 @@ function App() {
 
       if (matchingTab) {
         setActiveTabId(matchingTab.id);
+
+        /* Overview deep link bridge / 모아보기 상세 이동
+           TodayFocusWidget dispatches this event before opening Calendar/Career/Memo.
+           Switching Home back to the mounted Grid lets those existing components
+           receive their own detail events without duplicating detail UI here. */
+        if (matchingTab.id === "home" && homeViewMode === "overview") {
+          setHomeViewMode("widgets");
+        }
       }
     };
 
@@ -229,11 +256,32 @@ function App() {
     return () => {
       window.removeEventListener(OPEN_WIDGET_EVENT, handleOpenWidget);
     };
-  }, [setActiveTabId, tabs]);
+  }, [homeViewMode, setActiveTabId, tabs]);
 
   if (!activeTab) {
     return null;
   }
+
+  const isHomeOverview =
+    activeTab.id === "home" && homeViewMode === "overview" && !editMode;
+
+  const handleHomeViewModeChange = (mode: HomeViewMode) => {
+    setHomeViewMode(mode);
+
+    if (mode === "overview") {
+      setEditMode(false);
+    }
+  };
+
+  const handleToggleEditMode = () => {
+    /* Editing always belongs to the saved free-layout Grid.
+       편집 버튼을 누르면 모아보기를 덮어쓰지 않고 기존 자유 배치로 이동한다. */
+    if (!editMode && activeTab.id === "home") {
+      setHomeViewMode("widgets");
+    }
+
+    setEditMode((prev) => !prev);
+  };
 
   return (
     /* Data Provider Stack:
@@ -247,22 +295,28 @@ function App() {
           layoutMode={layoutMode}
           tabs={tabs}
           activeTabId={activeTabId}
+          homeViewMode={homeViewMode}
           onChangeLayoutMode={setLayoutMode}
-          onToggleEditMode={() => setEditMode((prev) => !prev)}
+          onChangeHomeViewMode={handleHomeViewModeChange}
+          onToggleEditMode={handleToggleEditMode}
           onOpenSettings={() => setSettingsOpen(true)}
           onSelectTab={setActiveTabId}
           onAddTab={addTab}
           onRenameTab={renameTab}
           onRemoveTab={removeTab}
         >
-          <DashboardGrid
-            editMode={editMode}
-            layoutMode={layoutMode}
-            activeTab={activeTab}
-            onLayoutsChange={updateActiveTabLayouts}
-            onAddWidget={addWidgetToActiveTab}
-            onRemoveWidget={removeWidgetFromActiveTab}
-          />
+          {isHomeOverview ? (
+            <HomeOverview onShowWidgets={() => setHomeViewMode("widgets")} />
+          ) : (
+            <DashboardGrid
+              editMode={editMode}
+              layoutMode={layoutMode}
+              activeTab={activeTab}
+              onLayoutsChange={updateActiveTabLayouts}
+              onAddWidget={addWidgetToActiveTab}
+              onRemoveWidget={removeWidgetFromActiveTab}
+            />
+          )}
         </AppShell>
 
         {/* Figma Overlay: Settings Floating Window / Dashboard Grid와 형제 계층 */}
@@ -280,7 +334,7 @@ function App() {
           onClose={() => setCommandPaletteOpen(false)}
           onOpenSettings={() => setSettingsOpen(true)}
           onOpenQuickCapture={() => setQuickCaptureOpen(true)}
-          onToggleEditMode={() => setEditMode((prev) => !prev)}
+          onToggleEditMode={handleToggleEditMode}
           onSelectTab={setActiveTabId}
           onChangeLayoutMode={setLayoutMode}
         />

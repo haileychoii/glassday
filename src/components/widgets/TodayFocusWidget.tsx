@@ -212,7 +212,12 @@ export const TodayFocusWidget = () => {
 
   const handleOpenCalendarItem = (eventId: string) => {
     openWidget({ widgetId: "calendar" });
-    openCalendarEvent({ eventId });
+
+    /* Overview-to-detail handoff / 모아보기에서 상세 열기
+       App.tsx may replace HomeOverview with DashboardGrid after openWidget().
+       Waiting one frame gives CalendarWidget.tsx time to mount its existing
+       OPEN_CALENDAR_EVENT listener before the selected event is dispatched. */
+    window.requestAnimationFrame(() => openCalendarEvent({ eventId }));
   };
 
   const handleOpenCareerItem = (careerId: string) => {
@@ -222,7 +227,10 @@ export const TodayFocusWidget = () => {
 
   const handleOpenMemoItem = (noteId: string) => {
     openWidget({ widgetId: "memo", preferredTabId: "memo" });
-    openMemoNote({ noteId });
+
+    // MemoWidget.tsx owns the editor; defer only the selection event so the
+    // newly selected Workspace can mount first. / 편집 UI는 기존 Memo가 계속 소유한다.
+    window.requestAnimationFrame(() => openMemoNote({ noteId }));
   };
 
   return (

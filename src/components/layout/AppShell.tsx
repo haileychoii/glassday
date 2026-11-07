@@ -50,8 +50,10 @@ type AppShellProps = {
   layoutMode: DashboardLayoutMode;
   tabs: DashboardTab[];
   activeTabId: string;
+  homeViewMode: "overview" | "widgets";
 
   onChangeLayoutMode: (mode: DashboardLayoutMode) => void;
+  onChangeHomeViewMode: (mode: "overview" | "widgets") => void;
   onToggleEditMode: () => void;
   onOpenSettings: () => void;
   onSelectTab: (tabId: string) => void;
@@ -66,7 +68,9 @@ export const AppShell = ({
   layoutMode,
   tabs,
   activeTabId,
+  homeViewMode,
   onChangeLayoutMode,
+  onChangeHomeViewMode,
   onToggleEditMode,
   onOpenSettings,
   onSelectTab,
@@ -372,9 +376,11 @@ const shellContent = (
           layoutMode={effectiveLayoutMode}
           tabs={tabs}
           activeTabId={activeTabId}
+          homeViewMode={homeViewMode}
           onChangeLayoutMode={
             isTauriApp ? () => undefined : onChangeLayoutMode
           }
+          onChangeHomeViewMode={onChangeHomeViewMode}
           onToggleEditMode={onToggleEditMode}
           onOpenSettings={onOpenSettings}
           onSelectTab={onSelectTab}
