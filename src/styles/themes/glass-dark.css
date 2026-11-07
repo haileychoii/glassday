@@ -24,8 +24,8 @@ body.desktop-transparent[data-theme="glass-dark"] {
   --gd-dark-shell-bg:
     linear-gradient(
       180deg,
-      rgba(30, 32, 38, 0.46),
-      rgba(5, 7, 12, 0.34)
+      rgba(30, 32, 38, 0.24),
+      rgba(5, 7, 12, 0.15)
     );
 
   --gd-dark-shell-border:
@@ -41,8 +41,8 @@ body.desktop-transparent[data-theme="glass-dark"] {
   --gd-dark-card-bg:
     linear-gradient(
       145deg,
-      rgba(56, 59, 68, 0.38),
-      rgba(7, 9, 15, 0.30)
+      rgba(56, 59, 68, 0.24),
+      rgba(7, 9, 15, 0.16)
     );
 
   --gd-dark-card-border:
@@ -57,8 +57,8 @@ body.desktop-transparent[data-theme="glass-dark"] {
   --gd-dark-panel-bg:
     linear-gradient(
       145deg,
-      rgba(68, 72, 82, 0.28),
-      rgba(8, 10, 17, 0.24)
+      rgba(68, 72, 82, 0.18),
+      rgba(8, 10, 17, 0.12)
     );
 
   --gd-dark-panel-border:
@@ -73,8 +73,8 @@ body.desktop-transparent[data-theme="glass-dark"] {
   --gd-dark-control-bg:
     linear-gradient(
       145deg,
-      rgba(76, 80, 90, 0.28),
-      rgba(8, 10, 17, 0.24)
+      rgba(76, 80, 90, 0.2),
+      rgba(8, 10, 17, 0.12)
     );
 
   --gd-dark-control-border:
@@ -85,8 +85,8 @@ body.desktop-transparent[data-theme="glass-dark"] {
   --gd-widget-panel-bg:
     linear-gradient(
       145deg,
-      rgba(68, 72, 82, 0.28),
-      rgba(8, 10, 17, 0.24)
+      rgba(68, 72, 82, 0.18),
+      rgba(8, 10, 17, 0.12)
     );
 
   --gd-widget-panel-border:
@@ -162,36 +162,33 @@ html.desktop-transparent[data-theme="glass-dark"]
 
 body.desktop-transparent[data-theme="glass-dark"]
   .app-shell-surface.liquid-shell {
-  /* Tauri glass backplate
-     Keep the desktop visible and use blur, not opaque navy/black paint, as the
-     main material. / 검은 판이 아니라 투명도와 blur가 주인공인 dark glass다. */
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.07), transparent 42%),
-    var(--gd-dark-shell-bg) !important;
-  background-color: rgba(5, 7, 12, 0.24) !important;
-  background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.07), transparent 42%),
-    var(--gd-dark-shell-bg) !important;
+  /* Shell transparency / 전체 판 투명화
+     English: Native Acrylic in src-tauri/src/lib.rs already blurs the desktop.
+     Removing the shell paint prevents a second rectangular dark plate while
+     the sidebar, topbar and widgets still form readable smoked-glass layers.
+     Korean: 네이티브 Acrylic이 blur를 담당하므로 전체 shell의 검은 색판은
+     제거하고 실제 UI 요소에만 smoked glass를 남긴다. */
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
 
   /*
    * The shell owns one neutral black blur layer.
    * Korean: 남색/보라 tint 없이 검정 유리 막만 만들어 뒤 배경 텍스트를 흐린다.
    */
   backdrop-filter:
-    blur(52px)
-    saturate(150%)
-    brightness(0.88) !important;
+    blur(58px)
+    saturate(146%)
+    brightness(0.9) !important;
 
   -webkit-backdrop-filter:
-    blur(52px)
-    saturate(150%)
-    brightness(0.88) !important;
+    blur(58px)
+    saturate(146%)
+    brightness(0.9) !important;
 
-  border-color:
-    var(--gd-dark-shell-border) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
 
-  box-shadow:
-    var(--gd-dark-shell-shadow) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
 
@@ -227,8 +224,8 @@ body.desktop-transparent[data-theme="glass-dark"] .sidebar {
   background:
     linear-gradient(
       180deg,
-      rgba(48, 52, 61, 0.36),
-      rgba(5, 7, 12, 0.30)
+      rgba(48, 52, 61, 0.24),
+      rgba(5, 7, 12, 0.16)
     ) !important;
 
   border-right:
@@ -239,11 +236,11 @@ body.desktop-transparent[data-theme="glass-dark"] .sidebar {
     12px 0 36px rgba(0, 0, 0, 0.16) !important;
 
   backdrop-filter:
-    blur(46px)
+    blur(52px)
     saturate(148%) !important;
 
   -webkit-backdrop-filter:
-    blur(46px)
+    blur(52px)
     saturate(148%) !important;
 }
 
@@ -259,8 +256,8 @@ body.desktop-transparent[data-theme="glass-dark"] .topbar {
   background:
     linear-gradient(
       180deg,
-      rgba(50, 54, 64, 0.38),
-      rgba(5, 7, 12, 0.30)
+      rgba(50, 54, 64, 0.25),
+      rgba(5, 7, 12, 0.16)
     ) !important;
 
   border:
@@ -274,11 +271,11 @@ body.desktop-transparent[data-theme="glass-dark"] .topbar {
     0 14px 34px rgba(0, 0, 0, 0.22) !important;
 
   backdrop-filter:
-    blur(46px)
+    blur(52px)
     saturate(148%) !important;
 
   -webkit-backdrop-filter:
-    blur(46px)
+    blur(52px)
     saturate(148%) !important;
 }
 
@@ -300,11 +297,11 @@ body.desktop-transparent[data-theme="glass-dark"] .glass-card {
     var(--gd-dark-card-shadow) !important;
 
   backdrop-filter:
-    blur(44px)
+    blur(50px)
     saturate(148%) !important;
 
   -webkit-backdrop-filter:
-    blur(44px)
+    blur(50px)
     saturate(148%) !important;
 }
 
@@ -545,8 +542,8 @@ body.desktop-transparent[data-theme="glass-dark"] .settings-modal-window {
   background:
     linear-gradient(
       145deg,
-      rgba(54, 58, 69, 0.66),
-      rgba(5, 7, 12, 0.50)
+      rgba(54, 58, 69, 0.46),
+      rgba(5, 7, 12, 0.30)
     ) !important;
 
   border-color:
@@ -569,15 +566,15 @@ body.desktop-transparent[data-theme="glass-dark"] .settings-modal-window {
 }
 
 /* Dark settings isolation / Dark 설정창 분리
-   English: A shallow blurred scrim removes readable dashboard detail while
+   English: A strong blurred scrim removes readable dashboard detail while
    keeping the desktop color field visible through the native Acrylic layer.
    Korean: 설정 뒤의 글자는 읽히지 않게 흐리고 바탕 색감만 남겨 유리 느낌과
    입력 가독성을 동시에 유지한다. */
 html.desktop-transparent[data-theme="glass-dark"] .settings-modal-backdrop,
 body.desktop-transparent[data-theme="glass-dark"] .settings-modal-backdrop {
-  background: rgba(2, 4, 8, 0.34) !important;
-  backdrop-filter: blur(24px) saturate(104%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(104%) !important;
+  background: rgba(2, 4, 8, 0.22) !important;
+  backdrop-filter: blur(40px) saturate(104%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(104%) !important;
 }
 
 html.desktop-transparent[data-theme="glass-dark"] .settings-section,
@@ -598,8 +595,8 @@ body.desktop-transparent[data-theme="glass-dark"] .settings-status {
   background:
     linear-gradient(
       145deg,
-      rgba(78, 84, 98, 0.44),
-      rgba(7, 9, 15, 0.36)
+      rgba(78, 84, 98, 0.30),
+      rgba(7, 9, 15, 0.22)
     ) !important;
 
   border-color:

@@ -3,34 +3,32 @@
  *
  * English: CSS `backdrop-filter` can blur content rendered inside WebView2,
  * but it cannot sample the Windows desktop behind a transparent Tauri window.
- * Acrylic provides that missing native blur layer.
+ * Windows blur-behind provides that missing native layer without adding the
+ * opaque system Acrylic rectangle seen on Windows 11.
  *
  * Korean: 웹뷰 내부 배경은 CSS가 흐리지만 실제 바탕화면 픽셀은 읽을 수 없다.
- * Light와 Dark 모두 Windows Acrylic을 켜 바탕화면까지 흐리게 만든다.
+ * Windows 11 기본 Acrylic의 회색 판을 피하고 blur-behind로 바탕화면만 흐린다.
  */
 #[cfg(target_os = "windows")]
 #[tauri::command]
 fn set_native_glass_effect(window: tauri::WebviewWindow, mode: String) -> Result<(), String> {
-    use window_vibrancy::{apply_acrylic, clear_acrylic};
+    use window_vibrancy::{apply_blur, clear_acrylic, clear_blur};
 
-    // Clear the previous material before changing modes. This prevents the
-    // light tint from leaking into dark glass after a live theme switch.
-    // 테마 전환 시 이전 틴트가 남지 않도록 기존 효과를 먼저 해제한다.
+    // Clear both supported backdrops before changing modes. The previous
+    // release used Acrylic, so clearing it also handles live upgrades safely.
+    // 이전 버전의 Acrylic과 현재 blur를 모두 지워 테마 전환 잔상을 막는다.
+    clear_blur(&window).map_err(|error| error.to_string())?;
     clear_acrylic(&window).map_err(|error| error.to_string())?;
 
     match mode.as_str() {
-        // Light uses a low-alpha cool white tint. CSS adds the visible highlights,
-        // so the native layer can focus on blur without becoming a gray sheet.
-        // Light는 흐림만 담당하도록 흰 틴트를 얇게 두어 회색 판처럼 보이지 않는다.
-        "light" => {
-            apply_acrylic(&window, Some((229, 241, 255, 44))).map_err(|error| error.to_string())
-        }
-        // Dark needs a denser neutral tint because CSS backdrop-filter cannot hide
-        // desktop text outside WebView2. This keeps color motion but removes detail.
-        // Dark는 바탕화면 글자는 지우고 색의 움직임만 남도록 중성 틴트를 더 진하게 둔다.
-        "dark" => {
-            apply_acrylic(&window, Some((12, 14, 20, 142))).map_err(|error| error.to_string())
-        }
+        // `apply_blur` honors this tiny alpha on Windows 11, unlike Acrylic's
+        // system-controlled gray tint. CSS cards provide the visible edges.
+        // Light는 거의 무색의 blur만 쓰고 카드의 얇은 테두리로 형태를 만든다.
+        "light" => apply_blur(&window, Some((218, 238, 255, 8))).map_err(|error| error.to_string()),
+        // Dark keeps a low-alpha neutral smoke tint. Blur removes readable
+        // desktop detail while preserving more background color than Acrylic.
+        // Dark도 회색 판 대신 얇은 smoke tint와 blur로 배경 형태만 흐린다.
+        "dark" => apply_blur(&window, Some((12, 14, 20, 64))).map_err(|error| error.to_string()),
         _ => Ok(()),
     }
 }
