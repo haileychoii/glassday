@@ -723,6 +723,201 @@
    Summary는 fixed 영역이고 긴 task/text/clip section만 내부 scroll한다.
    Inner surface 색상은 theme-surfaces.css semantic token을 우선 사용한다.
    ============================================================ */
+
+/* =========================================================
+   Compact dashboard journal / 대시보드용 요약 일기
+
+   DailyJournalWidget.tsx keeps the existing full editor as the detail Variant.
+   This block only styles the compact Variant shown inside DashboardGrid.
+========================================================= */
+
+.journal-expand-button {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.journal-expand-button svg {
+  width: 13px;
+  height: 13px;
+}
+
+.journal-compact-widget .glass-card-body {
+  overflow: hidden;
+}
+
+.journal-compact-content {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--gd-widget-stack-gap, 8px);
+}
+
+.journal-compact-metrics {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.journal-compact-metrics > div {
+  min-width: 0;
+  min-height: 46px;
+  padding: 7px 9px;
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  border: 1px solid var(--gd-widget-panel-border);
+  border-radius: var(--gd-radius-inner, 14px);
+  background: var(--gd-widget-panel-bg);
+  box-shadow: var(--gd-widget-panel-shadow);
+}
+
+.journal-compact-metrics span {
+  overflow: hidden;
+  color: hsl(var(--muted-foreground) / 0.84);
+  font-size: 9px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.journal-compact-metrics strong {
+  overflow: hidden;
+  color: hsl(var(--foreground) / 0.94);
+  font-size: 14px;
+  line-height: 1.1;
+  font-weight: 820;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.journal-compact-section {
+  min-width: 0;
+  min-height: 0;
+  padding: 8px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 6px;
+  overflow: hidden;
+  border: 1px solid var(--gd-widget-panel-border);
+  border-radius: var(--gd-radius-inner, 14px);
+  background: var(--gd-widget-panel-bg);
+}
+
+.journal-compact-section-title {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: hsl(var(--foreground) / 0.76);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.journal-compact-section-title svg {
+  width: 12px;
+  height: 12px;
+}
+
+.journal-compact-tasks {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  overflow-y: auto;
+}
+
+.journal-compact-task,
+.journal-compact-empty {
+  width: 100%;
+  min-width: 0;
+  min-height: 30px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--gd-widget-control-border);
+  border-radius: 10px;
+  background: var(--gd-widget-control-bg);
+  color: hsl(var(--foreground) / 0.8);
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.journal-compact-task > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.journal-compact-task.is-done > span:last-child {
+  opacity: 0.52;
+  text-decoration: line-through;
+}
+
+.journal-compact-check {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid hsl(var(--primary) / 0.5);
+  border-radius: 999px;
+}
+
+.journal-compact-check svg {
+  width: 9px;
+  height: 9px;
+}
+
+.journal-compact-empty {
+  color: hsl(var(--muted-foreground) / 0.78);
+  border-style: dashed;
+}
+
+.journal-compact-reflection {
+  min-width: 0;
+  min-height: 32px;
+  padding: 6px 9px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--gd-widget-control-border);
+  border-radius: 11px;
+  background: var(--gd-widget-control-bg);
+  color: hsl(var(--muted-foreground) / 0.86);
+  text-align: left;
+  font-size: 10px;
+  font-weight: 680;
+}
+
+.journal-compact-reflection svg {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+
+.journal-compact-reflection span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.journal-detail-window .daily-journal-widget {
+  border: 0;
+  box-shadow: none;
+}
 /* =========================================================
    Final Daily Journal adaptive composition
    The journal summary should not simply stack into one column. The first three

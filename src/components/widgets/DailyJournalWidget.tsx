@@ -20,6 +20,7 @@ import {
   Check,
   ClipboardList,
   Hash,
+  Maximize2,
   Plus,
   Sparkles,
   Trash2,
@@ -29,6 +30,7 @@ import { useMemo, useState } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 import { GlassCard } from "../glass/GlassCard";
+import { FloatingWindow } from "../common/FloatingWindow";
 import type {
   JournalClip,
   JournalEntry,
@@ -57,8 +59,18 @@ const cx = (...classes: Array<string | false | null | undefined>) => {
   return classes.filter(Boolean).join(" ");
 };
 
+type DailyJournalWidgetProps = {
+  /** Dashboard는 compact, FloatingWindow 안에서는 detail 전체 편집기를 사용한다. */
+  presentation?: "compact" | "detail";
+  /** compact에서 선택한 날짜를 detail 창에 그대로 전달한다. */
+  initialDate?: string;
+};
+
 /** 날짜를 기준으로 JournalEntry를 편집하고 derived summary를 계산하는 Widget. */
-export const DailyJournalWidget = () => {
+export const DailyJournalWidget = ({
+  presentation = "compact",
+  initialDate,
+}: DailyJournalWidgetProps = {}) => {
   // Share the same persistence bridge as other widgets. Normalization remains in
   // journalUtils.ts; no mount-time save can overwrite a newly restored snapshot.
   // 한국어: 초기 표시에는 저장하지 않고, 입력할 때만 저장하며 복원·초기화를 바로 반영한다.
@@ -72,7 +84,10 @@ export const DailyJournalWidget = () => {
     () => storedEntries.map((storedEntry) => normalizeJournalEntry(storedEntry)),
     [storedEntries]
   );
-  const [selectedDate, setSelectedDate] = useState(todayString());
+  const [selectedDate, setSelectedDate] = useState(
+    initialDate ?? todayString()
+  );
+  const [detailOpen, setDetailOpen] = useState(false);
   const [newTaskText, setNewTaskText] = useState("");
   const [newTomorrowTaskText, setNewTomorrowTaskText] = useState("");
   const [clipText, setClipText] = useState("");
@@ -244,6 +259,122 @@ export const DailyJournalWidget = () => {
       </div>
     );
   };
+
+  if (presentation === "compact") {
+    const compactTasks = entry.todayTasks.slice(0, 3);
+    const reflectionPreview =
+      entry.reflection.trim() || entry.memo.trim() || "오늘의 한 줄을 남겨보세요.";
+
+    return (
+      <>
+        <GlassCard
+          className="daily-journal-widget journal-compact-widget"
+          title="Daily Journal"
+          subtitle={`${entry.date} · ${progress}% filled`}
+          icon={<BookOpen className="w-4 h-4" />}
+          actions={
+            <button
+              type="button"
+              onClick={() => setDetailOpen(true)}
+              className="glass-button journal-expand-button"
+              title="일기 전체 편집"
+              aria-label="Open full journal editor"
+            >
+              <Maximize2 aria-hidden="true" />
+            </button>
+          }
+        >
+          {/* Compact summary / 작은 대시보드 요약
+              Existing JournalEntry is edited directly, so task checks here and
+              the full editor below always stay in sync. / 별도 요약 데이터를 만들지 않는다. */}
+          <div className="journal-compact-content">
+            <div className="journal-compact-metrics">
+              <div>
+                <span>Progress</span>
+                <strong>{progress}%</strong>
+              </div>
+              <div>
+                <span>Tasks</span>
+                <strong>{doneTaskCount}/{entry.todayTasks.length}</strong>
+              </div>
+              <div>
+                <span>Mood</span>
+                <strong>{journalMoodLabels[entry.condition]}</strong>
+              </div>
+            </div>
+
+            <section className="journal-compact-section">
+              <div className="journal-compact-section-title">
+                <ClipboardList aria-hidden="true" />
+                <span>Today</span>
+              </div>
+
+              <div className="journal-compact-tasks">
+                {compactTasks.length === 0 ? (
+                  <button
+                    type="button"
+                    className="journal-compact-empty"
+                    onClick={() => setDetailOpen(true)}
+                  >
+                    오늘 할 일을 추가해 보세요.
+                  </button>
+                ) : (
+                  compactTasks.map((task) => (
+                    <button
+                      key={task.id}
+                      type="button"
+                      className={cx(
+                        "journal-compact-task",
+                        task.done && "is-done"
+                      )}
+                      onClick={() =>
+                        updateTask("todayTasks", task.id, { done: !task.done })
+                      }
+                      aria-label={`${task.text} ${task.done ? "완료 취소" : "완료"}`}
+                    >
+                      <span className="journal-compact-check">
+                        {task.done && <Check aria-hidden="true" />}
+                      </span>
+                      <span>{task.text}</span>
+                    </button>
+                  ))
+                )}
+              </div>
+            </section>
+
+            <button
+              type="button"
+              className="journal-compact-reflection"
+              onClick={() => setDetailOpen(true)}
+            >
+              <Sparkles aria-hidden="true" />
+              <span>{reflectionPreview}</span>
+            </button>
+          </div>
+        </GlassCard>
+
+        {/* Full editor / 전체 편집기
+            FloatingWindow.tsx supplies save-on-close and responsive window bounds.
+            The detail instance shares the same localStorage key via useLocalStorage. */}
+        <FloatingWindow
+          open={detailOpen}
+          title="Daily Journal"
+          subtitle={`${entry.date} · ${progress}% filled`}
+          storageKey="glassday.journal.detailWindow.rect.v1"
+          defaultRect={{ x: 120, y: 64, w: 760, h: 640 }}
+          minWidth={380}
+          minHeight={460}
+          className="journal-detail-window"
+          onClose={() => setDetailOpen(false)}
+        >
+          <DailyJournalWidget
+            presentation="detail"
+            initialDate={selectedDate}
+          />
+        </FloatingWindow>
+      </>
+    );
+  }
 
   return (
     <GlassCard
