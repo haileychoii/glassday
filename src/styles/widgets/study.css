@@ -6,6 +6,266 @@
    Widget/Detail은 같은 DOM 구조에 mode class만 달라지고 같은 Study data를 공유한다.
    Timeline/side content는 container 크기에 따라 재배치되며 필요한 영역만 내부 scroll한다.
    ============================================================ */
+
+/* =========================================================
+   Compact dashboard Study / 대시보드용 학습 요약
+
+   StudyWidget.tsx keeps renderPlanner("detail") inside StudyDetailWindow.
+   The grid card below exposes only high-frequency actions: task check + timer.
+========================================================= */
+
+.study-widget .glass-card-body {
+  overflow: hidden;
+}
+
+.study-compact-planner {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 4px minmax(0, 1fr) auto;
+  gap: var(--gd-widget-stack-gap, 8px);
+}
+
+.study-compact-metrics {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.study-compact-metrics > div {
+  min-width: 0;
+  min-height: 46px;
+  padding: 7px 9px;
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  border: 1px solid var(--study10-panel-border);
+  border-radius: var(--study10-radius);
+  background: var(--study10-panel-bg);
+  box-shadow: var(--study10-panel-shadow);
+}
+
+.study-compact-metrics span {
+  color: hsl(var(--muted-foreground) / 0.84);
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.study-compact-metrics strong {
+  overflow: hidden;
+  color: hsl(var(--foreground) / 0.94);
+  font-size: 14px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.study-compact-progress {
+  width: 100%;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: hsl(var(--foreground) / 0.08);
+}
+
+.study-compact-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--study10-accent-gradient);
+  transition: width 180ms ease;
+}
+
+.study-compact-section {
+  min-width: 0;
+  min-height: 0;
+  padding: 8px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 6px;
+  overflow: hidden;
+  border: 1px solid var(--study10-panel-border);
+  border-radius: var(--study10-radius);
+  background: var(--study10-panel-bg);
+}
+
+.study-compact-heading {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.study-compact-heading span {
+  color: hsl(var(--foreground) / 0.78);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.study-compact-heading small {
+  overflow: hidden;
+  color: hsl(var(--muted-foreground) / 0.78);
+  font-size: 9px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.study-compact-task-list {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  overflow-y: auto;
+}
+
+.study-compact-task,
+.study-compact-empty {
+  width: 100%;
+  min-width: 0;
+  min-height: 34px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--study10-control-border);
+  border-radius: calc(var(--study10-radius) * 0.72);
+  background: var(--study10-control-bg);
+  color: hsl(var(--foreground) / 0.82);
+  text-align: left;
+}
+
+.study-compact-task:hover,
+.study-compact-empty:hover {
+  background: var(--study10-control-active-bg);
+}
+
+.study-compact-check {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--study-subject-color, hsl(var(--primary) / 0.5));
+  border-radius: 999px;
+}
+
+.study-compact-check svg {
+  width: 9px;
+  height: 9px;
+}
+
+.study-compact-task-copy {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.study-compact-task-copy strong,
+.study-compact-task-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.study-compact-task-copy strong {
+  font-size: 10px;
+  font-weight: 780;
+}
+
+.study-compact-task-copy small {
+  color: hsl(var(--muted-foreground) / 0.8);
+  font-size: 8px;
+  font-weight: 650;
+}
+
+.study-compact-task.is-done .study-compact-task-copy {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.study-compact-empty {
+  color: hsl(var(--muted-foreground) / 0.78);
+  border-style: dashed;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.study-compact-footer {
+  min-width: 0;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.study-compact-subjects {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  overflow: hidden;
+}
+
+.study-compact-subjects > span {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: hsl(var(--muted-foreground) / 0.84);
+  font-size: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.study-compact-subjects i {
+  width: 5px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--study-subject-color);
+}
+
+.study-compact-muted {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.study-compact-timer {
+  height: 30px;
+  min-width: 68px;
+  padding: 0 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  border: 1px solid hsl(var(--primary) / 0.36);
+  border-radius: calc(var(--study10-radius) * 0.72);
+  background: hsl(var(--primary) / 0.12);
+  color: hsl(var(--foreground) / 0.9);
+  font-size: 9px;
+  font-weight: 780;
+}
+
+.study-compact-timer.is-running {
+  background: var(--study10-accent-gradient);
+}
+
+.study-compact-timer svg {
+  width: 12px;
+  height: 12px;
+}
+
+@container study-widget (max-width: 440px) {
+  .study-compact-subjects > span:nth-child(n + 2) {
+    display: none;
+  }
+}
 /* =========================================================
    STUDY PLANNER WIDGET
 
