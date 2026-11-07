@@ -1,0 +1,450 @@
+/* ============================================================
+   [Diary Workspace] Free-layout page / 자유 배치 다이어리
+
+   Component map:
+   - DiaryWorkspace.tsx -> toolbar, date and add controls
+   - DiaryPage.tsx      -> responsive 10:7 canvas
+   - DiaryItem.tsx      -> text/photo/sticker + Moveable controls
+
+   The canvas itself is the only framed work surface. Toolbar and stage remain
+   unframed so the app does not become a stack of nested cards.
+   ============================================================ */
+
+.diary-workspace {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100%;
+  height: 100%;
+  gap: 14px;
+  padding: clamp(12px, 2vw, 22px);
+  overflow: hidden;
+}
+
+.diary-loading {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.diary-toolbar {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.diary-toolbar-title,
+.diary-date-controls,
+.diary-add-controls {
+  display: flex;
+  align-items: center;
+}
+
+.diary-toolbar-title {
+  min-width: 0;
+  gap: 10px;
+}
+
+.diary-toolbar-title > svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  color: hsl(var(--primary));
+}
+
+.diary-toolbar-title h2,
+.diary-toolbar-title p {
+  margin: 0;
+}
+
+.diary-toolbar-title h2 {
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 760;
+}
+
+.diary-toolbar-title p {
+  margin-top: 2px;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.diary-date-controls,
+.diary-add-controls {
+  gap: 6px;
+}
+
+.diary-icon-button,
+.diary-today-button,
+.diary-add-button {
+  min-height: 34px;
+  border: 1px solid var(--gd-widget-control-border, hsl(var(--border)));
+  background: var(--gd-widget-control-bg, hsl(var(--card) / 0.72));
+  color: hsl(var(--foreground));
+}
+
+.diary-icon-button {
+  width: 34px;
+  min-width: 34px;
+  padding: 0;
+}
+
+.diary-icon-button svg,
+.diary-add-button svg {
+  width: 15px;
+  height: 15px;
+}
+
+.diary-today-button,
+.diary-add-button {
+  padding: 0 11px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.diary-add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.diary-date-input {
+  width: 128px;
+  min-height: 34px;
+  padding: 0 9px;
+  border: 1px solid var(--gd-widget-control-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-button);
+  background: var(--gd-widget-control-bg, hsl(var(--card) / 0.72));
+  color: hsl(var(--foreground));
+  font: inherit;
+  font-size: 11px;
+  outline: none;
+}
+
+.diary-date-input:focus-visible,
+.diary-icon-button:focus-visible,
+.diary-today-button:focus-visible,
+.diary-add-button:focus-visible {
+  outline: 2px solid hsl(var(--ring) / 0.7);
+  outline-offset: 2px;
+}
+
+.diary-canvas-region {
+  display: grid;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  place-items: center;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.diary-page-frame {
+  display: grid;
+  width: min(100%, calc((100dvh - 185px) * 10 / 7), 1000px);
+  min-width: 0;
+  place-items: center;
+}
+
+.diary-page-canvas {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 10 / 7;
+  overflow: hidden;
+  border: 1px solid var(--gd-widget-panel-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-panel);
+  background: color-mix(in srgb, hsl(var(--card)) 86%, transparent);
+  box-shadow: var(
+    --gd-widget-panel-shadow,
+    0 20px 54px -38px hsl(var(--foreground) / 0.42)
+  );
+  isolation: isolate;
+}
+
+.diary-page-canvas::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(hsl(var(--border) / 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--border) / 0.14) 1px, transparent 1px);
+  background-size: 4% 5.7%;
+}
+
+.diary-item {
+  position: absolute;
+  min-width: 0;
+  min-height: 0;
+  transform-origin: center;
+  touch-action: none;
+  user-select: none;
+}
+
+.diary-item-text {
+  overflow: visible;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: min(var(--gd-radius-inner), 18px);
+  box-shadow: 0 12px 28px -24px hsl(var(--foreground) / 0.42);
+}
+
+.diary-item-photo {
+  overflow: hidden;
+  border: 5px solid color-mix(in srgb, hsl(var(--card)) 92%, transparent);
+  border-radius: min(var(--gd-radius-inner), 18px);
+  box-shadow: 0 16px 30px -22px hsl(var(--foreground) / 0.58);
+}
+
+.diary-item-sticker {
+  filter: drop-shadow(0 10px 12px hsl(var(--foreground) / 0.14));
+}
+
+.diary-item.is-selected {
+  outline: 2px solid hsl(var(--ring) / 0.92);
+  outline-offset: 3px;
+}
+
+.diary-text-editor {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  resize: none;
+  border: 0;
+  border-radius: inherit;
+  padding: clamp(12px, 2vw, 22px);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: clamp(11px, 1.55vw, 18px);
+  line-height: 1.58;
+  outline: none;
+  user-select: text;
+  touch-action: manipulation;
+}
+
+.diary-text-editor::placeholder {
+  color: hsl(var(--muted-foreground) / 0.58);
+}
+
+.diary-media-image,
+.diary-media-placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.diary-media-image {
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.diary-item-sticker .diary-media-image {
+  object-fit: contain;
+}
+
+.diary-media-placeholder {
+  display: grid;
+  place-items: center;
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--muted) / 0.46);
+}
+
+.diary-media-placeholder svg {
+  width: 24%;
+  height: 24%;
+}
+
+.diary-item-tools {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 3;
+  padding: 4px;
+  border: 1px solid var(--gd-widget-control-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-button);
+  background: color-mix(in srgb, hsl(var(--card)) 88%, transparent);
+  box-shadow: 0 8px 24px -18px hsl(var(--foreground) / 0.6);
+  backdrop-filter: blur(14px);
+}
+
+.diary-item-tool {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+}
+
+.diary-item-tool:hover {
+  background: hsl(var(--muted) / 0.82);
+}
+
+.diary-item-tool.is-danger {
+  color: #c44f68;
+}
+
+.diary-item-tool svg {
+  width: 14px;
+  height: 14px;
+}
+
+.diary-item-drag-handle {
+  cursor: grab;
+  touch-action: none;
+}
+
+.diary-item-drag-handle:active {
+  cursor: grabbing;
+}
+
+.diary-workspace .moveable-control {
+  width: 9px !important;
+  height: 9px !important;
+  margin-top: -4.5px !important;
+  margin-left: -4.5px !important;
+  border: 1px solid hsl(var(--card)) !important;
+  background: hsl(var(--primary)) !important;
+}
+
+.diary-workspace .moveable-line {
+  background: hsl(var(--ring)) !important;
+}
+
+.diary-status {
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  z-index: 30;
+  padding: 8px 12px;
+  border: 1px solid var(--gd-widget-control-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-button);
+  background: color-mix(in srgb, hsl(var(--card)) 90%, transparent);
+  color: hsl(var(--foreground));
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 12px 30px -22px hsl(var(--foreground) / 0.6);
+  backdrop-filter: blur(14px);
+  animation: diary-status-fade 2.6s both;
+}
+
+@keyframes diary-status-fade {
+  0%,
+  72% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .diary-toolbar {
+    grid-template-columns: minmax(140px, 1fr) auto;
+  }
+
+  .diary-add-controls {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+
+  .diary-page-frame {
+    width: min(100%, calc((100dvh - 225px) * 10 / 7), 1000px);
+  }
+}
+
+@media (max-width: 620px) {
+  .diary-workspace {
+    height: auto;
+    min-height: 100%;
+    padding: 10px;
+    overflow: visible;
+  }
+
+  .diary-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .diary-toolbar-title {
+    width: 100%;
+  }
+
+  .diary-date-controls {
+    flex: 1 1 230px;
+  }
+
+  .diary-date-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+  }
+
+  .diary-add-controls {
+    flex: 1 1 auto;
+    justify-content: flex-end;
+  }
+
+  .diary-add-button {
+    width: 34px;
+    min-width: 34px;
+    padding: 0;
+  }
+
+  .diary-add-button span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .diary-canvas-region {
+    min-height: 280px;
+    place-items: start center;
+  }
+
+  .diary-page-frame {
+    width: 100%;
+  }
+
+  .diary-item-tools {
+    bottom: calc(100% + 5px);
+  }
+
+  .diary-item-tool {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* Pixel/Retro preserve their square desktop language; other themes keep the
+   shared rounded tokens. / 하드 픽셀 테마만 종이와 도구 모서리를 각지게 둔다. */
+html[data-theme="pixel-desk"] .diary-page-canvas,
+html[data-theme="pixel-desk"] .diary-item-text,
+html[data-theme="pixel-desk"] .diary-item-photo,
+html[data-theme="retro"] .diary-page-canvas,
+html[data-theme="retro"] .diary-item-text,
+html[data-theme="retro"] .diary-item-photo {
+  border-radius: 0;
+}

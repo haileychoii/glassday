@@ -242,31 +242,33 @@ export const Topbar = ({
                 Edit
             =============================================== */}
 
-            <button
-              type="button"
-              onClick={onToggleEditMode}
-              className={cn(
-                "glass-button topbar-action-button",
-                editMode && "is-active"
-              )}
-              title={
-                editMode
-                  ? "Finish editing dashboard"
-                  : "Edit dashboard"
-              }
-              aria-label={
-                editMode
-                  ? "Finish editing dashboard"
-                  : "Edit dashboard"
-              }
-              aria-pressed={editMode}
-            >
-              <LayoutGrid className="w-3.5 h-3.5" />
+            {activeTabId !== "diary" && (
+              <button
+                type="button"
+                onClick={onToggleEditMode}
+                className={cn(
+                  "glass-button topbar-action-button",
+                  editMode && "is-active"
+                )}
+                title={
+                  editMode
+                    ? "Finish editing dashboard"
+                    : "Edit dashboard"
+                }
+                aria-label={
+                  editMode
+                    ? "Finish editing dashboard"
+                    : "Edit dashboard"
+                }
+                aria-pressed={editMode}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
 
-              <span>
-                {editMode ? "Done" : "Edit"}
-              </span>
-            </button>
+                <span>
+                  {editMode ? "Done" : "Edit"}
+                </span>
+              </button>
+            )}
 
             {/* Tauri widget mode keeps only real app actions here.
                 Tauri 위젯 모드에서는 창 버튼을 렌더링하지 않고 Settings/Edit만 남긴다. */}

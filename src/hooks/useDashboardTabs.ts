@@ -285,10 +285,26 @@ const normalizeTabs = (
   options: { mergeCurrentDefaults?: boolean } = {}
 ): DashboardTab[] => {
   if (!Array.isArray(tabs) || tabs.length === 0) {
-    return [fallbackTab];
+    return options.mergeCurrentDefaults
+      ? defaultDashboardTabs.map((tab) => normalizeTab(tab))
+      : [fallbackTab];
   }
 
-  return tabs.map((tab) => normalizeTab(tab, options));
+  const normalizedTabs = tabs.map((tab) => normalizeTab(tab, options));
+
+  if (!options.mergeCurrentDefaults) {
+    return normalizedTabs;
+  }
+
+  /* Schema v4 adds the locked Diary workspace. Existing users keep every
+     saved Grid coordinate; only missing default tabs are appended. / 기존
+     배치는 건드리지 않고 새 기본 탭만 끝에 보충한다. */
+  const savedIds = new Set(normalizedTabs.map((tab) => tab.id));
+  const missingDefaultTabs = defaultDashboardTabs
+    .filter((tab) => !savedIds.has(tab.id))
+    .map((tab) => normalizeTab(tab));
+
+  return [...normalizedTabs, ...missingDefaultTabs];
 };
 
 const createNewTab = (): DashboardTab => {

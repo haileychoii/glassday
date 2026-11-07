@@ -23,6 +23,7 @@ import {
   FolderOpen,
   HeartPulse,
   House,
+  LibraryBig,
   NotebookPen,
   Plus,
   Trash2,
@@ -95,6 +96,7 @@ export const WorkspaceTabsNav = ({
       career: BriefcaseBusiness,
       study: BookOpen,
       memo: NotebookPen,
+      diary: LibraryBig,
       life: HeartPulse,
     };
 
@@ -103,6 +105,7 @@ export const WorkspaceTabsNav = ({
       career: "💼",
       study: "📚",
       memo: "📝",
+      diary: "📔",
       life: "🌿",
     };
 

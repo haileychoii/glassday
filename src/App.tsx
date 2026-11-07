@@ -28,7 +28,7 @@
  * - layoutMode 저장 키는 OAuth 복귀와 연결되므로 임의 변경하지 않는다.
  * ============================================================
  */
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 
 import { AppShell } from "./components/layout/AppShell";
 import { CommandPalette } from "./components/command/CommandPalette";
@@ -64,6 +64,14 @@ import type { DashboardLayoutMode } from "./types/workspace";
 
 const HOME_VIEW_MODE_STORAGE_KEY = "glassday.dashboard.homeView.v1";
 type HomeViewMode = "overview" | "widgets";
+
+/* Diary includes react-moveable, which is only needed on its own workspace.
+   해당 탭을 열 때만 편집 엔진을 내려받아 일반 대시보드 시작 번들을 줄인다. */
+const DiaryWorkspace = lazy(() =>
+  import("./components/diary/DiaryWorkspace").then((module) => ({
+    default: module.DiaryWorkspace,
+  }))
+);
 
 const readLayoutModeFromUrl = (): DashboardLayoutMode | null => {
   if (typeof window === "undefined") return null;
@@ -283,6 +291,16 @@ function App() {
     setEditMode((prev) => !prev);
   };
 
+  const handleSelectTab = (tabId: string) => {
+    /* Diary owns its own item selection tools, so dashboard Grid edit mode
+       must not leak into that workspace. / 다이어리 진입 시 그리드 편집을 끝낸다. */
+    if (tabId === "diary") {
+      setEditMode(false);
+    }
+
+    setActiveTabId(tabId);
+  };
+
   return (
     /* Data Provider Stack:
        Cloud snapshot이 localStorage를 복원한 뒤 Dashboard Context와 각 Widget의
@@ -300,12 +318,22 @@ function App() {
           onChangeHomeViewMode={handleHomeViewModeChange}
           onToggleEditMode={handleToggleEditMode}
           onOpenSettings={() => setSettingsOpen(true)}
-          onSelectTab={setActiveTabId}
+          onSelectTab={handleSelectTab}
           onAddTab={addTab}
           onRenameTab={renameTab}
           onRemoveTab={removeTab}
         >
-          {isHomeOverview ? (
+          {activeTab.id === "diary" ? (
+            <Suspense
+              fallback={
+                <div className="diary-loading" role="status">
+                  Diary
+                </div>
+              }
+            >
+              <DiaryWorkspace />
+            </Suspense>
+          ) : isHomeOverview ? (
             <HomeOverview onShowWidgets={() => setHomeViewMode("widgets")} />
           ) : (
             <DashboardGrid
@@ -335,7 +363,7 @@ function App() {
           onOpenSettings={() => setSettingsOpen(true)}
           onOpenQuickCapture={() => setQuickCaptureOpen(true)}
           onToggleEditMode={handleToggleEditMode}
-          onSelectTab={setActiveTabId}
+          onSelectTab={handleSelectTab}
           onChangeLayoutMode={setLayoutMode}
         />
 
