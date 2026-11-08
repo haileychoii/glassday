@@ -17,11 +17,14 @@ import {
   ChevronLeft,
   ChevronRight,
   ImagePlus,
+  Redo2,
   SmilePlus,
   Type,
+  Undo2,
 } from "lucide-react";
 import {
   useRef,
+  useEffect,
   useState,
   type ChangeEvent,
 } from "react";
@@ -55,7 +58,37 @@ export const DiaryWorkspace = () => {
     updateItem,
     removeItem,
     bringItemToFront,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
   } = useDiaryDocument(selectedDate);
+
+  useEffect(() => {
+    // Match desktop editors without stealing the browser's native text-field
+    // undo. / 글을 입력 중일 때는 입력칸 고유의 되돌리기를 우선한다.
+    const handleHistoryShortcut = (event: KeyboardEvent) => {
+      if (!(event.ctrlKey || event.metaKey) || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (
+        target?.tagName === "TEXTAREA" ||
+        target?.tagName === "INPUT" ||
+        target?.isContentEditable
+      ) return;
+
+      const key = event.key.toLowerCase();
+      if (key === "z" && !event.shiftKey && canUndo) {
+        event.preventDefault();
+        undo();
+      } else if ((key === "y" || (key === "z" && event.shiftKey)) && canRedo) {
+        event.preventDefault();
+        redo();
+      }
+    };
+
+    window.addEventListener("keydown", handleHistoryShortcut);
+    return () => window.removeEventListener("keydown", handleHistoryShortcut);
+  }, [canRedo, canUndo, redo, undo]);
 
   const changeDate = (nextDate: string) => {
     setSelectedDate(nextDate);
@@ -173,6 +206,28 @@ export const DiaryWorkspace = () => {
         </div>
 
         <div className="diary-add-controls" aria-label="Add diary item">
+          <div className="diary-history-controls" aria-label="Edit history">
+            <button
+              type="button"
+              className="glass-button diary-icon-button"
+              onClick={undo}
+              disabled={!canUndo}
+              title="Undo"
+              aria-label="Undo"
+            >
+              <Undo2 aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="glass-button diary-icon-button"
+              onClick={redo}
+              disabled={!canRedo}
+              title="Redo"
+              aria-label="Redo"
+            >
+              <Redo2 aria-hidden="true" />
+            </button>
+          </div>
           <button
             type="button"
             className="glass-button diary-add-button"

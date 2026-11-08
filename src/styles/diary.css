@@ -41,7 +41,8 @@
 
 .diary-toolbar-title,
 .diary-date-controls,
-.diary-add-controls {
+.diary-add-controls,
+.diary-history-controls {
   display: flex;
   align-items: center;
 }
@@ -81,6 +82,13 @@
   gap: 6px;
 }
 
+.diary-history-controls {
+  gap: 4px;
+  padding-right: 8px;
+  margin-right: 2px;
+  border-right: 1px solid var(--gd-widget-control-border, hsl(var(--border)));
+}
+
 .diary-icon-button,
 .diary-today-button,
 .diary-add-button {
@@ -100,6 +108,11 @@
 .diary-add-button svg {
   width: 15px;
   height: 15px;
+}
+
+.diary-icon-button:disabled {
+  opacity: 0.42;
+  cursor: default;
 }
 
 .diary-today-button,

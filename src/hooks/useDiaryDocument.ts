@@ -8,7 +8,7 @@
  * Persistence: useLocalStorage -> glassdayStorage event/cloud snapshot bridge
  * Media bytes: src/lib/mediaStore.ts (IndexedDB, referenced by assetId)
  */
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { useLocalStorage } from "./useLocalStorage";
 import {
@@ -36,6 +36,20 @@ const createEmptyPage = (date: string): DiaryPage => ({
   items: [],
   updatedAt: Date.now(),
 });
+
+type PageHistory = {
+  undo: DiaryPage[];
+  redo: DiaryPage[];
+  lastTextEdit: { itemId: string; at: number } | null;
+};
+
+const HISTORY_LIMIT = 40;
+const TEXT_EDIT_GROUP_MS = 900;
+
+const getHistory = (histories: Record<string, PageHistory>, date: string) => {
+  histories[date] ??= { undo: [], redo: [], lastTextEdit: null };
+  return histories[date];
+};
 
 const normalizeItem = (item: Partial<DiaryItem>, index: number): DiaryItem => ({
   id: typeof item.id === "string" ? item.id : createItemId(),
@@ -71,6 +85,13 @@ const normalizeDocument = (value: DiaryDocument): DiaryDocument => {
 };
 
 export const useDiaryDocument = (selectedDate: string) => {
+  // Undo belongs to each date and stays in memory only. Page content itself
+  // remains auto-saved by useLocalStorage, including after reload. / 날짜별
+  // 되돌리기는 현재 편집 세션에만 두고 원본 기록은 기존 저장 경로를 유지한다.
+  const historiesRef = useRef<Record<string, PageHistory>>({});
+  const [historyAvailability, setHistoryAvailability] = useState<
+    Record<string, { undo: number; redo: number }>
+  >({});
   const { value: storedDocument, setValue: setDocument } =
     useLocalStorage<DiaryDocument>(DIARY_DOCUMENT_STORAGE_KEY, emptyDocument);
   const document = useMemo(
@@ -79,11 +100,44 @@ export const useDiaryDocument = (selectedDate: string) => {
   );
   const page = document.pages[selectedDate] ?? createEmptyPage(selectedDate);
 
-  const updatePage = (updater: (current: DiaryPage) => DiaryPage) => {
+  const publishHistoryAvailability = (history: PageHistory) => {
+    setHistoryAvailability((current) => ({
+      ...current,
+      [selectedDate]: { undo: history.undo.length, redo: history.redo.length },
+    }));
+  };
+
+  const updatePage = (
+    updater: (current: DiaryPage) => DiaryPage,
+    textItemId?: string
+  ) => {
+    const history = getHistory(historiesRef.current, selectedDate);
+    let changed = false;
     setDocument((current) => {
       const normalized = normalizeDocument(current);
       const currentPage = normalized.pages[selectedDate] ?? createEmptyPage(selectedDate);
       const nextPage = updater(currentPage);
+      if (JSON.stringify(nextPage.items) === JSON.stringify(currentPage.items)) {
+        return current;
+      }
+
+      const now = Date.now();
+      const continuingTextEdit =
+        textItemId &&
+        history.lastTextEdit?.itemId === textItemId &&
+        now - history.lastTextEdit.at < TEXT_EDIT_GROUP_MS;
+
+      // useLocalStorage invokes this updater synchronously (see its publish
+      // contract). A new action records the previous complete page once; quick
+      // keystrokes in one text item share that undo step. / 글 입력 중 Ctrl+Z에
+      // 준하는 되돌리기가 글자 하나씩만 지우지 않도록 묶는다.
+      if (!continuingTextEdit) {
+        history.undo.push(currentPage);
+        if (history.undo.length > HISTORY_LIMIT) history.undo.shift();
+      }
+      history.redo = [];
+      history.lastTextEdit = textItemId ? { itemId: textItemId, at: now } : null;
+      changed = true;
 
       return {
         ...normalized,
@@ -92,11 +146,12 @@ export const useDiaryDocument = (selectedDate: string) => {
           [selectedDate]: {
             ...nextPage,
             date: selectedDate,
-            updatedAt: Date.now(),
+            updatedAt: now,
           },
         },
       };
     });
+    if (changed) publishHistoryAvailability(history);
   };
 
   const addItem = (draft: Omit<DiaryItem, "id" | "zIndex">) => {
@@ -120,7 +175,7 @@ export const useDiaryDocument = (selectedDate: string) => {
       items: current.items.map((item) =>
         item.id === itemId ? normalizeItem({ ...item, ...patch }, 0) : item
       ),
-    }));
+    }), Object.keys(patch).length === 1 && "text" in patch ? itemId : undefined);
   };
 
   const removeItem = (itemId: string) => {
@@ -135,6 +190,33 @@ export const useDiaryDocument = (selectedDate: string) => {
     updateItem(itemId, { zIndex: nextZIndex });
   };
 
+  const restorePage = (direction: "undo" | "redo") => {
+    const history = getHistory(historiesRef.current, selectedDate);
+    const source = history[direction];
+    if (source.length === 0) return;
+
+    setDocument((current) => {
+      const normalized = normalizeDocument(current);
+      const currentPage = normalized.pages[selectedDate] ?? createEmptyPage(selectedDate);
+      const restoredPage = source.pop();
+      if (!restoredPage) return current;
+
+      const destination = direction === "undo" ? history.redo : history.undo;
+      destination.push(currentPage);
+      if (destination.length > HISTORY_LIMIT) destination.shift();
+      history.lastTextEdit = null;
+
+      return {
+        ...normalized,
+        pages: {
+          ...normalized.pages,
+          [selectedDate]: { ...restoredPage, updatedAt: Date.now() },
+        },
+      };
+    });
+    publishHistoryAvailability(history);
+  };
+
   return {
     document,
     page,
@@ -142,5 +224,9 @@ export const useDiaryDocument = (selectedDate: string) => {
     updateItem,
     removeItem,
     bringItemToFront,
+    undo: () => restorePage("undo"),
+    redo: () => restorePage("redo"),
+    canUndo: (historyAvailability[selectedDate]?.undo ?? 0) > 0,
+    canRedo: (historyAvailability[selectedDate]?.redo ?? 0) > 0,
   };
 };
