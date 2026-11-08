@@ -467,3 +467,357 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
   font-size: 16px;
   font-weight: 500;
 }
+
+/* ============================================================
+   Mobile Settings sheet / 모바일 Settings 시트
+
+   연결 컴포넌트: src/components/settings/SettingsModal.tsx
+   Settings is rendered through a document.body portal, so it is not a child
+   of MobileLayout. `body:has(.mobile-layout)` keeps this rule mobile-web-only;
+   desktop and Tauri retain the existing movable Settings window.
+   설정은 body portal로 렌더링되므로 MobileLayout의 자식이 아니다. 따라서
+   모바일 셸이 있을 때만 적용해 데스크톱/Tauri 스타일을 건드리지 않는다.
+   ============================================================ */
+@media (max-width: 767px) {
+  body:has(.mobile-layout) .settings-modal-backdrop {
+    place-items: stretch;
+    padding: 0;
+    background: hsl(var(--background) / 0.22);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  body:has(.mobile-layout) .settings-modal-window,
+  body:has(.mobile-layout) .settings-window,
+  body:has(.mobile-layout) .settings-panel {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    transform: none !important;
+    display: grid !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+  }
+
+  /* Keep the title visible and the close action thumb-sized. /
+     제목은 고정하고 닫기 버튼은 모바일 터치 영역을 유지한다. */
+  body:has(.mobile-layout) .settings-modal-header,
+  body:has(.mobile-layout) .settings-header,
+  body:has(.mobile-layout) .settings-titlebar {
+    min-height: 58px !important;
+    padding: 8px max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left)) !important;
+    gap: 8px !important;
+    touch-action: auto;
+  }
+
+  body:has(.mobile-layout) .settings-modal-icon,
+  body:has(.mobile-layout) .settings-icon {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+  }
+
+  body:has(.mobile-layout) .settings-modal-title-wrap {
+    gap: 8px !important;
+  }
+
+  body:has(.mobile-layout) .settings-modal-header h2,
+  body:has(.mobile-layout) .settings-header h2,
+  body:has(.mobile-layout) .settings-titlebar h2 {
+    font-size: 14px !important;
+    line-height: 1.15 !important;
+  }
+
+  body:has(.mobile-layout) .settings-modal-header p,
+  body:has(.mobile-layout) .settings-header p,
+  body:has(.mobile-layout) .settings-titlebar p {
+    display: none !important;
+  }
+
+  body:has(.mobile-layout) .settings-close-button,
+  body:has(.mobile-layout) .settings-modal-header > button,
+  body:has(.mobile-layout) .settings-header > button,
+  body:has(.mobile-layout) .settings-titlebar > button {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+  }
+
+  /* The body owns the only Settings scroll position. / 설정 본문만 스크롤한다. */
+  body:has(.mobile-layout) .settings-modal-body,
+  body:has(.mobile-layout) .settings-body,
+  body:has(.mobile-layout) .settings-content {
+    padding: 10px max(10px, env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)) !important;
+    gap: 10px !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+  }
+
+  body:has(.mobile-layout) .settings-section,
+  body:has(.mobile-layout) .settings-card {
+    padding: 12px !important;
+    gap: 10px !important;
+    border-radius: 18px !important;
+  }
+
+  body:has(.mobile-layout) .settings-section-title,
+  body:has(.mobile-layout) .settings-card-title {
+    margin: 0 !important;
+    font-size: 12px !important;
+  }
+
+  /* Two columns reduce vertical travel when choosing a theme. /
+     테마 선택은 2열로 배치해 긴 스크롤을 줄인다. */
+  body:has(.mobile-layout) .settings-theme-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  body:has(.mobile-layout) .settings-theme-card {
+    min-height: 104px !important;
+    padding: 8px !important;
+    gap: 5px !important;
+    border-radius: 14px !important;
+    grid-template-rows: 38px auto auto !important;
+  }
+
+  body:has(.mobile-layout) .settings-theme-preview {
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 6px !important;
+    border-radius: 10px !important;
+  }
+
+  body:has(.mobile-layout) .settings-theme-card strong {
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+  }
+
+  body:has(.mobile-layout) .settings-theme-card small {
+    margin: 0 !important;
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+  }
+
+  body:has(.mobile-layout) .settings-font-stack,
+  body:has(.mobile-layout) .settings-webfont-grid,
+  body:has(.mobile-layout) .settings-auth-stack,
+  body:has(.mobile-layout) .settings-action-grid,
+  body:has(.mobile-layout) .settings-backup-grid,
+  body:has(.mobile-layout) .settings-reset-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  body:has(.mobile-layout) .settings-field {
+    gap: 4px;
+  }
+
+  body:has(.mobile-layout) .settings-field span,
+  body:has(.mobile-layout) .settings-action-card span,
+  body:has(.mobile-layout) .settings-backup-button span,
+  body:has(.mobile-layout) .settings-reset-button span {
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+  }
+
+  body:has(.mobile-layout) .settings-input {
+    min-height: 40px !important;
+    font-size: 16px;
+  }
+
+  body:has(.mobile-layout) .settings-action-card,
+  body:has(.mobile-layout) .settings-backup-button,
+  body:has(.mobile-layout) .settings-reset-button {
+    min-height: 52px !important;
+    padding: 10px !important;
+    gap: 8px !important;
+    border-radius: 14px !important;
+  }
+}
+
+/* 98.css-inspired Pixel Desk controls / 98.css 느낌의 Pixel Desk 컨트롤
+   98.css uses a neutral system gray, square corners, and raised/sunken bevels
+   instead of translucent gradients. Apply that material only when Pixel Desk
+   is active, so Glass Light, Mac Core, and Aurora keep their own surfaces.
+   98.css의 핵심인 회색 시스템 패널과 입체 bevel을 Pixel Desk에만 적용한다. */
+@media (max-width: 767px) {
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-modal-window,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-modal-window {
+    color: #000;
+    background: #c0c0c0;
+    border: 2px solid #000;
+    border-radius: 0 !important;
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-modal-header,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-modal-header {
+    background: #000080;
+    color: #fff;
+    border-bottom: 2px solid #000;
+  }
+
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-modal-icon,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-modal-icon,
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-close-button,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-close-button {
+    color: #000;
+    background: #c0c0c0;
+    border: 2px outset #dfdfdf;
+    border-radius: 0 !important;
+    box-shadow: none;
+  }
+
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-modal-icon {
+    color: #000080;
+  }
+
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-section,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-section,
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-card,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-card {
+    background: #c0c0c0;
+    border: 2px outset #dfdfdf;
+    border-radius: 0 !important;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-theme-card,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-theme-card,
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-action-card,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-action-card,
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-reset-button,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-reset-button {
+    color: #000;
+    background: #c0c0c0;
+    border: 2px outset #dfdfdf;
+    border-radius: 0 !important;
+    box-shadow: none;
+  }
+
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-theme-card.is-active {
+    background: #000080;
+    color: #fff;
+    border: 2px inset #dfdfdf;
+  }
+
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-theme-card small,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-theme-card small {
+    color: inherit;
+    opacity: 0.82;
+  }
+
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-theme-preview,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-theme-preview {
+    border: 1px inset #dfdfdf;
+    border-radius: 0 !important;
+  }
+
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-input,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-input {
+    color: #000;
+    background: #fff;
+    border: 2px inset #dfdfdf;
+    border-radius: 0 !important;
+    box-shadow: none;
+  }
+
+  /* Avoid a giant phone canvas while keeping widget internals functional. /
+     모바일에서는 위젯 슬롯의 최소 높이만 낮추고 내부 기능은 그대로 둔다. */
+  :is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+    .mobile-layout .mobile-widget-slot {
+    height: clamp(240px, 52svh, 460px);
+  }
+
+  :is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+    .mobile-layout .widget-frame__body {
+    font-size: 11px;
+  }
+}
+
+/* Shared phone density pass / 공통 모바일 밀도 조정
+   This only changes the mobile shell's spacing. Widget data, desktop grid
+   coordinates, and stored layout values remain untouched. / 위젯 데이터와
+   데스크톱 좌표는 건드리지 않고 모바일 표시 여백만 줄인다. */
+@media (max-width: 767px) {
+  .mobile-header {
+    padding-block: calc(6px + env(safe-area-inset-top)) 6px;
+  }
+
+  .mobile-heading h1 {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+
+  .mobile-heading > span {
+    font-size: 10px;
+  }
+
+  .mobile-header-actions button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mobile-dashboard {
+    gap: 8px;
+    padding-top: 8px;
+  }
+
+  .mobile-widget-slot {
+    height: clamp(260px, 54svh, 500px);
+  }
+
+  .mobile-widget-slot .widget-frame__header {
+    padding-block: 7px;
+  }
+
+  .mobile-widget-slot .widget-frame__header h3 {
+    font-size: 11px;
+  }
+
+  .mobile-widget-slot .widget-frame__header p {
+    font-size: 9px;
+  }
+}
+
+/* Pixel Desk mobile navigation follows a 98.css status bar instead of a
+   floating glass rail. / Pixel Desk 하단 메뉴도 유리 알약이 아니라
+   98.css 상태바처럼 회색 패널과 raised/inset 상태를 사용한다. */
+@media (max-width: 767px) {
+  :is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+    .mobile-layout .mobile-navigation {
+    background: #c0c0c0;
+    border-top: 2px solid #fff;
+    box-shadow: inset 0 1px 0 #dfdfdf, inset 0 -1px 0 #808080;
+  }
+
+  :is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+    .mobile-layout .mobile-navigation-item {
+    color: #000;
+    background: #c0c0c0;
+    border: 2px outset #dfdfdf;
+    border-radius: 0;
+  }
+
+  :is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+    .mobile-layout .mobile-navigation-item[aria-current="page"] {
+    color: #fff;
+    background: #000080;
+    border-style: inset;
+  }
+
+  :is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+    .mobile-layout .mobile-navigation-capture {
+    color: #000;
+    background: #c0c0c0;
+    border: 2px outset #dfdfdf;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
