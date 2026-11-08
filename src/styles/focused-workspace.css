@@ -114,6 +114,20 @@
     overflow: visible;
   }
 
+  .focused-workspace > .career-widget,
+  .focused-workspace > .study-widget {
+    height: auto;
+    min-height: 0;
+  }
+
+  .focused-workspace .study-widget--workspace {
+    /* study.css uses size containment for dashboard tiles. A free-height
+       mobile workspace needs inline-size containment instead, or its card
+       collapses to its border. / 모바일은 높이를 내용으로 계산하게 한다. */
+    container-type: inline-size;
+    overflow: visible;
+  }
+
   .focused-workspace .study-widget--workspace > .glass-card-body,
   .focused-workspace .study-widget--workspace > .widget-frame__body {
     overflow: visible;
@@ -127,5 +141,36 @@
 
   .focused-workspace .study-widget--workspace .study10-side-stack {
     grid-template-rows: none;
+  }
+}
+
+@media (max-width: 620px) {
+  /* WorkspaceTabsNav.tsx renders the same six core tabs for desktop and
+     mobile. Show them as two rows here, so Diary/Life are discoverable without
+     swiping a hidden rail. / 기본 탭을 가로 스크롤 없이 바로 찾을 수 있게 한다. */
+  .app-mode-stage:not(.is-laptop-mode) .topbar-mobile-workspace-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    overflow: visible;
+    gap: 4px;
+    padding-bottom: 0;
+  }
+
+  .app-mode-stage:not(.is-laptop-mode) .topbar-mobile-workspaces .sidebar-tab-item {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .app-mode-stage:not(.is-laptop-mode) .topbar-mobile-workspaces .sidebar-tab-main {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    padding-inline: 5px;
+  }
+
+  .app-mode-stage:not(.is-laptop-mode) .topbar-mobile-workspaces .sidebar-tab-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
