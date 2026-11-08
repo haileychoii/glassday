@@ -170,6 +170,15 @@
   background: var(--mac-desktop-bg) !important;
 }
 
+/* AppShell.tsx marks the frameless Tauri host with desktop-transparent.
+   Keep the Mac desktop wallpaper only in web previews: painting html/body in
+   Tauri fills the transparent pixels outside the rounded native window.
+   웹 미리보기 배경은 유지하고, 설치 앱에서는 둥근 창 밖 픽셀을 투명하게 둔다. */
+html.desktop-transparent[data-theme="mac-core"],
+html.desktop-transparent[data-theme="mac-core"] body {
+  background: transparent !important;
+}
+
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .liquid-shell,
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .glass-panel {
   position: relative !important;
