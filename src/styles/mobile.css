@@ -173,6 +173,68 @@
   font-size: 9px;
   line-height: 1.2;
 }
+
+/* Pixel mobile surface contract
+   The desktop theme paints square controls with a bevel. Reuse that same
+   material for the mobile shell and navigation so tabs do not float on a
+   transparent strip. / Pixel 모바일도 회색 패널과 입체 버튼을 공유해 탭이
+   투명한 공간 위에 떠 보이지 않도록 한다. */
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout {
+  background: #008080;
+  color: #000;
+  font-size: 11px;
+}
+
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .mobile-header,
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .mobile-navigation {
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-bottom: 2px solid #404040;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+}
+
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .mobile-navigation {
+  border-top: 2px solid #404040;
+  border-bottom: 0;
+}
+
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .mobile-navigation-item {
+  border-radius: 0;
+  color: #000;
+  font-size: 11px;
+}
+
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .mobile-navigation-item[aria-current="page"] {
+  color: #fff;
+  background: #000080;
+  border-top: 2px solid #404040;
+  border-left: 2px solid #404040;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+}
+
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .mobile-navigation-capture {
+  border-radius: 0;
+  background: #c0c0c0;
+  color: #000;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+}
+
+:is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)
+  .mobile-layout .widget-frame__body {
+  padding: 6px 8px 8px;
+}
 .mobile-navigation {
   /* Render every workspace as one equal-width cell. The previous flex rail
      allowed a second horizontal gesture on phones. / 모든 탭을 한 번에

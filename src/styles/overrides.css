@@ -689,6 +689,96 @@ body,
   }
 }
 
+/* Pixel Desk small-web fallback
+   This applies only to the pre-MobileLayout web shell at 768-920px. The
+   dedicated mobile shell has its matching surface in mobile.css. / 768~920px
+   구간의 Pixel 탭도 투명한 바가 아니라 실제 윈도우 패널처럼 보이게 한다. */
+@media (max-width: 920px) {
+  :is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  ) .app-mode-stage .topbar,
+  :is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  ) .app-mode-stage .topbar-inner {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  :is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  ) .app-mode-stage .topbar-mobile-workspaces {
+    margin-inline: 0 !important;
+    padding: 4px 8px 5px !important;
+    background: #c0c0c0 !important;
+    border-top: 2px solid #fff !important;
+    border-bottom: 2px solid #404040 !important;
+    box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080 !important;
+  }
+
+  :is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  ) .app-mode-stage .topbar-mobile-workspaces .sidebar-tab-main {
+    height: 32px !important;
+    padding-inline: 6px !important;
+    font-size: 11px !important;
+  }
+
+  :is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  ) .app-mode-stage .topbar-title h1 {
+    font-size: 15px !important;
+  }
+
+  :is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  ) .app-mode-stage .dashboard-grid-item > .glass-card > .widget-frame__header {
+    min-height: 0 !important;
+    padding: 6px 8px !important;
+  }
+}
+
 .theme-segmented-control.theme-button-group {
   display: flex;
   align-items: center;
