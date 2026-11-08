@@ -24,6 +24,11 @@ log = "0.4"
 tauri = { version = "2.11.3", features = [] }
 tauri-plugin-log = "2"
 
+[target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+# Official Tauri plugin: restore only the desktop widget's position and size.
+# 공식 Tauri 플러그인으로 위젯 창의 위치와 크기만 다시 불러온다.
+tauri-plugin-window-state = "=2.4.0"
+
 [target.'cfg(target_os = "windows")'.dependencies]
 # Native blur reaches desktop pixels that CSS cannot sample.
 # CSS가 읽지 못하는 Windows 바탕화면 픽셀은 네이티브 blur로 흐린다.

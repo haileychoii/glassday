@@ -134,7 +134,24 @@ fn set_native_glass_effect(_window: tauri::WebviewWindow, _mode: String) -> Resu
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let builder = tauri::Builder::default();
+
+    // Source: tauri-apps/plugins-workspace, plugins/window-state (MIT/Apache-2.0).
+    // Keep only placement: src/utils/tauriDesktop.ts owns the desktop-pin
+    // preference, and src-tauri/tauri.conf.json owns window chrome defaults.
+    // 공식 플러그인에서 위치·크기만 복원한다. 바탕화면 고정과 창 장식 설정은
+    // 각 파일이 계속 관리해 재시작할 때 설정이 서로 덮어쓰이지 않게 한다.
+    #[cfg(desktop)]
+    let builder = builder.plugin(
+        tauri_plugin_window_state::Builder::default()
+            .with_state_flags(
+                tauri_plugin_window_state::StateFlags::POSITION
+                    | tauri_plugin_window_state::StateFlags::SIZE,
+            )
+            .build(),
+    );
+
+    builder
         .setup(|app| {
             if cfg!(debug_assertions) {
                 app.handle().plugin(
