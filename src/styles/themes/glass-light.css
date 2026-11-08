@@ -816,14 +816,14 @@ body.desktop-transparent[data-theme="glass-light"]
   .app-shell-surface.liquid-shell {
   /* Desktop glass contrast / 바탕화면 위 유리의 기본 명도
      AppShell.tsx makes the Tauri host transparent, while src-tauri/src/lib.rs
-     blurs the native desktop. WebView2 can still expose a near-black native
-     backdrop, so CSS needs one translucent light film behind every widget.
-     / 네이티브 배경이 검게 보이는 경우에도 글자가 읽히도록 반투명 흰 막을 둔다. */
+     applies Desktop Acrylic to the actual desktop. Keep this CSS tint light
+     enough to show its blur, but strong enough for dark text over dark windows.
+     / 실제 바탕화면 Acrylic 흐림이 보이도록 색막을 얇게 두되 글자는 읽히게 한다. */
   background: linear-gradient(
     145deg,
-    rgba(248, 251, 255, 0.8),
-    rgba(231, 243, 252, 0.76) 54%,
-    rgba(249, 239, 249, 0.78)
+    rgba(248, 251, 255, 0.42),
+    rgba(231, 243, 252, 0.34) 54%,
+    rgba(249, 239, 249, 0.4)
   ) !important;
 
   backdrop-filter:

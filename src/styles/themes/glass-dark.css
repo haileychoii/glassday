@@ -163,14 +163,16 @@ html.desktop-transparent[data-theme="glass-dark"]
 body.desktop-transparent[data-theme="glass-dark"]
   .app-shell-surface.liquid-shell {
   /* Shell transparency / 전체 판 투명화
-     English: Native Acrylic in src-tauri/src/lib.rs already blurs the desktop.
-     Removing the shell paint prevents a second rectangular dark plate while
-     the sidebar, topbar and widgets still form readable smoked-glass layers.
-     Korean: 네이티브 Acrylic이 blur를 담당하므로 전체 shell의 검은 색판은
-     제거하고 실제 UI 요소에만 smoked glass를 남긴다. */
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
+     English: src-tauri/src/lib.rs supplies Desktop Acrylic behind the WebView.
+     A thin smoke tint keeps white text readable even with a light Windows
+     system theme, while the rounded native region clips the OS backdrop.
+     Korean: Rust의 Acrylic 흐림 위에 얇은 먹색 막을 두어 밝은 Windows 모드에서도
+     글자를 읽을 수 있게 한다. 바깥 사각형은 네이티브 둥근 경계가 잘라낸다. */
+  background: linear-gradient(
+    145deg,
+    rgba(9, 11, 18, 0.5),
+    rgba(15, 17, 26, 0.42)
+  ) !important;
 
   /*
    * The shell owns one neutral black blur layer.
