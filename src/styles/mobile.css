@@ -786,6 +786,101 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
   }
 }
 
+/* Career mobile density / Career 모바일 밀도
+   CareerWidget.tsx keeps the same data and edit actions on every device. This
+   final mobile layer only tightens the existing summary, filter, and list-card
+   spacing so the phone view shows more companies without hiding actions.
+   CareerWidget.tsx의 데이터와 편집 동작은 공유하고, 모바일에서만 요약·필터·
+   목록 카드의 여백을 줄여 더 많은 기업을 한 번에 보여준다. */
+@media (max-width: 767px) {
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-widget {
+    padding: 10px !important;
+    gap: 6px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-widget-header {
+    padding-block: 6px !important;
+    gap: 6px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-summary-grid {
+    gap: 4px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-summary-card {
+    min-height: 46px !important;
+    padding: 5px 3px !important;
+    border-radius: 10px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-summary-card strong {
+    font-size: 15px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-summary-card span {
+    margin-top: 3px !important;
+    font-size: 8px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-filter-row {
+    padding-bottom: 2px !important;
+    gap: 4px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-filter-pill {
+    height: 24px !important;
+    min-height: 24px !important;
+    padding-inline: 7px !important;
+    font-size: 8.5px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list {
+    gap: 5px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-item {
+    padding: 8px !important;
+    gap: 5px !important;
+    border-radius: 12px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-top {
+    gap: 5px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-title strong {
+    font-size: 11px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-title span {
+    margin-top: 1px !important;
+    font-size: 8.5px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-dday-pill {
+    min-height: 22px !important;
+    padding: 3px 5px !important;
+    font-size: 8px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-delete-button {
+    width: 24px !important;
+    min-width: 24px !important;
+    height: 24px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-meta {
+    gap: 3px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-meta span,
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-status-pill {
+    min-height: 18px !important;
+    padding-inline: 5px !important;
+    font-size: 7.5px !important;
+  }
+}
+
 /* Pixel Desk mobile navigation follows a 98.css status bar instead of a
    floating glass rail. / Pixel Desk 하단 메뉴도 유리 알약이 아니라
    98.css 상태바처럼 회색 패널과 raised/inset 상태를 사용한다. */
