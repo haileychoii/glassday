@@ -740,14 +740,14 @@ body[data-theme="glass-light"] ::-webkit-scrollbar-thumb:hover {
 
 
 /* ============================================================
-   TAURI ONLY — BACKGROUNDLESS GLASS LIGHT
+   TAURI ONLY — FROSTED GLASS LIGHT
    ------------------------------------------------------------
    WEB / Vercel:
    - 기존 Glass Light 디자인 그대로 유지
 
    TAURI:
-   - Window 아래 solid 배경판 제거
-   - 실제 Desktop은 보이되 밝은 우윳빛 blur 막으로 흐림
+   - Window 아래 불투명 배경판은 제거
+   - 실제 Desktop 위에 반투명 밝은 유리막과 blur 적용
    - Sidebar / Topbar / Widgets는 같은 frosted material로 유지
    ============================================================ */
 
@@ -793,10 +793,11 @@ body.desktop-transparent[data-theme="glass-light"] .bg-glass-gradient {
 
    이게 중요함.
 
-   Glassday 전체 뒤를 받치는 큰 흰색/회색 판을 제거한다.
+   A translucent light film keeps dark native backdrops readable without
+   hiding the desktop. / 검은 네이티브 배경 위에서도 읽히도록 반투명 밝은 막을 둔다.
 
-   Sidebar / Topbar / Widgets는 아래에서 다시 Glass로 만들어지므로
-   전체 UI가 사라지는 것이 아니다.
+   Sidebar / Topbar / Widgets keep their own glass layers below.
+   사이드바·상단바·위젯은 아래의 유리 재질 규칙을 각각 유지한다.
 ============================================================ */
 
 html.desktop-transparent[data-theme="glass-light"] .app-shell-surface,
@@ -813,16 +814,17 @@ html.desktop-transparent[data-theme="glass-light"]
 
 body.desktop-transparent[data-theme="glass-light"]
   .app-shell-surface.liquid-shell {
-  /* Shell transparency / 전체 판 투명화
-     English: src-tauri/src/lib.rs already blurs the real Windows desktop.
-     Keeping another colored rectangle here made the whole app look mounted on
-     a gray board, so the shell now carries blur only. Sidebar, topbar and each
-     GlassCard remain the visible glass layers below.
-     Korean: 실제 바탕화면 blur는 Rust Acrylic이 담당하므로 전체 shell에는
-     색판을 겹치지 않는다. 눈에 보이는 유리 표면은 sidebar/topbar/widget만 맡는다. */
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
+  /* Desktop glass contrast / 바탕화면 위 유리의 기본 명도
+     AppShell.tsx makes the Tauri host transparent, while src-tauri/src/lib.rs
+     blurs the native desktop. WebView2 can still expose a near-black native
+     backdrop, so CSS needs one translucent light film behind every widget.
+     / 네이티브 배경이 검게 보이는 경우에도 글자가 읽히도록 반투명 흰 막을 둔다. */
+  background: linear-gradient(
+    145deg,
+    rgba(248, 251, 255, 0.8),
+    rgba(231, 243, 252, 0.76) 54%,
+    rgba(249, 239, 249, 0.78)
+  ) !important;
 
   backdrop-filter:
     blur(46px)

@@ -224,15 +224,13 @@ body.theme-retro {
   --gd-widget-control-active-bg: hsl(var(--accent));
 }
 
-html[data-theme="glass-light"] body,
-body[data-theme="glass-light"],
+/* Glass Light keeps the bright backdrop from themes/glass-light.css.
+   Glass Light의 밝은 배경은 해당 테마 파일에 맡기고 Dark만 어둡게 칠한다. */
 html[data-theme="glass-dark"] body,
 body[data-theme="glass-dark"] {
   background: #10131a !important;
 }
 
-html[data-theme="glass-light"] .bg-glass-gradient,
-body[data-theme="glass-light"] .bg-glass-gradient,
 html[data-theme="glass-dark"] .bg-glass-gradient,
 body[data-theme="glass-dark"] .bg-glass-gradient {
   background:
