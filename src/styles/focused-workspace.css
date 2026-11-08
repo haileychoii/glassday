@@ -1,0 +1,131 @@
+/* ============================================================
+   [Focused Workspace] Career + Study one-screen composition
+
+   Source components:
+   - src/components/workspace/FocusedWorkspace.tsx
+   - src/components/widgets/CareerWidget.tsx
+   - src/components/widgets/StudyWidget.tsx
+
+   The app shell stays fixed. Only the Career list, Study timeline, and task
+   list own overflow. / 페이지 전체가 길어지지 않고 실제 내용 영역만 스크롤한다.
+   ============================================================ */
+
+.focused-workspace {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: clamp(10px, 1.5vw, 18px);
+  overflow: hidden;
+}
+
+/* The focused route is already the full workspace, so AppShell must not add a
+   second page scrollbar around it. / 내부 목록과 바깥 페이지의 이중 스크롤 방지. */
+.app-shell-main:has(> .focused-workspace) {
+  overflow: hidden !important;
+}
+
+.focused-workspace > .career-widget,
+.focused-workspace > .study-widget {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.focused-workspace .career-widget--workspace {
+  --career-layout-gap: clamp(6px, 1cqh, 10px);
+  --career-summary-min-height: clamp(52px, 10cqh, 72px);
+  padding: clamp(12px, 1.8vw, 20px);
+}
+
+.focused-workspace .career-widget--workspace .career-list {
+  scrollbar-gutter: stable;
+}
+
+.focused-workspace .study-widget--workspace > .glass-card-body,
+.focused-workspace .study-widget--workspace > .widget-frame__body {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.focused-workspace .study-widget--workspace .study10-planner--detail {
+  height: 100%;
+  min-height: 0;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+}
+
+.focused-workspace .study-widget--workspace .study10-workspace,
+.focused-workspace .study-widget--workspace .study10-timeline-panel,
+.focused-workspace .study-widget--workspace .study10-side-stack {
+  min-height: 0;
+}
+
+.focused-workspace .study-widget--workspace .study10-workspace {
+  height: 100%;
+  align-items: stretch;
+}
+
+.focused-workspace .study-widget--workspace .study10-timeline-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.focused-workspace .study-widget--workspace .study10-timeline-scroll {
+  flex: 1 1 auto;
+  max-height: none;
+}
+
+.focused-workspace .study-widget--workspace .study10-side-stack {
+  grid-template-rows: minmax(0, 1.25fr) minmax(92px, 0.75fr);
+}
+
+.focused-workspace .study-widget--workspace .study10-task-panel,
+.focused-workspace .study-widget--workspace .study10-note-panel {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.focused-workspace .study-widget--workspace .study10-task-list {
+  max-height: none;
+  overflow: auto;
+}
+
+.focused-workspace .study-widget--workspace .study10-note-panel textarea {
+  min-height: 0;
+  height: calc(100% - 38px);
+}
+
+@media (max-width: 719px) {
+  .focused-workspace {
+    padding: 10px;
+  }
+
+  /* A phone cannot show the full two-column planner legibly. It gets one
+     predictable workspace scroll instead of multiple clipped panels. / 모바일은
+     읽을 수 있는 크기를 우선하고 작업공간 하나만 세로 스크롤한다. */
+  .app-shell-main:has(> .focused-workspace) {
+    overflow-y: auto !important;
+  }
+
+  .focused-workspace {
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  .focused-workspace .study-widget--workspace > .glass-card-body,
+  .focused-workspace .study-widget--workspace > .widget-frame__body {
+    overflow: visible;
+  }
+
+  .focused-workspace .study-widget--workspace .study10-planner--detail {
+    height: auto;
+    display: grid;
+    grid-template-rows: none;
+  }
+
+  .focused-workspace .study-widget--workspace .study10-side-stack {
+    grid-template-rows: none;
+  }
+}

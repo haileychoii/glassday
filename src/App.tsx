@@ -34,6 +34,10 @@ import { AppShell } from "./components/layout/AppShell";
 import { CommandPalette } from "./components/command/CommandPalette";
 import { DashboardGrid } from "./components/grid/DashboardGrid";
 import { HomeOverview } from "./components/home/HomeOverview";
+import {
+  FocusedWorkspace,
+  type FocusedWorkspaceId,
+} from "./components/workspace/FocusedWorkspace";
 import { DashboardDataProvider } from "./context/DashboardDataContext";
 import { CloudSyncProvider } from "./context/CloudSyncContext";
 import { QuickCapture } from "./components/quick-capture/QuickCapture";
@@ -272,6 +276,10 @@ function App() {
 
   const isHomeOverview =
     activeTab.id === "home" && homeViewMode === "overview" && !editMode;
+  const focusedWorkspaceId: FocusedWorkspaceId | null =
+    activeTab.id === "career" || activeTab.id === "study"
+      ? activeTab.id
+      : null;
 
   const handleHomeViewModeChange = (mode: HomeViewMode) => {
     setHomeViewMode(mode);
@@ -282,6 +290,10 @@ function App() {
   };
 
   const handleToggleEditMode = () => {
+    if (focusedWorkspaceId || activeTab.id === "diary") {
+      return;
+    }
+
     /* Editing always belongs to the saved free-layout Grid.
        편집 버튼을 누르면 모아보기를 덮어쓰지 않고 기존 자유 배치로 이동한다. */
     if (!editMode && activeTab.id === "home") {
@@ -294,7 +306,7 @@ function App() {
   const handleSelectTab = (tabId: string) => {
     /* Diary owns its own item selection tools, so dashboard Grid edit mode
        must not leak into that workspace. / 다이어리 진입 시 그리드 편집을 끝낸다. */
-    if (tabId === "diary") {
+    if (tabId === "career" || tabId === "study" || tabId === "diary") {
       setEditMode(false);
     }
 
@@ -333,6 +345,8 @@ function App() {
             >
               <DiaryWorkspace />
             </Suspense>
+          ) : focusedWorkspaceId ? (
+            <FocusedWorkspace workspaceId={focusedWorkspaceId} />
           ) : isHomeOverview ? (
             <HomeOverview onShowWidgets={() => setHomeViewMode("widgets")} />
           ) : (

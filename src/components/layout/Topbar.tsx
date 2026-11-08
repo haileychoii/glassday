@@ -76,6 +76,9 @@ export const Topbar = ({
    * Tauri   -> true
    */
   const isTauriApp = isTauri();
+  const usesDedicatedWorkspace = ["career", "study", "diary"].includes(
+    activeTabId
+  );
 
   return (
     <header
@@ -242,7 +245,7 @@ export const Topbar = ({
                 Edit
             =============================================== */}
 
-            {activeTabId !== "diary" && (
+            {!usesDedicatedWorkspace && (
               <button
                 type="button"
                 onClick={onToggleEditMode}

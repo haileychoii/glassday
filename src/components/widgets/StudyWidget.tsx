@@ -90,6 +90,11 @@ import { StudyDetailWindow } from "./study/StudyDetailWindow";
 
 type StudyPaintTool = StudyPlannerSubjectId | "erase";
 type StudyPlannerMode = "widget" | "detail";
+
+type StudyWidgetProps = {
+  /** Full-tab mode reuses the detailed planner without opening a floating window. */
+  surface?: "widget" | "workspace";
+};
 type StudySubjectDraft = {
   subjectId: StudyPlannerSubjectId | null;
   name: string;
@@ -111,7 +116,7 @@ const getSubjectStyle = (color: string) =>
  * Widget/Detail이 하나의 v2 storage를 공유해 Wide/Laptop에서도 동일한 학습 기록을 본다.
  * pointer drag painting과 timer 종료가 모두 StudyDayData.blocks를 갱신한다.
  */
-export const StudyWidget = () => {
+export const StudyWidget = ({ surface = "widget" }: StudyWidgetProps) => {
   const today = toLocalDateInput();
   const initialPlanner = useMemo(() => createInitialStudyPlannerStorage(), []);
   const { value: storedPlanner, setValue: setStoredPlanner } =
@@ -1224,6 +1229,27 @@ export const StudyWidget = () => {
           document.body
         )
       : null;
+
+  if (surface === "workspace") {
+    return (
+      <>
+        {/* FocusedWorkspace.tsx owns the tab-sized frame. The detailed planner
+            is rendered inline so Career/Study navigation never creates an
+            extra floating layer or page-length grid. / 탭 안에서 바로 편집한다. */}
+        <GlassCard
+          className="study-widget study-widget--workspace"
+          title="Study Planner"
+          subtitle={`${formatStudyDate(selectedDate)} · ${formatStudyMinutes(
+            totalMinutes
+          )}`}
+          icon={<BookOpenCheck className="w-4 h-4" />}
+        >
+          {renderPlanner("detail")}
+        </GlassCard>
+        {subjectEditorPortal}
+      </>
+    );
+  }
 
   return (
     <>

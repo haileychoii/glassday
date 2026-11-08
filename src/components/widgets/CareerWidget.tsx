@@ -89,6 +89,11 @@ type CareerWidgetProps = {
    * card UI는 숨기고 전용 portal host만 유지한다.
    */
   detailOnly?: boolean;
+  /**
+   * `workspace` is mounted by FocusedWorkspace.tsx and fills one locked tab.
+   * Data, cards, and detail portal remain identical to the grid widget.
+   */
+  surface?: "widget" | "workspace";
 };
 
 const statusOptions: CareerStatus[] = [
@@ -386,7 +391,10 @@ const normalizeCareer = (item: CareerItem): CareerItem => ({
  * DashboardDataContext의 CareerItem을 편집한다. List/Board는 같은 record의 presentation
  * variant이며 Floating Detail에서 저장한 변경은 Calendar projection에도 반영된다.
  */
-export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
+export const CareerWidget = ({
+  detailOnly = false,
+  surface = "widget",
+}: CareerWidgetProps) => {
   const {
     careerApplications,
     activeCareerDetailId,
@@ -1104,7 +1112,11 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     <>
       {/* Figma Component: Career Widget / detailOnly에서는 이 Grid surface를 렌더링하지 않는다. */}
       {!detailOnly && (
-      <section className="glass-card widget-frame career-widget">
+      <section
+        className={`glass-card widget-frame career-widget${
+          surface === "workspace" ? " career-widget--workspace" : ""
+        }`}
+      >
         {/* Figma Frame: Widget Header / Horizontal Auto Layout / Space Between */}
         <div className="career-widget-header glass-card-header widget-card-header widget-frame__header">
           <div className="career-widget-title-wrap glass-card-title-group widget-card-title-group widget-frame__title-group">

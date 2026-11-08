@@ -23,6 +23,7 @@
 @import "./layout-modes.css";
 @import "./controls.css";
 @import "./dashboard-grid.css";
+@import "./focused-workspace.css";
 @import "./home-overview.css";
 @import "./diary.css";
 @import "./overlays.css";
