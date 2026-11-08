@@ -30,4 +30,4 @@ tauri-plugin-log = "2"
 window-vibrancy = "0.8.1"
 # Clip the native blur to the same rounded outline as the WebView surface.
 # WebView 표면뿐 아니라 네이티브 blur도 같은 둥근 외곽으로 자른다.
-windows = { version = "0.61.3", features = ["Win32_Graphics_Gdi"] }
+windows = { version = "0.61.3", features = ["Win32_Graphics_Dwm", "Win32_Graphics_Gdi"] }

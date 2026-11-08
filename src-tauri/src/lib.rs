@@ -3,14 +3,19 @@
  *
  * English: CSS `backdrop-filter` can blur content rendered inside WebView2,
  * but it cannot sample the Windows desktop behind a transparent Tauri window.
- * Windows blur-behind provides that missing native layer without adding the
- * opaque system Acrylic rectangle seen on Windows 11.
+ * On Windows 11 build 22621+, legacy blur-behind can be transparent without
+ * actually blurring. Desktop Acrylic is the native material for that case;
+ * the rounded Win32 region below prevents a rectangular backdrop.
  *
  * Korean: 웹뷰 내부 배경은 CSS가 흐리지만 실제 바탕화면 픽셀은 읽을 수 없다.
- * Windows 11 기본 Acrylic의 회색 판을 피하고 blur-behind로 바탕화면만 흐린다.
+ * 최신 Windows 11에서는 blur-behind만으로 흐림이 보이지 않을 수 있으므로
+ * Desktop Acrylic을 쓰고 네이티브 둥근 영역으로 바깥 사각형을 잘라낸다.
  */
 #[cfg(target_os = "windows")]
 use std::sync::atomic::{AtomicBool, Ordering};
+
+#[cfg(target_os = "windows")]
+use windows::Win32::Graphics::Dwm::{DwmSetWindowAttribute, DWMWA_USE_IMMERSIVE_DARK_MODE};
 
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Gdi::{CreateRoundRectRgn, DeleteObject, SetWindowRgn};
@@ -77,7 +82,7 @@ fn update_native_window_region(window: &tauri::WebviewWindow) -> Result<(), Stri
 #[cfg(target_os = "windows")]
 #[tauri::command]
 fn set_native_glass_effect(window: tauri::WebviewWindow, mode: String) -> Result<(), String> {
-    use window_vibrancy::{apply_blur, clear_acrylic, clear_blur};
+    use window_vibrancy::{apply_acrylic, apply_blur, clear_acrylic, clear_blur};
 
     // Clear both supported backdrops before changing modes. The previous
     // release used Acrylic, so clearing it also handles live upgrades safely.
@@ -85,18 +90,32 @@ fn set_native_glass_effect(window: tauri::WebviewWindow, mode: String) -> Result
     clear_blur(&window).map_err(|error| error.to_string())?;
     clear_acrylic(&window).map_err(|error| error.to_string())?;
 
-    match mode.as_str() {
-        // `apply_blur` honors this tiny alpha on Windows 11, unlike Acrylic's
-        // system-controlled gray tint. CSS cards provide the visible edges.
-        // Light는 거의 무색의 blur만 쓰고 카드의 얇은 테두리로 형태를 만든다.
-        "light" => {
-            apply_blur(&window, Some((218, 238, 255, 8))).map_err(|error| error.to_string())?
+    if matches!(mode.as_str(), "light" | "dark") {
+        // Desktop Acrylic samples the actual windows/wallpaper behind WebView2.
+        // `apply_blur` is a fallback for older Windows versions only: on this
+        // machine's newer Windows 11 it can return Ok without visible blur.
+        // Acrylic은 실제 바탕화면을 흐린다. 구형 Windows만 blur-behind로 대체한다.
+        let dark_mode: i32 = i32::from(mode == "dark");
+        let hwnd = window.hwnd().map_err(|error| error.to_string())?;
+        if let Err(error) = unsafe {
+            DwmSetWindowAttribute(
+                hwnd,
+                DWMWA_USE_IMMERSIVE_DARK_MODE,
+                &dark_mode as *const _ as _,
+                std::mem::size_of_val(&dark_mode) as u32,
+            )
+        } {
+            log::warn!("Could not set native glass color mode: {error}");
         }
-        // Dark keeps a low-alpha neutral smoke tint. Blur removes readable
-        // desktop detail while preserving more background color than Acrylic.
-        // Dark도 회색 판 대신 얇은 smoke tint와 blur로 배경 형태만 흐린다.
-        "dark" => apply_blur(&window, Some((12, 14, 20, 64))).map_err(|error| error.to_string())?,
-        _ => (),
+
+        let tint = if mode == "light" {
+            (242, 248, 255, 72)
+        } else {
+            (22, 24, 30, 92)
+        };
+        apply_acrylic(&window, Some(tint))
+            .or_else(|_| apply_blur(&window, Some(tint)))
+            .map_err(|error| error.to_string())?;
     }
 
     ROUNDED_NATIVE_WINDOW.store(mode != "square", Ordering::Relaxed);
