@@ -174,17 +174,21 @@
   line-height: 1.2;
 }
 .mobile-navigation {
-  display: flex;
+  /* Render every workspace as one equal-width cell. The previous flex rail
+     allowed a second horizontal gesture on phones. / 모든 탭을 한 번에
+     보이게 하는 고정 그리드라서 하단 메뉴 자체는 가로 스크롤하지 않는다. */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
   min-width: 0;
   gap: 2px;
-  overflow-x: auto;
+  overflow: hidden;
   padding: 6px max(6px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
   border-top: 1px solid hsl(var(--foreground) / 0.14);
 }
 .mobile-navigation-item {
-  flex: 1 0 58px;
+  width: 100%;
   min-width: 0;
-  max-width: 120px;
+  max-width: none;
   min-height: 48px;
   display: flex;
   flex-direction: column;
@@ -221,7 +225,7 @@
   }
 
   .mobile-navigation-item {
-    flex-basis: 52px;
+    width: 100%;
     min-height: 46px;
     padding-inline: 3px;
   }
@@ -272,10 +276,10 @@
    available for discoverability but does not compete visually. / 하단 +를
    엄지 영역의 주 행동으로 사용한다. */
 .mobile-navigation-capture {
-  width: 48px;
-  min-width: 48px;
+  width: 100%;
+  min-width: 0;
   height: 48px;
-  margin: -12px 4px 0;
+  margin: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
