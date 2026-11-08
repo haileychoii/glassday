@@ -20,6 +20,7 @@ type DiaryPageProps = {
   selectedItemId: string | null;
   onSelectItem: (itemId: string | null) => void;
   onChangeItem: (itemId: string, patch: Partial<DiaryItemModel>) => void;
+  onReplaceMedia: (itemId: string, file: File) => void;
   onBringToFront: (itemId: string) => void;
   onRemoveItem: (itemId: string) => void;
 };
@@ -29,6 +30,7 @@ export const DiaryPage = ({
   selectedItemId,
   onSelectItem,
   onChangeItem,
+  onReplaceMedia,
   onBringToFront,
   onRemoveItem,
 }: DiaryPageProps) => {
@@ -58,6 +60,7 @@ export const DiaryPage = ({
             canvasRef={canvasRef}
             onSelect={onSelectItem}
             onChange={onChangeItem}
+            onReplaceMedia={onReplaceMedia}
             onBringToFront={onBringToFront}
             onRemove={onRemoveItem}
           />

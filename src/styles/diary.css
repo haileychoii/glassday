@@ -115,6 +115,83 @@
   cursor: default;
 }
 
+/* The saved-layout row stays separate from add tools so narrow windows can
+   wrap without overlapping the canvas. / 창을 줄여도 저장·적용 조작이 겹치지 않는다. */
+.diary-template-controls,
+.diary-template-name-form {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 6px;
+}
+
+.diary-template-controls {
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+}
+
+.diary-template-icon {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  color: hsl(var(--muted-foreground));
+}
+
+.diary-template-select,
+.diary-template-name-input,
+.diary-template-button {
+  min-height: 34px;
+  border: 1px solid var(--gd-widget-control-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-button);
+  background: var(--gd-widget-control-bg, hsl(var(--card) / 0.72));
+  color: hsl(var(--foreground));
+  font: inherit;
+  font-size: 11px;
+}
+
+.diary-template-select {
+  width: min(185px, 26vw);
+  min-width: 0;
+  padding: 0 8px;
+}
+
+.diary-template-name-form {
+  flex: 0 1 255px;
+}
+
+.diary-template-name-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 9px;
+}
+
+.diary-template-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.diary-template-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.diary-template-button:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+.diary-template-select:focus-visible,
+.diary-template-name-input:focus-visible,
+.diary-template-button:focus-visible {
+  outline: 2px solid hsl(var(--ring) / 0.7);
+  outline-offset: 2px;
+}
+
 .diary-today-button,
 .diary-add-button {
   padding: 0 11px;
@@ -162,7 +239,7 @@
 
 .diary-page-frame {
   display: grid;
-  width: min(100%, calc((100dvh - 185px) * 10 / 7), 1000px);
+  width: min(100%, calc((100dvh - 225px) * 10 / 7), 1000px);
   min-width: 0;
   place-items: center;
 }
@@ -268,8 +345,15 @@
 .diary-media-placeholder {
   display: grid;
   place-items: center;
+  padding: 0;
+  border: 0;
   color: hsl(var(--muted-foreground));
   background: hsl(var(--muted) / 0.46);
+  cursor: pointer;
+}
+
+.diary-media-placeholder:hover {
+  background: hsl(var(--muted) / 0.7);
 }
 
 .diary-media-placeholder svg {
@@ -380,7 +464,7 @@
   }
 
   .diary-page-frame {
-    width: min(100%, calc((100dvh - 225px) * 10 / 7), 1000px);
+    width: min(100%, calc((100dvh - 265px) * 10 / 7), 1000px);
   }
 }
 
@@ -415,6 +499,35 @@
   .diary-add-controls {
     flex: 1 1 auto;
     justify-content: flex-end;
+  }
+
+  .diary-template-controls {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .diary-template-select {
+    flex: 1 1 130px;
+    width: auto;
+  }
+
+  .diary-save-template-button {
+    width: 34px;
+    padding: 0;
+  }
+
+  .diary-save-template-button span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .diary-template-name-form {
+    flex: 1 1 180px;
   }
 
   .diary-add-button {

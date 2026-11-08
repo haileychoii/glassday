@@ -19,6 +19,7 @@ import {
   BringToFront,
   GripHorizontal,
   Image as ImageIcon,
+  ImagePlus,
   Trash2,
 } from "lucide-react";
 import Moveable, {
@@ -46,6 +47,7 @@ type DiaryItemProps = {
   canvasRef: RefObject<HTMLDivElement | null>;
   onSelect: (itemId: string) => void;
   onChange: (itemId: string, patch: Partial<DiaryItemModel>) => void;
+  onReplaceMedia: (itemId: string, file: File) => void;
   onBringToFront: (itemId: string) => void;
   onRemove: (itemId: string) => void;
 };
@@ -64,27 +66,30 @@ export const DiaryItem = ({
   canvasRef,
   onSelect,
   onChange,
+  onReplaceMedia,
   onBringToFront,
   onRemove,
 }: DiaryItemProps) => {
   const [targetElement, setTargetElement] = useState<HTMLDivElement | null>(null);
   const [dragHandleElement, setDragHandleElement] =
     useState<HTMLButtonElement | null>(null);
-  const [assetUrl, setAssetUrl] = useState<string | null>(null);
+  const [asset, setAsset] = useState<{ id: string; url: string } | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const pendingPatchRef = useRef<Partial<DiaryItemModel> | null>(null);
 
   useEffect(() => {
-    if (!item.assetId) return;
+    const assetId = item.assetId;
+    if (!assetId) return;
 
     let active = true;
     let objectUrl: string | null = null;
 
-    void getDiaryAsset(item.assetId).then((blob) => {
+    void getDiaryAsset(assetId).then((blob) => {
       if (!blob || !active) return;
 
       objectUrl = URL.createObjectURL(blob);
-      setAssetUrl(objectUrl);
-    });
+      setAsset({ id: assetId, url: objectUrl });
+    }).catch((error) => console.error("Unable to load diary image", error));
 
     return () => {
       active = false;
@@ -209,6 +214,18 @@ export const DiaryItem = ({
               <GripHorizontal aria-hidden="true" />
             </button>
 
+            {item.type !== "text" && (
+              <button
+                type="button"
+                className="diary-item-tool"
+                onClick={() => imageInputRef.current?.click()}
+                title="Replace image"
+                aria-label="Replace image"
+              >
+                <ImagePlus aria-hidden="true" />
+              </button>
+            )}
+
             <button
               type="button"
               className="diary-item-tool"
@@ -239,17 +256,36 @@ export const DiaryItem = ({
             placeholder="Write something..."
             aria-label="Diary text"
           />
-        ) : assetUrl ? (
+        ) : asset && asset.id === item.assetId ? (
           <img
             className="diary-media-image"
-            src={assetUrl}
+            src={asset.url}
             alt={item.type === "sticker" ? "Diary sticker" : "Diary photo"}
             draggable={false}
           />
         ) : (
-          <div className="diary-media-placeholder" aria-label="Loading image">
+          <button
+            type="button"
+            className="diary-media-placeholder"
+            onClick={() => imageInputRef.current?.click()}
+            aria-label={item.assetId ? "Image unavailable; choose another" : "Choose image for this slot"}
+            title="Choose image"
+          >
             <ImageIcon aria-hidden="true" />
-          </div>
+          </button>
+        )}
+        {item.type !== "text" && (
+          <input
+            ref={imageInputRef}
+            type="file"
+            accept={item.type === "sticker" ? "image/png,image/webp,image/gif" : "image/*"}
+            hidden
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              event.target.value = "";
+              if (file) onReplaceMedia(item.id, file);
+            }}
+          />
         )}
       </div>
 

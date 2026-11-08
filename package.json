@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "test:calendar": "node --import ./tests/register-typescript.mjs --test tests/calendar.test.mjs",
     "test:career": "node --import ./tests/register-typescript.mjs --test tests/career.test.mjs",
+    "test:diary": "node --import ./tests/register-typescript.mjs --test tests/diaryTemplates.test.mjs",
     "test:storage": "node --import ./tests/register-typescript.mjs --test tests/storage.test.mjs",
     "preview": "vite preview",
     "tauri:dev": "tauri dev",

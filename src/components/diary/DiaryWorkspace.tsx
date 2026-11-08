@@ -17,8 +17,11 @@ import {
   ChevronLeft,
   ChevronRight,
   ImagePlus,
+  LayoutTemplate,
   Redo2,
+  Save,
   SmilePlus,
+  Trash2,
   Type,
   Undo2,
 } from "lucide-react";
@@ -30,13 +33,22 @@ import {
 } from "react";
 
 import { useDiaryDocument } from "../../hooks/useDiaryDocument";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { createDiaryTemplate } from "../../lib/diaryTemplates";
 import { saveDiaryAsset } from "../../lib/mediaStore";
-import type { DiaryItem, DiaryItemType } from "../../types/diary";
+import {
+  DIARY_TEMPLATES_STORAGE_KEY,
+  type DiaryItem,
+  type DiaryItemType,
+  type DiaryTemplate,
+} from "../../types/diary";
 import {
   addDaysToDateString,
   todayString,
 } from "../widgets/journal/journalUtils";
 import { DiaryPage } from "./DiaryPage";
+
+const EMPTY_TEMPLATES: DiaryTemplate[] = [];
 
 const formatDiaryDate = (value: string) =>
   new Intl.DateTimeFormat("ko-KR", {
@@ -50,19 +62,30 @@ export const DiaryWorkspace = () => {
   const [selectedDate, setSelectedDate] = useState(todayString);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [status, setStatus] = useState("");
+  const [isNamingTemplate, setIsNamingTemplate] = useState(false);
+  const [templateName, setTemplateName] = useState("");
+  const [selectedTemplateId, setSelectedTemplateId] = useState("");
   const photoInputRef = useRef<HTMLInputElement>(null);
   const stickerInputRef = useRef<HTMLInputElement>(null);
+  // useLocalStorage is the same auto-save bridge used for diary pages in
+  // useDiaryDocument.ts. / 템플릿도 별도 저장 키로 보관해 날짜별 기록과 분리한다.
+  const { value: templates, setValue: setTemplates } = useLocalStorage(
+    DIARY_TEMPLATES_STORAGE_KEY,
+    EMPTY_TEMPLATES
+  );
   const {
     page,
     addItem,
     updateItem,
     removeItem,
     bringItemToFront,
+    addTemplateItems,
     undo,
     redo,
     canUndo,
     canRedo,
   } = useDiaryDocument(selectedDate);
+  const selectedTemplate = templates.find((item) => item.id === selectedTemplateId);
 
   useEffect(() => {
     // Match desktop editors without stealing the browser's native text-field
@@ -154,6 +177,55 @@ export const DiaryWorkspace = () => {
 
   const handleItemChange = (itemId: string, patch: Partial<DiaryItem>) => {
     updateItem(itemId, patch);
+  };
+
+  const replaceMedia = async (itemId: string, file: File) => {
+    if (!file.type.startsWith("image/")) {
+      setStatus("이미지 파일만 사용할 수 있어요.");
+      return;
+    }
+
+    try {
+      const assetId = await saveDiaryAsset(file);
+      updateItem(itemId, { assetId });
+      setStatus("이미지를 교체했어요.");
+    } catch (error) {
+      console.error("Unable to replace diary media", error);
+      setStatus("이미지를 저장하지 못했어요.");
+    }
+  };
+
+  const saveLayout = () => {
+    const name = templateName.trim();
+    if (!name || page.items.length === 0) return;
+
+    const template = createDiaryTemplate(name, page.items);
+    setTemplates((current) => [...current, template]);
+    setSelectedTemplateId(template.id);
+    setTemplateName("");
+    setIsNamingTemplate(false);
+    setStatus("배치 템플릿을 저장했어요.");
+  };
+
+  const applyLayout = () => {
+    if (!selectedTemplate) return;
+    if (
+      page.items.length > 0 &&
+      !window.confirm("현재 날짜의 항목은 그대로 두고 선택한 배치를 추가할까요?")
+    ) return;
+
+    addTemplateItems(selectedTemplate);
+    setSelectedItemId(null);
+    setStatus("배치를 이 날짜에 추가했어요. 사진 자리를 눌러 이미지를 넣을 수 있어요.");
+  };
+
+  const deleteLayout = () => {
+    if (!selectedTemplate) return;
+    if (!window.confirm(`'${selectedTemplate.name}' 템플릿을 삭제할까요?`)) return;
+
+    setTemplates((current) => current.filter((item) => item.id !== selectedTemplate.id));
+    setSelectedTemplateId("");
+    setStatus("템플릿을 삭제했어요.");
   };
 
   return (
@@ -259,6 +331,89 @@ export const DiaryWorkspace = () => {
           </button>
         </div>
 
+        <div className="diary-template-controls" aria-label="Diary layouts">
+          <LayoutTemplate aria-hidden="true" className="diary-template-icon" />
+          <select
+            className="diary-template-select"
+            value={selectedTemplateId}
+            onChange={(event) => setSelectedTemplateId(event.target.value)}
+            aria-label="Saved layouts"
+          >
+            <option value="">Saved layouts</option>
+            {templates.map((template) => (
+              <option key={template.id} value={template.id}>{template.name}</option>
+            ))}
+          </select>
+          <button
+            type="button"
+            className="glass-button diary-template-button"
+            onClick={applyLayout}
+            disabled={!selectedTemplate}
+            title="Add layout to this date"
+          >
+            Apply
+          </button>
+          {isNamingTemplate ? (
+            <form
+              className="diary-template-name-form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                saveLayout();
+              }}
+            >
+              <input
+                className="diary-template-name-input"
+                value={templateName}
+                onChange={(event) => setTemplateName(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") setIsNamingTemplate(false);
+                }}
+                maxLength={40}
+                placeholder="Layout name"
+                aria-label="Layout name"
+                autoFocus
+              />
+              <button
+                type="submit"
+                className="glass-button diary-icon-button"
+                disabled={!templateName.trim()}
+                title="Save layout"
+                aria-label="Save layout"
+              >
+                <Save aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="glass-button diary-template-button"
+                onClick={() => setIsNamingTemplate(false)}
+              >
+                Cancel
+              </button>
+            </form>
+          ) : (
+            <button
+              type="button"
+              className="glass-button diary-template-button diary-save-template-button"
+              onClick={() => setIsNamingTemplate(true)}
+              disabled={page.items.length === 0}
+              title="Save the current layout without text or photos"
+            >
+              <Save aria-hidden="true" />
+              <span>Save layout</span>
+            </button>
+          )}
+          <button
+            type="button"
+            className="glass-button diary-icon-button"
+            onClick={deleteLayout}
+            disabled={!selectedTemplate}
+            title="Delete selected layout"
+            aria-label="Delete selected layout"
+          >
+            <Trash2 aria-hidden="true" />
+          </button>
+        </div>
+
         <input
           ref={photoInputRef}
           type="file"
@@ -281,6 +436,7 @@ export const DiaryWorkspace = () => {
           selectedItemId={selectedItemId}
           onSelectItem={setSelectedItemId}
           onChangeItem={handleItemChange}
+          onReplaceMedia={(itemId, file) => void replaceMedia(itemId, file)}
           onBringToFront={bringItemToFront}
           onRemoveItem={(itemId) => {
             removeItem(itemId);

@@ -40,6 +40,17 @@ export type DiaryDocument = {
   pages: Record<string, DiaryPage>;
 };
 
+/** Reusable geometry and appearance, never a dated note or personal photo. */
+export type DiaryTemplateItem = Omit<DiaryItem, "id" | "text" | "assetId">;
+
+export type DiaryTemplate = {
+  id: string;
+  name: string;
+  items: DiaryTemplateItem[];
+  createdAt: number;
+};
+
 export const DIARY_DOCUMENT_STORAGE_KEY = "glassday.diary.document.v1";
+export const DIARY_TEMPLATES_STORAGE_KEY = "glassday.diary.templates.v1";
 export const DIARY_CANVAS_WIDTH = 1000;
 export const DIARY_CANVAS_HEIGHT = 700;

@@ -16,6 +16,7 @@ import {
   type DiaryDocument,
   type DiaryItem,
   type DiaryPage,
+  type DiaryTemplate,
 } from "../types/diary";
 
 const createItemId = () => {
@@ -190,6 +191,26 @@ export const useDiaryDocument = (selectedDate: string) => {
     updateItem(itemId, { zIndex: nextZIndex });
   };
 
+  const addTemplateItems = (template: DiaryTemplate) => {
+    if (template.items.length === 0) return;
+
+    // Applying a layout appends blank items as one undoable action. Existing
+    // content is never overwritten. / 이미 작성한 날짜에 적용해도 글과 사진을 지우지 않는다.
+    updatePage((current) => {
+      const nextZIndex = Math.max(0, ...current.items.map((item) => item.zIndex));
+      const blankItems = [...template.items]
+        .sort((left, right) => left.zIndex - right.zIndex)
+        .map((layout, index): DiaryItem => ({
+          ...layout,
+          id: createItemId(),
+          zIndex: nextZIndex + index + 1,
+          text: layout.type === "text" ? "" : undefined,
+        }));
+
+      return { ...current, items: [...current.items, ...blankItems] };
+    });
+  };
+
   const restorePage = (direction: "undo" | "redo") => {
     const history = getHistory(historiesRef.current, selectedDate);
     const source = history[direction];
@@ -224,6 +245,7 @@ export const useDiaryDocument = (selectedDate: string) => {
     updateItem,
     removeItem,
     bringItemToFront,
+    addTemplateItems,
     undo: () => restorePage("undo"),
     redo: () => restorePage("redo"),
     canUndo: (historyAvailability[selectedDate]?.undo ?? 0) > 0,
