@@ -6,7 +6,8 @@ import assert from 'node:assert/strict';
 import { beforeEach, test } from 'node:test';
 import {
   patchLocalStorageEvents, GLASSDAY_STORAGE_EVENT, GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY,
-  batchGlassdayStorageChanges, applyGlassdayStorageSnapshot, shouldSyncStorageChange,
+  batchGlassdayStorageChanges, applyGlassdayStorageSnapshot, createGlassdayStorageSnapshot,
+  shouldSyncStorageChange,
 } from '../src/lib/glassdayStorage.ts';
 import { parseGlassdayBackup, importGlassdayBackupFile, resetGlassdayLayout, resetGlassdaySection } from '../src/utils/backup.ts';
 
@@ -74,6 +75,20 @@ test('snapshot restores data once while preserving the local layout and theme', 
   assert.equal(localStorage.getItem('glassday.theme'), 'pixel-desk');
   assert.equal(events.length, 1);
   assert.equal(shouldSyncStorageChange(events[0]), true);
+});
+test('cloud uploads include records but exclude the visible theme and workspace', () => {
+  // CloudSyncContext.tsx sends this exact snapshot after Google login.
+  // 로그인 후 화면이 바뀌지 않도록 glassdayStorage.ts의 허용 목록을 검증한다.
+  localStorage.setItem('glassday.theme', 'mac-core');
+  localStorage.setItem('glassday.dashboard.activeTab.v1', 'career');
+  localStorage.setItem('glassday.dashboard.tabs.v1', '["home","career"]');
+  localStorage.setItem('glassday.memo.notes.v2', '[{"text":"keep"}]');
+
+  const snapshot = createGlassdayStorageSnapshot();
+  assert.equal(snapshot.data['glassday.memo.notes.v2'], '[{"text":"keep"}]');
+  assert.equal(snapshot.data['glassday.theme'], undefined);
+  assert.equal(snapshot.data['glassday.dashboard.activeTab.v1'], undefined);
+  assert.equal(snapshot.data['glassday.dashboard.tabs.v1'], undefined);
 });
 test('UI and sync-marker events cannot schedule recursive uploads', () => {
   for (const key of ['glassday.theme', 'glassday.dashboard.tabs.v1', GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY]) {
