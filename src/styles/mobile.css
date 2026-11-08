@@ -916,3 +916,116 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
     box-shadow: none;
   }
 }
+
+/* Settings compact pass / Settings 모바일 2차 압축
+   Some Settings groups intentionally collapse to one column on narrow phones.
+   Keep the action label and touch target, but remove repeated helper copy so a
+   simple choice does not become a full-height card. / 좁은 화면에서 한 열이
+   되는 선택 버튼은 제목과 터치 영역만 유지하고 반복 설명을 줄인다. */
+@media (max-width: 767px) {
+  body:has(.mobile-layout) .settings-modal-body,
+  body:has(.mobile-layout) .settings-body,
+  body:has(.mobile-layout) .settings-content {
+    padding-block: 8px calc(14px + env(safe-area-inset-bottom)) !important;
+    gap: 8px !important;
+  }
+
+  body:has(.mobile-layout) .settings-section,
+  body:has(.mobile-layout) .settings-card {
+    padding: 10px !important;
+    gap: 8px !important;
+  }
+
+  body:has(.mobile-layout) .settings-section-title,
+  body:has(.mobile-layout) .settings-card-title {
+    font-size: 11px !important;
+  }
+
+  body:has(.mobile-layout) .settings-theme-card {
+    min-height: 92px !important;
+    grid-template-rows: 32px auto auto !important;
+    padding: 7px !important;
+  }
+
+  body:has(.mobile-layout) .settings-theme-preview {
+    height: 32px !important;
+    min-height: 32px !important;
+  }
+
+  body:has(.mobile-layout) .settings-theme-card strong {
+    font-size: 10px !important;
+  }
+
+  body:has(.mobile-layout) .settings-theme-card small {
+    font-size: 8px !important;
+  }
+
+  body:has(.mobile-layout) .settings-action-card,
+  body:has(.mobile-layout) .settings-backup-button,
+  body:has(.mobile-layout) .settings-reset-button {
+    min-height: 44px !important;
+    padding: 7px 9px !important;
+    gap: 7px !important;
+  }
+
+  body:has(.mobile-layout) .settings-action-card strong,
+  body:has(.mobile-layout) .settings-backup-button strong,
+  body:has(.mobile-layout) .settings-reset-button strong {
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+  }
+
+  body:has(.mobile-layout) .settings-action-card span,
+  body:has(.mobile-layout) .settings-backup-button span,
+  body:has(.mobile-layout) .settings-reset-button span {
+    display: none !important;
+  }
+
+  body:has(.mobile-layout) .settings-toggle-row {
+    gap: 8px !important;
+    padding: 8px !important;
+  }
+
+  body:has(.mobile-layout) .settings-toggle-row strong {
+    font-size: 11px !important;
+  }
+
+  body:has(.mobile-layout) .settings-toggle-row span {
+    font-size: 9px !important;
+    line-height: 1.25 !important;
+  }
+
+  body:has(.mobile-layout) .settings-toggle-button {
+    min-height: 32px !important;
+    padding-inline: 10px !important;
+    font-size: 10px !important;
+  }
+
+  body:has(.mobile-layout) .settings-sync-box,
+  body:has(.mobile-layout) .settings-font-helper,
+  body:has(.mobile-layout) .settings-status {
+    padding: 9px !important;
+    font-size: 10px !important;
+    line-height: 1.3 !important;
+  }
+}
+
+/* Prevent oversized text inside the shared mobile shell. Inputs stay at 16px
+   where iOS needs them to avoid automatic zoom; display copy is compacted.
+   입력은 iOS 자동 확대 방지를 위해 16px을 유지하고, 표시용 글자만 줄인다. */
+@media (max-width: 767px) {
+  .mobile-layout .glass-card-body,
+  .mobile-layout .widget-frame__body {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .mobile-layout :is(h1, h2, h3, h4, strong) {
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-layout :is(.today-focus-main h2, .today-focus-hero h2, .today-focus-block h3) {
+    font-size: clamp(15px, 4.6vw, 21px);
+    line-height: 1.2;
+  }
+}
