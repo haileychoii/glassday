@@ -128,8 +128,9 @@ export const AppShell = ({
 
     /*
      * `applyTheme` in src/constants/themes.ts emits this event after updating
-     * the DOM. The native bridge gives Light and Dark different Acrylic tints.
-     * 테마 DOM 변경 직후 같은 이벤트를 받아 Light/Dark 네이티브 재질을 맞춘다.
+     * the DOM. `tauriDesktop.ts` passes the theme shape to src-tauri/src/lib.rs
+     * so Windows blur and CSS agree at all four corners.
+     * 테마 DOM 변경 직후 Rust에도 모서리 형태를 알려 사각형 blur를 남기지 않는다.
      */
     const syncNativeGlass = (theme: ThemeId) => {
       const mode =
@@ -137,7 +138,9 @@ export const AppShell = ({
           ? "light"
           : theme === "glass-dark"
             ? "dark"
-            : "off";
+            : theme === "pixel-desk"
+              ? "square"
+              : "off";
 
       void setNativeGlassEffect(mode).catch((error) => {
         console.warn("Unable to update the native glass effect", error);

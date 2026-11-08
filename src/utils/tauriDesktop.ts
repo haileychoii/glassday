@@ -106,17 +106,17 @@ export const resetTauriWindowSize = async () => {
 };
 
 /**
- * Synchronize Glass Light/Dark with the Rust Acrylic command in
+ * Synchronize Glass Light/Dark and the window outline with the Rust command in
  * `src-tauri/src/lib.rs`.
  *
  * English: Browser previews keep using CSS backdrop-filter. Only the native
- * shell invokes Windows Acrylic, and leaving both themes clears the effect so
- * Pixel, Retro, Aurora, and the other themes keep their own material.
+ * shell invokes Windows blur. Pixel Desk uses a square native outline; every
+ * other theme keeps the rounded outline even when native blur is off.
  *
- * Korean: 웹 미리보기는 CSS만 사용한다. Tauri에서만 Acrylic을 호출하고,
- * 다른 테마로 바꾸면 즉시 해제해 각 테마의 표면이 서로 섞이지 않게 한다.
+ * Korean: 웹 미리보기는 CSS만 사용한다. Tauri에서는 Pixel Desk만 네이티브
+ * 창을 각지게 두고, 다른 테마는 실제 창 경계까지 둥글게 자른다.
  */
-export type NativeGlassMode = "light" | "dark" | "off";
+export type NativeGlassMode = "light" | "dark" | "off" | "square";
 
 export const setNativeGlassEffect = async (mode: NativeGlassMode) => {
   if (!isTauriApp) return;
