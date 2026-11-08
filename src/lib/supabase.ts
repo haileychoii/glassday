@@ -18,6 +18,7 @@
  * ============================================================
  */
 import { createClient } from "@supabase/supabase-js";
+import { isTauri } from "@tauri-apps/api/core";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -30,6 +31,9 @@ export const supabase = isSupabaseConfigured
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
+        // CloudSyncContext.tsx exchanges the desktop deep-link code here.
+        // Tauri만 PKCE를 써서 Google 인증 후 받은 code를 앱에서 교환한다.
+        flowType: isTauri() ? "pkce" : "implicit",
       },
     })
   : null;

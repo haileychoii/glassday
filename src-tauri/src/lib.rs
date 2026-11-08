@@ -136,6 +136,17 @@ fn set_native_glass_effect(_window: tauri::WebviewWindow, _mode: String) -> Resu
 pub fn run() {
     let builder = tauri::Builder::default();
 
+    // The single-instance plugin must run before deep-link so an OAuth return
+    // reaches the open window instead of creating a second dashboard.
+    // Google 인증이 돌아올 때 새 창을 만들지 않고 기존 앱에 전달한다.
+    #[cfg(desktop)]
+    let builder = builder.plugin(tauri_plugin_single_instance::init(|_, _, _| {}));
+
+    #[cfg(desktop)]
+    let builder = builder
+        .plugin(tauri_plugin_deep_link::init())
+        .plugin(tauri_plugin_opener::init());
+
     // Source: tauri-apps/plugins-workspace, plugins/window-state (MIT/Apache-2.0).
     // Keep only placement: src/utils/tauriDesktop.ts owns the desktop-pin
     // preference, and src-tauri/tauri.conf.json owns window chrome defaults.

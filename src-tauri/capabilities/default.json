@@ -9,6 +9,8 @@
     "core:window:allow-start-resize-dragging",
     "core:window:allow-set-size",
     "core:window:allow-set-always-on-bottom",
-    "core:webview:allow-set-webview-zoom"
+    "core:webview:allow-set-webview-zoom",
+    "deep-link:default",
+    "opener:default"
   ]
 }

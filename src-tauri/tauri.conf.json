@@ -35,6 +35,13 @@
       "csp": null
     }
   },
+  "plugins": {
+    "deep-link": {
+      "desktop": {
+        "schemes": ["glassday-desktop"]
+      }
+    }
+  },
   "bundle": {
     "active": true,
     "targets": "all",

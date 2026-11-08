@@ -11,6 +11,7 @@
     "test:career": "node --import ./tests/register-typescript.mjs --test tests/career.test.mjs",
     "test:diary": "node --import ./tests/register-typescript.mjs --test tests/diaryTemplates.test.mjs",
     "test:storage": "node --import ./tests/register-typescript.mjs --test tests/storage.test.mjs",
+    "test:auth": "node --import ./tests/register-typescript.mjs --test tests/desktopAuth.test.mjs",
     "preview": "vite preview",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build"
@@ -19,6 +20,8 @@
     "@supabase/supabase-js": "^2.110.0",
     "@tailwindcss/vite": "^4.3.1",
     "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/plugin-deep-link": "2.4.7",
+    "@tauri-apps/plugin-opener": "2.4.0",
     "dayjs": "^1.11.21",
     "lucide-react": "^1.18.0",
     "react": "^19.2.6",

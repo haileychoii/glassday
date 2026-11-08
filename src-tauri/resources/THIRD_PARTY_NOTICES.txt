@@ -5,12 +5,27 @@ Source: https://github.com/tauri-apps/plugins-workspace/tree/v2/plugins/window-s
 Chosen license: MIT (the project offers Apache-2.0 OR MIT)
 Copyright (c) 2017 - Present Tauri Apps Contributors
 
+tauri-plugin-deep-link 2.4.7
+Source: https://github.com/tauri-apps/plugins-workspace/tree/v2/plugins/deep-link
+Chosen license: MIT (the project offers Apache-2.0 OR MIT)
+Copyright (c) 2017 - Present Tauri Apps Contributors
+
+tauri-plugin-single-instance 2.4.0
+Source: https://github.com/tauri-apps/plugins-workspace/tree/v2/plugins/single-instance
+Chosen license: MIT (the project offers Apache-2.0 OR MIT)
+Copyright (c) 2017 - Present Tauri Apps Contributors
+
+tauri-plugin-opener 2.4.0
+Source: https://github.com/tauri-apps/plugins-workspace/tree/v2/plugins/opener
+Chosen license: MIT (the project offers Apache-2.0 OR MIT)
+Copyright (c) 2017 - Present Tauri Apps Contributors
+
 window-vibrancy 0.8.1
 Source: https://github.com/tauri-apps/window-vibrancy
 Chosen license: MIT (the project offers Apache-2.0 OR MIT)
 Copyright (c) 2020-2022 Tauri Programme within The Commons Conservancy
 
-The following MIT permission notice applies to both components above.
+The following MIT permission notice applies to all components above.
 
 MIT License
 
