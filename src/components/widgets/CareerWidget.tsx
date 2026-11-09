@@ -25,6 +25,8 @@
  * ============================================================
  */
 import { createPortal } from "react-dom";
+import { isTauri } from "@tauri-apps/api/core";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import {
   BriefcaseBusiness,
   CalendarDays,
@@ -1001,6 +1003,22 @@ export const CareerWidget = ({
     }));
   };
 
+  const openPostingUrl = (url: string) => {
+    // The list link and detail action share one desktop path. Tauri's opener
+    // (registered in src-tauri/src/lib.rs) launches the system browser; a
+    // WebView target=_blank can leave the installed app on a different page.
+    // 목록과 상세 창 모두 설치 앱에서는 외부 브라우저를 사용한다.
+    if (isTauri()) {
+      void openUrl(url).catch((error: unknown) => {
+        console.error("Could not open career posting", error);
+        window.alert("공고 페이지를 열지 못했어. URL을 확인해 줘.");
+      });
+      return;
+    }
+
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   const renderCareerCard = (item: CareerItem, compact = false) => {
     const nextSchedule = getNextCareerSchedule(item);
     const postingUrl = normalizeCareerPostingUrl(item.postingUrl);
@@ -1085,7 +1103,13 @@ export const CareerWidget = ({
               target="_blank"
               rel="noreferrer"
               title={postingUrl}
-              onClick={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation();
+                if (isTauri()) {
+                  event.preventDefault();
+                  openPostingUrl(postingUrl);
+                }
+              }}
               onPointerDown={(event) => event.stopPropagation()}
             >
               <Link2 className="w-3 h-3" />
@@ -1311,13 +1335,7 @@ export const CareerWidget = ({
                   {selectedPostingUrl && (
                     <button
                       type="button"
-                      onClick={() =>
-                        window.open(
-                          selectedPostingUrl,
-                          "_blank",
-                          "noopener,noreferrer"
-                        )
-                      }
+                      onClick={() => openPostingUrl(selectedPostingUrl)}
                       className="career-small-button"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />

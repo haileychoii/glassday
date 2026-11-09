@@ -410,15 +410,10 @@
 }
 
 .career-list-meta {
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: var(--gd-widget-inline-gap);
   min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.career-list-meta::-webkit-scrollbar {
-  display: none;
+  overflow: visible;
 }
 
 .career-list-meta span {
@@ -489,8 +484,9 @@
   text-decoration: none;
   font-size: 10px;
   font-weight: 850;
-  border-color: hsl(var(--primary) / 0.32);
-  background: hsl(var(--primary) / 0.1);
+  border-color: hsl(var(--primary) / 0.5);
+  background: hsl(var(--primary) / 0.14);
+  flex: 0 0 auto;
 }
 
 .career-posting-link:hover,
@@ -1190,7 +1186,7 @@
   }
 
   .career-list-meta {
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap !important;
     gap: 6px !important;
   }
 
@@ -2651,20 +2647,13 @@ body.theme-pixel-desk .career-cover-question-input {
     width: 100% !important;
 
     display: flex !important;
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap !important;
 
     align-items: center !important;
 
     gap: 4px !important;
 
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-
-    scrollbar-width: none !important;
-  }
-
-  .career-list-meta::-webkit-scrollbar {
-    display: none !important;
+    overflow: visible !important;
   }
 
   .career-list-meta span {
