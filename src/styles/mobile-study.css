@@ -1,8 +1,33 @@
-/*
- * Glassday / Mobile-first Study Planner
- * Imported by MobileStudyCard, isolated from Desktop/Tauri via unique classes.
- * This stylesheet does not change stored layouts or shared StudyWidget logic.
- */
+/* ===========================================================================
+ * Glassday / Mobile Study Planner — COMPACT VERSION 2
+ * ===========================================================================
+ * [왜 이 파일을 고치나요?]
+ * 처음 만든 모바일 Study에서는 10분 시간표의 각 칸을 44px 높이로 강제했고,
+ * 날짜/과목/할 일 버튼도 커서 전체 화면이 과하게 세로로 늘어났습니다.
+ * 이 버전은 위젯을 새로 만드는 대신 모바일에서만 치수와 글꼴 크기를 재정의합니다.
+ *
+ * [파일 연결 구조]
+ * src/App.tsx
+ *   └─ src/components/mobile/MobileDashboard.tsx
+ *       └─ src/components/mobile/MobileStudyCard.tsx
+ *           ├─ 이 파일을 import: src/styles/mobile-study.css
+ *           └─ src/components/widgets/WidgetSlot.tsx
+ *               └─ src/components/widgets/StudyWidget.tsx (원본 기능 사용)
+ *                   ├─ src/styles/widgets/study.css (PC/공통 스타일)
+ *                   └─ src/components/widgets/study/studyUtils.ts (시간/저장 계산)
+ *
+ * [수정 범위]
+ * .mobile-study-card / .mobile-study-detail 접두어에만 적용됩니다.
+ * 원본 StudyWidget.tsx, DashboardGrid, 데이터 저장키
+ * glassday.study.planner.v2, PC/Tauri 레이아웃은 변경하지 않습니다.
+ *
+ * [글씨 크기 기준]
+ * 큰 수치 17–21px / 화면 제목 14–15px / 일반 본문 13px /
+ * 부가 설명 11–12px / 입력 컨트롤 16px(iOS 자동 확대 방지)
+ * [공간 기준]
+ * 시간표 10분 셀 26px / 날짜 바 38px / 과목 칩 38px /
+ * 요약 카드 54px / 할 일 행 44px. 좁은 칸은 조작 정확도 점검이 필요합니다.
+ * =========================================================================== */
 
 .mobile-layout .mobile-widget-slot[data-widget-id="study"] {
   height: auto !important;
@@ -17,14 +42,14 @@
 
 .mobile-study-card {
   min-width: 0;
-  padding: 16px;
+  padding: 12px;
   border: 1px solid hsl(var(--border) / 0.7);
   border-radius: var(--gd-radius-widget, 20px);
   background: var(--gd-surface-bg, hsl(var(--card) / 0.93));
   box-shadow: var(--gd-surface-shadow, 0 10px 30px hsl(var(--foreground) / 0.07));
   backdrop-filter: var(--gd-surface-filter, blur(20px));
   display: grid;
-  gap: 14px;
+  gap: 9px;
 }
 
 .mobile-study-card__heading,
@@ -40,7 +65,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 750;
 }
 
@@ -51,7 +76,7 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0 2px 0 8px;
   font-size: 12px;
   font-weight: 650;
@@ -61,7 +86,7 @@
 .mobile-study-card__metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
+  gap: 7px;
 }
 
 .mobile-study-card__metric {
@@ -70,27 +95,27 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: 6px;
-  padding: 13px 12px;
+  gap: 4px;
+  padding: 9px 10px;
   border: 1px solid var(--gd-inner-border, hsl(var(--border) / 0.5));
-  border-radius: 15px;
+  border-radius: 12px;
   background: var(--gd-inner-bg, hsl(var(--card) / 0.5));
 }
 
 .mobile-study-card__metric > span {
-  font-size: 11px;
+  font-size: 12px;
   opacity: 0.78;
 }
 
 .mobile-study-card__metric > strong {
-  font-size: clamp(20px, 5.5vw, 26px);
+  font-size: clamp(18px, 5vw, 21px);
   line-height: 1.2;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
 
 .mobile-study-card__metric > strong em {
-  font-size: 14px;
+  font-size: 13px;
   font-style: normal;
   font-weight: 500;
   opacity: 0.72;
@@ -107,7 +132,7 @@
 
 .mobile-study-card__progress {
   display: grid;
-  gap: 7px;
+  gap: 5px;
 }
 
 .mobile-study-card__progress-caption {
@@ -117,7 +142,7 @@
 .mobile-study-card__progress-caption > strong { font-size: 12px; }
 
 .mobile-study-card__progress-track {
-  height: 8px;
+  height: 6px;
   overflow: hidden;
   border-radius: 999px;
   background: hsl(var(--foreground) / 0.11);
@@ -133,8 +158,8 @@
 .mobile-study-card__upcoming {
   min-width: 0;
   display: grid;
-  gap: 5px;
-  padding: 10px 12px;
+  gap: 4px;
+  padding: 8px 10px;
   border: 1px solid hsl(var(--border) / 0.45);
   border-radius: 13px;
 }
@@ -161,7 +186,7 @@
 .mobile-study-card__shortcuts {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 7px;
+  gap: 6px;
 }
 
 .mobile-study-card__shortcuts > button {
@@ -170,8 +195,8 @@
   justify-content: center;
   gap: 5px;
   min-width: 0;
-  min-height: 44px;
-  padding: 7px 4px;
+  min-height: 40px;
+  padding: 5px 4px;
   border: 1px solid var(--gd-control-border, hsl(var(--border) / 0.55));
   border-radius: 12px;
   background: var(--gd-control-bg, hsl(var(--card) / 0.74));
@@ -213,9 +238,9 @@
 .mobile-study-detail *::after { box-sizing: border-box; }
 
 .mobile-study-detail__header {
-  min-height: 60px;
+  min-height: 52px;
   display: grid;
-  grid-template-columns: 78px minmax(0, 1fr) 78px;
+  grid-template-columns: 68px minmax(0, 1fr) 68px;
   align-items: center;
   gap: 4px;
   padding: calc(7px + env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 7px max(12px, env(safe-area-inset-left));
@@ -224,7 +249,7 @@
 }
 
 .mobile-study-detail__back {
-  min-height: 44px;
+  min-height: 40px;
   padding: 0;
   border: none;
   background: transparent;
@@ -244,7 +269,7 @@
 }
 
 .mobile-study-detail__heading strong {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
 }
 
@@ -256,14 +281,14 @@
 .mobile-study-detail__tabs {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
-  padding: 8px 12px;
+  gap: 5px;
+  padding: 6px 10px;
   border-bottom: 1px solid hsl(var(--border) / 0.35);
   background: hsl(var(--background));
 }
 
 .mobile-study-detail__tabs > button {
-  min-height: 44px;
+  min-height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -288,7 +313,7 @@
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 12px max(10px, env(safe-area-inset-right)) calc(28px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+  padding: 8px max(9px, env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) max(9px, env(safe-area-inset-left));
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }
@@ -319,12 +344,12 @@
   max-height: none !important;
   min-height: 0 !important;
   overflow: visible !important;
-  padding: 12px !important;
+  padding: 8px !important;
 }
 
 .mobile-study-detail .study-widget .widget-frame__header {
   min-height: 0 !important;
-  padding: 10px 12px !important;
+  padding: 8px 10px !important;
 }
 
 .mobile-study-detail .study-widget .widget-frame__header .widget-frame__actions {
@@ -334,7 +359,7 @@
 .mobile-study-detail .study10-planner {
   min-height: 0;
   display: grid !important;
-  gap: 12px !important;
+  gap: 8px !important;
 }
 
 .mobile-study-detail .study10-summary {
@@ -343,17 +368,17 @@
 }
 
 .mobile-study-detail .study10-summary-card {
-  min-height: 70px;
-  padding: 10px;
+  min-height: 54px;
+  padding: 7px 9px;
 }
 
 .mobile-study-detail .study10-summary-card--goal { grid-column: 1 / -1; }
-.mobile-study-detail .study10-summary-card > strong { font-size: 18px; }
-.mobile-study-detail .study10-goal-line input { font-size: 16px !important; height: 36px; width: 100px; }
-.mobile-study-detail .study10-date-bar { grid-template-columns: 44px minmax(0, 1fr) 48px 44px !important; gap: 5px !important; }
+.mobile-study-detail .study10-summary-card > strong { font-size: 17px; }
+.mobile-study-detail .study10-goal-line input { font-size: 16px !important; height: 32px; width: 94px; }
+.mobile-study-detail .study10-date-bar { grid-template-columns: 38px minmax(0, 1fr) 42px 38px !important; gap: 4px !important; }
 .mobile-study-detail .study10-icon-button,
-.mobile-study-detail .study10-today-button { min-width: 44px !important; min-height: 44px !important; height: 44px !important; }
-.mobile-study-detail .study10-date-control { height: 44px !important; padding: 0 5px !important; }
+.mobile-study-detail .study10-today-button { min-width: 38px !important; min-height: 38px !important; height: 38px !important; }
+.mobile-study-detail .study10-date-control { height: 38px !important; padding: 0 5px !important; }
 .mobile-study-detail .study10-date-control span { font-size: 12px !important; }
 .mobile-study-detail .study10-date-control input { min-width: 0; }
 .mobile-study-detail .study10-today-button { padding: 0 4px !important; }
@@ -364,22 +389,22 @@
 }
 
 .mobile-study-detail .study10-side-stack { min-width: 0; display: grid; }
-.mobile-study-detail .study10-panel { padding: 12px !important; }
+.mobile-study-detail .study10-panel { padding: 8px !important; }
 .mobile-study-detail .study10-control-band { grid-template-columns: minmax(0, 1fr) !important; }
 .mobile-study-detail .study10-subject-tools {
   display: flex !important;
   overflow-x: auto;
   overflow-y: hidden;
-  gap: 7px;
-  padding: 2px 0 6px;
+  gap: 5px;
+  padding: 2px 0 3px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
 }
 .mobile-study-detail .study10-subject-control,
 .mobile-study-detail .study10-subject-tools > .study10-subject-tool { flex: 0 0 auto; }
-.mobile-study-detail .study10-subject-tool { min-height: 44px !important; padding: 5px 9px !important; }
-.mobile-study-detail .study10-timer-button { min-height: 44px !important; }
-.mobile-study-detail .study10-timer { min-height: 54px; }
+.mobile-study-detail .study10-subject-tool { min-height: 38px !important; height: 38px !important; padding: 3px 8px !important; }
+.mobile-study-detail .study10-timer-button { min-height: 38px !important; height: 38px !important; }
+.mobile-study-detail .study10-timer { min-height: 46px; padding-block: 5px !important; }
 .mobile-study-detail .study10-timeline-scroll {
   max-height: none !important;
   overflow: visible !important;
@@ -388,18 +413,18 @@
 .mobile-study-detail .study10-minute-head,
 .mobile-study-detail .study10-hour-row {
   min-width: 0 !important;
-  grid-template-columns: 33px repeat(6, minmax(0, 1fr)) !important;
-  gap: 3px !important;
+  grid-template-columns: 28px repeat(6, minmax(0, 1fr)) !important;
+  gap: 2px !important;
 }
 .mobile-study-detail .study10-slot {
-  height: 44px !important;
-  min-height: 44px !important;
-  border-radius: 8px;
+  height: 26px !important;
+  min-height: 26px !important;
+  border-radius: 6px;
 }
 .mobile-study-detail .study10-hour-label { font-size: 11px; }
 .mobile-study-detail .study10-panel-heading { flex-wrap: wrap; }
-.mobile-study-detail .study10-panel-actions { gap: 5px; }
-.mobile-study-detail .study10-panel-actions .study10-icon-button { min-width: 44px; }
+.mobile-study-detail .study10-panel-actions { gap: 4px; }
+.mobile-study-detail .study10-panel-actions .study10-icon-button { min-width: 34px !important; width: 34px !important; min-height: 34px !important; height: 34px !important; }
 
 /* Display-only tab switching: original StudyWidget state is never unmounted. */
 .mobile-study-detail[data-study-view="timeline"] .study10-side-stack,
@@ -412,8 +437,8 @@
 
 .mobile-study-detail .study10-task-form {
   display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 86px !important;
-  gap: 8px !important;
+  grid-template-columns: minmax(0, 1fr) 76px !important;
+  gap: 6px !important;
 }
 .mobile-study-detail .study10-task-form > select { grid-column: 1; grid-row: 1; }
 .mobile-study-detail .study10-task-form > input { grid-column: 1; grid-row: 2; }
@@ -425,14 +450,14 @@
 .mobile-study-detail .study10-task-form .study10-add-button { height: 44px !important; min-height: 44px !important; font-size: 16px !important; }
 .mobile-study-detail .study10-estimate-input input { font-size: 16px !important; }
 .mobile-study-detail .study10-task-list { max-height: none !important; overflow: visible !important; }
-.mobile-study-detail .study10-task-row { min-height: 52px !important; grid-template-columns: 36px 5px minmax(0, 1fr) 44px !important; }
-.mobile-study-detail .study10-task-check { width: 36px !important; height: 36px !important; }
-.mobile-study-detail .study10-task-delete { width: 44px !important; height: 44px !important; }
+.mobile-study-detail .study10-task-row { min-height: 44px !important; padding: 4px 6px !important; grid-template-columns: 30px 4px minmax(0, 1fr) 34px !important; gap: 5px !important; }
+.mobile-study-detail .study10-task-check { width: 30px !important; height: 30px !important; }
+.mobile-study-detail .study10-task-delete { width: 34px !important; height: 34px !important; }
 .mobile-study-detail .study10-task-copy strong { font-size: 13px !important; }
 .mobile-study-detail .study10-task-copy small { font-size: 11px !important; }
 .mobile-study-detail .study10-task-copy strong,
 .mobile-study-detail .study10-task-copy small { white-space: normal; overflow-wrap: anywhere; }
-.mobile-study-detail .study10-note-panel textarea { min-height: 38dvh !important; max-height: none !important; font-size: 16px !important; line-height: 1.6; }
+.mobile-study-detail .study10-note-panel textarea { min-height: 180px !important; max-height: none !important; font-size: 16px !important; line-height: 1.5; }
 
 /* Portal dialogs remain above the full-screen planner. */
 body:has(.mobile-study-detail) .study10-subject-dialog-layer { z-index: 100080; }
@@ -445,10 +470,97 @@ body:has(.mobile-study-detail) .study10-subject-dialog {
   .mobile-study-card { padding: 12px; }
   .mobile-study-card__metric { padding: 10px 8px; }
   .mobile-study-detail__tabs > button { font-size: 12px; gap: 3px; }
-  .mobile-study-detail .study10-date-bar { grid-template-columns: 40px minmax(0, 1fr) 44px 40px !important; }
-  .mobile-study-detail .study10-icon-button { min-width: 40px !important; }
+  .mobile-study-detail .study10-date-bar { grid-template-columns: 36px minmax(0, 1fr) 40px 36px !important; }
+  .mobile-study-detail .study10-icon-button { min-width: 36px !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .mobile-study-card__progress-track > div { transition: none; }
+}
+
+
+/* ===========================================================================
+ * 6. MOBILE TYPOGRAPHY SYSTEM / 글씨 크기 일관성
+ * ===========================================================================
+ * 기존 study.css에는 위젯 컨테이너에 따라 9~15px 등 여러 수치가 있습니다.
+ * 본 규칙은 모바일 상세화면에서만 읽는 글자 크기를 통일합니다.
+ * 아래 그룹을 바꾸면 해당 역할의 문구가 함께 바뀝니다.
+ *
+ * - 14px: 섹션 제목, 과목명, 주요 버튼 텍스트
+ * - 13px: 타이머 숫자, 일반 본문, 날짜 네비게이션
+ * - 11px: 보조 설명, 시간표 분 단위 표시
+ * - 16px: 편집용 input/select/textarea(아이폰 포커스 확대 방지)
+ * =========================================================================== */
+.mobile-study-detail .study10-planner {
+  font-size: 13px !important;
+  line-height: 1.35;
+}
+
+/* Section labels: 10분 시간표 / 오늘 할 일 / 오늘 메모 */
+.mobile-study-detail .study10-panel-heading > div > span,
+.mobile-study-detail .study10-summary-card > span,
+.mobile-study-detail .study10-summary-card > label,
+.mobile-study-detail .study10-subject-tool > span:not(.study10-subject-dot) {
+  font-size: 13px !important;
+  line-height: 1.3 !important;
+}
+
+/* Supporting hints: 06:00–24:00, 학습 시간, 설명 */
+.mobile-study-detail .study10-panel-heading small,
+.mobile-study-detail .study10-subject-tool small,
+.mobile-study-detail .study10-minute-head span,
+.mobile-study-detail .study10-timer-copy > span,
+.mobile-study-detail .study10-empty,
+.mobile-study-detail .study10-legacy-note {
+  font-size: 11px !important;
+  line-height: 1.3 !important;
+}
+
+/* Date and control labels: 날짜, 오늘, 타이머 시작/종료 */
+.mobile-study-detail .study10-today-button,
+.mobile-study-detail .study10-timer-button,
+.mobile-study-detail .study10-add-button {
+  font-size: 13px !important;
+  line-height: 1.2 !important;
+}
+.mobile-study-detail .study10-timer-copy strong {
+  font-size: 15px !important;
+  line-height: 1.2 !important;
+  font-variant-numeric: tabular-nums;
+}
+.mobile-study-detail .study10-hour-label {
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+}
+.mobile-study-detail .study10-minute-head { padding-bottom: 2px !important; }
+.mobile-study-detail .study10-timeline-grid { gap: 2px !important; }
+
+/* 날짜/수치/텍스트 편집기에선 iOS 입력 포커스 확대 방지 */
+.mobile-study-detail .study10-task-form select,
+.mobile-study-detail .study10-task-form > input,
+.mobile-study-detail .study10-estimate-input input,
+.mobile-study-detail .study10-date-control input,
+.mobile-study-detail .study10-goal-line input,
+.mobile-study-detail .study10-note-panel textarea {
+  font-size: 16px !important;
+}
+
+/* 과목별 색상 칩은 기존 팔레트를 그대로 사용하고, 수평으로 배치해 높이를 줄임 */
+.mobile-study-detail .study10-subject-control,
+.mobile-study-detail .study10-subject-tool { align-self: center; }
+.mobile-study-detail .study10-subject-tool > small {
+  white-space: nowrap;
+}
+
+/* ===========================================================================
+ * 7. SMALL PHONE / 360px 이하 추가 조정
+ * ===========================================================================
+ * 320px 기기에서는 날짜 바가 가로로 밀리지 않게 아이콘·버튼 간격만 좁힙니다.
+ * PC/태블릿 화면에는 적용되지 않습니다.
+ * =========================================================================== */
+@media (max-width: 360px) {
+  .mobile-study-detail .study10-date-control span { font-size: 11px !important; }
+  .mobile-study-detail .study10-minute-head,
+  .mobile-study-detail .study10-hour-row { gap: 1px !important; }
+  .mobile-study-card__metric > strong { font-size: 18px; }
 }
