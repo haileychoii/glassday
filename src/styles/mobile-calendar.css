@@ -1,0 +1,591 @@
+/* ===========================================================================
+   Glassday / Mobile Calendar UI
+   ===========================================================================
+   [이 CSS가 연결되는 파일]
+   - MobileDashboard.tsx -> MobileCalendarCard.tsx 의 className을 꾸밉니다.
+   - DashboardDataContext의 저장 방식과 기능 코드는 수정하지 않습니다.
+   - CalendarWidget.tsx의 기존 일정 편집 FloatingWindow만 휴대폰에서 전체화면화.
+   - MobileLayout이 렌더될 때만 적용하도록 .mobile-layout 또는
+     body:has(.mobile-layout)로 모든 셀렉터의 범위를 제한합니다.
+
+   [수정할 때 이 파일에서 찾을 곳]
+   1. slot & shell: 홈 카드의 전체 높이, 배경, 테두리
+   2. mobile card: 상단, 7일 선택, 일정 목록
+   3. detail: 전체화면, 월간 그리드, 보기 탭, 스크롤
+   4. event editor bridge: CalendarWidget의 기존 편집창 전체화면 처리
+   5. theme adaptation: Mac / Pixel 등 디자인과 공통 token 호환
+
+   [중요] desktop grid 좌표, .calendar-widget-card 범용 스타일은 건드리지 마세요.
+   =========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   1. MOBILE SLOT & SHARED DESIGN TOKENS
+   ---------------------------------------------------------------------------
+   기존 mobile.css는 위젯을 일괄 고정 높이로 만듭니다. Calendar는 내용만큼
+   자연스럽게 자라야 불필요한 내부 스크롤이 생기지 않습니다.
+   Pixel Desk에서 더 강한 슬롯 높이 규칙이 있어 !important로 명확히 덮습니다.
+   --------------------------------------------------------------------------- */
+.mobile-layout .mobile-widget-slot[data-widget-id="calendar"] {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible;
+}
+
+.mobile-layout .mobile-calendar-card,
+body:has(.mobile-layout) .mobile-calendar-detail {
+  /* 기존 theme-surfaces.css의 semantic surface를 우선 사용합니다. */
+  --mc-surface: var(--gd-widget-panel-bg, hsl(var(--card) / 0.82));
+  --mc-border: var(--gd-widget-panel-border, hsl(var(--border) / 0.38));
+  --mc-control: var(--gd-widget-control-bg, hsl(var(--card) / 0.55));
+  --mc-radius: var(--gd-radius-widget, 20px);
+  color: hsl(var(--foreground));
+  box-sizing: border-box;
+}
+
+.mobile-layout .mobile-calendar-card *,
+body:has(.mobile-layout) .mobile-calendar-detail * {
+  box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------------------------
+   2. MOBILE CARD — WORKSPACE / HOME
+   ---------------------------------------------------------------------------
+   목표: 선택일의 일정과 다음 일정 몇 개만 빠르게 확인하도록 한 장으로 표시.
+   '전체 보기'는 모바일 상세 화면, '+'는 기존 일정 편집창을 엽니다.
+   --------------------------------------------------------------------------- */
+.mobile-layout .mobile-calendar-card {
+  width: 100%;
+  min-width: 0;
+  padding: 15px;
+  display: grid;
+  gap: 13px;
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius);
+  background: var(--gd-surface-bg, hsl(var(--card) / 0.86));
+  box-shadow: var(--gd-surface-shadow, 0 12px 32px -24px hsl(var(--foreground) / 0.24));
+}
+.mobile-layout .mobile-calendar-card__header,
+.mobile-layout .mobile-calendar-card__summary,
+.mobile-layout .mobile-calendar-card__agenda-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  gap: 10px;
+}
+.mobile-layout .mobile-calendar-card__label {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  font-weight: 800;
+  font-size: 14px;
+}
+.mobile-layout .mobile-calendar-card__open,
+.mobile-layout .mobile-calendar-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border: 0;
+  background: transparent;
+  color: hsl(var(--foreground) / 0.74);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.mobile-layout .mobile-calendar-card__summary {
+  padding: 12px;
+  border: 1px solid var(--mc-border);
+  border-radius: 16px;
+  background: var(--mc-surface);
+}
+.mobile-layout .mobile-calendar-card__summary > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.mobile-layout .mobile-calendar-card__summary strong {
+  font-size: 19px;
+  font-weight: 820;
+  overflow-wrap: anywhere;
+}
+.mobile-layout .mobile-calendar-card__summary span {
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+}
+.mobile-layout .mobile-calendar-add,
+body:has(.mobile-layout) .mobile-calendar-detail__add {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: hsl(var(--primary) / 0.14);
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--primary) / 0.26);
+  border-radius: 14px;
+  cursor: pointer;
+}
+.mobile-layout .mobile-calendar-card__agenda-heading strong { font-size: 13px; }
+.mobile-layout .mobile-calendar-card__agenda-heading span {
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ---------------------------------------------------------------------------
+   2-1. 7-DAY STRIP — SUMMARY & FULL WEEK VIEW
+   ---------------------------------------------------------------------------
+   날짜를 누르면 React selectedDate만 변경됩니다. 저장된 Calendar 이벤트나
+   Career 일정을 변경하지 않습니다. 7개의 날짜를 균등 배치합니다.
+   --------------------------------------------------------------------------- */
+.mobile-layout .mobile-calendar-week-strip,
+body:has(.mobile-layout) .mobile-calendar-week-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  min-width: 0;
+}
+.mobile-layout .mobile-calendar-week-day,
+body:has(.mobile-layout) .mobile-calendar-week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  min-height: 64px;
+  padding: 7px 1px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  color: hsl(var(--foreground) / 0.78);
+  cursor: pointer;
+}
+.mobile-layout .mobile-calendar-week-day span,
+body:has(.mobile-layout) .mobile-calendar-week-day span {
+  font-size: 10px;
+}
+.mobile-layout .mobile-calendar-week-day strong,
+body:has(.mobile-layout) .mobile-calendar-week-day strong {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+.mobile-layout .mobile-calendar-week-day i,
+body:has(.mobile-layout) .mobile-calendar-week-day i {
+  width: 4px;
+  height: 4px;
+  border-radius: 100%;
+  background: transparent;
+}
+.mobile-layout .mobile-calendar-week-day i.has-event,
+body:has(.mobile-layout) .mobile-calendar-week-day i.has-event {
+  background: hsl(var(--primary));
+}
+.mobile-layout .mobile-calendar-week-day.is-selected,
+body:has(.mobile-layout) .mobile-calendar-week-day.is-selected {
+  background: hsl(var(--primary) / 0.16);
+  border-color: hsl(var(--primary) / 0.34);
+  color: hsl(var(--foreground));
+}
+.mobile-layout .mobile-calendar-week-day.is-today strong,
+body:has(.mobile-layout) .mobile-calendar-week-day.is-today strong {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* ---------------------------------------------------------------------------
+   2-2. EVENT ROW / EMPTY STATE
+   ---------------------------------------------------------------------------
+   카드에서는 최대 3개, 상세에서는 전부 보여줍니다. 모든 행은 터치 높이 50px+
+   보장하고 행사 색상은 CalendarWidget과 동일한 getEventColor()를 사용합니다.
+   --------------------------------------------------------------------------- */
+.mobile-layout .mobile-calendar-agenda,
+body:has(.mobile-layout) .mobile-calendar-agenda,
+body:has(.mobile-layout) .mobile-calendar-date-groups {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+.mobile-layout .mobile-calendar-event,
+body:has(.mobile-layout) .mobile-calendar-event {
+  width: 100%;
+  min-width: 0;
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 4px minmax(0, 1fr) 18px;
+  gap: 11px;
+  align-items: center;
+  padding: 9px 11px;
+  border: 1px solid var(--mc-border);
+  border-radius: 13px;
+  background: var(--mc-surface);
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+.mobile-layout .mobile-calendar-event__accent,
+body:has(.mobile-layout) .mobile-calendar-event__accent {
+  height: 100%;
+  min-height: 32px;
+  border-radius: 999px;
+  background: var(--mobile-calendar-event-color, hsl(var(--primary)));
+}
+.mobile-layout .mobile-calendar-event__content,
+body:has(.mobile-layout) .mobile-calendar-event__content {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.mobile-layout .mobile-calendar-event__title,
+body:has(.mobile-layout) .mobile-calendar-event__title {
+  font-size: 13px;
+  font-weight: 760;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  overflow-wrap: anywhere;
+}
+.mobile-layout .mobile-calendar-event__career,
+body:has(.mobile-layout) .mobile-calendar-event__career {
+  padding: 2px 5px;
+  font-size: 9px;
+  font-weight: 800;
+  border-radius: 5px;
+  background: hsl(var(--primary) / 0.13);
+}
+.mobile-layout .mobile-calendar-event__meta,
+body:has(.mobile-layout) .mobile-calendar-event__meta {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.mobile-layout .mobile-calendar-event__chevron,
+body:has(.mobile-layout) .mobile-calendar-event__chevron {
+  color: hsl(var(--muted-foreground));
+}
+.mobile-layout .mobile-calendar-empty,
+body:has(.mobile-layout) .mobile-calendar-empty {
+  border: 1px dashed var(--mc-border);
+  border-radius: 12px;
+  padding: 15px 12px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ---------------------------------------------------------------------------
+   3. MOBILE FULL-SCREEN CALENDAR (createPortal(document.body))
+   ---------------------------------------------------------------------------
+   z-index는 기존 FloatingWindow 이벤트 편집창(2147482600)보다 낮게 둡니다.
+   덕분에 모바일 일정 목록을 누르면 편집창이 전체 화면 위에 정상 표시됩니다.
+   --------------------------------------------------------------------------- */
+body:has(.mobile-layout) .mobile-calendar-detail {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482000;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  background: hsl(var(--background));
+}
+body:has(.mobile-layout) .mobile-calendar-detail__header {
+  min-height: 60px;
+  padding: calc(7px + env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) 7px max(10px, env(safe-area-inset-left));
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr) 50px;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 1px solid var(--mc-border);
+  background: var(--gd-surface-bg, hsl(var(--card) / 0.84));
+}
+body:has(.mobile-layout) .mobile-calendar-detail__header h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 800;
+}
+body:has(.mobile-layout) .mobile-calendar-detail__back,
+body:has(.mobile-layout) .mobile-calendar-period-nav > button {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 6px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+body:has(.mobile-layout) .mobile-calendar-detail__add {
+  justify-self: end;
+}
+body:has(.mobile-layout) .mobile-calendar-detail__scroll {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 13px max(12px, env(safe-area-inset-right)) calc(35px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+body:has(.mobile-layout) .mobile-calendar-view-switch {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--mc-border);
+  border-radius: 15px;
+  background: var(--mc-surface);
+}
+body:has(.mobile-layout) .mobile-calendar-view-switch button {
+  min-height: 41px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: hsl(var(--foreground) / 0.74);
+  font-size: 13px;
+  cursor: pointer;
+}
+body:has(.mobile-layout) .mobile-calendar-view-switch button.is-selected {
+  color: hsl(var(--foreground));
+  font-weight: 800;
+  background: hsl(var(--primary) / 0.17);
+}
+body:has(.mobile-layout) .mobile-calendar-period-nav {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 48px 44px;
+  gap: 3px;
+  align-items: center;
+}
+body:has(.mobile-layout) .mobile-calendar-period-nav > div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+  text-align: center;
+}
+body:has(.mobile-layout) .mobile-calendar-period-nav > div strong {
+  font-size: 17px;
+}
+body:has(.mobile-layout) .mobile-calendar-period-nav > div span {
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+}
+body:has(.mobile-layout) .mobile-calendar-period-nav .mobile-calendar-period-nav__today {
+  font-size: 12px;
+  border-radius: 10px;
+  background: var(--mc-control);
+  border: 1px solid var(--mc-border);
+}
+body:has(.mobile-layout) .mobile-calendar-detail__list-heading,
+body:has(.mobile-layout) .mobile-calendar-date-group__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+body:has(.mobile-layout) .mobile-calendar-detail__list-heading strong,
+body:has(.mobile-layout) .mobile-calendar-date-group__heading strong {
+  font-size: 14px;
+}
+body:has(.mobile-layout) .mobile-calendar-detail__list-heading span,
+body:has(.mobile-layout) .mobile-calendar-date-group__heading small {
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+}
+body:has(.mobile-layout) .mobile-calendar-date-group {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+body:has(.mobile-layout) .mobile-calendar-date-group + .mobile-calendar-date-group {
+  padding-top: 12px;
+  border-top: 1px solid var(--mc-border);
+}
+
+/* ---------------------------------------------------------------------------
+   3-1. MONTH GRID — 7 columns x 6 weeks
+   ---------------------------------------------------------------------------
+   날짜별 칸에 일정이 있으면 최대 3개 점 표시. 점은 클릭 대상이 아니며 버튼 전체가
+   44px 이상 높이이므로 작은 화면에서도 날짜 선택이 비교적 쉽습니다.
+   --------------------------------------------------------------------------- */
+body:has(.mobile-layout) .mobile-calendar-month {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px 6px;
+  background: var(--mc-surface);
+  border: 1px solid var(--mc-border);
+  border-radius: 17px;
+}
+body:has(.mobile-layout) .mobile-calendar-month__weekdays,
+body:has(.mobile-layout) .mobile-calendar-month__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+  min-width: 0;
+}
+body:has(.mobile-layout) .mobile-calendar-month__weekdays > span {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: hsl(var(--muted-foreground));
+}
+body:has(.mobile-layout) .mobile-calendar-month__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 45px;
+  min-width: 0;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  padding: 5px 0;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+body:has(.mobile-layout) .mobile-calendar-month__day.is-other-month { opacity: .34; }
+body:has(.mobile-layout) .mobile-calendar-month__day.is-selected {
+  background: hsl(var(--primary) / .16);
+  border-color: hsl(var(--primary) / .38);
+  font-weight: 800;
+}
+body:has(.mobile-layout) .mobile-calendar-month__day.is-today > span:first-child {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+body:has(.mobile-layout) .mobile-calendar-month__dots {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  min-height: 4px;
+}
+body:has(.mobile-layout) .mobile-calendar-month__dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+}
+
+/* ---------------------------------------------------------------------------
+   4. EXISTING CalendarWidget EDITOR — MOBILE ONLY
+   ---------------------------------------------------------------------------
+   EventRow -> openCalendarEvent() -> CalendarWidget -> FloatingWindow.
+   FloatingWindow은 body Portal이고 인라인 width/height/left/top이 저장된 PC 값이므로,
+   모바일에서만 !important로 화면 전체 크기로 표시합니다.
+
+   기존 FloatingWindow.tsx를 수정하지 않는 이유:
+   - Memo/Money/Timer/Study 팝업까지 전역적으로 바뀌는 회귀 문제 방지
+   - desktop 위치(localStorage key: glassday.calendar.eventWindow.rect.v1) 유지
+   --------------------------------------------------------------------------- */
+body:has(.mobile-layout) .floating-window.calendar-floating-window {
+  left: 0 !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  border-radius: 0 !important;
+  resize: none !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  background: hsl(var(--background) / 0.98);
+}
+body:has(.mobile-layout) .calendar-floating-window .floating-window-titlebar {
+  height: auto !important;
+  min-height: 60px !important;
+  padding: calc(8px + env(safe-area-inset-top)) 12px 8px !important;
+  cursor: default !important;
+}
+body:has(.mobile-layout) .calendar-floating-window .floating-window-actions button {
+  min-width: 44px;
+  min-height: 44px;
+}
+body:has(.mobile-layout) .calendar-floating-window .floating-window-body {
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+body:has(.mobile-layout) .calendar-floating-window .calendar-modal-body {
+  height: 100% !important;
+  max-height: none !important;
+  padding: 16px 14px calc(30px + env(safe-area-inset-bottom)) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  gap: 14px !important;
+}
+body:has(.mobile-layout) .calendar-floating-window .calendar-detail-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 10px !important;
+}
+body:has(.mobile-layout) .calendar-floating-window :is(input, textarea, select) {
+  min-height: 44px;
+  font-size: 16px !important; /* 모바일 Safari 입력 포커스 자동 확대 방지 */
+}
+body:has(.mobile-layout) .calendar-floating-window .calendar-modal-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+body:has(.mobile-layout) .calendar-floating-window :is(.calendar-danger-button, .calendar-done-button) {
+  width: 100%;
+  min-height: 44px;
+  justify-content: center;
+}
+
+/* ---------------------------------------------------------------------------
+   5. ACCESSIBILITY, SMALL PHONE, AND THEME ADAPTATION
+   --------------------------------------------------------------------------- */
+.mobile-layout .mobile-calendar-card button:focus-visible,
+body:has(.mobile-layout) .mobile-calendar-detail button:focus-visible,
+body:has(.mobile-layout) .calendar-floating-window button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+@media (max-width: 360px) {
+  .mobile-layout .mobile-calendar-card { padding: 10px; gap: 10px; }
+  body:has(.mobile-layout) .mobile-calendar-detail__scroll { padding-inline: 8px; }
+  body:has(.mobile-layout) .mobile-calendar-month { padding-inline: 2px; }
+  .mobile-layout .mobile-calendar-week-day,
+  body:has(.mobile-layout) .mobile-calendar-week-day { min-height: 58px; }
+}
+
+/* Pixel Desk: square visual language is preserved; layout/interaction stays mobile. */
+:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"])
+  .mobile-layout .mobile-calendar-card,
+:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"])
+  .mobile-layout .mobile-calendar-event,
+:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"])
+  .mobile-layout .mobile-calendar-card__summary,
+:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"])
+  .mobile-calendar-detail :is(.mobile-calendar-month, .mobile-calendar-month__day, .mobile-calendar-week-day, .mobile-calendar-event) {
+  border-radius: 0 !important;
+}
