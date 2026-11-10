@@ -816,6 +816,18 @@ export const MemoWidget = () => {
     setSelectedNoteId(newNote.id);
     setEditing(true);
     setMemoWindowOpen(true);
+
+
+    /*
+     * 모바일에서 새 메모를 만든 직후
+     * 목록 화면 대신 편집기를 보여준다.
+     *
+     * PC에서는 기존 동작을 유지한다.
+     */
+    if (document.querySelector(".mobile-layout")) {
+      setIsWindowListHidden(true);
+    }
+
   };
 
   const deleteMemo = (id: string) => {
@@ -1336,6 +1348,40 @@ export const MemoWidget = () => {
     </div>
   );
 
+
+/**
+ * 메모 목록에서 특정 메모 선택
+ *
+ * PC:
+ * 기존 목록 열기/닫기 동작 유지.
+ *
+ * 모바일:
+ * FloatingWindow 목록에서 메모를 선택하면
+ * 메모 목록을 닫고 편집 화면으로 전환한다.
+ *
+ * 연결되는 상태:
+ * - selectedNoteId: 현재 선택한 메모 ID
+ * - isWindowListHidden: 전체 화면 목록/편집 전환
+ */
+const selectMemoFromList = (
+  noteId: string,
+  windowMode: boolean,
+  inlineMode: boolean
+) => {
+  setSelectedNoteId(noteId);
+
+  const isMobile = Boolean(
+    document.querySelector(".mobile-layout")
+  );
+
+  if (windowMode && isMobile) {
+    setIsWindowListHidden(true);
+  } else if (!windowMode && !inlineMode) {
+    setIsWidgetListOpen(false);
+  }
+};
+
+
   /* Figma Component: Memo List Panel / Floating · Inline · Popover presentation variant. */
   const renderNoteList = (windowMode = false, inlineMode = false) => (
     <div
@@ -1398,20 +1444,25 @@ export const MemoWidget = () => {
               key={note.id}
               role="button"
               tabIndex={0}
+              
               onClick={() => {
-                setSelectedNoteId(note.id);
-                if (!windowMode && !inlineMode) {
-                  setIsWidgetListOpen(false);
-                }
+                selectMemoFromList(
+                note.id,
+                windowMode,
+                inlineMode
+                );
               }}
+
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
-                  setSelectedNoteId(note.id);
-                  if (!windowMode && !inlineMode) {
-                    setIsWidgetListOpen(false);
-                  }
+                selectMemoFromList(
+                  note.id,
+                  windowMode,
+                  inlineMode
+                  );
                 }
               }}
+
               className={cn(
                 "memo-note-item",
                 note.id === activeNote?.id && "is-active",

@@ -1,68 +1,220 @@
+
 /**
- * ============================================================================
- * Glassday / MobileDashboard — 휴대전화용 위젯 배치 라우터
- * ============================================================================
+ * ============================================================
+ * Glassday — MobileDashboard.tsx
+ * ============================================================
  *
- * [이 파일의 역할]
- * src/App.tsx → <MobileLayout> → <MobileDashboard> 순서로 표시됩니다.
- * activeTab.widgetIds는 PC와 같은 목록을 읽지만, 실제 표시 방식만 모바일용으로
- * 교체합니다. 이 파일은 데이터 저장이나 Grid 좌표 수정 기능을 갖고 있지 않습니다.
+ * [1. 이 파일의 역할]
  *
- * [어떤 위젯을 어떻게 렌더링하나요?]
- * - "study": 이전 작업의 MobileStudyCard (요약 카드 + 모바일 플래너)
- * - "calendar": 이번 작업의 MobileCalendarCard (요약 카드 + 월/주/일정 화면)
- * - 기타: <WidgetSlot>을 사용해서 기존 데스크톱과 동일한 위젯 인스턴스 재사용
+ * 모바일에서 현재 선택한 워크스페이스의 위젯을
+ * 위에서 아래로 한 열씩 배치하는 컴포넌트입니다.
  *
- * [다른 파일과의 연결]
- * - src/components/widgets/WidgetRenderer.tsx: 모든 위젯의 실제 인스턴스 관리
- * - src/components/widgets/WidgetSlot.tsx: 위젯이 표시될 DOM 위치 제공
- * - src/constants/widgets.ts: id에 해당하는 접근성 이름 제공
- * - src/styles/mobile.css: 모바일 공통 위젯 슬롯 크기
- * - src/styles/mobile-study.css: Study 카드 스타일
- * - src/styles/mobile-calendar.css: Calendar 카드 스타일
+ * PC에서 사용하는 Grid 좌표나 위젯 크기를 수정하지 않습니다.
  *
- * [반드시 지킬 것]
- * 데스크톱 WidgetId, Wide/Laptop Grid, 저장키, CloudSync를 수정하지 마세요.
- * 모바일 전용 카드가 위젯 하나의 데이터를 별도 localStorage에 중복 저장해서도
- * 안 됩니다. Study/Calendar 원본 데이터는 기존 Hook/Context에서 읽습니다.
- * ============================================================================
+ *
+ * [2. 어디에서 호출하나요?]
+ *
+ * App.tsx
+ *   └── MobileLayout.tsx
+ *        └── MobileDashboard.tsx  ← 현재 파일
+ *
+ *
+ * [3. 연결되는 파일]
+ *
+ * src/components/mobile/
+ *   ├── MobileDashboard.tsx
+ *   ├── MobileStudyCard.tsx
+ *   ├── MobileCalendarCard.tsx
+ *   └── MobileCareerCard.tsx
+ *
+ * src/components/widgets/
+ *   ├── WidgetSlot.tsx
+ *   └── WidgetRenderer.tsx
+ *
+ * src/styles/
+ *   ├── mobile.css
+ *   ├── mobile-study.css
+ *   ├── mobile-calendar.css
+ *   └── mobile-career.css
+ *
+ *
+ * [4. 위젯별 연결 방식]
+ *
+ * study:
+ *   모바일용 Study 카드 사용
+ *
+ * calendar:
+ *   모바일용 Calendar 카드 사용
+ *
+ * career:
+ *   모바일용 Career 카드 사용
+ *
+ * 그 외:
+ *   기존 WidgetSlot을 통해 원래 위젯 표시
+ *
+ *
+ * [5. 데이터 저장]
+ *
+ * 이 파일은 데이터를 직접 저장하지 않습니다.
+ *
+ * Study는 기존 Study Planner 저장소,
+ * Calendar와 Career는 DashboardDataContext를
+ * 통해 데이터를 읽고 수정합니다.
+ *
+ * 따라서 모바일 UI를 수정해도 기존 기록은 유지됩니다.
+ *
+ *
+ * [6. 수정할 때 주의할 점]
+ *
+ * - PC 레이아웃과 관련된 코드를 추가하지 마세요.
+ * - widget ID를 임의로 변경하지 마세요.
+ * - 같은 위젯을 WidgetSlot으로 중복 렌더링하지 마세요.
+ * - 모바일 카드 CSS는 카드 파일이 직접 import합니다.
+ *
+ * ============================================================
  */
 
 import type { DashboardTab } from "../../types/workspace";
+
 import { widgetRegistry } from "../../constants/widgets";
+
 import { WidgetSlot } from "../widgets/WidgetSlot";
+
 import { MobileStudyCard } from "./MobileStudyCard";
 import { MobileCalendarCard } from "./MobileCalendarCard";
+import { MobileCareerCard } from "./MobileCareerCard";
 
-export const MobileDashboard = ({ activeTab }: { activeTab: DashboardTab }) => (
-  <div className="mobile-dashboard">
-    {activeTab.widgetIds.map((id) => (
-      <div
-        key={id}
-        /* Calendar/Study는 카드 내용 높이에 따라 슬롯이 자랍니다.
-           다른 위젯은 기존 mobile.css 고정 슬롯 정책을 그대로 사용합니다. */
-        className={[
+/**
+ * MobileDashboard
+ *
+ * activeTab:
+ * 현재 사용자가 선택한 워크스페이스 정보입니다.
+ *
+ * activeTab.widgetIds:
+ * 해당 워크스페이스에 표시할 위젯 ID 배열입니다.
+ *
+ * 예시:
+ * ["today", "calendar", "study"]
+ */
+export const MobileDashboard = ({
+  activeTab,
+}: {
+  activeTab: DashboardTab;
+}) => {
+  return (
+    <div className="mobile-dashboard">
+      {/*
+       * 현재 워크스페이스에 등록된 위젯을
+       * 순서대로 렌더링합니다.
+       *
+       * widgetIds의 순서가 모바일 화면의
+       * 위젯 표시 순서가 됩니다.
+       */}
+      {activeTab.widgetIds.map((id) => {
+        /*
+         * 모바일 전용 UI가 있는 위젯에만
+         * 해당 클래스를 추가합니다.
+         *
+         * 실제 높이/여백/크기 설정은
+         * 각 mobile-*.css 파일에서 담당합니다.
+         */
+        const slotClassName = [
           "mobile-widget-slot",
-          id === "study" ? "mobile-widget-slot--study" : "",
-          id === "calendar" ? "mobile-widget-slot--calendar" : "",
-        ].filter(Boolean).join(" ")}
-        data-widget-id={id}
-        role="region"
-        aria-label={widgetRegistry[id]?.label ?? id}
-      >
-        {id === "study" ? (
-          <MobileStudyCard />
-        ) : id === "calendar" ? (
-          <MobileCalendarCard />
-        ) : (
-          <WidgetSlot widgetId={id} />
-        )}
-      </div>
-    ))}
 
-    {/* 위젯 없는 사용자 정의 워크스페이스의 Empty State */}
-    {activeTab.widgetIds.length === 0 && (
-      <p className="mobile-empty">No widgets in this workspace.</p>
-    )}
-  </div>
-);
+          id === "study"
+            ? "mobile-widget-slot--study"
+            : "",
+
+          id === "calendar"
+            ? "mobile-widget-slot--calendar"
+            : "",
+
+          id === "career"
+            ? "mobile-widget-slot--career"
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" ");
+
+        return (
+          <div
+            key={id}
+            className={slotClassName}
+            data-widget-id={id}
+            role="region"
+            aria-label={widgetRegistry[id]?.label ?? id}
+          >
+            {/*
+             * STUDY PLANNER
+             *
+             * 연결:
+             * MobileStudyCard.tsx
+             * mobile-study.css
+             *
+             * 모바일 전용 요약 카드 및
+             * 상세 학습 화면을 사용합니다.
+             */}
+            {id === "study" ? (
+              <MobileStudyCard />
+            ) : id === "calendar" ? (
+              /*
+               * CALENDAR
+               *
+               * 연결:
+               * MobileCalendarCard.tsx
+               * mobile-calendar.css
+               *
+               * 모바일 날짜 탐색 및
+               * 일정 목록 화면을 사용합니다.
+               */
+              <MobileCalendarCard />
+            ) : id === "career" ? (
+              /*
+               * CAREER
+               *
+               * 연결:
+               * MobileCareerCard.tsx
+               * mobile-career.css
+               *
+               * 기업 목록과 지원 현황을
+               * 모바일에 맞게 표시합니다.
+               *
+               * 기존 CareerWidget의
+               * 상세 편집 기능을 재사용합니다.
+               */
+              <MobileCareerCard />
+            ) : (
+              /*
+               * OTHER WIDGETS
+               *
+               * 아직 모바일 전용 카드가 없는 위젯은
+               * 기존 WidgetSlot을 그대로 사용합니다.
+               *
+               * 예:
+               * - Memo
+               * - Timer
+               * - Money
+               * - Daily Journal
+               * - Health
+               * - Mood
+               */
+              <WidgetSlot widgetId={id} />
+            )}
+          </div>
+        );
+      })}
+
+      {/*
+       * EMPTY WORKSPACE
+       *
+       * 현재 워크스페이스에 등록된 위젯이 없으면
+       * 안내 문구를 표시합니다.
+       */}
+      {activeTab.widgetIds.length === 0 && (
+        <p className="mobile-empty">
+          이 워크스페이스에는 아직 위젯이 없어.
+        </p>
+      )}
+    </div>
+  );
+};

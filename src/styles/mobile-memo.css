@@ -1,0 +1,695 @@
+
+/* ============================================================================
+ * GLASSDAY — MOBILE MEMO
+ * ============================================================================
+ *
+ * 파일 위치:
+ * src/styles/mobile-memo.css
+ *
+ * 연결 구조:
+ *
+ * App.tsx
+ *   └─ MobileLayout.tsx
+ *       └─ MobileDashboard.tsx
+ *           └─ WidgetSlot (memo)
+ *               └─ MemoWidget.tsx
+ *
+ * 관련 스타일:
+ * - src/styles/widgets/memo.css : PC/모바일 공용 기본 디자인
+ * - src/styles/overlays.css     : 공용 FloatingWindow
+ * - src/styles/mobile.css       : 모바일 대시보드 레이아웃
+ *
+ * 이 파일의 목적:
+ * 1. 모바일 메모 위젯 높이와 좌우 여백 정리
+ * 2. 기존 FloatingWindow를 모바일 전체 화면으로 전환
+ * 3. 메모 목록과 편집기를 한 화면씩 표시
+ * 4. 리치 텍스트 툴바를 가로 스크롤 방식으로 변경
+ * 5. 기존 메모 데이터와 PC 스타일 유지
+ *
+ * 저장 데이터:
+ * - glassday.memo.notes.v2
+ * - glassday.memo.selected.v2
+ *
+ * 이 CSS는 저장 형식을 수정하지 않는다.
+ * ============================================================================ */
+
+
+/* ============================================================================
+ * 1. 모바일 대시보드의 Memo 위젯
+ * ============================================================================
+ *
+ * mobile.css의 공통 위젯 높이를 Memo에 한해서 조정한다.
+ *
+ * 10분 시간표처럼 긴 콘텐츠가 아니라,
+ * 짧은 메모 미리보기이므로 300~430px 정도만 사용한다.
+ * ============================================================================ */
+
+.mobile-layout
+.mobile-widget-slot[data-widget-id="memo"] {
+  height: clamp(300px, 46svh, 430px);
+  min-width: 0;
+}
+
+
+/* 기존 MemoWidget 프레임 유지 */
+
+.mobile-layout
+.mobile-widget-slot[data-widget-id="memo"]
+.memo-widget {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+
+/* 위젯 본문 여백 */
+
+.mobile-layout
+.mobile-widget-slot[data-widget-id="memo"]
+.widget-frame__body {
+  min-width: 0;
+  min-height: 0;
+
+  padding: 6px;
+  overflow: hidden;
+}
+
+
+/* ============================================================================
+ * 2. 메모 미리보기
+ * ============================================================================
+ *
+ * 대시보드에 표시되는 작은 위젯에는
+ * 전체 편집 도구를 모두 노출하지 않는다.
+ *
+ * 자세한 편집은 전체 화면에서 진행한다.
+ * ============================================================================ */
+
+.mobile-layout
+.mobile-widget-slot[data-widget-id="memo"]
+.memo-app {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.mobile-layout
+.mobile-widget-slot[data-widget-id="memo"]
+.memo-workspace {
+  min-width: 0;
+  min-height: 0;
+
+  padding: 8px;
+  gap: 6px;
+}
+
+
+/* 작은 미리보기에서는 서식 툴바 숨김
+ *
+ * 실제 서식 기능은 삭제되지 않는다.
+ * 전체 화면 편집기에서는 정상적으로 표시된다.
+ */
+
+.mobile-layout
+.mobile-widget-slot[data-widget-id="memo"]
+.memo-toolbar {
+  display: none;
+}
+
+
+/* 메모 제목 */
+
+.mobile-layout
+.mobile-widget-slot[data-widget-id="memo"]
+:is(.memo-title-input, .memo-title-view) {
+  width: 100%;
+  max-width: none;
+
+  margin: 0;
+  padding: 0 2px;
+
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+
+/* 메모 본문 미리보기 */
+
+.mobile-layout
+.mobile-widget-slot[data-widget-id="memo"]
+.memo-editor {
+  min-height: 0;
+
+  padding: 10px 12px;
+
+  border-radius: 12px;
+
+  line-height: 1.6;
+  overflow: auto;
+}
+
+
+/* 편집 버튼의 긴 텍스트는 작은 카드에서 생략 */
+
+.mobile-layout
+.mobile-widget-slot[data-widget-id="memo"]
+.memo-edit-label {
+  display: none;
+}
+
+
+/* 작은 화면의 헤더 버튼 */
+
+.mobile-layout
+.mobile-widget-slot[data-widget-id="memo"]
+.widget-frame__actions .glass-button {
+  min-width: 32px;
+  min-height: 32px;
+
+  padding-inline: 6px;
+}
+
+
+/* ============================================================================
+ * 3. 모바일 메모 목록 팝오버
+ * ============================================================================
+ *
+ * 전체 화면이 아니라 위젯 안에서 목록 버튼을 눌렀을 때
+ * 열리는 기존 팝오버도 위젯 너비를 사용하도록 변경한다.
+ * ============================================================================ */
+
+.mobile-layout
+.mobile-widget-slot[data-widget-id="memo"]
+.memo-widget-list-popover {
+  left: 0;
+  top: 0;
+
+  width: 100%;
+  max-width: none;
+  height: 100%;
+
+  border-radius: 12px;
+  padding: 8px;
+}
+
+
+/* ============================================================================
+ * 4. Memo FloatingWindow → 모바일 전체 화면
+ * ============================================================================
+ *
+ * MemoWidget.tsx는 FloatingWindow.tsx를 사용한다.
+ *
+ * FloatingWindow는 PC용 좌표/크기를 인라인 스타일로 지정한다.
+ * 이 영역에 한해서 !important로 모바일 전체 화면을 적용한다.
+ *
+ * body:has(.mobile-layout)을 사용하므로
+ * PC에서는 아래 규칙들이 적용되지 않는다.
+ * ============================================================================ */
+
+body:has(.mobile-layout)
+.memo-floating-window {
+  position: fixed !important;
+
+  inset: 0 !important;
+  left: 0 !important;
+  top: 0 !important;
+
+  width: 100dvw !important;
+  height: 100dvh !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  max-width: none !important;
+  max-height: none !important;
+
+  resize: none !important;
+
+  border-radius: 0 !important;
+
+  grid-template-rows:
+    auto minmax(0, 1fr) !important;
+
+  overflow: hidden !important;
+}
+
+
+/* ============================================================================
+ * 5. 전체 화면 헤더
+ * ============================================================================
+ *
+ * PC에서는 창 이동용 제목 표시줄이지만,
+ * 모바일에서는 이동하지 않고 고정된 헤더로 사용한다.
+ * ============================================================================ */
+
+body:has(.mobile-layout)
+.memo-floating-window-titlebar {
+  height: auto;
+  min-height: calc(58px + env(safe-area-inset-top));
+
+  padding:
+    calc(8px + env(safe-area-inset-top))
+    8px
+    8px;
+
+  gap: 8px;
+
+  cursor: default;
+}
+
+
+/* 제목 영역 */
+
+body:has(.mobile-layout)
+.memo-floating-window-titlebar
+.floating-window-title {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+
+/* 보조 설명은 작은 화면에서 생략 */
+
+body:has(.mobile-layout)
+.memo-floating-window-titlebar
+.floating-window-subtitle {
+  display: none;
+}
+
+
+/* 상단 버튼은 줄바꿈하지 않고 가로 스크롤 */
+
+body:has(.mobile-layout)
+.memo-floating-window-titlebar
+.floating-window-actions {
+  flex: 1 1 auto;
+
+  min-width: 0;
+  max-width: 72%;
+
+  display: flex;
+  flex-wrap: nowrap;
+
+  gap: 5px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scrollbar-width: none;
+}
+
+body:has(.mobile-layout)
+.memo-floating-window-titlebar
+.floating-window-actions::-webkit-scrollbar {
+  display: none;
+}
+
+body:has(.mobile-layout)
+.memo-floating-window-titlebar
+.floating-window-actions .glass-button {
+  flex: 0 0 auto;
+
+  min-height: 38px;
+  padding-inline: 8px;
+
+  font-size: 12px;
+}
+
+
+/* ============================================================================
+ * 6. 전체 화면 본문
+ * ============================================================================
+ *
+ * 기존 PC 구조:
+ *
+ * [메모 목록] [크기 조절선] [편집기]
+ *
+ * 수정할 모바일 구조:
+ *
+ * 목록 모드:
+ * [메모 목록]
+ *
+ * 편집 모드:
+ * [편집기]
+ *
+ * 별도의 HTML 래퍼는 추가하지 않는다.
+ * 기존 .is-window-list-hidden 상태를 그대로 사용한다.
+ * ============================================================================ */
+
+body:has(.mobile-layout)
+.memo-floating-window
+.floating-window-body {
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+body:has(.mobile-layout)
+.memo-floating-body {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  padding: 0;
+
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: minmax(0, 1fr);
+
+  overflow: hidden;
+}
+
+
+/* PC용 사이드바 폭 조절 핸들 제거 */
+
+body:has(.mobile-layout)
+.memo-window-resizer {
+  display: none;
+}
+
+
+/* ============================================================================
+ * 7. 목록 모드
+ * ============================================================================
+ *
+ * is-window-list-hidden 클래스가 없으면
+ * 메모 목록만 표시한다.
+ * ============================================================================ */
+
+body:has(.mobile-layout)
+.memo-floating-body:not(.is-window-list-hidden)
+> .memo-list-panel {
+  display: flex;
+
+  grid-column: 1;
+  grid-row: 1;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  padding: 8px;
+
+  border: 0;
+  border-radius: 0;
+
+  overflow-y: auto;
+}
+
+body:has(.mobile-layout)
+.memo-floating-body:not(.is-window-list-hidden)
+> .memo-workspace {
+  display: none;
+}
+
+
+/* 메모 목록 한 줄 */
+
+body:has(.mobile-layout)
+.memo-floating-body
+.memo-note-item {
+  min-height: 58px;
+
+  padding: 8px 10px;
+
+  border-radius: 12px;
+  gap: 8px;
+}
+
+
+/* 메모 제목 */
+
+body:has(.mobile-layout)
+.memo-floating-body
+.memo-note-title {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+
+/* 미리보기 */
+
+body:has(.mobile-layout)
+.memo-floating-body
+.memo-note-preview {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+
+/* ============================================================================
+ * 8. 편집 모드
+ * ============================================================================
+ *
+ * is-window-list-hidden 클래스가 있으면
+ * 메모 편집기만 표시한다.
+ *
+ * 메모 목록 버튼을 다시 누르면 목록 모드로 돌아간다.
+ * ============================================================================ */
+
+body:has(.mobile-layout)
+.memo-floating-body.is-window-list-hidden
+> .memo-workspace {
+  display: flex;
+
+  grid-column: 1;
+  grid-row: 1;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  padding: 8px;
+  gap: 6px;
+
+  overflow: hidden;
+}
+
+
+/* 편집 화면에서 목록 패널 숨김 */
+
+body:has(.mobile-layout)
+.memo-floating-body.is-window-list-hidden
+> .memo-list-panel {
+  display: none;
+}
+
+
+/* ============================================================================
+ * 9. 편집기 제목
+ * ============================================================================
+ *
+ * 메모 자체의 제목과 실제 내용을 명확히 구분한다.
+ * ============================================================================ */
+
+body:has(.mobile-layout)
+.memo-floating-window
+:is(.memo-title-input, .memo-title-view) {
+  width: 100%;
+  max-width: none;
+
+  margin: 0;
+  padding: 2px;
+
+  height: auto;
+  min-height: 36px;
+
+  line-height: 1.4;
+
+  font-size: 16px;
+  font-weight: 750;
+}
+
+
+/* ============================================================================
+ * 10. 리치 텍스트 툴바
+ * ============================================================================
+ *
+ * 기존에는 버튼이 여러 줄로 내려갔다.
+ *
+ * 모바일에서는 한 줄로 표시하고
+ * 가로로 스와이프해 나머지 버튼을 사용한다.
+ *
+ * 글꼴/굵게/기울임/밑줄/표/사진 등의
+ * 기존 기능은 그대로 유지한다.
+ * ============================================================================ */
+
+body:has(.mobile-layout)
+.memo-floating-window
+.memo-toolbar {
+  width: 100%;
+  max-width: none;
+
+  min-height: 42px;
+
+  margin: 0;
+
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+
+  gap: 6px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+body:has(.mobile-layout)
+.memo-floating-window
+.memo-toolbar::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* 툴바 아이콘 버튼 */
+
+body:has(.mobile-layout)
+.memo-floating-window
+.memo-tool-button {
+  flex: 0 0 auto;
+
+  min-width: 36px;
+  height: 36px;
+
+  border-radius: 10px;
+}
+
+
+/* 글꼴 및 크기 선택 */
+
+body:has(.mobile-layout)
+.memo-floating-window
+.memo-select {
+  flex: 0 0 auto;
+
+  min-width: 92px;
+  max-width: 150px;
+
+  height: 36px;
+  padding-inline: 8px;
+
+  font-size: 13px;
+}
+
+
+/* ============================================================================
+ * 11. 메모 색상 팔레트
+ * ============================================================================
+ *
+ * 다양한 색상을 유지하되
+ * 화면 너비에 맞춰 가로 스크롤한다.
+ * ============================================================================ */
+
+body:has(.mobile-layout)
+.memo-floating-window
+.memo-color-area {
+  min-width: 0;
+
+  padding: 6px 8px;
+
+  gap: 8px;
+
+  border-radius: 12px;
+}
+
+body:has(.mobile-layout)
+.memo-floating-window
+.memo-color-picker {
+  min-width: 0;
+
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+
+/* ============================================================================
+ * 12. 실제 메모 편집 영역
+ * ============================================================================
+ *
+ * 메모에 저장한 글꼴과 글씨 크기를 존중한다.
+ * 여기에서는 패딩과 줄 간격만 수정한다.
+ *
+ * 저장된 HTML이나 글꼴 정보를 변경하지 않는다.
+ * ============================================================================ */
+
+body:has(.mobile-layout)
+.memo-floating-window
+.memo-editor {
+  flex: 1 1 auto;
+
+  width: 100%;
+  height: 100%;
+
+  min-height: 0;
+
+  margin: 0;
+  padding: 12px;
+
+  border-radius: 12px;
+
+  line-height: 1.65;
+
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+
+
+/* ============================================================================
+ * 13. TXT 저장 다이얼로그
+ * ============================================================================
+ *
+ * 기존 저장 창이 모바일 화면 밖으로 나가지 않도록
+ * 좌우 여백과 최대 높이를 제한한다.
+ * ============================================================================ */
+
+body:has(.mobile-layout)
+.memo-save-backdrop {
+  padding: 8px;
+}
+
+body:has(.mobile-layout)
+.memo-save-dialog {
+  width: 100%;
+  max-width: 440px;
+
+  max-height: 90dvh;
+
+  padding: 12px;
+
+  border-radius: 16px;
+
+  overflow-y: auto;
+}
+
+body:has(.mobile-layout)
+.memo-save-input {
+  font-size: 16px;
+}
+
+
+/* ============================================================================
+ * 14. 키보드 접근성
+ * ============================================================================ */
+
+body:has(.mobile-layout)
+.memo-floating-window
+:is(button, input, select, textarea):focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
