@@ -586,298 +586,131 @@
   font-size: clamp(38px, 13cqi, 54px);
 }
 
-/* =========================================================
-   COMPACT MODE
-   Settings closed
-
-   Layout:
-   1) large circle
-   2) Start button directly below
-========================================================= */
-
-.timer-widget-layout:not(.is-settings-visible) {
-  gap: 0;
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window)
+  .timer-widget-layout:not(.is-settings-visible) .timer-widget-main-card {
+  grid-template-rows: 36px minmax(0, 1fr) 42px;
+  gap: 5px;
+  padding: 5px 3px;
+  /* overrides.css의 !important 테마 배경은 이 모바일 영역에서만 제거. */
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-main-card {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-
-  padding: 2px 6px 5px;
-
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows:
-    minmax(0, 1fr)
-    28px;
-
-  align-items: center;
-  justify-items: center;
-
-  gap: 3px;
-
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-
-  overflow: hidden;
-}
-
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-mode-row,
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-meta {
-  display: none;
-}
-
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-focus-stage {
-  /*
-   * timer-layout is the actual body area.
-   * Reserve 38px for Start + gap + padding.
-   */
-  --timer-stage-size:
-    min(
-      78cqi,
-      calc(100cqb - 38px),
-      220px
-    );
-
-  --timer-ring-radius:
-    calc(var(--timer-stage-size) * 0.405);
-
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window)
+  .timer-widget-layout:not(.is-settings-visible) .timer-widget-mode-row {
+  display: flex;
   grid-row: 1;
+  width: 100%;
+  gap: 5px;
+}
 
-  width: var(--timer-stage-size);
-  height: var(--timer-stage-size);
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window) .timer-widget-mode-button {
+  flex: 1 1 0;
   min-width: 0;
-  min-height: 0;
-  max-width: 100%;
-  max-height: 100%;
+  min-height: 36px;
+  padding: 0 5px;
+  border-radius: 10px;
+  font-size: 11px;
+}
 
-  aspect-ratio: 1;
-
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window)
+  .timer-widget-layout:not(.is-settings-visible) .timer-widget-time-editor-shell {
+  grid-row: 2;
   align-self: center;
   justify-self: center;
 }
 
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-clock-stack {
-  width: min(70%, 146px);
-
-  gap: 3px;
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window)
+  .timer-widget-layout:not(.is-settings-visible) .timer-widget-focus-stage {
+  --timer-stage-size: min(164px, 55cqi, calc(100cqb - 108px));
 }
 
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-clock {
-  font-size: clamp(34px, 16cqi, 52px);
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window)
+  .timer-widget-layout:not(.is-settings-visible) .timer-widget-clock {
+  font-size: clamp(30px, 11cqi, 40px);
 }
 
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-duration-label {
-  font-size: 9px;
-}
-
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-remaining-label {
-  font-size: 8px;
-}
-
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-action-row {
-  position: relative;
-  z-index: 5;
-
-  grid-row: 2;
-
-  width: 100%;
-  height: 28px;
-  min-height: 28px;
-
-  margin: 0;
-
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window)
+  .timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row {
+  grid-row: 3;
   display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
-
-  overflow: visible;
+  height: 42px;
+  min-height: 42px;
+  gap: 6px;
 }
 
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-action-row
-  .timer-widget-primary {
-  display: inline-flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window)
+  .timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row
+  :is(.timer-widget-primary, .timer-widget-secondary) {
+  display: inline-flex;
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+  height: 42px;
+  min-height: 42px;
+  padding: 0 6px;
+  border-radius: 10px;
+  font-size: 12px;
 }
 
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-action-row
-  .timer-widget-secondary {
-  display: none;
+/* 현재 모드 시간을 수정하는 단일 팝오버. iOS 입력 확대 방지. */
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window) .timer-widget-time-popover {
+  width: min(210px, calc(100cqi - 16px));
+  padding: 10px;
+  border-radius: 12px;
 }
 
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-primary {
-  min-width: 78px;
-  height: 28px;
-  min-height: 28px;
-
-  padding: 0 11px;
-
-  font-size: 10px;
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window) .timer-widget-time-edit-row input {
+  font-size: 16px;
 }
 
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-prompt {
+/* 세션 종료 시 숨겨졌던 안내 문구를 복구해 다음 행동을 이해할 수 있게 한다. */
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window)
+  .timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt {
   position: absolute;
-  left: 6px;
-  right: 6px;
-  bottom: 6px;
-
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
   z-index: 8;
-
-  padding: 6px;
-
-  gap: 5px;
-
-  overflow: hidden;
+  gap: 7px;
+  padding: 9px;
+  background: hsl(var(--card) / 0.98);
 }
 
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-prompt-copy {
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window)
+  .timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt-copy {
+  display: block;
+  font-size: 12px;
+}
+
+body:has(.mobile-layout) :is(.timer-widget, .timer-floating-window)
+  .timer-widget-prompt-actions :is(.timer-widget-primary, .timer-widget-secondary) {
+  min-height: 36px;
+  height: 36px;
+  font-size: 11px;
+}
+
+/* D. FloatingWindow는 document.body Portal로 렌더링된다.
+   기존 FloatingWindow.tsx의 viewport clamp가 위치·크기를 관리하므로
+   CSS에서 left/top/width/height를 강제로 변경하지 않는다.
+   (강제 크기 변경은 ResizeObserver 때문에 PC 저장 좌표를 바꿀 수 있음.) */
+body:has(.mobile-layout) .timer-floating-window {
+  resize: none;
+  border-radius: 18px;
+  grid-template-rows: 52px minmax(0, 1fr);
+}
+
+body:has(.mobile-layout) .timer-floating-window .floating-window-titlebar {
+  height: 52px;
+  min-height: 52px;
+  padding-inline: 10px;
+  cursor: default;
+}
+
+body:has(.mobile-layout) .timer-floating-window .floating-window-subtitle {
   display: none;
 }
 
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-prompt-actions {
-  flex-wrap: nowrap;
-  justify-content: center;
-}
-
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-prompt-actions
-  .timer-widget-primary,
-.timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-prompt-actions
-  .timer-widget-secondary {
-  height: 26px;
-  min-height: 26px;
-
-  padding: 0 9px;
-
-  font-size: 10px;
-}
-
-/* =========================================================
-   NARROW SETTINGS LAYOUT
-========================================================= */
-
-@container timer-widget (max-width: 680px) {
-  .timer-widget-layout.is-settings-visible {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows:
-      minmax(180px, 1fr)
-      auto;
-
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-
-  .timer-widget-layout.is-settings-visible
-    .timer-widget-main-card,
-  .timer-widget-layout.is-settings-visible
-    .timer-widget-settings-card {
-    height: auto;
-  }
-}
-
-/* =========================================================
-   SMALL TIMER WIDGET
-   One block only
-========================================================= */
-
-@container timer-widget (max-width: 420px) {
-  .timer-widget .glass-card-body {
-    padding: 0 4px 4px;
-  }
-
-  .timer-widget-layout:not(.is-settings-visible)
-    .timer-widget-main-card {
-    padding: 0 4px 4px;
-
-    grid-template-rows:
-      minmax(0, 1fr)
-      27px;
-
-    gap: 3px;
-  }
-
-  .timer-widget-layout:not(.is-settings-visible)
-    .timer-widget-focus-stage {
-    --timer-stage-size:
-      min(
-        80cqi,
-        calc(100cqb - 36px),
-        216px
-      );
-
-    --timer-ring-radius:
-      calc(var(--timer-stage-size) * 0.405);
-  }
-
-  .timer-widget-layout:not(.is-settings-visible)
-    .timer-widget-clock-stack {
-    width: min(70%, 142px);
-
-    gap: 2px;
-  }
-
-  .timer-widget-layout:not(.is-settings-visible)
-    .timer-widget-clock {
-    font-size: clamp(33px, 16.5cqi, 50px);
-  }
-
-  .timer-widget-layout:not(.is-settings-visible)
-    .timer-widget-action-row {
-    height: 27px;
-    min-height: 27px;
-  }
-
-  .timer-widget-layout:not(.is-settings-visible)
-    .timer-widget-primary {
-    min-width: 76px;
-    height: 27px;
-    min-height: 27px;
-
-    padding: 0 10px;
-
-    font-size: 10px;
-  }
-
-  .timer-widget-layout.is-settings-visible
-    .timer-widget-main-card,
-  .timer-widget-layout.is-settings-visible
-    .timer-widget-settings-card {
-    padding: 8px;
-
-    border-radius: 18px;
-  }
-
-  .timer-widget-layout.is-settings-visible
-    .timer-widget-primary {
-    min-height: 28px;
-
-    padding: 0 10px;
-  }
-
-  .timer-widget-layout.is-settings-visible
-    .timer-widget-clock {
-    font-size: clamp(27px, 17cqi, 40px);
-  }
-}
+body:has(.mobile-layout) .timer-floating-body {
+  padding: 6px;
