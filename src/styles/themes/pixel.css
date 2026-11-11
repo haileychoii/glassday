@@ -40,7 +40,7 @@
   --muted-foreground: 0 0% 24%;
   --accent: 240 100% 25%;
   --accent-foreground: 0 0% 100%;
-  --border: 0 0% 0%;
+  --border: 0 0% 54%;
   --input: 0 0% 100%;
   --ring: 240 100% 25%;
 
@@ -402,6 +402,17 @@
     -1px -1px 0 #808080 inset !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+}
+
+/*
+   DashboardGrid.tsx renders widgets inside AppShell.tsx's .app-shell-main.
+   EN: Keep the window chrome gray, but expose the classic Win95 teal on the
+   canvas behind every widget; their own light faces remain readable.
+   KO: 창 테두리와 사이드바는 회색으로 두고, 모든 위젯 뒤 작업 공간만
+   윈도우 95 청록색으로 통일한다. 위젯 본문은 밝은 색을 유지한다.
+*/
+html[data-theme="pixel-desk"] .app-shell-main {
+  background: #008080 !important;
 }
 
 :where(
