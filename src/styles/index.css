@@ -88,3 +88,5 @@
    Journal's compact controls have one predictable final appearance. */
 @import "./themes/pixel-journal.css";
 
+@import "./mobile-pixel.css";
+

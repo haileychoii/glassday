@@ -1,0 +1,46 @@
+
+/*
+ * 파일: src/styles/mobile-pixel.css
+ *
+ * 연결:
+ * GlassCard.tsx          → .widget-frame__header
+ * MobileStudyCard.tsx    → .mobile-study-card__heading
+ * MobileCalendarCard.tsx → .mobile-calendar-card__header
+ * MobileCareerCard.tsx   → .mobile-career-card__header
+ *
+ * 네 종류의 헤더가 동일한 Windows 95 제목 표시줄을 사용한다.
+ */
+:is(
+  [data-theme="pixel-desk"],
+  .theme-pixel-desk,
+  .pixel-desk,
+  .theme-pixel
+) .mobile-layout {
+
+  /* 기존 Pixel Desk의 장식용 제목 표시줄 제거 */
+  & .mobile-widget-slot .glass-card::before,
+  & .mobile-widget-slot .glass-card::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* 실제 제목·아이콘·버튼의 공통 정렬 */
+  & :is(
+    .mobile-widget-slot .glass-card > .widget-frame__header,
+    .mobile-study-card__heading,
+    .mobile-calendar-card__header,
+    .mobile-career-card__header
+  ) {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 4px 7px !important;
+    gap: 6px !important;
+
+    background: #000080 !important;
+    color: #ffffff !important;
+  }
+}
