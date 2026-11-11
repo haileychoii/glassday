@@ -1,0 +1,426 @@
+
+/* ============================================================================
+ * GLASSDAY — MOBILE TIMER / COMPACT v1
+ * 파일: src/styles/mobile-timer.css
+ * ============================================================================
+ *
+ * [파일 연결]
+ *
+ * src/styles/index.css
+ *   ├─ widgets/timer.css       기존 공용 스타일
+ *   └─ mobile-timer.css        현재 파일: 모바일 전용 보정
+ *
+ * src/components/mobile/MobileDashboard.tsx
+ *   └─ WidgetSlot widgetId="timer"
+ *       └─ src/components/widgets/TimerWidget.tsx
+ *           ├─ TimerSurface
+ *           │   ├─ 모드 선택
+ *           │   ├─ 원형 진행 시계
+ *           │   ├─ 시간 설정 팝오버
+ *           │   └─ 시작/정지/초기화 버튼
+ *           └─ FloatingWindow
+ *               └─ 동일한 timer controller 재사용
+ *
+ * src/components/widgets/timer/usePomodoroTimer.ts
+ *   └─ 시간 계산, 실행/정지, 완료 처리, 저장 담당
+ *
+ * [설계 원칙]
+ * - React 컴포넌트나 DOM wrapper를 새로 만들지 않는다.
+ * - 기존 timer.css의 공통 색상과 SVG 진행 링을 유지한다.
+ * - 모바일에서 숨겨졌던 버튼만 다시 표시한다.
+ * - FloatingWindow의 저장된 PC 위치/크기는 변경하지 않는다.
+ *
+ * [선택자 설명]
+ * :is(...)는 동일한 스타일을 다음 두 곳에 적용한다.
+ * 1. 모바일 대시보드의 Timer 위젯
+ * 2. 모바일에서 열린 Timer 플로팅 창
+ *
+ * 새로 추가할 시간 설정 항목은 기본적으로 숨기고,
+ * 위 두 모바일 화면에서만 표시한다.
+ * ============================================================================ */
+
+
+/* 1. 모바일 대시보드의 Timer 카드 높이
+ *
+ * 기존 mobile.css:
+ * .mobile-widget-slot { height: clamp(300px, 64svh, 560px) }
+ *
+ * Timer는 긴 목록이 없으므로 별도 높이를 사용한다.
+ * PC Grid 설정과 저장된 위젯 크기에는 영향이 없다.
+ */
+.mobile-layout [data-widget-id="timer"] {
+  height: clamp(310px, 43svh, 352px);
+}
+
+
+/* 2. 공통 타이머 영역
+ *
+ * .timer-widget-layout
+ *   TimerSurface의 실제 루트
+ *
+ * .timer-widget-main-card
+ *   모드 선택, 원형 시계, 실행 버튼을 표시하는 영역
+ *
+ * 기본 Compact Mode는 모드 버튼과 Reset/Next를 숨긴다.
+ * 모바일에서는 세 줄을 명확하게 배치한다.
+ *
+ * 첫 줄: Focus / Short break / Long break
+ * 둘째 줄: 진행 시계
+ * 셋째 줄: Start/Pause / Reset / Next
+ */
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-main-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 36px minmax(0, 1fr) 42px;
+  gap: 4px;
+
+  padding: 6px;
+  align-content: stretch;
+
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+
+/* 3. 모드 선택
+ *
+ * TSX: .timer-widget-mode-row
+ *
+ * 기존 Compact Mode의 display:none을 해제한다.
+ * 모드 선택 함수 setMode()는 그대로 사용한다.
+ */
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-mode-row {
+  display: flex;
+  grid-row: 1;
+
+  width: 100%;
+  min-width: 0;
+  gap: 5px;
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-mode-button {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 36px;
+
+  padding: 0 4px;
+  border-radius: 9px;
+
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+
+/* 4. 원형 시계
+ *
+ * TSX:
+ * .timer-widget-time-editor-shell
+ *   └─ .timer-widget-focus-stage
+ *       ├─ .timer-widget-progress-svg
+ *       └─ .timer-widget-clock-stack
+ *
+ * 기존 SVG를 그대로 사용한다.
+ * SVG viewBox가 120 × 120, circle 반지름이 48이므로
+ * 실제 링 반지름은 크기의 약 40%다.
+ *
+ * --timer-ring-radius는 진행 위치 점의 계산에도 사용된다.
+ * 두 값이 달라지면 점이 원형 선에서 벗어나므로 함께 관리한다.
+ */
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-time-editor-shell {
+  grid-row: 2;
+  min-height: 0;
+  align-self: center;
+  justify-self: center;
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-focus-stage {
+  --timer-stage-size:
+    min(168px, 46cqi, calc(100cqb - 98px));
+
+  --timer-ring-radius:
+    calc(var(--timer-stage-size) * 0.4);
+
+  width: var(--timer-stage-size);
+  height: var(--timer-stage-size);
+
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+
+/* 시계 숫자와 보조 텍스트
+ *
+ * formatTimerClock()에서 생성하는 시간 문자열은
+ * 실제 글씨 크기만 조절하고 계산 방식은 건드리지 않는다.
+ */
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-clock {
+  font-size: clamp(30px, 10cqi, 38px);
+  line-height: 1.05;
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-layout:not(.is-settings-visible)
+  :is(.timer-widget-duration-label, .timer-widget-remaining-label) {
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+
+/* 5. 실행 버튼
+ *
+ * TSX:
+ * .timer-widget-action-row
+ *   ├─ .timer-widget-primary   Start / Pause
+ *   ├─ .timer-widget-secondary Reset
+ *   └─ .timer-widget-secondary Next
+ *
+ * toggle(), reset(), skip()은 모두 기존 훅에서 제공한다.
+ *
+ * 단지 숨겨진 보조 버튼을 표시하고 높이를 맞춘다.
+ */
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-action-row {
+  grid-row: 3;
+
+  display: flex;
+  width: 100%;
+  height: 42px;
+  min-height: 42px;
+  gap: 6px;
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-action-row
+  :is(.timer-widget-primary, .timer-widget-secondary) {
+  display: inline-flex;
+
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  height: 42px;
+  min-height: 42px;
+
+  padding: 0 6px;
+  border-radius: 10px;
+
+  font-size: 12px;
+}
+
+
+/* 6. 시간 설정 팝오버
+ *
+ * 원형 시계를 누르면 열리는 기존 편집 팝오버다.
+ *
+ * 아래에서 추가하는 Short/Long break 편집 기능도
+ * 같은 팝오버를 재사용하므로 별도의 모달을 만들지 않는다.
+ */
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-time-popover {
+  width: min(244px, calc(100cqi - 18px));
+  max-width: calc(100cqi - 18px);
+  max-height: 218px;
+
+  padding: 10px;
+  overflow-y: auto;
+
+  border-radius: 12px;
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-time-edit-row input {
+  font-size: 16px;
+}
+
+
+/* 7. 휴식 시간 설정
+ *
+ * 아래 JSX 수정에서 사용하는 클래스다.
+ *
+ * 데스크톱에서는 기존 Focus 편집창 그대로 유지한다.
+ * 모바일에서만 Short/Long break 설정 행을 표시한다.
+ *
+ * 각 행:
+ * [시간 종류] [-] [현재 분] [+]
+ */
+.timer-widget-break-options {
+  display: none;
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-break-options {
+  display: grid;
+  gap: 6px;
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-break-option {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 30px 36px 30px;
+  align-items: center;
+  gap: 4px;
+
+  font-size: 11px;
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-break-option button {
+  display: grid;
+  place-items: center;
+
+  width: 30px;
+  height: 34px;
+
+  border: 1px solid hsl(var(--border) / 0.4);
+  border-radius: 8px;
+
+  background: hsl(var(--card) / 0.5);
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-break-option strong {
+  text-align: center;
+  font-size: 12px;
+}
+
+
+/* 8. 타이머 완료 메시지
+ *
+ * completionPrompt가 있을 때만 TimerWidget.tsx가 렌더링한다.
+ *
+ * 기존 Compact Mode는 안내 문구까지 숨겼다.
+ * 모바일에서는 다음 행동을 선택할 수 있게 문구를 보여준다.
+ *
+ * 메시지는 타이머 카드 위에 잠깐 겹쳐 표시된다.
+ * 별도 배경 레이어나 래퍼는 필요하지 않다.
+ */
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-prompt {
+  left: 6px;
+  right: 6px;
+  bottom: 5px;
+
+  padding: 10px;
+  gap: 8px;
+
+  background: hsl(var(--card) / 0.98);
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-prompt-copy {
+  display: block;
+  font-size: 12px;
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-prompt-actions
+  :is(.timer-widget-primary, .timer-widget-secondary) {
+  min-height: 36px;
+  height: 36px;
+  font-size: 11px;
+}
+
+
+/* 9. 기존 FloatingWindow의 모바일 표시
+ *
+ * TimerWidget.tsx:
+ * <FloatingWindow className="timer-floating-window" />
+ *
+ * FloatingWindow.tsx가 화면 밖으로 벗어나지 않도록
+ * 위치/크기를 계산하는 기능은 그대로 사용한다.
+ *
+ * 따라서 position, left, top, width, height를
+ * 강제로 변경하지 않는다.
+ *
+ * 저장 키:
+ * glassday.timer.floating.rect.v1
+ *
+ * 모바일 CSS가 PC의 저장된 창 좌표를 덮어쓰면 안 된다.
+ */
+body:has(.mobile-layout) .timer-floating-window {
+  resize: none;
+}
+
+body:has(.mobile-layout)
+.timer-floating-window .floating-window-titlebar {
+  padding-inline: 10px;
+  gap: 8px;
+}
+
+body:has(.mobile-layout)
+.timer-floating-window .floating-window-subtitle {
+  display: none;
+}
+
+body:has(.mobile-layout)
+.timer-floating-body {
+  padding: 6px;
+}
+
+
+/* 10. 키보드 접근성
+ *
+ * 외부 키보드 또는 키보드 탐색을 사용하는 경우
+ * 현재 선택된 버튼의 위치를 확인할 수 있도록 한다.
+ */
+.mobile-layout [data-widget-id="timer"]
+.timer-widget-main-card button:focus-visible,
+body:has(.mobile-layout)
+.timer-floating-window button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
