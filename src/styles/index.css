@@ -84,3 +84,7 @@
 @import "./mobile-money.css";
 @import "./mobile-timer.css";
 
+/* Pixel-only finishing rules follow mobile and shared overrides so the
+   Journal's compact controls have one predictable final appearance. */
+@import "./themes/pixel-journal.css";
+
