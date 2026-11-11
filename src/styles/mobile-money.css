@@ -1,0 +1,368 @@
+
+/* ============================================================================
+   GLASSDAY / MOBILE MONEY
+   파일: src/styles/mobile-money.css
+   ============================================================================
+
+   [이 파일이 담당하는 화면]
+   모바일 대시보드의 Money 위젯 안에서 표시되는
+   소비 요약, 지출 내역, 위시리스트, 고정 지출 화면의 레이아웃.
+
+   [연결 구조]
+   src/main.tsx
+     └─ src/styles/index.css
+          └─ mobile-money.css (현재 파일)
+
+   src/App.tsx
+     └─ src/components/mobile/MobileDashboard.tsx
+          └─ WidgetSlot widgetId="money"
+               └─ src/components/widgets/MoneyWidget.tsx
+
+   [기존 스타일]
+   src/styles/widgets/money.css
+     → PC 및 공통 Money 디자인
+
+   [데이터와 계산]
+   src/types/money.ts
+     → 거래/위시리스트/고정 지출 데이터 타입
+
+   src/components/widgets/money/moneyUtils.ts
+     → 금액 합계, 지출 카테고리, 기간별 계산
+
+   src/hooks/useLocalStorage.ts
+     → glassday.money 데이터 저장
+
+   [수정 원칙]
+   1. 현재 파일은 모바일 레이아웃만 담당한다.
+   2. PC용 money.css는 수정하지 않는다.
+   3. 새로운 HTML wrapper나 React 컴포넌트를 추가하지 않는다.
+   4. 이미 정상 작동하는 반응형 규칙은 중복 작성하지 않는다.
+   5. 선택자 범위는 Money 위젯으로만 제한한다.
+   6. 데이터를 저장하거나 계산하는 코드는 건드리지 않는다.
+
+   [스타일 적용 범위]
+   .mobile-layout
+     → 모바일 전용 화면
+
+   [data-widget-id="money"]
+     → Money 위젯 하나만 선택
+
+   두 조건을 모두 만족할 때만 아래 스타일이 적용된다.
+   ============================================================================ */
+
+
+/* ============================================================================
+   1. MONEY 위젯 본문
+   ============================================================================
+   연결: MoneyWidget.tsx의 <GlassCard className="money-widget">
+
+   .glass-card-body : GlassCard가 만드는 본문
+   .money-detail    : 탭과 선택된 내용을 담는 스크롤 영역
+
+   중복 좌우 padding을 줄이고 기존 위젯 높이는 유지한다.
+   위젯 자체의 스크롤 영역을 추가로 만들지 않는다.
+   ============================================================================ */
+
+.mobile-layout [data-widget-id="money"] .money-widget .glass-card-body {
+  padding: 6px 8px 8px;
+}
+
+.mobile-layout [data-widget-id="money"] .money-detail {
+  min-width: 0;
+  gap: 8px;
+  padding: 0;
+}
+
+
+/* ============================================================================
+   2. 섹션 탭
+   ============================================================================
+   연결: MoneyWidget.tsx → .money-section-tabs
+
+   표시 내용:
+   Overview / Spending / Wishlist / Recurring
+
+   [기존 문제]
+   money.css의 좁은 화면 규칙에서는 탭 글씨를 숨기고
+   아이콘만 남긴다.
+
+   [수정]
+   글씨와 아이콘을 함께 표시한다.
+   한 줄에 들어가지 않으면 가로 스크롤한다.
+
+   버튼 높이 36px, 글씨 12px로 통일한다.
+   ============================================================================ */
+
+.mobile-layout [data-widget-id="money"] .money-section-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 5px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+
+  padding: 2px 0 6px;
+}
+
+.mobile-layout [data-widget-id="money"] .money-section-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-layout [data-widget-id="money"] .money-section-tab {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: max-content;
+  min-height: 36px;
+
+  padding: 0 10px;
+  border-radius: 10px;
+
+  font-size: 12px;
+}
+
+/* money.css의 모바일 아이콘 전용 규칙을 해제한다. */
+.mobile-layout [data-widget-id="money"] .money-section-tab span {
+  display: inline;
+}
+
+
+/* ============================================================================
+   3. 기간 필터
+   ============================================================================
+   연결: MoneyWidget.tsx → .money-period-control
+
+   표시 내용:
+   This month / This week / Last 2 weeks / Today / Custom
+
+   이 기간 선택은 금액 합계, 카테고리 그래프,
+   지출 목록에 공통으로 적용된다.
+
+   [수정]
+   별도 배경 패널을 제거한다.
+   기간 버튼은 한 줄로 표시하고 가로 스크롤한다.
+   ============================================================================ */
+
+.mobile-layout [data-widget-id="money"] .money-period-control {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.mobile-layout [data-widget-id="money"] .money-period-buttons {
+  flex-wrap: nowrap;
+  gap: 5px;
+
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mobile-layout [data-widget-id="money"] .money-period-buttons::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-layout [data-widget-id="money"] .money-pill {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding-inline: 10px;
+  font-size: 11px;
+}
+
+
+/* ============================================================================
+   4. 공통 콘텐츠 카드
+   ============================================================================
+   연결: MoneyWidget.tsx → .money-detail-card
+
+   사용 위치:
+   - Overview: 소비 요약, 카테고리 분석, 상점별 소비
+   - Spending: 지출 추가, 거래 목록, 거래 수정
+   - Wishlist: 원하는 물건, 구매 기록
+   - Recurring: 반복 지출 등록과 목록
+
+   [수정]
+   PC용 큰 카드의 여백과 블러 효과를 모바일에서 줄인다.
+   불필요한 그림자 효과는 제거한다.
+
+   단, 카드 자체는 서로 다른 기능을 구분하므로 유지한다.
+   ============================================================================ */
+
+.mobile-layout [data-widget-id="money"] .money-detail-card {
+  min-width: 0;
+  padding: 9px;
+  gap: 8px;
+
+  border-radius: 12px;
+  box-shadow: none;
+
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+
+/* 제목 위에 반복되는 장식용 영문 라벨만 숨긴다.
+   기능 이름(h3)과 실제 금액/데이터는 그대로 표시한다. */
+
+.mobile-layout [data-widget-id="money"] .money-section-heading .money-kicker {
+  display: none;
+}
+
+.mobile-layout [data-widget-id="money"] .money-section-heading h3 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+
+/* ============================================================================
+   5. Overview / 지출 분석
+   ============================================================================
+   연결: MoneyWidget.tsx → .money-overview-grid
+
+   표시 요소:
+   - 선택 기간 총 지출
+   - 월 예산과 사용률
+   - 카테고리별 원형 그래프
+   - 상점별 소비
+   - 카테고리 거래 내역
+
+   기존 money.css에 좁은 화면 1열 레이아웃이
+   이미 있으므로 중복 선언하지 않는다.
+
+   여기서는 필요 이상으로 큰 그래프 영역만 조정한다.
+   ============================================================================ */
+
+.mobile-layout [data-widget-id="money"] .money-chart-card {
+  min-height: 0;
+}
+
+.mobile-layout [data-widget-id="money"] .money-chart-layout {
+  gap: 8px;
+}
+
+.mobile-layout [data-widget-id="money"] .money-overview-hero strong {
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+
+/* ============================================================================
+   6. 거래 목록
+   ============================================================================
+   연결: MoneyWidget.tsx → TransactionList
+
+   .money-transaction-row
+     → 지출 1건을 표시하는 행
+
+   .money-transaction-copy
+     → 지출 이름, 카테고리 등 설명
+
+   .money-transaction-side
+     → 금액, 거래 관리 버튼
+
+   [기존 문제]
+   작은 위젯에서는 금액 영역이 두 번째 줄로 내려간다.
+
+   [수정]
+   이름과 금액을 가능한 한 같은 행에 표시한다.
+   이름은 공간이 부족하면 말줄임 처리한다.
+
+   거래 수정/삭제 동작은 변경하지 않는다.
+   ============================================================================ */
+
+.mobile-layout [data-widget-id="money"] .money-transaction-row {
+  grid-template-columns: 6px minmax(0, 1fr) auto;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.mobile-layout [data-widget-id="money"] .money-transaction-side {
+  grid-column: auto;
+  min-width: 0;
+  justify-content: flex-end;
+}
+
+
+/* ============================================================================
+   7. 상점별 소비 내역
+   ============================================================================
+   연결: MoneyWidget.tsx → StoreBars
+
+   .money-store-row
+     → 상점 이름 / 소비 그래프 / 지출 금액
+
+   기존 모바일 규칙에서는 이 세 요소를 한 열로 표시한다.
+
+   여기서는 다시 한 줄에 표시해
+   불필요한 세로 길이를 줄인다.
+   ============================================================================ */
+
+.mobile-layout [data-widget-id="money"] .money-store-row {
+  grid-template-columns: minmax(66px, 0.8fr) minmax(0, 1fr) auto;
+  gap: 6px;
+}
+
+
+/* ============================================================================
+   8. 지출/위시리스트 입력창
+   ============================================================================
+   연결: MoneyWidget.tsx
+
+   .money-form
+     → 지출, 위시리스트, 고정 지출 등록
+
+   .money-detail-fields
+     → 위시리스트 상세 편집
+
+   기존 money.css에서 이미 모바일 한 열 레이아웃으로
+   변경하므로 grid-template-columns를 다시 선언하지 않는다.
+
+   iOS 입력창 자동 확대를 줄이기 위해 16px을 사용한다.
+   ============================================================================ */
+
+.mobile-layout [data-widget-id="money"] :is(
+  .money-form,
+  .money-detail-fields,
+  .money-period-custom,
+  .money-budget-editor,
+  .money-purchase-dialog
+) :is(input, select, textarea) {
+  max-width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  font-size: 16px;
+}
+
+
+/* ============================================================================
+   9. 위시리스트 구매 확인창
+   ============================================================================
+   연결: MoneyWidget.tsx → .money-purchase-layer
+
+   [화면 역할]
+   위시리스트에서 구매 완료를 선택하면 표시되는 창.
+
+   [저장 연결]
+   구매를 확정하면 기존 MoneyWidget 로직이
+   위시리스트와 거래 내역을 연결한다.
+
+   [수정]
+   모바일에서 양쪽 여백을 8px로 제한한다.
+   확인창이 위젯 영역을 넘지 않도록 한다.
+   ============================================================================ */
+
+.mobile-layout [data-widget-id="money"] .money-purchase-layer {
+  padding: 8px;
+}
+
+.mobile-layout [data-widget-id="money"] .money-purchase-dialog {
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+
+  padding: 12px;
+  border-radius: 14px;
+}

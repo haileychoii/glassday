@@ -260,6 +260,87 @@ const TimerSurface = ({
                 </button>
               </div>
 
+
+{/*
+ * ============================================================
+ * MOBILE BREAK DURATION CONTROLS
+ * ============================================================
+ *
+ * 파일:
+ * src/components/widgets/TimerWidget.tsx
+ *
+ * 위치:
+ * TimerSurface → timeEditorOpen → timer-widget-time-popover
+ *
+ * 연결:
+ * - pomodoro.shortBreakMinutes : 짧은 휴식 시간
+ * - pomodoro.longBreakMinutes  : 긴 휴식 시간
+ * - updateMinutes()            : 시간을 조정하고 저장하는 함수
+ *
+ * CSS:
+ * src/styles/mobile-timer.css
+ *
+ * 화면:
+ * Short break  [-] 5m  [+]
+ * Long break   [-] 15m [+]
+ *
+ * 별도의 state나 저장소를 만들지 않는다.
+ * 기존 usePomodoroTimer controller를 재사용한다.
+ *
+ * PC에서는 CSS로 숨기므로 기존 편집창 모양을 유지한다.
+ * ============================================================
+ */}
+
+              <div className="timer-widget-break-options">
+
+                {/* 짧은 휴식: 1분 단위 변경 */}
+                <div className="timer-widget-break-option">
+                  <span>Short break</span>
+
+                  <button
+                    type="button"
+                    onClick={() => updateMinutes("shortBreakMinutes", -1)}
+                    aria-label="Decrease short break by one minute"
+                  >
+                    −
+                  </button>
+
+                  <strong>{pomodoro.shortBreakMinutes}m</strong>
+
+                  <button
+                    type="button"
+                    onClick={() => updateMinutes("shortBreakMinutes", 1)}
+                    aria-label="Increase short break by one minute"
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* 긴 휴식: 5분 단위 변경 */}
+                <div className="timer-widget-break-option">
+                  <span>Long break</span>
+
+                  <button
+                    type="button"
+                    onClick={() => updateMinutes("longBreakMinutes", -5)}
+                    aria-label="Decrease long break by five minutes"
+                  >
+                    −
+                  </button>
+
+                  <strong>{pomodoro.longBreakMinutes}m</strong>
+
+                  <button
+                    type="button"
+                    onClick={() => updateMinutes("longBreakMinutes", 5)}
+                    aria-label="Increase long break by five minutes"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+
               <button
                 type="button"
                 className="timer-widget-time-apply"
