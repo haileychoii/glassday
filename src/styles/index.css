@@ -86,5 +86,8 @@
 
 
 
+/* 모바일 Pixel Desk 디자인 */
 @import "./mobile-pixel.css";
 
+/* 모든 테마의 모바일 Daily Journal 레이아웃 — 마지막에 적용 */
+@import "./mobile-journal.css";
