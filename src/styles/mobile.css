@@ -351,27 +351,90 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
   gap: 6px;
 }
 
+
+/* ============================================================
+ * MAC CORE / MOBILE DAILY JOURNAL HEADER
+ * 파일: src/styles/mobile.css
+ *
+ * [연결]
+ * DailyJournalWidget.tsx
+ *   → GlassCard.tsx
+ *     → .widget-frame__header
+ *       ├─ .widget-frame__title-group
+ *       └─ .widget-frame__actions
+ *           └─ .journal-date-nav
+ *
+ * [표시]
+ * 첫째 줄: Daily Journal 아이콘과 제목
+ * 둘째 줄: 이전 날짜 / 날짜 선택 / 다음 날짜
+ *
+ * [Mac Core에서만 필요한 수정]
+ * - 다른 테마의 헤더는 변경하지 않는다.
+ * - 모바일에서 날짜 입력창이 화면 밖으로 밀리지 않도록 한다.
+ * - 16px 입력 글씨를 유지해 iOS 자동 확대를 방지한다.
+ * ============================================================ */
+
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout
+  .daily-journal-widget > .widget-frame__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 6px;
+  padding: 8px 10px;
+}
+
+/* 왼쪽 제목 영역 */
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout
+  .daily-journal-widget
+  > .widget-frame__header
+  > .widget-frame__title-group {
+  min-width: 0;
+  min-height: 24px;
+}
+
+/* 오른쪽 날짜 컨트롤을 모바일에서는 둘째 줄로 배치 */
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout
+  .daily-journal-widget
+  > .widget-frame__header
+  > .widget-frame__actions {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+
+  margin: 0;
+  flex-basis: auto;
+}
+
+/* 이전 / 날짜 / 다음의 3열 구성 */
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .journal-date-nav {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 38px;
+
+  gap: 6px;
+  width: 100%;
+}
+
+/* 터치 가능한 높이는 유지하면서
+ * 기존 44px보다 세로 공간을 조금 줄인다.
+ */
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout
+  .journal-date-nav :is(button, input) {
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+
+  font-size: 16px;
+}
+
+
 /* Date navigation gets its own row instead of squeezing the Journal title.
    Keep editable fields at 16px to avoid Safari focus zoom; touch targets stay
    44px even though the title typography is compact. / 날짜 잘림과 자동 확대 방지. */
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .daily-journal-widget .widget-frame__actions {
-  flex-basis: 100%;
-}
-
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .journal-date-nav {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
-  width: 100%;
-  gap: 8px;
-}
-
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .journal-date-nav :is(button, input) {
-  width: 100%;
-  min-width: 0;
-  height: 44px;
-  font-size: 16px;
-  font-weight: 500;
-}
 
 /* ============================================================
    Mobile Settings sheet / 모바일 Settings 시트
