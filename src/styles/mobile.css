@@ -1,3 +1,4 @@
+
 /* [Figma Mapping] Mobile Web shell only
    Connections: MobileLayout / MobileNavigation / MobileDashboard.
    Existing theme tokens and Widget CSS remain the visual source of truth.
@@ -15,10 +16,7 @@
   isolation: isolate;
 }
 
-/* Mobile is a task surface, not a miniature desktop canvas. Keep one page
-   scroll, full-width touch targets, and predictable horizontal bounds for all
-   widgets. / 모바일은 축소된 데스크톱이 아니라 한 손으로 쓰는 작업 화면이다.
-   위젯은 한 열, 페이지는 한 곳만 스크롤하도록 고정한다. */
+/* 모바일 전체 레이아웃과 박스 크기 */
 .mobile-layout,
 .mobile-layout * {
   box-sizing: border-box;
@@ -32,17 +30,33 @@
   min-width: 0;
 }
 
+/* 모바일 상단 헤더 */
 .mobile-header {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: calc(8px + env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left));
+  padding: calc(8px + env(safe-area-inset-top))
+    max(12px, env(safe-area-inset-right))
+    8px
+    max(12px, env(safe-area-inset-left));
   border-bottom: 1px solid hsl(var(--foreground) / 0.14);
 }
+
 .mobile-heading { flex: 1; min-width: 0; }
 .mobile-heading > span { font-size: 12px; opacity: 0.7; }
-.mobile-heading h1 { margin: 0; font-size: 18px; line-height: 1.4; overflow-wrap: anywhere; }
-.mobile-header-actions { display: flex; flex: none; gap: 2px; }
+.mobile-heading h1 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.mobile-header-actions {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+
 .mobile-header-actions button {
   display: grid;
   place-items: center;
@@ -56,26 +70,29 @@
   cursor: pointer;
 }
 
-/* One shell scroller; widget-local lists retain their existing scroll behavior.
-   이번 단계에서는 긴 위젯 편집기의 내부 스크롤까지 바꾸지 않습니다. */
-.mobile-main { min-height: 0; min-width: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior-y: contain; }
+/* 모바일 페이지 스크롤과 위젯 배치 */
+.mobile-main {
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+}
+
 .mobile-dashboard {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
-  padding: 10px max(10px, env(safe-area-inset-right)) 22px max(10px, env(safe-area-inset-left));
+  padding: 10px max(10px, env(safe-area-inset-right))
+    22px max(10px, env(safe-area-inset-left));
 }
+
 .mobile-widget-slot {
   min-width: 0;
   height: clamp(300px, 64svh, 560px);
-  /* Explicit stage-one frame height supports existing size container queries.
-     모바일 전용 표시 높이이며 Dashboard layout이나 저장값에 반영하지 않습니다. */
 }
 
-/* Small-screen typography contract
-   Widget internals still come from their existing components, but the shared
-   frame gets a smaller, non-overlapping title row on phones. / 모바일에서는
-   위젯 기능은 공유하고 헤더 밀도만 낮춰 제목과 테두리가 겹치지 않게 한다. */
+/* 모바일 공통 GlassCard 헤더 */
 .mobile-widget-slot > .glass-card,
 .mobile-widget-slot > .career-widget {
   min-width: 0;
@@ -123,35 +140,33 @@
   height: 28px;
 }
 
-/* Mac Core used the desktop minimum header height on a narrow viewport.
-   Let the title row size itself so text sits inside the widget frame rather
-   than on its border. / 데스크톱 최소 높이를 해제해 제목이 테두리에 걸리지 않게 한다. */
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout
-  .widget-frame__header {
+/* Mac Core 공통 헤더의 최소 높이 해제 */
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .widget-frame__header {
   min-height: 0;
   align-items: flex-start;
 }
 
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout
-  .widget-frame__title-group,
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout
-  .widget-frame__copy {
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .widget-frame__title-group,
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .widget-frame__copy {
   min-height: 0;
 }
 
-
+/* 모바일 하단 내비게이션 */
 .mobile-navigation {
-  /* Render every workspace as one equal-width cell. The previous flex rail
-     allowed a second horizontal gesture on phones. / 모든 탭을 한 번에
-     보이게 하는 고정 그리드라서 하단 메뉴 자체는 가로 스크롤하지 않는다. */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
   min-width: 0;
   gap: 2px;
   overflow: hidden;
-  padding: 6px max(6px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+  padding: 6px max(6px, env(safe-area-inset-right))
+    calc(6px + env(safe-area-inset-bottom))
+    max(6px, env(safe-area-inset-left));
   border-top: 1px solid hsl(var(--foreground) / 0.14);
 }
+
 .mobile-navigation-item {
   width: 100%;
   min-width: 0;
@@ -169,17 +184,35 @@
   border-radius: 6px;
   cursor: pointer;
 }
-.mobile-navigation-item span { max-width: 100%; font-size: 12px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mobile-navigation-item[aria-current="page"] { background: hsl(var(--primary) / 0.18); }
-.mobile-layout button:focus-visible { outline: 2px solid hsl(var(--foreground)); outline-offset: -3px; }
-.mobile-empty { padding: 20px 0; font-size: 14px; }
 
+.mobile-navigation-item span {
+  max-width: 100%;
+  font-size: 12px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-navigation-item[aria-current="page"] {
+  background: hsl(var(--primary) / 0.18);
+}
+
+.mobile-layout button:focus-visible {
+  outline: 2px solid hsl(var(--foreground));
+  outline-offset: -3px;
+}
+
+.mobile-empty {
+  padding: 20px 0;
+  font-size: 14px;
+}
+
+/* 좁은 휴대폰의 상단·하단 여백 */
 @media (max-width: 420px) {
-  /* At 320-420px, leave enough width for Korean labels and icon buttons while
-     keeping the browser safe-area inset visible. / 작은 휴대폰에서는 좌우
-     여백을 줄이고도 버튼의 최소 터치 영역은 유지한다. */
   .mobile-header {
-    padding-inline: max(8px, env(safe-area-inset-left)) max(8px, env(safe-area-inset-right));
+    padding-inline: max(8px, env(safe-area-inset-left))
+      max(8px, env(safe-area-inset-right));
   }
 
   .mobile-heading h1 {
@@ -202,9 +235,7 @@
   }
 }
 
-/* Mobile Today Focus is a reading-first section, not a second scroll box.
-   Its parent slot can grow with the content so the page owns one predictable
-   scroll position. / Today Focus 내부 스크롤을 없애고 페이지 스크롤을 사용한다. */
+/* Today Focus: 모바일에서는 전체 페이지 스크롤 사용 */
 .mobile-widget-slot[data-widget-id="today"] {
   height: auto;
   min-height: 0;
@@ -215,13 +246,14 @@
   max-height: none;
 }
 
-.mobile-widget-slot[data-widget-id="today"] .today-focus-widget .glass-card-body {
+.mobile-widget-slot[data-widget-id="today"]
+  .today-focus-widget .glass-card-body {
   overflow: visible;
 }
 
-/* Keep the promise of “Top 3” on a narrow screen while leaving the desktop
-   list untouched. / 모바일에서는 핵심 3개만 먼저 보여 정보 밀도를 낮춘다. */
-.mobile-widget-slot[data-widget-id="today"] .today-focus-task:nth-child(n + 4) {
+/* Today Focus의 우선순위 항목은 3개까지 표시 */
+.mobile-widget-slot[data-widget-id="today"]
+  .today-focus-task:nth-child(n + 4) {
   display: none;
 }
 
@@ -239,9 +271,7 @@
   overflow: visible;
 }
 
-/* Bottom navigation owns the primary capture action; the header button stays
-   available for discoverability but does not compete visually. / 하단 +를
-   엄지 영역의 주 행동으로 사용한다. */
+/* Quick Capture 진입 버튼 */
 .mobile-navigation-capture {
   width: 100%;
   min-width: 0;
@@ -255,13 +285,13 @@
   background: hsl(var(--primary));
   border: 1px solid hsl(var(--primary) / 0.42);
   border-radius: 999px;
-  box-shadow: 0 8px 20px hsl(var(--primary) / 0.24), inset 0 1px 0 hsl(0 0% 100% / 0.42);
+  box-shadow:
+    0 8px 20px hsl(var(--primary) / 0.24),
+    inset 0 1px 0 hsl(0 0% 100% / 0.42);
   cursor: pointer;
 }
 
-/* Quick Capture becomes a bottom sheet on phones so the keyboard and the
-   submit action stay close to the user's thumb. / 모바일에서는 중앙 모달을
-   하단 시트로 바꿔 입력 흐름을 짧게 유지한다. */
+/* Quick Capture 모바일 하단 시트 */
 body:has(.mobile-layout) .command-overlay:has(.quick-capture-panel) {
   place-items: end center;
   padding: 0;
@@ -289,17 +319,21 @@ body:has(.mobile-layout) .quick-capture-submit {
   justify-content: center;
 }
 
-/* Root-level status overlays must not cover the mobile navigation.
-   이 두 요소는 App의 형제 overlay이므로 모바일 shell 존재 여부로 범위를 제한합니다. */
-body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
+body:has(.mobile-layout)
+  :is(.global-sync-indicator, .quick-capture-toast) {
   bottom: calc(80px + env(safe-area-inset-bottom));
 }
 
-/* [Figma Mapping] Mac Core / Mobile Widget Header
-   GlassCard.tsx owns the title, subtitle and actions. Paint the real header
-   instead of the desktop's fixed 38px decoration so wrapped rows remain inside
-   the toolbar. / 모바일에서만 제목 배경과 구분선이 실제 헤더 높이를 따릅니다.
-   Settings font selection is inherited; no font family is forced here. */
+/* ============================================================================
+ * MAC CORE — 모든 일반 위젯의 공통 모바일 헤더
+ *
+ * GlassCard.tsx
+ *   → widget-frame__header
+ *     → title-group / copy / actions
+ *
+ * Mac Core의 공통 재질은 유지한다.
+ * ============================================================================ */
+
 :is([data-theme="mac-core"], .theme-mac-core) .mobile-layout {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -307,11 +341,13 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
   line-height: 1.45;
 }
 
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .glass-card::before {
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .glass-card::before {
   content: none;
 }
 
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__header {
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .widget-frame__header {
   flex-wrap: wrap;
   gap: 8px;
   padding: 10px 12px;
@@ -319,17 +355,20 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
   border-bottom: 1px solid rgb(60 60 67 / 0.12);
 }
 
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__title-group {
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .widget-frame__title-group {
   flex: 1 1 150px;
   align-items: center;
 }
 
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__copy {
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .widget-frame__copy {
   justify-content: center;
   gap: 2px;
 }
 
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__header h3 {
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .widget-frame__header h3 {
   margin: 0;
   font-size: 13px;
   line-height: 1.4;
@@ -337,115 +376,133 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
   overflow-wrap: anywhere;
 }
 
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__header p {
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .widget-frame__header p {
   font-size: 11px;
   line-height: 1.4;
   white-space: normal;
   overflow-wrap: anywhere;
 }
 
-:is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .widget-frame__actions {
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .widget-frame__actions {
   min-width: 0;
   max-width: 100%;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-
-/* ============================================================
- * MAC CORE / MOBILE DAILY JOURNAL HEADER
- * 파일: src/styles/mobile.css
+/* ============================================================================
+ * MAC CORE — DAILY JOURNAL 전용 모바일 헤더 수정
+ * ============================================================================
+ *
+ * [파일]
+ * src/styles/mobile.css
  *
  * [연결]
- * DailyJournalWidget.tsx
- *   → GlassCard.tsx
- *     → .widget-frame__header
+ * DailyJournalWidget.tsx → GlassCard.tsx
+ *
+ * [화면 구조]
+ * .daily-journal-widget
+ *   └─ .widget-frame__header
  *       ├─ .widget-frame__title-group
+ *       │   └─ 아이콘 + Daily Journal
  *       └─ .widget-frame__actions
  *           └─ .journal-date-nav
+ *               └─ 이전 날짜 / 날짜 선택 / 다음 날짜
  *
- * [표시]
- * 첫째 줄: Daily Journal 아이콘과 제목
- * 둘째 줄: 이전 날짜 / 날짜 선택 / 다음 날짜
+ * [수정 이유]
+ * 기존 display:grid와 actions width:100% 때문에
+ * Mac Core에서만 제목과 날짜가 항상 두 줄로 분리됐다.
  *
- * [Mac Core에서만 필요한 수정]
- * - 다른 테마의 헤더는 변경하지 않는다.
- * - 모바일에서 날짜 입력창이 화면 밖으로 밀리지 않도록 한다.
- * - 16px 입력 글씨를 유지해 iOS 자동 확대를 방지한다.
- * ============================================================ */
+ * 가로 폭이 충분하면 한 줄, 부족하면 자동 줄바꿈한다.
+ * PC 및 다른 테마에는 영향을 주지 않는다.
+ * ============================================================================ */
 
 :is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout
-  .daily-journal-widget > .widget-frame__header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-
-  gap: 6px;
+  .mobile-layout .daily-journal-widget > .widget-frame__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 0;
   padding: 8px 10px;
+  gap: 6px;
 }
 
-/* 왼쪽 제목 영역 */
+/* Journal 제목의 좌측 시작선 */
 :is([data-theme="mac-core"], .theme-mac-core)
   .mobile-layout
   .daily-journal-widget
   > .widget-frame__header
   > .widget-frame__title-group {
+  flex: 1 1 108px;
   min-width: 0;
-  min-height: 24px;
+  min-height: 0;
+  align-items: center;
 }
 
-/* 오른쪽 날짜 컨트롤을 모바일에서는 둘째 줄로 배치 */
+/* 날짜 선택 영역: 가로 폭이 충분하면 제목 오른쪽 */
 :is([data-theme="mac-core"], .theme-mac-core)
   .mobile-layout
   .daily-journal-widget
   > .widget-frame__header
   > .widget-frame__actions {
-  width: 100%;
-  max-width: none;
+  flex: 0 1 auto;
+  width: auto;
+  max-width: 100%;
   min-width: 0;
-
-  margin: 0;
-  flex-basis: auto;
+  margin-left: auto;
 }
 
-/* 이전 / 날짜 / 다음의 3열 구성 */
+/* 날짜 컨트롤은 추가 HTML 래퍼 없이 기존 flex 유지 */
 :is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout .journal-date-nav {
-  display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) 38px;
-
-  gap: 6px;
-  width: 100%;
+  .mobile-layout .daily-journal-widget .journal-date-nav {
+  display: flex;
+  align-items: center;
+  width: auto;
+  min-width: 0;
+  gap: 4px;
 }
 
-/* 터치 가능한 높이는 유지하면서
- * 기존 44px보다 세로 공간을 조금 줄인다.
- */
+/* 이전 날짜 / 다음 날짜 버튼 */
 :is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout
-  .journal-date-nav :is(button, input) {
-  width: 100%;
-  min-width: 0;
-  height: 38px;
+  .mobile-layout .daily-journal-widget .journal-date-nav button {
+  flex: 0 0 32px;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  min-height: 32px;
+}
 
+/* 날짜 입력창: iOS Safari 자동 확대 방지를 위해 16px 유지 */
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .daily-journal-widget .journal-date-nav input {
+  flex: 0 1 120px;
+  width: 120px;
+  min-width: 90px;
+  max-width: 120px;
+  height: 32px;
+  min-height: 32px;
+  padding-inline: 3px;
   font-size: 16px;
 }
 
+/* 날짜·Progress가 헤더와 본문에서 중복되지 않도록
+   Journal 헤더의 부제목만 숨긴다. */
+:is([data-theme="mac-core"], .theme-mac-core)
+  .mobile-layout .daily-journal-widget .widget-frame__subtitle {
+  display: none;
+}
 
-/* Date navigation gets its own row instead of squeezing the Journal title.
-   Keep editable fields at 16px to avoid Safari focus zoom; touch targets stay
-   44px even though the title typography is compact. / 날짜 잘림과 자동 확대 방지. */
+/* ============================================================================
+ * MOBILE SETTINGS SHEET
+ *
+ * 연결: SettingsModal.tsx
+ * Portal은 document.body 아래에 렌더링되므로
+ * body:has(.mobile-layout) 조건을 사용한다.
+ * ============================================================================ */
 
-/* ============================================================
-   Mobile Settings sheet / 모바일 Settings 시트
-
-   연결 컴포넌트: src/components/settings/SettingsModal.tsx
-   Settings is rendered through a document.body portal, so it is not a child
-   of MobileLayout. `body:has(.mobile-layout)` keeps this rule mobile-web-only;
-   desktop and Tauri retain the existing movable Settings window.
-   설정은 body portal로 렌더링되므로 MobileLayout의 자식이 아니다. 따라서
-   모바일 셸이 있을 때만 적용해 데스크톱/Tauri 스타일을 건드리지 않는다.
-   ============================================================ */
 @media (max-width: 767px) {
   body:has(.mobile-layout) .settings-modal-backdrop {
     place-items: stretch;
@@ -468,13 +525,12 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
     grid-template-rows: auto minmax(0, 1fr) !important;
   }
 
-  /* Keep the title visible and the close action thumb-sized. /
-     제목은 고정하고 닫기 버튼은 모바일 터치 영역을 유지한다. */
   body:has(.mobile-layout) .settings-modal-header,
   body:has(.mobile-layout) .settings-header,
   body:has(.mobile-layout) .settings-titlebar {
     min-height: 58px !important;
-    padding: 8px max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left)) !important;
+    padding: 8px max(12px, env(safe-area-inset-right))
+      8px max(12px, env(safe-area-inset-left)) !important;
     gap: 8px !important;
     touch-action: auto;
   }
@@ -512,11 +568,13 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
     height: 44px !important;
   }
 
-  /* The body owns the only Settings scroll position. / 설정 본문만 스크롤한다. */
+  /* Settings 본문만 스크롤 */
   body:has(.mobile-layout) .settings-modal-body,
   body:has(.mobile-layout) .settings-body,
   body:has(.mobile-layout) .settings-content {
-    padding: 10px max(10px, env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)) !important;
+    padding: 10px max(10px, env(safe-area-inset-right))
+      calc(18px + env(safe-area-inset-bottom))
+      max(10px, env(safe-area-inset-left)) !important;
     gap: 10px !important;
     overflow-y: auto !important;
     overscroll-behavior: contain;
@@ -535,8 +593,6 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
     font-size: 12px !important;
   }
 
-  /* Two columns reduce vertical travel when choosing a theme. /
-     테마 선택은 2열로 배치해 긴 스크롤을 줄인다. */
   body:has(.mobile-layout) .settings-theme-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 8px !important;
@@ -605,14 +661,18 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
   }
 }
 
-/* 98.css-inspired Pixel Desk controls / 98.css 느낌의 Pixel Desk 컨트롤
-   98.css uses a neutral system gray, square corners, and raised/sunken bevels
-   instead of translucent gradients. Apply that material only when Pixel Desk
-   is active, so Glass Light, Mac Core, and Aurora keep their own surfaces.
-   98.css의 핵심인 회색 시스템 패널과 입체 bevel을 Pixel Desk에만 적용한다. */
+/* ============================================================================
+ * PIXEL DESK — MOBILE SETTINGS
+ *
+ * Windows 95의 회색 패널과 각진 입체 테두리.
+ * Mac Core를 포함한 다른 테마에는 적용하지 않는다.
+ * ============================================================================ */
+
 @media (max-width: 767px) {
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-modal-window,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-modal-window {
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-modal-window,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-modal-window {
     color: #000;
     background: #c0c0c0;
     border: 2px solid #000;
@@ -622,17 +682,23 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
     -webkit-backdrop-filter: none;
   }
 
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-modal-header,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-modal-header {
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-modal-header,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-modal-header {
     background: #000080;
     color: #fff;
     border-bottom: 2px solid #000;
   }
 
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-modal-icon,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-modal-icon,
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-close-button,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-close-button {
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-modal-icon,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-modal-icon,
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-close-button,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-close-button {
     color: #000;
     background: #c0c0c0;
     border: 2px outset #dfdfdf;
@@ -640,14 +706,19 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
     box-shadow: none;
   }
 
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-modal-icon {
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-modal-icon {
     color: #000080;
   }
 
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-section,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-section,
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-card,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-card {
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-section,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-section,
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-card,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-card {
     background: #c0c0c0;
     border: 2px outset #dfdfdf;
     border-radius: 0 !important;
@@ -656,12 +727,18 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
     -webkit-backdrop-filter: none;
   }
 
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-theme-card,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-theme-card,
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-action-card,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-action-card,
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-reset-button,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-reset-button {
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-theme-card,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-theme-card,
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-action-card,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-action-card,
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-reset-button,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-reset-button {
     color: #000;
     background: #c0c0c0;
     border: 2px outset #dfdfdf;
@@ -669,40 +746,42 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
     box-shadow: none;
   }
 
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-theme-card.is-active {
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-theme-card.is-active {
     background: #000080;
     color: #fff;
     border: 2px inset #dfdfdf;
   }
 
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-theme-card small,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-theme-card small {
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-theme-card small,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-theme-card small {
     color: inherit;
     opacity: 0.82;
   }
 
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-theme-preview,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-theme-preview {
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-theme-preview,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-theme-preview {
     border: 1px inset #dfdfdf;
     border-radius: 0 !important;
   }
 
-  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk) body:has(.mobile-layout) .settings-input,
-  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout) .settings-input {
+  :is(html[data-theme="pixel-desk"], html.theme-pixel-desk)
+    body:has(.mobile-layout) .settings-input,
+  body:is([data-theme="pixel-desk"], .theme-pixel-desk):has(.mobile-layout)
+    .settings-input {
     color: #000;
     background: #fff;
     border: 2px inset #dfdfdf;
     border-radius: 0 !important;
     box-shadow: none;
   }
-
-
 }
 
-/* Shared phone density pass / 공통 모바일 밀도 조정
-   This only changes the mobile shell's spacing. Widget data, desktop grid
-   coordinates, and stored layout values remain untouched. / 위젯 데이터와
-   데스크톱 좌표는 건드리지 않고 모바일 표시 여백만 줄인다. */
+/* 모바일 위젯 간격 및 폰트 밀도 */
 @media (max-width: 767px) {
   .mobile-header {
     padding-block: calc(6px + env(safe-area-inset-top)) 6px;
@@ -744,113 +823,125 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
   }
 }
 
-/* Career mobile density / Career 모바일 밀도
-   CareerWidget.tsx keeps the same data and edit actions on every device. This
-   final mobile layer only tightens the existing summary, filter, and list-card
-   spacing so the phone view shows more companies without hiding actions.
-   CareerWidget.tsx의 데이터와 편집 동작은 공유하고, 모바일에서만 요약·필터·
-   목록 카드의 여백을 줄여 더 많은 기업을 한 번에 보여준다. */
+/* ============================================================================
+ * CAREER — 모바일 요약 및 기업 목록 밀도
+ * 기존 CareerWidget.tsx 데이터·편집 동작은 유지한다.
+ * ============================================================================ */
+
 @media (max-width: 767px) {
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-widget {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-widget {
     padding: 10px !important;
     gap: 6px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-widget-header {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-widget-header {
     padding-block: 6px !important;
     gap: 6px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-summary-grid {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-summary-grid {
     gap: 4px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-summary-card {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-summary-card {
     min-height: 46px !important;
     padding: 5px 3px !important;
     border-radius: 10px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-summary-card strong {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-summary-card strong {
     font-size: 15px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-summary-card span {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-summary-card span {
     margin-top: 3px !important;
-    font-size: 8px !important;
+    font-size: 8.5px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-filter-row {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-filter-row {
     padding-bottom: 2px !important;
     gap: 4px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-filter-pill {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-filter-pill {
     height: 24px !important;
     min-height: 24px !important;
     padding-inline: 7px !important;
     font-size: 8.5px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-list {
     gap: 5px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-item {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-list-item {
     padding: 8px !important;
     gap: 5px !important;
     border-radius: 12px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-top {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-list-top {
     gap: 5px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-title strong {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-list-title strong {
     font-size: 11px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-title span {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-list-title span {
     margin-top: 1px !important;
     font-size: 8.5px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-dday-pill {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-dday-pill {
     min-height: 22px !important;
     padding: 3px 5px !important;
     font-size: 8px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-delete-button {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-delete-button {
     width: 24px !important;
     min-width: 24px !important;
     height: 24px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-meta {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-list-meta {
     gap: 3px !important;
   }
 
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-list-meta span,
-  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="career"] .career-status-pill {
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-list-meta span,
+  body:has(.mobile-layout)
+    .mobile-widget-slot[data-widget-id="career"] .career-status-pill {
     min-height: 18px !important;
     padding-inline: 5px !important;
     font-size: 7.5px !important;
   }
 }
 
-
-
-/* Settings compact pass / Settings 모바일 2차 압축
-   Some Settings groups intentionally collapse to one column on narrow phones.
-   Keep the action label and touch target, but remove repeated helper copy so a
-   simple choice does not become a full-height card. / 좁은 화면에서 한 열이
-   되는 선택 버튼은 제목과 터치 영역만 유지하고 반복 설명을 줄인다. */
+/* Settings 모바일 압축 */
 @media (max-width: 767px) {
   body:has(.mobile-layout) .settings-modal-body,
   body:has(.mobile-layout) .settings-body,
   body:has(.mobile-layout) .settings-content {
-    padding-block: 8px calc(14px + env(safe-area-inset-bottom)) !important;
+    padding-block: 8px
+      calc(14px + env(safe-area-inset-bottom)) !important;
     gap: 8px !important;
   }
 
@@ -906,7 +997,7 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
   }
 
   body:has(.mobile-layout) .settings-toggle-row {
-    gap: 8px !important;
+    gap: 8px;
     padding: 8px !important;
   }
 
@@ -934,9 +1025,7 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
   }
 }
 
-/* Prevent oversized text inside the shared mobile shell. Inputs stay at 16px
-   where iOS needs them to avoid automatic zoom; display copy is compacted.
-   입력은 iOS 자동 확대 방지를 위해 16px을 유지하고, 표시용 글자만 줄인다. */
+/* 모바일 공통 글자 크기 */
 @media (max-width: 767px) {
   .mobile-layout .glass-card-body,
   .mobile-layout .widget-frame__body {
@@ -948,7 +1037,8 @@ body:has(.mobile-layout) :is(.global-sync-indicator, .quick-capture-toast) {
     overflow-wrap: anywhere;
   }
 
-  .mobile-layout :is(.today-focus-main h2, .today-focus-hero h2, .today-focus-block h3) {
+  .mobile-layout
+    :is(.today-focus-main h2, .today-focus-hero h2, .today-focus-block h3) {
     font-size: clamp(15px, 4.6vw, 21px);
     line-height: 1.2;
   }
