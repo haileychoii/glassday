@@ -1,45 +1,672 @@
 
-/*
- * 파일: src/styles/mobile-pixel.css
+/* ============================================================================
+ * GLASSDAY / MOBILE PIXEL DESK — WINDOWS 95
+ * ============================================================================
  *
- * 연결:
- * GlassCard.tsx          → .widget-frame__header
- * MobileStudyCard.tsx    → .mobile-study-card__heading
- * MobileCalendarCard.tsx → .mobile-calendar-card__header
- * MobileCareerCard.tsx   → .mobile-career-card__header
+ * [현재 파일]
+ * src/styles/mobile-pixel.css
  *
- * 네 종류의 헤더가 동일한 Windows 95 제목 표시줄을 사용한다.
- */
+ * [연결 관계]
+ *
+ * src/styles/index.css
+ *   └─ mobile-pixel.css (현재 파일, 마지막 import)
+ *
+ * src/components/mobile/MobileDashboard.tsx
+ *   ├─ MobileStudyCard.tsx
+ *   │   └─ .mobile-study-card
+ *   ├─ MobileCalendarCard.tsx
+ *   │   └─ .mobile-calendar-card
+ *   ├─ MobileCareerCard.tsx
+ *   │   └─ .mobile-career-card
+ *   └─ WidgetSlot.tsx
+ *       └─ GlassCard.tsx
+ *           └─ .glass-card / .widget-frame__header
+ *
+ * [문제 원인]
+ * Study, Calendar, Career는 자체 제목줄을 사용한다.
+ * Memo, Money, Timer 등은 GlassCard 제목줄을 사용한다.
+ * 기존 Pixel Desk CSS는 두 구조에 서로 다른 스타일을 적용했다.
+ *
+ * [수정 목표]
+ * 1. 모든 모바일 위젯의 제목줄 높이와 아이콘 위치 통일
+ * 2. Windows 95의 남색 제목줄 + 회색 창 + 입체 버튼 적용
+ * 3. Calendar 내부의 청록색·둥근 패널 제거
+ * 4. 중복되는 가짜 제목줄 ::before/::after 제거
+ * 5. 모바일 이외의 화면과 실제 위젯 기능 유지
+ *
+ * [중요]
+ * 이 파일은 기존 CSS를 보완하는 Pixel 전용 스타일이다.
+ * JSX/TSX 구조를 바꾸거나 새 HTML 래퍼를 추가하지 않는다.
+ * ============================================================================ */
+
+
+/* ============================================================================
+ * 1. MOBILE PIXEL 공통 디자인
+ *
+ * Pixel Desk가 html 또는 body에 지정된 경우에만 작동한다.
+ * 다른 테마와 PC의 구조를 변경하지 않는다.
+ * ============================================================================ */
+
 :is(
-  [data-theme="pixel-desk"],
-  .theme-pixel-desk,
-  .pixel-desk,
-  .theme-pixel
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
 ) .mobile-layout {
 
-  /* 기존 Pixel Desk의 장식용 제목 표시줄 제거 */
-  & .mobile-widget-slot .glass-card::before,
-  & .mobile-widget-slot .glass-card::after {
+  /* Windows 95 디자인 토큰
+   *
+   * Figma에서 같은 변수명으로 관리할 수 있다.
+   */
+  --w95-bg: #c0c0c0;
+  --w95-title: #000080;
+  --w95-text: #000000;
+  --w95-light: #ffffff;
+  --w95-highlight: #dfdfdf;
+  --w95-shadow: #808080;
+  --w95-dark: #404040;
+
+  background: #008080;
+  color: var(--w95-text);
+
+  /* --------------------------------------------------------
+   * 2. 위젯 간 공통 여백
+   *
+   * MobileDashboard.tsx의 .mobile-dashboard 담당.
+   * 위젯별 높이는 변경하지 않는다.
+   * -------------------------------------------------------- */
+  & .mobile-dashboard {
+    gap: 8px;
+    padding-inline: 8px;
+  }
+
+  /* --------------------------------------------------------
+   * 3. 공통 위젯 바깥 창
+   *
+   * GlassCard       : Memo / Money / Timer 등
+   * MobileStudyCard : Study
+   * MobileCalendar  : Calendar
+   * MobileCareer    : Career
+   *
+   * 동일한 Windows 95 창 프레임으로 표시한다.
+   * -------------------------------------------------------- */
+  & :is(
+    .mobile-widget-slot > .glass-card,
+    .mobile-study-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    min-width: 0;
+
+    border: 2px solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+    background: var(--w95-bg) !important;
+    background-image: none !important;
+
+    box-shadow:
+      inset 1px 1px var(--w95-highlight),
+      inset -1px -1px var(--w95-shadow) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* --------------------------------------------------------
+   * 4. GlassCard의 중복 장식 제거
+   *
+   * 원본: src/styles/themes/pixel.css
+   *
+   * ::before : 가짜 남색 제목 표시줄
+   * ::after  : 가짜 최소화/최대화/닫기 버튼
+   *
+   * 실제 제목줄과 버튼은 GlassCard.tsx에 이미 있으므로
+   * 모바일에서는 가짜 장식만 제거한다.
+   * -------------------------------------------------------- */
+  & .mobile-widget-slot > .glass-card::before,
+  & .mobile-widget-slot > .glass-card::after {
     content: none !important;
     display: none !important;
   }
 
-  /* 실제 제목·아이콘·버튼의 공통 정렬 */
+  /* GlassCard의 기존 30px 상단 장식 여백 제거.
+   * 제목줄 38px / 남은 공간은 실제 위젯 본문.
+   */
+  & .mobile-widget-slot > .glass-card {
+    display: grid !important;
+    grid-template-rows: 38px minmax(0, 1fr) !important;
+
+    height: 100% !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* --------------------------------------------------------
+   * 5. 자체 모바일 카드의 내부 여백
+   *
+   * Study / Calendar / Career는 GlassCard를 사용하지 않는다.
+   *
+   * 제목줄은 창 전체 폭으로 표시하고,
+   * 본문에만 8px 여백을 둔다.
+   *
+   * 이 방식은 HTML 요소를 추가하지 않는다.
+   * -------------------------------------------------------- */
   & :is(
-    .mobile-widget-slot .glass-card > .widget-frame__header,
+    .mobile-study-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    padding: 0 8px 8px !important;
+    gap: 8px;
+  }
+
+  & :is(
     .mobile-study-card__heading,
     .mobile-calendar-card__header,
     .mobile-career-card__header
   ) {
+    margin-inline: -8px;
+  }
+
+  /* --------------------------------------------------------
+   * 6. 모든 위젯의 실제 제목 표시줄
+   *
+   * GlassCard.tsx
+   *   .widget-frame__header
+   *
+   * MobileStudyCard.tsx
+   *   .mobile-study-card__heading
+   *
+   * MobileCalendarCard.tsx
+   *   .mobile-calendar-card__header
+   *
+   * MobileCareerCard.tsx
+   *   .mobile-career-card__header
+   *
+   * 모든 위젯에 같은 높이·여백·정렬을 적용한다.
+   * -------------------------------------------------------- */
+  & :is(
+    .mobile-widget-slot > .glass-card > .widget-frame__header,
+    .mobile-study-card__heading,
+    .mobile-calendar-card__header,
+    .mobile-career-card__header
+  ) {
+    box-sizing: border-box;
+
     display: flex !important;
+    flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
 
+    flex-wrap: nowrap !important;
+
     height: 38px !important;
     min-height: 38px !important;
+
     padding: 4px 7px !important;
     gap: 6px !important;
 
+    background: var(--w95-title) !important;
+    background-image: none !important;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+
+    color: #ffffff !important;
+  }
+
+  /* --------------------------------------------------------
+   * 7. 제목과 아이콘 정렬
+   *
+   * GlassCard:
+   *   title-group → icon + copy
+   *
+   * 자체 카드:
+   *   heading/label → SVG 아이콘 + 텍스트
+   *
+   * 모든 아이콘을 제목 왼쪽 18px 영역에 정렬한다.
+   * -------------------------------------------------------- */
+  & .mobile-widget-slot :is(
+    .widget-frame__title-group,
+    .widget-frame__copy
+  ) {
+    min-height: 0 !important;
+    min-width: 0;
+
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  & :is(
+    .widget-frame__title-group,
+    .mobile-study-card__eyebrow,
+    .mobile-calendar-card__label,
+    .mobile-career-card__heading
+  ) {
+    gap: 6px !important;
+  }
+
+  & :is(
+    .widget-frame__icon,
+    .mobile-study-card__eyebrow > svg,
+    .mobile-calendar-card__label > svg,
+    .mobile-career-card__heading > svg
+  ) {
+    box-sizing: border-box;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 18px !important;
+
+    width: 18px !important;
+    min-width: 18px !important;
+    height: 18px !important;
+
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+  }
+
+  & .widget-frame__icon svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  /* 제목 텍스트: 12px로 통일 */
+  & :is(
+    .mobile-widget-slot .widget-frame__title,
+    .mobile-study-card__eyebrow,
+    .mobile-calendar-card__label,
+    .mobile-career-card__heading,
+    .mobile-career-card__heading strong
+  ) {
+    margin: 0 !important;
+
+    color: #ffffff !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+  }
+
+  /* 위젯 제목줄의 부제목은 모바일에서 숨김.
+   * 실제 위젯 콘텐츠나 데이터는 숨기지 않는다.
+   */
+  & .mobile-widget-slot .widget-frame__subtitle {
+    display: none !important;
+  }
+
+  /* --------------------------------------------------------
+   * 8. 제목줄 오른쪽 버튼
+   *
+   * Study/Calendar/Career의 '전체 보기'와
+   * GlassCard의 실제 액션 버튼에 적용된다.
+   *
+   * 실제 클릭 기능은 기존 TSX가 유지한다.
+   * -------------------------------------------------------- */
+  & :is(
+    .mobile-widget-slot .widget-frame__actions button,
+    .mobile-study-card__open,
+    .mobile-calendar-card__open,
+    .mobile-career-card__open
+  ) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+
+    flex: 0 0 auto;
+
+    min-width: 28px;
+    height: 28px;
+    min-height: 28px;
+
+    padding: 0 7px !important;
+
+    border: 2px solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+
+    background: var(--w95-bg) !important;
+    color: #000000 !important;
+    font-size: 11px !important;
+
+    box-shadow:
+      inset 1px 1px var(--w95-highlight),
+      inset -1px -1px var(--w95-shadow) !important;
+  }
+
+  /* --------------------------------------------------------
+   * 9. GlassCard 본문
+   *
+   * 기존 pixel.css는 .glass-card-body 높이를 100%로 둔다.
+   * 모바일에서는 제목줄 아래의 남은 공간만 차지한다.
+   * -------------------------------------------------------- */
+  & .mobile-widget-slot > .glass-card > .widget-frame__body {
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 8px !important;
+
+    overflow: auto;
+  }
+
+  /* --------------------------------------------------------
+   * 10. CALENDAR 요약 패널
+   *
+   * 사진에서 회색 둥근 상자로 보이던 영역이다.
+   *
+   * 연결:
+   * MobileCalendarCard.tsx
+   *   → .mobile-calendar-card__summary
+   *
+   * 선택 날짜, 등록 일정 수, 일정 추가 버튼 표시.
+   *
+   * 기존 기능은 그대로 두고 패널만 Windows 95 스타일로 변경.
+   * -------------------------------------------------------- */
+  & .mobile-calendar-card__summary {
+    padding: 10px !important;
+
+    border: 2px solid !important;
+    border-color:
+      var(--w95-shadow)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-shadow) !important;
+
+    border-radius: 0 !important;
+
+    background: var(--w95-highlight) !important;
+
+    box-shadow:
+      inset 1px 1px var(--w95-dark) !important;
+  }
+
+  /* --------------------------------------------------------
+   * 11. CALENDAR 일주일 날짜 버튼
+   *
+   * 연결:
+   * MobileCalendarCard.tsx
+   *   → .mobile-calendar-week-day
+   *
+   * 7일 날짜 선택 기능을 그대로 유지하면서
+   * Windows 95 Raised Button 스타일로 변경한다.
+   * -------------------------------------------------------- */
+  & .mobile-calendar-week-day {
+    min-width: 0;
+
+    border: 2px solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+
+    background: var(--w95-bg) !important;
+    color: var(--w95-text) !important;
+
+    box-shadow: none !important;
+  }
+
+  & .mobile-calendar-week-day.is-selected {
+    border-color:
+      var(--w95-dark)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-dark) !important;
+
+    background: var(--w95-title) !important;
+    color: #ffffff !important;
+  }
+
+  & .mobile-calendar-week-day.is-selected
+    :is(span, strong) {
+    color: #ffffff !important;
+  }
+
+  /* --------------------------------------------------------
+   * 12. CALENDAR 일정 목록 및 빈 상태
+   *
+   * 화면 아래의
+   * '선택한 날짜에 등록된 일정이 없어요.' 영역.
+   *
+   * 둥글고 반투명한 박스 대신
+   * Windows 95의 평면적인 목록 영역 사용.
+   * -------------------------------------------------------- */
+  & :is(
+    .mobile-calendar-agenda,
+    .mobile-calendar-empty,
+    .mobile-calendar-event
+  ) {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-calendar-empty {
+    padding: 12px !important;
+    background: #ffffff !important;
+
+    border: 1px solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+
+    color: #404040 !important;
+  }
+
+  /* --------------------------------------------------------
+   * 13. 공통 카드 안쪽 패널
+   *
+   * Study : 공부 현황 숫자
+   * Career: 지원 현황 숫자와 다음 일정
+   *
+   * 상태에 의미가 있는 색상은 전부 제거하지 않고
+   * 기본 패널만 공통 스타일로 바꾼다.
+   * -------------------------------------------------------- */
+  & :is(
+    .mobile-study-card__metric,
+    .mobile-study-card__upcoming,
+    .mobile-career-metrics > div,
+    .mobile-career-next
+  ) {
+    border: 1px solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+
+    background: var(--w95-highlight) !important;
+    box-shadow: none !important;
+  }
+
+  /* --------------------------------------------------------
+   * 14. 공통 기능 버튼
+   *
+   * Calendar + 버튼
+   * Career 기업 추가
+   * Study 바로가기
+   * Money 기간 및 탭
+   * Timer 실행/모드 선택
+   *
+   * 모두 기존 onClick을 그대로 유지한다.
+   * -------------------------------------------------------- */
+  & :is(
+    .mobile-calendar-add,
+    .mobile-career-card__add,
+    .mobile-study-card__shortcuts > button,
+    .money-pill,
+    .money-section-tab,
+    .timer-widget-mode-button,
+    .timer-widget-primary,
+    .timer-widget-secondary
+  ) {
+    border: 2px solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+
+    background: var(--w95-bg) !important;
+    color: var(--w95-text) !important;
+
+    box-shadow: none !important;
+  }
+
+  /* --------------------------------------------------------
+   * 15. 모바일 상단 및 하단 메뉴
+   *
+   * MobileLayout / MobileNavigation에서 사용하는
+   * 실제 버튼을 Windows 95 Taskbar 스타일로 통일한다.
+   * -------------------------------------------------------- */
+  & :is(
+    .mobile-header,
+    .mobile-navigation
+  ) {
+    background: var(--w95-bg) !important;
+    border-radius: 0 !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  & :is(
+    .mobile-navigation-item,
+    .mobile-navigation-capture
+  ) {
+    border: 2px solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+    background: var(--w95-bg) !important;
+    color: var(--w95-text) !important;
+  }
+
+  & .mobile-navigation-item[aria-current="page"] {
+    background: var(--w95-title) !important;
+    color: #ffffff !important;
+
+    border-color:
+      var(--w95-dark)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-dark) !important;
+  }
+
+  /* --------------------------------------------------------
+   * 16. 입력창
+   *
+   * Memo / Money / Study 등의 입력창.
+   * 체크박스·색상·파일 입력은 기본 형태를 유지한다.
+   * -------------------------------------------------------- */
+  & .mobile-widget-slot :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    textarea,
+    select
+  ) {
+    border-radius: 0 !important;
+    background: #ffffff !important;
+
+    border: 2px solid !important;
+    border-color:
+      var(--w95-shadow)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-shadow) !important;
+  }
+}
+
+
+/* ============================================================================
+ * 17. 포털로 렌더링하는 전체 화면
+ *
+ * Study / Calendar / Career의 전체 보기 화면은
+ * createPortal(document.body)로 렌더링된다.
+ *
+ * 따라서 .mobile-layout 내부 선택자만으로는 적용되지 않는다.
+ * 모바일 Pixel Desk가 활성화되어 있을 때만 적용한다.
+ * ============================================================================ */
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+):has(.mobile-layout) {
+
+  & :is(
+    .mobile-study-detail,
+    .mobile-calendar-detail,
+    .mobile-career-detail
+  ) {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+  }
+
+  & :is(
+    .mobile-study-detail__header,
+    .mobile-calendar-detail__header,
+    .mobile-career-detail__header
+  ) {
+    background: #000080 !important;
+    color: #ffffff !important;
+
+    border-radius: 0 !important;
+    border-bottom: 2px solid #404040 !important;
+  }
+
+  & :is(
+    .mobile-study-detail__heading strong,
+    .mobile-calendar-detail__header h2,
+    .mobile-career-detail__header h2
+  ) {
+    color: #ffffff !important;
+  }
+
+  & :is(
+    .mobile-study-detail__tabs > button,
+    .mobile-calendar-view-switch > button,
+    .mobile-career-status-rail > button
+  ) {
+    border-radius: 0 !important;
+
+    border: 2px solid #808080 !important;
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+  }
+
+  & :is(
+    .mobile-study-detail__tabs > button.is-selected,
+    .mobile-calendar-view-switch > button.is-selected,
+    .mobile-career-status-rail > button.is-active
+  ) {
     background: #000080 !important;
     color: #ffffff !important;
   }

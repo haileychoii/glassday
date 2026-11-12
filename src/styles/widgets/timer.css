@@ -714,3 +714,4 @@ body:has(.mobile-layout) .timer-floating-window .floating-window-subtitle {
 
 body:has(.mobile-layout) .timer-floating-body {
   padding: 6px;
+}
