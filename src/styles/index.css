@@ -91,3 +91,6 @@
 
 /* 모든 테마의 모바일 Daily Journal 레이아웃 — 마지막에 적용 */
 @import "./mobile-journal.css";
+
+/* Mac Core iOS Cupertino + 모든 테마의 공통 여백 */
+@import "./mobile-finish.css";
