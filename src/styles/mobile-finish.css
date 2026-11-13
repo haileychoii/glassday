@@ -1,0 +1,607 @@
+/* ============================================================================
+ * GLASSDAY / MOBILE FINISH — MAC CORE CUPERTINO v2
+ * 저장 경로: src/styles/mobile-finish.css (기존 파일 전체 교체)
+ *
+ * [연결 파일]
+ * - src/styles/index.css: 이 파일을 mobile-journal.css 뒤에서 import
+ * - GlassCard.tsx: 일반 위젯 제목/아이콘/본문
+ * - MobileStudyCard.tsx, MobileCalendarCard.tsx, MobileCareerCard.tsx:
+ *   독립형 모바일 카드 — GlassCard를 사용하지 않으므로 별도 공통 스타일 제공
+ * - DailyJournalWidget.tsx: 제목 / 날짜 도구줄 / 요약 / 기록
+ * - MemoWidget.tsx: 메모 목록 / 편집 영역 / 사용자 지정 종이색
+ * - SettingsModal.tsx: Portal 기반 설정창 / 실제 닫기 버튼
+ *
+ * [작동 범위]
+ * 1. 모든 모바일 테마: Journal/Memo의 중첩 좌우 여백만 축소
+ * 2. Mac Core 모바일: 창 재질, 타이포, 아이콘, 버튼, 패널 통일
+ * 3. Mac Core PC: Settings의 빨강/노랑/초록 장식 높이만 보정
+ *
+ * 새로운 HTML wrapper와 가짜 위젯 제목줄을 만들지 않는다.
+ * 데이터, 저장된 메모 종이색/서체, 입력 및 클릭 기능은 그대로 둔다.
+ * ============================================================================ */
+
+/* 01. 모든 테마 — Journal과 Memo에 중복 적용되던 좌우 패딩 압축. */
+.mobile-layout .mobile-widget-slot
+  .glass-card:is(.daily-journal-widget, .memo-widget)
+  > .widget-frame__body {
+  padding-inline: 6px !important;
+}
+
+.mobile-layout .daily-journal-widget {
+  --journal-body-pad-x: 6px;
+  --journal-gap: 7px;
+}
+
+.mobile-layout .daily-journal-widget
+  :is(.journal-summary-card, .journal-section, .journal-task-item, .journal-clip-item) {
+  padding-inline: 8px !important;
+}
+
+.mobile-layout .daily-journal-widget
+  :is(.journal-content, .journal-main-scroll, .journal-add-row, .journal-clip-row) {
+  min-width: 0;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="memo"]
+  :is(.memo-workspace, .memo-list-panel) {
+  padding-inline: 6px !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="memo"] .memo-editor {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-inline: 0 !important;
+  padding-inline: 8px !important;
+}
+
+/* Memo 상세 편집기는 body 아래 Portal로 렌더링되므로 별도 경로가 필요. */
+body:has(.mobile-layout) .memo-floating-window .memo-workspace {
+  padding-inline: 6px !important;
+}
+body:has(.mobile-layout) .memo-floating-window .memo-editor {
+  padding-inline: 8px !important;
+}
+
+/* ============================================================================
+ * 02. MAC CORE — 전체 모바일 디자인 토큰
+ *
+ * macOS System Settings: 밝은 회색 바탕, 흰 창, 옅은 툴바, 가는 hairline.
+ * Apple Blue는 모든 배경에 뿌리지 않고 선택 및 아이콘에만 사용한다.
+ * ============================================================================ */
+:is(
+  html[data-theme="mac-core"], body[data-theme="mac-core"],
+  html.theme-mac-core, body.theme-mac-core
+) .mobile-layout {
+  --cu-canvas: #f2f2f7;
+  --cu-window: #ffffff;
+  --cu-toolbar: #f8f8fa;
+  --cu-group: #f6f6f8;
+  --cu-control: #ffffff;
+  --cu-line: rgb(60 60 67 / 0.13);
+  --cu-hairline: rgb(60 60 67 / 0.09);
+  --cu-text: #1c1c1e;
+  --cu-secondary: #6e6e73;
+  --cu-accent: #007aff;
+  --cu-accent-tint: rgb(0 122 255 / 0.095);
+  --cu-shadow: 0 1px 1px rgb(20 28 45 / 0.025),
+               0 6px 20px -10px rgb(20 28 45 / 0.11);
+  --cu-radius-window: 14px;
+  --cu-radius-inner: 10px;
+
+  /* 기존 위젯의 semantic token을 Mac Core 한 군데에서 조정. */
+  --gd-widget-panel-bg: var(--cu-group);
+  --gd-widget-panel-border: var(--cu-hairline);
+  --gd-widget-panel-shadow: none;
+  --gd-widget-control-bg: var(--cu-control);
+  --gd-widget-control-border: var(--cu-line);
+  --gd-widget-control-active-bg: var(--cu-accent-tint);
+  --gd-widget-inner-radius: var(--cu-radius-inner);
+
+  background: var(--cu-canvas) !important;
+  color: var(--cu-text);
+  -webkit-font-smoothing: antialiased;
+
+  /* 모바일 최상단/하단도 위젯과 같은 Mac 재질을 사용. */
+  & .mobile-header {
+    background: rgb(250 250 252 / 0.89) !important;
+    border-bottom: 1px solid var(--cu-line) !important;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.95);
+    backdrop-filter: blur(20px) saturate(145%);
+    -webkit-backdrop-filter: blur(20px) saturate(145%);
+  }
+
+  & .mobile-heading h1 {
+    color: var(--cu-text) !important;
+    font-size: 18px !important;
+    font-weight: 750 !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.035em;
+  }
+
+  & .mobile-heading > span {
+    color: var(--cu-secondary) !important;
+    font-size: 11px !important;
+  }
+
+  & .mobile-header-actions button {
+    color: var(--cu-text) !important;
+    border: 1px solid var(--cu-hairline) !important;
+    border-radius: 9px !important;
+    background: var(--cu-window) !important;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.035) !important;
+  }
+
+  & .mobile-navigation {
+    border-top: 1px solid var(--cu-line) !important;
+    background: rgb(249 249 251 / 0.91) !important;
+    box-shadow: 0 -2px 12px rgb(20 28 45 / 0.035);
+    backdrop-filter: blur(24px) saturate(145%);
+    -webkit-backdrop-filter: blur(24px) saturate(145%);
+  }
+
+  & .mobile-navigation-item {
+    color: var(--cu-secondary) !important;
+    border-radius: 10px !important;
+    background: transparent !important;
+    font-weight: 550;
+  }
+  & .mobile-navigation-item[aria-current="page"] {
+    color: var(--cu-accent) !important;
+    background: var(--cu-accent-tint) !important;
+  }
+  & .mobile-navigation-item[aria-current="page"] svg {
+    color: var(--cu-accent) !important;
+  }
+  & .mobile-navigation-capture {
+    border: 1px solid rgb(0 122 255 / 0.3) !important;
+    border-radius: 11px !important;
+    background: #007aff !important;
+    box-shadow: 0 2px 8px rgb(0 122 255 / 0.15) !important;
+  }
+
+  /* 위젯의 시작선과 슬롯 간격. Career의 음수 margin을 원복. */
+  & .mobile-dashboard {
+    gap: 10px !important;
+    padding-inline: max(9px, env(safe-area-inset-left))
+                    max(9px, env(safe-area-inset-right)) !important;
+  }
+  & .mobile-widget-slot[data-widget-id="career"] {
+    margin-inline: 0 !important;
+  }
+
+  /* ========================================================================
+   * 03. Widget Window — GlassCard/독립 모바일 카드 4종 공통
+   * 가장 중요한 규칙: 테두리가 있는 위젯과 없는 위젯을 만들지 않는다.
+   * ======================================================================== */
+  & :is(
+    .mobile-widget-slot .glass-card,
+    .mobile-study-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    box-sizing: border-box;
+    min-width: 0;
+    border: 1px solid var(--cu-line) !important;
+    border-radius: var(--cu-radius-window) !important;
+    background: var(--cu-window) !important;
+    background-image: none !important;
+    color: var(--cu-text) !important;
+    box-shadow: var(--cu-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    overflow: hidden !important;
+  }
+
+  /* 예전 Mac 테마가 생성하는 가짜 38px 헤더를 제거한다. */
+  & .mobile-widget-slot .glass-card::before,
+  & .mobile-widget-slot .glass-card::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* Study/Calendar/Career는 자체적으로 헤더를 그리므로 내부 패딩만 8px. */
+  & :is(.mobile-study-card, .mobile-calendar-card, .mobile-career-card) {
+    padding: 8px !important;
+    gap: 8px !important;
+  }
+
+  /* 일반 GlassCard는 실제 헤더만 사용. Journal의 2행 헤더는 제외. */
+  & :is(
+    .mobile-widget-slot .glass-card:not(.daily-journal-widget) > .widget-frame__header,
+    .mobile-study-card__heading,
+    .mobile-calendar-card__header,
+    .mobile-career-card__header
+  ) {
+    box-sizing: border-box;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100%;
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 7px 11px !important;
+    gap: 8px !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--cu-hairline) !important;
+    border-radius: 0 !important;
+    background: var(--cu-toolbar) !important;
+    background-image: none !important;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.85) !important;
+    color: var(--cu-text) !important;
+  }
+
+  /* 독립형 카드 제목줄은 부모 8px 패딩을 상쇄해 창 끝까지 확장. */
+  & :is(
+    .mobile-study-card__heading,
+    .mobile-calendar-card__header,
+    .mobile-career-card__header
+  ) {
+    width: calc(100% + 16px);
+    margin: -8px -8px 0 !important;
+  }
+
+  /* Mac 위젯 아이콘: SF Symbols처럼 동일한 광학 크기를 유지. */
+  & .mobile-widget-slot .glass-card .widget-frame__icon,
+  & :is(
+    .mobile-study-card__eyebrow > svg,
+    .mobile-calendar-card__label > svg,
+    .mobile-career-card__heading > svg
+  ) {
+    box-sizing: border-box;
+    display: inline-grid !important;
+    place-items: center;
+    flex: 0 0 28px !important;
+    width: 28px !important;
+    min-width: 28px !important;
+    height: 28px !important;
+    padding: 5px !important;
+    margin: 0 !important;
+    border: 1px solid rgb(0 122 255 / 0.055) !important;
+    border-radius: 8px !important;
+    background: var(--cu-accent-tint) !important;
+    box-shadow: none !important;
+    color: var(--cu-accent) !important;
+  }
+  & .mobile-widget-slot .glass-card .widget-frame__icon svg {
+    width: 17px !important;
+    height: 17px !important;
+    color: var(--cu-accent) !important;
+  }
+
+  /* 아이콘과 제목의 수직 기준선 통일. */
+  & :is(
+    .mobile-study-card__eyebrow,
+    .mobile-calendar-card__label,
+    .mobile-career-card__heading
+  ) {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-width: 0;
+  }
+  & .mobile-widget-slot .glass-card .widget-frame__title-group {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    text-align: left !important;
+  }
+  & .mobile-widget-slot .glass-card .widget-frame__copy {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+  }
+  & :is(
+    .widget-frame__title,
+    .mobile-study-card__eyebrow,
+    .mobile-calendar-card__label,
+    .mobile-career-card__heading,
+    .mobile-career-card__heading strong
+  ) {
+    margin: 0 !important;
+    color: var(--cu-text) !important;
+    font-size: 13px !important;
+    font-weight: 720 !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.02em !important;
+  }
+  & .mobile-widget-slot .glass-card .widget-frame__subtitle {
+    display: none !important;
+  }
+
+  /* Mac toolbar: 버튼은 연회색 바탕 + 가는 윤곽, 파란색은 작동 표시. */
+  & :is(
+    .mobile-widget-slot .glass-card:not(.daily-journal-widget) .widget-frame__actions button,
+    .mobile-study-card__open,
+    .mobile-calendar-card__open,
+    .mobile-career-card__open
+  ) {
+    flex: 0 0 auto;
+    min-height: 32px !important;
+    padding: 0 8px !important;
+    color: var(--cu-accent) !important;
+    font-size: 11.5px !important;
+    font-weight: 650 !important;
+    border: 1px solid var(--cu-hairline) !important;
+    border-radius: 8px !important;
+    background: var(--cu-window) !important;
+    box-shadow: 0 1px 2px rgb(20 28 45 / 0.035) !important;
+  }
+  & :is(
+    .mobile-widget-slot .glass-card:not(.daily-journal-widget) .widget-frame__actions button,
+    .mobile-study-card__open,
+    .mobile-calendar-card__open,
+    .mobile-career-card__open
+  ):active {
+    background: var(--cu-accent-tint) !important;
+    transform: none !important;
+  }
+
+  /* 본문 영역: 헤더 아래 불필요한 공백 축소. */
+  & .mobile-widget-slot .glass-card > .widget-frame__body {
+    padding-block: 8px !important;
+    min-width: 0;
+    min-height: 0;
+  }
+  & .mobile-widget-slot .glass-card:is(.daily-journal-widget, .memo-widget)
+    > .widget-frame__body {
+    padding-inline: 6px !important;
+  }
+
+  /* ========================================================================
+   * 04. Grouped content — 일정/통계/조건/알림은 동일한 회색 패널
+   * 요소별 특수 색(과목, 경고 레벨, 메모 종이색)은 삭제하지 않는다.
+   * ======================================================================== */
+  & :is(
+    .mobile-study-card__metric,
+    .mobile-study-card__upcoming,
+    .mobile-calendar-card__summary,
+    .mobile-career-metrics > div,
+    .mobile-career-next,
+    .journal-summary-card,
+    .journal-section,
+    .journal-score-inline,
+    .journal-task-item,
+    .journal-clip-item,
+    .money-summary-panel,
+    .money-budget-panel,
+    .alert-center-item
+  ) {
+    border: 1px solid var(--cu-hairline) !important;
+    border-radius: var(--cu-radius-inner) !important;
+    background: var(--cu-group) !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Alert는 정보/주의/위험 의미를 잃지 않도록 왼쪽 색상선만 유지. */
+  & .alert-center-item.tone-danger { border-left: 3px solid #ff453a !important; }
+  & .alert-center-item.tone-warning { border-left: 3px solid #ff9f0a !important; }
+  & .alert-center-item.tone-info { border-left: 3px solid #007aff !important; }
+  & .alert-center-item.tone-success { border-left: 3px solid #30d158 !important; }
+
+  /* 메모 목록의 선택 색상은 기존 per-note 색을 유지한다. */
+  & .memo-note-item:not(.is-active) {
+    border: 1px solid var(--cu-hairline) !important;
+    border-radius: var(--cu-radius-inner) !important;
+    background: var(--cu-group) !important;
+    box-shadow: none !important;
+  }
+  & .memo-note-item.is-active {
+    background: var(--memo-note-surface-active, var(--cu-accent-tint)) !important;
+    border-color: var(--memo-note-border, rgb(0 122 255 / 0.23)) !important;
+    border-radius: var(--cu-radius-inner) !important;
+    box-shadow: none !important;
+  }
+
+  /* Condition은 이미 4개 개별 셀을 가지므로 바깥 카드 제거. */
+  & .daily-journal-widget .journal-score-strip-card {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Mac Journal: 첫 행은 창 제목, 두 번째 행은 날짜 전용 툴바. */
+  & .mobile-widget-slot .daily-journal-widget
+    > .widget-frame__header {
+    background: var(--cu-toolbar) !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+  & .mobile-widget-slot .daily-journal-widget
+    > .widget-frame__header > .widget-frame__title-group {
+    background: var(--cu-toolbar) !important;
+    border-bottom: 1px solid var(--cu-hairline) !important;
+    color: var(--cu-text) !important;
+  }
+  & .mobile-widget-slot .daily-journal-widget
+    > .widget-frame__header > .widget-frame__actions {
+    background: var(--cu-window) !important;
+    border-top: 0 !important;
+    border-bottom: 1px solid var(--cu-hairline) !important;
+  }
+  & .daily-journal-widget .journal-date-nav :is(button, input) {
+    color: var(--cu-text) !important;
+    background: var(--cu-toolbar) !important;
+    border: 1px solid var(--cu-line) !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+  }
+  & .daily-journal-widget .journal-date-nav button {
+    color: var(--cu-accent) !important;
+  }
+
+  /* 메모 바깥 영역은 흰 창의 일부. 실제 종이색은 변경하지 않음. */
+  & .memo-workspace {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  & .memo-widget .memo-editor {
+    background: var(--memo-paper-surface, #ffffff) !important;
+    border: 1px solid var(--cu-hairline) !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+  }
+
+  /* 분류가 필요한 고유 색상은 유지하되 입력/버튼은 Mac 높이에 맞춤. */
+  & :is(input, textarea, select, button):focus-visible {
+    outline: 2px solid rgb(0 122 255 / 0.75) !important;
+    outline-offset: 2px;
+  }
+}
+
+/* ============================================================================
+ * 05. Mac Core PC Settings — macOS 창 장식의 수평 정렬 보정.
+ * SettingsModal.tsx / settings-modal-header::before 는 가짜 장식이며
+ * 실제 닫기 버튼은 .settings-close-button 이다.
+ * 모바일에서는 아래 06 규칙이 장식을 완전히 숨긴다.
+ * ============================================================================ */
+:is(
+  html[data-theme="mac-core"], body[data-theme="mac-core"],
+  html.theme-mac-core, body.theme-mac-core
+) .settings-modal-header {
+  padding-left: 83px !important;
+}
+
+:is(
+  html[data-theme="mac-core"], body[data-theme="mac-core"],
+  html.theme-mac-core, body.theme-mac-core
+) .settings-modal-header::before {
+  top: 50% !important;
+  left: 17px !important;
+  transform: translateY(-50%) !important;
+  width: 12px !important;
+  height: 12px !important;
+  background: #ff5f57 !important;
+  box-shadow: 18px 0 0 #ffbd2e, 36px 0 0 #28c840 !important;
+}
+
+/* ============================================================================
+ * 06. Mac Core 모바일 Settings — 실제 iOS Settings 전체화면 동작.
+ * Portal은 .mobile-layout 안이 아니라 document.body 바로 아래에 나타난다.
+ * 따라서 html/body 테마와 body:has(.mobile-layout) 조건을 함께 사용한다.
+ * ============================================================================ */
+:is(
+  html[data-theme="mac-core"] body,
+  html.theme-mac-core body,
+  body[data-theme="mac-core"],
+  body.theme-mac-core
+):has(.mobile-layout) {
+  & .settings-modal-window {
+    background: #f2f2f7 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  & .settings-modal-header {
+    box-sizing: border-box;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    height: calc(58px + env(safe-area-inset-top)) !important;
+    min-height: calc(58px + env(safe-area-inset-top)) !important;
+    padding: env(safe-area-inset-top) 14px 0 !important;
+    gap: 10px !important;
+    border-bottom: 1px solid rgb(60 60 67 / 0.12) !important;
+    background: #fafafa !important;
+    cursor: default !important;
+    touch-action: auto !important;
+  }
+
+  /* macOS 빨노초는 모바일 Settings에서는 제목을 가리므로 제거. */
+  & .settings-modal-header::before,
+  & .settings-modal-header::after {
+    content: none !important;
+    display: none !important;
+    box-shadow: none !important;
+  }
+
+  & .settings-modal-title-wrap {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    align-items: center !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 10px !important;
+  }
+
+  & .settings-modal-icon {
+    display: grid !important;
+    place-items: center !important;
+    flex: 0 0 32px !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    border: 1px solid rgb(0 122 255 / 0.06) !important;
+    border-radius: 9px !important;
+    background: rgb(0 122 255 / 0.09) !important;
+    box-shadow: none !important;
+    color: #007aff !important;
+  }
+
+  & .settings-modal-title-text { min-width: 0; }
+  & .settings-modal-title-text h2 {
+    margin: 0 !important;
+    font-size: 17px !important;
+    font-weight: 750 !important;
+    line-height: 1.2 !important;
+    color: #1c1c1e !important;
+    letter-spacing: -0.03em;
+  }
+  & .settings-modal-title-text p { display: none !important; }
+
+  /* 44px 터치 영역으로 닫기 버튼 기능은 유지한다. */
+  & .settings-close-button {
+    position: static !important;
+    display: grid !important;
+    place-items: center !important;
+    flex: 0 0 40px !important;
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #3a3a3c !important;
+    background: #e9e9ed !important;
+    border: 1px solid rgb(60 60 67 / 0.08) !important;
+    border-radius: 11px !important;
+    box-shadow: none !important;
+  }
+
+  & .settings-modal-body {
+    background: #f2f2f7 !important;
+  }
+
+  & :is(.settings-section, .settings-card, .settings-theme-card) {
+    background: #ffffff !important;
+    border: 1px solid rgb(60 60 67 / 0.09) !important;
+    border-radius: 13px !important;
+    box-shadow: none !important;
+  }
+
+  & .settings-section-title {
+    color: #6e6e73 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+  }
+  & .settings-theme-card.is-active {
+    border-color: rgb(0 122 255 / 0.5) !important;
+    box-shadow: 0 0 0 2px rgb(0 122 255 / 0.12) !important;
+  }
+}
