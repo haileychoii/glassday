@@ -96,6 +96,227 @@
   }
 }
 
+
+/* ==========================================================================
+ * 1-1. MOBILE WIDGET DESIGN SYSTEM — SHARED GEOMETRY
+ *
+ * 대상: Pastel / Glass Light / Glass Dark / Aurora / Retro
+ * 제외: Mac Core / Pixel Desk (기존 전용 디자인 유지)
+ *
+ * 연결:
+ * MobileDashboard.tsx → 모든 .mobile-widget-slot
+ * GlassCard.tsx → .widget-frame__header / __title / __icon
+ * MobileStudyCard.tsx → .mobile-study-card
+ * MobileCalendarCard.tsx → .mobile-calendar-card
+ * MobileCareerCard.tsx → .mobile-career-card
+ *
+ * 색상보다 먼저 위젯의 크기, 아이콘, 제목 정렬을 통일한다.
+ * ========================================================================== */
+
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora,
+  [data-theme="retro"], .theme-retro
+) .mobile-layout {
+  --mobile-widget-inset: 10px;
+
+  /* 01. 모든 위젯이 동일한 그리드 폭을 사용한다. */
+  & .mobile-dashboard > .mobile-widget-slot {
+    width: 100%;
+    min-width: 0;
+    margin-inline: 0 !important;
+    box-sizing: border-box;
+  }
+
+  & :is(
+    .mobile-widget-slot .glass-card,
+    .mobile-study-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-inline: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 02. 독립형 위젯도 한 열로 구성한다. */
+  & :is(
+    .mobile-study-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 var(--mobile-widget-inset)
+      var(--mobile-widget-inset) !important;
+    gap: 8px;
+  }
+
+  /* 03. 제목줄 높이와 정렬 통일.
+   * Journal은 날짜 선택 2행이 있으므로 제외한다. */
+  & :is(
+    .mobile-widget-slot .glass-card:not(.daily-journal-widget)
+      > .widget-frame__header,
+    .mobile-study-card__heading,
+    .mobile-calendar-card__header,
+    .mobile-career-card__header
+  ) {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+    min-height: 48px !important;
+    height: auto !important;
+    padding: 8px var(--mobile-widget-inset) !important;
+    gap: 8px !important;
+  }
+
+  /* 04. 독립형 카드의 제목줄은 카드 전체 너비를 사용한다.
+   * 바깥 카드까지 넓히는 것은 아니다. */
+  & .mobile-widget-slot[data-widget-id="study"]
+      > .mobile-study-card > .mobile-study-card__heading,
+  & .mobile-widget-slot[data-widget-id="calendar"]
+      > .mobile-calendar-card > .mobile-calendar-card__header,
+  & .mobile-widget-slot[data-widget-id="career"]
+      > .mobile-career-card > .mobile-career-card__header {
+    width: calc(100% + 2 * var(--mobile-widget-inset)) !important;
+    max-width: none !important;
+    margin: 0 calc(-1 * var(--mobile-widget-inset)) !important;
+  }
+
+  /* 05. 제목 아이콘 + 글자의 기준선 통일. */
+  & :is(
+    .mobile-widget-slot .widget-frame__title-group,
+    .mobile-study-card__eyebrow,
+    .mobile-calendar-card__label,
+    .mobile-career-card__heading
+  ) {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    gap: 7px !important;
+  }
+
+  & .mobile-widget-slot .widget-frame__copy {
+    min-width: 0;
+    min-height: 0;
+    justify-content: center !important;
+    align-items: flex-start !important;
+  }
+
+  /* 06. 아이콘은 같은 크기이되 테마별 색상은 유지. */
+  & .mobile-widget-slot .widget-frame__icon {
+    flex: 0 0 24px !important;
+    width: 24px !important;
+    min-width: 24px !important;
+    height: 24px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  & :is(
+    .mobile-widget-slot .widget-frame__icon svg,
+    .mobile-study-card__eyebrow > svg,
+    .mobile-calendar-card__label > svg,
+    .mobile-career-card__heading > svg
+  ) {
+    flex: 0 0 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  /* 07. 위젯 제목의 폰트 크기와 두께 통일. */
+  & :is(
+    .mobile-widget-slot .widget-frame__title,
+    .mobile-study-card__eyebrow,
+    .mobile-calendar-card__label,
+    .mobile-career-card__heading,
+    .mobile-career-card__heading strong
+  ) {
+    margin: 0 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.015em !important;
+  }
+
+  & .mobile-widget-slot .widget-frame__subtitle {
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+  }
+
+  /* 08. 제목 오른쪽 버튼들의 기본 규격 통일. */
+  & .mobile-widget-slot .widget-frame__actions {
+    flex: 0 0 auto;
+    margin-left: auto;
+    min-width: 0;
+    flex-wrap: nowrap;
+  }
+
+  & :is(
+    .mobile-widget-slot .widget-frame__actions button,
+    .mobile-study-card__open,
+    .mobile-calendar-card__open,
+    .mobile-career-card__open
+  ) {
+    min-height: 32px;
+    font-size: 12px !important;
+  }
+}
+
+/* ==========================================================================
+ * 1-2. MODERN THEMES — SHARED CARD MATERIAL
+ *
+ * 공통 구조를 적용한 뒤 각 테마의 재질 변수를 읽어온다.
+ * Retro / Pixel Desk의 레트로 디자인은 변경하지 않는다.
+ * ========================================================================== */
+
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora
+) .mobile-layout {
+  /* 모든 카드의 배경·테두리·그림자를 테마 토큰에서 가져온다. */
+  & :is(
+    .mobile-widget-slot .glass-card,
+    .mobile-study-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    border: 1px solid var(--gd-surface-border) !important;
+    border-radius: var(--gd-radius-widget, 18px) !important;
+    background: var(--gd-surface-bg) !important;
+    box-shadow: var(--gd-surface-shadow) !important;
+    backdrop-filter: var(--gd-surface-filter, blur(20px)) !important;
+    -webkit-backdrop-filter:
+      var(--gd-surface-filter, blur(20px)) !important;
+  }
+
+  /* 제목줄은 동일한 표면과 구분선을 사용한다. */
+  & :is(
+    .mobile-widget-slot .glass-card:not(.daily-journal-widget)
+      > .widget-frame__header,
+    .mobile-study-card__heading,
+    .mobile-calendar-card__header,
+    .mobile-career-card__header
+  ) {
+    background: var(--gd-widget-panel-bg) !important;
+    border-bottom: 1px solid var(--gd-widget-panel-border) !important;
+    box-shadow: none !important;
+  }
+}
+
+
 /* 2. MAC CORE / MOBILE — iOS System Colors + semantic design tokens.
  * 다른 테마에 영향을 주지 않으며 색상/여백을 여기서 한 번만 정한다. */
 :is(
