@@ -50,12 +50,40 @@
  * 좌우 4px씩을 되찾는다.
  * ============================================================================ */
 
+
+/* ============================================================
+ * MOBILE CAREER — 공통 위젯 가로 크기 통일
+ *
+ * 파일: src/styles/mobile-career.css
+ * 연결: MobileDashboard.tsx → MobileCareerCard.tsx
+ *
+ * 모든 테마에서 Career의 외곽 너비를 다른 위젯과 통일한다.
+ * Career 전용 음수 여백을 제거하고 부모 그리드 폭을 따른다.
+ * ============================================================ */
+
 .mobile-layout .mobile-widget-slot[data-widget-id="career"] {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
   height: auto !important;
   min-height: 0;
-  margin-inline: -4px;
+
+  margin: 0 !important;
+  box-sizing: border-box;
   overflow: visible;
 }
+
+/* Career 카드 자체도 슬롯 너비를 넘지 않도록 한다. */
+.mobile-layout
+.mobile-widget-slot[data-widget-id="career"]
+.mobile-career-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
 
 
 /* ============================================================================
