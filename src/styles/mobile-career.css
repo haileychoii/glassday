@@ -1,247 +1,133 @@
 
 /* ============================================================================
- * Glassday · Mobile Career — Compact v2
- * ============================================================================
+ * GLASSDAY — MOBILE CAREER / FULL REPLACEMENT
+ * File: src/styles/mobile-career.css
  *
- * [파일 위치]
- * src/styles/mobile-career.css
+ * Components:
+ *   MobileDashboard.tsx -> .mobile-widget-slot[data-widget-id="career"]
+ *   MobileCareerCard.tsx -> .mobile-career-card (dashboard summary)
+ *                          .mobile-career-detail (full-screen list portal)
+ *   CareerWidget.tsx -> .career-floating-* (company editor portal)
+ *   DashboardDataContext.tsx -> data/state only, unchanged by this stylesheet
  *
- * [연결 파일]
- * 1. MobileDashboard.tsx
- *    모바일 대시보드에 Career 위젯을 배치한다.
- *
- * 2. MobileCareerCard.tsx
- *    지원 현황 요약, 기업 목록, 전체 보기 화면을 렌더링한다.
- *    이 CSS를 직접 import한다.
- *
- * 3. CareerWidget.tsx
- *    기업 정보, 자기소개서, 전형 일정 등을 편집하는 기존 상세창이다.
- *    모바일에서만 크기와 내부 여백을 조정한다.
- *
- * 4. DashboardDataContext.tsx
- *    지원 기업 데이터를 실제로 저장하고 Calendar와 연결한다.
- *    이 CSS는 저장 데이터나 로직을 변경하지 않는다.
- *
- * [핵심 수정]
- * - 기업 목록과 상세 편집창의 중첩 좌우 여백 축소
- * - 모바일 위젯의 불필요한 고정 높이 제거
- * - 기업 목록을 화면 너비에 가깝게 표시
- * - 상세 편집창을 모바일 전체 화면으로 표시
- * - 본문과 입력창의 글씨 크기 정리
- * - 중복된 카드 배경 및 여백 최소화
- *
- * [중요]
- * 데스크톱 Career는 수정하지 않는다.
- * Study / Calendar 관련 스타일도 수정하지 않는다.
- *
- * CareerWidget.tsx의 인라인 스타일과 충돌하는 일부 부분에만
- * !important를 사용한다.
+ * Responsibilities:
+ *   1. Career outer width = exactly the shared dashboard column width.
+ *   2. Inner rows use that width without negative margins or extra wrappers.
+ *   3. Mac Core / Pixel Desk header material stays in their theme CSS files.
+ *   4. Full-screen list and company editor keep working on mobile.
+ * No changes to desktop widgets or saved data.
  * ============================================================================ */
 
-
-/* ============================================================================
- * 1. MOBILE DASHBOARD — Career 위젯 영역
- * ============================================================================
- *
- * 원래 mobile.css에서는 모든 위젯에 고정 높이를 부여한다.
- * Career는 요약 카드의 콘텐츠 높이에 맞춰 자연스럽게 늘어나야 한다.
- *
- * margin-inline: -4px로 모바일 대시보드의 바깥쪽 여백 중
- * 좌우 4px씩을 되찾는다.
- * ============================================================================ */
-
-
-/* ============================================================
- * MOBILE CAREER — 공통 위젯 가로 크기 통일
- *
- * 파일: src/styles/mobile-career.css
- * 연결: MobileDashboard.tsx → MobileCareerCard.tsx
- *
- * 모든 테마에서 Career의 외곽 너비를 다른 위젯과 통일한다.
- * Career 전용 음수 여백을 제거하고 부모 그리드 폭을 따른다.
- * ============================================================ */
-
+/* 01. The mobile grid owns width. Do not reclaim gutters using negative margins.
+ * Other widgets live in the same .mobile-widget-slot grid column. */
 .mobile-layout .mobile-widget-slot[data-widget-id="career"] {
-  width: 100%;
-  max-width: 100%;
+  width: 100% !important;
+  max-width: 100% !important;
   min-width: 0;
-
   height: auto !important;
   min-height: 0;
-
   margin: 0 !important;
   box-sizing: border-box;
+  justify-self: stretch;
   overflow: visible;
 }
 
-/* Career 카드 자체도 슬롯 너비를 넘지 않도록 한다. */
-.mobile-layout
-.mobile-widget-slot[data-widget-id="career"]
-.mobile-career-card {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-}
-
-
-
-/* ============================================================================
- * 2. MOBILE CAREER 공통 디자인 토큰
- * ============================================================================
- *
- * 카드, 기업 행, 전체 화면에서 사용하는 공통 치수다.
- *
- * [수정할 때 가장 먼저 볼 값]
- * --mc-card-pad   : 요약 카드 안쪽 여백
- * --mc-row-pad    : 기업 목록 행 좌우 여백
- * --mc-screen-pad : 전체 보기 화면 좌우 여백
- * --mc-gap        : 요소 사이 간격
- *
- * 이 값들을 조정하면 여러 선택자를 하나씩 수정하지 않아도 된다.
- * ============================================================================ */
-
+/* 02. Shared Career sizing/colors.
+ * Keep the semantic theme surfaces: native iOS/Pixel colors come from later CSS. */
 .mobile-career-card,
 .mobile-career-detail {
   --mc-card-pad: 8px;
   --mc-row-pad: 8px;
   --mc-screen-pad: 8px;
-  --mc-editor-pad: 8px;
   --mc-gap: 8px;
-
-  --mc-surface: var(
-    --gd-widget-panel-bg,
-    hsl(var(--card) / 0.87)
-  );
-
-  --mc-border: var(
-    --gd-widget-panel-border,
-    hsl(var(--border) / 0.4)
-  );
-
-  --mc-control: var(
-    --gd-widget-control-bg,
-    hsl(var(--card) / 0.74)
-  );
-
+  --mc-surface: var(--gd-widget-panel-bg, hsl(var(--card) / 0.87));
+  --mc-border: var(--gd-widget-panel-border, hsl(var(--border) / 0.4));
+  --mc-control: var(--gd-widget-control-bg, hsl(var(--card) / 0.74));
   color: hsl(var(--foreground));
   font-size: 13px;
   line-height: 1.4;
 }
 
+.mobile-career-card,
 .mobile-career-card *,
+.mobile-career-detail,
 .mobile-career-detail * {
   box-sizing: border-box;
 }
 
-
-/* ============================================================================
- * 3. CAREER SUMMARY CARD
- * ============================================================================
- *
- * MobileCareerCard.tsx의 기본 요약 카드다.
- *
- * 이전에는 요약 카드 안쪽 여백과 기업 행 안쪽 여백이 겹쳐
- * 실제 텍스트가 사용할 수 있는 폭이 좁아졌다.
- *
- * 바깥 카드에는 8px만 사용하고,
- * 내부 영역에는 불필요한 추가 wrapper 여백을 넣지 않는다.
- * ============================================================================ */
-
-.mobile-career-card {
-  width: 100%;
-  min-width: 0;
-
-  padding: var(--mc-card-pad);
-
+/* Only ONE rule owns the outer card geometry. A single minmax(0,1fr) column
+ * stops long company names and header controls from widening the card. */
+.mobile-layout .mobile-widget-slot[data-widget-id="career"] > .mobile-career-card {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: var(--mc-card-pad);
   gap: var(--mc-gap);
-
   border: 1px solid var(--mc-border);
   border-radius: var(--gd-radius-widget, 18px);
-
-  background: var(
-    --gd-surface-bg,
-    hsl(var(--card) / 0.87)
-  );
-
-  box-shadow: var(
-    --gd-surface-shadow,
-    0 12px 30px -25px hsl(var(--foreground) / 0.2)
-  );
+  background: var(--gd-surface-bg, hsl(var(--card) / 0.87));
+  box-shadow: var(--gd-surface-shadow, 0 12px 30px -25px hsl(var(--foreground) / 0.2));
+  overflow: hidden;
 }
 
+/* Keep card children in the single intrinsic-width-safe grid track.
+ * Do NOT add child margin-inline or width:calc(...): the later theme files
+ * deliberately control titlebar bleed for Mac Core and Pixel Desk. */
+.mobile-career-card > :is(
+  .mobile-career-card__header,
+  .mobile-career-metrics,
+  .mobile-career-card__section-head,
+  .mobile-career-next,
+  .mobile-career-card__empty,
+  .mobile-career-card__preview
+) {
+  min-width: 0;
+}
 
-/* 요약 카드 헤더와 각 섹션 제목 */
-
+/* 03. Summary header — Career title + 'View all' action. */
 .mobile-career-card__header,
 .mobile-career-card__section-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   min-width: 0;
   gap: 6px;
 }
 
 .mobile-career-card__heading {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-
   min-width: 0;
-
+  gap: 6px;
   font-size: 15px;
   font-weight: 800;
 }
 
-.mobile-career-card__heading svg {
-  flex: none;
-}
-
-.mobile-career-card__section-head strong {
-  font-size: 13px;
-}
-
-
-/* 전체 보기 / 기업 추가 버튼 */
+.mobile-career-card__heading svg { flex: none; }
+.mobile-career-card__section-head strong { font-size: 13px; }
 
 .mobile-career-card__open,
 .mobile-career-card__add {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  gap: 4px;
   flex: none;
-
   min-height: 38px;
   padding: 6px 3px;
-
+  gap: 4px;
   border: 0;
   background: transparent;
-
   color: hsl(var(--foreground) / 0.75);
-
   font-size: 12px;
   font-weight: 750;
-
+  white-space: nowrap;
   cursor: pointer;
 }
 
-
-/* ============================================================================
- * 4. 지원 현황 요약 지표
- * ============================================================================
- *
- * 예: 전체 지원 / 진행 중 / 예정 일정
- *
- * 각 카드가 지나치게 세로로 길어지지 않도록
- * 최소 높이를 50px로 설정한다.
- *
- * 3개를 같은 너비로 배치한다.
- * ============================================================================ */
-
+/* 04. Three equal metrics (total / in progress / upcoming). */
 .mobile-career-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -249,19 +135,15 @@
 }
 
 .mobile-career-metrics > div {
+  display: grid;
+  align-content: center;
+  justify-items: center;
   min-width: 0;
   min-height: 50px;
-
   padding: 6px 3px;
-
-  display: grid;
-  justify-items: center;
-  align-content: center;
   gap: 2px;
-
   border: 1px solid var(--mc-border);
   border-radius: 10px;
-
   background: var(--mc-surface);
 }
 
@@ -269,44 +151,31 @@
   font-size: 18px;
   line-height: 1.1;
   font-weight: 800;
-
   font-variant-numeric: tabular-nums;
 }
 
 .mobile-career-metrics span {
-  font-size: 11px;
   color: hsl(var(--muted-foreground));
+  font-size: 11px;
   white-space: nowrap;
 }
 
-
-/* ============================================================================
- * 5. 가장 가까운 전형 일정
- * ============================================================================
- *
- * 일정명과 D-day만 간결하게 보여준다.
- * 별도의 중첩 카드나 추가 wrapper 여백을 만들지 않는다.
- * ============================================================================ */
-
+/* 05. Nearest hiring event. D-day remains in the right column. */
 .mobile-career-next {
-  min-height: 46px;
-  padding: 7px 9px;
-
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-
+  min-width: 0;
+  min-height: 46px;
+  padding: 7px 9px;
   gap: 2px 6px;
-
   border: 1px solid var(--mc-border);
   border-radius: 10px;
-
   background: var(--mc-surface);
 }
 
 .mobile-career-next > span {
   grid-column: 1;
-
   color: hsl(var(--muted-foreground));
   font-size: 11px;
 }
@@ -314,121 +183,88 @@
 .mobile-career-next > strong {
   grid-column: 1;
   min-width: 0;
-
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
   font-size: 13px;
 }
 
 .mobile-career-next > b {
   grid-column: 2;
   grid-row: 1 / 3;
-
   font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 
-
-/* 기업 미리보기와 전체 목록에 공통 적용 */
-
+/* 06. Dashboard company preview + full-screen company list. */
 .mobile-career-card__preview,
 .mobile-career-detail__list {
-  min-width: 0;
-
   display: grid;
+  min-width: 0;
   gap: 6px;
 }
 
 .mobile-career-card__empty {
+  min-width: 0;
   margin: 0;
   padding: 10px 8px;
-
   border: 1px dashed var(--mc-border);
   border-radius: 10px;
-
   color: hsl(var(--muted-foreground));
   font-size: 12px;
 }
 
-
-/* ============================================================================
- * 6. COMPANY ROW — 기업 목록 카드
- * ============================================================================
- *
- * MobileCareerCard.tsx의 CareerRow 컴포넌트와 연결된다.
- *
- * 열 구조:
- * ① 기업 구분 색상 4px
- * ② 기업명 / 직무 / 전형 일정
- * ③ 상세 화면 이동 아이콘 16px
- *
- * 기업명에는 최대한 많은 가로 공간을 할당한다.
- * ============================================================================ */
-
 .mobile-career-row {
-  width: 100%;
-  min-width: 0;
-  min-height: 55px;
-
-  padding: 7px var(--mc-row-pad);
-
   display: grid;
   grid-template-columns: 4px minmax(0, 1fr) 16px;
   align-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 55px;
+  padding: 7px var(--mc-row-pad);
   gap: 7px;
-
   border: 1px solid var(--mc-border);
   border-radius: 10px;
-
   background: var(--mc-surface);
-
   color: inherit;
   text-align: left;
-
   cursor: pointer;
 }
 
 .mobile-career-row__accent {
   width: 4px;
   height: 33px;
-
   border-radius: 99px;
   background: var(--mc-company-color, #c6def1);
 }
 
 .mobile-career-row__content {
-  min-width: 0;
-
   display: grid;
+  min-width: 0;
   gap: 2px;
 }
 
 .mobile-career-row__top {
   display: flex;
   align-items: center;
-
-  gap: 5px;
   min-width: 0;
+  gap: 5px;
 }
 
-.mobile-career-row__top strong {
+.mobile-career-row__top strong,
+.mobile-career-row__role {
   min-width: 0;
-
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
 
+.mobile-career-row__top strong {
   font-size: 13px;
   font-weight: 750;
 }
 
 .mobile-career-row__role {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
   color: hsl(var(--muted-foreground));
   font-size: 11px;
 }
@@ -437,9 +273,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-
   gap: 3px;
-
   color: hsl(var(--foreground) / 0.73);
   font-size: 11px;
 }
@@ -448,82 +282,36 @@
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
+.mobile-career-row__schedule b.is-urgent { color: #bc4c63; }
+.mobile-career-row__chevron { color: hsl(var(--muted-foreground)); }
 
-.mobile-career-row__schedule b.is-urgent {
-  color: #bc4c63;
-}
-
-.mobile-career-row__chevron {
-  color: hsl(var(--muted-foreground));
-}
-
-
-/* 기업 진행 상태 표시 */
-
+/* Status colors are semantic; preserve them in every theme. */
 .mobile-career-status {
   flex: none;
-
   padding: 2px 5px;
   border-radius: 6px;
-
-  background: hsl(var(--primary) / 0.1);
   color: hsl(var(--foreground) / 0.8);
-
+  background: hsl(var(--primary) / 0.1);
   font-size: 10px;
   font-weight: 700;
 }
+.mobile-career-status--interview { background: #e7e0f7; color: #55447a; }
+.mobile-career-status--rejected { background: #e7e7e7; color: #555; }
+.mobile-career-status--offer { background: #d5eee4; color: #286851; }
 
-.mobile-career-status--interview {
-  background: #e7e0f7;
-  color: #55447a;
-}
-
-.mobile-career-status--rejected {
-  background: #e7e7e7;
-  color: #555;
-}
-
-.mobile-career-status--offer {
-  background: #d5eee4;
-  color: #286851;
-}
-
-
-/* ============================================================================
- * 7. CAREER FULL-SCREEN LIST
- * ============================================================================
- *
- * MobileCareerCard.tsx에서 createPortal을 사용해
- * document.body에 직접 표시되는 전체 화면이다.
- *
- * 구조:
- * - 고정 헤더
- * - 검색창
- * - 상태 필터
- * - 기업 목록
- *
- * 전체 화면 바깥에는 padding을 넣지 않는다.
- * 콘텐츠 스크롤 영역에만 8px 여백을 넣는다.
- * ============================================================================ */
-
+/* 07. 'View all' full-screen list. Rendered via createPortal(document.body)
+ * from MobileCareerCard.tsx, not inside .mobile-layout. */
 .mobile-career-detail {
   position: fixed;
   inset: 0;
   z-index: 99000;
-
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   width: 100%;
   height: 100dvh;
   min-width: 0;
-
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-
+  padding-block: env(safe-area-inset-top) env(safe-area-inset-bottom);
   overflow: hidden;
-
-  padding-block:
-    env(safe-area-inset-top)
-    env(safe-area-inset-bottom);
-
   background: hsl(var(--background));
 }
 
@@ -531,40 +319,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   min-width: 0;
   min-height: 62px;
-
-  gap: 8px;
   padding: 9px var(--mc-screen-pad);
-
+  gap: 8px;
   border-bottom: 1px solid var(--mc-border);
 }
 
-.mobile-career-detail__header > div:first-child {
-  min-width: 0;
-}
-
+.mobile-career-detail__header > div:first-child { min-width: 0; }
 .mobile-career-detail__header > div:first-child > span {
   display: block;
-
+  color: hsl(var(--muted-foreground));
   font-size: 10px;
   letter-spacing: 0.06em;
-
-  color: hsl(var(--muted-foreground));
 }
 
 .mobile-career-detail__header h2 {
   display: flex;
   align-items: baseline;
-
-  gap: 7px;
   margin: 0;
-
+  gap: 7px;
   font-size: 18px;
   font-weight: 800;
 }
-
 .mobile-career-detail__header h2 small {
   color: hsl(var(--muted-foreground));
   font-size: 12px;
@@ -572,363 +349,190 @@
 
 .mobile-career-detail__header-actions {
   display: flex;
-  gap: 5px;
   flex: none;
+  gap: 5px;
 }
-
 .mobile-career-detail__header-actions button {
   display: grid;
   place-items: center;
-
   width: 42px;
   height: 42px;
-
   border: 1px solid var(--mc-border);
   border-radius: 10px;
-
   background: var(--mc-control);
   color: inherit;
-
   cursor: pointer;
 }
-
-
-/* 실제 스크롤되는 목록 영역 */
 
 .mobile-career-detail__scroll {
   display: grid;
   align-content: start;
-
-  gap: 10px;
   min-height: 0;
-
-  padding:
-    10px
-    var(--mc-screen-pad)
-    calc(16px + env(safe-area-inset-bottom));
-
+  padding: 10px var(--mc-screen-pad) calc(16px + env(safe-area-inset-bottom));
+  gap: 10px;
   overflow: hidden auto;
   overscroll-behavior-y: contain;
-
   -webkit-overflow-scrolling: touch;
 }
 
-
-/* ============================================================================
- * 8. 기업 검색
- * ============================================================================
- *
- * 검색창은 실제 입력 영역에 최대한 많은 가로 폭을 사용한다.
- * iOS Safari에서 입력창을 누를 때 자동 확대되는 현상을 줄이기 위해
- * input 글씨 크기는 16px로 유지한다.
- * ============================================================================ */
-
+/* 08. Search controls — 16px input prevents Safari input zoom. */
 .mobile-career-search {
-  min-height: 44px;
-  padding: 0 9px;
-
   display: flex;
   align-items: center;
-
+  min-height: 44px;
+  padding: 0 9px;
   gap: 6px;
-
   border: 1px solid var(--mc-border);
   border-radius: 10px;
-
   background: var(--mc-control);
 }
-
 .mobile-career-search input {
   flex: 1;
   min-width: 0;
-
   height: 44px;
   padding: 0;
-
   border: 0;
   outline: 0;
-
   background: transparent;
   color: inherit;
-
   font-size: 16px;
 }
-
 .mobile-career-search button {
   display: grid;
   place-items: center;
-
   flex: none;
-
   width: 32px;
   height: 40px;
-
   border: 0;
   background: transparent;
-
   color: hsl(var(--muted-foreground));
 }
 
-
-/* ============================================================================
- * 9. 지원 상태 필터
- * ============================================================================
- *
- * 필터 전체가 한 줄로 배치된다.
- * 공간이 부족하면 가로로 스크롤할 수 있다.
- * ============================================================================ */
-
+/* 09. Status filters scroll horizontally; the full list scrolls vertically. */
 .mobile-career-status-rail {
   display: flex;
-  gap: 6px;
-
   width: 100%;
   min-width: 0;
-
   padding-block: 1px 4px;
-
+  gap: 6px;
   overflow-x: auto;
   overflow-y: hidden;
-
   scrollbar-width: none;
 }
-
-.mobile-career-status-rail::-webkit-scrollbar {
-  display: none;
-}
-
+.mobile-career-status-rail::-webkit-scrollbar { display: none; }
 .mobile-career-status-rail button {
   flex: none;
-
   min-height: 36px;
   padding: 0 10px;
-
   border: 1px solid var(--mc-border);
   border-radius: 10px;
-
   background: var(--mc-control);
   color: hsl(var(--foreground) / 0.7);
-
   font-size: 12px;
   font-weight: 700;
-
   white-space: nowrap;
   cursor: pointer;
 }
-
 .mobile-career-status-rail button.is-active {
   border-color: hsl(var(--primary) / 0.4);
   background: hsl(var(--primary) / 0.14);
   color: hsl(var(--foreground));
 }
-
 .mobile-career-detail__subhead {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
-
   gap: 7px;
 }
-
-.mobile-career-detail__subhead strong {
-  font-size: 13px;
-}
-
+.mobile-career-detail__subhead strong { font-size: 13px; }
 .mobile-career-upcoming-toggle {
   display: inline-flex;
   align-items: center;
-
   gap: 6px;
   font-size: 12px;
 }
-
 .mobile-career-upcoming-toggle input {
   width: 18px;
   height: 18px;
-
   accent-color: hsl(var(--primary));
 }
-
 .mobile-career-detail__empty {
   padding: 22px 8px;
-
   border: 1px dashed var(--mc-border);
   border-radius: 10px;
-
   color: hsl(var(--muted-foreground));
   font-size: 13px;
-
   text-align: center;
 }
 
-
-/* ============================================================================
- * 10. 기존 CareerWidget 상세 편집창 수정
- * ============================================================================
- *
- * [중요한 연결 관계]
- * CareerWidget.tsx는 자체 createPortal로 상세 편집창을 만든다.
- *
- * MobileCareerCard.tsx의 자식 요소가 아니므로
- * .mobile-career-card 선택자로는 상세창을 수정할 수 없다.
- *
- * 따라서 body:has(.mobile-layout)을 사용해
- * 실제 모바일 화면일 때만 기존 Career 상세창을 수정한다.
- *
- * 데스크톱에서는 아래 규칙들이 적용되지 않는다.
- * ============================================================================ */
-
-body:has(.mobile-layout) .career-floating-layer {
-  z-index: 100000 !important;
-}
-
-
-/* 기존 PC용 floating window의 위치/크기를 모바일 전체 화면으로 변경 */
-
+/* 10. Company detail editor from CareerWidget.tsx is a different body portal.
+ * Only activate these overrides when the mobile app shell exists. */
+body:has(.mobile-layout) .career-floating-layer { z-index: 100000 !important; }
 body:has(.mobile-layout) .career-floating-window {
   inset: 0 !important;
-
   left: 0 !important;
   top: 0 !important;
-
-  width: 100dvw !important;
+  width: 100% !important;
   height: 100dvh !important;
-
   min-width: 0 !important;
   min-height: 0 !important;
-
   max-width: none !important;
   max-height: none !important;
-
   border-radius: 0 !important;
   resize: none !important;
-
   grid-template-rows: auto minmax(0, 1fr) !important;
-
   overflow: hidden !important;
 }
 
-
-/* ============================================================================
- * 11. 기업 상세창 헤더
- * ============================================================================
- *
- * PC에서는 드래그 가능한 제목 표시줄이지만,
- * 모바일에서는 이동할 필요가 없으므로 더 간결하게 표시한다.
- * ============================================================================ */
-
+/* 11. Detail editor header and tap targets. */
 body:has(.mobile-layout) .career-floating-titlebar {
   min-height: 62px !important;
-
-  padding:
-    calc(8px + env(safe-area-inset-top))
-    8px
-    8px !important;
-
+  padding: calc(8px + env(safe-area-inset-top)) 8px 8px !important;
   gap: 7px !important;
   cursor: default !important;
 }
-
-body:has(.mobile-layout) .career-floating-title > svg {
-  display: none;
-}
-
+body:has(.mobile-layout) .career-floating-title > svg { display: none; }
 body:has(.mobile-layout) .career-floating-title h2 {
   margin: 0;
-
   font-size: 16px;
   line-height: 1.25;
-
   overflow-wrap: anywhere;
 }
-
-body:has(.mobile-layout) .career-floating-title p {
-  font-size: 11px;
-}
-
+body:has(.mobile-layout) .career-floating-title p { font-size: 11px; }
 body:has(.mobile-layout) .career-floating-close-button {
   min-width: 42px;
   min-height: 42px;
 }
-
 body:has(.mobile-layout) .career-modal-actions .career-small-button {
   max-width: 116px;
   padding-inline: 7px;
-
   font-size: 11px;
 }
 
-
-/* ============================================================================
- * 12. 상세창 콘텐츠 좌우 여백
- * ============================================================================
- *
- * [기존 문제]
- * CareerWidget.tsx의 .career-floating-body에는
- * padding: 18px 인라인 스타일이 지정되어 있다.
- *
- * 여기에 각 .career-detail-section의 padding이 추가되어
- * 콘텐츠 좌우에 여백이 중복됐다.
- *
- * [수정]
- * 스크롤 본문에 8px을 한 번만 적용한다.
- * 각 섹션에서는 추가 여백을 최소화한다.
- * ============================================================================ */
-
+/* 12. Detail editor: one outer horizontal inset instead of nested padding.
+ * Original CareerWidget may set 18px inline; !important overrides it. */
 body:has(.mobile-layout) .career-floating-body {
   min-width: 0 !important;
   min-height: 0 !important;
-
-  padding:
-    8px
-    8px
-    calc(20px + env(safe-area-inset-bottom)) !important;
-
+  padding: 8px 8px calc(20px + env(safe-area-inset-bottom)) !important;
   gap: 10px !important;
-
   overflow-x: hidden !important;
   overflow-y: auto !important;
-
   -webkit-overflow-scrolling: touch;
 }
-
-
-/* 불필요한 중첩 패널 제거 */
-
-body:has(.mobile-layout)
-.career-floating-body > .career-detail-section {
+body:has(.mobile-layout) .career-floating-body > .career-detail-section {
   min-width: 0;
   max-width: 100%;
-
   padding: 8px 2px;
-
   border: 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.28);
   border-radius: 0;
-
   background: transparent;
   box-shadow: none;
-
-  border-bottom: 1px solid hsl(var(--border) / 0.28);
 }
 
-
-/* ============================================================================
- * 13. 상세 편집 폼 — 모바일 1열 레이아웃
- * ============================================================================
- *
- * 기존 PC 폼은 2~3열 레이아웃을 사용한다.
- * 모바일에서는 화면 너비를 넘지 않도록 1열로 정리한다.
- *
- * 대상:
- * - 지원 기업 기본 정보
- * - 채용 전형 일정
- * - 자기소개서
- * - 첨부 자료
- * - 면접 기록
- * - 최종 결과
- * ============================================================================ */
-
+/* 13. Company editor form uses a single mobile column. */
 body:has(.mobile-layout) .career-floating-body :is(
   .career-detail-grid,
   .career-stage-top,
@@ -941,10 +545,6 @@ body:has(.mobile-layout) .career-floating-body :is(
 ) {
   grid-template-columns: minmax(0, 1fr) !important;
 }
-
-
-/* 상세 섹션 내부 개별 카드 여백 */
-
 body:has(.mobile-layout) .career-floating-body :is(
   .cover-letter-item,
   .career-attachment-item,
@@ -954,55 +554,27 @@ body:has(.mobile-layout) .career-floating-body :is(
   padding: 8px;
   border-radius: 12px;
 }
-
-
-/* 전형 진행 상태를 나타내는 세로 타임라인 */
-
 body:has(.mobile-layout) .career-floating-body .career-stage-item {
   grid-template-columns: 24px minmax(0, 1fr);
-
   gap: 6px;
   min-width: 0;
 }
-
 body:has(.mobile-layout) .career-floating-body :is(
   .career-stage-marker,
   .career-stage-marker-wrap
 ) {
   max-width: 24px;
 }
-
-
-/* 모바일 입력창 글씨 크기 통일 */
-
 body:has(.mobile-layout) .career-floating-body :is(
-  input:not([type="checkbox"]):not([type="color"]),
-  select,
-  textarea
+  input:not([type="checkbox"]):not([type="color"]), select, textarea
 ) {
   min-width: 0;
   max-width: 100%;
-
   font-size: 16px;
 }
+body:has(.mobile-layout) .career-window-resize-handle { display: none !important; }
 
-
-/* 모바일에서 창 크기 조절 핸들은 필요하지 않음 */
-
-body:has(.mobile-layout) .career-window-resize-handle {
-  display: none !important;
-}
-
-
-/* ============================================================================
- * 14. 접근성 및 키보드 포커스
- * ============================================================================
- *
- * 모바일에 외부 키보드를 연결하거나
- * 브라우저의 키보드 탐색을 사용할 때
- * 현재 선택한 요소를 쉽게 구분할 수 있도록 한다.
- * ============================================================================ */
-
+/* 14. Keyboard focus and reduced motion. */
 .mobile-career-row:focus-visible,
 .mobile-career-card__open:focus-visible,
 .mobile-career-card__add:focus-visible,
@@ -1011,12 +583,6 @@ body:has(.mobile-layout) .career-window-resize-handle {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
 }
-
-
-/* 사용자가 모션 감소 설정을 켠 경우 */
-
 @media (prefers-reduced-motion: reduce) {
-  .mobile-career-row {
-    transition: none;
-  }
+  .mobile-career-row { transition: none; }
 }
