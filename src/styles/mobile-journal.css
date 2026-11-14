@@ -552,3 +552,52 @@
   content: none !important;
   display: none !important;
 }
+
+
+/* PC: Summary 토글 숨김, 요약은 항상 표시 */
+.daily-journal-widget .journal-summary-toggle {
+  display: none;
+}
+
+/* 모바일: 접기/펼치기 버튼 */
+.mobile-layout .daily-journal-widget .journal-summary-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  margin-bottom: 7px;
+
+  border: 1px solid var(--journal-panel-border);
+  border-radius: var(--journal-radius);
+  background: var(--journal-panel);
+  color: var(--journal-text);
+
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* 모바일에서 접혔을 때만 요약 내용 숨김 */
+.mobile-layout .daily-journal-widget
+.journal-summary-row[data-mobile-open="false"] {
+  display: none !important;
+}
+
+/* 모바일: 요약과 기록을 하나의 스크롤 영역으로 */
+.mobile-layout .daily-journal-widget .journal-content {
+  display: block !important;
+  height: 100%;
+  min-height: 0;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+.mobile-layout .daily-journal-widget .journal-main-scroll {
+  height: auto !important;
+  min-height: 0;
+  overflow: visible !important;
+}
