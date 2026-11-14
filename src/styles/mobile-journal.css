@@ -1,215 +1,554 @@
+
 /* ============================================================================
- * GLASSDAY / MOBILE DAILY JOURNAL — ALL THEMES
- * 저장 위치: src/styles/mobile-journal.css
+ * GLASSDAY — MOBILE JOURNAL / COMPACT & READABLE
+ * File: src/styles/mobile-journal.css
  *
- * [연결 컴포넌트]
- * MobileDashboard.tsx → WidgetSlot.tsx → DailyJournalWidget.tsx → GlassCard.tsx
+ * 연결:
+ * MobileDashboard.tsx → WidgetSlot.tsx
+ * → DailyJournalWidget.tsx → GlassCard.tsx
  *
- * [기존 DOM — JSX 변경 없음]
- * .glass-card.daily-journal-widget
- *   ├─ .widget-frame__header
- *   │   ├─ .widget-frame__title-group (아이콘/제목/부제)
- *   │   └─ .widget-frame__actions
- *   │       └─ .journal-date-nav (이전 날짜 / 날짜 입력 / 다음 날짜)
- *   └─ .widget-frame__body
- *       └─ .journal-content
- *           ├─ .journal-summary-row
- *           └─ .journal-main-scroll
+ * 목표:
+ * 1. 날짜와 제목의 불필요한 고정 높이 축소
+ * 2. 요약 영역을 본문과 함께 스크롤
+ * 3. Progress / Tasks / Clips / Condition 압축
+ * 4. Today Tasks, Tomorrow, 기록 입력칸 가독성 개선
+ * 5. 테마별 색상은 유지하고 모바일 배치만 변경
  *
- * [설계 원칙]
- * - 제목/날짜 컨트롤을 같은 행에 우겨 넣지 않고, 실제 헤더를 2행으로 표시.
- * - Pixel Desk는 위쪽만 남색 제목줄, 아래는 회색 날짜 도구줄.
- * - Mac Core는 기존 유리 재질을 유지하고, 요약의 Condition 이중 패널 제거.
- * - 모바일 셸에만 적용하며 PC/다른 위젯/데이터 저장 로직은 변경하지 않음.
- * - index.css에서 mobile-pixel.css 뒤에 한 번만 import한다.
+ * PC, Tauri, 데이터 저장 로직에는 영향을 주지 않는다.
  * ============================================================================ */
 
-/* 01. 공통: 위젯 프레임은 고정 38px 대신 내용 높이(86px)를 받아야 한다.
- * 기존 mobile-pixel.css의 grid-template-rows: 38px !important도 여기서 교체한다. */
+/* 01. Journal 외곽
+ *
+ * 일반적인 휴대폰에서는 헤더 48px만 고정한다.
+ * 기존 86px 또는 96px 고정 헤더는 사용하지 않는다.
+ */
 .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget {
   display: grid !important;
-  grid-template-rows: 86px minmax(0, 1fr) !important;
-  padding-top: 0 !important;
+  grid-template-rows: 48px minmax(0, 1fr) !important;
+
   min-width: 0;
-  overflow: hidden;
-}
-
-/* 02. 실제 제목줄은 2행: 제목 38px + 날짜 도구줄 48px.
- * 기존 Mac Core display:flex / Pixel Desk height:38px 충돌을 함께 해소한다. */
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-  > .widget-frame__header {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) !important;
-  grid-template-rows: 38px 48px !important;
-  height: 86px !important;
-  min-height: 86px !important;
+  min-height: 0;
   padding: 0 !important;
-  margin: 0 !important;
-  gap: 0 !important;
-  align-items: stretch !important;
-  justify-content: stretch !important;
   overflow: hidden;
 }
 
-/* 03. 제목: 왼쪽 아이콘과 타이틀을 첫째 행에 중앙 정렬한다. */
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-  > .widget-frame__header > .widget-frame__title-group {
-  grid-row: 1;
+/* 02. 제목 + 날짜 선택
+ *
+ * 충분한 화면 폭에서는 한 행에 표시한다.
+ * 제목과 날짜가 서로 겹치지 않도록 너비를 제한한다.
+ */
+.mobile-layout .mobile-widget-slot .daily-journal-widget
+  > .widget-frame__header {
   display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
   align-items: center !important;
-  justify-content: flex-start !important;
+  justify-content: space-between !important;
+
   width: 100% !important;
-  height: 38px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+
+  padding: 0 8px !important;
+  margin: 0 !important;
+  gap: 6px !important;
+
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* 제목 그룹: 아이콘 + Daily Journal */
+.mobile-layout .mobile-widget-slot .daily-journal-widget
+  > .widget-frame__header
+  > .widget-frame__title-group {
+  display: flex !important;
+  flex: 1 1 auto !important;
+
+  align-items: center !important;
+
+  width: auto !important;
   min-width: 0 !important;
   min-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 10px !important;
-  gap: 7px;
-  flex: none !important;
-  text-align: left !important;
-}
+  height: auto !important;
 
-/* 04. 날짜 선택을 제목 밑의 독립된 도구줄로 배치.
- * GlassCard의 기존 actions DOM과 onClick은 그대로 사용한다. */
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-  > .widget-frame__header > .widget-frame__actions {
-  grid-row: 2;
-  display: flex !important;
-  align-items: center !important;
-  flex: none !important;
-  flex-wrap: nowrap !important;
-  width: 100% !important;
-  max-width: none !important;
-  min-width: 0 !important;
-  height: 48px !important;
+  padding: 0 !important;
   margin: 0 !important;
-  padding: 4px 8px !important;
-  gap: 0 !important;
-  border-top: 1px solid var(--gd-widget-panel-border, hsl(var(--border))) !important;
-  background: var(--gd-widget-panel-bg, transparent) !important;
-}
-
-/* 05. 이전 날짜 / 날짜 선택 / 다음 날짜를 3열로 균일 배치.
- * 남는 폭은 가운데 날짜 입력창에만 배분한다. */
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-  .journal-date-nav {
-  display: grid !important;
-  grid-template-columns: 40px minmax(0, 1fr) 40px !important;
-  align-items: center !important;
-  width: 100% !important;
-  min-width: 0 !important;
   gap: 6px !important;
 }
 
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-  .journal-date-nav :is(button, input) {
-  box-sizing: border-box;
-  width: 100% !important;
-  max-width: none !important;
-  min-width: 0 !important;
-  height: 40px !important;
-  min-height: 40px !important;
-  margin: 0 !important;
-  flex: none !important;
-}
-
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-  .journal-date-nav input {
-  padding-inline: 6px;
-  font-size: 16px !important; /* iOS의 날짜 입력 포커스 확대 방지 */
-}
-
-/* 06. Mac Core / Pixel Desk: 가짜 :before 장식이 실제 헤더를 덮지 않게 한다.
- * Pixel Desk는 기존 mobile-pixel.css에서 해제되지만 한 번 더 명시한다. */
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget::before,
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget::after {
-  content: none !important;
+/* 날짜가 이미 표시되므로 중복 부제목 제거 */
+.mobile-layout .daily-journal-widget .widget-frame__subtitle {
   display: none !important;
 }
 
-/* 07. 공통 모바일 Journal 요약: Progress/Tasks/Clips 3열 + Condition 전체 폭.
- * Mac Core의 강한 카드 배경 규칙에도 레이아웃은 동일하게 유지한다. */
+.mobile-layout .daily-journal-widget .widget-frame__copy {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  justify-content: center !important;
+}
+
+.mobile-layout .daily-journal-widget .widget-frame__title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+/* 날짜 컨트롤이 제목을 밀어내지 않도록 분리 */
+.mobile-layout .mobile-widget-slot .daily-journal-widget
+  > .widget-frame__header > .widget-frame__actions {
+  display: flex !important;
+  flex: 0 0 auto !important;
+
+  align-items: center !important;
+
+  width: auto !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 0 !important;
+  background: transparent !important;
+}
+
+/* 03. 날짜 선택
+ *
+ * 왼쪽 버튼 / 날짜 / 오른쪽 버튼
+ * 날짜 입력은 실제 input[type=date]이므로 기능 유지.
+ */
+.mobile-layout .daily-journal-widget .journal-date-nav {
+  display: grid !important;
+  grid-template-columns: 28px 116px 28px !important;
+
+  align-items: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+
+  gap: 4px !important;
+}
+
+.mobile-layout .daily-journal-widget
+  .journal-date-nav :is(button, input) {
+  box-sizing: border-box !important;
+
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+
+  height: 34px !important;
+  min-height: 34px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.mobile-layout .daily-journal-widget .journal-date-nav button {
+  flex: none !important;
+  font-size: 14px;
+}
+
+.mobile-layout .daily-journal-widget .journal-date-nav input {
+  padding-inline: 3px !important;
+  font-size: 16px !important;
+  text-align: center;
+}
+
+/* 04. 본문 스크롤
+ *
+ * 기존:
+ * journal-content
+ * ├─ Summary (고정)
+ * └─ journal-main-scroll (독립 스크롤)
+ *
+ * 변경:
+ * journal-content 자체가 스크롤
+ * ├─ Summary
+ * └─ journal-main-scroll (일반 콘텐츠)
+ *
+ * 결과: 위쪽 요약이 계속 화면을 차지하지 않는다.
+ */
+.mobile-layout .mobile-widget-slot .daily-journal-widget
+  > .widget-frame__body {
+  display: grid !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  padding: 6px !important;
+  overflow: hidden !important;
+}
+
+.mobile-layout .daily-journal-widget .journal-content {
+  display: block !important;
+
+  width: 100%;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  padding: 0 0 12px !important;
+
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-gutter: auto;
+}
+
+.mobile-layout .daily-journal-widget .journal-main-scroll {
+  display: grid !important;
+  align-content: start !important;
+
+  height: auto !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+
+  padding: 0 !important;
+  gap: 7px !important;
+
+  overflow: visible !important;
+}
+
+/* 05. 상단 요약: 작고 읽기 쉽게
+ *
+ * 세 개의 요약 지표를 한 행으로 구성한다.
+ * 각각의 높이는 36px로 축소한다.
+ */
 .mobile-layout .daily-journal-widget .journal-summary-row {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 8px !important;
-  min-width: 0;
+
+  align-items: stretch !important;
+  gap: 5px !important;
+
+  min-width: 0 !important;
+  margin: 0 0 7px !important;
 }
 
+.mobile-layout .daily-journal-widget
+  .journal-summary-card:not(.journal-score-strip-card) {
+  min-width: 0 !important;
+  min-height: 36px !important;
+
+  padding: 5px 8px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+
+  gap: 3px !important;
+}
+
+.mobile-layout .daily-journal-widget
+  .journal-summary-card > span {
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.mobile-layout .daily-journal-widget
+  .journal-summary-card > strong {
+  margin: 0 !important;
+  font-size: 15px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 06. Condition 점수
+ *
+ * 기존의 Condition 바깥 패널은 없애고
+ * Energy / Focus / Sleepy / Stress만 배치한다.
+ */
 .mobile-layout .daily-journal-widget .journal-score-strip-card {
   grid-column: 1 / -1 !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) !important;
+
+  display: block !important;
+
   min-width: 0 !important;
   min-height: 0 !important;
+
   padding: 0 !important;
-  gap: 0 !important;
+  margin: 0 !important;
+
   border: 0 !important;
   border-radius: 0 !important;
+
   background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
+
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
-.mobile-layout .daily-journal-widget .journal-score-strip-card > span {
-  display: none !important; /* 좁은 모바일에서는 Condition 중복 레이블 생략 */
+/* Condition 중복 라벨 제거 */
+.mobile-layout .daily-journal-widget
+  .journal-score-strip-card > span {
+  display: none !important;
 }
 
+/* 점수 4개를 가로로 배치 */
 .mobile-layout .daily-journal-widget .journal-score-strip {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  gap: 5px !important;
-  min-width: 0;
+
+  min-width: 0 !important;
+  gap: 4px !important;
 }
 
-@container journal-widget (max-width: 370px) {
+.mobile-layout .daily-journal-widget .journal-score-inline {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  min-width: 0 !important;
+  min-height: 52px !important;
+
+  padding: 5px 2px !important;
+  gap: 3px !important;
+}
+
+.mobile-layout .daily-journal-widget .journal-score-inline small {
+  font-size: 10px !important;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+/* - / 점수 / + */
+.mobile-layout .daily-journal-widget .journal-score-stepper {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 3px !important;
+}
+
+.mobile-layout .daily-journal-widget
+  .journal-score-stepper button {
+  flex: 0 0 26px !important;
+
+  width: 26px !important;
+  min-width: 26px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+
+  padding: 0 !important;
+  font-size: 13px !important;
+}
+
+.mobile-layout .daily-journal-widget .journal-score-stepper b {
+  min-width: 12px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 07. 실제 기록 섹션
+ *
+ * Today Tasks, Tomorrow, Condition, Work Log 등의
+ * 내부 간격을 줄이되 입력 크기는 유지한다.
+ */
+.mobile-layout .daily-journal-widget .journal-section {
+  min-width: 0 !important;
+
+  padding: 9px 8px !important;
+  margin: 0 !important;
+}
+
+.mobile-layout .daily-journal-widget .journal-section-title {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+  margin-bottom: 7px;
+
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 750;
+}
+
+/* 기록하는 입력칸은 충분히 읽을 수 있게 유지 */
+.mobile-layout .daily-journal-widget .journal-section textarea {
+  min-height: 76px !important;
+
+  padding: 9px !important;
+
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+
+  resize: vertical;
+}
+
+/* Today/Tomorrow 추가 입력 */
+.mobile-layout .daily-journal-widget
+  :is(.journal-add-row, .journal-clip-row) {
+  gap: 6px !important;
+  margin-bottom: 6px !important;
+}
+
+.mobile-layout .daily-journal-widget
+  :is(.journal-add-row input, .journal-clip-row input, .journal-mood-select) {
+  min-width: 0 !important;
+  min-height: 40px !important;
+  font-size: 16px !important;
+}
+
+/* 목록의 카드 높이를 과도하게 늘리지 않음 */
+.mobile-layout .daily-journal-widget
+  :is(.journal-task-item, .journal-clip-item) {
+  min-width: 0;
+  padding: 7px 8px;
+}
+
+/* 08. 작은 휴대폰
+ *
+ * 제목 + 날짜를 2행으로 배치한다.
+ * 제목 34px, 날짜 42px = 총 76px
+ *
+ * 한 행으로 무리하게 압축해서 겹치는 문제를 방지한다.
+ */
+@media (max-width: 380px) {
+  .mobile-layout .mobile-widget-slot
+    .glass-card.daily-journal-widget {
+    grid-template-rows: 76px minmax(0, 1fr) !important;
+  }
+
+  .mobile-layout .mobile-widget-slot
+    .daily-journal-widget > .widget-frame__header {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: 34px 42px !important;
+
+    height: 76px !important;
+    min-height: 76px !important;
+
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+
+  .mobile-layout .mobile-widget-slot
+    .daily-journal-widget > .widget-frame__header
+    > .widget-frame__title-group {
+    grid-row: 1;
+    width: 100% !important;
+    padding: 0 9px !important;
+  }
+
+  .mobile-layout .mobile-widget-slot
+    .daily-journal-widget > .widget-frame__header
+    > .widget-frame__actions {
+    grid-row: 2;
+
+    width: 100% !important;
+    height: 42px !important;
+
+    padding: 3px 8px !important;
+    border-top: 1px solid
+      var(--gd-widget-panel-border, hsl(var(--border))) !important;
+  }
+
+  .mobile-layout .daily-journal-widget .journal-date-nav {
+    grid-template-columns: 32px minmax(0, 1fr) 32px !important;
+    width: 100% !important;
+  }
+
   .mobile-layout .daily-journal-widget .journal-score-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
-/* 08. Pixel Desk: 위는 네이비 OS 제목줄, 아래는 시스템 회색 도구줄.
- * Mac Core·Glass·Aurora 등 다른 테마에는 적용되지 않는다. */
+/* 09. Pixel Desk
+ *
+ * 기존 Win95 색상과 각진 스타일을 유지한다.
+ * Pixel에서는 화면 폭과 관계없이 2행 헤더를 사용.
+ */
 :is(html, body):is(
-  [data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel
-) .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-  > .widget-frame__header {
+  [data-theme="pixel-desk"],
+  .theme-pixel-desk
+) .mobile-layout .mobile-widget-slot
+  .glass-card.daily-journal-widget {
+  grid-template-rows: 76px minmax(0, 1fr) !important;
+}
+
+:is(html, body):is(
+  [data-theme="pixel-desk"],
+  .theme-pixel-desk
+) .mobile-layout .mobile-widget-slot
+  .daily-journal-widget > .widget-frame__header {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: 34px 42px !important;
+
+  height: 76px !important;
+  min-height: 76px !important;
+
+  padding: 0 !important;
+  gap: 0 !important;
+
   background: #c0c0c0 !important;
 }
 
 :is(html, body):is(
-  [data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel
-) .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
+  [data-theme="pixel-desk"],
+  .theme-pixel-desk
+) .mobile-layout .daily-journal-widget
   > .widget-frame__header > .widget-frame__title-group {
+  grid-row: 1;
+  width: 100% !important;
+  height: 34px !important;
+
+  padding: 0 9px !important;
+
   background: #000080 !important;
   color: #ffffff !important;
 }
 
 :is(html, body):is(
-  [data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel
-) .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
+  [data-theme="pixel-desk"],
+  .theme-pixel-desk
+) .mobile-layout .daily-journal-widget
   > .widget-frame__header > .widget-frame__actions {
+  grid-row: 2;
+
+  width: 100% !important;
+  height: 42px !important;
+
+  padding: 3px 8px !important;
+
   background: #c0c0c0 !important;
   border-top: 1px solid #808080 !important;
 }
 
-/* 09. Pixel Desk의 날짜 버튼도 도구줄 배경과 분리된 Win95 스타일 유지.
- * 검은 글씨를 지정해 네이비 제목줄의 흰색 글씨가 내려오지 않게 한다. */
 :is(html, body):is(
-  [data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel
-) .mobile-layout .daily-journal-widget .journal-date-nav :is(button, input) {
-  color: #000000 !important;
+  [data-theme="pixel-desk"],
+  .theme-pixel-desk
+) .mobile-layout .daily-journal-widget
+  .journal-date-nav {
+  grid-template-columns: 32px minmax(0, 1fr) 32px !important;
+  width: 100% !important;
 }
 
-/* 10. Mac Core: 기존 Mac 재질은 유지하되 Journal의 이중 Condition 패널은 제거.
- * 이전 overrides.css의 .journal-score-strip-card !important보다 나중에 선언된다. */
-:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .mobile-layout .daily-journal-widget .journal-score-strip-card {
-  border: 0 !important;
-  background: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+:is(html, body):is(
+  [data-theme="pixel-desk"],
+  .theme-pixel-desk
+) .mobile-layout .daily-journal-widget
+  .journal-date-nav :is(button, input) {
+  color: #000 !important;
+}
+
+/* 10. 기존 테마 장식이 헤더를 덮지 않게 한다. */
+.mobile-layout .mobile-widget-slot
+  .glass-card.daily-journal-widget::before,
+.mobile-layout .mobile-widget-slot
+  .glass-card.daily-journal-widget::after {
+  content: none !important;
+  display: none !important;
 }
