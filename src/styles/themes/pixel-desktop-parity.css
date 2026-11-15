@@ -190,6 +190,206 @@
   color: var(--pixel-desktop-text);
 }
 
+/*
+ * EN: Match the shared mobile widget rhythm on desktop.
+ * KO: 모바일에서 이미 통일한 위젯 리듬을 데스크톱에도 그대로 적용한다.
+ *
+ * Reference: src/styles/mobile-pixel.css
+ * - mobile dashboard gap: 8px
+ * - widget title row: 38px
+ * - title row padding: 4px 7px
+ * - widget body padding: 8px
+ *
+ * The old desktop Pixel theme reserved 30px for a decorative fake title bar.
+ * The real `.widget-frame__header` is now the only title bar, so that extra
+ * space must be removed or every widget gets a different-looking top inset.
+ */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface {
+  --pixel-widget-gap: 8px;
+  --pixel-widget-header-height: 38px;
+  --pixel-widget-header-padding: 4px 7px;
+  --pixel-widget-body-padding: 8px;
+}
+
+/* Keep the desktop grid's existing sizing, but use the same visual gap. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .dashboard-grid {
+  gap: var(--pixel-widget-gap) !important;
+}
+
+/* Every GlassCard widget uses one real title row and one padded body row. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(.glass-card, .career-widget) {
+  display: grid !important;
+  grid-template-rows: var(--pixel-widget-header-height) minmax(0, 1fr) !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Study/Calendar/Career use the same title geometry as GlassCard widgets. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .glass-card > .widget-frame__header,
+  .career-widget > .widget-frame__header,
+  .mobile-study-card__heading,
+  .mobile-calendar-card__header,
+  .mobile-career-card__header
+) {
+  box-sizing: border-box;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  height: var(--pixel-widget-header-height) !important;
+  min-height: var(--pixel-widget-header-height) !important;
+  padding: var(--pixel-widget-header-padding) !important;
+  gap: 6px !important;
+}
+
+/* Keep title groups, icons, and actions aligned to one predictable baseline. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .widget-frame__title-group,
+  .widget-frame__copy,
+  .career-widget-title-wrap,
+  .mobile-study-card__eyebrow,
+  .mobile-calendar-card__label,
+  .mobile-career-card__heading
+) {
+  min-width: 0;
+  min-height: 0 !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .widget-frame__icon,
+  .mobile-study-card__eyebrow > svg,
+  .mobile-calendar-card__label > svg,
+  .mobile-career-card__heading > svg
+) {
+  flex: 0 0 18px !important;
+  width: 18px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .widget-frame__title,
+  .mobile-study-card__eyebrow,
+  .mobile-calendar-card__label,
+  .mobile-career-card__heading,
+  .mobile-career-card__heading strong
+) {
+  margin: 0 !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0 !important;
+}
+
+/* Mobile hides the secondary line to keep the title row compact. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .widget-frame__subtitle {
+  display: none !important;
+}
+
+/* All widget bodies start at the same inset, regardless of widget type. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .glass-card > .widget-frame__body,
+  .career-widget > .widget-frame__body
+) {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: var(--pixel-widget-body-padding) !important;
+  overflow: auto;
+}
+
 /* Shared inner panels: same light gray surface, no glossy gradients. */
 :is(
   html[data-theme="pixel-desk"],
