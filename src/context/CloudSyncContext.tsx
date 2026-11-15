@@ -42,6 +42,7 @@ import type { Session, User } from "@supabase/supabase-js";
 import {
   applyGlassdayStorageSnapshot,
   createGlassdayStorageSnapshot,
+  emitGlassdayStorageChange,
   GLASSDAY_STORAGE_EVENT,
   getGlassdayLocalUpdatedAt,
   getGlassdaySnapshotTimestamp,
@@ -54,6 +55,7 @@ import {
   DASHBOARD_LAYOUT_MODE_KEY,
   DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
 } from "../constants/dashboardStorage";
+import { applyTheme, getCurrentTheme } from "../constants/themes";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 import { isTauri } from "@tauri-apps/api/core";
 
@@ -86,7 +88,78 @@ type CloudSyncContextValue = {
 
 const STORAGE_TABLE = "user_storage_snapshots";
 const REMOTE_REFRESH_INTERVAL_MS = 30_000;
+const AUTH_UI_SNAPSHOT_KEY = "glassday.auth.uiSnapshot.v1";
+const AUTH_UI_SNAPSHOT_KEYS = [
+  DASHBOARD_LAYOUT_MODE_KEY,
+  DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
+  "glassday.dashboard.activeTab.v1",
+  "glassday.dashboard.tabs.v1",
+  "glassday.dashboard.storageSchema.v1",
+  "glassday.mobile.widgets.v1",
+  "glassday.theme",
+  "glassday.ui.font.v1",
+] as const;
 const CloudSyncContext = createContext<CloudSyncContextValue | null>(null);
+
+type AuthUiSnapshot = Record<string, string | null>;
+
+/**
+ * OAuth는 외부 브라우저를 다녀오므로 페이지가 다시 로드된다.
+ * 인증 전의 화면 설정을 sessionStorage에 잠깐 보관해, 로그인 후에도
+ * 사용자가 보고 있던 탭/테마/레이아웃이 구버전 기본값으로 돌아가지 않게 한다.
+ *
+ * OAuth reload is a full page reload. We keep the current UI shell in
+ * sessionStorage so authentication cannot replace it with an older default.
+ */
+const captureAuthUiSnapshot = () => {
+  if (typeof window === "undefined") return;
+
+  const snapshot: AuthUiSnapshot = {};
+
+  AUTH_UI_SNAPSHOT_KEYS.forEach((key) => {
+    snapshot[key] = window.localStorage.getItem(key);
+  });
+
+  window.sessionStorage.setItem(
+    AUTH_UI_SNAPSHOT_KEY,
+    JSON.stringify(snapshot)
+  );
+};
+
+/**
+ * 로그인 직후 화면 껍데기만 복원한다.
+ * 일정/일기/커리어 같은 사용자 데이터는 Cloud Sync가 별도로 처리하므로
+ * 이 함수에서 임의로 cloud 데이터를 덮어쓰지 않는다.
+ *
+ * Restore only the UI shell. Durable user data remains owned by Cloud Sync.
+ */
+const restoreAuthUiSnapshot = () => {
+  if (typeof window === "undefined") return;
+
+  const rawSnapshot = window.sessionStorage.getItem(AUTH_UI_SNAPSHOT_KEY);
+  if (!rawSnapshot) return;
+
+  try {
+    const snapshot = JSON.parse(rawSnapshot) as AuthUiSnapshot;
+
+    Object.entries(snapshot).forEach(([key, value]) => {
+      if (value === null) {
+        window.localStorage.removeItem(key);
+      } else {
+        window.localStorage.setItem(key, value);
+      }
+    });
+
+    window.sessionStorage.removeItem(AUTH_UI_SNAPSHOT_KEY);
+
+    /* Theme is applied to the DOM, not only stored in localStorage. */
+    applyTheme(getCurrentTheme());
+    emitGlassdayStorageChange({ type: "bulk" });
+  } catch (error) {
+    console.warn("Glassday UI state could not be restored after OAuth.", error);
+    window.sessionStorage.removeItem(AUTH_UI_SNAPSHOT_KEY);
+  }
+};
 
 /*
  * OAuth redirect용 layout 처리.
@@ -371,6 +444,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
     if (!supabase) return;
 
     setSyncState("authenticating");
+    captureAuthUiSnapshot();
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -511,6 +585,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       }
 
       setSession(data.session);
+      restoreAuthUiSnapshot();
     });
 
     const {
@@ -520,6 +595,9 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
         hydratedUserIdRef.current = null;
       }
       setSession(nextSession);
+      if (nextSession) {
+        restoreAuthUiSnapshot();
+      }
 
       if (!nextSession) {
         setLastSyncedAt(null);
