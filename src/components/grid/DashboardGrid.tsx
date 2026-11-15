@@ -62,6 +62,21 @@ const ResponsiveGridLayout = Responsive as unknown as ComponentType<
 
 const safeWidgetRegistry = widgetRegistry as Record<string, WidgetMeta>;
 
+/*
+ * Focused workspace profiles
+ * EN: Each built-in tab has a short everyday view. Edit mode still exposes
+ * every saved widget, so this is a presentation filter rather than deletion.
+ * KO: 기본 탭은 자주 보는 핵심 위젯만 평소에 보여준다. 편집 모드에서는
+ * 저장된 위젯을 전부 다시 보여주므로 데이터나 배치를 삭제하지 않는다.
+ */
+const FOCUSED_WIDGETS_BY_TAB: Record<string, WidgetId[]> = {
+  home: ["today", "calendar", "memo"],
+  career: ["career", "calendar"],
+  study: ["study", "timer", "calendar"],
+  memo: ["memo", "journal"],
+  life: ["health", "mood", "money", "calendar"],
+};
+
 type Breakpoint = "lg" | "md" | "sm";
 
 type DashboardGridProps = {
@@ -418,8 +433,18 @@ export const DashboardGrid = ({
   }, []);
 
   const activeWidgetIds = useMemo<WidgetId[]>(() => {
-    return Array.isArray(activeTab.widgetIds) ? activeTab.widgetIds : [];
-  }, [activeTab.widgetIds]);
+    const configuredIds = Array.isArray(activeTab.widgetIds)
+      ? activeTab.widgetIds
+      : [];
+    const focusedIds = FOCUSED_WIDGETS_BY_TAB[activeTab.id];
+
+    /* Custom tabs keep their full list; only built-in workspaces use profiles. */
+    if (editMode || !focusedIds) {
+      return configuredIds;
+    }
+
+    return configuredIds.filter((widgetId) => focusedIds.includes(widgetId));
+  }, [activeTab.id, activeTab.widgetIds, editMode]);
   const rowHeight = layoutMode === "laptop" ? 46 : 52;
   const gridGap = layoutMode === "laptop" ? 10 : 14;
 

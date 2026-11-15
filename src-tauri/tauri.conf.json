@@ -23,7 +23,7 @@
         "decorations": false,
         "transparent": true,
         "center": true,
-        "alwaysOnBottom": true,
+        "alwaysOnTop": false,
         "shadow": false,
         "skipTaskbar": false,
         "minimizable": false,
