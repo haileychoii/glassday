@@ -50,6 +50,7 @@
 @import "./widgets/settings.css";
 @import "./widgets/study.css";
 @import "./widgets/timer.css";
+@import "./widgets/diary-workspace.css";
 
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";

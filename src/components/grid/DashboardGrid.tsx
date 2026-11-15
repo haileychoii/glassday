@@ -49,6 +49,7 @@ import type {
 } from "../../types/workspace";
 
 import { WidgetSlot } from "../widgets/WidgetSlot";
+import { DiaryWorkspace } from "../widgets/DiaryWorkspace";
 
 import { defaultLayoutsByMode } from "./gridDefaults";
 import { allWidgetIds, widgetRegistry } from "../../constants/widgets";
@@ -470,6 +471,8 @@ export const DashboardGrid = ({
     return responsiveLayouts[currentBreakpoint] ?? responsiveLayouts.lg ?? [];
   }, [responsiveLayouts, currentBreakpoint]);
 
+  const isDiaryWorkspace = !editMode && activeTab.id === "memo";
+
   const collidingWidgetIds = useMemo<WidgetId[]>(() => {
     return editMode ? getCollidingWidgetIds(editLayout) : [];
   }, [editMode, editLayout]);
@@ -753,6 +756,15 @@ export const DashboardGrid = ({
       INITIAL_VISIBLE_ROWS * rowHeight + (INITIAL_VISIBLE_ROWS - 1) * gridGap
     }px`,
   } as CSSProperties;
+
+  /*
+   * Diary is a focused workspace, not another long vertical dashboard.
+   * This branch comes after every Hook call so changing tabs/edit mode never
+   * changes the component's Hook order. Shared widget hosts keep their state.
+   */
+  if (isDiaryWorkspace) {
+    return <DiaryWorkspace />;
+  }
 
   return (
     <div

@@ -262,6 +262,12 @@ const normalizeTab = (
     return normalizedTab;
   }
 
+  /* Built-in Memo was renamed to Diary without changing its stable storage id. */
+  const builtInLabel =
+    defaultTab.id === "memo" && normalizedTab.label === "Memo"
+      ? defaultTab.label
+      : normalizedTab.label;
+
   const mergedWidgetIds = [
     ...normalizedTab.widgetIds,
     ...defaultTab.widgetIds.filter(
@@ -271,6 +277,7 @@ const normalizeTab = (
 
   return {
     ...normalizedTab,
+    label: builtInLabel,
     icon: normalizedTab.icon || defaultTab.icon,
     widgetIds: mergedWidgetIds,
     layouts: mergeLayoutsWithDefaults(
