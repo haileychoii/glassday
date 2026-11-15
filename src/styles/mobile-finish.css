@@ -1125,6 +1125,128 @@
   }
 }
 
+/* ============================================================================
+ * 11. MOBILE SURFACE CONTRACT — one spacing rhythm, one useful surface
+ *
+ * 연결 관계 / Connected structure:
+ * - MobileDashboard.tsx
+ *     -> .mobile-dashboard
+ *     -> .mobile-widget-slot[data-widget-id]
+ * - WidgetSlot.tsx / widgetHostContext.ts
+ *     -> .widget-instance-root (stable host, not a visual card)
+ * - GlassCard.tsx
+ *     -> .glass-card > .widget-frame__header + .widget-frame__body
+ * - MobileStudyCard / MobileCalendarCard / MobileCareerCard
+ *     -> their own mobile card is already the visual surface
+ *
+ * 문제 / Problem:
+ * 모바일에서는 위젯마다 서로 다른 파일이 외곽 padding, gap, body background를
+ * 조금씩 지정해 카드 안에 카드처럼 보이는 빈 테두리와 들쭉날쭉한 시작선이 생겼다.
+ * On mobile, several widget styles independently added padding, gaps and body
+ * surfaces, which made empty nested "windows" and inconsistent start lines.
+ *
+ * 해결 / Solution:
+ * 1) dashboard gap / slot / body inset을 이 한 곳에서 공통 기준으로 둔다.
+ * 2) WidgetSlot의 안정적인 host는 배치만 담당하도록 시각 장식을 제거한다.
+ * 3) GlassCard body는 바깥 카드의 배경을 상속해 장식용 이중 패널을 없앤다.
+ * 4) 실제 편집기, 입력창, 상세 화면과 데이터 행은 삭제하거나 숨기지 않는다.
+ *
+ * Desktop/Tauri는 .mobile-layout이 없으므로 이 규칙의 영향을 받지 않는다.
+ * Pixel Desk의 각진 bevel과 iOS/Mac Core의 surface 재질도 유지한다.
+ * ============================================================================ */
+
+body:has(.mobile-layout) .mobile-layout {
+  --mobile-page-gap: 8px;
+  --mobile-widget-inset: 10px;
+  --mobile-section-gap: 8px;
+  --mobile-control-gap: 6px;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-dashboard {
+  gap: var(--mobile-page-gap) !important;
+  padding: 8px max(10px, env(safe-area-inset-right))
+    calc(18px + env(safe-area-inset-bottom))
+    max(10px, env(safe-area-inset-left)) !important;
+}
+
+/* The slot and the host are layout plumbing, so they must not look like extra cards.
+ * 슬롯/호스트는 레이아웃용이므로 별도의 창처럼 보이지 않게 한다. */
+body:has(.mobile-layout) .mobile-layout
+  .mobile-widget-slot:not([data-widget-id="memo"]):not([data-widget-id="timer"]),
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot .widget-instance-root {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* All ordinary GlassCards share one body inset. Journal owns a separate compact
+ * scrolling geometry below, so it is intentionally excluded here.
+ * 일반 GlassCard만 공통 본문 여백을 사용하고 Journal의 전용 스크롤 구조는 보존한다. */
+body:has(.mobile-layout) .mobile-layout
+  .mobile-widget-slot .glass-card:not(.daily-journal-widget)
+  > .widget-frame__body {
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: var(--mobile-widget-inset) !important;
+  border: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* Header is the only chrome row. The body should not create another window.
+ * 헤더만 창의 크롬으로 남기고, 본문은 바깥 카드의 표면을 재사용한다. */
+body:has(.mobile-layout) .mobile-layout
+  .mobile-widget-slot .glass-card:not(.daily-journal-widget)
+  > .widget-frame__body > :first-child {
+  min-width: 0;
+}
+
+/* The three purpose-built cards use the same content inset and a full-width
+ * title row. Detail screens are not touched because they use separate classes.
+ * 전용 모바일 카드도 같은 기준선을 사용하되 상세 화면은 건드리지 않는다. */
+body:has(.mobile-layout) .mobile-layout
+  :is(.mobile-study-card, .mobile-calendar-card, .mobile-career-card) {
+  --mobile-card-inset: var(--mobile-widget-inset);
+  min-width: 0 !important;
+  padding: 0 var(--mobile-card-inset) var(--mobile-card-inset) !important;
+  gap: var(--mobile-section-gap) !important;
+}
+
+body:has(.mobile-layout) .mobile-layout
+  :is(.mobile-study-card, .mobile-calendar-card, .mobile-career-card)
+  > :is(
+    .mobile-study-card__heading,
+    .mobile-calendar-card__header,
+    .mobile-career-card__header
+  ) {
+  width: calc(100% + (2 * var(--mobile-card-inset))) !important;
+  margin-inline: calc(-1 * var(--mobile-card-inset)) !important;
+  box-sizing: border-box !important;
+}
+
+/* Repeated rows keep one compact rhythm instead of growing through nested gaps.
+ * 반복 행은 중첩 gap 때문에 불필요하게 길어지지 않도록 같은 간격을 쓴다. */
+body:has(.mobile-layout) .mobile-layout
+  :is(.mobile-career-card__preview, .mobile-calendar-agenda,
+      .mobile-study-card__shortcuts, .mobile-study-card__metrics) {
+  gap: var(--mobile-control-gap) !important;
+}
+
+/* Preserve touch targets while removing decorative wrapper padding. */
+body:has(.mobile-layout) .mobile-layout
+  :is(.mobile-widget-slot button, .mobile-widget-slot input,
+      .mobile-widget-slot textarea, .mobile-widget-slot select) {
+  box-sizing: border-box;
+}
+
 /* G. Pixel Desk always keeps the familiar two-row navy/grey header.
  * Its frame shape and colors are deliberately inherited from mobile-pixel.css. */
 :is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk)
