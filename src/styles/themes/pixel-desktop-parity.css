@@ -1,0 +1,339 @@
+/* ============================================================================
+ * PIXEL DESK DESKTOP PARITY
+ *
+ * EN: Reuse the visual language from mobile-pixel.css on the desktop shell.
+ * This file intentionally changes only color, surface, border, radius, and
+ * state treatment. Grid dimensions, widget sizes, and content behavior stay
+ * owned by the existing layout/widget files.
+ *
+ * KO: mobile-pixel.css의 색상·표면·테두리 문법을 데스크톱에도 적용한다.
+ * 크기, 비율, 배치, 데이터 동작은 기존 레이아웃/위젯 CSS가 담당하므로
+ * 이 파일에서는 변경하지 않는다.
+ *
+ * Source relationship:
+ * - Mobile reference: src/styles/mobile-pixel.css
+ * - Desktop shell: src/components/layout/AppShell.tsx
+ * - Desktop widgets: src/components/grid/DashboardGrid.tsx + GlassCard.tsx
+ * ============================================================================ */
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface {
+  --pixel-desktop-bg: #c0c0c0;
+  --pixel-desktop-panel: #dfdfdf;
+  --pixel-desktop-title: #000080;
+  --pixel-desktop-light: #ffffff;
+  --pixel-desktop-shadow: #808080;
+  --pixel-desktop-dark: #404040;
+  --pixel-desktop-text: #000000;
+
+  background: var(--pixel-desktop-bg) !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+  border: 2px solid !important;
+  border-color:
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-light) !important;
+  box-shadow:
+    inset 1px 1px var(--pixel-desktop-light),
+    inset -1px -1px var(--pixel-desktop-shadow) !important;
+  color: var(--pixel-desktop-text);
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* The app canvas stays teal, matching the mobile Pixel Desk desktop. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .app-shell-main {
+  background: #008080 !important;
+  background-image: none !important;
+}
+
+/* Sidebar and topbar use the same gray taskbar surface as mobile controls. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(aside, .topbar) {
+  background: var(--pixel-desktop-bg) !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/*
+ * EN: Use the real widget header instead of a second dark decorative frame.
+ * KO: 실제 위젯 제목줄만 남기고, 뒤에 겹치는 장식 프레임은 제거한다.
+ */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .glass-card {
+  background: var(--pixel-desktop-bg) !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+  border: 2px solid !important;
+  border-color:
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-light) !important;
+  box-shadow:
+    inset 1px 1px var(--pixel-desktop-light),
+    inset -1px -1px var(--pixel-desktop-shadow) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .glass-card::before,
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .glass-card::after {
+  content: none !important;
+  display: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .widget-frame__header {
+  background: var(--pixel-desktop-title) !important;
+  background-image: none !important;
+  color: var(--pixel-desktop-light) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .widget-frame__header :is(
+  .widget-frame__title,
+  .widget-frame__subtitle,
+  .widget-frame__copy,
+  .widget-frame__icon
+) {
+  color: var(--pixel-desktop-light) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .widget-frame__body {
+  background: var(--pixel-desktop-bg) !important;
+  background-image: none !important;
+  color: var(--pixel-desktop-text);
+}
+
+/* Shared inner panels: same light gray surface, no glossy gradients. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .journal-summary-card,
+  .journal-section,
+  .journal-task-item,
+  .journal-score-inline,
+  .alert-item,
+  .alert-summary-card,
+  .today-focus-hero,
+  .today-focus-section,
+  .today-focus-task,
+  .today-focus-mini-item,
+  .calendar-event-item,
+  .calendar-mini-card,
+  .calendar-month-day-cell,
+  .career-card,
+  .career-list-item,
+  .career-summary-card,
+  .money-summary-panel,
+  .money-budget-panel,
+  .money-visual-panel,
+  .money-recent-panel,
+  .money-detail-card,
+  .money-transaction-row,
+  .memo-list-panel,
+  .memo-note-item,
+  .mood-row,
+  .health-metric-card,
+  .study-subject-card,
+  .study-task,
+  .study-record-item,
+  .timer-widget-main-card
+) {
+  background: var(--pixel-desktop-panel) !important;
+  background-image: none !important;
+  border: 1px solid var(--pixel-desktop-shadow) !important;
+  border-radius: 0 !important;
+  box-shadow: inset 1px 1px var(--pixel-desktop-light) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Buttons retain Win95 raised/inset states, but no longer use black outlines. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(button, .glass-button, .money-pill, .calendar-view-button, .career-filter-pill) {
+  background: var(--pixel-desktop-bg) !important;
+  background-image: none !important;
+  color: var(--pixel-desktop-text) !important;
+  border: 2px solid !important;
+  border-color:
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-light) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  button:hover,
+  .glass-button:hover,
+  .money-pill:hover,
+  .calendar-view-button:hover,
+  .career-filter-pill:hover
+) {
+  background: var(--pixel-desktop-panel) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  button:active,
+  .glass-button.is-active,
+  .calendar-view-button.is-active,
+  .money-pill.is-active,
+  .career-filter-pill.is-active
+) {
+  background: var(--pixel-desktop-title) !important;
+  color: var(--pixel-desktop-light) !important;
+  border-color:
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-dark) !important;
+}
+
+/* Inputs follow mobile-pixel.css's white inset field treatment. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+  textarea,
+  select
+) {
+  background: #ffffff !important;
+  background-image: none !important;
+  color: var(--pixel-desktop-text) !important;
+  border: 2px solid !important;
+  border-color:
+    var(--pixel-desktop-shadow)
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-shadow) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}

@@ -94,3 +94,6 @@
 
 /* Mac Core iOS Cupertino + 모든 테마의 공통 여백 */
 @import "./mobile-finish.css";
+
+/* Desktop Pixel Desk uses the same visual tokens as mobile-pixel.css. */
+@import "./themes/pixel-desktop-parity.css";
