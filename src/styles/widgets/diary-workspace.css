@@ -1,15 +1,19 @@
 /*
- * Diary workspace layout
+ * Diary canvas layout
  *
- * EN: Placement for the focused Diary tab only.
- * KO: Diary 탭 전용 배치만 담당하며 Journal/Memo 내부 기능은 수정하지 않는다.
- * DailyJournalWidget.tsx and MemoWidget.tsx remain the data owners.
+ * EN: The canvas is a calm surface for movable widget blocks, not another
+ * stacked dashboard. React Grid Layout owns coordinates and resize handles.
+ * KO: Diary는 긴 대시보드가 아니라 위젯 블록을 배치하는 작업 캔버스다.
+ * 좌표와 크기 조절은 기존 react-grid-layout이 담당한다.
+ *
+ * Data owners remain DailyJournalWidget.tsx and MemoWidget.tsx. This file
+ * only styles the canvas, note blocks, and edit affordances.
  */
 .diary-workspace {
   width: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 18px;
+  padding: 16px;
   color: hsl(var(--foreground));
 }
 
@@ -17,16 +21,15 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 14px;
+  gap: 18px;
+  margin-bottom: 12px;
 }
 
 .diary-workspace__heading {
   min-width: 0;
 }
 
-.diary-workspace__eyebrow,
-.diary-workspace__status span {
+.diary-workspace__eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -37,8 +40,7 @@
   text-transform: uppercase;
 }
 
-.diary-workspace__eyebrow svg,
-.diary-workspace__status svg {
+.diary-workspace__eyebrow svg {
   width: 14px;
   height: 14px;
 }
@@ -56,74 +58,164 @@
   font-size: 13px;
 }
 
-.diary-workspace__status {
+.diary-workspace__actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
 }
 
-.diary-workspace__status span {
-  padding: 7px 9px;
+.diary-workspace__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 7px 10px;
   border: 1px solid hsl(var(--border) / 0.72);
-  border-radius: var(--gd-radius-card, 12px);
-  background: hsl(var(--card) / 0.56);
-  text-transform: none;
-  letter-spacing: 0;
+  border-radius: var(--gd-radius-button, 999px);
+  background: hsl(var(--card) / 0.62);
+  color: hsl(var(--foreground) / 0.86);
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.diary-workspace__action svg {
+  width: 14px;
+  height: 14px;
+}
+
+.diary-workspace__action:hover,
+.diary-workspace__action.is-active {
+  background: hsl(var(--primary) / 0.16);
+  border-color: hsl(var(--primary) / 0.52);
 }
 
 .diary-workspace__canvas {
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.85fr);
-  gap: 14px;
-  min-height: 0;
+  width: 100%;
+  min-height: 620px;
+  padding: 10px;
+  border: 1px solid hsl(var(--border) / 0.62);
+  border-radius: var(--gd-radius-panel, 18px);
+  background:
+    linear-gradient(hsl(var(--foreground) / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--foreground) / 0.035) 1px, transparent 1px),
+    hsl(var(--card) / 0.26);
+  background-size: 24px 24px;
+  overflow: hidden;
 }
 
-.diary-workspace__side {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: 14px;
+.diary-workspace__canvas.is-editing {
+  border-color: hsl(var(--primary) / 0.62);
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+.diary-canvas-grid {
+  min-height: 590px;
+}
+
+.diary-canvas-item {
   min-width: 0;
   min-height: 0;
 }
 
-.diary-workspace__slot {
-  min-width: 0;
-  min-height: 0;
-}
-
-.diary-workspace__slot--journal {
-  min-height: 650px;
-}
-
-.diary-workspace__slot--memo {
-  min-height: 430px;
-}
-
-/* WidgetSlot moves the shared host into this column at runtime. */
-.diary-workspace__slot > .widget-instance-root,
-.diary-workspace__slot > .widget-instance-root > .glass-card {
+.diary-canvas-item > .widget-instance-root,
+.diary-canvas-item > .widget-instance-root > .glass-card {
   width: 100%;
   height: 100%;
   min-width: 0;
   min-height: 0;
 }
 
-.diary-workspace__tip {
-  display: grid;
-  gap: 4px;
-  padding: 13px 14px;
-  border: 1px solid hsl(var(--border) / 0.7);
-  border-radius: var(--gd-radius-card, 12px);
-  background: hsl(var(--card) / 0.48);
-  color: hsl(var(--muted-foreground) / 0.82);
-  font-size: 12px;
-  line-height: 1.45;
+.diary-workspace__canvas:not(.is-editing) .diary-canvas-item > .widget-instance-root > .glass-card {
+  box-shadow: none;
 }
 
-.diary-workspace__tip strong {
-  color: hsl(var(--foreground) / 0.9);
-  font-size: 13px;
+.diary-note-block {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid hsl(42 58% 55% / 0.64);
+  border-radius: 12px;
+  background: hsl(48 92% 88% / 0.9);
+  color: hsl(38 35% 20%);
+  box-shadow: 0 8px 20px hsl(38 40% 24% / 0.12);
+}
+
+.diary-note-block__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: hsl(38 35% 28% / 0.7);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.diary-note-block__toolbar > svg {
+  width: 14px;
+  height: 14px;
+}
+
+.diary-note-block__toolbar span {
+  flex: 1;
+}
+
+.diary-note-block__toolbar button {
+  display: inline-flex;
+  padding: 3px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.diary-note-block__toolbar button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.diary-note-block textarea {
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  resize: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 1.5;
+}
+
+.diary-note-block p {
+  min-height: 0;
+  margin: 0;
+  overflow: auto;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.diary-workspace__footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 9px 2px 0;
+  color: hsl(var(--muted-foreground) / 0.72);
+  font-size: 11px;
+}
+
+.diary-workspace__footer svg {
+  width: 14px;
+  height: 14px;
+}
+
+.diary-workspace__footer span + span::before {
+  content: "·";
+  margin-right: 8px;
 }
 
 @media (max-width: 860px) {
@@ -137,20 +229,13 @@
     gap: 10px;
   }
 
-  .diary-workspace__status {
+  .diary-workspace__actions {
     justify-content: flex-start;
   }
 
   .diary-workspace__canvas {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .diary-workspace__slot--journal {
-    min-height: 620px;
-  }
-
-  .diary-workspace__slot--memo {
-    min-height: 420px;
+    min-height: 560px;
+    padding: 6px;
   }
 }
 
