@@ -660,3 +660,267 @@
   min-height: 28px !important;
   transform: none !important;
 }
+
+/*
+ * Supplied asset: public/pixel-icons/*.png
+ *
+ * EN: Each transparent crop is rendered as a real image, so neighboring
+ * sprite cells can never leak into a workspace icon.
+ * KO: 아이콘을 개별 투명 PNG로 잘라 사용해 다른 셀 조각이 섞이지 않는다.
+ */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-icon {
+  display: block !important;
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  image-rendering: pixelated;
+}
+
+/* Main widget title icons reuse the supplied Windows 95 artwork. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .today-focus-widget .widget-frame__icon,
+  .today-widget .widget-frame__icon,
+  .alert-center-widget .widget-frame__icon,
+  .calendar-widget-card .widget-frame__icon,
+  .career-widget .widget-frame__icon,
+  .daily-journal-widget .widget-frame__icon,
+  .memo-widget .widget-frame__icon,
+  .study-widget .widget-frame__icon,
+  .timer-widget .widget-frame__icon,
+  .money-widget .widget-frame__icon,
+  .health-widget .widget-frame__icon,
+  .mood-widget .widget-frame__icon
+) {
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 26px 26px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .today-focus-widget .widget-frame__icon,
+  .today-widget .widget-frame__icon
+) {
+  background-image: url("/pixel-icons/today.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .alert-center-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/alerts.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .calendar-widget-card .widget-frame__icon {
+  background-image: url("/pixel-icons/calendar.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .career-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/career.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .daily-journal-widget .widget-frame__icon,
+  .memo-widget .widget-frame__icon
+) {
+  background-image: url("/pixel-icons/diary.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .study-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/study.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .timer-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/timer.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .money-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/money.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .health-widget .widget-frame__icon,
+  .mood-widget .widget-frame__icon
+) {
+  background-image: url("/pixel-icons/health.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .today-focus-widget,
+  .today-widget,
+  .alert-center-widget,
+  .calendar-widget-card,
+  .career-widget,
+  .daily-journal-widget,
+  .memo-widget,
+  .study-widget,
+  .timer-widget,
+  .money-widget,
+  .health-widget,
+  .mood-widget
+) .widget-frame__icon > svg {
+  display: none !important;
+}
+
+/* Career's add button matches the compact Pixel Desk title action. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .career-widget-actions > .career-icon-button {
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .career-widget-actions > .career-icon-button svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* Keep the Glassday brand mark visible even when the sidebar copy is collapsed. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .sidebar-brand-icon {
+  display: block !important;
+  flex: 0 0 24px !important;
+  width: 24px !important;
+  min-width: 24px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  object-fit: contain !important;
+  image-rendering: pixelated;
+}

@@ -117,9 +117,12 @@ export const WorkspaceTabsNav = ({
      */
     if (theme === "pixel-desk") {
       return (
-        <span
-          className={`${iconClassName} pixel-tab-sprite pixel-tab-sprite-${tab.id}`}
+        <img
+          src={`/pixel-icons/${tab.id === "memo" ? "diary" : tab.id}.png`}
+          className={`${iconClassName} pixel-tab-icon`}
+          alt=""
           aria-hidden="true"
+          draggable={false}
         />
       );
     }
