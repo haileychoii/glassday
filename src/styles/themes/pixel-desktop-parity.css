@@ -541,3 +541,122 @@
   border-radius: 0 !important;
   box-shadow: none !important;
 }
+
+/*
+ * Supplied asset: public/windows95-app-icons-1.png
+ *
+ * EN: Pixel Desk workspace icons use fixed 28px boxes. The image is a
+ * transparent Windows 95 sprite sheet scaled once, then cropped by position.
+ * KO: 제공받은 Windows 95 스프라이트를 한 번만 축소하고 위치만 잘라 쓴다.
+ * 접힌 사이드바에서도 같은 28px 박스를 유지해 아이콘이 찌그러지지 않는다.
+ */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite {
+  display: inline-block !important;
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-image: url("/windows95-app-icons-1.png") !important;
+  background-repeat: no-repeat !important;
+  background-size: 247px 308px !important;
+  image-rendering: pixelated;
+  overflow: hidden;
+}
+
+/* Sprite positions correspond to the supplied 7-column Windows 95 sheet. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite-home {
+  background-position: -216px -15px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite-career {
+  background-position: -75px -174px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite-study {
+  background-position: -4px -215px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite-memo {
+  background-position: -110px -54px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite-life {
+  background-position: -75px -134px !important;
+}
+
+/* Collapsed mode hides the label only; the sprite stays square and centered. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .sidebar-tab-item.is-collapsed .pixel-tab-sprite {
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  transform: none !important;
+}

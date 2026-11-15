@@ -110,6 +110,20 @@ export const WorkspaceTabsNav = ({
       return <span className={iconClassName}>{macEmojiMap[tab.id] ?? "✨"}</span>;
     }
 
+    /*
+     * Pixel Desk uses the supplied Windows 95 sprite instead of Lucide icons.
+     * The sprite CSS fixes the box size so collapsing the sidebar hides only
+     * the label and never stretches or compresses the pixel artwork.
+     */
+    if (theme === "pixel-desk") {
+      return (
+        <span
+          className={`${iconClassName} pixel-tab-sprite pixel-tab-sprite-${tab.id}`}
+          aria-hidden="true"
+        />
+      );
+    }
+
     const Icon = iconMap[tab.id] ?? FolderOpen;
 
     return <Icon className={iconClassName} />;
