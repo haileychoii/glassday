@@ -50,10 +50,51 @@
 @import "./widgets/settings.css";
 @import "./widgets/study.css";
 @import "./widgets/timer.css";
+@import "./widgets/diary-workspace.css";
 
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";
 @import "./overrides.css";
-/* Runtime-scoped Mobile Web shell; no desktop theme overrides. */
-@import "./mobile.css";
+/* ============================================================
+   MOBILE WEB STYLES
+   ============================================================
 
+   mobile.css
+   → 모바일 전체 레이아웃, 헤더, 하단 내비게이션
+
+   mobile-study.css
+   → Study Planner 모바일 시간표, 버튼, 글씨
+
+   mobile-calendar.css
+   → Calendar 모바일 일정 및 상세 화면
+
+   mobile-career.css
+   → Career 모바일 지원 목록 및 상세 편집창
+
+   mobile-memo.css
+   → Memo 모바일 목록 및 편집 화면
+
+   모든 모바일 전용 CSS를 이곳에서 관리한다.
+   ============================================================ */
+
+@import "./mobile.css";
+@import "./mobile-study.css";
+@import "./mobile-calendar.css";
+@import "./mobile-career.css";
+@import "./mobile-memo.css";
+@import "./mobile-money.css";
+@import "./mobile-timer.css";
+
+
+
+/* 모바일 Pixel Desk 디자인 */
+@import "./mobile-pixel.css";
+
+/* 모든 테마의 모바일 Daily Journal 레이아웃 — 마지막에 적용 */
+@import "./mobile-journal.css";
+
+/* Mac Core iOS Cupertino + 모든 테마의 공통 여백 */
+@import "./mobile-finish.css";
+
+/* Desktop Pixel Desk uses the same visual tokens as mobile-pixel.css. */
+@import "./themes/pixel-desktop-parity.css";

@@ -49,6 +49,7 @@ import type {
 } from "../../types/workspace";
 
 import { WidgetSlot } from "../widgets/WidgetSlot";
+import { DiaryWorkspace } from "../widgets/DiaryWorkspace";
 
 import { defaultLayoutsByMode } from "./gridDefaults";
 import { allWidgetIds, widgetRegistry } from "../../constants/widgets";
@@ -61,6 +62,33 @@ const ResponsiveGridLayout = Responsive as unknown as ComponentType<
 >;
 
 const safeWidgetRegistry = widgetRegistry as Record<string, WidgetMeta>;
+
+/*
+ * Focused workspace profiles
+ * EN: Each built-in tab has a short everyday view. Edit mode still exposes
+ * every saved widget, so this is a presentation filter rather than deletion.
+ * KO: 기본 탭은 자주 보는 핵심 위젯만 평소에 보여준다. 편집 모드에서는
+ * 저장된 위젯을 전부 다시 보여주므로 데이터나 배치를 삭제하지 않는다.
+ */
+const FOCUSED_WIDGETS_BY_TAB: Record<string, WidgetId[]> = {
+  home: ["today", "calendar", "memo"],
+  career: ["career", "calendar"],
+  study: ["study", "timer", "calendar"],
+  memo: ["memo", "journal"],
+  life: ["health", "mood", "money", "calendar"],
+};
+
+/*
+ * View-mode height presets keep the dashboard scannable without changing the
+ * user's saved edit layout. Long content continues inside the widget body.
+ * / 보기 모드 전용 높이이며, 편집 모드의 저장 배치에는 영향을 주지 않는다.
+ */
+const COMPACT_HEIGHTS_BY_TAB: Record<string, Partial<Record<WidgetId, number>>> = {
+  home: { today: 4, calendar: 6, memo: 7 },
+  career: { career: 8, calendar: 7 },
+  study: { study: 9, timer: 6, calendar: 7 },
+  life: { health: 6, mood: 6, money: 6, calendar: 7 },
+};
 
 type Breakpoint = "lg" | "md" | "sm";
 
@@ -291,6 +319,73 @@ const stackCollidingLayout = (layout: GridLayoutItem[]): GridLayoutItem[] => {
   return placed;
 };
 
+/**
+ * Pack a focused view in configured widget order.
+ *
+ * The old layout keeps the original y coordinates, which leaves large empty
+ * vertical gaps after we hide secondary widgets. This helper resets only the
+ * view copy to the top and lets the existing collision logic stack same-column
+ * widgets naturally.
+ */
+const stackLayoutInOrder = (
+  layout: GridLayoutItem[],
+  order: WidgetId[]
+): GridLayoutItem[] => {
+  const orderIndex = new Map(order.map((widgetId, index) => [widgetId, index]));
+  const placed: GridLayoutItem[] = [];
+
+  [...layout]
+    .sort((a, b) => {
+      const aIndex = orderIndex.get(a.i as WidgetId) ?? order.length;
+      const bIndex = orderIndex.get(b.i as WidgetId) ?? order.length;
+      return aIndex - bIndex || a.x - b.x;
+    })
+    .forEach((sourceItem) => {
+      const item = { ...sourceItem, y: 0 };
+      let moved = true;
+
+      while (moved) {
+        moved = false;
+        placed.forEach((placedItem) => {
+          if (isOverlapping(item, placedItem)) {
+            item.y = placedItem.y + placedItem.h;
+            moved = true;
+          }
+        });
+      }
+
+      placed.push(item);
+    });
+
+  return placed;
+};
+
+/** Create a compact view-only copy; persisted layouts remain untouched. */
+const createCompactFocusedLayouts = (
+  layouts: Layouts,
+  tabId: string,
+  widgetIds: WidgetId[]
+): Layouts => {
+  const heights = COMPACT_HEIGHTS_BY_TAB[tabId] ?? {};
+
+  return Object.fromEntries(
+    Object.entries(layouts).map(([breakpoint, items]) => {
+      const compactItems = items
+        .filter((item) => widgetIds.includes(item.i as WidgetId))
+        .map((item) => {
+          const widgetId = item.i as WidgetId;
+          const compactHeight = heights[widgetId];
+
+          return compactHeight
+            ? { ...item, h: Math.max(item.minH ?? 3, compactHeight), y: 0 }
+            : { ...item, y: 0 };
+        });
+
+      return [breakpoint, stackLayoutInOrder(compactItems, widgetIds)];
+    })
+  ) as Layouts;
+};
+
 const stackResponsiveLayouts = (layouts: Layouts): Layouts => ({
   lg: stackCollidingLayout(layouts.lg),
   md: stackCollidingLayout(layouts.md),
@@ -418,8 +513,18 @@ export const DashboardGrid = ({
   }, []);
 
   const activeWidgetIds = useMemo<WidgetId[]>(() => {
-    return Array.isArray(activeTab.widgetIds) ? activeTab.widgetIds : [];
-  }, [activeTab.widgetIds]);
+    const configuredIds = Array.isArray(activeTab.widgetIds)
+      ? activeTab.widgetIds
+      : [];
+    const focusedIds = FOCUSED_WIDGETS_BY_TAB[activeTab.id];
+
+    /* Custom tabs keep their full list; only built-in workspaces use profiles. */
+    if (editMode || !focusedIds) {
+      return configuredIds;
+    }
+
+    return configuredIds.filter((widgetId) => focusedIds.includes(widgetId));
+  }, [activeTab.id, activeTab.widgetIds, editMode]);
   const rowHeight = layoutMode === "laptop" ? 46 : 52;
   const gridGap = layoutMode === "laptop" ? 10 : 14;
 
@@ -436,14 +541,33 @@ export const DashboardGrid = ({
       return draftLayouts;
     }
 
-    return editMode
-      ? responsiveLayouts
+    if (editMode) {
+      return responsiveLayouts;
+    }
+
+    const focusedIds = FOCUSED_WIDGETS_BY_TAB[activeTab.id];
+
+    /* Built-in tabs get a compact view; custom tabs keep their own layout. */
+    return focusedIds
+      ? createCompactFocusedLayouts(
+          responsiveLayouts,
+          activeTab.id,
+          activeWidgetIds
+        )
       : stackResponsiveLayouts(responsiveLayouts);
-  }, [draftLayouts, editMode, responsiveLayouts]);
+  }, [
+    activeTab.id,
+    activeWidgetIds,
+    draftLayouts,
+    editMode,
+    responsiveLayouts,
+  ]);
 
   const editLayout = useMemo<GridLayoutItem[]>(() => {
     return responsiveLayouts[currentBreakpoint] ?? responsiveLayouts.lg ?? [];
   }, [responsiveLayouts, currentBreakpoint]);
+
+  const isDiaryWorkspace = !editMode && activeTab.id === "memo";
 
   const collidingWidgetIds = useMemo<WidgetId[]>(() => {
     return editMode ? getCollidingWidgetIds(editLayout) : [];
@@ -728,6 +852,15 @@ export const DashboardGrid = ({
       INITIAL_VISIBLE_ROWS * rowHeight + (INITIAL_VISIBLE_ROWS - 1) * gridGap
     }px`,
   } as CSSProperties;
+
+  /*
+   * Diary is a focused workspace, not another long vertical dashboard.
+   * This branch comes after every Hook call so changing tabs/edit mode never
+   * changes the component's Hook order. Shared widget hosts keep their state.
+   */
+  if (isDiaryWorkspace) {
+    return <DiaryWorkspace />;
+  }
 
   return (
     <div

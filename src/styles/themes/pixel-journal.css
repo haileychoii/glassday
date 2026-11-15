@@ -1,0 +1,199 @@
+/*
+   Pixel Desk Journal polish / 픽셀 데스크 일기 위젯 마무리
+   EN: DailyJournalWidget.tsx supplies these semantic rows; journal.css owns
+   their responsive layout. This theme layer only replaces the glossy borders
+   and sizes the controls, after overrides.css and the mobile styles load.
+   KO: DailyJournalWidget.tsx의 요약/점수/할 일 구조를 그대로 사용한다.
+   journal.css의 반응형 배치는 유지하고 Pixel Desk의 표면과 조작 크기만 조정한다.
+*/
+
+html[data-theme="pixel-desk"] .daily-journal-widget :is(
+  .journal-summary-card,
+  .journal-score-inline,
+  .journal-section,
+  .journal-task-item,
+  .journal-clip-item,
+  .journal-library-item,
+  .journal-empty-box
+) {
+  border: 1px solid #9aa7a3 !important;
+  border-radius: 0 !important;
+  background: #deded6 !important;
+  box-shadow: inset 1px 1px 0 #f8f8f4 !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-summary-card {
+  min-height: 40px !important;
+  padding: 5px 7px !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-summary-card span {
+  color: #52605d !important;
+  font-size: 10px !important;
+  line-height: 1.1;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-summary-card strong {
+  color: #1e2928 !important;
+  font-size: 14px !important;
+  line-height: 1.1;
+}
+
+/*
+   EN: The four condition fields already have individual borders. Removing
+   their parent frame avoids a dark nested-card outline at narrow widths.
+   KO: 상태 4칸에 각각 선이 있으므로 바깥쪽 이중 테두리를 없앤다.
+*/
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-score-strip-card {
+  min-height: 40px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-score-strip {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+  overflow: visible;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-score-inline {
+  min-width: 0;
+  min-height: 42px !important;
+  padding: 4px 2px !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: auto auto;
+  justify-items: center;
+  align-content: center;
+  gap: 2px !important;
+  text-align: center !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-score-inline small {
+  width: 100%;
+  color: #53615d !important;
+  font-size: 10px !important;
+  line-height: 1.1;
+  text-align: center;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-score-stepper {
+  width: auto !important;
+  gap: 2px !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-score-stepper button {
+  width: 19px !important;
+  height: 19px !important;
+  padding: 0 !important;
+  border: 1px solid #87938f !important;
+  border-radius: 0 !important;
+  background: #d4d0c8 !important;
+  box-shadow: inset 1px 1px 0 #fff !important;
+  color: #1e2928 !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-score-stepper button:hover,
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-add-row button:hover {
+  background: #e8ece7 !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-score-stepper b {
+  min-width: 12px;
+  margin: 0 !important;
+  color: #1e2928 !important;
+  font-size: 12px !important;
+  line-height: 1;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-section {
+  padding: 9px !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-section-title {
+  margin-bottom: 7px;
+  color: #24302e !important;
+  font-size: 11px;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-add-row {
+  grid-template-columns: minmax(0, 1fr) 34px !important;
+  gap: 5px !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-add-row :is(input, button) {
+  min-width: 0;
+  width: 100% !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  border-radius: 0 !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-add-row input {
+  padding-inline: 8px !important;
+  border: 1px solid #8c9995 !important;
+  background: #fff !important;
+  box-shadow: inset 1px 1px 0 #d8dedb !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-add-row button {
+  border: 1px solid #87938f !important;
+  background: #d4d0c8 !important;
+  box-shadow: inset 1px 1px 0 #fff !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget .journal-task-item {
+  min-height: 31px;
+  padding: 3px 5px;
+  background: #f4f4ef !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget :is(.journal-task-check, .journal-task-delete-select) {
+  border: 1px solid #87938f !important;
+  border-radius: 0 !important;
+  background: #e9e9e2 !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="pixel-desk"] .daily-journal-widget :is(.journal-mood-select, .journal-section textarea) {
+  border: 1px solid #8c9995 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  box-shadow: inset 1px 1px 0 #d8dedb !important;
+}
+
+/*
+   EN: Below 300px four score steppers would collide, so use two columns.
+   KO: 폭이 아주 좁을 때만 상태를 두 칸씩 배치해 버튼 겹침을 막는다.
+*/
+@container journal-widget (max-width: 300px) {
+  html[data-theme="pixel-desk"] .daily-journal-widget .journal-score-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* EN: Preserve journal.css's short-widget density when the dashboard row is
+   resized vertically. KO: 낮은 위젯에서는 요약이 본문을 밀어내지 않게 줄인다. */
+@container journal-widget (max-height: 430px) {
+  html[data-theme="pixel-desk"] .daily-journal-widget .journal-summary-card {
+    min-height: 33px !important;
+    padding-block: 3px !important;
+  }
+
+  html[data-theme="pixel-desk"] .daily-journal-widget .journal-score-inline {
+    min-height: 33px !important;
+    padding-block: 2px !important;
+  }
+
+  html[data-theme="pixel-desk"] .daily-journal-widget .journal-score-stepper button {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  html[data-theme="pixel-desk"] .daily-journal-widget .journal-section {
+    padding: 7px !important;
+  }
+}

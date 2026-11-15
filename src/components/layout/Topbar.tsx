@@ -21,9 +21,12 @@
 import {
   LayoutGrid,
   Monitor,
+  Pin,
+  PinOff,
   Settings,
   Sparkles,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { isTauri } from "@tauri-apps/api/core";
 
@@ -33,6 +36,10 @@ import type {
   DashboardTab,
 } from "../../types/workspace";
 import { WorkspaceTabsNav } from "./WorkspaceTabsNav";
+import {
+  getTauriWindowPinned,
+  setTauriWindowPinned,
+} from "../../utils/tauriDesktop";
 
 type TopbarProps = {
   editMode: boolean;
@@ -49,6 +56,8 @@ type TopbarProps = {
   onRenameTab: (tabId: string, label: string) => void;
   onRemoveTab: (tabId: string) => void;
 };
+
+const TAURI_PINNED_STORAGE_KEY = "glassday.tauri.windowPinned.v1";
 
 export const Topbar = ({
   editMode,
@@ -70,6 +79,50 @@ export const Topbar = ({
    * Tauri   -> true
    */
   const isTauriApp = isTauri();
+
+  /*
+   * Tauri-only desktop widget state.
+   * EN: Keep the pin state in the native window, not dashboard storage.
+   * KO: 고정 여부는 위젯 데이터가 아닌 현재 데스크톱 창 설정으로 관리한다.
+   */
+  const [isPinned, setIsPinned] = useState(false);
+
+  useEffect(() => {
+    if (!isTauriApp) return;
+
+    const savedPinned = window.localStorage.getItem(
+      TAURI_PINNED_STORAGE_KEY
+    );
+
+    if (savedPinned !== null) {
+      const pinned = savedPinned === "true";
+      void setTauriWindowPinned(pinned)
+        .then(() => setIsPinned(pinned))
+        .catch(() => setIsPinned(false));
+      return;
+    }
+
+    void getTauriWindowPinned()
+      .then(setIsPinned)
+      .catch(() => setIsPinned(false));
+  }, [isTauriApp]);
+
+  const togglePinned = () => {
+    const nextPinned = !isPinned;
+    setIsPinned(nextPinned);
+    window.localStorage.setItem(
+      TAURI_PINNED_STORAGE_KEY,
+      String(nextPinned)
+    );
+    void setTauriWindowPinned(nextPinned).catch(() => {
+      /* Restore the visible state if the native window rejects the command. */
+      setIsPinned(isPinned);
+      window.localStorage.setItem(
+        TAURI_PINNED_STORAGE_KEY,
+        String(isPinned)
+      );
+    });
+  };
 
   return (
     <header
@@ -196,6 +249,27 @@ export const Topbar = ({
 
               <span>Settings</span>
             </button>
+
+            {isTauriApp && (
+              <button
+                type="button"
+                onClick={togglePinned}
+                className={cn(
+                  "glass-button topbar-action-button",
+                  isPinned && "is-active"
+                )}
+                title={isPinned ? "Unpin from desktop" : "Pin on desktop"}
+                aria-label={isPinned ? "Unpin from desktop" : "Pin on desktop"}
+                aria-pressed={isPinned}
+              >
+                {isPinned ? (
+                  <PinOff className="w-3.5 h-3.5" />
+                ) : (
+                  <Pin className="w-3.5 h-3.5" />
+                )}
+                <span>{isPinned ? "Unpin" : "Pin"}</span>
+              </button>
+            )}
 
             {/* ===============================================
                 Edit

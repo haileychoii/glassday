@@ -1,784 +1,174 @@
-/* =========================================================
-   DAILY JOURNAL
-   Widget-local styles for:
-   - date navigation
-   - summary cards and condition controls
-   - task, clip, and journal entry layouts
-========================================================= */
+/* ============================================================================
+ * GLASSDAY / DAILY JOURNAL — ALL THEMES
+ * 파일: src/styles/widgets/journal.css
+ * ============================================================================
+ *
+ * [화면 연결]
+ * App.tsx → MobileDashboard.tsx 또는 DashboardGrid.tsx
+ *         → WidgetSlot.tsx → DailyJournalWidget.tsx → GlassCard.tsx
+ *
+ * DailyJournalWidget.tsx의 실제 구조:
+ * .daily-journal-widget (GlassCard: 제목·아이콘·날짜 선택)
+ *   └─ .widget-frame__body
+ *       └─ .journal-content
+ *           ├─ .journal-summary-row (Progress / Tasks / Clips / Condition)
+ *           └─ .journal-main-scroll (Today, Tomorrow, Memo, Clips 등)
+ *
+ * [다른 파일의 책임]
+ * - base.css: GlassCard 공통 헤더·본문 구조
+ * - theme-surfaces.css: 테마별 표면·테두리·버튼 토큰
+ * - themes/mac-core.css: Mac Core 전체의 재질과 타이포그래피
+ * - themes/pixel.css: Pixel Desk의 PC 창 스타일
+ * - mobile.css: 휴대폰 헤더·날짜 컨트롤 배치
+ * - mobile-pixel.css: 휴대폰 Pixel Desk의 Win95 외형
+ *
+ * [핵심 원칙]
+ * 1. Mac/Pixel/Pastel/Glass/Aurora/Retro 모두 같은 JSX와 레이아웃 사용.
+ * 2. 콘텐츠의 색을 테마 이름별로 하드코딩하지 않고 공통 변수를 사용.
+ * 3. 실제 위젯 너비를 @container로 감지. 브라우저 너비만으로 판단하지 않음.
+ * 4. 요약은 위쪽에 유지하고 긴 항목 목록만 내부 스크롤.
+ * 5. 새 wrapper, 가짜 제목줄(::before), 중첩된 장식 패널을 추가하지 않음.
+ * 6. 화면별로 중복되어 있던 !important 및 상충하는 1/2/4열 규칙 정리.
+ * ============================================================================ */
 
-/* =========================================================
-   1. Widget shell and shared inline rows
-========================================================= */
-
+/* 01. Journal 전용 설정값. Figma에서도 같은 토큰으로 매핑 가능. */
 .daily-journal-widget {
-  /* Widget body inset
-     This single token controls the Journal content distance from both sides.
-     / 위젯 내부 좌우 여백은 이 값 하나만 수정하면 된다. */
-  --journal-body-pad-x: var(--gd-space-xs);
-  /* Theme surface aliases
-     Journal and Study intentionally share the same panel/control contrast.
-     / 테마별 명암은 theme-surfaces.css에서 한 번만 조절한다. */
-  --journal-surface-bg: var(--gd-widget-panel-bg);
-  --journal-surface-border: var(--gd-widget-panel-border);
-  --journal-surface-shadow: var(--gd-widget-panel-shadow);
-  --journal-control-bg: var(--gd-widget-control-bg);
-  --journal-control-border: var(--gd-widget-control-border);
-  /* Holographic action palette
-     Add/Save controls share this muted cyan-pink-champagne surface.
-     저널 강조색을 바꾸려면 아래 action 변수만 조절하면 된다. */
-  --journal-action-bg:
-    linear-gradient(
-      112deg,
-      hsl(190 62% 72% / 0.24),
-      hsl(320 52% 76% / 0.2) 50%,
-      hsl(48 72% 76% / 0.22)
-    );
-  --journal-action-bg-hover:
-    linear-gradient(
-      112deg,
-      hsl(190 66% 70% / 0.34),
-      hsl(320 56% 74% / 0.3) 50%,
-      hsl(48 76% 74% / 0.32)
-    );
-  --journal-action-border: hsl(var(--foreground) / 0.14);
-  --journal-action-text: hsl(var(--foreground) / 0.78);
+  --journal-gap: 8px;
+  --journal-pad: 8px;
+  --journal-radius: var(--gd-widget-inner-radius, var(--gd-radius-inner, 12px));
+  --journal-panel: var(--gd-widget-panel-bg, hsl(var(--card)));
+  --journal-panel-border: var(--gd-widget-panel-border, hsl(var(--border)));
+  --journal-panel-shadow: var(--gd-widget-panel-shadow, none);
+  --journal-control: var(--gd-widget-control-bg, hsl(var(--secondary)));
+  --journal-control-border: var(--gd-widget-control-border, hsl(var(--border)));
+  --journal-accent: hsl(var(--primary));
+  --journal-text: hsl(var(--foreground));
+  --journal-muted: hsl(var(--muted-foreground));
+  --journal-body-pad-x: var(--gd-widget-pad-x, 8px);
+
   height: 100%;
+  min-width: 0;
   min-height: 0;
   overflow: hidden;
-  container-type: size;
-  container-name: gd-widget journal-widget;
+
+  /* dashboard 크기 변경에 따라 요약 행의 열 개수 결정 */
+  container: journal-widget / size;
 }
 
-.daily-journal-widget .glass-card-body {
-  min-height: 0;
-  padding-top: 2px;
+/* 02. GlassCard 공통 본문 안에서 Journal만 자체 스크롤을 갖는다.
+ * 다른 위젯의 .widget-frame__body에는 영향 없음. */
+.daily-journal-widget > .widget-frame__body {
   display: grid;
   grid-template-rows: minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding-inline: var(--journal-body-pad-x);
 }
 
+/* 03. 화면의 두 영역: 위 요약(고정) / 아래 목록(스크롤). */
 .journal-content {
-  min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: var(--gd-widget-section-gap-tight);
+  gap: var(--journal-gap);
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
 }
 
-.journal-date-nav,
-.journal-summary-row,
-.journal-section-title,
-.journal-task-item,
-.journal-clip-item,
-.journal-library-item {
+.journal-main-scroll {
+  display: grid;
+  align-content: start;
+  gap: var(--journal-gap);
+  min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 04. 날짜 이동 버튼은 GlassCard의 actions에 렌더링된다.
+ * DailyJournalWidget.tsx → Previous / date input / Next.
+ * 헤더에서의 줄바꿈은 공통 GlassCard와 mobile.css가 담당한다. */
+.journal-date-nav {
   display: flex;
   align-items: center;
+  gap: 5px;
+  min-width: 0;
 }
 
-.journal-date-nav {
-  gap: var(--gd-widget-inline-gap);
-  flex-shrink: 0;
-}
-
-/* =========================================================
-   2. Date navigation and compact summary controls
-========================================================= */
-
-.journal-date-nav button,
-.journal-date-nav input {
-  height: 22px;
-  border-radius: 999px;
-  background: hsl(0 0% 100% / 0.32);
-  border: 1px solid hsl(0 0% 100% / 0.46);
-  color: hsl(var(--foreground) / 0.68);
+.journal-date-nav :is(button, input) {
+  height: 30px;
+  min-width: 0;
+  border: 1px solid var(--journal-control-border);
+  border-radius: var(--gd-radius-button, 8px);
+  background: var(--journal-control);
+  color: var(--journal-text);
 }
 
 .journal-date-nav button {
-  width: 32px;
+  flex: 0 0 30px;
+  width: 30px;
+  padding: 0;
 }
 
 .journal-date-nav input {
   width: 130px;
-  padding: 0 10px;
-  font-size: 11px;
-  font-weight: 800;
+  padding-inline: 6px;
+  font-size: 12px;
+  font-weight: 700;
 }
 
+/* 05. 상단 요약: 넓은 위젯은 3개 카운터 + Condition 한 행.
+ * 너비 760px 이하에서는 3개 카운터 위 / Condition 아래.
+ * @container는 위젯 자체 너비 기준이므로 PC Grid 크기에도 반응한다. */
 .journal-summary-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--gd-widget-section-gap-tight);
+  grid-template-columns: repeat(3, minmax(0, 0.7fr)) minmax(280px, 1.9fr);
+  align-items: stretch;
+  gap: var(--journal-gap);
+  min-width: 0;
 }
 
 .journal-summary-card {
-  flex: 1;
   min-width: 0;
-  min-height: 44px;
-  border-radius: 16px;
-  padding: 6px 8px;
-  background: var(--journal-surface-bg);
-  border: 1px solid var(--journal-surface-border);
-  box-shadow: var(--journal-surface-shadow);
-}
-
-.journal-summary-card span {
-  display: block;
-  font-size: 10px;
-  font-weight: 850;
-  color: hsl(var(--foreground) / 0.38);
-  text-transform: uppercase;
-}
-
-.journal-summary-card strong {
-  display: block;
-  margin-top: 3px;
-  font-size: 16px;
-  font-weight: 900;
-  color: hsl(var(--foreground) / 0.82);
-}
-
-.journal-score-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.journal-score-strip-card {
-  min-width: 0;
-  grid-column: 1 / -1;
-}
-
-.journal-score-strip {
-  margin-top: 6px;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--gd-widget-section-gap);
-}
-
-.journal-score-inline {
-  min-width: 0;
-  min-height: 52px;
-  border-radius: 16px;
-  padding: 7px 8px;
-  background: var(--journal-control-bg);
-  border: 1px solid var(--journal-control-border);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  text-align: center;
-}
-
-.journal-score-inline small {
-  font-size: 9px;
-  font-weight: 850;
-  line-height: 1;
-  color: hsl(var(--foreground) / 0.42);
-}
-
-.journal-score-stepper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  gap: 3px;
-}
-
-.journal-score-stepper button {
-  width: 14px;
-  height: 14px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: hsl(0 0% 100% / 0.34);
-  border: 1px solid hsl(0 0% 100% / 0.44);
-  color: hsl(var(--foreground) / 0.56);
-  font-size: 9px;
-  font-weight: 900;
-}
-
-.journal-score-stepper b {
-  text-align: center;
-  font-size: 13px;
-  margin: 0 3px;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.journal-score-grid label {
-  min-width: 0;
-  border-radius: 18px;
-  padding: 10px;
-  background: hsl(0 0% 100% / 0.22);
-  border: 1px solid hsl(0 0% 100% / 0.36);
-  display: grid;
-  gap: 6px;
-}
-
-.journal-score-grid span {
-  font-size: 10px;
-  font-weight: 850;
-  color: hsl(var(--foreground) / 0.42);
-}
-
-.journal-score-grid input {
-  width: 100%;
-}
-
-.journal-score-grid b {
-  font-size: 12px;
-  font-weight: 900;
-  color: hsl(var(--primary));
-}
-
-.journal-main-scroll {
-  min-height: 0;
-  overflow: auto;
-  display: grid;
-  align-content: start;
-  gap: var(--gd-widget-stack-gap);
-  margin-top: 0;
-  padding-right: 0;
-}
-
-.journal-section {
-  border-radius: 16px;
-  padding: var(--gd-widget-section-gap);
-  background: var(--journal-surface-bg);
-  border: 1px solid var(--journal-surface-border);
-  box-shadow: var(--journal-surface-shadow);
-}
-
-.journal-section-title {
-  gap: var(--gd-widget-section-title-gap);
-  margin-bottom: var(--gd-widget-section-title-bottom);
-  font-size: 12px;
-  font-weight: 800;
-  color: hsl(var(--foreground) / 0.82);
-}
-
-.journal-add-row,
-.journal-clip-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 40px;
-  gap: var(--gd-widget-section-gap-tight);
-  margin-bottom: var(--gd-widget-section-gap-tight);
-}
-
-.journal-clip-row {
-  grid-template-columns: minmax(0, 1fr) 96px;
-}
-
-.journal-add-row input,
-.journal-clip-row input,
-.journal-mood-select,
-.journal-section textarea {
-  width: 100%;
-  min-width: 0;
-  border-radius: 15px;
-  background: hsl(0 0% 100% / 0.32);
-  border: 1px solid hsl(0 0% 100% / 0.44);
-  color: hsl(var(--foreground) / 0.72);
-  outline: none;
-}
-
-.journal-add-row input,
-.journal-clip-row input,
-.journal-mood-select {
-  height: 38px;
-  padding: 0 12px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.journal-add-row button,
-.journal-clip-row button {
-  min-height: 38px;
-  border-radius: 15px;
-  display: grid;
-  place-items: center;
-  background: var(--journal-action-bg);
-  border: 1px solid var(--journal-action-border);
-  color: var(--journal-action-text);
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.34);
-  backdrop-filter: blur(10px) saturate(118%);
-  -webkit-backdrop-filter: blur(10px) saturate(118%);
-  font-size: 12px;
-  font-weight: 800;
-  transition:
-    background 160ms ease,
-    border-color 160ms ease,
-    transform 160ms ease;
-}
-
-.journal-add-row button:hover,
-.journal-clip-row button:hover {
-  background: var(--journal-action-bg-hover);
-  border-color: hsl(var(--foreground) / 0.2);
-  transform: translateY(-1px);
-}
-
-.journal-section textarea {
-  min-height: 100px;
-  width: 100%;
-  /* resize: vertical; */
-  padding: 12px;
-  font-size: 12px;
-  line-height: 1.55;
-  font-weight: 500;
-  color: hsl(var(--foreground) / 0.72);
-}
-
-.journal-task-list,
-.journal-clip-list,
-.journal-library-list {
-  display: grid;
-  gap: var(--gd-widget-section-gap-tight);
-}
-
-.journal-task-item {
-  min-height: 34px;
-  display: grid;
-  grid-template-columns: 16px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 7px;
-  border-radius: 12px;
-  background: var(--journal-control-bg);
-  border: 1px solid var(--journal-control-border);
-}
-
-.journal-task-item.is-done {
-  opacity: 0.55;
-}
-
-.journal-task-item.is-done input {
-  text-decoration: line-through;
-}
-
-.journal-task-check,
-.journal-task-delete-select,
-.journal-task-delete-confirm button {
-  width: 16px;
-  height: 16px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: hsl(0 0% 100% / 0.22);
-  border: 1px solid hsl(0 0% 100% / 0.38);
-  color: hsl(var(--foreground) / 0.52);
-}
-
-.journal-task-check {
-  color: hsl(var(--primary));
-}
-
-.journal-task-delete-select {
-  justify-self: end;
-}
-
-.journal-task-delete-select::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: inherit;
-  background: hsl(var(--foreground) / 0.22);
-}
-
-.journal-task-delete-confirm {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-}
-
-.journal-task-delete-confirm button:first-child {
-  color: hsl(150 48% 38%);
-  background: hsl(150 64% 90% / 0.4);
-}
-
-.journal-task-delete-confirm button:last-child,
-.journal-clip-item button:hover {
-  color: hsl(350 70% 45%);
-  background: hsl(350 100% 96% / 0.46);
-}
-
-.journal-task-item input {
-  min-width: 0;
-  background: transparent;
-  border: 0;
-  outline: none;
-  font-size: 12px;
-  font-weight: 500;
-  color: hsl(var(--foreground) / 0.72);
-}
-
-.journal-tag-tools,
-.journal-hashtag-row {
-  margin-top: 5px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.journal-tag-tools button,
-.journal-hashtag-row span,
-.journal-muted {
-  min-height: 26px;
-  border-radius: 999px;
-  padding: 0 9px;
-  display: inline-flex;
-  align-items: center;
-  font-size: 10px;
-  font-weight: 850;
-  background: var(--journal-action-bg);
-  border: 1px solid var(--journal-action-border);
-  color: var(--journal-action-text);
-}
-
-.journal-muted {
-  background: hsl(0 0% 100% / 0.22);
-  border-color: hsl(0 0% 100% / 0.36);
-  color: hsl(var(--foreground) / 0.42);
-}
-
-.journal-clip-item {
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 18px;
-  background: hsl(0 0% 100% / 0.24);
-  border: 1px solid hsl(0 0% 100% / 0.38);
-}
-
-.journal-clip-item div {
-  min-width: 0;
-}
-
-.journal-clip-item strong {
-  display: block;
-  font-size: 10px;
-  font-weight: 900;
-  color: hsl(var(--primary));
-}
-
-.journal-clip-item span {
-  display: block;
-  margin-top: 4px;
-  font-size: 12px;
-  color: hsl(var(--foreground) / 0.68);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.journal-clip-item button {
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: hsl(0 0% 100% / 0.32);
-  border: 1px solid hsl(0 0% 100% / 0.42);
-}
-
-.journal-library-list {
-  margin-top: 10px;
-}
-
-.journal-library-item {
-  justify-content: space-between;
-  min-height: 34px;
-  border-radius: 15px;
-  padding: 0 10px;
-  background: hsl(0 0% 100% / 0.22);
-  border: 1px solid hsl(0 0% 100% / 0.36);
-}
-
-.journal-library-item strong {
-  font-size: 11px;
-  font-weight: 900;
-  color: hsl(var(--foreground) / 0.68);
-}
-
-.journal-library-item span {
-  min-width: 24px;
-  height: 22px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  font-size: 10px;
-  font-weight: 900;
-  color: hsl(var(--primary));
-  background: hsl(var(--primary) / 0.1);
-}
-
-.journal-empty-box {
-  border-radius: 16px;
-  padding: 12px;
-  font-size: 12px;
-  color: hsl(var(--foreground) / 0.42);
-  background: hsl(0 0% 100% / 0.18);
-  border: 1px dashed hsl(0 0% 100% / 0.36);
-}
-
-@media (max-width: 900px) {
-  .journal-summary-row,
-  .journal-score-grid {
-    display: grid;
-  }
-
-  .journal-summary-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .journal-score-strip-card {
-    grid-column: 1 / -1;
-  }
-}
-
-.react-grid-item > .dashboard-grid-item > .daily-journal-widget,
-.react-grid-item > .dashboard-grid-item-content > .daily-journal-widget,
-.react-grid-item > .daily-journal-widget {
-  display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
-  align-content: stretch !important;
-  gap: 8px !important;
-  overflow: hidden !important;
-}
-
-.react-grid-item .journal-main-scroll {
-  height: 100% !important;
-  min-height: 0 !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior: contain !important;
-  -webkit-overflow-scrolling: touch !important;
-  /* The outer widget body owns horizontal spacing; do not stack another inset. */
-  padding-inline: 0 !important;
-}
-
-@container journal-widget (max-width: 860px) {
-  .journal-summary-row {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 6px !important;
-  }
-
-  .journal-summary-card {
-    min-height: 0 !important;
-    padding: 6px 7px !important;
-    border-radius: 14px !important;
-  }
-
-  .journal-score-strip {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  }
-
-  .journal-score-inline {
-    min-height: 48px !important;
-  }
-}
-
-@container journal-widget (max-width: 680px) {
-  .journal-summary-card span {
-    font-size: 9px !important;
-  }
-
-  .journal-summary-card strong {
-    margin-top: 3px !important;
-    font-size: 15px !important;
-  }
-
-  .journal-section {
-    padding: 12px !important;
-    border-radius: 18px !important;
-  }
-
-  .journal-add-row,
-  .journal-clip-row {
-    grid-template-columns: 1fr !important;
-  }
-
-  .journal-add-row button,
-  .journal-clip-row button {
-    width: 100% !important;
-  }
-
-  .journal-tag-tools,
-  .journal-hashtag-row,
-  .journal-library-list {
-    gap: 6px !important;
-  }
-
-  .journal-summary-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
-
-  .journal-score-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-
-  .journal-score-stepper button {
-    width: 13px !important;
-    height: 13px !important;
-    font-size: 8px !important;
-  }
-
-  .journal-score-stepper b {
-    font-size: 12px !important;
-    margin: 0 2px !important;
-  }
-}
-
-@container journal-widget (max-width: 560px) {
-  /* Compact dashboard preview:
-     summary cards stay on one line, condition spans full width, and
-     task/clip entry rows collapse into a single column here instead of
-     depending on global overrides.css. */
-  .journal-summary-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 6px !important;
-  }
-
-  .journal-summary-card {
-    min-height: 0 !important;
-    padding: 5px 6px !important;
-    border-radius: 13px !important;
-  }
-
-  .journal-summary-card strong {
-    margin-top: 2px !important;
-    font-size: 14px !important;
-  }
-
-  .journal-summary-card span {
-    font-size: 9px !important;
-  }
-
-  .journal-score-strip-card {
-    grid-column: 1 / -1 !important;
-  }
-
-  .journal-score-inline {
-    min-height: 48px !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 4px !important;
-    text-align: center !important;
-  }
-
-  .journal-score-stepper {
-    justify-content: center !important;
-    width: 100% !important;
-  }
-
-  .journal-score-stepper button {
-    width: 14px !important;
-    height: 14px !important;
-    font-size: 9px !important;
-  }
-
-  .journal-score-stepper b {
-    margin: 0 3px !important;
-    font-size: 13px !important;
-  }
-
-  .journal-score-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 8px !important;
-  }
-
-  .journal-score-grid label {
-    min-height: 0 !important;
-    padding: 9px !important;
-  }
-
-  .journal-score-strip {
-    grid-template-columns: 1fr !important;
-  }
-
-  .journal-add-row,
-  .journal-clip-row {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-@container journal-widget (max-width: 600px) {
-  .journal-summary-card:last-child {
-    grid-column: 1 / -1 !important;
-  }
-
-  .journal-score-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* ============================================================
-   [Figma Mapping] Daily Journal Widget
-   TSX: src/components/widgets/DailyJournalWidget.tsx
-   Frames: Date Nav, Summary/Condition Grid, .journal-main-scroll, Journal Sections.
-   --journal-body-pad-x는 좌우 body inset을 한곳에서 조절하는 Figma-facing token이다.
-   Summary는 fixed 영역이고 긴 task/text/clip section만 내부 scroll한다.
-   Inner surface 색상은 theme-surfaces.css semantic token을 우선 사용한다.
-   ============================================================ */
-/* =========================================================
-   Final Daily Journal adaptive composition
-   The journal summary should not simply stack into one column. The first three
-   counters stay compact, while Condition behaves like a dense horizontal
-   control strip that wraps only when the actual widget width cannot support it.
-========================================================= */
-
-.daily-journal-widget {
-  --journal-summary-gap: clamp(5px, 1.1cqw, 8px);
-  --journal-summary-counter-min: clamp(58px, 14cqw, 86px);
-  --journal-condition-min: clamp(220px, 42cqw, 360px);
-}
-
-.daily-journal-widget .glass-card-body {
-  overflow: hidden;
-}
-
-.journal-content {
-  gap: var(--journal-summary-gap) !important;
-}
-
-.journal-summary-row {
-  width: 100%;
-  min-width: 0;
-  display: grid !important;
-  grid-template-columns:
-    repeat(3, minmax(var(--journal-summary-counter-min), 0.28fr))
-    minmax(var(--journal-condition-min), 1fr) !important;
-  align-items: stretch !important;
-  gap: var(--journal-summary-gap) !important;
-}
-
-.journal-summary-card {
-  min-width: 0 !important;
-  min-height: 40px !important;
-  padding: 6px 8px !important;
+  min-height: 48px;
+  padding: 7px 9px;
+  border: 1px solid var(--journal-panel-border);
+  border-radius: var(--journal-radius);
+  background: var(--journal-panel);
+  box-shadow: var(--journal-panel-shadow);
   display: grid;
   align-content: center;
 }
 
-.journal-summary-card span {
-  line-height: 1;
+.journal-summary-card > span {
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.2;
+  color: var(--journal-muted);
+  text-transform: uppercase;
 }
 
-.journal-summary-card strong {
-  margin-top: 3px !important;
-  line-height: 1.05;
+.journal-summary-card > strong {
+  margin-top: 3px;
+  font-size: 16px;
+  font-weight: 850;
+  line-height: 1.1;
+  color: var(--journal-text);
 }
 
+/* 06. Condition: 별도의 큰 카드 안에 다시 작은 카드를 중첩하지 않는다.
+ * 자식 4개 점수 카드만 패널로 유지해 불필요한 이중 테두리를 방지한다. */
 .journal-score-strip-card {
-  grid-column: auto !important;
-  min-height: 40px !important;
-  display: grid !important;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 8px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .journal-score-strip-card > span {
@@ -787,194 +177,354 @@
 }
 
 .journal-score-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
   min-width: 0;
-  margin-top: 0 !important;
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(54px, 1fr)) !important;
-  gap: 5px !important;
 }
 
 .journal-score-inline {
-  min-height: 31px !important;
-  padding: 4px 6px !important;
-  border-radius: 12px !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center !important;
-  justify-content: initial !important;
-  gap: 5px !important;
-  text-align: left !important;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 46px;
+  padding: 5px 3px;
+  text-align: center;
+  border: 1px solid var(--journal-control-border);
+  border-radius: var(--journal-radius);
+  background: var(--journal-control);
 }
 
 .journal-score-inline small {
   min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.2;
+  color: var(--journal-muted);
 }
 
 .journal-score-stepper {
-  width: auto !important;
-  flex: 0 0 auto;
-  gap: 3px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
 }
 
 .journal-score-stepper button {
-  width: 13px !important;
-  height: 13px !important;
-  font-size: 8px !important;
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--journal-control-border);
+  border-radius: var(--gd-radius-button, 8px);
+  background: var(--journal-control);
+  color: var(--journal-text);
+  font-size: 12px;
+  line-height: 1;
 }
 
 .journal-score-stepper b {
-  min-width: 10px;
-  margin: 0 1px !important;
-  font-size: 12px !important;
+  min-width: 12px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--journal-text);
 }
 
-@container journal-widget (max-width: 760px) {
-  .journal-summary-row {
-    grid-template-columns: repeat(3, minmax(56px, 1fr)) !important;
-  }
+/* 07. 오늘/내일 할 일, 메모, 취업 기록, 클립, 태그 목록의 섹션.
+ * DailyJournalWidget.tsx의 .journal-main-scroll > section들이 대상. */
+.journal-section {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--journal-panel-border);
+  border-radius: var(--journal-radius);
+  background: var(--journal-panel);
+  box-shadow: var(--journal-panel-shadow);
+}
 
+.journal-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--journal-text);
+}
+
+/* 08. 새 항목 입력: 입력창+추가 버튼을 한 줄로 유지.
+ * 좁은 화면에서도 전체 폭 버튼을 다음 줄로 내리지 않는다. */
+.journal-add-row,
+.journal-clip-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 40px;
+  gap: 6px;
+  min-width: 0;
+  margin-bottom: 8px;
+}
+
+/* 클립 추가 영역은 액션 버튼에 조금 더 넓은 폭이 필요하다. */
+.journal-clip-row {
+  grid-template-columns: minmax(0, 1fr) 86px;
+}
+
+.journal-add-row input,
+.journal-clip-row input,
+.journal-mood-select,
+.journal-section textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--journal-control-border);
+  border-radius: var(--gd-radius-button, 8px);
+  background: var(--journal-control);
+  color: var(--journal-text);
+  outline-offset: 2px;
+}
+
+.journal-add-row input,
+.journal-clip-row input,
+.journal-mood-select {
+  height: 38px;
+  padding-inline: 9px;
+  font-size: 12px;
+}
+
+.journal-add-row button,
+.journal-clip-row button {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 38px;
+  border: 1px solid var(--journal-control-border);
+  border-radius: var(--gd-radius-button, 8px);
+  background: var(--journal-control);
+  color: var(--journal-text);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.journal-section textarea {
+  min-height: 100px;
+  padding: 10px;
+  resize: vertical;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* 09. 할 일·클립·라이브러리 목록. 선택·삭제 상태는 TSX가 결정한다. */
+.journal-task-list,
+.journal-clip-list,
+.journal-library-list {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.journal-task-item {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 5px 7px;
+  border: 1px solid var(--journal-control-border);
+  border-radius: var(--journal-radius);
+  background: var(--journal-control);
+}
+
+.journal-task-item.is-done { opacity: 0.56; }
+.journal-task-item.is-done input { text-decoration: line-through; }
+
+.journal-task-check,
+.journal-task-delete-select,
+.journal-task-delete-confirm button {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid var(--journal-control-border);
+  border-radius: var(--gd-radius-button, 8px);
+  background: var(--journal-control);
+  color: var(--journal-text);
+}
+
+.journal-task-check { color: var(--journal-accent); }
+.journal-task-delete-select { justify-self: end; }
+.journal-task-delete-select::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--journal-muted);
+  border-radius: inherit;
+}
+
+.journal-task-delete-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.journal-task-delete-confirm button:first-child { color: hsl(150 48% 38%); }
+.journal-task-delete-confirm button:last-child,
+.journal-clip-item button:hover { color: hsl(350 70% 45%); }
+
+.journal-task-item input {
+  min-width: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--journal-text);
+  font-size: 12px;
+}
+
+.journal-clip-item,
+.journal-library-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--journal-control-border);
+  border-radius: var(--journal-radius);
+  background: var(--journal-control);
+}
+
+.journal-clip-item > div { min-width: 0; }
+.journal-clip-item strong { display: block; font-size: 11px; color: var(--journal-accent); }
+.journal-clip-item span {
+  display: block;
+  margin-top: 3px;
+  color: var(--journal-muted);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.journal-clip-item button {
+  flex: 0 0 30px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--journal-control-border);
+  border-radius: var(--gd-radius-button, 8px);
+  background: var(--journal-control);
+  color: var(--journal-text);
+}
+
+.journal-library-list { margin-top: 8px; }
+.journal-library-item strong { min-width: 0; font-size: 11px; color: var(--journal-text); }
+.journal-library-item span { font-size: 11px; font-weight: 800; color: var(--journal-accent); }
+
+/* 10. 태그·빈 상태. 해시태그 색은 테마의 primary를 따른다. */
+.journal-tag-tools,
+.journal-hashtag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.journal-tag-tools button,
+.journal-hashtag-row span,
+.journal-muted {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--journal-control-border);
+  border-radius: var(--gd-radius-button, 8px);
+  background: var(--journal-control);
+  color: var(--journal-text);
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.journal-muted { color: var(--journal-muted); }
+.journal-empty-box {
+  padding: 10px;
+  border: 1px dashed var(--journal-panel-border);
+  border-radius: var(--journal-radius);
+  background: var(--journal-control);
+  color: var(--journal-muted);
+  font-size: 12px;
+}
+
+/* 11. 넓은 창보다 작은 위젯: 카운터 3개 + Condition 전체 폭.
+ * 여기서만 4열 → 3열 구조 전환. 기존의 중복된 860/760/680/600/560을 제거. */
+@container journal-widget (max-width: 760px) {
+  .journal-summary-row { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
   .journal-score-strip-card {
     grid-column: 1 / -1 !important;
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .journal-score-strip {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  }
-}
-
-@container journal-widget (max-width: 500px) {
-  .journal-summary-card {
-    min-height: 36px !important;
-    padding: 5px 6px !important;
-  }
-
-  .journal-summary-card strong {
-    font-size: 13px !important;
-  }
-
-  .journal-score-strip-card {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
   }
-
-  .journal-score-strip-card > span {
-    /* The four visible labels already explain the group in compact mode. */
-    display: none;
-  }
-
-  .journal-score-strip {
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(58px, 1fr)) !important;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .journal-score-strip::-webkit-scrollbar {
-    display: none;
-  }
-
-  .journal-score-inline {
-    min-width: 58px;
-    min-height: 38px !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    grid-template-rows: auto auto;
-    justify-items: center;
-    align-content: center;
-    gap: 2px !important;
-    text-align: center !important;
-  }
-
-  .journal-score-inline small {
-    width: 100%;
-    text-align: center;
-    text-overflow: clip;
-  }
-
-  .journal-score-inline .journal-score-stepper {
-    justify-self: center;
-  }
+  .journal-score-strip-card > span { display: none; }
+  .journal-score-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-/* =========================================================
-   Compact interaction rows
-   Figma: Input + Primary Icon Action / one horizontal Auto Layout row
-
-   Earlier mobile rules stacked these controls into two full-width rows. The
-   final contract keeps the action beside its field so task content remains
-   visible without extra scrolling. / 좁은 위젯에서도 추가 버튼은 입력창 옆에 둔다.
-========================================================= */
-@container journal-widget (max-width: 680px) {
-  .journal-add-row {
-    grid-template-columns: minmax(0, 1fr) 38px !important;
-  }
-
-  .journal-clip-row {
-    grid-template-columns: minmax(0, 1fr) 86px !important;
-  }
-
-  .journal-add-row button,
-  .journal-clip-row button {
-    width: auto !important;
-  }
-
-  .journal-date-nav {
-    gap: 4px;
-  }
-
-  .journal-date-nav button {
-    width: 28px;
-  }
-
-  .journal-date-nav input {
-    width: clamp(94px, 31cqw, 128px);
-    padding-inline: 7px;
-  }
+/* 12. 아주 좁은 위젯: Condition 4개를 2열로.
+ * 4열 버튼이 서로 겹치지 않도록 하고 가로 스크롤은 만들지 않는다. */
+@container journal-widget (max-width: 350px) {
+  .journal-summary-card { padding: 6px; min-height: 38px; }
+  .journal-summary-card > span { font-size: 9px; }
+  .journal-summary-card > strong { font-size: 13px; }
+  .journal-score-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .journal-score-inline { min-height: 40px; }
+  .journal-date-nav { gap: 4px; }
+  .journal-date-nav button { flex-basis: 28px; width: 28px; }
+  .journal-date-nav input { width: 110px; }
 }
 
+/* 13. 높이가 낮은 데스크톱 위젯은 요약만 압축하고
+ * 본문 스크롤은 유지한다. 글씨/버튼까지 무조건 축소하지 않는다. */
 @container journal-widget (max-height: 430px) {
-  .journal-content {
-    gap: 5px !important;
-  }
+  .journal-content { gap: 5px; }
+  .journal-summary-card { min-height: 36px; padding-block: 4px; }
+  .journal-score-inline { min-height: 38px; padding-block: 3px; }
+  .journal-section { padding: 8px; }
+}
 
-  .journal-summary-card {
-    min-height: 33px !important;
-    padding: 4px 6px !important;
-    border-radius: 11px !important;
-  }
+/* 14. Mac Core: Journal 전용 토큰만 변경한다.
+ * 전체 Mac 앱의 디자인을 여기서 재정의하지 않는다.
+ * 연결: themes/mac-core.css의 --mac-inner-bg/--mac-control-bg. */
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .daily-journal-widget {
+  --journal-radius: var(--gd-radius-inner, 9px);
+  --journal-panel: var(--mac-inner-bg, #f7f8fa);
+  --journal-panel-border: var(--mac-inner-border, #dedee2);
+  --journal-panel-shadow: var(--mac-inner-shadow, none);
+  --journal-control: var(--mac-control-bg, #f5f5f7);
+  --journal-control-border: var(--mac-control-border, #d1d1d6);
+  --journal-text: var(--mac-text, #1d1d1f);
+  --journal-muted: var(--mac-secondary-text, #6e6e73);
+  --journal-accent: var(--mac-blue, #0a84ff);
+}
 
-  .journal-summary-card span {
-    font-size: 8px !important;
-  }
+/* 15. Pixel Desk/Retro: 각진 형태는 테마가 가진 radius 토큰을 사용.
+ * PC의 윈도우 창 장식(가짜 ::before)은 이 파일이 생성하지 않는다.
+ * 모바일 Pixel 타이틀/색은 mobile-pixel.css가 최종 담당한다. */
+:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"], html.theme-pixel-desk, body.theme-pixel-desk, html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .daily-journal-widget {
+  --journal-radius: 0px;
+}
 
-  .journal-summary-card strong {
-    margin-top: 1px !important;
-    font-size: 12px !important;
-  }
-
-  .journal-score-strip-card > span {
-    display: none;
-  }
-
-  .journal-score-inline {
-    min-height: 27px !important;
-    padding: 3px 5px !important;
-  }
-
-  .journal-score-stepper button {
-    width: 12px !important;
-    height: 12px !important;
-  }
-
-  .journal-main-scroll {
-    gap: 7px !important;
-  }
-
-  .journal-section {
-    padding: 8px !important;
-    border-radius: 12px !important;
-  }
+/* 16. 모바일 공통: 글씨 입력 시 iOS Safari 자동 줌 방지.
+ * 화면 폭을 바꾸는 것이 아니라 실제 모바일 셸이 있을 때만 적용. */
+.mobile-layout .daily-journal-widget :is(
+  .journal-date-nav input,
+  .journal-add-row input,
+  .journal-clip-row input,
+  .journal-mood-select,
+  .journal-section textarea
+) {
+  font-size: 16px;
 }

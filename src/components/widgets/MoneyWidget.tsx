@@ -1583,9 +1583,7 @@ export const MoneyWidget = () => {
                   <div>
                     <span className="money-kicker">Database</span>
                     <h3>Add Expense</h3>
-                    <p>
-                      Keep the form closed until you are entering a new spend.
-                    </p>
+                    
                   </div>
 
                   <button
@@ -2008,7 +2006,7 @@ export const MoneyWidget = () => {
                   <div>
                     <span className="money-kicker">Wishlist</span>
                     <h3>Add Item</h3>
-                    <p>Keep the form closed until you need a new planned purchase.</p>
+                    
                   </div>
 
                   <button

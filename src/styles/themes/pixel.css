@@ -1,11 +1,37 @@
-/* ============================================================
-   [Theme Variant] Pixel Desk
-   Registry ID: pixel-desk / selectors: data-theme="pixel-desk", .theme-pixel-desk
-   Parent decor: src/components/layout/PixelDesktopDecor.tsx
-   Figma mapping: square OS window, pixel/bevel controls, navy active title bar, desktop icon layer.
-   다른 Theme와 분리된 selector scope 안에서 radius/shadow/control appearance를 교체한다.
-   Widget data/interaction과 Grid layout 값은 공유한다.
-   ============================================================ */
+/* ============================================================================
+ * GLASSDAY / PIXEL DESK — 공유 테마 (PC + 모바일 공통 기반)
+ * 파일: src/styles/themes/pixel.css
+ * ============================================================================
+ *
+ * [연결 파일]
+ * src/styles/index.css
+ *   ├─ themes/pixel.css       ← 현재 파일. Pixel 색상/버튼/PC 창 디자인
+ *   ├─ widgets/*.css          ← 위젯별 데이터 화면 및 기능 스타일
+ *   ├─ mobile.css             ← 모바일 화면 구성
+ *   └─ mobile-pixel.css       ← 모바일 Win95 헤더/창/패널 최종 규격
+ *
+ * [화면 연결]
+ * App.tsx → Desktop 대시보드 / MobileDashboard.tsx
+ *   → WidgetSlot.tsx → widget-instance-root → GlassCard.tsx
+ *      ├─ .widget-frame__header (실제 제목/아이콘/조작 버튼)
+ *      └─ .widget-frame__body   (위젯 본문)
+ *
+ * [이번 정리]
+ * 1. 192회 반복된 테마 루트 선택자를 동일한 의미의 :where(:is())로 단축.
+ * 2. PC용 .glass-card 가짜 제목줄 (::before/::after)은 모바일에서 비활성화.
+ * 3. PC용 24px 헤더 강제 규칙은 모바일에서 비활성화.
+ * 4. 공통 안쪽 패널은 --w95-panel이 있으면 해당 색상을 우선 사용.
+ *
+ * [주의]
+ * 기존 버튼 이벤트 / 위젯 저장 데이터 / 데스크톱 Grid 배치는 건드리지 않음.
+ * 휴대폰 브라우저의 '데스크톱 사이트' 모드를 고려하여 화면 너비(@media)가 아닌
+ * body:has(.mobile-layout)를 기준으로 모바일 여부를 판정한다.
+ * 별도 DOM wrapper는 추가하지 않는다.
+ *
+ * [브라우저 지원]
+ * :is(), :where(), :has()는 기존 프로젝트에서도 사용 중인 최신 CSS 선택자.
+ * ============================================================================ */
+
 /* ================================
    Theme: Pixel Desk
    Retro 90s OS Desktop
@@ -16,16 +42,7 @@
    실제 테마명이 pixel-desk여도, 예전 theme-pixel이어도 둘 다 대응
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) {
   --background: 174 100% 25%;
   --foreground: 0 0% 0%;
   --card: 0 0% 78%;
@@ -40,7 +57,7 @@
   --muted-foreground: 0 0% 24%;
   --accent: 240 100% 25%;
   --accent-foreground: 0 0% 100%;
-  --border: 0 0% 0%;
+  --border: 0 0% 54%;
   --input: 0 0% 100%;
   --ring: 240 100% 25%;
 
@@ -80,36 +97,9 @@
    Global background / font
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-),
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) body,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) #root {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)),
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) body,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) #root {
   background: #008080 !important;
   background-image: none !important;
   color: #000000 !important;
@@ -117,96 +107,15 @@
 }
 
 /* 배경 장식 제거 */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .bg-glass-gradient,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .aurora-bg,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .aurora-orb,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .cloud-bg,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .gradient-orb,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .background-orb,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .liquid-orb,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-bg-layer,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .noise-overlay,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .bg-glass-gradient,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .aurora-bg,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .aurora-orb,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .cloud-bg,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .gradient-orb,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .background-orb,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .liquid-orb,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-bg-layer,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .noise-overlay,
 :where(
   html[data-theme="pixel-desk"],
   body[data-theme="pixel-desk"],
@@ -222,76 +131,13 @@
 }
 
 /* no desktop icons/folders */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .pixel-desktop-decor,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .pixel-desktop-icon,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .pixel-desktop-icon-box,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .pixel-desktop-icon-label,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .apple-desktop-decor,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .apple-desktop-folder,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .apple-folder-shape {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .pixel-desktop-decor,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .pixel-desktop-icon,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .pixel-desktop-icon-box,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .pixel-desktop-icon-label,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .apple-desktop-decor,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .apple-desktop-folder,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .apple-folder-shape {
   display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
@@ -301,96 +147,15 @@
    App shell / sidebar
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .liquid-shell,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-panel,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .dashboard-shell,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .workspace-shell,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .desktop-shell,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .main-shell,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .dashboard-layout,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-layout {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .liquid-shell,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-panel,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .app-shell,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .dashboard-shell,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .workspace-shell,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .desktop-shell,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .main-shell,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .dashboard-layout,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .app-layout {
   border-radius: 0 !important;
   background: #c0c0c0 !important;
   border-top: 2px solid #ffffff !important;
@@ -404,16 +169,18 @@
   -webkit-backdrop-filter: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) aside {
+/*
+   DashboardGrid.tsx renders widgets inside AppShell.tsx's .app-shell-main.
+   EN: Keep the window chrome gray, but expose the classic Win95 teal on the
+   canvas behind every widget; their own light faces remain readable.
+   KO: 창 테두리와 사이드바는 회색으로 두고, 모든 위젯 뒤 작업 공간만
+   윈도우 95 청록색으로 통일한다. 위젯 본문은 밝은 색을 유지한다.
+*/
+html[data-theme="pixel-desk"] .app-shell-main {
+  background: #008080 !important;
+}
+
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) aside {
   background: #c0c0c0 !important;
   border-right: 2px solid #808080 !important;
   box-shadow:
@@ -427,16 +194,7 @@
    Topbar
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .topbar {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .topbar {
   position: relative !important;
   width: 100% !important;
   height: 56px !important;
@@ -452,30 +210,12 @@
   overflow: visible !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .topbar-inner {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .topbar-inner {
   min-height: 56px !important;
   padding: 0 14px !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .topbar-actions {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .topbar-actions {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -488,29 +228,11 @@
   backdrop-filter: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .topbar-title p {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .topbar-title p {
   display: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .layout-mode-toggle {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .layout-mode-toggle {
   gap: 0 !important;
   padding: 0 !important;
   border-radius: 0 !important;
@@ -524,32 +246,14 @@
     -1px -1px 0 #808080 inset !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .layout-mode-button {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .layout-mode-button {
   height: 26px !important;
   padding: 0 8px !important;
   border-radius: 0 !important;
   box-shadow: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .theme-segmented-control {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .theme-segmented-control {
   border-radius: 0 !important;
   background: #c0c0c0 !important;
   border-top: 2px solid #ffffff !important;
@@ -566,106 +270,16 @@
    Typography
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-),
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-card,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) aside,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) main,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) button,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) input,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) textarea,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) select,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-editor,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-title-input {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)),
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) aside,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) main,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) button,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) input,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) textarea,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) select,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-editor,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-title-input {
   font-family: var(--glassday-app-font) !important;
   letter-spacing: 0 !important;
   text-shadow: none !important;
@@ -675,150 +289,33 @@
    Pixel Desk keeps its bitmap font for interface chrome, while the memo title,
    rich text, list preview, and font options use the font saved on each note.
    / 테마는 기본 UI 폰트만 정하고 메모별 서체를 덮어쓰지 않습니다. */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) :where(.memo-title-input, .memo-title-view, .memo-editor, .memo-editor *) {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :where(.memo-title-input, .memo-title-view, .memo-editor, .memo-editor *) {
   font-family: var(--memo-title-font, var(--memo-font-family, inherit)) !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) :where(.memo-note-title, .memo-note-preview) {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :where(.memo-note-title, .memo-note-preview) {
   font-family: var(--memo-note-font, inherit) !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-font-select option {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-font-select option {
   font-family: var(--memo-option-font, inherit) !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) h1,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) h2,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) h3,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) strong,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .font-semibold,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .font-bold {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) h1,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) h2,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) h3,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) strong,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .font-semibold,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .font-bold {
   font-weight: 700 !important;
   color: #000000 !important;
   letter-spacing: -0.02em !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) p,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) span,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) small,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .text-muted-foreground {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) p,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) span,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) small,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .text-muted-foreground {
   color: #404040 !important;
 }
 
@@ -826,86 +323,14 @@
    Buttons / inputs
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) button,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-button,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .theme-segment-button,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .topbar-action-button,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .calendar-nav-button,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .calendar-view-button,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .widget-picker-button,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .sidebar-tab-item {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) button,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-button,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .theme-segment-button,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .topbar-action-button,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-nav-button,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-view-button,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .widget-picker-button,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .sidebar-tab-item {
   border-radius: 0 !important;
   background: #c0c0c0 !important;
   color: #000000 !important;
@@ -919,36 +344,9 @@
   transform: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) button:active,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-button:active,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .theme-segment-button:active {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) button:active,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-button:active,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .theme-segment-button:active {
   border-top-color: #404040 !important;
   border-left-color: #404040 !important;
   border-right-color: #ffffff !important;
@@ -958,66 +356,12 @@
     -1px -1px 0 #dfdfdf inset !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) input,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) textarea,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) select,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-editor,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .calendar-date-input,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .theme-select-mobile {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) input,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) textarea,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) select,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-editor,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-date-input,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .theme-select-mobile {
   border-radius: 0 !important;
   background: #ffffff !important;
   color: #000000 !important;
@@ -1035,16 +379,7 @@
    The outer item is only a layout slot. The actual visible button is
    sidebar-tab-main, so the rounded default pill cannot overlap the square
    Windows-98 button frame. */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .sidebar-tab-item {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .sidebar-tab-item {
   min-height: 28px !important;
   padding: 0 !important;
   background: transparent !important;
@@ -1054,29 +389,11 @@
   box-shadow: none !important;
 }
 
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-mode-stage.is-laptop-mode .sidebar-tab-item {
+:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .app-mode-stage.is-laptop-mode .sidebar-tab-item {
   min-height: 28px !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .sidebar-tab-main {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .sidebar-tab-main {
   height: 30px !important;
   padding: 0 8px !important;
   border-radius: 0 !important;
@@ -1091,71 +408,26 @@
     -1px -1px 0 #808080 inset !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .sidebar-tab-item.is-collapsed .sidebar-tab-main {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .sidebar-tab-item.is-collapsed .sidebar-tab-main {
   width: 28px !important;
   height: 28px !important;
   padding: 0 !important;
   border-radius: 0 !important;
 }
 
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-mode-stage.is-laptop-mode .sidebar-tab-main,
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-mode-stage.is-laptop-mode .sidebar-tab-item.is-collapsed .sidebar-tab-main {
+:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .app-mode-stage.is-laptop-mode .sidebar-tab-main,
+:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .app-mode-stage.is-laptop-mode .sidebar-tab-item.is-collapsed .sidebar-tab-main {
   border-radius: 0 !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .sidebar-tab-item.is-active {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .sidebar-tab-item.is-active {
   background: transparent !important;
   color: inherit !important;
   border: 0 !important;
   box-shadow: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .sidebar-tab-item.is-active .sidebar-tab-main {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .sidebar-tab-item.is-active .sidebar-tab-main {
   background: #000080 !important;
   color: #ffffff !important;
   border-radius: 0 !important;
@@ -1166,125 +438,41 @@
   box-shadow: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .sidebar-tab-item.is-active * {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .sidebar-tab-item.is-active * {
   color: #ffffff !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .workspace-theme-icon-pixel-desk {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .workspace-theme-icon-pixel-desk {
   width: 16px !important;
   height: 16px !important;
 }
 
+/* ========================================================================
+ * PC 전용 헤더 규격: 모바일에서는 .mobile-pixel.css가 38px 규격을 사용한다.
+ * 뒤에 붙는 :where(:not(body:has(.mobile-layout) *))는 PC 전용 적용 조건.
+ * :where()로 감싸 원래 선택자의 우선순위(specificity)를 유지한다.
+ * CSS가 Portal로 옮겨진 위젯에도 동일하게 적용된다.
+ * ======================================================================== */
 /* Pixel widget headers share one tighter start line so title placement stays
    consistent across Today Focus, Career, Memo, Journal, and the rest. */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-card-header,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .widget-frame__header {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card-header:where(:not(body:has(.mobile-layout) *)),
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .widget-frame__header:where(:not(body:has(.mobile-layout) *)) {
   min-height: 24px !important;
   padding: 2px 8px !important;
   gap: 5px !important;
   align-items: center !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-card-title,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .widget-card-title,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .widget-frame__title {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card-title:where(:not(body:has(.mobile-layout) *)),
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .widget-card-title:where(:not(body:has(.mobile-layout) *)),
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .widget-frame__title:where(:not(body:has(.mobile-layout) *)) {
   font-size: 11px !important;
   line-height: 1.1 !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-card-subtitle,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .widget-card-subtitle,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .widget-frame__subtitle {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card-subtitle:where(:not(body:has(.mobile-layout) *)),
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .widget-card-subtitle:where(:not(body:has(.mobile-layout) *)),
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .widget-frame__subtitle:where(:not(body:has(.mobile-layout) *)) {
   font-size: 10px !important;
   line-height: 1.1 !important;
 }
@@ -1293,82 +481,19 @@
    responsive.css and overrides.css are imported after this theme, so these
    higher-specificity selectors keep every widget title on the same tighter
    pixel title line. Today Focus uses the same GlassCard header as the rest. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-card > :is(.glass-card-header, .widget-frame__header),
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .dashboard-grid-item > .glass-card > :is(.glass-card-header, .widget-frame__header),
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-mode-stage.is-laptop-mode .dashboard-grid-item > .glass-card > :is(.glass-card-header, .widget-frame__header),
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) :is(.today-focus-card, .today-focus-widget) > :is(.glass-card-header, .widget-frame__header) {
+:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card > :is(.glass-card-header, .widget-frame__header):where(:not(body:has(.mobile-layout) *)),
+:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .dashboard-grid-item > .glass-card > :is(.glass-card-header, .widget-frame__header):where(:not(body:has(.mobile-layout) *)),
+:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .app-mode-stage.is-laptop-mode .dashboard-grid-item > .glass-card > :is(.glass-card-header, .widget-frame__header):where(:not(body:has(.mobile-layout) *)),
+:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :is(.today-focus-card, .today-focus-widget) > :is(.glass-card-header, .widget-frame__header):where(:not(body:has(.mobile-layout) *)) {
   min-height: 24px !important;
   padding: 2px 8px !important;
   gap: 5px !important;
   align-items: center !important;
 }
 
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-card > :is(.glass-card-body, .widget-frame__body),
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .dashboard-grid-item > .glass-card > :is(.glass-card-body, .widget-frame__body),
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-mode-stage.is-laptop-mode .dashboard-grid-item > .glass-card > :is(.glass-card-body, .widget-frame__body) {
+:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card > :is(.glass-card-body, .widget-frame__body):where(:not(body:has(.mobile-layout) *)),
+:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .dashboard-grid-item > .glass-card > :is(.glass-card-body, .widget-frame__body):where(:not(body:has(.mobile-layout) *)),
+:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .app-mode-stage.is-laptop-mode .dashboard-grid-item > .glass-card > :is(.glass-card-body, .widget-frame__body):where(:not(body:has(.mobile-layout) *)) {
   padding: 2px 8px 8px !important;
 }
 
@@ -1376,56 +501,25 @@
    Grid / card rectangle fix
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .react-grid-item,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .dashboard-grid-item,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .dashboard-grid-item-content {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .react-grid-item,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .dashboard-grid-item,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .dashboard-grid-item-content {
   border-radius: 0 !important;
   overflow: visible !important;
   clip-path: none !important;
   box-shadow: none !important;
 }
 
+/* ========================================================================
+ * PC Pixel 창 프레임.
+ * 모바일: GlassCard.tsx에 실제 헤더가 있으므로 가짜 ::before/::after를 끈다.
+ * 바깥 .glass-card, 가짜 버튼, 본문 height 강제까지 한꺼번에 PC로만 제한한다.
+ * ======================================================================== */
 /* =========================================================
    Widget window
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-card {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card:where(:not(body:has(.mobile-layout) *)) {
   position: relative !important;
   height: 100% !important;
   min-height: 0 !important;
@@ -1441,29 +535,20 @@
 
   border-top: 2px solid #ffffff !important;
   border-left: 2px solid #ffffff !important;
-  border-right: 2px solid #424242 !important;
-  border-bottom: 2px solid #424242 !important;
+  border-right: 2px solid #7c8885 !important;
+  border-bottom: 2px solid #7c8885 !important;
 
   box-shadow:
-    inset -1px -1px 0 #7b7b7b,
+    inset -1px -1px 0 #a1aaa6,
     inset 1px 1px 0 #f7f7f7,
-    4px 4px 0 #8d8d88 !important;
+    2px 2px 0 #547371 !important;
 
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
 /* Window titlebar */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-card::before {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card:where(:not(body:has(.mobile-layout) *))::before {
   content: "" !important;
   display: block !important;
 
@@ -1489,16 +574,7 @@
 }
 
 /* Minimize / maximize / close */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-card::after {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card:where(:not(body:has(.mobile-layout) *))::after {
   content: "_  □  ×" !important;
 
   position: absolute !important;
@@ -1537,30 +613,12 @@
   pointer-events: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-card > * {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card > *:where(:not(body:has(.mobile-layout) *)) {
   position: relative !important;
   z-index: 2 !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .glass-card-body {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card-body:where(:not(body:has(.mobile-layout) *)) {
   height: 100% !important;
   min-height: 0 !important;
   padding: 4px 10px 10px !important;
@@ -1571,338 +629,43 @@
    Inner panels
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .journal-section,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .alert-item,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .alert-summary-card,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .today-focus-hero,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .today-focus-section,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .today-focus-task,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .today-focus-mini-item,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .today-focus-career-item,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .today-focus-memo,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .today-focus-empty,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .calendar-month-day-cell,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .calendar-week-timeline,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .calendar-event-item,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-list-panel,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-workspace,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .settings-section,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .career-detail-section,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .study-hero,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .study-subject-card,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .study-input-panel,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .study-goal-panel,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .study-week-panel,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .study-task-panel,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .study-record-list-panel,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .study-task,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .study-record-item,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .study-empty,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .career-card,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .career-list-item,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .calendar-mini-card,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .journal-task,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .journal-task-empty {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .journal-section,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .alert-item,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .alert-summary-card,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-hero,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-section,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-task,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-mini-item,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-career-item,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-memo,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-empty,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-month-day-cell,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-week-timeline,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-event-item,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-list-panel,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-workspace,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .settings-section,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .career-detail-section,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-hero,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-subject-card,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-input-panel,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-goal-panel,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-week-panel,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-task-panel,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-record-list-panel,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-task,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-record-item,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-empty,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .career-card,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .career-list-item,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-mini-card,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .journal-task,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .journal-task-empty {
   border-radius: 0 !important;
-  background: #e8e8dc !important;
+  /* Desktop: 기존 베이지 표면 유지.
+     Mobile: mobile-pixel.css의 --w95-panel(#dfdfdf)을 상속받아 회색 통일. */
+  background: var(--w95-panel, #e8e8dc) !important;
   background-image: none !important;
   border-top: 2px solid #ffffff !important;
   border-left: 2px solid #ffffff !important;
@@ -1917,56 +680,11 @@
    Floating windows / modals
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-window,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .calendar-modal-window,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .settings-modal-window,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .career-modal-window,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .floating-window {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-window,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-modal-window,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .settings-modal-window,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .career-modal-window,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .floating-window {
   border-radius: 0 !important;
   background: #c0c0c0 !important;
   border-top: 2px solid #ffffff !important;
@@ -1981,56 +699,11 @@
   -webkit-backdrop-filter: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-window-titlebar,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .calendar-modal-header,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .settings-modal-header,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .career-modal-header,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .floating-window-titlebar {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-window-titlebar,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-modal-header,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .settings-modal-header,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .career-modal-header,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .floating-window-titlebar {
   background: #000080 !important;
   color: #ffffff !important;
   border-bottom: 2px solid #000000 !important;
@@ -2040,16 +713,7 @@
    Target the actual heading because shared Settings typography can assign its
    own foreground color after the titlebar color is inherited. / 공통 Settings
    글자색과 충돌해도 Pixel Desk 제목은 흰색 픽셀 음영을 유지한다. */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) :is(
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :is(
   .settings-modal-header h2,
   .settings-header h2,
   .settings-titlebar h2
@@ -2064,16 +728,7 @@
    Memo-specific
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item {
   display: grid !important;
   grid-template-columns: 14px minmax(0, 1fr) 24px !important;
   align-items: center !important;
@@ -2092,60 +747,15 @@
   overflow: hidden !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item::before {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item::before {
   display: none !important;
   content: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-color,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-accent {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-color,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-accent {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -2167,16 +777,7 @@
   box-shadow: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-delete {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-delete {
   position: static !important;
   transform: none !important;
   width: 22px !important;
@@ -2185,69 +786,15 @@
 }
 
 /* varied chip colors */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 1) .memo-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 1) .memo-note-color,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 1) .memo-note-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 1) .memo-note-accent {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-note-color,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-note-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-note-accent {
   background: #f7a8c9 !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 2) .memo-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 2) .memo-note-color,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 2) .memo-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 2) .memo-note-color,
 :where(
   html[data-theme="pixel-desk"],
   body[data-theme="pixel-desk"],
@@ -2257,29 +804,11 @@
   body.pixel-desk,
   html.theme-pixel
 ) .memo-note-item:nth-child(6n + 2) .memo-note-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 2) .memo-note-accent {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 2) .memo-note-accent {
   background: #fff1a8 !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 3) .memo-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 3) .memo-color-chip,
 :where(
   html[data-theme="pixel-desk"],
   body[data-theme="pixel-desk"],
@@ -2289,203 +818,50 @@
   body.pixel-desk,
   html.theme-pixel
 ) .memo-note-item:nth-child(6n + 3) .memo-note-color,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 3) .memo-note-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 3) .memo-note-accent {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 3) .memo-note-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 3) .memo-note-accent {
   background: #a9e9ff !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 4) .memo-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 4) .memo-note-color,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 4) .memo-note-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 4) .memo-note-accent {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-note-color,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-note-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-note-accent {
   background: #c8f7b7 !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 5) .memo-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 5) .memo-note-color,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 5) .memo-note-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 5) .memo-note-accent {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-note-color,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-note-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-note-accent {
   background: #cbb8ff !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 6) .memo-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 6) .memo-note-color,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 6) .memo-note-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-note-item:nth-child(6n + 6) .memo-note-accent {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-note-color,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-note-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-note-accent {
   background: #ffbf91 !important;
 }
 
 /* Memo editor */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-workspace {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-workspace {
   background:
-    color-mix(in srgb, var(--memo-paper-color, #fff7cf) 24%, #d8d8cc 76%) !important;
+    color-mix(in srgb, var(--memo-paper-color, #fff7cf) 24%, var(--w95-bg, #d8d8cc) 76%) !important;
   overflow: hidden !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-editor-shell {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-editor-shell {
   flex: 1 1 auto !important;
   min-height: 220px !important;
   display: grid !important;
   grid-template-rows: 24px minmax(0, 1fr) !important;
   overflow: hidden !important;
-  background: #d8d8cc !important;
+  background: var(--w95-bg, #d8d8cc) !important;
   border: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-editor-label {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-editor-label {
   height: 24px !important;
   padding: 0 2px !important;
   display: flex !important;
@@ -2496,16 +872,7 @@
   border: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-editor {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-editor {
   flex: 1 1 auto !important;
   min-height: 0 !important;
   height: auto !important;
@@ -2528,71 +895,26 @@
     inset -1px -1px 0 #f7f7f7 !important;
 
   overflow: auto !important;
-  scrollbar-color: #c0c0c0 #d4d0c8 !important;
+  scrollbar-color: #c0c0c0 var(--w95-bg, #d4d0c8) !important;
 }
 
 /* Pixel memo scroll targets:
    memo has nested list/editor panes, so each scrollable child needs an
    explicit overflow rule instead of relying only on the outer widget window. */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-widget .memo-list-panel,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-widget .memo-note-list,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-widget .memo-editor {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-widget .memo-list-panel,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-widget .memo-note-list,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-widget .memo-editor {
   min-height: 0 !important;
   overflow: auto !important;
-  scrollbar-color: #c0c0c0 #d4d0c8 !important;
+  scrollbar-color: #c0c0c0 var(--w95-bg, #d4d0c8) !important;
 }
 
 /* =========================================================
    Calendar / progress / chips
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .calendar-range-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .calendar-week-event {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-range-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-week-event {
   border-radius: 0 !important;
   background: #ffffcc !important;
   color: #000000 !important;
@@ -2603,39 +925,12 @@
   box-shadow: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .event-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .memo-color-chip {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .event-color-chip,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-color-chip {
   border-radius: 0 !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .today-focus-ring {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-ring {
   border-radius: 0 !important;
   background: #c0c0c0 !important;
   border-top: 2px solid #404040 !important;
@@ -2645,16 +940,7 @@
   box-shadow: none !important;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .today-focus-ring span {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-ring span {
   border-radius: 0 !important;
   background: #ffffff !important;
 }
@@ -2675,16 +961,7 @@
    Workspace header
 ========================================================= */
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .dashboard-tab-header {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .dashboard-tab-header {
   display: none !important;
 }
 
@@ -2735,43 +1012,16 @@
 }
 
 /* Scrollbar */
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) {
   scrollbar-color: #c0c0c0 #d4d0c8;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) ::-webkit-scrollbar {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) ::-webkit-scrollbar {
   width: 16px;
   height: 16px;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) ::-webkit-scrollbar-track {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) ::-webkit-scrollbar-track {
   background: #d4d0c8;
   border-top: 1px solid #808080;
   border-left: 1px solid #808080;
@@ -2779,16 +1029,7 @@
   border-bottom: 1px solid #ffffff;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) ::-webkit-scrollbar-thumb {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #dcdcdc, #bdbdbd);
   border-top: 2px solid #ffffff;
   border-left: 2px solid #ffffff;
@@ -2796,15 +1037,6 @@
   border-bottom: 2px solid #404040;
 }
 
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) ::-webkit-scrollbar-corner {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) ::-webkit-scrollbar-corner {
   background: #d4d0c8;
 }

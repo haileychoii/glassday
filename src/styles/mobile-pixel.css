@@ -1,0 +1,823 @@
+
+/* ============================================================================
+ * GLASSDAY — MOBILE PIXEL DESK / WINDOWS 95
+ * 파일: src/styles/mobile-pixel.css
+ * ============================================================================
+ *
+ * [목적]
+ * Pixel Desk 모바일 위젯의 제목줄, 아이콘, 색상, 테두리를 통일한다.
+ * 다른 테마나 PC 화면에는 영향을 주지 않는다.
+ *
+ * [실제 파일 연결]
+ *
+ * src/styles/index.css
+ *   └─ mobile-pixel.css (현재 파일, 마지막 import)
+ *
+ * src/components/mobile/MobileDashboard.tsx
+ *   ├─ MobileStudyCard.tsx     → .mobile-study-card
+ *   ├─ MobileCalendarCard.tsx  → .mobile-calendar-card
+ *   ├─ MobileCareerCard.tsx    → .mobile-career-card
+ *   └─ WidgetSlot.tsx
+ *       └─ widgetHostContext.ts
+ *           └─ .widget-instance-root
+ *               └─ GlassCard.tsx → .glass-card
+ *
+ * [일반 위젯]
+ * GlassCard.tsx는 Today, Alert, Journal, Timer, Memo, Money 등에서 공유.
+ * 실제 제목줄: .widget-frame__header
+ * 실제 본문:   .widget-frame__body
+ *
+ * [기존 오류의 원인]
+ * 이전 CSS는 .mobile-widget-slot > .glass-card를 선택했다.
+ * 실제 DOM에는 중간에 .widget-instance-root가 있으므로 불일치했다.
+ * 그 결과 기존 pixel.css의 가짜 제목줄이 그대로 표시됐다.
+ *
+ * [수정 원칙]
+ * - React/JSX 요소 추가 없음
+ * - 기존 데이터 및 이벤트 핸들러 변경 없음
+ * - Windows 95 스타일 토큰 하나로 통일
+ * - 위젯별 예외는 꼭 필요한 곳에만 작성
+ * ============================================================================ */
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .mobile-layout {
+
+  /* =========================================================
+   * 1. 공통 디자인 토큰
+   *
+   * Figma 디자인 시스템에서도 같은 이름 사용 가능.
+   * ========================================================= */
+
+  --w95-bg: #c0c0c0;
+  --w95-panel: #dfdfdf;
+  --w95-title: #000080;
+  --w95-light: #ffffff;
+  --w95-shadow: #808080;
+  --w95-dark: #404040;
+  --w95-text: #000000;
+
+  background: #008080;
+  color: var(--w95-text);
+
+  /* =========================================================
+   * 2. 모바일 대시보드의 위젯 간격
+   *
+   * 파일: MobileDashboard.tsx
+   * 클래스: .mobile-dashboard
+   *
+   * 모든 위젯의 좌우 시작선을 8px로 맞춘다.
+   * ========================================================= */
+
+  & .mobile-dashboard {
+    gap: 8px;
+    padding-inline: 8px;
+  }
+
+  /* =========================================================
+   * 3. 모든 위젯의 바깥 창
+   *
+   * 기본 위젯은 중간에 widget-instance-root가 있으므로
+   * 직접 자식(>) 대신 하위 선택자를 사용한다.
+   *
+   * Study/Calendar/Career는 독립 모바일 카드를 사용한다.
+   * ========================================================= */
+
+  & :is(
+    .mobile-widget-slot .glass-card,
+    .mobile-study-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    min-width: 0;
+
+    background: var(--w95-bg) !important;
+    background-image: none !important;
+
+    border: 2px solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+
+    box-shadow:
+      inset 1px 1px var(--w95-light),
+      inset -1px -1px var(--w95-shadow) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* =========================================================
+   * 4. GlassCard 가짜 제목줄 제거
+   *
+   * 파일: src/styles/themes/pixel.css
+   *
+   * ::before → 남색 장식용 줄
+   * ::after  → 클릭할 수 없는 _ □ × 모양
+   *
+   * 실제 헤더가 있으므로 두 가짜 요소는 모바일에서 제거.
+   * ========================================================= */
+
+  & .mobile-widget-slot .glass-card::before,
+  & .mobile-widget-slot .glass-card::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* 기존 Pixel 테마의 padding-top:30px도 제거.
+   *
+   * 첫 번째 행: 실제 제목줄 38px
+   * 두 번째 행: 남은 전체 공간을 위젯 본문에 할당
+   */
+  & .mobile-widget-slot .glass-card {
+    display: grid !important;
+
+    grid-template-rows:
+      38px minmax(0, 1fr) !important;
+
+    height: 100% !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* =========================================================
+   * 5. Study / Calendar / Career 자체 카드
+   *
+   * 이 세 카드는 GlassCard 구조가 아니다.
+   * 실제 제목줄은 전체 폭으로 표시하고
+   * 나머지 콘텐츠에만 8px 여백을 준다.
+   * ========================================================= */
+
+  & :is(
+    .mobile-study-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    padding: 0 8px 8px !important;
+    gap: 8px;
+  }
+
+  & :is(
+    .mobile-study-card__heading,
+    .mobile-calendar-card__header,
+    .mobile-career-card__header
+  ) {
+    margin-inline: -8px;
+  }
+
+  /* =========================================================
+   * 6. 모든 위젯의 실제 제목줄
+   *
+   * GlassCard.tsx         → .widget-frame__header
+   * MobileStudyCard.tsx   → .mobile-study-card__heading
+   * MobileCalendarCard    → .mobile-calendar-card__header
+   * MobileCareerCard      → .mobile-career-card__header
+   *
+   * 동일한 제목줄 높이, 패딩, 배경을 사용한다.
+   * ========================================================= */
+
+  & :is(
+    .mobile-widget-slot .glass-card > .widget-frame__header,
+    .mobile-study-card__heading,
+    .mobile-calendar-card__header,
+    .mobile-career-card__header
+  ) {
+    box-sizing: border-box;
+
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    flex-wrap: nowrap !important;
+
+    height: 38px !important;
+    min-height: 38px !important;
+
+    padding: 4px 7px !important;
+    gap: 6px !important;
+
+    background: var(--w95-title) !important;
+    background-image: none !important;
+
+    color: #ffffff !important;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* =========================================================
+   * 7. 제목 / 아이콘 위치
+   *
+   * GlassCard.tsx의 기존 title-group, copy를 재사용.
+   * 추가 div나 span을 만들지 않는다.
+   * ========================================================= */
+
+  & .mobile-widget-slot .glass-card :is(
+    .widget-frame__title-group,
+    .widget-frame__copy
+  ) {
+    min-width: 0;
+    min-height: 0 !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  & :is(
+    .widget-frame__title-group,
+    .mobile-study-card__eyebrow,
+    .mobile-calendar-card__label,
+    .mobile-career-card__heading
+  ) {
+    gap: 6px !important;
+  }
+
+  /* 모든 제목줄의 아이콘 영역 18×18px */
+
+  & :is(
+    .widget-frame__icon,
+    .mobile-study-card__eyebrow > svg,
+    .mobile-calendar-card__label > svg,
+    .mobile-career-card__heading > svg
+  ) {
+    flex: 0 0 18px !important;
+
+    width: 18px !important;
+    min-width: 18px !important;
+    height: 18px !important;
+
+    padding: 0 !important;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+
+    color: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  & .widget-frame__icon svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  /* 모든 제목 글씨 12px, 흰색 */
+
+  & :is(
+    .widget-frame__title,
+    .mobile-study-card__eyebrow,
+    .mobile-calendar-card__label,
+    .mobile-career-card__heading,
+    .mobile-career-card__heading strong
+  ) {
+    margin: 0 !important;
+
+    color: #ffffff !important;
+
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+
+    letter-spacing: 0 !important;
+  }
+
+  /* 좁은 휴대폰에서 제목이 두 줄로 내려가지 않도록 한다. */
+
+  & .widget-frame__title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 제목줄의 보조 설명은 숨기고, 본문 데이터는 유지한다. */
+
+  & .mobile-widget-slot .widget-frame__subtitle {
+    display: none !important;
+  }
+
+  /* =========================================================
+   * 8. 제목줄 오른쪽 버튼
+   *
+   * Alert 새로고침, Timer 확대, Memo 편집,
+   * Study/Calendar/Career 전체 보기.
+   *
+   * 기존 버튼의 onClick 기능은 유지한다.
+   * ========================================================= */
+
+  & :is(
+    .widget-frame__actions button,
+    .mobile-study-card__open,
+    .mobile-calendar-card__open,
+    .mobile-career-card__open
+  ) {
+    flex: 0 0 auto;
+
+    min-width: 28px;
+    height: 28px;
+    min-height: 28px;
+
+    padding: 0 6px !important;
+
+    border: 2px solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+
+    background: var(--w95-bg) !important;
+    color: var(--w95-text) !important;
+
+    box-shadow: none !important;
+  }
+
+  /* =========================================================
+   * 9. 위젯 본문 배경
+   *
+   * .widget-frame__body는 GlassCard의 두 번째 행이다.
+   * Pixel 테마에서 지정한 beige 배경 대신 회색을 사용한다.
+   * ========================================================= */
+
+  & .mobile-widget-slot .glass-card > .widget-frame__body {
+    min-width: 0;
+    min-height: 0 !important;
+
+    height: auto !important;
+    padding: 8px !important;
+
+    background: var(--w95-bg) !important;
+    overflow: auto;
+  }
+
+  /* =========================================================
+   * 10. Calendar / Study / Career 내부 패널
+   *
+   * Calendar → 선택 날짜 요약
+   * Study    → 공부 시간 / 완료한 할 일
+   * Career   → 지원 현황 / 다음 일정
+   *
+   * 기능 데이터와 의미 있는 상태 색상은 유지한다.
+   * ========================================================= */
+
+  & :is(
+    .mobile-calendar-card__summary,
+    .mobile-study-card__metric,
+    .mobile-study-card__upcoming,
+    .mobile-career-metrics > div,
+    .mobile-career-next
+  ) {
+    border: 1px solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+
+    background: var(--w95-panel) !important;
+    background-image: none !important;
+
+    box-shadow: none !important;
+  }
+
+  /* =========================================================
+   * 11. Daily Journal 베이지 배경 제거
+   *
+   * 파일: themes/pixel-journal.css
+   *
+   * 이 파일은 기존 PC Journal도 다루므로 수정하지 않는다.
+   * 모바일에서만 패널 색상과 테두리를 통일한다.
+   * ========================================================= */
+
+  & .daily-journal-widget :is(
+    .journal-summary-card,
+    .journal-score-inline,
+    .journal-section,
+    .journal-task-item,
+    .journal-clip-item,
+    .journal-library-item,
+    .journal-empty-box
+  ) {
+    border: 1px solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+
+    background: var(--w95-panel) !important;
+    background-image: none !important;
+
+    box-shadow: none !important;
+  }
+
+  /* 날짜 선택은 실제 헤더 오른쪽에 위치한다.
+   * 좁은 화면에서도 다른 제목줄과 기준선을 맞춘다.
+   */
+  & .daily-journal-widget .widget-frame__title-group {
+    flex: 0 1 auto !important;
+  }
+
+  & .daily-journal-widget .widget-frame__actions {
+    flex: 0 1 auto !important;
+    min-width: 0;
+  }
+
+  & .daily-journal-widget .journal-date-nav {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  & .daily-journal-widget .journal-date-nav input {
+    width: min(108px, 28vw);
+    min-width: 0;
+    height: 28px;
+    font-size: 11px;
+  }
+
+  /* =========================================================
+   * 12. Alert Center 파스텔 배경 제거
+   *
+   * AlertCenterWidget.tsx → .alert-center-item
+   *
+   * 기존 tone별 그라데이션을 없애고
+   * 위험/경고/정보/성공은 왼쪽 강조선으로만 표현한다.
+   * ========================================================= */
+
+  & .alert-center-item {
+    border: 1px solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+
+    background: var(--w95-panel) !important;
+    background-image: none !important;
+
+    box-shadow: none !important;
+  }
+
+  & .alert-center-item.tone-danger {
+    border-left: 3px solid #ad3030 !important;
+  }
+
+  & .alert-center-item.tone-warning {
+    border-left: 3px solid #916700 !important;
+  }
+
+  & .alert-center-item.tone-info {
+    border-left: 3px solid var(--w95-title) !important;
+  }
+
+  & .alert-center-item.tone-success {
+    border-left: 3px solid #176b49 !important;
+  }
+
+  & :is(
+    .alert-center-icon,
+    .alert-center-title-row span
+  ) {
+    border-radius: 0 !important;
+    background: var(--w95-bg) !important;
+    box-shadow: none !important;
+  }
+
+  /* =========================================================
+   * 13. Timer 기본 배경 / 위젯 프레임
+   *
+   * 파일: TimerWidget.tsx
+   *       widgets/timer.css
+   *       mobile-timer.css
+   *
+   * Timer의 현재 베이지색은 기존 Pixel 테마에서 온다.
+   * 바깥 창과 원형 시계의 배경을 통일한다.
+   * ========================================================= */
+
+  & [data-widget-id="timer"] .timer-widget {
+    background: var(--w95-bg) !important;
+  }
+
+  & [data-widget-id="timer"] .widget-frame__body {
+    display: flex;
+    overflow: hidden !important;
+  }
+
+  & [data-widget-id="timer"] .timer-widget-layout {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr) !important;
+  }
+
+  /* ---------------------------------------------------------
+   * 14. Timer 네 영역을 명시적으로 분리
+   *
+   * TimerSurface 자식:
+   * 1. .timer-widget-mode-row        Focus / Break
+   * 2. .timer-widget-time-editor-shell  원형 시계
+   * 3. .timer-widget-meta            완료한 세션
+   * 4. .timer-widget-action-row      실행 / Reset / Next
+   *
+   * 기존 모바일 CSS는 3행만 정의해 내용이 겹칠 수 있다.
+   *
+   * 실제 화면 순서:
+   * 모드 → 원형 시계 → 실행 버튼 → 완료 횟수
+   * --------------------------------------------------------- */
+
+  & [data-widget-id="timer"]
+    .timer-widget-layout:not(.is-settings-visible)
+    .timer-widget-main-card {
+    display: grid !important;
+
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows:
+      36px
+      minmax(0, 1fr)
+      42px
+      16px !important;
+
+    gap: 4px !important;
+    padding: 4px !important;
+
+    align-content: stretch;
+    justify-items: stretch;
+
+    background: transparent !important;
+    background-image: none !important;
+
+    border: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden;
+  }
+
+  & [data-widget-id="timer"]
+    .timer-widget-mode-row {
+    grid-row: 1;
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    gap: 5px;
+  }
+
+  & [data-widget-id="timer"]
+    .timer-widget-mode-button {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 36px;
+    padding-inline: 4px;
+    white-space: nowrap;
+  }
+
+  /* 두 번째 줄: 원형 시계
+   *
+   * 기존 176~226px 링이 휴대폰에서 너무 컸다.
+   * 링의 크기를 148px 이하로 제한한다.
+   */
+  & [data-widget-id="timer"]
+    .timer-widget-time-editor-shell {
+    grid-row: 2;
+    min-height: 0;
+    align-self: center;
+    justify-self: center;
+  }
+
+  & [data-widget-id="timer"]
+    .timer-widget-focus-stage {
+    width: min(148px, 42vw) !important;
+    height: min(148px, 42vw) !important;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    aspect-ratio: 1;
+    background: transparent !important;
+  }
+
+  /* 세 번째 줄: Start / Reset / Next */
+
+  & [data-widget-id="timer"]
+    .timer-widget-action-row {
+    grid-row: 3;
+
+    display: flex;
+    width: 100%;
+
+    height: 42px;
+    min-height: 42px;
+
+    gap: 5px;
+  }
+
+  & [data-widget-id="timer"]
+    .timer-widget-action-row button {
+    display: inline-flex;
+    flex: 1 1 0;
+    min-width: 0;
+    height: 42px;
+    padding-inline: 4px;
+  }
+
+  /* 네 번째 줄: 완료한 집중 세션 */
+
+  & [data-widget-id="timer"]
+    .timer-widget-meta {
+    grid-row: 4;
+
+    align-self: center;
+    justify-self: center;
+
+    margin: 0;
+    text-align: center;
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  /* =========================================================
+   * 15. 공통 입체 버튼
+   *
+   * 각 위젯의 버튼 기능은 변경하지 않는다.
+   * Pixel Desk에서만 외형을 Windows 95로 통일한다.
+   * ========================================================= */
+
+  & :is(
+    .mobile-calendar-week-day,
+    .mobile-calendar-add,
+    .mobile-study-card__shortcuts > button,
+    .mobile-career-card__add,
+    .money-pill,
+    .money-section-tab,
+    .timer-widget-mode-button,
+    .timer-widget-primary,
+    .timer-widget-secondary,
+    .journal-add-row button,
+    .journal-score-stepper button
+  ) {
+    border: 2px solid !important;
+
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+
+    background: var(--w95-bg) !important;
+    color: var(--w95-text) !important;
+
+    box-shadow: none !important;
+  }
+
+  /* 선택된 상태는 남색 음각 버튼 */
+
+  & :is(
+    .mobile-calendar-week-day.is-selected,
+    .money-pill.is-active,
+    .money-section-tab.is-active,
+    .timer-widget-mode-button.is-active
+  ) {
+    border-color:
+      var(--w95-dark)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-dark) !important;
+
+    background: var(--w95-title) !important;
+    color: #ffffff !important;
+  }
+
+  & .mobile-calendar-week-day.is-selected
+    :is(span, strong) {
+    color: #ffffff !important;
+  }
+
+  /* =========================================================
+   * 16. 모바일 상단 / 하단 메뉴
+   *
+   * src/components/layout/MobileLayout.tsx
+   * Windows 95의 회색 Taskbar 스타일.
+   * ========================================================= */
+
+  & :is(.mobile-header, .mobile-navigation) {
+    border-radius: 0 !important;
+    background: var(--w95-bg) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  & :is(
+    .mobile-header-actions button,
+    .mobile-navigation-item,
+    .mobile-navigation-capture
+  ) {
+    border: 2px solid !important;
+
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+
+    background: var(--w95-bg) !important;
+    color: var(--w95-text) !important;
+  }
+
+  & .mobile-navigation-item[aria-current="page"] {
+    border-color:
+      var(--w95-dark)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-dark) !important;
+
+    background: var(--w95-title) !important;
+    color: #ffffff !important;
+  }
+
+  /* =========================================================
+   * 17. 입력창
+   *
+   * Memo / Money / Journal / Study 등.
+   *
+   * 버튼과 달리 입력창은 흰색 Inset Border 사용.
+   * ========================================================= */
+
+  & .mobile-widget-slot :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    textarea,
+    select
+  ) {
+    border-radius: 0 !important;
+
+    background: #ffffff !important;
+
+    border: 2px solid !important;
+    border-color:
+      var(--w95-shadow)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-shadow) !important;
+  }
+}
+
+
+/* ============================================================================
+ * 18. 모바일 전체 화면 상세 보기
+ *
+ * Study / Calendar / Career의 전체 보기는 Portal로 렌더링한다.
+ * 따라서 .mobile-layout 바깥에 위치한다.
+ *
+ * Pixel Desk + 모바일 화면이 존재하는 경우에만 스타일 적용.
+ * ============================================================================ */
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+):has(.mobile-layout) {
+
+  /* 상세 페이지 공통 회색 배경 */
+
+  & :is(
+    .mobile-study-detail,
+    .mobile-calendar-detail,
+    .mobile-career-detail
+  ) {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+  }
+
+  /* 상세 페이지 공통 남색 제목줄 */
+
+  & :is(
+    .mobile-study-detail__header,
+    .mobile-calendar-detail__header,
+    .mobile-career-detail__header
+  ) {
+    background: #000080 !important;
+    color: #ffffff !important;
+
+    border-radius: 0 !important;
+    border-bottom: 2px solid #404040 !important;
+  }
+
+  & :is(
+    .mobile-study-detail__heading strong,
+    .mobile-calendar-detail__header h2,
+    .mobile-career-detail__header h2
+  ) {
+    color: #ffffff !important;
+  }
+}
