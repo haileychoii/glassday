@@ -111,7 +111,7 @@ const readCanvasStorage = (): DiaryCanvasStorage => {
 
 /** A freeform Diary canvas with opt-in movement, resizing, and note blocks. */
 export const DiaryWorkspace = () => {
-  const initialStorage = useMemo(readCanvasStorage, []);
+  const initialStorage = useMemo(() => readCanvasStorage(), []);
   const [items, setItems] = useState<DiaryCanvasItem[]>(initialStorage.items);
   const [layouts, setLayouts] = useState<Layouts>(initialStorage.layouts);
   const [editMode, setEditMode] = useState(false);

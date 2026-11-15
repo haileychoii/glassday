@@ -268,6 +268,7 @@ export const MobileCareerCard = () => {
     const beforeOverflow = document.body.style.overflow;
     const beforeFocus = document.activeElement instanceof HTMLElement
       ? document.activeElement : null;
+    const trigger = triggerRef.current;
     document.body.style.overflow = "hidden";
     closeRef.current?.focus();
 
@@ -300,7 +301,7 @@ export const MobileCareerCard = () => {
     return () => {
       window.removeEventListener("keydown", keyHandler);
       document.body.style.overflow = beforeOverflow;
-      (triggerRef.current ?? beforeFocus)?.focus();
+      (trigger ?? beforeFocus)?.focus();
     };
   }, [expanded]);
 
