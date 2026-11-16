@@ -2875,10 +2875,6 @@ body.theme-pixel-desk .career-cover-question-input {
     gap: 6px !important;
   }
 
-  .career-cover-icon {
-    display: none !important;
-  }
-
   .career-cover-question-input {
     grid-column: 1 / -1 !important;
 
