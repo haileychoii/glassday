@@ -392,11 +392,6 @@
   opacity: 0.92;
 }
 
-.theme-pastel .bg-glass-gradient::after {
-  display: none !important;
-  content: none !important;
-}
-
 /* 앱 전체 껍데기 색감만 */
 .theme-pastel .liquid-shell,
 .theme-pastel .glass-panel {
