@@ -23,6 +23,10 @@
 .mobile-layout .mobile-dashboard,
 :is(html, body):is([data-theme], [class*="theme-"])
   .mobile-layout .mobile-dashboard {
+  width: 100% !important;
+  max-width: 760px !important;
+  margin-inline: auto !important;
+  grid-template-columns: minmax(0, 1fr) !important;
   gap: var(--mobile-widget-gap) !important;
   padding: 8px max(10px, env(safe-area-inset-right))
     calc(18px + env(safe-area-inset-bottom))
@@ -35,6 +39,34 @@
   min-width: 0 !important;
   margin: 0 !important;
   justify-self: stretch !important;
+}
+
+/* Center widget identity inside its own header track while leaving controls at
+ * the trailing edge. Body copy and task labels keep their readable start edge.
+ * 위젯 제목만 헤더 기준으로 가운데 놓고, 버튼은 오른쪽에 유지합니다. */
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
+  > .glass-card > .widget-frame__header > .widget-frame__title-group {
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
+  > .glass-card > .widget-frame__header > .widget-frame__title-group
+  > .widget-frame__copy {
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="career"]
+  .mobile-career-card__heading,
+.mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+  .mobile-calendar-card__label,
+.mobile-layout .mobile-widget-slot[data-widget-id="study"]
+  .mobile-study-card__eyebrow {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  justify-content: center !important;
+  text-align: center !important;
 }
 
 .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root,
@@ -96,6 +128,46 @@
   min-height: 0 !important;
   max-height: none !important;
   overflow: visible !important;
+}
+
+/* Today Focus and Alert Center are content-height cards on mobile. Their desktop
+ * roots use `height: 100%`; preserve enough body room after switching to natural
+ * height so the title row cannot consume the whole card. / 첫 두 위젯의 본문이
+ * 헤더 한 줄 높이로 접히지 않도록 모바일 최소 본문 공간을 확보합니다. */
+.mobile-layout .mobile-widget-slot[data-widget-id="today"] {
+  height: auto !important;
+  min-height: 280px !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="today"]
+  > .widget-instance-root > .today-focus-widget {
+  display: grid !important;
+  height: auto !important;
+  min-height: 280px !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="today"]
+  > .widget-instance-root > .today-focus-widget > .widget-frame__body {
+  min-height: 220px !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="alerts"] {
+  height: auto !important;
+  min-height: 176px !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="alerts"]
+  > .widget-instance-root > .alert-center-widget {
+  display: grid !important;
+  height: auto !important;
+  min-height: 176px !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="alerts"]
+  > .widget-instance-root > .alert-center-widget > .widget-frame__body {
+  min-height: 116px !important;
 }
 
 /* Native and GlassCard widgets share a single header height and inset.
