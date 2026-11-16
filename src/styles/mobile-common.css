@@ -64,6 +64,19 @@
   min-width: 0 !important;
 }
 
+/* Memo and Journal use a 100%-height GlassCard with an internal scroll region.
+ * Their slot already has a mobile height, so preserve that definite height on
+ * the portal host; auto-height hosts collapse the card's 1fr content row.
+ * Memo/Journal은 카드 내부 스크롤을 쓰므로 슬롯의 높이를 호스트까지 전달합니다. */
+.mobile-layout .mobile-widget-slot:is(
+  [data-widget-id="memo"],
+  [data-widget-id="journal"]
+) > .widget-instance-root {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
 /* A GlassCard must not inherit the desktop grid cell height on phones.
  * 모바일에서는 저장된 데스크톱 셀 높이가 카드 본문을 접지 않게 합니다. */
 .mobile-layout .mobile-widget-slot[data-widget-id]:not([data-widget-id="memo"]):not([data-widget-id="timer"]):not([data-widget-id="journal"])
