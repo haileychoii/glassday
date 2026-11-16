@@ -18,6 +18,8 @@
   --pd-muted: #8b7180;
   --pd-rose: #cf6f98;
   --pd-rose-deep: #aa4e79;
+  --pd-hot: #ed78ad;
+  --pd-candy: #f7b8d3;
   --pd-rose-soft: #f5dbe6;
   --pd-rose-pale: #fff1f6;
   --pd-lilac: #eee8f5;
@@ -38,7 +40,8 @@
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) body {
   color: var(--pd-ink) !important;
   background:
-    linear-gradient(135deg, #f9edf2 0%, #f4e2ec 48%, #eee9f4 100%) !important;
+    repeating-linear-gradient(135deg, rgb(255 255 255 / 0.18) 0 1px, transparent 1px 28px),
+    linear-gradient(135deg, #fce8f1 0%, #f6dce9 48%, #eee5f5 100%) !important;
 }
 
 /* Keep the shell airy so its backdrop reads like a styled personal website. */
@@ -76,6 +79,13 @@
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .sidebar-brand-subtitle {
   color: var(--pd-muted) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .sidebar-brand-subtitle::after {
+  content: "  ♡ ✧";
+  color: var(--pd-hot) !important;
+  font-weight: 800;
 }
 
 /* Workspace navigation: soft menu tiles, with one clear rose selected state. */
@@ -270,5 +280,127 @@
     width: 26px !important;
     min-width: 26px !important;
     height: 26px !important;
+  }
+}
+
+/* Kitsch finish: candy-pink accents and scrapbook-like sticker depth. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
+  --pd-rose: #ed78ad;
+  --pd-rose-deep: #b7447d;
+  --pd-hot: #f05f9e;
+  --pd-candy: #ffc4dd;
+  --pd-rose-soft: #ffe0ed;
+  --pd-rose-pale: #fff0f7;
+  --pd-lilac: #eee2ff;
+  --pd-line: #edbfd4;
+  --pd-shadow: 0 11px 25px rgb(183 76 127 / 0.12);
+  --primary: 333 80% 66%;
+  --ring: 333 80% 66%;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) body {
+  background:
+    repeating-linear-gradient(135deg, rgb(255 255 255 / 0.22) 0 2px, transparent 2px 22px),
+    linear-gradient(135deg, #ffe8f2 0%, #fbd9eb 46%, #eee4ff 100%) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .sidebar-brand-title::after {
+  content: "  ✧";
+  color: var(--pd-hot) !important;
+  font-size: 0.72em;
+  vertical-align: 0.2em;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .sidebar-tab-main {
+  background: rgb(255 248 252 / 0.76) !important;
+  border-color: rgb(232 168 198 / 0.35) !important;
+  box-shadow: 0 2px 0 rgb(221 151 185 / 0.18) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .sidebar-tab-item.is-active .sidebar-tab-main {
+  background: linear-gradient(135deg, #f47eaf, #dc64a0 62%, #bd7ed2) !important;
+  border-color: #d55794 !important;
+  box-shadow: 0 3px 0 #c9568d, 0 7px 15px rgb(198 73 135 / 0.22) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card, .widget-frame, .floating-window, .settings-modal, .settings-modal-content) {
+  background: linear-gradient(150deg, rgb(255 252 254 / 0.97), rgb(255 245 250 / 0.94)) !important;
+  border: 1px solid #edc5d8 !important;
+  border-radius: 21px !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    0 3px 0 rgb(239 192 213 / 0.66),
+    0 12px 26px rgb(151 73 112 / 0.11) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-header, .widget-card-header, .widget-frame__header) {
+  background: linear-gradient(100deg, #ffd6e8 0%, #ffe8f1 57%, #eee5ff 100%) !important;
+  border-bottom-color: #efc5d8 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.widget-frame__title-group, .glass-card-title-group, .widget-card-title-group)::after {
+  content: "✦";
+  flex: 0 0 auto;
+  margin-left: 3px;
+  color: #e978aa !important;
+  font-size: 11px;
+  text-shadow: 0 1px 0 #fff;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button, .glass-button, .calendar-nav-button, .calendar-view-button,
+    .career-icon-button, .career-small-button, .theme-segment-button, .memo-tool-button, .memo-mini-button) {
+  background: linear-gradient(180deg, #fffafd, #ffedf5) !important;
+  border-color: #e9b9d0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 0 #efc5d8, 0 4px 8px rgb(145 74 108 / 0.08) !important;
+  transition: transform 130ms ease, box-shadow 130ms ease, background 130ms ease;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button:hover, .glass-button:hover, .calendar-nav-button:hover, .calendar-view-button:hover) {
+  background: linear-gradient(180deg, #ffeaf4, #fbd5e7) !important;
+  border-color: #df91b5 !important;
+  box-shadow: 0 1px 0 #e7a8c5, 0 6px 12px rgb(190 76 132 / 0.14) !important;
+  transform: translateY(-1px);
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button.is-active, .glass-button.is-active, .calendar-view-button.is-active,
+    .theme-segment-button.is-active, .money-section-tab.is-active) {
+  background: linear-gradient(135deg, #ee76a9, #d85595) !important;
+  border-color: #c84986 !important;
+  box-shadow: 0 2px 0 #bd4d83, 0 5px 11px rgb(190 76 132 / 0.18) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.diary-workspace__canvas, .diary-workspace__canvas.is-editing) {
+  border: 2px dashed #e9a9c7 !important;
+  border-radius: 23px !important;
+  background:
+    linear-gradient(rgb(224 127 171 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(224 127 171 / 0.07) 1px, transparent 1px),
+    linear-gradient(145deg, #fffefe, #fff5f9 64%, #f8f1ff) !important;
+  background-size: 24px 24px, 24px 24px, auto !important;
+  box-shadow: inset 0 0 0 4px rgb(255 255 255 / 0.72), 0 9px 24px rgb(175 91 131 / 0.1) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .diary-note-block {
+  background: linear-gradient(145deg, #fff2f8, #ffddeb) !important;
+  border-color: #e995b9 !important;
+  box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.7), 0 4px 0 #efbfd5, 0 10px 18px rgb(143 68 106 / 0.15) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+    :is(button, .glass-button, .sidebar-tab-main) {
+    transition: none !important;
   }
 }
