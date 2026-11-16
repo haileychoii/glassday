@@ -903,24 +903,3 @@
   width: 14px !important;
   height: 14px !important;
 }
-
-/* Keep the Glassday brand mark visible even when the sidebar copy is collapsed. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface .sidebar-brand-icon {
-  display: block !important;
-  flex: 0 0 24px !important;
-  width: 24px !important;
-  min-width: 24px !important;
-  height: 24px !important;
-  min-height: 24px !important;
-  object-fit: contain !important;
-  image-rendering: pixelated;
-}
