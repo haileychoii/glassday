@@ -70,7 +70,6 @@ import {
 
 // CSS는 이 컴포넌트를 모바일에서 사용할 때만 번들에 포함합니다.
 // src/styles/index.css나 PC 전용 theme 파일은 수정하지 않습니다.
-import "../../styles/mobile-calendar.css";
 
 /** '월간 / 주간 / 일정'은 렌더링 방식이며 저장 데이터 형식은 바꾸지 않습니다. */
 type MobileCalendarView = "month" | "week" | "agenda";

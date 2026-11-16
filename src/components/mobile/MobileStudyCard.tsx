@@ -34,7 +34,6 @@ import {
   toLocalDateInput,
 } from "../widgets/study/studyUtils";
 import { WidgetSlot } from "../widgets/WidgetSlot";
-import "../../styles/mobile-study.css";
 
 type StudyView = "timeline" | "tasks" | "notes";
 
