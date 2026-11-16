@@ -234,22 +234,6 @@ export const Topbar = ({
               </div>
             )}
 
-            {/* ===============================================
-                Settings
-            =============================================== */}
-
-            <button
-              type="button"
-              onClick={onOpenSettings}
-              className="glass-button topbar-action-button"
-              title="Open settings"
-              aria-label="Open settings"
-            >
-              <Settings className="w-3.5 h-3.5" />
-
-              <span>Settings</span>
-            </button>
-
             {isTauriApp && (
               <button
                 type="button"
@@ -299,6 +283,20 @@ export const Topbar = ({
               <span>
                 {editMode ? "Done" : "Edit"}
               </span>
+            </button>
+
+            {/* Keep Settings last so it sits at the far right in every layout.
+                모든 레이아웃에서 설정 버튼이 맨 오른쪽에 오도록 마지막에 배치한다. */}
+            <button
+              type="button"
+              onClick={onOpenSettings}
+              className="glass-button topbar-action-button"
+              title="Open settings"
+              aria-label="Open settings"
+            >
+              <Settings className="w-3.5 h-3.5" />
+
+              <span>Settings</span>
             </button>
 
             {/* Tauri widget mode keeps only real app actions here.
