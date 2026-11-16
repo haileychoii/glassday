@@ -1101,7 +1101,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-dashboard {
 /* The slot and the host are layout plumbing, so they must not look like extra cards.
  * 슬롯/호스트는 레이아웃용이므로 별도의 창처럼 보이지 않게 한다. */
 body:has(.mobile-layout) .mobile-layout
-  .mobile-widget-slot:not([data-widget-id="memo"]):not([data-widget-id="timer"]),
+  .mobile-widget-slot:not([data-widget-id="memo"]):not([data-widget-id="timer"]):not([data-widget-id="journal"]),
 body:has(.mobile-layout) .mobile-layout
   .mobile-widget-slot:not([data-widget-id="memo"]):not([data-widget-id="journal"])
   .widget-instance-root {
