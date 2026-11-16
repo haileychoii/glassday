@@ -64,15 +64,6 @@ export const Sidebar = ({
           <div className="sidebar-brand-subtitle">Personal OS</div>
         </div>
 
-        {/* Shared app mark restored from public/glassday-icon.png. */}
-        <img
-          className="sidebar-brand-icon"
-          src="/glassday-icon.png"
-          alt=""
-          aria-hidden="true"
-          draggable={false}
-        />
-
         <button
           type="button"
           onClick={onToggleCollapsed}
