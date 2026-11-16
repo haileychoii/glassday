@@ -589,3 +589,126 @@ body:has(.mobile-layout) .calendar-floating-window button:focus-visible {
   .mobile-calendar-detail :is(.mobile-calendar-month, .mobile-calendar-month__day, .mobile-calendar-week-day, .mobile-calendar-event) {
   border-radius: 0 !important;
 }
+
+/* ===========================================================================
+   6. CALENDAR MOBILE DENSITY PASS — one inset, fewer nested panels
+   ===========================================================================
+   연결 / Connected files:
+   - MobileCalendarCard.tsx: summary, week strip, agenda rows, detail portal
+   - mobile-finish.css: shared --mobile-widget-inset / --mobile-section-gap
+
+   Calendar는 바깥 카드 1개와 실제 조작 요소만 남겨야 합니다.
+   날짜 요약과 일정 행은 의미가 있는 콘텐츠이므로 유지하되,
+   각 요소가 서로 다른 padding을 가져 세로로 늘어나던 부분만 줄입니다.
+   터치 대상은 44px 안팎을 유지하고, PC/Tauri CalendarWidget은 건드리지 않습니다.
+   =========================================================================== */
+
+.mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+  .mobile-calendar-card__summary {
+  padding: 8px !important;
+  gap: 8px !important;
+  border-radius: 12px !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+  .mobile-calendar-card__summary strong {
+  font-size: 16px !important;
+  line-height: 1.25 !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+  .mobile-calendar-week-strip {
+  gap: 3px !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+  .mobile-calendar-week-day {
+  min-height: 54px !important;
+  padding-block: 6px !important;
+  gap: 3px !important;
+  border-radius: 11px !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+  .mobile-calendar-week-day strong {
+  font-size: 14px !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+  .mobile-calendar-agenda {
+  gap: var(--mobile-control-gap, 6px) !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+  .mobile-calendar-event {
+  min-height: 52px !important;
+  grid-template-columns: 3px minmax(0, 1fr) 16px !important;
+  gap: 8px !important;
+  padding: 8px !important;
+  border-radius: 10px !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+  .mobile-calendar-event__title {
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+  .mobile-calendar-event__meta {
+  font-size: 10px !important;
+}
+
+/* The detail portal is a separate screen, but it uses the same compact rhythm.
+ * 상세 화면도 홈 카드와 같은 간격을 사용해 불필요한 빈 공간을 줄입니다. */
+body:has(.mobile-layout) .mobile-calendar-detail__scroll {
+  padding-top: 10px !important;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom)) !important;
+  gap: 10px !important;
+}
+
+body:has(.mobile-layout) .mobile-calendar-detail__header {
+  min-height: 56px !important;
+}
+
+body:has(.mobile-layout) .mobile-calendar-view-switch {
+  padding: 3px !important;
+  border-radius: 12px !important;
+}
+
+body:has(.mobile-layout) .mobile-calendar-view-switch button {
+  min-height: 38px !important;
+  border-radius: 9px !important;
+}
+
+body:has(.mobile-layout) .mobile-calendar-period-nav {
+  grid-template-columns: 44px minmax(0, 1fr) 44px 44px !important;
+  gap: 2px !important;
+}
+
+body:has(.mobile-layout) .mobile-calendar-period-nav > div strong {
+  font-size: 15px !important;
+}
+
+body:has(.mobile-layout) .mobile-calendar-date-group {
+  gap: 6px !important;
+}
+
+body:has(.mobile-layout)
+  .mobile-calendar-date-group + .mobile-calendar-date-group {
+  padding-top: 8px !important;
+}
+
+@media (max-width: 360px) {
+  /* 320px phone: preserve 44px controls, reduce only visual padding. */
+  .mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+    .mobile-calendar-card__summary {
+    padding-inline: 7px !important;
+  }
+
+  .mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
+    .mobile-calendar-event {
+    grid-template-columns: 3px minmax(0, 1fr) 14px !important;
+    gap: 6px !important;
+  }
+}
