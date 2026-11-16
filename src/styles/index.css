@@ -101,3 +101,6 @@
 
 /* Pink Diary's final visual layer stays after desktop and mobile overrides. */
 @import "./themes/pink-diary.css";
+
+/* Tauri-only host transparency and four-corner clipping must follow themes. */
+@import "./desktop-window.css";
