@@ -503,6 +503,32 @@
       var(--w95-light)
       var(--w95-shadow) !important;
   }
+
+  /* Pixel Desk is intentionally rectangular: only corners change here.
+   * Shared spacing, typography, widths, and control sizes stay in the common layer.
+   * Pixel Desk에서는 모서리만 직각으로 만들고 공통 간격·글자·치수는 유지합니다. */
+  & .mobile-widget-slot :is(
+    [class*="panel"],
+    [class*="card"],
+    [class*="item"],
+    [class*="section"],
+    [class*="agenda"],
+    [class*="preview"],
+    [class*="transaction"],
+    [class*="store-row"],
+    [class*="editor"],
+    [class*="note"],
+    [class*="pill"],
+    [class*="tab"]
+  ),
+  & .mobile-widget-slot :is(
+    button,
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    textarea,
+    select
+  ) {
+    border-radius: 0 !important;
+  }
 }
 
 
