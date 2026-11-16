@@ -21,7 +21,7 @@
   max-height: calc(100vh - 48px) !important;
 
   display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
 
   overflow: hidden !important;
   box-sizing: border-box !important;
@@ -52,6 +52,59 @@
   display: flex !important;
   align-items: center !important;
   gap: 12px !important;
+}
+
+/* Short section tabs keep all settings available without one very long page. */
+.settings-section-tabs {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  overflow-x: auto;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+  background: hsl(var(--background) / 0.3);
+  scrollbar-width: thin;
+}
+
+.settings-section-tab {
+  min-width: max-content;
+  min-height: 34px;
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex: 1 0 auto;
+}
+
+.settings-section-tab svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+}
+
+.settings-section-tab:hover {
+  background: hsl(var(--muted) / 0.72);
+  color: hsl(var(--foreground));
+}
+
+.settings-section-tab.is-active {
+  border-color: hsl(var(--primary) / 0.28);
+  background: hsl(var(--primary) / 0.14);
+  color: hsl(var(--foreground));
+}
+
+.settings-section-tab:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 1px;
 }
 
 /* Compact leading icon */
@@ -373,6 +426,17 @@ body.theme-retro .settings-reset-button {
   .settings-content {
     padding: 16px !important;
     gap: 14px !important;
+  }
+
+  .settings-section-tabs {
+    padding-inline: max(10px, env(safe-area-inset-left));
+    gap: 4px;
+  }
+
+  .settings-section-tab {
+    flex: 0 0 auto;
+    min-height: 36px;
+    padding-inline: 10px;
   }
 
   .settings-section,

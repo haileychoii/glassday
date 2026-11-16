@@ -522,7 +522,7 @@ body:has(.mobile-layout)
     border-radius: 0 !important;
     transform: none !important;
     display: grid !important;
-    grid-template-rows: auto minmax(0, 1fr) !important;
+    grid-template-rows: auto auto minmax(0, 1fr) !important;
   }
 
   body:has(.mobile-layout) .settings-modal-header,

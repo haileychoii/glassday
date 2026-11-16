@@ -88,6 +88,29 @@ type SettingsModalProps = {
   onClose: () => void;
 };
 
+type SettingsTab =
+  | "theme"
+  | "fonts"
+  | "display"
+  | "backup"
+  | "account"
+  | "reset";
+
+// Keep each task in its own short panel instead of stacking every control vertically.
+// 설정 기능별로 짧은 패널을 분리해 한 화면에 긴 목록이 계속 이어지지 않게 한다.
+const SETTINGS_TABS: {
+  id: SettingsTab;
+  label: string;
+  icon: typeof Palette;
+}[] = [
+  { id: "theme", label: "Theme", icon: Palette },
+  { id: "fonts", label: "Fonts", icon: Globe },
+  { id: "display", label: "Display", icon: Eye },
+  { id: "backup", label: "Backup", icon: Download },
+  { id: "account", label: "Account & Sync", icon: Cloud },
+  { id: "reset", label: "Reset", icon: RotateCcw },
+];
+
 const SETTINGS_WINDOW_POSITION_STORAGE_KEY = "glassday.settingsWindow.position.v1";
 
 const renderThemePreview = (themeId: ThemeId) => (
@@ -127,6 +150,7 @@ const renderThemePreview = (themeId: ThemeId) => (
 export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const windowRef = useRef<HTMLElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
   const dragStateRef = useRef<{
     pointerId: number;
     startX: number;
@@ -150,6 +174,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   } = useCloudSync();
 
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
+  const [activeTab, setActiveTab] = useState<SettingsTab>("theme");
   const [appFont, setAppFont] = useState(() => getSavedAppFont());
   const [defaultMemoFont, setDefaultMemoFont] = useState(() =>
     getSavedDefaultMemoFont()
@@ -209,6 +234,10 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
     return () => window.clearTimeout(refreshId);
   }, [open]);
+
+  useEffect(() => {
+    if (contentRef.current) contentRef.current.scrollTop = 0;
+  }, [activeTab]);
 
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
@@ -544,9 +573,35 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
           </button>
         </header>
 
+        <nav className="settings-section-tabs" role="tablist" aria-label="Settings sections">
+          {SETTINGS_TABS.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              id={`settings-tab-${id}`}
+              aria-selected={activeTab === id}
+              aria-controls="settings-tab-panel"
+              className={cn("settings-section-tab", activeTab === id && "is-active")}
+              onClick={() => setActiveTab(id)}
+            >
+              <Icon aria-hidden="true" />
+              <span>{label}</span>
+            </button>
+          ))}
+        </nav>
+
         {/* Scroll Container: 설정 section만 스크롤되고 Title Bar는 고정된다. */}
-        <div className="settings-modal-body settings-body settings-content">
+        <div
+          ref={contentRef}
+          className="settings-modal-body settings-body settings-content"
+          id="settings-tab-panel"
+          role="tabpanel"
+          aria-labelledby={`settings-tab-${activeTab}`}
+          tabIndex={0}
+        >
           {/* Figma Frame: Theme Selection / Theme Card Component Grid */}
+          {activeTab === "theme" && (
           <section className="settings-section settings-card">
             <div className="settings-section-title settings-card-title">
               <Palette className="w-4 h-4" />
@@ -573,7 +628,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
               ))}
             </div>
           </section>
+          )}
 
+          {activeTab === "fonts" && (
           <section className="settings-section settings-card">
             <div className="settings-section-title settings-card-title">
               <Globe className="w-4 h-4" />
@@ -711,7 +768,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
               </div>
             )}
           </section>
+          )}
 
+          {activeTab === "display" && (
           <section className="settings-section settings-card">
             <div className="settings-section-title settings-card-title">
               {scrollbarsVisible ? (
@@ -758,7 +817,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
               </div>
             </div>
           </section>
+          )}
 
+          {activeTab === "backup" && (
           <section className="settings-section settings-card">
             <div className="settings-section-title settings-card-title">
               <Download className="w-4 h-4" />
@@ -801,7 +862,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
               />
             </div>
           </section>
+          )}
 
+          {activeTab === "reset" && (
           <section className="settings-section settings-card">
             <div className="settings-section-title settings-card-title">
               <RotateCcw className="w-4 h-4" />
@@ -888,7 +951,10 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
               </button>
             </div>
           </section>
+          )}
 
+          {activeTab === "account" && (
+          <>
           <section className="settings-section settings-card">
             <div className="settings-section-title settings-card-title">
               <Cloud className="w-4 h-4" />
@@ -1065,6 +1131,8 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
               )}
             </div>
           </section>
+          </>
+          )}
 
           {status && <div className="settings-status">{status}</div>}
         </div>
