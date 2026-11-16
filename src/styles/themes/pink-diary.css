@@ -1,0 +1,274 @@
+/*
+ * Pink Diary theme finish
+ *
+ * EN: The original "retro" theme id is retained for saved-user compatibility;
+ *     this file owns the modern kawaii personal-site look shown in the references.
+ * KO: 저장된 테마 설정과 컴포넌트 연결을 지키기 위해 내부 id는 retro로
+ *     유지하고, 실제 화면 재질은 이 파일에서 Pink Diary 전용으로 덮어씁니다.
+ *
+ * Connected components:
+ * - AppShell.tsx / Sidebar.tsx / WorkspaceTabsNav.tsx: desktop shell and nav
+ * - GlassCard.tsx + each widget: shared card, title bar, and body surfaces
+ * - DiaryWorkspace.tsx + diary-workspace.css: editable diary paper canvas
+ * - No widget data, layout coordinates, or app-icon artwork is changed here.
+ */
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
+  --pd-ink: #493440;
+  --pd-muted: #8b7180;
+  --pd-rose: #cf6f98;
+  --pd-rose-deep: #aa4e79;
+  --pd-rose-soft: #f5dbe6;
+  --pd-rose-pale: #fff1f6;
+  --pd-lilac: #eee8f5;
+  --pd-cream: #fffaf6;
+  --pd-line: #ead3de;
+  --pd-shadow: 0 12px 30px rgb(112 67 88 / 0.09);
+
+  --background: 331 44% 95%;
+  --card: 30 100% 99%;
+  --foreground: 318 18% 23%;
+  --muted-foreground: 326 11% 48%;
+  --primary: 335 47% 61%;
+  --border: 331 31% 86%;
+  --ring: 335 55% 64%;
+  --radius: 18px;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) body {
+  color: var(--pd-ink) !important;
+  background:
+    linear-gradient(135deg, #f9edf2 0%, #f4e2ec 48%, #eee9f4 100%) !important;
+}
+
+/* Keep the shell airy so its backdrop reads like a styled personal website. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.app-shell-surface, .app-shell, .app-shell-main-column, .app-shell-main) {
+  background: transparent !important;
+  border-color: rgb(199 145 169 / 0.2) !important;
+  box-shadow: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.sidebar, aside) {
+  color: var(--pd-ink) !important;
+  background: linear-gradient(180deg, #f5e2eb, #f1e5f0) !important;
+  border: 1px solid rgb(204 154 175 / 0.28) !important;
+  box-shadow: inset -1px 0 0 rgb(255 255 255 / 0.72) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.topbar, .app-topbar) {
+  color: var(--pd-ink) !important;
+  background: rgb(255 250 252 / 0.84) !important;
+  border: 1px solid rgb(220 182 199 / 0.42) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 6px 20px rgb(112 67 88 / 0.06) !important;
+  backdrop-filter: blur(14px) saturate(125%);
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .sidebar-brand-title {
+  color: var(--pd-rose-deep) !important;
+  font-weight: 850 !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .sidebar-brand-subtitle {
+  color: var(--pd-muted) !important;
+}
+
+/* Workspace navigation: soft menu tiles, with one clear rose selected state. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .sidebar-tab-main {
+  min-height: 40px !important;
+  color: #745768 !important;
+  background: rgb(255 250 252 / 0.58) !important;
+  border: 1px solid transparent !important;
+  border-radius: 13px !important;
+  box-shadow: none !important;
+  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .sidebar-tab-main:hover {
+  background: #fff7fa !important;
+  border-color: #ebcbd9 !important;
+  transform: translateX(1px);
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .sidebar-tab-item.is-active .sidebar-tab-main {
+  color: #fff !important;
+  background: linear-gradient(135deg, #d77da2, #bf638e) !important;
+  border-color: rgb(166 73 115 / 0.28) !important;
+  box-shadow: 0 5px 12px rgb(166 73 115 / 0.16) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .sidebar-tab-icon {
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  border-radius: 9px !important;
+  background: rgb(255 255 255 / 0.72) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .sidebar-tab-item.is-active .sidebar-tab-icon {
+  background: rgb(255 255 255 / 0.2) !important;
+}
+
+/* Cream glass widget surfaces create depth without the old hard pixel bevel. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card, .widget-frame, .floating-window, .settings-modal, .settings-modal-content) {
+  color: var(--pd-ink) !important;
+  background: rgb(255 250 247 / 0.9) !important;
+  border: 1px solid rgb(218 178 196 / 0.48) !important;
+  border-radius: 18px !important;
+  box-shadow: var(--pd-shadow) !important;
+  backdrop-filter: blur(12px) saturate(118%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(118%) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-header, .widget-card-header, .widget-frame__header) {
+  color: var(--pd-ink) !important;
+  background: linear-gradient(100deg, #fae9f0, #f8edf4 68%, #f0edf7) !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgb(225 193 207 / 0.56) !important;
+  border-radius: 17px 17px 0 0 !important;
+  box-shadow: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3) {
+  color: #583b4b !important;
+  font-weight: 780 !important;
+  text-shadow: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle, .widget-frame__header p) {
+  color: var(--pd-muted) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.glass-card-body, .widget-frame__body) {
+  color: var(--pd-ink) !important;
+  background: transparent !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.widget-frame__icon, .glass-card-icon, .widget-card-icon) {
+  color: var(--pd-rose-deep) !important;
+  background: linear-gradient(145deg, #fff7fa, #f4dfe9) !important;
+  border: 1px solid #efd5e0 !important;
+  border-radius: 9px !important;
+  box-shadow: inset 0 1px 0 #fff !important;
+}
+
+/* Controls use the same polished family, while hover gives a stronger tint. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button, .glass-button, input, select, textarea, .calendar-nav-button, .calendar-view-button,
+    .career-icon-button, .career-small-button, .theme-segment-button, .memo-tool-button, .memo-mini-button) {
+  color: #654957 !important;
+  background: #fffafd !important;
+  border: 1px solid #e7cbd8 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 2px rgb(112 67 88 / 0.05) !important;
+  text-shadow: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button:hover, .glass-button:hover, .calendar-nav-button:hover, .calendar-view-button:hover) {
+  background: #f7e3ec !important;
+  border-color: #dba9bf !important;
+  box-shadow: 0 4px 10px rgb(112 67 88 / 0.12) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(button.is-active, .glass-button.is-active, .calendar-view-button.is-active,
+    .theme-segment-button.is-active, .money-section-tab.is-active) {
+  color: #fff !important;
+  background: var(--pd-rose) !important;
+  border-color: var(--pd-rose-deep) !important;
+  box-shadow: 0 4px 10px rgb(166 73 115 / 0.16) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(input, select, textarea) {
+  background: #fffdfd !important;
+  border-color: #e6cbd7 !important;
+  box-shadow: inset 0 1px 2px rgb(112 67 88 / 0.045) !important;
+}
+
+/* Diary is the feature canvas: a soft stationery page, not a gray grid. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .diary-workspace {
+  color: var(--pd-ink) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .diary-workspace__eyebrow {
+  color: var(--pd-rose-deep) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .diary-workspace__heading h2::after {
+  content: "  ♡";
+  color: var(--pd-rose) !important;
+  font-size: 0.72em;
+  vertical-align: 0.08em;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .diary-workspace__action {
+  color: #70485a !important;
+  background: #fffafd !important;
+  border-color: #e6c9d7 !important;
+  box-shadow: 0 2px 6px rgb(112 67 88 / 0.06) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.diary-workspace__action:hover, .diary-workspace__action.is-active) {
+  color: #fff !important;
+  background: var(--pd-rose) !important;
+  border-color: var(--pd-rose-deep) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .diary-workspace__canvas {
+  border: 1px solid #e7cbd8 !important;
+  border-radius: 20px !important;
+  background:
+    linear-gradient(rgb(207 111 152 / 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(207 111 152 / 0.055) 1px, transparent 1px),
+    linear-gradient(145deg, #fffdfb, #fff7f7 72%, #fdf2f7) !important;
+  background-size: 26px 26px, 26px 26px, auto !important;
+  box-shadow: inset 0 1px 0 #fff, 0 8px 22px rgb(112 67 88 / 0.065) !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .diary-workspace__canvas.is-editing {
+  border-color: #d98bab !important;
+  box-shadow: 0 0 0 3px rgb(207 111 152 / 0.12), inset 0 1px 0 #fff !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .diary-note-block {
+  color: #634756 !important;
+  background: linear-gradient(145deg, #fff5f7, #fce8ef) !important;
+  border: 1px solid #e8bfd0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 8px 18px rgb(112 67 88 / 0.12) !important;
+}
+
+@media (max-width: 767px) {
+  :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+    .sidebar-tab-icon {
+    width: 26px !important;
+    min-width: 26px !important;
+    height: 26px !important;
+  }
+}

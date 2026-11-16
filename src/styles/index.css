@@ -101,3 +101,5 @@
 
 /* Final mobile geometry layer: shared spacing/type wins over theme sizing. */
 @import "./mobile-common.css";
+/* Pink Diary's final visual layer stays after desktop and mobile overrides. */
+@import "./themes/pink-diary.css";
