@@ -10,19 +10,19 @@ flowchart TD
   Main --> Tailwind[index.css Tailwind 기본 스타일]
   Main --> Entry[styles/index.css 앱 CSS 진입점]
 
-  App --> Shell[AppShell / Sidebar / Topbar]
-  App --> Grid[DashboardGrid]
-  App --> Render[WidgetRenderer]
-  App --> Mobile[MobileLayout / MobileDashboard]
-  App --> Overlay[SettingsModal / CommandPalette / QuickCapture]
+  App --> Shell[AppShell / Sidebar / Topbar · 웹]
+  App --> Grid[DashboardGrid · 웹]
+  App --> Render[WidgetRenderer · 웹/모바일 공용]
+  App --> Mobile[MobileLayout / MobileDashboard · 모바일]
+  App --> Overlay[SettingsModal / CommandPalette / QuickCapture · 공용]
 
-  Entry --> Foundation[spacing-tokens / fonts / base]
-  Entry --> LayoutCSS[layout / layout-modes / controls / dashboard-grid]
-  Entry --> ThemeCSS[themes/* / theme-surfaces]
-  Entry --> WidgetCSS[widgets/*]
-  Entry --> Responsive[responsive / overrides]
-  Entry --> MobileCSS[mobile.css / mobile-*.css]
-  Entry --> PixelCSS[pixel-desktop-parity.css]
+  Entry --> Foundation[spacing-tokens / fonts / base · 공용]
+  Entry --> LayoutCSS[layout / layout-modes / controls / dashboard-grid · 웹]
+  Entry --> ThemeCSS[themes/* / theme-surfaces · 공용]
+  Entry --> WidgetCSS[widgets/* · 공용 위젯]
+  Entry --> Responsive[responsive / overrides · 웹/모바일]
+  Entry --> MobileCSS[mobile.css / mobile-*.css · 모바일]
+  Entry --> PixelCSS[pixel-desktop-parity.css · 웹]
 
   Shell --> LayoutCSS
   Grid --> LayoutCSS
@@ -30,10 +30,21 @@ flowchart TD
   Render --> ThemeCSS
   Mobile --> MobileCSS
   Mobile --> Render
-  Overlay --> OverlayCSS[overlays.css / widgets/settings.css / themes]
+  Overlay --> OverlayCSS[overlays.css / widgets/settings.css / themes · 공용]
 
   ThemeState[constants/themes.ts 테마 상태 설정] -. data-theme 등으로 선택 .-> ThemeCSS
+
+  classDef app fill:#f3f4f6,stroke:#6b7280,color:#111827
+  classDef web fill:#dbeafe,stroke:#2563eb,color:#172554
+  classDef mobile fill:#fce7f3,stroke:#db2777,color:#831843
+  classDef shared fill:#dcfce7,stroke:#16a34a,color:#14532d
+  class Main,App,Entry app
+  class Shell,Grid,LayoutCSS,PixelCSS web
+  class Mobile,MobileCSS mobile
+  class Tailwind,Render,Overlay,OverlayCSS,Foundation,ThemeCSS,WidgetCSS,Responsive,ThemeState shared
 ```
+
+**색상 범례:** 파랑은 웹 전용, 분홍은 모바일 전용, 초록은 양쪽에서 공유, 회색은 앱 진입점이다.
 
 ### 이 그림 읽는 법
 
