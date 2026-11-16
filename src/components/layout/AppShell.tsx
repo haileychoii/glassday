@@ -103,7 +103,6 @@ export const AppShell = ({
 
     return () => {
       window.removeEventListener("glassday-theme-change", applyCurrentGlassMaterial);
-      void syncNativeGlassEffect("pastel");
     };
   }, [isTauriApp]);
   
