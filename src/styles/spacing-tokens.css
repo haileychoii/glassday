@@ -32,7 +32,7 @@
   /* Shared desktop frame scale; special widgets override only their exception. */
   --gd-widget-desktop-pad-x: 12px;
   --gd-widget-desktop-pad-y: 12px;
-  --gd-widget-desktop-header-top: 9px;
+  --gd-widget-desktop-header-top: 10px;
   --gd-widget-desktop-header-bottom: 5px;
   --gd-widget-desktop-content-top: 4px;
   --gd-widget-desktop-header-height: 34px;
