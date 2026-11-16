@@ -18,6 +18,7 @@
  * ============================================================
  */
 import { createClient } from "@supabase/supabase-js";
+import { isTauri } from "@tauri-apps/api/core";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -30,6 +31,9 @@ export const supabase = isSupabaseConfigured
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
+        // KO: 외부 브라우저의 코드는 앱에 남은 검증기로만 교환한다.
+        // EN: The desktop callback is a custom scheme, so it uses PKCE.
+        flowType: isTauri() ? "pkce" : "implicit",
       },
     })
   : null;

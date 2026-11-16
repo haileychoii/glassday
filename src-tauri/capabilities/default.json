@@ -2,12 +2,16 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Default capability for Glassday desktop",
-  "windows": ["main"],
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "core:default",
     "core:window:allow-start-dragging",
     "core:window:allow-set-effects",
     "core:window:allow-is-always-on-top",
-    "core:window:allow-set-always-on-top"
+    "core:window:allow-set-always-on-top",
+    "deep-link:default",
+    "opener:default"
   ]
 }
