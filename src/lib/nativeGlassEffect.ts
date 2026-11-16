@@ -9,37 +9,50 @@ import { Effect, getCurrentWindow } from "@tauri-apps/api/window";
 import type { ThemeId } from "../constants/themes";
 
 const GLASS_THEMES: ReadonlySet<ThemeId> = new Set([
+  "pastel",
   "glass-light",
   "glass-dark",
   "aurora",
 ]);
 
+// KO: 빠른 테마 전환에서도 마지막 선택이 승리하도록 OS 호출을 순서대로 실행한다.
+// EN: AppShell.tsx can request a new material before the previous native call ends.
+let pendingEffect: Promise<void> = Promise.resolve();
+
 /**
  * Match native blur/tint to the selected glass palette and remove it elsewhere.
  * 선택된 유리 테마와 OS 창 재질을 맞추고, 비유리 테마에서는 효과를 비운다.
  */
-export const syncNativeGlassEffect = async (theme: ThemeId): Promise<void> => {
-  if (!isTauri()) return;
+export const syncNativeGlassEffect = (theme: ThemeId): Promise<void> => {
+  if (!isTauri()) return Promise.resolve();
 
-  const window = getCurrentWindow();
+  pendingEffect = pendingEffect.catch(() => undefined).then(async () => {
+    const window = getCurrentWindow();
 
-  if (!GLASS_THEMES.has(theme)) {
-    await window.clearEffects().catch(() => undefined);
-    return;
-  }
+    if (!GLASS_THEMES.has(theme)) {
+      await window.clearEffects();
+      return;
+    }
 
-  const isDark = theme === "glass-dark" || theme === "aurora";
-  const tint: [number, number, number, number] = isDark
-    ? [24, 27, 36, 84]
-    : [236, 244, 255, 76];
+    const tint: [number, number, number, number] =
+      theme === "glass-dark" || theme === "aurora"
+        ? [24, 27, 36, 72]
+        : theme === "pastel"
+          ? [255, 230, 244, 56]
+          : [236, 244, 255, 76];
 
-  try {
-    // Acrylic samples and blurs pixels behind the native window on Windows.
-    // Acrylic은 Windows 네이티브 창 뒤의 실제 바탕화면을 샘플링해 흐린다.
-    await window.setEffects({ effects: [Effect.Acrylic], color: tint });
-  } catch {
-    // Older Windows builds may lack Acrylic; Blur is the compatibility fallback.
-    // 구형 Windows에서 Acrylic을 지원하지 않으면 호환 Blur로 대체한다.
-    await window.setEffects({ effects: [Effect.Blur], color: tint }).catch(() => undefined);
-  }
+    try {
+      // KO: CSS backdrop-filter는 WebView 밖의 바탕화면을 흐릴 수 없다.
+      // EN: Native Acrylic blurs the desktop; theme CSS controls the glass tint.
+      await window.setEffects({ effects: [Effect.Acrylic], color: tint });
+    } catch {
+      // KO: Acrylic 미지원 환경에서는 Windows Blur를 시도한다.
+      // EN: Keep the compatibility path, but expose failure for debugging.
+      await window.setEffects({ effects: [Effect.Blur], color: tint });
+    }
+  }).catch((error: unknown) => {
+    console.warn(`[Glassday] Native glass material failed for ${theme}`, error);
+  });
+
+  return pendingEffect;
 };
