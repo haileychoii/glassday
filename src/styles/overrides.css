@@ -3894,6 +3894,13 @@ body,
   font-size: var(--gd-tauri-type-root);
 }
 
+/* Exception only: the installed Tauri window uses a denser widget frame. */
+body:not(:has(.mobile-layout)) .tauri-app-window {
+  --gd-widget-header-row-min-height: 28px;
+  --gd-widget-pad-x: 10px;
+  --gd-widget-pad-y: 10px;
+}
+
 .tauri-app-window > .app-shell-surface {
   /* Tauri density tokens
      English: Reduce chrome height only in the desktop shell; the web laptop
