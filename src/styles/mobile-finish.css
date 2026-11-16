@@ -1102,7 +1102,9 @@ body:has(.mobile-layout) .mobile-layout .mobile-dashboard {
  * 슬롯/호스트는 레이아웃용이므로 별도의 창처럼 보이지 않게 한다. */
 body:has(.mobile-layout) .mobile-layout
   .mobile-widget-slot:not([data-widget-id="memo"]):not([data-widget-id="timer"]),
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot .widget-instance-root {
+body:has(.mobile-layout) .mobile-layout
+  .mobile-widget-slot:not([data-widget-id="memo"]):not([data-widget-id="journal"])
+  .widget-instance-root {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -1113,6 +1115,18 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot .widget-instance-roo
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
+}
+
+/* Memo and Journal cards use a fixed mobile slot with their own inner scroller.
+ * Keep the portal host at that slot height; forcing `height: auto` here leaves
+ * only the title row visible because the card body is a `minmax(0, 1fr)` row.
+ * Memo/Journal은 내부 스크롤을 쓰므로 슬롯의 높이를 호스트까지 전달합니다. */
+body:has(.mobile-layout) .mobile-layout
+  .mobile-widget-slot:is([data-widget-id="memo"], [data-widget-id="journal"])
+  > .widget-instance-root {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
 }
 
 /* All ordinary GlassCards share one body inset. Journal owns a separate compact
