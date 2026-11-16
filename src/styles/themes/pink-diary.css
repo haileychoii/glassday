@@ -544,6 +544,19 @@
   box-shadow: 0 12px 30px rgb(92 52 72 / 0.12) !important;
 }
 
+/*
+ * KO: 웹에서는 핑크 페이지 배경을 유지하지만, 설치 앱의 body는 네이티브
+ *     투명 창 전체를 차지한다. body까지 칠하면 둥근 표면 뒤에 네모가 생긴다.
+ * EN: Only AppShell's surface paints the desktop window; the web page keeps
+ *     its normal pink background.
+ */
+html[data-theme="retro"] body:has(.tauri-app-window),
+html.theme-retro body:has(.tauri-app-window),
+body[data-theme="retro"]:has(.tauri-app-window),
+body.theme-retro:has(.tauri-app-window) {
+  background: transparent !important;
+}
+
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(button, .glass-button, .calendar-nav-button, .calendar-view-button,
     .career-icon-button, .career-small-button, .theme-segment-button, .memo-tool-button, .memo-mini-button) {
