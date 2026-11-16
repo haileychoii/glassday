@@ -415,6 +415,44 @@ body.desktop-transparent[data-theme="glass-dark"] :is(
     saturate(160%) !important;
 }
 
+/* Career list controls stay as one continuous glass pill in Glass Dark.
+   The shared transparent-control layer can otherwise paint the native select
+   as a square rectangle behind its rounded Career metadata surface. */
+html[data-theme="glass-dark"] .career-list-meta :is(.career-status-pill, select),
+body[data-theme="glass-dark"] .career-list-meta :is(.career-status-pill, select),
+html.theme-glass-dark .career-list-meta :is(.career-status-pill, select),
+body.theme-glass-dark .career-list-meta :is(.career-status-pill, select) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  border-radius: 999px !important;
+  background-clip: padding-box;
+  overflow: hidden;
+}
+
+html[data-theme="glass-dark"] .career-list-meta select,
+body[data-theme="glass-dark"] .career-list-meta select,
+html.theme-glass-dark .career-list-meta select,
+body.theme-glass-dark .career-list-meta select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+/* Career card typography is intentionally a little quieter than widget titles. */
+html[data-theme="glass-dark"] .career-list-title strong,
+body[data-theme="glass-dark"] .career-list-title strong,
+html.theme-glass-dark .career-list-title strong,
+body.theme-glass-dark .career-list-title strong {
+  font-size: 12px !important;
+}
+
+html[data-theme="glass-dark"] .career-list-title span,
+body[data-theme="glass-dark"] .career-list-title span,
+html.theme-glass-dark .career-list-title span,
+body.theme-glass-dark .career-list-title span {
+  font-size: 10px !important;
+}
+
 
 /* ============================================================
    11. CONTROLS
