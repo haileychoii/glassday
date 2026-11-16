@@ -98,7 +98,9 @@
 
 .app-shell-surface.is-laptop {
   --gd-radius-app: 20px;
-  --gd-radius-panel: 0px 0px 20px 0px;
+  /* KO: 한 모서리만 둥글던 공통 패널 값을 네 모서리에 똑같이 적용한다.
+     EN: Shared by overlays.css, command.css and diary-workspace.css. */
+  --gd-radius-panel: 20px;
   /* 위젯의 radious */
   --gd-radius-widget: 22px; 
   --gd-radius-card: 20px;

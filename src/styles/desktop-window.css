@@ -1,0 +1,29 @@
+/*
+ * KO: AppShell.tsx의 .tauri-app-window는 투명한 호스트이고,
+ *     .app-shell-surface 하나만 설치 앱의 창 모양을 그린다. 테마 CSS 뒤에서
+ *     html/body/#root의 배경을 지워야 Mac Core와 Pink Diary도 네모난 배경을 남기지 않는다.
+ * EN: Imported last by index.css so theme wallpapers cannot repaint the
+ *     transparent Tauri host. Browser and mobile layouts keep their backgrounds.
+ */
+html.desktop-transparent[data-theme]:has(.tauri-app-window),
+html.desktop-transparent[data-theme]:has(.tauri-app-window) body,
+html.desktop-transparent[data-theme]:has(.tauri-app-window) #root,
+html.desktop-transparent[data-theme] .tauri-app-window {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* KO: 네 모서리는 같은 반경으로 자른다. Pixel Desk만 Win95 사각 창을 유지한다.
+   EN: Theme-specific radii apply to the one surface owned by AppShell.tsx. */
+html.desktop-transparent[data-theme] .tauri-app-window > .app-shell-surface {
+  border-radius: var(--gd-native-window-radius, 22px) !important;
+  overflow: hidden !important;
+}
+
+html.desktop-transparent[data-theme="mac-core"] .tauri-app-window > .app-shell-surface {
+  --gd-native-window-radius: 14px;
+}
+
+html.desktop-transparent[data-theme="pixel-desk"] .tauri-app-window > .app-shell-surface {
+  --gd-native-window-radius: 0px;
+}
