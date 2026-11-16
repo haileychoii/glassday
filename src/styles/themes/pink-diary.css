@@ -485,19 +485,64 @@
   display: none !important;
 }
 
-/* Each selector targets the existing GlassCard icon slot of one widget. */
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .calendar-widget .widget-frame__icon::before { content: "🗓️"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .career-widget .widget-frame__icon::before { content: "💼"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .daily-journal-widget .widget-frame__icon::before { content: "🐱"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .study-widget .widget-frame__icon::before { content: "📚"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .memo-widget .widget-frame__icon::before { content: "💌"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .money-widget .widget-frame__icon::before { content: "💸"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .timer-widget .widget-frame__icon::before { content: "⏰"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .health-widget .widget-frame__icon::before { content: "🌷"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .mood-widget .widget-frame__icon::before { content: "🧸"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .alert-center-widget .widget-frame__icon::before { content: "🔔"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .today-focus-widget .widget-frame__icon::before { content: "✨"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .today-tasks-widget .widget-frame__icon::before { content: "🎀"; }
+/*
+ * KO: 제공된 4x4 그림의 배경만 제거한 아틀라스를 모든 탭/위젯에 재사용한다.
+ * EN: WorkspaceTabsNav.tsx renders the nav span; GlassCard.tsx and
+ * CareerWidget.tsx render the icon slot. Each rule below selects one cell.
+ */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.pink-diary-tab-icon, .widget-frame__icon)::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: url("/pink-diary-atlas.png");
+  background-repeat: no-repeat;
+  background-size: 400% 400%;
+  background-position: var(--pd-icon-x, 0%) var(--pd-icon-y, 0%);
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .pink-diary-tab-icon {
+  display: block !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  flex: 0 0 32px !important;
+  overflow: hidden;
+  background: transparent !important;
+}
+
+.pink-diary-tab-icon-home,
+.daily-journal-widget .widget-frame__icon { --pd-icon-x: 0%; --pd-icon-y: 0%; }
+.pink-diary-tab-icon-career,
+.career-widget .widget-frame__icon { --pd-icon-x: 66.667%; --pd-icon-y: 0%; }
+.pink-diary-tab-icon-study,
+.study-widget .widget-frame__icon { --pd-icon-x: 33.333%; --pd-icon-y: 0%; }
+.pink-diary-tab-icon-memo,
+.memo-widget .widget-frame__icon { --pd-icon-x: 33.333%; --pd-icon-y: 100%; }
+.pink-diary-tab-icon-life,
+.health-widget .widget-frame__icon { --pd-icon-x: 100%; --pd-icon-y: 66.667%; }
+.calendar-widget .widget-frame__icon { --pd-icon-x: 100%; --pd-icon-y: 100%; }
+.money-widget .widget-frame__icon { --pd-icon-x: 66.667%; --pd-icon-y: 100%; }
+.timer-widget .widget-frame__icon { --pd-icon-x: 100%; --pd-icon-y: 100%; }
+.mood-widget .widget-frame__icon { --pd-icon-x: 66.667%; --pd-icon-y: 66.667%; }
+.alert-center-widget .widget-frame__icon { --pd-icon-x: 33.333%; --pd-icon-y: 100%; }
+.today-focus-widget .widget-frame__icon { --pd-icon-x: 0%; --pd-icon-y: 33.333%; }
+.today-tasks-widget .widget-frame__icon { --pd-icon-x: 66.667%; --pd-icon-y: 0%; }
+
+/*
+ * KO: Tauri의 투명 네이티브 창 안에서 이 요소 하나만 바깥 모서리를 그린다.
+ * EN: AppShell.tsx owns this surface. Avoid a transparent shell exposing
+ * rectangular child panels at the rounded edge.
+ */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .tauri-app-window > .app-shell-surface {
+  background: #f8edf3 !important;
+  border: 1px solid #e7cfd9 !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+  box-shadow: 0 12px 30px rgb(92 52 72 / 0.12) !important;
+}
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(button, .glass-button, .calendar-nav-button, .calendar-view-button,
