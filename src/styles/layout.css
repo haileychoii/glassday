@@ -749,12 +749,18 @@ aside .sidebar-workspace-list {
   font-size: 16px;
 }
 
-.workspace-theme-icon-pixel-desk,
-.workspace-theme-icon-retro {
+.workspace-theme-icon-pixel-desk {
   width: 22px;
   height: 22px;
   color: #111111;
   image-rendering: pixelated;
+}
+
+.workspace-theme-icon-retro {
+  width: 22px;
+  height: 22px;
+  font-size: 18px;
+  image-rendering: auto;
 }
 
 .sidebar-tab-item.is-active .sidebar-tab-main {
