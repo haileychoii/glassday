@@ -98,3 +98,6 @@
 
 /* Desktop Pixel Desk uses the same visual tokens as mobile-pixel.css. */
 @import "./themes/pixel-desktop-parity.css";
+
+/* Pink Diary's final visual layer stays after desktop and mobile overrides. */
+@import "./themes/pink-diary.css";
