@@ -111,9 +111,9 @@ export const WorkspaceTabsNav = ({
     }
 
     /*
-     * KO: Pink Diary는 사용자가 준 4x4 그림의 투명 아틀라스를 사용한다.
-     * EN: pink-diary.css selects the atlas cell; this fixed box never shrinks
-     * when Sidebar.tsx collapses and hides the tab label.
+     * KO: Pink Diary는 사용자가 준 여러 투명 PNG 시트의 이모지를 사용한다.
+     * EN: pink-diary.css selects a source sheet and cell for each tab; this
+     * fixed box never shrinks when Sidebar.tsx hides the tab label.
      */
     if (theme === "retro") {
       return (
