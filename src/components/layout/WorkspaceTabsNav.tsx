@@ -110,21 +110,17 @@ export const WorkspaceTabsNav = ({
       return <span className={iconClassName}>{macEmojiMap[tab.id] ?? "✨"}</span>;
     }
 
-    // Pink Diary uses single emoji glyphs instead of cropped sheet cells.
-    // The supplied contact sheet has a full-color background in every cell,
-    // so using it as a CSS sprite made each navigation icon look boxed and cut off.
+    /*
+     * KO: Pink Diary는 사용자가 준 4x4 그림의 투명 아틀라스를 사용한다.
+     * EN: pink-diary.css selects the atlas cell; this fixed box never shrinks
+     * when Sidebar.tsx collapses and hides the tab label.
+     */
     if (theme === "retro") {
-      const pinkDiaryEmojiMap: Record<string, string> = {
-        home: "🐱",
-        career: "📋",
-        study: "📚",
-        memo: "💌",
-        life: "🌷",
-      };
       return (
-        <span className={iconClassName} aria-hidden="true">
-          {pinkDiaryEmojiMap[tab.id] ?? "💗"}
-        </span>
+        <span
+          className={`${iconClassName} pink-diary-tab-icon pink-diary-tab-icon-${tab.id}`}
+          aria-hidden="true"
+        />
       );
     }
 
