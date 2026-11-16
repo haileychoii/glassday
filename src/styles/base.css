@@ -199,7 +199,7 @@ main {
 
 .glass-card-title,
 .widget-frame__title {
-  font-size: 12px;
+  font-size: var(--gd-widget-desktop-title-size);
   font-weight: 800;
   line-height: 1.2;
   color: hsl(var(--foreground) / 0.86);
@@ -211,7 +211,7 @@ main {
 .glass-card-subtitle,
 .widget-frame__subtitle {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--gd-widget-desktop-subtitle-size);
   font-weight: 650;
   line-height: 1.25;
   color: hsl(var(--muted-foreground) / 0.68);
@@ -270,10 +270,10 @@ main {
 .glass-card-icon,
 .widget-card-icon,
 .widget-frame__icon {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  flex: 0 0 28px;
+  width: var(--gd-widget-desktop-icon-size);
+  height: var(--gd-widget-desktop-icon-size);
+  min-width: var(--gd-widget-desktop-icon-size);
+  flex: 0 0 var(--gd-widget-desktop-icon-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
