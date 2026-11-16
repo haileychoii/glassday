@@ -110,6 +110,24 @@ export const WorkspaceTabsNav = ({
       return <span className={iconClassName}>{macEmojiMap[tab.id] ?? "✨"}</span>;
     }
 
+    // Pink Diary uses single emoji glyphs instead of cropped sheet cells.
+    // The supplied contact sheet has a full-color background in every cell,
+    // so using it as a CSS sprite made each navigation icon look boxed and cut off.
+    if (theme === "retro") {
+      const pinkDiaryEmojiMap: Record<string, string> = {
+        home: "🐱",
+        career: "📋",
+        study: "📚",
+        memo: "💌",
+        life: "🌷",
+      };
+      return (
+        <span className={iconClassName} aria-hidden="true">
+          {pinkDiaryEmojiMap[tab.id] ?? "💗"}
+        </span>
+      );
+    }
+
     /*
      * Pixel Desk uses the supplied Windows 95 sprite instead of Lucide icons.
      * The sprite CSS fixes the box size so collapsing the sidebar hides only
