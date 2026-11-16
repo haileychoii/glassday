@@ -59,7 +59,6 @@ import {
 import { useDashboardData } from "../../context/DashboardDataContext";
 import type { CareerItem, CareerStatus } from "../../types/dashboard";
 import { parseDate, toLocalDateInput } from "../widgets/calendar/calendarUtils";
-import "../../styles/mobile-career.css";
 
 /**
  * 기존 CareerItem.status와 완전히 동일한 id를 사용합니다.
