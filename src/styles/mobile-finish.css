@@ -1103,7 +1103,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-dashboard {
 body:has(.mobile-layout) .mobile-layout
   .mobile-widget-slot:not([data-widget-id="memo"]):not([data-widget-id="timer"]):not([data-widget-id="journal"]),
 body:has(.mobile-layout) .mobile-layout
-  .mobile-widget-slot:not([data-widget-id="memo"]):not([data-widget-id="journal"])
+  .mobile-widget-slot:not([data-widget-id="memo"]):not([data-widget-id="journal"]):not([data-widget-id="timer"])
   .widget-instance-root {
   width: 100% !important;
   max-width: 100% !important;
@@ -1122,7 +1122,11 @@ body:has(.mobile-layout) .mobile-layout
  * only the title row visible because the card body is a `minmax(0, 1fr)` row.
  * Memo/Journal은 내부 스크롤을 쓰므로 슬롯의 높이를 호스트까지 전달합니다. */
 body:has(.mobile-layout) .mobile-layout
-  .mobile-widget-slot:is([data-widget-id="memo"], [data-widget-id="journal"])
+  .mobile-widget-slot:is(
+    [data-widget-id="memo"],
+    [data-widget-id="journal"],
+    [data-widget-id="timer"]
+  )
   > .widget-instance-root {
   height: 100% !important;
   min-height: 0 !important;
