@@ -23,6 +23,8 @@ import {
 } from "react";
 
 import { isTauri } from "@tauri-apps/api/core";
+import { getCurrentTheme } from "../../constants/themes";
+import { syncNativeGlassEffect } from "../../lib/nativeGlassEffect";
 
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
@@ -73,19 +75,37 @@ export const AppShell = ({
    */
 
   const isTauriApp = isTauri();
-useEffect(() => {
-  const root = document.documentElement;
+  useEffect(() => {
+    const root = document.documentElement;
 
-  if (isTauriApp) {
-    root.classList.add("desktop-transparent");
-  } else {
-    root.classList.remove("desktop-transparent");
-  }
+    if (isTauriApp) {
+      root.classList.add("desktop-transparent");
+    } else {
+      root.classList.remove("desktop-transparent");
+    }
 
-  return () => {
-    root.classList.remove("desktop-transparent");
-  };
-}, [isTauriApp]);
+    return () => {
+      root.classList.remove("desktop-transparent");
+    };
+  }, [isTauriApp]);
+
+  useEffect(() => {
+    if (!isTauriApp) return;
+
+    // Apply at startup and whenever Settings dispatches the shared theme event.
+    // 앱 시작 때 적용하고 설정 화면의 공통 테마 변경 이벤트마다 동기화한다.
+    const applyCurrentGlassMaterial = () => {
+      void syncNativeGlassEffect(getCurrentTheme());
+    };
+
+    applyCurrentGlassMaterial();
+    window.addEventListener("glassday-theme-change", applyCurrentGlassMaterial);
+
+    return () => {
+      window.removeEventListener("glassday-theme-change", applyCurrentGlassMaterial);
+      void syncNativeGlassEffect("pastel");
+    };
+  }, [isTauriApp]);
   
 /*
  * Tauri에서는 layout 선택 개념이 필요 없다.
