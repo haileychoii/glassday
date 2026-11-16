@@ -98,3 +98,6 @@
 
 /* Desktop Pixel Desk uses the same visual tokens as mobile-pixel.css. */
 @import "./themes/pixel-desktop-parity.css";
+
+/* Final mobile geometry layer: shared spacing/type wins over theme sizing. */
+@import "./mobile-common.css";

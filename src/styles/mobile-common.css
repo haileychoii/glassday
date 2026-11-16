@@ -1,0 +1,116 @@
+/*
+ * Shared mobile widget geometry for every theme.
+ * Connected components: MobileDashboard / MobileCareerCard / MobileCalendarCard /
+ * MobileStudyCard and GlassCard's widget-frame header/body.
+ * Theme styles keep ownership of color, material, font family, and bevels;
+ * this final layer owns only spacing, title scale, and alignment.
+ * 모든 테마의 모바일 공통 규격 파일입니다. 테마 CSS는 색과 표면 재질을,
+ * 이 파일은 위젯 간격·헤더·제목 크기와 정렬을 맡습니다.
+ */
+
+.mobile-layout {
+  --mobile-widget-gap: 8px;
+  --mobile-widget-inset: 10px;
+  --mobile-widget-title-size: 14px;
+  --mobile-widget-subtitle-size: 11px;
+  --mobile-widget-header-min-height: 44px;
+}
+
+/* Give every widget one shared column, width, and vertical rhythm.
+ * 모바일 위젯은 한 열과 같은 폭, 같은 위젯 사이 간격을 사용합니다. */
+.mobile-layout .mobile-dashboard {
+  gap: var(--mobile-widget-gap) !important;
+}
+
+.mobile-layout .mobile-widget-slot {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  justify-self: stretch !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root,
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card,
+.mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card,
+  .mobile-calendar-card,
+  .mobile-study-card
+) {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Native and GlassCard widgets share a single header height and inset.
+ * Journal keeps its two-row date toolbar, but uses the same title typography. */
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card:not(.daily-journal-widget)
+  > .widget-frame__header,
+.mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card,
+  .mobile-calendar-card,
+  .mobile-study-card
+) > :is(
+  .mobile-career-card__header,
+  .mobile-calendar-card__header,
+  .mobile-study-card__heading
+) {
+  min-height: var(--mobile-widget-header-min-height) !important;
+  height: auto !important;
+  padding: 8px var(--mobile-widget-inset) !important;
+  gap: 8px !important;
+  box-sizing: border-box !important;
+}
+
+/* Use one readable title scale without changing theme-specific font families.
+ * Pixel/Retro/Mac Core 글꼴은 유지하고 글자 크기와 줄 간격만 통일합니다. */
+.mobile-layout .mobile-widget-slot[data-widget-id] .widget-frame__title,
+.mobile-layout .mobile-widget-slot[data-widget-id] .mobile-career-card__heading,
+.mobile-layout .mobile-widget-slot[data-widget-id] .mobile-career-card__heading strong,
+.mobile-layout .mobile-widget-slot[data-widget-id] .mobile-calendar-card__label,
+.mobile-layout .mobile-widget-slot[data-widget-id] .mobile-study-card__eyebrow {
+  min-width: 0 !important;
+  margin: 0 !important;
+  font-size: var(--mobile-widget-title-size) !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id] .widget-frame__subtitle {
+  font-size: var(--mobile-widget-subtitle-size) !important;
+  line-height: 1.3 !important;
+}
+
+/* GlassCard bodies and purpose-built cards start content at the same inset.
+ * 본문 시작선과 전용 카드의 내용 시작선을 동일하게 맞춥니다. */
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card:not(.daily-journal-widget)
+  > .widget-frame__body {
+  min-width: 0 !important;
+  padding: var(--mobile-widget-inset) !important;
+  box-sizing: border-box !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card,
+  .mobile-calendar-card,
+  .mobile-study-card
+) {
+  --mobile-card-inset: var(--mobile-widget-inset);
+  gap: var(--mobile-widget-gap) !important;
+  padding: 0 var(--mobile-widget-inset) var(--mobile-widget-inset) !important;
+  box-sizing: border-box !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card,
+  .mobile-calendar-card,
+  .mobile-study-card
+) > :is(
+  .mobile-career-card__header,
+  .mobile-calendar-card__header,
+  .mobile-study-card__heading
+) {
+  width: calc(100% + 2 * var(--mobile-widget-inset)) !important;
+  margin-inline: calc(-1 * var(--mobile-widget-inset)) !important;
+}
