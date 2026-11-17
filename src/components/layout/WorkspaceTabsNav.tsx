@@ -106,20 +106,34 @@ export const WorkspaceTabsNav = ({
       life: "🌿",
     };
 
+    // KO: pink-diary.css의 개별 이미지 규격과 함께 사용한다. 시트 좌표는 쓰지 않는다.
+    // EN: Full transparent icons prevent neighboring sprite cells from leaking.
+    const pinkIconMap: Record<string, string> = {
+      home: "/pink-icons/isolated/home.png",
+      career: "/pink-icons/isolated/career.png",
+      study: "/pink-icons/isolated/study.png",
+      memo: "/pink-icons/isolated/diary.png",
+      diary: "/pink-icons/isolated/diary.png",
+      life: "/pink-icons/isolated/life.png",
+      calendar: "/pink-icons/isolated/calendar.png",
+    };
+
     if (theme === "mac-core") {
       return <span className={iconClassName}>{macEmojiMap[tab.id] ?? "✨"}</span>;
     }
 
     /*
-     * KO: Pink Diary는 사용자가 준 여러 투명 PNG 시트의 이모지를 사용한다.
-     * EN: pink-diary.css selects a source sheet and cell for each tab; this
-     * fixed box never shrinks when Sidebar.tsx hides the tab label.
+     * KO: Pink Diary는 제공된 이모지에서 분리한 PNG 한 개를 탭마다 그린다.
+     * EN: The fixed image box stays intact when Sidebar.tsx hides the label.
      */
     if (theme === "retro") {
       return (
-        <span
+        <img
+          src={pinkIconMap[tab.id] ?? pinkIconMap.diary}
           className={`${iconClassName} pink-diary-tab-icon pink-diary-tab-icon-${tab.id}`}
+          alt=""
           aria-hidden="true"
+          draggable={false}
         />
       );
     }
