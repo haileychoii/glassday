@@ -375,6 +375,13 @@
   font-weight: 750;
 }
 
+/* Keep editable task text compact while leaving new-entry fields at 16px to
+ * prevent Safari focus zoom. / 목록 글씨는 줄이고 새 입력창 크기는 유지합니다. */
+.mobile-layout .daily-journal-widget .journal-task-item input {
+  font-size: 14px !important;
+  line-height: 1.3 !important;
+}
+
 /* 기록하는 입력칸은 충분히 읽을 수 있게 유지 */
 .mobile-layout .daily-journal-widget .journal-section textarea {
   min-height: 76px !important;

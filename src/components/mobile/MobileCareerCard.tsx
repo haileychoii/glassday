@@ -336,8 +336,14 @@ export const MobileCareerCard = () => {
 
         <div className="mobile-career-card__section-head">
           <strong>다음 일정</strong>
-          <button type="button" onClick={createItem} className="mobile-career-card__add">
-            <Plus size={15} aria-hidden="true" /> 기업 추가
+          <button
+            type="button"
+            onClick={createItem}
+            className="mobile-career-card__add"
+            aria-label="새 기업 추가"
+            title="새 기업 추가"
+          >
+            <Plus size={18} aria-hidden="true" />
           </button>
         </div>
 

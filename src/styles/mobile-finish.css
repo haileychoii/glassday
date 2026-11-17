@@ -478,7 +478,7 @@
     background: var(--ios-surface) !important;
     background-image: none !important;
     border: 0 !important;
-    border-bottom: 0.5px solid var(--ios-separator) !important;
+    border-bottom: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
   }
@@ -569,7 +569,7 @@
   /* Journal의 높이·줄 배치는 파일 끝의 COMPACT JOURNAL 규칙에서 관리. */
   & .daily-journal-widget > .widget-frame__header {
     background: var(--ios-surface) !important;
-    border-bottom: 0.5px solid var(--ios-separator) !important;
+    border-bottom: 0 !important;
     border-radius: 0 !important;
   }
   & .daily-journal-widget > .widget-frame__header > .widget-frame__title-group {

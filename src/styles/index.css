@@ -99,8 +99,6 @@
 /* Desktop Pixel Desk uses the same visual tokens as mobile-pixel.css. */
 @import "./themes/pixel-desktop-parity.css";
 
-/* Final mobile geometry layer: shared spacing/type wins over theme sizing. */
-@import "./mobile-common.css";
 /* Pink Diary's final visual layer stays after desktop and mobile overrides. */
 @import "./themes/pink-diary.css";
 
@@ -109,3 +107,6 @@
 
 /* Shared widget fit and narrow-card behavior; theme surfaces remain untouched. */
 @import "./responsive-widgets.css";
+
+/* Final mobile geometry layer: shared spacing/type wins over theme sizing. */
+@import "./mobile-common.css";
