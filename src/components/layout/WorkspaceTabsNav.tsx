@@ -17,21 +17,13 @@
  * - Sidebar에서는 Vertical, Topbar에서는 CSS override로 Horizontal Auto Layout
  * ============================================================
  */
-import {
-  BookOpen,
-  BriefcaseBusiness,
-  FolderOpen,
-  HeartPulse,
-  House,
-  NotebookPen,
-  Plus,
-  Trash2,
-} from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import { cn } from "../../lib/utils";
 import type { DashboardTab } from "../../types/workspace";
+import { WorkspaceTabIcon } from "./WorkspaceTabIcon";
 
 type WorkspaceTabsNavProps = {
   tabs: DashboardTab[];
@@ -84,72 +76,6 @@ export const WorkspaceTabsNav = ({
     };
   }, []);
 
-  const renderTabIcon = (tab: DashboardTab) => {
-    const iconClassName = cn(
-      "workspace-theme-icon",
-      `workspace-theme-icon-${theme}`
-    );
-
-    const iconMap: Record<string, typeof House> = {
-      home: House,
-      career: BriefcaseBusiness,
-      study: BookOpen,
-      memo: NotebookPen,
-      life: HeartPulse,
-    };
-
-    const macEmojiMap: Record<string, string> = {
-      home: "🏠",
-      career: "💼",
-      study: "📚",
-      memo: "📝",
-      life: "🌿",
-    };
-
-    if (theme === "mac-core") {
-      return <span className={iconClassName}>{macEmojiMap[tab.id] ?? "✨"}</span>;
-    }
-
-    // Pink Diary uses single emoji glyphs instead of cropped sheet cells.
-    // The supplied contact sheet has a full-color background in every cell,
-    // so using it as a CSS sprite made each navigation icon look boxed and cut off.
-    if (theme === "retro") {
-      const pinkDiaryEmojiMap: Record<string, string> = {
-        home: "🐱",
-        career: "📋",
-        study: "📚",
-        memo: "💌",
-        life: "🌷",
-      };
-      return (
-        <span className={iconClassName} aria-hidden="true">
-          {pinkDiaryEmojiMap[tab.id] ?? "💗"}
-        </span>
-      );
-    }
-
-    /*
-     * Pixel Desk uses the supplied Windows 95 sprite instead of Lucide icons.
-     * The sprite CSS fixes the box size so collapsing the sidebar hides only
-     * the label and never stretches or compresses the pixel artwork.
-     */
-    if (theme === "pixel-desk") {
-      return (
-        <img
-          src={`/pixel-icons/${tab.id === "memo" ? "diary" : tab.id}.png`}
-          className={`${iconClassName} pixel-tab-icon`}
-          alt=""
-          aria-hidden="true"
-          draggable={false}
-        />
-      );
-    }
-
-    const Icon = iconMap[tab.id] ?? FolderOpen;
-
-    return <Icon className={iconClassName} />;
-  };
-
   return (
     <>
       {/* Figma Component List: Workspace Tabs / 방향은 배치 위치의 CSS가 결정한다. */}
@@ -178,7 +104,9 @@ export const WorkspaceTabsNav = ({
               title={collapsed ? tab.label : undefined}
               aria-label={collapsed ? tab.label : undefined}
             >
-              <span className="sidebar-tab-icon">{renderTabIcon(tab)}</span>
+              <span className="sidebar-tab-icon">
+                <WorkspaceTabIcon tabId={tab.id} theme={theme} />
+              </span>
 
               {!collapsed && editMode && !tab.locked ? (
                 <input
