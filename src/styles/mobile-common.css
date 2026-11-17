@@ -25,7 +25,9 @@
 .mobile-layout .mobile-dashboard,
 :is(html, body):is([data-theme], [class*="theme-"])
   .mobile-layout .mobile-dashboard {
-  width: 100% !important;
+  /* Expand only by the width reserved for a classic vertical scrollbar.
+   * 스크롤바가 차지한 폭만큼만 보정해 카드의 좌우 여백을 비슷하게 맞춥니다. */
+  width: calc(100% + max(0px, calc(100vw - 100%))) !important;
   max-width: 760px !important;
   margin-inline: auto !important;
   grid-template-columns: minmax(0, 1fr) !important;
@@ -245,6 +247,88 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
   gap: 8px !important;
 }
 
+/* Header icons are glyphs rather than buttons; remove their theme tile while
+ * keeping standalone Pink Diary artwork intact. / 제목 아이콘을 도형 밖에 둡니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] :is(
+  .widget-frame__icon,
+  .mobile-career-card__heading > svg,
+  .mobile-calendar-card__label > svg,
+  .mobile-study-card__eyebrow > svg
+) {
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Modern themes let the card surface continue behind every title row. Pixel
+ * Desk retains its signature blue bevel title bars. / Pixel 제목줄은 보존합니다. */
+:is(html, body):is(
+  [data-theme="pastel"], [data-theme="glass-light"], [data-theme="glass-dark"],
+  [data-theme="aurora"], [data-theme="mac-core"], [data-theme="retro"],
+  .theme-pastel, .theme-glass-light, .theme-glass-dark, .theme-aurora,
+  .theme-mac-core, .theme-retro
+) .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
+  > .glass-card > .widget-frame__header,
+:is(html, body):is(
+  [data-theme="pastel"], [data-theme="glass-light"], [data-theme="glass-dark"],
+  [data-theme="aurora"], [data-theme="mac-core"], [data-theme="retro"],
+  .theme-pastel, .theme-glass-light, .theme-glass-dark, .theme-aurora,
+  .theme-mac-core, .theme-retro
+) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
+) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Pink Diary is a mobile theme with one calm rose surface system. Older theme
+ * layers contain repeated gradients; these mobile-only rules make widget chrome
+ * and inner panels agree without changing desktop or saved note colors.
+ * Pink Diary 모바일은 단색 장미빛 표면으로 통일하고 저장된 메모 색은 보존합니다. */
+:is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout {
+  --pd-mobile-surface: #fffafd;
+  --pd-mobile-panel: #fff4f8;
+  --pd-mobile-line: #ead7e0;
+}
+
+:is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout .mobile-main {
+  background: #fff5f8 !important;
+  background-image: none !important;
+}
+
+:is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
+  .mobile-widget-slot .glass-card,
+:is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
+  :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card) {
+  background: var(--pd-mobile-surface) !important;
+  border-color: var(--pd-mobile-line) !important;
+  box-shadow: 0 3px 10px rgb(137 88 111 / 0.06) !important;
+}
+
+:is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
+  .mobile-widget-slot .glass-card > .widget-frame__header,
+:is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
+  :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
+  background: var(--pd-mobile-surface) !important;
+  background-image: none !important;
+  border: 0 !important;
+}
+
+:is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
+  :is(.journal-summary-card, .journal-section, .alert-center-item,
+      .mobile-career-metrics > div, .mobile-career-next,
+      .mobile-calendar-card__summary, .mobile-study-card__metric,
+      .mobile-study-card__upcoming) {
+  background: var(--pd-mobile-panel) !important;
+  background-image: none !important;
+  border: 1px solid var(--pd-mobile-line) !important;
+  box-shadow: none !important;
+}
+
 /* Use one readable title scale without changing theme-specific font families.
  * Pixel/Retro/Mac Core 글꼴은 유지하고 글자 크기와 줄 간격만 통일합니다. */
 .mobile-layout .mobile-widget-slot[data-widget-id] .widget-frame__title,
@@ -340,6 +424,13 @@ body:has(.mobile-layout) .settings-section-tab {
 .mobile-layout .mobile-widget-slot[data-widget-id="journal"] > .widget-instance-root
   > .daily-journal-widget > .widget-frame__body {
   padding: var(--mobile-widget-inset) !important;
+}
+
+/* The Journal scrolls inside the widget; avoid reserving a second right gutter
+ * beside the page's own scrollbar. / Journal 내부에 추가 여백을 예약하지 않습니다. */
+body:has(.mobile-layout) .mobile-layout .daily-journal-widget .journal-content {
+  scrollbar-gutter: auto !important;
+  padding-right: 0 !important;
 }
 
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
