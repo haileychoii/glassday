@@ -1,0 +1,75 @@
+/* ============================================================
+   Shared Dashboard Widget Fit
+
+   연결:
+   - GlassCard.tsx가 만드는 .glass-card.widget-frame 공통 바깥 프레임
+   - 각 위젯의 actions/content는 widgets/*.css에서 계속 소유
+   - index.css의 가장 마지막에서 공통 폭 안전 규칙만 보완
+
+   목적:
+   - 그리드에서 카드가 좁아져도 제목, 우측 동작, 폼 필드가 프레임 밖으로
+     밀려나지 않게 한다.
+   - 위젯이 자기 실제 폭을 기준으로 좁은 데스크톱 카드의 제목줄을 재배치한다.
+   - 테마별 색, 모서리, 타이포그래피와 위젯 콘텐츠의 배치는 변경하지 않는다.
+
+   English: This is a shared fit layer, not a replacement for widget-specific
+   layouts or theme chrome. It only prevents horizontal overflow and lets a
+   narrow desktop widget header wrap according to that widget's own width.
+   ============================================================ */
+
+.glass-card.widget-frame {
+  container-type: inline-size;
+  container-name: gd-widget-frame;
+}
+
+.glass-card.widget-frame > .widget-frame__header,
+.glass-card.widget-frame > .widget-frame__body,
+.glass-card.widget-frame .widget-frame__title-group,
+.glass-card.widget-frame .widget-frame__actions {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.glass-card.widget-frame .widget-frame__actions {
+  max-width: 100%;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--gd-widget-inline-gap, 6px);
+}
+
+.glass-card.widget-frame .widget-frame__actions > *,
+.glass-card.widget-frame :where(input, select, textarea) {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Desktop widgets are resizable independently of the viewport. Query the
+   widget frame, not the browser, so a narrow grid cell responds in place. */
+@media (min-width: 768px) {
+  @container gd-widget-frame (max-width: 420px) {
+    .widget-frame__header {
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--gd-widget-inline-gap, 6px) var(--gd-widget-header-gap, 8px);
+    }
+
+    .widget-frame__title-group {
+      flex: 1 1 132px;
+    }
+
+    .widget-frame__actions {
+      flex: 0 1 auto;
+    }
+  }
+
+  @container gd-widget-frame (max-width: 320px) {
+    .widget-frame__header {
+      padding-inline: var(--gd-space-sm, 8px);
+    }
+
+    .widget-frame__title-group {
+      flex-basis: 112px;
+    }
+  }
+}
