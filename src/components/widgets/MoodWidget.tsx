@@ -12,14 +12,30 @@
  * ============================================================
  */
 import { useState } from "react";
-import { Heart, Lock, Pencil, RotateCcw } from "lucide-react";
+import {
+  Activity,
+  Brain,
+  Heart,
+  Lock,
+  Moon,
+  Pencil,
+  RotateCcw,
+  Utensils,
+  Zap,
+} from "lucide-react";
 import { GlassCard } from "../glass/GlassCard";
 import { cn } from "../../lib/utils";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 
-const metrics = ["Energy", "Focus", "Sleepiness", "Stress", "Appetite"] as const;
+const metrics = [
+  { key: "Energy", icon: Zap },
+  { key: "Focus", icon: Brain },
+  { key: "Sleepiness", icon: Moon },
+  { key: "Stress", icon: Activity },
+  { key: "Appetite", icon: Utensils },
+] as const;
 
-type Metric = (typeof metrics)[number];
+type Metric = (typeof metrics)[number]["key"];
 
 type MoodValues = Record<Metric, number>;
 
@@ -29,6 +45,16 @@ const defaultMood: MoodValues = {
   Sleepiness: 4,
   Stress: 2,
   Appetite: 3,
+};
+
+// Each scale translates the saved 1-5 value into plain language.
+// 기존 숫자 저장값은 유지하고, 화면에서만 지표별 의미를 분명히 보여준다.
+const metricScaleLabels: Record<Metric, readonly string[]> = {
+  Energy: ["Very low", "Low", "Steady", "High", "Very high"],
+  Focus: ["Scattered", "Light", "Steady", "Focused", "Deep focus"],
+  Sleepiness: ["Alert", "A little tired", "Moderate", "Sleepy", "Very sleepy"],
+  Stress: ["Calm", "Slight", "Moderate", "High", "Overwhelming"],
+  Appetite: ["Very low", "Low", "Usual", "Good", "Very strong"],
 };
 
 /** Edit mode에서만 score dot interaction을 허용하는 life signal component. */
@@ -77,17 +103,30 @@ export const MoodWidget = () => {
         </button>
       }
     >
-      {/* Figma Component Set: Metric Row / Score 1..5 / Read Only · Editing */}
+      {/*
+       * Metric rows keep the existing five 1-5 values, while adding a named
+       * interpretation and an explicit selection control for each signal.
+       * 기존 저장 호환성은 그대로 두고 점만 보이던 척도를 읽을 수 있게 한다.
+       */}
       <div className="mood-list">
-        {metrics.map((metric) => (
+        {metrics.map(({ key: metric, icon: Icon }) => (
           <div
             key={metric}
             className="mood-row"
             data-metric={metric.toLowerCase()}
           >
-            <span className="mood-label">{metric}</span>
+            <div className="mood-row-heading">
+              <span className="mood-label">
+                <Icon aria-hidden="true" />
+                {metric}
+              </span>
+              <span className="mood-value">
+                <strong>{values[metric]}/5</strong>
+                <span>{metricScaleLabels[metric][values[metric] - 1]}</span>
+              </span>
+            </div>
 
-            <div className="mood-track">
+            <div className="mood-track" role="group" aria-label={`${metric} level`}>
               {[1, 2, 3, 4, 5].map((n) => (
                 <button
                   key={n}
@@ -95,19 +134,18 @@ export const MoodWidget = () => {
                   onClick={() => updateMetric(metric, n)}
                   className={cn(
                     "mood-dot",
-                    editing && "cursor-pointer",
-                    n <= values[metric] ? "mood-dot-active" : "hover:bg-white/65",
-                    !editing && "pointer-events-none"
+                    n <= values[metric] && "mood-dot-active",
+                    values[metric] === n && "is-selected"
                   )}
-                  aria-label={`Set ${metric} to ${n} of 5`}
+                  disabled={!editing}
+                  aria-label={`${metric}: ${metricScaleLabels[metric][n - 1]}`}
                   aria-pressed={values[metric] === n}
-                />
+                  title={`${n} · ${metricScaleLabels[metric][n - 1]}`}
+                >
+                  {n}
+                </button>
               ))}
             </div>
-
-            <span className="mood-value">
-              {values[metric]}/5
-            </span>
           </div>
         ))}
 

@@ -26,7 +26,7 @@
 .mood-list {
   min-width: 0;
   display: grid;
-  gap: 7px;
+  gap: var(--gd-widget-stack-gap, 8px);
 }
 
 .mood-row {
@@ -35,15 +35,23 @@
   --mood-surface-active:
     color-mix(in srgb, var(--mood-accent) 18%, white 82%);
   min-width: 0;
-  min-height: 34px;
-  padding: 6px 8px;
-  border-radius: 14px;
+  min-height: 64px;
+  padding: var(--gd-widget-panel-pad, 10px);
+  border-radius: var(--gd-widget-inner-radius, 14px);
   display: grid;
-  grid-template-columns: minmax(58px, 0.62fr) minmax(60px, 1fr) auto;
-  align-items: center;
+  grid-template-rows: auto auto;
+  align-content: center;
   gap: 8px;
   background: var(--mood-surface);
   border: 1px solid hsl(0 0% 100% / 0.34);
+}
+
+.mood-row-heading {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .mood-row[data-metric="energy"] {
@@ -73,6 +81,9 @@
 
 .mood-label {
   min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   font-size: 11px;
   font-weight: 750;
   line-height: 1.1;
@@ -81,40 +92,87 @@
   text-overflow: ellipsis;
 }
 
+.mood-label svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  color: var(--mood-accent);
+}
+
 .mood-value {
-  min-width: 30px;
+  min-width: 0;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 6px;
   text-align: right;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 750;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mood-value strong {
+  color: hsl(var(--foreground) / 0.88);
+  font-size: 11px;
+}
+
+.mood-value > span {
+  color: hsl(var(--muted-foreground) / 0.84);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mood-track {
   min-width: 0;
   display: grid;
-  grid-template-columns: repeat(5, minmax(7px, 10px));
-  justify-content: center;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 5px;
 }
 
 .mood-dot {
-  width: 9px;
-  height: 9px;
+  min-width: 0;
+  height: 24px;
   border-radius: 999px;
-  background: hsl(0 0% 100% / 0.34);
+  display: grid;
+  place-items: center;
+  color: hsl(var(--foreground) / 0.62);
+  background: hsl(0 0% 100% / 0.26);
+  border: 1px solid hsl(var(--foreground) / 0.1);
+  font-size: 10px;
+  font-weight: 750;
   transition:
-    transform 140ms ease,
+    color 140ms ease,
     background 140ms ease,
+    border-color 140ms ease,
     box-shadow 140ms ease;
 }
 
+.mood-dot:not(:disabled) {
+  cursor: pointer;
+}
+
+.mood-dot:disabled {
+  opacity: 0.82;
+}
+
 .mood-dot-active {
+  color: color-mix(in srgb, var(--mood-accent) 72%, #242336 28%);
+  background: color-mix(in srgb, var(--mood-accent) 28%, white 72%);
+  border-color: color-mix(in srgb, var(--mood-accent) 38%, transparent);
+}
+
+.mood-dot.is-selected {
+  color: white;
   background: var(--mood-accent);
-  transform: scale(1.08);
-  box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--mood-accent) 18%, transparent),
-    0 6px 16px -10px color-mix(in srgb, var(--mood-accent) 62%, transparent);
+  border-color: color-mix(in srgb, var(--mood-accent) 76%, black 24%);
+  box-shadow: 0 2px 8px -4px color-mix(in srgb, var(--mood-accent) 70%, transparent);
+}
+
+.mood-dot:focus-visible {
+  outline: 2px solid var(--mood-accent);
+  outline-offset: 2px;
 }
 
 .mood-reset-button {
@@ -258,14 +316,13 @@ body.theme-mac-core .mood-dot-active {
 
 @container mood-widget (max-width: 360px) {
   .mood-list {
-    gap: 5px;
+    gap: 6px;
   }
 
   .mood-row {
-    min-height: 31px;
-    grid-template-columns: minmax(48px, 0.58fr) minmax(48px, 1fr) auto;
+    min-height: 58px;
     gap: 6px;
-    padding: 5px 7px;
+    padding: 7px;
   }
 
   .mood-label {
@@ -273,18 +330,17 @@ body.theme-mac-core .mood-dot-active {
   }
 
   .mood-value {
-    min-width: 26px;
+    gap: 4px;
+    font-size: 9px;
+  }
+
+  .mood-value strong {
     font-size: 10px;
   }
 
-  .mood-track {
-    grid-template-columns: repeat(5, 8px);
-    gap: 4px;
-  }
-
   .mood-dot {
-    width: 8px;
-    height: 8px;
+    height: 22px;
+    font-size: 9px;
   }
 }
 
