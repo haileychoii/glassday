@@ -15,7 +15,9 @@
   --mobile-widget-subtitle-size: 11px;
   --mobile-widget-header-min-height: 48px;
   --mobile-widget-icon-size: 22px;
-  --mobile-widget-action-size: 36px;
+  /* A 40px control stays compact in dense widget headers but is easier to tap.
+   * 좁은 헤더를 과하게 키우지 않으면서 손가락으로 누르기 쉽게 맞춥니다. */
+  --mobile-widget-action-size: 40px;
 }
 
 /* Give every widget one shared column, width, and vertical rhythm.

@@ -203,6 +203,24 @@
   outline-offset: -3px;
 }
 
+/* Mobile controls use immediate press feedback instead of desktop hover states.
+ * 모바일에서는 hover 대신 눌림 상태를 짧게 보여 터치 반응을 분명히 합니다. */
+.mobile-layout button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .mobile-layout :is(
+    .mobile-header-actions button,
+    .mobile-navigation-item,
+    .mobile-navigation-capture,
+    .mobile-widget-slot .widget-frame__actions button
+  ):active {
+    transform: scale(0.98);
+  }
+}
+
 .mobile-empty {
   padding: 20px 0;
   font-size: 14px;
