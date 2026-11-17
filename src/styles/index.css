@@ -106,3 +106,6 @@
 
 /* Tauri-only host transparency and four-corner clipping must follow themes. */
 @import "./desktop-window.css";
+
+/* Shared widget fit and narrow-card behavior; theme surfaces remain untouched. */
+@import "./responsive-widgets.css";
