@@ -58,6 +58,8 @@ import {
 import { applyTheme, getCurrentTheme } from "../constants/themes";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 import { isTauri } from "@tauri-apps/api/core";
+import { getCurrent, onOpenUrl } from "@tauri-apps/plugin-deep-link";
+import { openUrl } from "@tauri-apps/plugin-opener";
 
 import type { DashboardLayoutMode } from "../types/workspace";
 
@@ -89,6 +91,7 @@ type CloudSyncContextValue = {
 const STORAGE_TABLE = "user_storage_snapshots";
 const REMOTE_REFRESH_INTERVAL_MS = 30_000;
 const AUTH_UI_SNAPSHOT_KEY = "glassday.auth.uiSnapshot.v1";
+const DESKTOP_AUTH_CALLBACK = "glassday://auth/callback";
 const AUTH_UI_SNAPSHOT_KEYS = [
   DASHBOARD_LAYOUT_MODE_KEY,
   DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
@@ -446,17 +449,72 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
     setSyncState("authenticating");
     captureAuthUiSnapshot();
 
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: getAuthRedirectUrl(),
-      },
-    });
+    try {
+      const desktop = isTauri();
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: desktop ? DESKTOP_AUTH_CALLBACK : getAuthRedirectUrl(),
+          skipBrowserRedirect: desktop,
+        },
+      });
 
-    if (error) {
+      if (error) throw error;
+      if (desktop) {
+        if (!data.url || new URL(data.url).origin !== new URL(import.meta.env.VITE_SUPABASE_URL).origin) {
+          throw new Error("Unexpected Google authentication URL.");
+        }
+        // KO: WebView 안에서 Google을 열면 웹 구버전으로 이탈할 수 있다.
+        // EN: Keep the installed UI open; Chrome handles the OAuth page.
+        await openUrl(data.url);
+      }
+    } catch (error) {
       console.error(error);
-      setSyncState("error", error.message);
+      setSyncState("error", error instanceof Error ? error.message : "Google sign-in could not start.");
     }
+  }, [setSyncState]);
+
+  useEffect(() => {
+    if (!isTauri() || !supabase) return;
+    let disposed = false;
+    const processedCodes = new Set<string>();
+
+    /*
+     * KO: Rust deep-link 플러그인이 전달한 설치 앱 전용 주소만 수락한다.
+     *     SettingsModal.tsx의 로그인 버튼과 같은 Supabase client를 사용한다.
+     * EN: Handle both a running-app callback and a cold-start callback.
+     *     Never log the returned URL or its authorization code.
+     */
+    const handleCallback = async (urls: string[]) => {
+      const callback = urls.map((value) => {
+        try { return new URL(value); } catch { return null; }
+      }).find((url) => url?.protocol === "glassday:" && url.host === "auth" && url.pathname === "/callback");
+      if (!callback || disposed) return;
+
+      const authError = callback.searchParams.get("error_description") ?? callback.searchParams.get("error");
+      if (authError) {
+        setSyncState("error", authError);
+        return;
+      }
+      const code = callback.searchParams.get("code");
+      if (!code) {
+        setSyncState("error", "Google did not return an authorization code. Check the Supabase redirect URL.");
+        return;
+      }
+      if (processedCodes.has(code)) return;
+      processedCodes.add(code);
+      const { error } = await supabase!.auth.exchangeCodeForSession(code);
+      if (error && !disposed) setSyncState("error", error.message);
+    };
+
+    let stopListening: (() => void) | undefined;
+    void onOpenUrl((urls) => { void handleCallback(urls); })
+      .then((unlisten) => { if (disposed) unlisten(); else stopListening = unlisten; })
+      .catch((error) => setSyncState("error", String(error)));
+    void getCurrent().then((urls) => { if (urls) void handleCallback(urls); })
+      .catch((error) => setSyncState("error", String(error)));
+
+    return () => { disposed = true; stopListening?.(); };
   }, [setSyncState]);
 
   const signInWithMagicLink = useCallback(

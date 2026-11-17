@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Glassday",
-  "version": "0.1.16",
+  "version": "0.1.19",
   "identifier": "com.glassday.app",
   "build": {
     "frontendDist": "../dist",
@@ -33,6 +33,13 @@
     ],
     "security": {
       "csp": null
+    }
+  },
+  "plugins": {
+    "deep-link": {
+      "desktop": {
+        "schemes": ["glassday"]
+      }
     }
   },
   "bundle": {

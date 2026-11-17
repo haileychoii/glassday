@@ -485,19 +485,107 @@
   display: none !important;
 }
 
-/* Each selector targets the existing GlassCard icon slot of one widget. */
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .calendar-widget .widget-frame__icon::before { content: "🗓️"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .career-widget .widget-frame__icon::before { content: "💼"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .daily-journal-widget .widget-frame__icon::before { content: "🐱"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .study-widget .widget-frame__icon::before { content: "📚"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .memo-widget .widget-frame__icon::before { content: "💌"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .money-widget .widget-frame__icon::before { content: "💸"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .timer-widget .widget-frame__icon::before { content: "⏰"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .health-widget .widget-frame__icon::before { content: "🌷"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .mood-widget .widget-frame__icon::before { content: "🧸"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .alert-center-widget .widget-frame__icon::before { content: "🔔"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .today-focus-widget .widget-frame__icon::before { content: "✨"; }
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .today-tasks-widget .widget-frame__icon::before { content: "🎀"; }
+/*
+ * KO: WorkspaceTabsNav.tsx의 탭과 GlassCard.tsx/CareerWidget.tsx의 제목 아이콘은
+ *     각기 다른 원본 PNG 시트에서 용도에 맞는 셀을 고른다. 9x6 격자의 셀은
+ *     정사각형이므로 900% x 600%로 그려도 원본 비율이 찌그러지지 않는다.
+ * EN: Each mapped icon uses one cell of a supplied transparent 9x6 sheet.
+ *     Unmapped widgets use a heart from sheet 2, not the old 4x4 atlas.
+ */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.pink-diary-tab-icon, .widget-frame__icon)::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: var(--pd-icon-sheet, url("/pink-icons/pink_emoji_2.png"));
+  background-repeat: no-repeat;
+  background-size: var(--pd-icon-columns, 900%) var(--pd-icon-rows, 600%);
+  background-position: var(--pd-icon-x, 75%) var(--pd-icon-y, 100%);
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .pink-diary-tab-icon {
+  display: block !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  flex: 0 0 32px !important;
+  overflow: hidden;
+  background: transparent !important;
+}
+
+/* KO: 원본 시트별 매핑을 묶어 새 아이콘 추가 시 파일 연결을 찾기 쉽게 둔다.
+   EN: Sprite dimensions stay central; only positions vary per feature. */
+:is(.pink-diary-tab-icon-home, .pink-diary-tab-icon-study,
+    .pink-diary-tab-icon-calendar,
+    .daily-journal-widget .widget-frame__icon,
+    .study-widget .widget-frame__icon,
+    .calendar-widget .widget-frame__icon) {
+  --pd-icon-sheet: url("/pink-icons/pink_emoji_1.png");
+  --pd-icon-columns: 900%;
+  --pd-icon-rows: 600%;
+}
+
+:is(.pink-diary-tab-icon-memo, .pink-diary-tab-icon-diary,
+    .pink-diary-tab-icon-life, .pink-diary-tab-icon-money,
+    .memo-widget .widget-frame__icon,
+    .health-widget .widget-frame__icon,
+    .money-widget .widget-frame__icon,
+    .mood-widget .widget-frame__icon,
+    .alert-center-widget .widget-frame__icon) {
+  --pd-icon-sheet: url("/pink-icons/pink_emoji_2.png");
+  --pd-icon-columns: 900%;
+  --pd-icon-rows: 600%;
+}
+
+:is(.pink-diary-tab-icon-career, .career-widget .widget-frame__icon,
+    .today-focus-widget .widget-frame__icon) {
+  --pd-icon-sheet: url("/pink-icons/pink_emoji_5.png");
+  --pd-icon-columns: 900%;
+  --pd-icon-rows: 600%;
+}
+
+:is(.timer-widget .widget-frame__icon,
+    .today-tasks-widget .widget-frame__icon) {
+  --pd-icon-sheet: url("/pink-icons/pink_emoji_6.png");
+  --pd-icon-columns: 900%;
+  --pd-icon-rows: 600%;
+}
+
+.pink-diary-tab-icon-home { --pd-icon-x: 0%; --pd-icon-y: 0%; }
+.pink-diary-tab-icon-career,
+.career-widget .widget-frame__icon { --pd-icon-x: 100%; --pd-icon-y: 40%; }
+.pink-diary-tab-icon-study,
+.study-widget .widget-frame__icon { --pd-icon-x: 50%; --pd-icon-y: 0%; }
+.pink-diary-tab-icon-memo,
+.memo-widget .widget-frame__icon { --pd-icon-x: 37.5%; --pd-icon-y: 40%; }
+.pink-diary-tab-icon-diary { --pd-icon-x: 25%; --pd-icon-y: 20%; }
+.pink-diary-tab-icon-life,
+.health-widget .widget-frame__icon { --pd-icon-x: 75%; --pd-icon-y: 100%; }
+.daily-journal-widget .widget-frame__icon { --pd-icon-x: 37.5%; --pd-icon-y: 80%; }
+.pink-diary-tab-icon-calendar,
+.calendar-widget .widget-frame__icon { --pd-icon-x: 87.5%; --pd-icon-y: 20%; }
+.pink-diary-tab-icon-money,
+.money-widget .widget-frame__icon { --pd-icon-x: 87.5%; --pd-icon-y: 60%; }
+.timer-widget .widget-frame__icon { --pd-icon-x: 62.5%; --pd-icon-y: 20%; }
+.mood-widget .widget-frame__icon { --pd-icon-x: 12.5%; --pd-icon-y: 0%; }
+.alert-center-widget .widget-frame__icon { --pd-icon-x: 100%; --pd-icon-y: 40%; }
+.today-focus-widget .widget-frame__icon { --pd-icon-x: 62.5%; --pd-icon-y: 40%; }
+.today-tasks-widget .widget-frame__icon { --pd-icon-x: 12.5%; --pd-icon-y: 20%; }
+
+/*
+ * KO: Tauri의 투명 네이티브 창 안에서 이 요소 하나만 바깥 모서리를 그린다.
+ * EN: AppShell.tsx owns this surface. Avoid a transparent shell exposing
+ * rectangular child panels at the rounded edge.
+ */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .tauri-app-window > .app-shell-surface {
+  background: #f8edf3 !important;
+  border: 1px solid #e7cfd9 !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+  box-shadow: 0 12px 30px rgb(92 52 72 / 0.12) !important;
+}
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(button, .glass-button, .calendar-nav-button, .calendar-view-button,

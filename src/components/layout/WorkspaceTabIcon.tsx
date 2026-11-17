@@ -36,20 +36,20 @@ const macEmoji: Record<string, string> = {
   life: "🌿",
 };
 
-const retroEmoji: Record<string, string> = {
-  home: "🐱",
-  career: "📋",
-  study: "📚",
-  memo: "💌",
-  life: "🌷",
-};
-
 export const WorkspaceTabIcon = ({ tabId, theme }: WorkspaceTabIconProps) => {
   const className = `workspace-theme-icon workspace-theme-icon-${theme}`;
 
-  if (theme === "mac-core" || theme === "retro") {
-    const emoji = theme === "mac-core" ? macEmoji[tabId] : retroEmoji[tabId];
-    return <span className={className} aria-hidden="true">{emoji ?? "✨"}</span>;
+  if (theme === "mac-core") {
+    return <span className={className} aria-hidden="true">{macEmoji[tabId] ?? "✨"}</span>;
+  }
+
+  if (theme === "retro") {
+    return (
+      <span
+        className={`${className} pink-diary-tab-icon pink-diary-tab-icon-${tabId}`}
+        aria-hidden="true"
+      />
+    );
   }
 
   if (theme === "pixel-desk") {
