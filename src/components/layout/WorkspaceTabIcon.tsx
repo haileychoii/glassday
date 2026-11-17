@@ -36,6 +36,16 @@ const macEmoji: Record<string, string> = {
   life: "🌿",
 };
 
+const pinkDiaryIcons: Record<string, string> = {
+  home: "/pink-icons/isolated/home.png",
+  career: "/pink-icons/isolated/career.png",
+  study: "/pink-icons/isolated/study.png",
+  memo: "/pink-icons/isolated/diary.png",
+  diary: "/pink-icons/isolated/diary.png",
+  life: "/pink-icons/isolated/life.png",
+  calendar: "/pink-icons/isolated/calendar.png",
+};
+
 export const WorkspaceTabIcon = ({ tabId, theme }: WorkspaceTabIconProps) => {
   const className = `workspace-theme-icon workspace-theme-icon-${theme}`;
 
@@ -45,9 +55,12 @@ export const WorkspaceTabIcon = ({ tabId, theme }: WorkspaceTabIconProps) => {
 
   if (theme === "retro") {
     return (
-      <span
+      <img
+        src={pinkDiaryIcons[tabId] ?? pinkDiaryIcons.diary}
         className={`${className} pink-diary-tab-icon pink-diary-tab-icon-${tabId}`}
+        alt=""
         aria-hidden="true"
+        draggable={false}
       />
     );
   }

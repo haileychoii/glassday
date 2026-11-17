@@ -465,10 +465,10 @@
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.widget-frame__icon, .glass-card-icon, .widget-card-icon) {
   display: grid !important;
-  width: 36px !important;
-  min-width: 36px !important;
-  height: 36px !important;
-  flex: 0 0 36px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  flex: 0 0 28px !important;
   place-items: center !important;
   padding: 0 !important;
   color: inherit !important;
@@ -476,102 +476,64 @@
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  font-size: 25px !important;
   line-height: 1 !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .widget-frame__icon svg {
-  display: none !important;
+  display: block !important;
+  width: 17px !important;
+  height: 17px !important;
+  visibility: visible !important;
 }
 
 /*
- * KO: WorkspaceTabsNav.tsx의 탭과 GlassCard.tsx/CareerWidget.tsx의 제목 아이콘은
- *     각기 다른 원본 PNG 시트에서 용도에 맞는 셀을 고른다. 9x6 격자의 셀은
- *     정사각형이므로 900% x 600%로 그려도 원본 비율이 찌그러지지 않는다.
- * EN: Each mapped icon uses one cell of a supplied transparent 9x6 sheet.
- *     Unmapped widgets use a heart from sheet 2, not the old 4x4 atlas.
+ * KO: GlassCard.tsx와 CareerWidget.tsx의 제목에는 실제 .widget-frame__icon이
+ *     있다. 이미지가 있는 위젯만 개별 PNG로 교체하고 나머지는 SVG를 남긴다.
+ * EN: The previous global SVG hide made unmapped widget headers blank.
  */
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.pink-diary-tab-icon, .widget-frame__icon)::before {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 100%;
-  background-image: var(--pd-icon-sheet, url("/pink-icons/pink_emoji_2.png"));
-  background-repeat: no-repeat;
-  background-size: var(--pd-icon-columns, 900%) var(--pd-icon-rows, 600%);
-  background-position: var(--pd-icon-x, 75%) var(--pd-icon-y, 100%);
+  :is(.today-focus-widget, .career-widget, .study-widget,
+      .daily-journal-widget, .memo-widget, .health-widget,
+      .mood-widget, .calendar-widget, .today-tasks-widget)
+  .widget-frame__icon {
+  background-image: var(--pd-widget-icon) !important;
+  /* KO: 위의 important background 단축 속성이 이 세 값을 초기화하지 못하게 한다.
+     EN: The earlier important background shorthand must not reset icon fitting. */
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
 }
 
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .pink-diary-tab-icon {
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.today-focus-widget, .career-widget, .study-widget,
+      .daily-journal-widget, .memo-widget, .health-widget,
+      .mood-widget, .calendar-widget, .today-tasks-widget)
+  .widget-frame__icon svg {
+  display: none !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .pink-diary-tab-icon {
   display: block !important;
-  width: 32px !important;
-  min-width: 32px !important;
-  height: 32px !important;
-  flex: 0 0 32px !important;
-  overflow: hidden;
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  flex: 0 0 30px !important;
+  object-fit: contain;
+  object-position: center;
   background: transparent !important;
 }
 
-/* KO: 원본 시트별 매핑을 묶어 새 아이콘 추가 시 파일 연결을 찾기 쉽게 둔다.
-   EN: Sprite dimensions stay central; only positions vary per feature. */
-:is(.pink-diary-tab-icon-home, .pink-diary-tab-icon-study,
-    .pink-diary-tab-icon-calendar,
-    .daily-journal-widget .widget-frame__icon,
-    .study-widget .widget-frame__icon,
-    .calendar-widget .widget-frame__icon) {
-  --pd-icon-sheet: url("/pink-icons/pink_emoji_1.png");
-  --pd-icon-columns: 900%;
-  --pd-icon-rows: 600%;
-}
-
-:is(.pink-diary-tab-icon-memo, .pink-diary-tab-icon-diary,
-    .pink-diary-tab-icon-life, .pink-diary-tab-icon-money,
-    .memo-widget .widget-frame__icon,
-    .health-widget .widget-frame__icon,
-    .money-widget .widget-frame__icon,
-    .mood-widget .widget-frame__icon,
-    .alert-center-widget .widget-frame__icon) {
-  --pd-icon-sheet: url("/pink-icons/pink_emoji_2.png");
-  --pd-icon-columns: 900%;
-  --pd-icon-rows: 600%;
-}
-
-:is(.pink-diary-tab-icon-career, .career-widget .widget-frame__icon,
-    .today-focus-widget .widget-frame__icon) {
-  --pd-icon-sheet: url("/pink-icons/pink_emoji_5.png");
-  --pd-icon-columns: 900%;
-  --pd-icon-rows: 600%;
-}
-
-:is(.timer-widget .widget-frame__icon,
-    .today-tasks-widget .widget-frame__icon) {
-  --pd-icon-sheet: url("/pink-icons/pink_emoji_6.png");
-  --pd-icon-columns: 900%;
-  --pd-icon-rows: 600%;
-}
-
-.pink-diary-tab-icon-home { --pd-icon-x: 0%; --pd-icon-y: 0%; }
-.pink-diary-tab-icon-career,
-.career-widget .widget-frame__icon { --pd-icon-x: 100%; --pd-icon-y: 40%; }
-.pink-diary-tab-icon-study,
-.study-widget .widget-frame__icon { --pd-icon-x: 50%; --pd-icon-y: 0%; }
-.pink-diary-tab-icon-memo,
-.memo-widget .widget-frame__icon { --pd-icon-x: 37.5%; --pd-icon-y: 40%; }
-.pink-diary-tab-icon-diary { --pd-icon-x: 25%; --pd-icon-y: 20%; }
-.pink-diary-tab-icon-life,
-.health-widget .widget-frame__icon { --pd-icon-x: 75%; --pd-icon-y: 100%; }
-.daily-journal-widget .widget-frame__icon { --pd-icon-x: 37.5%; --pd-icon-y: 80%; }
-.pink-diary-tab-icon-calendar,
-.calendar-widget .widget-frame__icon { --pd-icon-x: 87.5%; --pd-icon-y: 20%; }
-.pink-diary-tab-icon-money,
-.money-widget .widget-frame__icon { --pd-icon-x: 87.5%; --pd-icon-y: 60%; }
-.timer-widget .widget-frame__icon { --pd-icon-x: 62.5%; --pd-icon-y: 20%; }
-.mood-widget .widget-frame__icon { --pd-icon-x: 12.5%; --pd-icon-y: 0%; }
-.alert-center-widget .widget-frame__icon { --pd-icon-x: 100%; --pd-icon-y: 40%; }
-.today-focus-widget .widget-frame__icon { --pd-icon-x: 62.5%; --pd-icon-y: 40%; }
-.today-tasks-widget .widget-frame__icon { --pd-icon-x: 12.5%; --pd-icon-y: 20%; }
+.today-focus-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/home.png"); }
+.career-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/career.png"); }
+.study-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/study.png"); }
+.daily-journal-widget .widget-frame__icon,
+.memo-widget .widget-frame__icon,
+.today-tasks-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/diary.png"); }
+.health-widget .widget-frame__icon,
+.mood-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/life.png"); }
+.calendar-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/calendar.png"); }
 
 /*
  * KO: Tauri의 투명 네이티브 창 안에서 이 요소 하나만 바깥 모서리를 그린다.
