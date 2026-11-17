@@ -17,36 +17,35 @@
    narrow desktop widget header wrap according to that widget's own width.
    ============================================================ */
 
-.glass-card.widget-frame {
-  container-type: inline-size;
-  container-name: gd-widget-frame;
-}
-
-.glass-card.widget-frame > .widget-frame__header,
-.glass-card.widget-frame > .widget-frame__body,
-.glass-card.widget-frame .widget-frame__title-group,
-.glass-card.widget-frame .widget-frame__actions {
-  min-width: 0;
-  box-sizing: border-box;
-}
-
-.glass-card.widget-frame .widget-frame__actions {
-  max-width: 100%;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: var(--gd-widget-inline-gap, 6px);
-}
-
-.glass-card.widget-frame .widget-frame__actions > *,
-.glass-card.widget-frame :where(input, select, textarea) {
-  min-width: 0;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-/* Desktop widgets are resizable independently of the viewport. Query the
-   widget frame, not the browser, so a narrow grid cell responds in place. */
 @media (min-width: 768px) {
+  .glass-card.widget-frame {
+    container-type: inline-size;
+    container-name: gd-widget-frame;
+  }
+
+  .glass-card.widget-frame > .widget-frame__header,
+  .glass-card.widget-frame > .widget-frame__body,
+  .glass-card.widget-frame .widget-frame__title-group,
+  .glass-card.widget-frame .widget-frame__actions {
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .glass-card.widget-frame .widget-frame__actions {
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--gd-widget-inline-gap, 6px);
+  }
+
+  .glass-card.widget-frame .widget-frame__actions > *,
+  .glass-card.widget-frame :where(input, select, textarea) {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Widgets resize independently of the viewport; query each card itself. */
   @container gd-widget-frame (max-width: 420px) {
     .widget-frame__header {
       flex-wrap: wrap;
