@@ -25,9 +25,7 @@
 .mobile-layout .mobile-dashboard,
 :is(html, body):is([data-theme], [class*="theme-"])
   .mobile-layout .mobile-dashboard {
-  /* Expand only by the width reserved for a classic vertical scrollbar.
-   * 스크롤바가 차지한 폭만큼만 보정해 카드의 좌우 여백을 비슷하게 맞춥니다. */
-  width: calc(100% + max(0px, calc(100vw - 100%))) !important;
+  width: 100% !important;
   max-width: 760px !important;
   margin-inline: auto !important;
   grid-template-columns: minmax(0, 1fr) !important;
@@ -35,6 +33,8 @@
   padding: 8px max(10px, env(safe-area-inset-right))
     calc(18px + env(safe-area-inset-bottom))
     max(10px, env(safe-area-inset-left)) !important;
+  /* The scrollbar already occupies the outer edge; leave only a tiny inner gap. */
+  padding-right: max(3px, env(safe-area-inset-right)) !important;
 }
 
 .mobile-layout .mobile-widget-slot {
@@ -262,6 +262,18 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] :is(
   padding: 0 !important;
 }
 
+/* Remove theme gradients behind icon glyphs; Retro's isolated PNG artwork is
+ * intentionally retained because it is itself the icon, not its container.
+ * 글리프 뒤의 색 타일만 제거하고 Pink Diary의 독립 그림 아이콘은 보존합니다. */
+:is(html, body):is(
+  [data-theme="pastel"], [data-theme="glass-light"], [data-theme="glass-dark"],
+  [data-theme="aurora"], [data-theme="mac-core"], [data-theme="pixel-desk"],
+  .theme-pastel, .theme-glass-light, .theme-glass-dark, .theme-aurora,
+  .theme-mac-core, .theme-pixel-desk
+) .mobile-layout .mobile-widget-slot[data-widget-id] .widget-frame__icon {
+  background-image: none !important;
+}
+
 /* Modern themes let the card surface continue behind every title row. Pixel
  * Desk retains its signature blue bevel title bars. / Pixel 제목줄은 보존합니다. */
 :is(html, body):is(
@@ -455,4 +467,51 @@ body:has(.mobile-layout) .mobile-layout .daily-journal-widget .journal-content {
 ) {
   width: calc(100% + 2 * var(--mobile-widget-inset)) !important;
   margin-inline: calc(-1 * var(--mobile-widget-inset)) !important;
+}
+
+/* One explicit title fill wins over legacy per-widget theme selectors. Modern
+ * themes match their card surface; Pixel Desk keeps its familiar navy caption.
+ * 모든 위젯 제목 배경을 한 규칙으로 맞추되 Pixel Desk의 남색 제목줄은 유지합니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  .widget-frame__header,
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
+) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
+  background-color: hsl(var(--card)) !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+    html.theme-pixel-desk, body.theme-pixel-desk, html.pixel-desk, body.pixel-desk,
+    html.theme-pixel, body.theme-pixel) .mobile-layout
+  .mobile-widget-slot[data-widget-id] .widget-frame__header,
+:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+    html.theme-pixel-desk, body.theme-pixel-desk, html.pixel-desk, body.pixel-desk,
+    html.theme-pixel, body.theme-pixel) .mobile-layout
+  .mobile-widget-slot[data-widget-id] > :is(
+    .mobile-career-card, .mobile-calendar-card, .mobile-study-card
+  ) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
+  background: var(--w95-title, #000080) !important;
+  color: var(--w95-light, #fff) !important;
+  border: 0 !important;
+}
+
+:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+    html.theme-pixel-desk, body.theme-pixel-desk, html.pixel-desk, body.pixel-desk,
+    html.theme-pixel, body.theme-pixel) .mobile-layout
+  .mobile-widget-slot[data-widget-id] :is(.widget-frame__title, .widget-frame__icon) {
+  color: var(--w95-light, #fff) !important;
+}
+
+/* Quick Capture is a narrow utility key, not a full-width navigation tab.
+ * 하단의 +는 작업공간 탭보다 좁은 전용 칸에 배치합니다. */
+body:has(.mobile-layout) .mobile-navigation-capture {
+  width: 52px !important;
+  max-width: 52px !important;
+  min-width: 52px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
 }

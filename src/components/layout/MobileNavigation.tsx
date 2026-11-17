@@ -41,7 +41,11 @@ const NavigationContent = ({ tabs, activeTabId, onSelectTab, onOpenQuickCapture 
   }, []);
 
   return (
-    <nav className="mobile-navigation" aria-label="Workspaces">
+    <nav
+      className="mobile-navigation"
+      aria-label="Workspaces"
+      style={{ gridTemplateColumns: `52px repeat(${tabs.length}, minmax(0, 1fr))` }}
+    >
       {/* Keep Quick Capture in the thumb zone without changing tab behavior.
           기존 탭 동작은 유지하고 자주 쓰는 기록 기능은 엄지 영역에 둡니다. */}
       <button
