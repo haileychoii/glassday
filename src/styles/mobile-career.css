@@ -127,6 +127,20 @@
   cursor: pointer;
 }
 
+/* The add action is icon-only on phones, so keep its tap target square instead
+ * of letting the former text label stretch it across the section header.
+ * 모바일 추가 버튼은 아이콘만 보여주고 누르기 좋은 정사각형 크기를 유지합니다. */
+.mobile-career-card__add {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  border: 1px solid var(--mc-border);
+  border-radius: 10px;
+  background: var(--mc-surface);
+}
+
 /* 04. Three equal metrics (total / in progress / upcoming). */
 .mobile-career-metrics {
   display: grid;

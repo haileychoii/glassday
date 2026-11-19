@@ -202,6 +202,24 @@
   outline-offset: -3px;
 }
 
+/* Mobile controls use immediate press feedback instead of desktop hover states.
+ * 모바일에서는 hover 대신 눌림 상태를 짧게 보여 터치 반응을 분명히 합니다. */
+.mobile-layout button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .mobile-layout :is(
+    .mobile-header-actions button,
+    .mobile-navigation-item,
+    .mobile-navigation-capture,
+    .mobile-widget-slot .widget-frame__actions button
+  ):active {
+    transform: scale(0.98);
+  }
+}
+
 .mobile-empty {
   padding: 20px 0;
   font-size: 14px;
@@ -1087,5 +1105,148 @@ body:has(.mobile-layout)
   .mobile-layout .mobile-dashboard[data-mobile-grid="editable"]
     > .mobile-widget-slot[data-mobile-width="half"] {
     grid-column: 1 / -1 !important;
+  }
+}
+
+/* Today Focus + Alert mobile pass / Today Focus와 Alert 모바일 최적화
+   The shared components keep their full desktop data model. These selectors
+   only change the phone presentation: tighter sections, compact task rows,
+   and shorter alert cards so the first screen shows useful context sooner.
+   공통 컴포넌트의 데이터는 유지하고, 모바일 표시 여백과 카드 높이만 줄인다. */
+@media (max-width: 767px) {
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus {
+    display: grid;
+    gap: 7px;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-hero {
+    padding: 10px !important;
+    gap: 8px !important;
+    border-radius: 14px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-kicker {
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-main {
+    padding: 0 !important;
+    display: block !important;
+    font-size: clamp(17px, 5vw, 22px) !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-ring {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    font-size: 11px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-section {
+    padding: 8px !important;
+    gap: 6px !important;
+    border-radius: 12px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-section-title {
+    font-size: 10px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-task-list,
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-mini-list,
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-memo-list {
+    gap: 5px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-task {
+    min-height: 36px !important;
+    padding: 6px 7px !important;
+    gap: 6px !important;
+    border-radius: 9px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-task-input {
+    min-width: 0;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-check,
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-delete {
+    width: 24px !important;
+    min-width: 24px !important;
+    height: 24px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-grid {
+    gap: 7px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-grid > .today-focus-section {
+    min-width: 0;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] :is(.today-focus-mini-item, .today-focus-career-item, .today-focus-memo) {
+    min-height: 34px !important;
+    padding: 6px 7px !important;
+    gap: 6px !important;
+    border-radius: 9px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] :is(.today-focus-mini-item strong, .today-focus-career-item strong, .today-focus-memo strong) {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] :is(.today-focus-mini-item span, .today-focus-career-item span, .today-focus-memo span) {
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-dday {
+    font-size: 9px !important;
+    padding: 3px 5px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="alerts"] .alert-center-list {
+    gap: 6px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="alerts"] .alert-center-item {
+    min-height: 48px !important;
+    padding: 7px 8px !important;
+    grid-template-columns: 28px minmax(0, 1fr) 14px !important;
+    gap: 7px !important;
+    border-radius: 11px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="alerts"] .alert-center-icon {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 9px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="alerts"] .alert-center-title-row strong {
+    font-size: 10px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="alerts"] .alert-center-title-row span {
+    height: 18px !important;
+    max-width: 64px !important;
+    padding-inline: 5px !important;
+    font-size: 8px !important;
+  }
+
+  body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="alerts"] .alert-center-content p {
+    margin-top: 2px !important;
+    font-size: 9px !important;
+    line-height: 1.25 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }

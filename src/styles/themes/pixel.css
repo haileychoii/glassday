@@ -319,6 +319,35 @@ html[data-theme="pixel-desk"] .app-shell-main {
   color: #404040 !important;
 }
 
+/* Pixel Settings has a navy title bar, so its secondary description cannot use
+   the normal gray paragraph color. Keep the classic black-on-gray card text,
+   but explicitly switch only the header description to a readable light tone.
+   한국어: 일반 본문은 검정 글씨를 유지하고, 남색 Settings 제목줄의 설명만
+   밝은 회색으로 분리해 배경에 묻히지 않게 한다. */
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel))
+  :is(.settings-modal-header, .settings-header, .settings-titlebar) h2 {
+  color: #ffffff !important;
+}
+
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel))
+  :is(.settings-modal-header, .settings-header, .settings-titlebar) p {
+  color: #dfefff !important;
+  opacity: 1 !important;
+}
+
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel))
+  :is(.settings-section-title, .settings-card-title) {
+  color: #202020 !important;
+}
+
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel))
+  :is(.settings-theme-card strong, .settings-theme-card small,
+      .settings-action-card strong, .settings-action-card span,
+      .settings-status) {
+  color: #202020 !important;
+  opacity: 1 !important;
+}
+
 /* =========================================================
    Buttons / inputs
 ========================================================= */

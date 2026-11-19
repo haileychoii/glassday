@@ -435,6 +435,51 @@
   border: 1px solid hsl(0 0% 100% / 0.36);
 }
 
+/*
+ * Inline application controls intentionally share the metadata chip geometry.
+ * The select replaces the old read-only status span, while Posting is a real
+ * action button so both controls remain compact inside narrow cards.
+ * 한국어: 목록 카드에서도 상태 변경과 공고 이동을 바로 할 수 있도록
+ * 기존 메타 칩과 같은 높이와 여백을 사용한다.
+ */
+.career-status-select,
+.career-posting-link {
+  min-height: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  border: 1px solid hsl(0 0% 100% / 0.36);
+  border-radius: 999px;
+  background: hsl(0 0% 100% / 0.24);
+  color: hsl(var(--foreground) / 0.68);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.career-status-select {
+  min-width: 82px;
+  padding: 0 20px 0 7px;
+  cursor: pointer;
+}
+
+.career-posting-link {
+  padding: 0 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gd-space-2xs);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.career-posting-link:hover,
+.career-posting-link:focus-visible,
+.career-status-select:hover,
+.career-status-select:focus-visible {
+  color: hsl(var(--foreground) / 0.92);
+  border-color: hsl(var(--ring) / 0.68);
+  background: hsl(0 0% 100% / 0.42);
+}
+
 .career-list-side {
   flex-direction: row;
   align-items: flex-start;
@@ -1630,7 +1675,7 @@
 }
 
 .career-small-button {
-  height: 34px;
+  height: 30px;
   padding: 0 12px;
   font-size: 12px;
   font-weight: 800;
@@ -1639,7 +1684,7 @@
 .career-icon-button,
 .career-delete-button {
   width: 34px;
-  height: 34px;
+  height: 30px;
   flex-shrink: 0;
 }
 

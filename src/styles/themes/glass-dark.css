@@ -168,7 +168,9 @@ body.desktop-transparent[data-theme="glass-dark"]
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%),
     var(--gd-dark-shell-bg) !important;
-  background-color: rgba(0, 0, 0, 0.18) !important;
+  /* Slightly stronger smoked layer keeps the desktop behind readable only as
+     a blur, while the native Acrylic effect still supplies transparency. */
+  background-color: rgba(0, 0, 0, 0.28) !important;
   background-image:
     linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%),
     var(--gd-dark-shell-bg) !important;
@@ -178,13 +180,13 @@ body.desktop-transparent[data-theme="glass-dark"]
    * Korean: 남색/보라 tint 없이 검정 유리 막만 만들어 뒤 배경 텍스트를 흐린다.
    */
   backdrop-filter:
-    blur(46px)
-    saturate(168%)
+    blur(54px)
+    saturate(158%)
     brightness(0.98) !important;
 
   -webkit-backdrop-filter:
-    blur(46px)
-    saturate(168%)
+    blur(54px)
+    saturate(158%)
     brightness(0.98) !important;
 
   border-color:
@@ -265,8 +267,7 @@ body.desktop-transparent[data-theme="glass-dark"] .topbar {
   border:
     1px solid rgba(255, 255, 255, 0.12) !important;
 
-  border-radius:
-    20px 20px 0 0 !important;
+  border-radius: 12px !important;
 
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),

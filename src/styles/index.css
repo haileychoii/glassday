@@ -1,24 +1,32 @@
+
 /* ============================================================
-   [CSS ENTRY] Glassday UI Style Dependency Order
+   GLASSDAY — CSS ENTRY
+   파일: src/styles/index.css
 
-   연결: src/main.tsx에서 한 번 import하며 모든 App/Widget에 적용된다.
-   Figma 읽기 순서:
-   1) spacing/font/base token과 공통 Component primitive
-   2) AppShell/Grid/Control/Floating Window 구조
-   3) Theme Variant palette와 surface token
-   4) 각 Widget 내부 Frame
-   5) viewport responsive와 최종 safety override
+   연결: src/main.tsx
 
-   뒤에서 import된 파일이 같은 specificity의 앞 규칙을 덮으므로 순서를 바꾸면
-   시각 결과가 달라질 수 있다. 새 CSS 파일은 담당 layer에만 추가한다.
+   전체 CSS의 적용 순서를 관리한다.
+   실제 스타일은 각 담당 CSS 파일에서 정의한다.
    ============================================================ */
 
-/* 1. Global tokens and primitives */
+
+/* ============================================================
+   01. GLOBAL TOKENS
+
+   전체 앱 공통 여백, 폰트, 기본 디자인 시스템
+   ============================================================ */
+
 @import "./spacing-tokens.css";
 @import "./fonts.css";
 @import "./base.css";
 
-/* 2. Shared layout, controls, grid, and overlays */
+
+/* ============================================================
+   02. SHARED APPLICATION LAYOUT
+
+   AppShell / Sidebar / Topbar / DashboardGrid
+   ============================================================ */
+
 @import "./layout.css";
 @import "./layout-modes.css";
 @import "./controls.css";
@@ -26,7 +34,13 @@
 @import "./overlays.css";
 @import "./command.css";
 
-/* 3. Theme palettes and cross-theme surface variables */
+
+/* ============================================================
+   03. THEME DESIGN SYSTEM
+
+   테마별 색상, 배경, 테두리, 재질
+   ============================================================ */
+
 @import "./themes/pastel.css";
 @import "./themes/glass-light.css";
 @import "./themes/glass-dark.css";
@@ -34,9 +48,16 @@
 @import "./themes/mac-core.css";
 @import "./themes/pixel.css";
 @import "./themes/retro.css";
+
 @import "./theme-surfaces.css";
 
-/* 4. Widget-level styles */
+
+/* ============================================================
+   04. WIDGET COMPONENTS
+
+   각 위젯의 내부 레이아웃과 디자인
+   ============================================================ */
+
 @import "./widgets/today-focus.css";
 @import "./widgets/today.css";
 @import "./widgets/alert-center.css";
@@ -51,31 +72,26 @@
 @import "./widgets/study.css";
 @import "./widgets/timer.css";
 @import "./widgets/diary-workspace.css";
+
+/* Money / Journal 독립 위젯 창 */
 @import "./widgets/detached-widget.css";
 
-/* 5. Responsive rules and late-stage corrections */
+
+/* ============================================================
+   05. RESPONSIVE / SAFETY OVERRIDES
+
+   화면 크기에 따른 레이아웃 및 공통 보정
+   ============================================================ */
+
 @import "./responsive.css";
 @import "./overrides.css";
+
+
 /* ============================================================
-   MOBILE WEB STYLES
-   ============================================================
+   06. MOBILE WEB
 
-   mobile.css
-   → 모바일 전체 레이아웃, 헤더, 하단 내비게이션
-
-   mobile-study.css
-   → Study Planner 모바일 시간표, 버튼, 글씨
-
-   mobile-calendar.css
-   → Calendar 모바일 일정 및 상세 화면
-
-   mobile-career.css
-   → Career 모바일 지원 목록 및 상세 편집창
-
-   mobile-memo.css
-   → Memo 모바일 목록 및 편집 화면
-
-   모든 모바일 전용 CSS를 이곳에서 관리한다.
+   모바일 전체 레이아웃과 하단 내비게이션
+   각 모바일 위젯의 전용 UI
    ============================================================ */
 
 @import "./mobile.css";
@@ -87,27 +103,38 @@
 @import "./mobile-timer.css";
 
 
+/* 모바일 테마 및 Journal 전용 디자인 */
 
-/* 모바일 Pixel Desk 디자인 */
 @import "./mobile-pixel.css";
-
-/* 모든 테마의 모바일 Daily Journal 레이아웃 — 마지막에 적용 */
 @import "./mobile-journal.css";
-
-/* Mac Core iOS Cupertino + 모든 테마의 공통 여백 */
 @import "./mobile-finish.css";
 
-/* Desktop Pixel Desk uses the same visual tokens as mobile-pixel.css. */
-@import "./themes/pixel-desktop-parity.css";
 
-/* Pink Diary's final visual layer stays after desktop and mobile overrides. */
+/* ============================================================
+   07. THEME FINAL LAYER
+
+   Desktop / Mobile 테마 디자인 통일
+   ============================================================ */
+
+@import "./themes/pixel-desktop-parity.css";
 @import "./themes/pink-diary.css";
 
-/* Tauri-only host transparency and four-corner clipping must follow themes. */
+
+/* ============================================================
+   08. TAURI NATIVE WINDOW
+
+   투명 Host 및 실제 앱 창의 네 모서리 처리.
+   반드시 테마 CSS보다 뒤에서 불러온다.
+   ============================================================ */
+
 @import "./desktop-window.css";
 
-/* Final shared rounded-corner layer; Pixel Desk keeps its square Win95 chrome. */
-@import "./corner-consistency.css";
 
-/* Shared widget fit and narrow-card behavior; theme surfaces remain untouched. */
+/* ============================================================
+   09. FINAL GEOMETRY
+
+   위젯 너비, 작은 화면 대응, 모바일 공통 여백
+   ============================================================ */
+
 @import "./responsive-widgets.css";
+@import "./mobile-common.css";

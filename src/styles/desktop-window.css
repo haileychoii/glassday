@@ -1,51 +1,123 @@
-/*
- * KO: AppShell.tsx의 .tauri-app-window는 투명한 호스트이고,
- *     .app-shell-surface 하나만 설치 앱의 창 모양을 그린다. 테마 CSS 뒤에서
- *     html/body/#root의 배경을 지워야 Mac Core와 Pink Diary도 네모난 배경을 남기지 않는다.
- * EN: Imported last by index.css so theme wallpapers cannot repaint the
- *     transparent Tauri host. Browser and mobile layouts keep their backgrounds.
- */
-html.desktop-transparent[data-theme]:has(.tauri-app-window),
-html.desktop-transparent[data-theme]:has(.tauri-app-window) body,
-html.desktop-transparent[data-theme]:has(.tauri-app-window) #root,
-html.desktop-transparent[data-theme] .tauri-app-window {
-  background: transparent !important;
-  background-image: none !important;
-}
 
-/*
- * KO: 100vw/100vh는 Windows WebView의 viewport 반올림과 native 창 크기
- *     계산이 어긋날 때 아래쪽을 1px 이상 잘라 모서리가 사각처럼 보일 수 있다.
- *     호스트를 실제 WebView 영역에 고정해 네 변과 하단 모서리를 모두 보존한다.
- * EN: Pin the host to the actual WebView viewport. This avoids 100vw/100vh
- *     rounding past the native client area and clipping the bottom corners.
- */
-.tauri-app-window {
-  position: fixed;
-  inset: 0;
-  width: auto;
-  height: auto;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-}
+/* ============================================================
+   GLASSDAY — NATIVE DESKTOP WINDOW
 
-/* KO: 네 모서리는 같은 반경으로 자른다. Pixel Desk만 Win95 사각 창을 유지한다.
-   EN: Theme-specific radii apply to the one surface owned by AppShell.tsx. */
-html.desktop-transparent[data-theme] .tauri-app-window > .app-shell-surface {
+   연결 파일:
+   - AppShell.tsx
+   - layout.css
+   - src-tauri/src/lib.rs
+   - src/lib/nativeGlassEffect.ts
+
+   담당 기능:
+   - Tauri 창의 투명 배경
+   - 실제 WebView 영역에 맞춘 외곽선
+   - 네 모서리 Radius 통일
+
+   일반 웹과 모바일 웹에는 적용하지 않는다.
+   ============================================================ */
+
+
+/* 01. Tauri WebView 투명 배경 */
+
+html.desktop-transparent:has(.tauri-app-window),
+html.desktop-transparent:has(.tauri-app-window) body,
+html.desktop-transparent:has(.tauri-app-window) #root {
   width: 100%;
   height: 100%;
   min-width: 0;
   min-height: 0;
+
+  margin: 0;
+  padding: 0;
+
+  background: transparent !important;
+  background-image: none !important;
+
+  overflow: hidden;
+}
+
+
+/* 02. Native Window Host
+
+   100vw / 100vh 대신 inset: 0을 사용한다.
+   Windows 화면 배율에 따른 하단 모서리 잘림을 방지한다.
+*/
+
+html.desktop-transparent .tauri-app-window {
+  --gd-native-window-radius: 10px;
+
+  position: fixed;
+  inset: 0;
+
+  width: auto;
+  height: auto;
+
+  min-width: 0;
+  min-height: 0;
+
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  border-radius: var(--gd-native-window-radius);
+
+  background: transparent !important;
+  background-image: none !important;
+
+  box-shadow: none;
+  /* Keep the transparent WebView and its one visible shell in the same
+     compositing context. This prevents a second square-looking layer from
+     leaking around the rounded native window. */
+  isolation: isolate;
+  background-clip: padding-box;
+  overflow: hidden;
   box-sizing: border-box;
-  border-radius: var(--gd-native-window-radius, 22px) !important;
-  overflow: hidden !important;
 }
 
-html.desktop-transparent[data-theme="mac-core"] .tauri-app-window > .app-shell-surface {
-  --gd-native-window-radius: 14px;
-}
 
-html.desktop-transparent[data-theme="pixel-desk"] .tauri-app-window > .app-shell-surface {
+/* 03. Pixel Desk — Windows 95 직각 디자인 유지 */
+
+html.desktop-transparent[data-theme="pixel-desk"]
+  .tauri-app-window {
   --gd-native-window-radius: 0px;
+}
+
+
+/* 04. Actual Glassday Surface
+
+   별도의 외부 배경판 없이 Host 전체를 채운다.
+   Rust의 WINDOW_RADIUS와 동일한 반경을 사용한다.
+*/
+
+html.desktop-transparent[data-theme]
+  .tauri-app-window > .app-shell-surface {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0 !important;
+
+  max-width: 100%;
+  max-height: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  border-radius: inherit !important;
+  overflow: hidden !important;
+
+  isolation: isolate;
+  background-clip: padding-box;
+  box-sizing: border-box;
+}
+
+
+/* 05. 불필요한 외부 그림자 제거
+
+   Pixel Desk의 기존 입체 테두리는 보존한다.
+*/
+
+html.desktop-transparent[data-theme]:not([data-theme="pixel-desk"])
+  .tauri-app-window > .app-shell-surface {
+  box-shadow: none !important;
 }

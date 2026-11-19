@@ -12,7 +12,6 @@
  * - DiaryWorkspace.tsx + diary-workspace.css: editable diary paper canvas
  * - No widget data, layout coordinates, or app-icon artwork is changed here.
  */
-
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
   --pd-ink: #493440;
   --pd-muted: #8b7180;
@@ -26,7 +25,6 @@
   --pd-cream: #fffaf6;
   --pd-line: #ead3de;
   --pd-shadow: 0 12px 30px rgb(112 67 88 / 0.09);
-
   --background: 331 44% 95%;
   --card: 30 100% 99%;
   --foreground: 318 18% 23%;
@@ -534,17 +532,51 @@
 .calendar-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/calendar.png"); }
 
 /*
+ * Empty calendar safety rail
+ *
+ * EN: A saved/legacy grid can give Calendar a tall slot even when there are
+ * no events. Keep the pink card readable and content-sized in that state;
+ * populated day/week/month views keep the normal flexible layout.
+ * KO: 예전 저장 배치가 빈 Calendar에 큰 높이를 남겨도 분홍 카드가 빈
+ * 화면 전체를 차지하지 않게 한다. 일정이 있으면 기존 유연한 높이를 유지한다.
+ */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .calendar-widget:has(.calendar-empty-state) {
+  height: auto !important;
+  min-height: 220px !important;
+  align-self: start !important;
+}
+
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  .calendar-widget:has(.calendar-empty-state) .calendar-view-body {
+  flex: 0 0 auto !important;
+  min-height: 86px !important;
+}
+
+/*
+ * Topbar corner rule
+ *
+ * EN: The topbar shares its left and bottom edges with the shell/sidebar and
+ * must not look like a floating pill. Only the top-right shell corner is an
+ * outer corner in this layout, so the other three corners stay square.
+ * KO: 상단바는 Sidebar와 본문에 붙어 있으므로 내부 모서리는 각지게 두고,
+ * 실제 외곽인 오른쪽 위만 둥글게 처리한다.
+ */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.topbar, .app-topbar) {
+  border-radius: 0 18px 0 0 !important;
+}
+/*
  * KO: Tauri의 투명 네이티브 창 안에서 이 요소 하나만 바깥 모서리를 그린다.
  * EN: AppShell.tsx owns this surface. Avoid a transparent shell exposing
  * rectangular child panels at the rounded edge.
  */
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .tauri-app-window > .app-shell-surface {
+  /* 외곽 Radius, clipping 및 외부 그림자는 desktop-window.css에서 관리한다.
+     Pink Diary는 실제 앱 표면의 색상과 테두리만 정의한다. */
   background: #f8edf3 !important;
   border: 1px solid #e7cfd9 !important;
-  border-radius: 22px !important;
-  overflow: hidden !important;
-  box-shadow: 0 12px 30px rgb(92 52 72 / 0.12) !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)

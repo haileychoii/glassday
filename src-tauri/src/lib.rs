@@ -6,28 +6,19 @@
  * ============================================================
  *
  * [역할]
- * - Tauri 애플리케이션 실행
- * - Google OAuth / Deep Link 연결
- * - 중복 애플리케이션 실행 방지
- * - Windows Native Window 외곽선 관리
- * - Window Resize / DPI 변경 대응
+ * 1. Tauri 애플리케이션 실행
+ * 2. Google OAuth / Deep Link 연결
+ * 3. 애플리케이션 중복 실행 방지
+ * 4. Windows 창 외곽선 및 모서리 관리
+ * 5. 창 크기 및 DPI 변경 대응
  *
  * [연결 파일]
  * - src-tauri/Cargo.toml
  * - src-tauri/tauri.conf.json
+ * - src-tauri/capabilities/default.json
  * - src/lib/nativeGlassEffect.ts
  * - src/styles/desktop-window.css
  * - src/components/layout/AppShell.tsx
- *
- * [담당 영역]
- * Rust:
- *   실제 운영체제 Window의 외곽선
- *
- * TypeScript:
- *   Native Acrylic 및 테마 변경
- *
- * CSS:
- *   WebView 내부의 앱 디자인
  *
  * ============================================================
  */
@@ -38,9 +29,9 @@ use tauri::Manager;
 /* ============================================================
    01. WINDOWS NATIVE API
 
-   Windows에서만 운영체제 창 관련 API를 사용한다.
-   다른 운영체제의 빌드에는 포함하지 않는다.
-============================================================ */
+   Windows에서만 창의 실제 표시 영역을 제어한다.
+   다른 운영체제에서는 Windows API를 사용하지 않는다.
+   ============================================================ */
 
 #[cfg(target_os = "windows")]
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -57,18 +48,17 @@ use windows::Win32::Graphics::Gdi::{
 
 
 /* ============================================================
-   02. NATIVE WINDOW CONSTANTS
+   02. WINDOW GEOMETRY CONSTANTS
 
-   desktop-window.css와 동일한 모서리 값을 사용한다.
+   desktop-window.css의 외곽 Radius와 동일하게 유지한다.
 
    일반 테마: 10px
    Pixel Desk: 0px
-============================================================ */
+   ============================================================ */
 
 #[cfg(target_os = "windows")]
 const WINDOW_RADIUS: f64 = 10.0;
 
-// 현재 Windows 창의 테마별 외곽선 상태
 #[cfg(target_os = "windows")]
 static SQUARE_WINDOW: AtomicBool = AtomicBool::new(false);
 
@@ -76,14 +66,11 @@ static SQUARE_WINDOW: AtomicBool = AtomicBool::new(false);
 /* ============================================================
    03. APPLY NATIVE WINDOW REGION
 
-   실제 Windows 창의 표시 영역을 지정한다.
+   CSS에서 앱의 모서리만 둥글게 처리하면
+   Windows의 실제 창 배경이 바깥에 남을 수 있다.
 
-   CSS에서만 모서리를 둥글게 처리할 경우
-   Windows Acrylic 배경이 바깥쪽에 남을 수 있다.
-
-   이 함수에서는 운영체제의 Window Region 자체를
-   앱의 외곽 디자인과 맞춘다.
-============================================================ */
+   운영체제의 창 경계를 CSS와 동일하게 맞춰준다.
+   ============================================================ */
 
 #[cfg(target_os = "windows")]
 fn apply_native_window_region(
@@ -92,51 +79,32 @@ fn apply_native_window_region(
     scale_factor: f64,
 ) -> Result<(), String> {
 
-    // 최소화 등으로 유효한 창 크기가 없는 경우 무시
+    // 유효하지 않은 창 크기는 무시한다.
     if size.width == 0 || size.height == 0 {
         return Ok(());
     }
 
-    /* --------------------------------------------------------
-       A. PIXEL DESK
-
-       기존 둥근 Region을 제거하여 직각 창으로 복원한다.
-    -------------------------------------------------------- */
-
+    // Pixel Desk에서는 둥근 창 영역을 제거한다.
     if SQUARE_WINDOW.load(Ordering::Relaxed) {
-
         let result = unsafe {
             SetWindowRgn(hwnd, None, true)
         };
 
-        if result == 0 {
-            return Err(
-                "Failed to restore square window".into()
-            );
-        }
-
-        return Ok(());
+        return if result != 0 {
+            Ok(())
+        } else {
+            Err("Failed to restore square window".into())
+        };
     }
 
+    // CSS 반지름을 Windows 물리 픽셀 단위의 지름으로 변환한다.
+    // Windows의 디스플레이 배율도 함께 반영한다.
+    let diameter = (WINDOW_RADIUS * 2.0 * scale_factor)
+        .round()
+        .max(2.0) as i32;
 
-    /* --------------------------------------------------------
-       B. ROUNDED WINDOW
-
-       CSS px을 Windows 실제 물리 픽셀로 변환한다.
-
-       CreateRoundRectRgn은 반지름이 아니라
-       모서리 타원의 폭과 높이를 사용한다.
-    -------------------------------------------------------- */
-
-    let diameter = (
-        WINDOW_RADIUS * 2.0 * scale_factor
-    )
-    .round()
-    .max(2.0) as i32;
-
-
+    // 둥근 사각형 형태의 실제 창 영역을 생성한다.
     let region = unsafe {
-
         CreateRoundRectRgn(
             0,
             0,
@@ -147,36 +115,20 @@ fn apply_native_window_region(
         )
     };
 
-
-    // 유효한 Region이 생성되었는지 확인
     if region.is_invalid() {
-
         return Err(
             "Failed to create native window region".into()
         );
     }
 
-
-    /* --------------------------------------------------------
-       C. APPLY REGION
-
-       적용에 성공하면 Windows가 Region의 소유권을 가진다.
-
-       실패한 경우에만 직접 메모리를 해제한다.
-    -------------------------------------------------------- */
-
+    // 생성한 영역을 Windows 창에 적용한다.
     let result = unsafe {
-
-        SetWindowRgn(
-            hwnd,
-            Some(region),
-            true,
-        )
+        SetWindowRgn(hwnd, Some(region), true)
     };
 
-
+    // 성공하면 Windows가 Region을 관리한다.
+    // 실패한 경우에만 직접 메모리를 해제한다.
     if result == 0 {
-
         let _ = unsafe {
             DeleteObject(region.into())
         };
@@ -191,16 +143,11 @@ fn apply_native_window_region(
 
 
 /* ============================================================
-   04. UPDATE NATIVE WINDOW SHAPE
+   04. UPDATE WINDOW REGION
 
-   현재 실제 창의 크기 및 DPI 정보를 읽어
-   Window Region을 다시 계산한다.
-
-   연결:
-   - 앱 최초 실행
-   - 테마 변경
-   - Native Window Resize
-============================================================ */
+   실제 창의 크기와 디스플레이 배율을 읽어
+   현재 창의 외곽선을 다시 계산한다.
+   ============================================================ */
 
 #[cfg(target_os = "windows")]
 fn update_native_window_region(
@@ -232,12 +179,13 @@ fn update_native_window_region(
 
    연결: src/lib/nativeGlassEffect.ts
 
-   TypeScript에서 현재 선택한 테마에 따라
-   square 값을 전달한다.
+   테마 변경 시 TypeScript에서 호출한다.
 
-   true  → Pixel Desk
-   false → 일반 둥근 창
-============================================================ */
+   square = true  → Pixel Desk
+   square = false → 일반 테마
+
+   Money 및 Journal 독립 창에는 적용하지 않는다.
+   ============================================================ */
 
 #[tauri::command]
 fn set_native_window_shape(
@@ -247,7 +195,7 @@ fn set_native_window_shape(
 
     #[cfg(target_os = "windows")]
     {
-        // 메인 Dashboard 창만 변경한다.
+        // 기본 Dashboard 창만 제어한다.
         if window.label() != "main" {
             return Ok(());
         }
@@ -257,12 +205,10 @@ fn set_native_window_shape(
             Ordering::Relaxed,
         );
 
-        return update_native_window_region(
-            &window
-        );
+        update_native_window_region(&window)
     }
 
-    // 다른 운영체제에서는 Windows 전용 작업을 수행하지 않는다.
+    // Windows 이외의 운영체제에서는 실행하지 않는다.
     #[cfg(not(target_os = "windows"))]
     {
         let _ = (window, square);
@@ -275,8 +221,8 @@ fn set_native_window_shape(
 /* ============================================================
    06. APPLICATION ENTRY POINT
 
-   앱 시작 및 기존 플러그인 등록.
-============================================================ */
+   Glassday 앱 실행 및 플러그인 등록
+   ============================================================ */
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -287,9 +233,9 @@ pub fn run() {
     /* --------------------------------------------------------
        A. SINGLE INSTANCE
 
-       Google 인증 후 새 창을 만들지 않고
-       이미 실행 중인 Glassday 창에 연결한다.
-    -------------------------------------------------------- */
+       Google OAuth 인증이 끝나면 새로운 창을 만들지 않고
+       이미 실행 중인 Glassday 창으로 돌아온다.
+       -------------------------------------------------------- */
 
     #[cfg(desktop)]
     let builder = builder.plugin(
@@ -300,7 +246,6 @@ pub fn run() {
                     app.get_webview_window("main")
                 {
                     let _ = window.show();
-
                     let _ = window.set_focus();
                 }
             },
@@ -311,27 +256,24 @@ pub fn run() {
     builder
 
         /* ----------------------------------------------------
-           B. EXTERNAL LINKS / GOOGLE LOGIN
+           B. PLUGINS
 
-           기존 인증 및 외부 브라우저 연결 유지.
-        ---------------------------------------------------- */
+           외부 링크 및 Google 로그인 연동
+           ---------------------------------------------------- */
 
-        .plugin(
-            tauri_plugin_opener::init()
-        )
-
-        .plugin(
-            tauri_plugin_deep_link::init()
-        )
+        .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_deep_link::init())
 
 
         /* ----------------------------------------------------
-           C. INITIAL APPLICATION SETUP
-        ---------------------------------------------------- */
+           C. INITIAL SETUP
+
+           앱 시작 시 실행되는 초기 설정
+           ---------------------------------------------------- */
 
         .setup(|app| {
 
-            // 개발 환경의 Windows Deep Link 등록
+            // Windows 개발 환경의 Deep Link 등록
             #[cfg(all(debug_assertions, windows))]
             {
                 use tauri_plugin_deep_link::DeepLinkExt;
@@ -339,34 +281,23 @@ pub fn run() {
                 app.deep_link().register_all()?;
             }
 
-
-            // 개발 로그 활성화
+            // 개발 환경 로그 활성화
             if cfg!(debug_assertions) {
-
                 app.handle().plugin(
-
                     tauri_plugin_log::Builder::default()
-
-                        .level(
-                            log::LevelFilter::Info
-                        )
-
+                        .level(log::LevelFilter::Info)
                         .build(),
-
                 )?;
             }
 
-
-            // 앱 최초 실행 시 창 외곽선을 적용한다.
+            // Windows 기본 창 외곽선 적용
             #[cfg(target_os = "windows")]
             {
                 if let Some(window) =
                     app.get_webview_window("main")
                 {
                     if let Err(error) =
-                        update_native_window_region(
-                            &window
-                        )
+                        update_native_window_region(&window)
                     {
                         log::warn!(
                             "Native window setup failed: {error}"
@@ -382,12 +313,11 @@ pub fn run() {
         /* ----------------------------------------------------
            D. WINDOW RESIZE / DPI CHANGE
 
-           창의 크기 또는 모니터 화면 배율이 변경되면
-           기존 Window Region을 다시 계산한다.
+           실제 창의 크기 또는 디스플레이 배율이 변경되면
+           둥근 창 영역을 다시 계산한다.
 
-           이 부분이 없으면 창을 확대했을 때
-           새로운 영역이 제대로 표시되지 않을 수 있다.
-        ---------------------------------------------------- */
+           독립 Money / Journal 창에는 적용하지 않는다.
+           ---------------------------------------------------- */
 
         .on_window_event(|window, event| {
 
@@ -400,7 +330,6 @@ pub fn run() {
                 match event {
 
                     tauri::WindowEvent::Resized(_)
-
                     | tauri::WindowEvent::ScaleFactorChanged {
                         ..
                     } => {
@@ -422,7 +351,6 @@ pub fn run() {
                                     scale_factor,
                                 )
                             {
-
                                 log::warn!(
                                     "Window region update failed: {error}"
                                 );
@@ -442,8 +370,8 @@ pub fn run() {
         /* ----------------------------------------------------
            E. FRONTEND COMMAND REGISTRATION
 
-           TypeScript의 invoke()와 Rust 함수를 연결한다.
-        ---------------------------------------------------- */
+           TypeScript와 Rust의 기능을 연결한다.
+           ---------------------------------------------------- */
 
         .invoke_handler(
             tauri::generate_handler![
@@ -454,13 +382,8 @@ pub fn run() {
 
         /* ----------------------------------------------------
            F. RUN APPLICATION
-        ---------------------------------------------------- */
+           ---------------------------------------------------- */
 
-        .run(
-            tauri::generate_context!()
-        )
-
-        .expect(
-            "error while running tauri application"
-        );
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }

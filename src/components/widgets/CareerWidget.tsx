@@ -50,6 +50,7 @@ import type {
 
 import { useDashboardData } from "../../context/DashboardDataContext";
 import { prepareLocalImageDataUrl } from "../../lib/localImage";
+import { openExternalUrl } from "../../lib/openExternalUrl";
 import type {
   CareerImageAttachment,
   CareerItem,
@@ -1027,15 +1028,45 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
         </div>
 
         <div className="career-list-meta">
-          <span className={`career-status-pill status-${item.status.toLowerCase()}`}>
-            {item.status}
-          </span>
+          {/*
+           * Inline status control: the card remains clickable for opening the
+           * detail window, but this select stops propagation so status can be
+           * changed directly from the list/board view.
+           * 한국어: 카드 전체는 상세 창을 열고, 상태 select만 즉시 상태를
+           * 바꾸도록 이벤트 전파를 막는다.
+           */}
+          <select
+            value={item.status}
+            onClick={(event) => event.stopPropagation()}
+            onChange={(event) => {
+              event.stopPropagation();
+              updateCareerApplication(item.id, {
+                status: event.target.value as CareerStatus,
+              });
+            }}
+            className={`career-status-select status-${item.status.toLowerCase()}`}
+            aria-label={`${item.company || "Career"} status`}
+          >
+            {statusOptions.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
 
           {item.postingUrl && (
-            <span>
+            <button
+              type="button"
+              className="career-posting-link"
+              title={item.postingUrl}
+              onClick={(event) => {
+                event.stopPropagation();
+                void openExternalUrl(item.postingUrl);
+              }}
+            >
               <Link2 className="w-3 h-3" />
               Posting
-            </span>
+            </button>
           )}
 
           <span>
@@ -1249,14 +1280,9 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                   {selectedItem.postingUrl && (
                     <button
                       type="button"
-                      onClick={() =>
-                        window.open(
-                          selectedItem.postingUrl,
-                          "_blank",
-                          "noopener,noreferrer"
-                        )
-                      }
+                      onClick={() => void openExternalUrl(selectedItem.postingUrl)}
                       className="career-small-button"
+                      title={selectedItem.postingUrl}
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       Open Posting

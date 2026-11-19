@@ -7,13 +7,67 @@
  * own shape. This final layer resolves theme overrides that rounded only the
  * top corners or reset a surface to square.
  */
-:root:not([data-theme="pixel-desk"]):not(.theme-pixel-desk) {
-  --gd-corner-surface: 16px;
-  --gd-corner-control: 10px;
-  --gd-corner-tile: 12px;
+:is(html, body):not([data-theme="pixel-desk"]):not(.theme-pixel-desk):not(.pixel-desk):not(.theme-pixel) {
+  /* Moderate shared radii: readable glass surfaces without oversized pills. */
+  --gd-corner-surface: 12px;
+  --gd-corner-control: 8px;
+  --gd-corner-tile: 10px;
 }
 
-:root:not([data-theme="pixel-desk"]):not(.theme-pixel-desk)
+/*
+ * Pixel Desk keeps its bevelled language, but a tiny radius prevents the
+ * current cards from looking unintentionally razor-sharp. This deliberately
+ * stays much smaller than the glass/pastel system above.
+ * 한국어: Pixel Desk의 각진 느낌은 유지하되 카드와 버튼이 깨져 보이지
+ * 않도록 아주 작은 라운딩만 적용한다.
+ */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) {
+  --gd-corner-surface: 4px;
+  --gd-corner-control: 3px;
+  --gd-corner-tile: 4px;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) :is(.glass-card, .widget-frame, .floating-window, .settings-modal-window,
+      .settings-window, .settings-panel, .career-application-card,
+      .career-board-card, .calendar-event-item, .study-subject-card,
+      .diary-note-block, .mobile-widget-slot) {
+  border-radius: var(--gd-corner-surface) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) :is(.glass-button, .settings-section-tab, .theme-segment-button,
+      .calendar-nav-button, .calendar-view-button, .career-small-button,
+      .career-status-select, input, select, textarea) {
+  border-radius: var(--gd-corner-control) !important;
+}
+
+:is(html, body):not([data-theme="pixel-desk"]):not(.theme-pixel-desk):not(.pixel-desk):not(.theme-pixel)
   :is(.glass-card, .widget-frame, .floating-window,
       .settings-modal-window, .settings-window, .settings-panel,
       .memo-window, .memo-floating-window, .calendar-floating-window,
@@ -21,14 +75,14 @@
   border-radius: var(--gd-corner-surface) !important;
 }
 
-:root:not([data-theme="pixel-desk"]):not(.theme-pixel-desk)
+:is(html, body):not([data-theme="pixel-desk"]):not(.theme-pixel-desk):not(.pixel-desk):not(.theme-pixel)
   :is(.glass-card-header, .widget-card-header, .widget-frame__header,
       .floating-window-titlebar, .settings-modal-header,
       .settings-header, .settings-titlebar, .memo-floating-window-titlebar) {
   border-radius: var(--gd-corner-control) !important;
 }
 
-:root:not([data-theme="pixel-desk"]):not(.theme-pixel-desk)
+:is(html, body):not([data-theme="pixel-desk"]):not(.theme-pixel-desk):not(.pixel-desk):not(.theme-pixel)
   :is(.settings-theme-card, .settings-action-card, .settings-section,
       .settings-card, .career-application-card, .career-board-card,
       .calendar-event-item, .study-subject-card, .diary-note-block,
@@ -36,7 +90,7 @@
   border-radius: var(--gd-corner-tile) !important;
 }
 
-:root:not([data-theme="pixel-desk"]):not(.theme-pixel-desk)
+:is(html, body):not([data-theme="pixel-desk"]):not(.theme-pixel-desk):not(.pixel-desk):not(.theme-pixel)
   :is(.glass-button, .settings-section-tab, .theme-segment-button,
       .calendar-nav-button, .calendar-view-button, .career-small-button,
       .career-status-select, .settings-theme-card, input, select, textarea) {

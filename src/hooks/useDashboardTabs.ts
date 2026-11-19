@@ -6,50 +6,35 @@
  * ============================================================
  *
  * [역할]
- * - Workspace 탭 목록 및 현재 활성 탭 관리
+ * - Workspace 목록 및 활성 탭 관리
  * - 위젯 추가 / 삭제
  * - 위젯 위치 및 크기 저장
  * - Wide / Laptop 레이아웃 독립 관리
- * - 기존 사용자 저장 데이터 복원 및 검증
+ * - 기존 사용자 데이터 복원
  *
  * [연결 파일]
- *
- * App.tsx
- * ├─ AppShell.tsx
- * │  ├─ Sidebar.tsx
- * │  └─ Topbar.tsx
- * └─ DashboardGrid.tsx
- *    └─ useDashboardTabs.ts
- *       └─ useLocalStorage.ts
- *
- * [관련 파일]
- * - src/constants/dashboardTabs.ts
- * - src/constants/dashboardStorage.ts
- * - src/components/grid/gridDefaults.ts
- * - src/types/workspace.ts
+ * - App.tsx
+ * - DashboardGrid.tsx
+ * - WorkspaceTabsNav.tsx
+ * - useLocalStorage.ts
+ * - constants/dashboardTabs.ts
+ * - constants/dashboardStorage.ts
+ * - types/workspace.ts
  *
  * [저장 구조]
  * - glassday.dashboard.tabs.v1
  * - glassday.dashboard.activeTab.v1
  *
- * [주의]
- * - Wide와 Laptop은 위젯 데이터를 공유한다.
- * - 위젯 배치 좌표는 각각 독립적으로 저장한다.
- * - 모바일 위젯 배치는 useMobileWidgetLayout에서 관리한다.
- * - 데이터를 저장할 때는 항상 최신 상태를 참조한다.
- *
  * [Figma Mapping]
  * - DashboardTab: Workspace Navigation Item
  * - DashboardModeLayouts: Layout Variant
  * - GridLayoutItem: Widget Instance Frame
+ *
+ * 모바일 위젯 배치는 useMobileWidgetLayout에서 별도 관리한다.
  * ============================================================
  */
 
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-} from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 import { useLocalStorage } from "./useLocalStorage";
 
@@ -58,9 +43,7 @@ import {
   DASHBOARD_STORAGE_SCHEMA_VERSION,
 } from "../constants/dashboardStorage";
 
-import {
-  defaultDashboardTabs,
-} from "../constants/dashboardTabs";
+import { defaultDashboardTabs } from "../constants/dashboardTabs";
 
 import type {
   DashboardLayoutMode,
@@ -75,28 +58,73 @@ import type {
 /* ============================================================
    01. STORAGE / GRID CONSTANTS
 
-   PC 및 Tauri 위젯 배치에 사용하는 공통 설정.
-
-   연결:
-   - DashboardGrid.tsx
-   - useLocalStorage.ts
-============================================================ */
+   기존 저장 Key와 Grid Column 수를 변경하지 않는다.
+   ============================================================ */
 
 const TABS_KEY = "glassday.dashboard.tabs.v1";
 const ACTIVE_TAB_KEY = "glassday.dashboard.activeTab.v1";
 
-// DashboardGrid에서 사용하는 전체 열 개수
 const GRID_COLUMNS = 16;
 
 
 /* ============================================================
-   02. EMPTY / CLONE LAYOUTS
+   02. COMMON UTILITIES
+   ============================================================ */
 
-   Wide와 Laptop 레이아웃을 서로 독립적으로 관리한다.
+// 새로운 Workspace의 고유 ID
+const createId = () => {
+  if (
+    typeof crypto !== "undefined" &&
+    "randomUUID" in crypto
+  ) {
+    return crypto.randomUUID();
+  }
 
-   같은 배열이나 객체를 공유하여 한쪽의 변경이
-   다른 쪽에 영향을 주는 것을 방지한다.
-============================================================ */
+  return `tab-${Date.now()}-${Math.random()
+    .toString(16)
+    .slice(2)}`;
+};
+
+
+// 일반 객체 확인
+const isRecord = (
+  value: unknown
+): value is Record<string, unknown> => {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value)
+  );
+};
+
+
+// 안전한 정수 변환
+const toSafeInteger = (
+  value: unknown,
+  fallback: number
+): number => {
+  return (
+    typeof value === "number" &&
+    Number.isFinite(value)
+  )
+    ? Math.round(value)
+    : fallback;
+};
+
+
+// 값이 허용 범위를 넘지 않도록 제한
+const clamp = (
+  value: number,
+  min: number,
+  max: number
+): number => Math.max(min, Math.min(value, max));
+
+
+/* ============================================================
+   03. EMPTY / CLONE LAYOUTS
+
+   Wide와 Laptop이 동일한 배열을 공유하지 않도록 한다.
+   ============================================================ */
 
 const emptyLayouts = (): Layouts => ({
   lg: [],
@@ -119,16 +147,13 @@ const createModeLayouts = (
 
 
 /* ============================================================
-   03. FALLBACK HOME TAB
+   04. FALLBACK HOME TAB
 
-   저장된 Workspace 데이터가 없거나 비어 있을 때
-   사용하는 안전한 기본 Home 화면.
-
-   기존 기본 위젯 및 좌표를 유지한다.
-============================================================ */
+   저장된 Workspace가 없거나 유효하지 않은 경우 사용한다.
+   기존 기본 위젯 및 배치 좌표를 유지한다.
+   ============================================================ */
 
 const fallbackLayouts: Layouts = {
-
   lg: [
     { i: "today", x: 0, y: 0, w: 4, h: 4 },
     { i: "calendar", x: 4, y: 0, w: 6, h: 5 },
@@ -149,7 +174,6 @@ const fallbackLayouts: Layouts = {
     { i: "memo", x: 0, y: 9, w: 16, h: 5 },
     { i: "study", x: 0, y: 14, w: 16, h: 5 },
   ],
-
 };
 
 const fallbackTab: DashboardTab = {
@@ -171,90 +195,31 @@ const fallbackTab: DashboardTab = {
 
 
 /* ============================================================
-   04. COMMON UTILITIES
+   05. STORED GRID ITEM TYPE
 
-   ID 생성 및 저장 데이터 검증.
-============================================================ */
+   연결: types/workspace.ts
 
-const createId = () => {
-  if (
-    typeof crypto !== "undefined" &&
-    "randomUUID" in crypto
-  ) {
-    return crypto.randomUUID();
-  }
+   과거 Infinity 좌표가 JSON 저장 중 null로 변환된
+   데이터까지 처리할 수 있도록 별도 타입을 정의한다.
 
-  return `tab-${Date.now()}-${Math.random()
-    .toString(16)
-    .slice(2)}`;
+   GridLayoutItem에 index signature가 있으므로
+   Omit 대신 필수 속성을 명시적으로 지정한다.
+   ============================================================ */
+
+type StoredGridLayoutItem = {
+  i: string;
+  x: number;
+  y: number | null;
+  w: number;
+  h: number;
+
+  [key: string]: unknown;
 };
 
-const isRecord = (
-  value: unknown
-): value is Record<string, unknown> => {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    !Array.isArray(value)
-  );
-};
-
-/**
- * 숫자를 유한한 정수로 변환한다.
- *
- * 잘못된 좌표가 저장되어 있을 경우 fallback을 사용한다.
- */
-const toSafeInteger = (
-  value: unknown,
-  fallback: number
-): number => {
-
-  if (
-    typeof value !== "number" ||
-    !Number.isFinite(value)
-  ) {
-    return fallback;
-  }
-
-  return Math.round(value);
-};
-
-/**
- * 숫자가 지정한 범위를 벗어나지 않도록 제한한다.
- */
-const clamp = (
-  value: number,
-  min: number,
-  max: number
-): number => {
-  return Math.max(min, Math.min(value, max));
-};
-
-
-/* ============================================================
-   05. GRID ITEM VALIDATION
-
-   위젯 하나의 위치 및 크기 데이터 검증.
-
-   i : Widget ID
-   x : 가로 시작 위치
-   y : 세로 시작 위치
-   w : 가로 크기
-   h : 세로 크기
-
-   예전 데이터에서 Infinity가 JSON 저장 과정 중
-   null로 변환된 경우도 복구할 수 있도록 처리한다.
-============================================================ */
-
-type StoredGridLayoutItem =
-  Omit<GridLayoutItem, "y"> & {
-    y: number | null;
-  };
 
 const isLayoutItem = (
   value: unknown
 ): value is StoredGridLayoutItem => {
-
   if (!isRecord(value)) return false;
 
   return (
@@ -273,46 +238,40 @@ const isLayoutItem = (
 /* ============================================================
    06. GRID ITEM NORMALIZATION
 
-   저장 또는 복원 시 위젯이 Grid 가로 경계를
-   벗어나지 않도록 기본 좌표를 보정한다.
+   위젯 하나의 위치 및 크기를 검증한다.
 
-   필수 조건:
-   - x >= 0
-   - y >= 0
-   - w >= 1
-   - h >= 1
-   - x + w <= GRID_COLUMNS
+   i : Widget ID
+   x : 가로 시작 위치
+   y : 세로 시작 위치
+   w : 가로 크기
+   h : 세로 크기
 
-   위젯별 최소 크기 및 실제 Resize 동작은
-   DashboardGrid.tsx에서 관리한다.
-============================================================ */
+   반드시 x + w <= GRID_COLUMNS를 만족해야 한다.
+   ============================================================ */
 
 const normalizeLayoutItem = (
   item: StoredGridLayoutItem,
   fallbackY = 0
 ): GridLayoutItem => {
 
-  // 위젯의 가로 크기는 최대 16칸
   const safeW = clamp(
     toSafeInteger(item.w, 4),
     1,
     GRID_COLUMNS
   );
 
-  // 위젯의 세로 크기는 최소 1칸
   const safeH = Math.max(
     1,
     toSafeInteger(item.h, 4)
   );
 
-  // 위젯 오른쪽 끝이 16-column 경계를 넘지 않도록 제한
+  // 위젯의 오른쪽 끝이 Grid 경계를 넘지 않도록 한다.
   const safeX = clamp(
     toSafeInteger(item.x, 0),
     0,
     GRID_COLUMNS - safeW
   );
 
-  // Infinity 또는 null 좌표는 지정된 fallback 위치로 복구
   const safeY = Math.max(
     0,
     toSafeInteger(item.y, fallbackY)
@@ -320,7 +279,6 @@ const normalizeLayoutItem = (
 
   return {
     ...item,
-
     i: item.i,
 
     x: safeX,
@@ -335,40 +293,31 @@ const normalizeLayoutItem = (
 /* ============================================================
    07. GRID LAYOUT ARRAY NORMALIZATION
 
-   하나의 breakpoint에 저장된 위젯 목록을 검증한다.
-
    - 잘못된 좌표 보정
    - 중복 위젯 ID 제거
-   - 유효하지 않은 세로 좌표 복구
-
-   정상적인 위젯의 기존 위치와 크기는 유지한다.
-============================================================ */
+   - 무효한 y 좌표는 기존 위젯 아래로 이동
+   ============================================================ */
 
 const normalizeLayoutArray = (
   value: unknown
 ): GridLayoutItem[] => {
-
   if (!Array.isArray(value)) return [];
-
-  const validItems = value.filter(isLayoutItem);
 
   const seenIds = new Set<string>();
 
-  const uniqueItems = validItems.filter((item) => {
-    if (seenIds.has(item.i)) return false;
+  const uniqueItems = value
+    .filter(isLayoutItem)
+    .filter((item) => {
 
-    seenIds.add(item.i);
+      if (seenIds.has(item.i)) {
+        return false;
+      }
 
-    return true;
-  });
+      seenIds.add(item.i);
+      return true;
+    });
 
-  /**
-   * 정상적인 y 좌표를 가진 위젯 중
-   * 가장 아래에 위치한 위젯의 끝부분을 계산한다.
-   *
-   * 비정상적인 y 좌표를 가진 위젯은
-   * 이 위치 아래로 이동시킨다.
-   */
+  // 정상 좌표를 가진 위젯 중 가장 아래쪽 위치
   let nextY = uniqueItems.reduce((bottom, item) => {
 
     if (
@@ -389,11 +338,10 @@ const normalizeLayoutArray = (
 
   return uniqueItems.map((item) => {
 
-    const hasValidY =
+    if (
       typeof item.y === "number" &&
-      Number.isFinite(item.y);
-
-    if (hasValidY) {
+      Number.isFinite(item.y)
+    ) {
       return normalizeLayoutItem(item);
     }
 
@@ -412,20 +360,12 @@ const normalizeLayoutArray = (
 /* ============================================================
    08. RESPONSIVE LAYOUT NORMALIZATION
 
-   화면 크기에 따라 저장된 3가지 배치를 검증한다.
-
-   lg: Large
-   md: Medium
-   sm: Small
-
-   Tauri에서도 실제 Dashboard 너비에 따라
-   해당 breakpoint의 좌표를 사용한다.
-============================================================ */
+   lg / md / sm별 저장 좌표를 검증한다.
+   ============================================================ */
 
 const normalizeLayouts = (
   layouts: unknown
 ): Layouts => {
-
   if (!isRecord(layouts)) {
     return emptyLayouts();
   }
@@ -439,65 +379,9 @@ const normalizeLayouts = (
 
 
 /* ============================================================
-   09. MERGE SAVED LAYOUTS WITH DEFAULTS
+   09. WIDE / LAPTOP STORAGE COMPATIBILITY
 
-   앱 업데이트로 새로운 기본 위젯이 추가된 경우
-   기존 사용자 레이아웃에 누락 항목만 추가한다.
-
-   사용자가 직접 설정한 위치 및 크기는 유지한다.
-============================================================ */
-
-const mergeLayoutArray = (
-  savedItems: GridLayoutItem[],
-  defaultItems: GridLayoutItem[]
-): GridLayoutItem[] => {
-
-  const savedIds = new Set(
-    savedItems.map((item) => item.i)
-  );
-
-  const missingDefaultItems = defaultItems
-    .filter((item) => !savedIds.has(item.i))
-    .map((item) => ({ ...item }));
-
-  return normalizeLayoutArray([
-    ...savedItems,
-    ...missingDefaultItems,
-  ]);
-};
-
-const mergeLayoutsWithDefaults = (
-  savedLayouts: DashboardModeLayouts,
-  defaultLayouts: DashboardModeLayouts
-): DashboardModeLayouts => {
-
-  const mergeMode = (
-    mode: DashboardLayoutMode
-  ): Layouts => {
-
-    const saved = savedLayouts[mode];
-    const defaults = defaultLayouts[mode];
-
-    return {
-      lg: mergeLayoutArray(saved.lg, defaults.lg),
-      md: mergeLayoutArray(saved.md, defaults.md),
-      sm: mergeLayoutArray(saved.sm, defaults.sm),
-    };
-  };
-
-  return {
-    wide: mergeMode("wide"),
-    laptop: mergeMode("laptop"),
-  };
-};
-
-
-/* ============================================================
-   10. WIDE / LAPTOP LAYOUT NORMALIZATION
-
-   기존 저장 구조와의 호환성을 유지한다.
-
-   과거 버전:
+   이전 버전:
    layouts = { lg, md, sm }
 
    현재 버전:
@@ -506,13 +390,12 @@ const mergeLayoutsWithDefaults = (
      laptop: { lg, md, sm }
    }
 
-   이전 버전의 데이터도 정상적으로 복원한다.
-============================================================ */
+   이전 사용자 데이터도 정상적으로 복원한다.
+   ============================================================ */
 
 const normalizeModeLayouts = (
   value: unknown
 ): DashboardModeLayouts => {
-
   if (!isRecord(value)) {
     return {
       wide: emptyLayouts(),
@@ -524,50 +407,103 @@ const normalizeModeLayouts = (
     "wide" in value || "laptop" in value;
 
   if (hasModeShape) {
+    const wide = normalizeLayouts(value.wide);
+    const laptop = normalizeLayouts(value.laptop);
 
-    const wideLayouts = normalizeLayouts(value.wide);
-
-    const laptopLayouts = normalizeLayouts(
-      value.laptop
-    );
-
+    // 기존 Laptop 데이터가 없으면 Wide에서 복원한다.
     const hasLaptopLayouts =
-      laptopLayouts.lg.length > 0 ||
-      laptopLayouts.md.length > 0 ||
-      laptopLayouts.sm.length > 0;
+      laptop.lg.length > 0 ||
+      laptop.md.length > 0 ||
+      laptop.sm.length > 0;
 
     return {
-      wide: wideLayouts,
-
+      wide,
       laptop: hasLaptopLayouts
-        ? laptopLayouts
-        : cloneLayouts(wideLayouts),
+        ? laptop
+        : cloneLayouts(wide),
     };
   }
 
-  // 이전 버전의 단일 레이아웃 구조 복원
-  const sharedLayouts = normalizeLayouts(value);
+  // 이전 버전의 단일 Layout 구조
+  return createModeLayouts(
+    normalizeLayouts(value)
+  );
+};
 
-  return createModeLayouts(sharedLayouts);
+
+/* ============================================================
+   10. MERGE SAVED LAYOUTS WITH DEFAULTS
+
+   저장 Schema가 업데이트되었을 때 사용한다.
+
+   새로운 기본 위젯만 보충하고,
+   기존 사용자 위젯의 위치와 크기는 유지한다.
+   ============================================================ */
+
+const mergeLayoutArray = (
+  savedItems: GridLayoutItem[],
+  defaultItems: GridLayoutItem[]
+): GridLayoutItem[] => {
+
+  const savedIds = new Set(
+    savedItems.map((item) => item.i)
+  );
+
+  const missingItems = defaultItems
+    .filter((item) => !savedIds.has(item.i))
+    .map((item) => ({ ...item }));
+
+  return normalizeLayoutArray([
+    ...savedItems,
+    ...missingItems,
+  ]);
+};
+
+
+const mergeLayoutsWithDefaults = (
+  saved: DashboardModeLayouts,
+  defaults: DashboardModeLayouts
+): DashboardModeLayouts => {
+
+  const mergeMode = (
+    mode: DashboardLayoutMode
+  ): Layouts => ({
+    lg: mergeLayoutArray(
+      saved[mode].lg,
+      defaults[mode].lg
+    ),
+
+    md: mergeLayoutArray(
+      saved[mode].md,
+      defaults[mode].md
+    ),
+
+    sm: mergeLayoutArray(
+      saved[mode].sm,
+      defaults[mode].sm
+    ),
+  });
+
+  return {
+    wide: mergeMode("wide"),
+    laptop: mergeMode("laptop"),
+  };
 };
 
 
 /* ============================================================
    11. WORKSPACE TAB NORMALIZATION
 
-   하나의 Workspace Tab에 저장된 데이터를 검증한다.
+   Memo와 Diary는 현재 로컬 브랜치의 구분을 유지한다.
 
-   Memo:
-   - 기존 memo ID 유지
-   - 예전에 Diary로 저장된 이름을 Memo로 복원
-
-   Diary:
-   - 별도의 독립 Workspace 유지
-============================================================ */
+   Workspace ID는 기존 저장 데이터와 연결되므로
+   임의로 변경하지 않는다.
+   ============================================================ */
 
 type NormalizeOptions = {
   mergeCurrentDefaults?: boolean;
 };
+
 
 const normalizeTab = (
   tab: DashboardTab,
@@ -575,7 +511,6 @@ const normalizeTab = (
 ): DashboardTab => {
 
   const normalizedTab: DashboardTab = {
-
     ...tab,
 
     id: String(tab.id),
@@ -596,7 +531,6 @@ const normalizeTab = (
     locked: Boolean(tab.locked),
   };
 
-  // 앱 저장 스키마 업데이트가 아닌 경우 기존 데이터 유지
   if (!options.mergeCurrentDefaults) {
     return normalizedTab;
   }
@@ -610,19 +544,15 @@ const normalizeTab = (
     return normalizedTab;
   }
 
-  const mergedWidgetIds = [
-    ...new Set([
-      ...normalizedTab.widgetIds,
-      ...defaultTab.widgetIds,
-    ]),
-  ];
-
   return {
     ...normalizedTab,
 
-    icon: normalizedTab.icon || defaultTab.icon,
-
-    widgetIds: mergedWidgetIds,
+    widgetIds: [
+      ...new Set([
+        ...normalizedTab.widgetIds,
+        ...defaultTab.widgetIds,
+      ]),
+    ],
 
     layouts: mergeLayoutsWithDefaults(
       normalizedTab.layouts,
@@ -632,44 +562,41 @@ const normalizeTab = (
 };
 
 
-/* ============================================================
-   12. WORKSPACE TAB ARRAY NORMALIZATION
-
-   전체 Workspace 목록을 검증한다.
-============================================================ */
-
 const normalizeTabs = (
   tabs: DashboardTab[],
   options: NormalizeOptions = {}
 ): DashboardTab[] => {
-
-  if (!Array.isArray(tabs) || tabs.length === 0) {
-    return [fallbackTab];
+  if (!Array.isArray(tabs)) {
+    return [normalizeTab(fallbackTab)];
   }
 
-  return tabs.map((tab) =>
-    normalizeTab(tab, options)
+  const validTabs = tabs.filter(
+    (tab) =>
+      isRecord(tab) &&
+      typeof tab.id === "string"
+  );
+
+  if (validTabs.length === 0) {
+    return [normalizeTab(fallbackTab)];
+  }
+
+  return validTabs.map(
+    (tab) => normalizeTab(tab, options)
   );
 };
 
 
 /* ============================================================
-   13. CREATE NEW WORKSPACE
+   12. CREATE NEW WORKSPACE
 
-   Sidebar에서 새로운 Workspace를 추가할 때 사용.
+   기본 구성: Memo + Calendar
 
-   기본 위젯:
-   - Memo
-   - Calendar
-
-   Wide / Laptop은 동일한 초기 좌표를 사용하지만
-   생성 이후에는 각각 독립적으로 관리한다.
-============================================================ */
+   Wide / Laptop은 생성 이후 독립적으로 관리한다.
+   ============================================================ */
 
 const createNewTab = (): DashboardTab => {
 
   const newLayouts: Layouts = {
-
     lg: [
       { i: "memo", x: 0, y: 0, w: 5, h: 4 },
       { i: "calendar", x: 5, y: 0, w: 7, h: 5 },
@@ -684,14 +611,12 @@ const createNewTab = (): DashboardTab => {
       { i: "memo", x: 0, y: 0, w: 16, h: 4 },
       { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
     ],
-
   };
 
   return {
     id: createId(),
 
     label: "New Tab",
-
     icon: "✨",
 
     widgetIds: ["memo", "calendar"],
@@ -704,51 +629,43 @@ const createNewTab = (): DashboardTab => {
 
 
 /* ============================================================
-   14. REMOVE WIDGET FROM RESPONSIVE LAYOUTS
+   13. REMOVE WIDGET FROM LAYOUTS
 
-   특정 위젯을 삭제하면 lg / md / sm에 저장된
-   해당 위젯의 좌표도 같이 제거한다.
+   위젯 삭제 시 모든 Breakpoint의 좌표를 제거한다.
 
-   Wide와 Laptop에서 공통으로 사용하는 함수.
-============================================================ */
+   위젯 내부의 실제 기록 데이터는 삭제하지 않는다.
+   ============================================================ */
 
 const removeWidgetFromLayouts = (
   layouts: Layouts,
   widgetId: WidgetId
-): Layouts => {
+): Layouts => ({
+  lg: layouts.lg.filter(
+    (item) => item.i !== widgetId
+  ),
 
-  return {
-    lg: layouts.lg.filter(
-      (item) => item.i !== widgetId
-    ),
+  md: layouts.md.filter(
+    (item) => item.i !== widgetId
+  ),
 
-    md: layouts.md.filter(
-      (item) => item.i !== widgetId
-    ),
-
-    sm: layouts.sm.filter(
-      (item) => item.i !== widgetId
-    ),
-  };
-};
+  sm: layouts.sm.filter(
+    (item) => item.i !== widgetId
+  ),
+});
 
 
 /* ============================================================
-   15. MAIN DASHBOARD HOOK
+   14. MAIN DASHBOARD HOOK
 
-   App.tsx에서 호출하는 메인 Hook.
-
-   Workspace, Widget, Grid Layout의 저장 상태를
-   관리하는 Source of Truth.
-============================================================ */
+   App.tsx에서 호출하는 Workspace 상태 관리 Hook.
+   ============================================================ */
 
 export const useDashboardTabs = () => {
 
-  /* ----------------------------------------------------------
-     A. STORED TABS
 
-     전체 탭 목록을 LocalStorage와 연결한다.
-  ---------------------------------------------------------- */
+  /* ----------------------------------------------------------
+     A. LOCAL STORAGE STATE
+     ---------------------------------------------------------- */
 
   const {
     value: storedTabs,
@@ -757,13 +674,6 @@ export const useDashboardTabs = () => {
     TABS_KEY,
     defaultDashboardTabs
   );
-
-
-  /* ----------------------------------------------------------
-     B. ACTIVE WORKSPACE
-
-     마지막으로 사용한 Workspace를 복원한다.
-  ---------------------------------------------------------- */
 
   const {
     value: activeTabId,
@@ -775,11 +685,10 @@ export const useDashboardTabs = () => {
 
 
   /* ----------------------------------------------------------
-     C. STORAGE SCHEMA VERSION
+     B. STORAGE SCHEMA MIGRATION
 
-     앱이 업데이트되어 저장 구조가 변경된 경우에만
-     기존 데이터에 기본값을 보충한다.
-  ---------------------------------------------------------- */
+     기존 사용자 저장 형식과의 호환성을 유지한다.
+     ---------------------------------------------------------- */
 
   const shouldUpgradeDashboardStorage =
     typeof window !== "undefined" &&
@@ -788,34 +697,16 @@ export const useDashboardTabs = () => {
     ) !== String(DASHBOARD_STORAGE_SCHEMA_VERSION);
 
 
-  /* ----------------------------------------------------------
-     D. NORMALIZED TABS
-
-     화면에서 사용할 안전한 Workspace 데이터.
-  ---------------------------------------------------------- */
-
   const tabs = useMemo(() => {
-
     return normalizeTabs(storedTabs, {
       mergeCurrentDefaults:
         shouldUpgradeDashboardStorage,
     });
-
   }, [
     storedTabs,
     shouldUpgradeDashboardStorage,
   ]);
 
-
-  /* ----------------------------------------------------------
-     E. STORAGE MIGRATION
-
-     기존 사용자 좌표를 초기화하지 않고
-     새로운 기본 위젯이 있는 경우에만 보충한다.
-
-     이전 렌더링의 tabs가 아닌
-     저장 시점의 최신 prev 값을 사용한다.
-  ---------------------------------------------------------- */
 
   useEffect(() => {
 
@@ -826,6 +717,7 @@ export const useDashboardTabs = () => {
       return;
     }
 
+    // 이전 렌더링이 아닌 최신 저장 상태를 사용한다.
     setTabs((previousTabs) =>
       normalizeTabs(previousTabs, {
         mergeCurrentDefaults: true,
@@ -844,239 +736,170 @@ export const useDashboardTabs = () => {
 
 
   /* ----------------------------------------------------------
-     F. ACTIVE TAB
+     C. ACTIVE WORKSPACE
 
-     현재 선택한 Workspace를 찾는다.
-
-     저장된 ID가 유효하지 않은 경우
-     첫 번째 탭을 안전하게 사용한다.
-  ---------------------------------------------------------- */
+     저장된 ID가 유효하지 않으면 첫 번째 탭을 표시한다.
+     ---------------------------------------------------------- */
 
   const activeTab = useMemo(() => {
-
     return (
       tabs.find((tab) => tab.id === activeTabId) ??
       tabs[0] ??
       fallbackTab
     );
-
   }, [
     tabs,
     activeTabId,
   ]);
 
-  // 실제 현재 표시되고 있는 Workspace ID
   const resolvedActiveTabId = activeTab.id;
 
 
   /* ----------------------------------------------------------
-     G. UPDATE TAB
+     D. UPDATE TAB
 
-     특정 Workspace의 데이터를 변경하는 공통 함수.
+     모든 Workspace 수정의 공통 함수.
 
-     중요:
-     화면이 렌더링되었을 때의 과거 상태가 아니라
-     setTabs에서 전달받은 최신 데이터를 사용한다.
+     위젯 이동 / Resize / 추가 / 삭제 시
+     최신 상태를 기준으로 수정한다.
+     ---------------------------------------------------------- */
 
-     위젯 이동 / Resize / 추가 / 삭제가
-     서로의 변경사항을 덮어쓰지 않도록 한다.
-  ---------------------------------------------------------- */
+  const updateTab = useCallback((
+    tabId: string,
+    updater: (tab: DashboardTab) => DashboardTab
+  ) => {
 
-  const updateTab = useCallback(
+    setTabs((previousTabs) =>
+      normalizeTabs(previousTabs).map((tab) =>
+        tab.id === tabId
+          ? normalizeTab(updater(tab))
+          : tab
+      )
+    );
 
-    (
-      tabId: string,
-      updater: (tab: DashboardTab) => DashboardTab
-    ) => {
-
-      setTabs((previousTabs) => {
-
-        const currentTabs = normalizeTabs(
-          previousTabs
-        );
-
-        return currentTabs.map((tab) => {
-
-          if (tab.id !== tabId) {
-            return tab;
-          }
-
-          return normalizeTab(
-            updater(tab)
-          );
-        });
-
-      });
-
-    },
-
-    [setTabs]
-  );
+  }, [setTabs]);
 
 
   /* ----------------------------------------------------------
-     H. UPDATE ACTIVE TAB LAYOUTS
+     E. SAVE WIDGET POSITION / SIZE
 
-     ★ 위젯 위치 및 크기 저장의 핵심 함수 ★
+     ★ 위젯 크기 저장의 핵심 함수 ★
 
-     연결:
      DashboardGrid.tsx
        → onLayoutsChange
        → updateActiveTabLayouts
-       → LocalStorage
+       → useLocalStorage.ts
 
-     Wide를 편집하면 Wide만 저장하고
-     Laptop을 편집하면 Laptop만 저장한다.
+     현재 수정한 Layout Mode만 변경한다.
+     ---------------------------------------------------------- */
 
-     그 외 Workspace와 위젯 데이터는 유지한다.
-  ---------------------------------------------------------- */
+  const updateActiveTabLayouts = useCallback((
+    mode: DashboardLayoutMode,
+    layouts: Layouts
+  ) => {
 
-  const updateActiveTabLayouts = useCallback(
+    const nextLayouts = normalizeLayouts(layouts);
 
-    (
-      mode: DashboardLayoutMode,
-      layouts: Layouts
-    ) => {
-
-      const nextLayouts = normalizeLayouts(layouts);
-
-      updateTab(
-        resolvedActiveTabId,
-
-        (currentTab) => ({
-
-          ...currentTab,
-
-          layouts: {
-
-            // 최신 Wide / Laptop 레이아웃 사용
-            ...currentTab.layouts,
-
-            // 현재 수정한 Mode만 교체
-            [mode]: nextLayouts,
-
-          },
-
-        })
-      );
-
-    },
-
-    [
+    updateTab(
       resolvedActiveTabId,
-      updateTab,
-    ]
-  );
+      (currentTab) => ({
+        ...currentTab,
+
+        layouts: {
+          ...currentTab.layouts,
+          [mode]: nextLayouts,
+        },
+      })
+    );
+
+  }, [
+    resolvedActiveTabId,
+    updateTab,
+  ]);
 
 
   /* ----------------------------------------------------------
-     I. ADD WIDGET
+     F. ADD WIDGET
 
-     현재 Workspace에 새로운 위젯을 추가한다.
+     현재 Workspace에만 새로운 위젯을 추가한다.
+     실제 위치와 크기는 DashboardGrid에서 보완한다.
+     ---------------------------------------------------------- */
 
-     이미 존재하는 위젯은 중복 추가하지 않는다.
+  const addWidgetToActiveTab = useCallback((
+    widgetId: WidgetId
+  ) => {
 
-     신규 위젯의 실제 Grid 좌표는
-     DashboardGrid.tsx에서 보완한다.
-  ---------------------------------------------------------- */
+    updateTab(
+      resolvedActiveTabId,
+      (currentTab) => {
 
-  const addWidgetToActiveTab = useCallback(
-
-    (widgetId: WidgetId) => {
-
-      updateTab(
-        resolvedActiveTabId,
-
-        (currentTab) => {
-
-          if (
-            currentTab.widgetIds.includes(widgetId)
-          ) {
-            return currentTab;
-          }
-
-          return {
-
-            ...currentTab,
-
-            widgetIds: [
-              ...currentTab.widgetIds,
-              widgetId,
-            ],
-
-          };
+        if (
+          currentTab.widgetIds.includes(widgetId)
+        ) {
+          return currentTab;
         }
-      );
-    },
 
-    [
-      resolvedActiveTabId,
-      updateTab,
-    ]
-  );
+        return {
+          ...currentTab,
+
+          widgetIds: [
+            ...currentTab.widgetIds,
+            widgetId,
+          ],
+        };
+      }
+    );
+
+  }, [
+    resolvedActiveTabId,
+    updateTab,
+  ]);
 
 
   /* ----------------------------------------------------------
-     J. REMOVE WIDGET
+     G. REMOVE WIDGET
 
-     현재 Workspace에서 위젯을 삭제한다.
+     현재 Workspace의 위젯 목록 및 좌표만 제거한다.
+     ---------------------------------------------------------- */
 
-     함께 제거되는 데이터:
-     - widgetIds
-     - Wide: lg / md / sm 좌표
-     - Laptop: lg / md / sm 좌표
+  const removeWidgetFromActiveTab = useCallback((
+    widgetId: WidgetId
+  ) => {
 
-     다른 Workspace 및 위젯 자체의 기록 데이터는
-     삭제하지 않는다.
-  ---------------------------------------------------------- */
+    updateTab(
+      resolvedActiveTabId,
+      (currentTab) => ({
+        ...currentTab,
 
-  const removeWidgetFromActiveTab = useCallback(
+        widgetIds: currentTab.widgetIds.filter(
+          (id) => id !== widgetId
+        ),
 
-    (widgetId: WidgetId) => {
-
-      updateTab(
-
-        resolvedActiveTabId,
-
-        (currentTab) => ({
-
-          ...currentTab,
-
-          widgetIds: currentTab.widgetIds.filter(
-            (id) => id !== widgetId
+        layouts: {
+          wide: removeWidgetFromLayouts(
+            currentTab.layouts.wide,
+            widgetId
           ),
 
-          layouts: {
+          laptop: removeWidgetFromLayouts(
+            currentTab.layouts.laptop,
+            widgetId
+          ),
+        },
+      })
+    );
 
-            wide: removeWidgetFromLayouts(
-              currentTab.layouts.wide,
-              widgetId
-            ),
-
-            laptop: removeWidgetFromLayouts(
-              currentTab.layouts.laptop,
-              widgetId
-            ),
-
-          },
-
-        })
-      );
-
-    },
-
-    [
-      resolvedActiveTabId,
-      updateTab,
-    ]
-  );
+  }, [
+    resolvedActiveTabId,
+    updateTab,
+  ]);
 
 
   /* ----------------------------------------------------------
-     K. ADD WORKSPACE
+     H. ADD WORKSPACE
 
-     Sidebar의 새로운 탭 추가 버튼과 연결된다.
-  ---------------------------------------------------------- */
+     새로운 탭을 생성하고 해당 탭으로 이동한다.
+     ---------------------------------------------------------- */
 
   const addTab = useCallback(() => {
 
@@ -1096,130 +919,105 @@ export const useDashboardTabs = () => {
 
 
   /* ----------------------------------------------------------
-     L. RENAME WORKSPACE
+     I. RENAME WORKSPACE
+     ---------------------------------------------------------- */
 
-     Workspace 이름만 변경한다.
+  const renameTab = useCallback((
+    tabId: string,
+    label: string
+  ) => {
 
-     위젯 목록 및 Grid 좌표에는 영향을 주지 않는다.
-  ---------------------------------------------------------- */
+    updateTab(
+      tabId,
+      (currentTab) => ({
+        ...currentTab,
+        label,
+      })
+    );
 
-  const renameTab = useCallback(
-
-    (
-      tabId: string,
-      label: string
-    ) => {
-
-      updateTab(
-        tabId,
-
-        (currentTab) => ({
-          ...currentTab,
-          label,
-        })
-      );
-
-    },
-
-    [updateTab]
-  );
+  }, [updateTab]);
 
 
   /* ----------------------------------------------------------
-     M. REMOVE WORKSPACE
+     J. REMOVE WORKSPACE
 
-     사용자가 생성한 Workspace를 삭제한다.
+     기본 Workspace는 삭제하지 않는다.
+     활성 탭 삭제 시 다른 탭으로 이동한다.
+     ---------------------------------------------------------- */
 
-     locked 상태인 기본 Workspace는
-     삭제할 수 없다.
-  ---------------------------------------------------------- */
+  const removeTab = useCallback((
+    tabId: string
+  ) => {
 
-  const removeTab = useCallback(
+    const target = tabs.find(
+      (tab) => tab.id === tabId
+    );
 
-    (tabId: string) => {
+    if (!target || target.locked) {
+      return;
+    }
 
-      const target = tabs.find(
+    const remainingTabs = tabs.filter(
+      (tab) => tab.id !== tabId
+    );
+
+    setTabs((previousTabs) => {
+
+      const currentTabs = normalizeTabs(previousTabs);
+
+      const currentTarget = currentTabs.find(
         (tab) => tab.id === tabId
       );
 
-      if (!target || target.locked) {
-        return;
+      if (!currentTarget || currentTarget.locked) {
+        return currentTabs;
       }
 
-      const remainingTabs = tabs.filter(
+      const nextTabs = currentTabs.filter(
         (tab) => tab.id !== tabId
       );
 
-      setTabs((previousTabs) => {
+      return nextTabs.length > 0
+        ? nextTabs
+        : [normalizeTab(fallbackTab)];
+    });
 
-        const currentTabs = normalizeTabs(
-          previousTabs
-        );
 
-        const currentTarget = currentTabs.find(
-          (tab) => tab.id === tabId
-        );
+    if (resolvedActiveTabId === tabId) {
+      setActiveTabId(
+        remainingTabs[0]?.id ?? "home"
+      );
+    }
 
-        if (!currentTarget || currentTarget.locked) {
-          return currentTabs;
-        }
-
-        const nextTabs = currentTabs.filter(
-          (tab) => tab.id !== tabId
-        );
-
-        return nextTabs.length > 0
-          ? nextTabs
-          : [fallbackTab];
-
-      });
-
-      // 현재 표시 중인 탭을 삭제하면 다른 탭으로 이동
-      if (resolvedActiveTabId === tabId) {
-
-        setActiveTabId(
-          remainingTabs[0]?.id ?? "home"
-        );
-
-      }
-
-    },
-
-    [
-      tabs,
-      resolvedActiveTabId,
-      setTabs,
-      setActiveTabId,
-    ]
-  );
+  }, [
+    tabs,
+    resolvedActiveTabId,
+    setTabs,
+    setActiveTabId,
+  ]);
 
 
   /* ==========================================================
-     16. PUBLIC HOOK API
+     15. PUBLIC HOOK API
 
-     기존 App.tsx와 연결되는 반환 구조를 유지한다.
-
-     Desktop / Tauri / Mobile에서 현재 사용 중인
-     함수 이름은 변경하지 않는다.
-  ========================================================== */
+     App.tsx와 연결되는 기존 함수 이름을 유지한다.
+     ========================================================== */
 
   return {
-
-    // Workspace states
+    // Workspace State
     tabs,
     activeTab,
-    activeTabId,
+    activeTabId: resolvedActiveTabId,
     setActiveTabId,
 
-    // Widget layout actions
+    // Widget Actions
     updateActiveTabLayouts,
     addWidgetToActiveTab,
     removeWidgetFromActiveTab,
 
-    // Workspace actions
+    // Workspace Actions
     addTab,
     renameTab,
     removeTab,
-
   };
 };

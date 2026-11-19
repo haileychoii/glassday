@@ -42,7 +42,8 @@ textarea {
 .topbar-action-button,
 .icon-button,
 .control-button {
-  height: 32px;
+  /* Shared widget controls stay compact without reducing their hit target. */
+  height: 30px;
   border-radius: 20px;
   display: inline-flex;
   align-items: center;
@@ -193,8 +194,8 @@ textarea {
 /* Widget header의 icon action은 glyph가 작더라도 안정적인 touch target을 가진다.
    Pixel/Retro 테마의 사각형 표현은 각 theme override가 그대로 결정한다. */
 .widget-frame__actions > :where(button, .glass-button, .icon-button) {
-  min-width: 34px;
-  min-height: 34px;
+  min-width: 30px;
+  min-height: 30px;
 }
 
 /* =========================================================

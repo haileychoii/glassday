@@ -1,58 +1,64 @@
+
 /**
  * ============================================================
- * [Figma Mapping] Navigation / Workspace Tabs
+ * GLASSDAY — WORKSPACE TABS NAVIGATION
+ * 파일: src/components/layout/WorkspaceTabsNav.tsx
  * ============================================================
  *
- * 화면 역할:
- * - 동일한 DashboardTab 목록을 Sidebar와 Compact Topbar 양쪽에서 렌더링한다.
- * - 선택, 이름 변경, 삭제 interaction의 공통 구현이다.
+ * [역할]
+ * - Sidebar 및 Compact Topbar의 Workspace 목록 표시
+ * - Workspace 선택, 이름 수정, 추가, 삭제
+ * - 테마별 아이콘 업데이트
  *
- * 데이터 연결:
- * - Tab 데이터와 callback은 `useDashboardTabs`를 사용하는 `App.tsx`에서 내려온다.
- * - Theme icon Variant를 위해 `glassday-theme-change` event를 구독한다.
+ * [연결 파일]
+ * - App.tsx
+ * - useDashboardTabs.ts
+ * - Sidebar.tsx
+ * - Topbar.tsx
+ * - WorkspaceTabIcon.tsx
+ * - layout.css
  *
- * Figma 구조:
- * - Component Set: Workspace Tab
- * - Variants: Default / Selected / Edit / Collapsed / Theme Icon
- * - Sidebar에서는 Vertical, Topbar에서는 CSS override로 Horizontal Auto Layout
+ * [Figma Mapping]
+ * Workspace Tab
+ * └─ Default / Selected / Edit / Collapsed
  * ============================================================
  */
-import {
-  BookOpen,
-  BriefcaseBusiness,
-  FolderOpen,
-  HeartPulse,
-  House,
-  NotebookPen,
-  Plus,
-  Trash2,
-} from "lucide-react";
+
+import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import { cn } from "../../lib/utils";
 import type { DashboardTab } from "../../types/workspace";
 
+import { WorkspaceTabIcon } from "./WorkspaceTabIcon";
+
+
+/* ============================================================
+   01. COMPONENT PROPS
+   ============================================================ */
+
 type WorkspaceTabsNavProps = {
   tabs: DashboardTab[];
   activeTabId: string;
   editMode: boolean;
   collapsed?: boolean;
+
   onSelectTab: (tabId: string) => void;
   onAddTab?: () => void;
   onRenameTab: (tabId: string, label: string) => void;
   onRemoveTab: (tabId: string) => void;
+
   className?: string;
   addButtonClassName?: string;
   showAddButton?: boolean;
 };
 
-/**
- * WorkspaceTabsNav
- *
- * 한 Tab의 id는 `DashboardTab.layouts`와 activeTab 저장에 사용된다. label이나
- * icon 표시를 바꾸는 것은 안전하지만 id 변경은 저장된 workspace 연결을 끊는다.
- */
+
+/* ============================================================
+   02. WORKSPACE TABS COMPONENT
+   ============================================================ */
+
 export const WorkspaceTabsNav = ({
   tabs,
   activeTabId,
@@ -66,117 +72,44 @@ export const WorkspaceTabsNav = ({
   addButtonClassName,
   showAddButton = false,
 }: WorkspaceTabsNavProps) => {
-  const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
 
+  const [theme, setTheme] = useState<ThemeId>(
+    () => getCurrentTheme()
+  );
+
+  // Settings에서 테마를 변경하면 아이콘도 변경한다.
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
-      const customEvent = event as CustomEvent<ThemeId>;
+      const nextTheme = (event as CustomEvent<ThemeId>).detail;
 
-      if (customEvent.detail) {
-        setTheme(customEvent.detail);
+      if (nextTheme) {
+        setTheme(nextTheme);
       }
     };
 
-    window.addEventListener("glassday-theme-change", handleThemeChange);
+    window.addEventListener(
+      "glassday-theme-change",
+      handleThemeChange
+    );
 
     return () => {
-      window.removeEventListener("glassday-theme-change", handleThemeChange);
+      window.removeEventListener(
+        "glassday-theme-change",
+        handleThemeChange
+      );
     };
   }, []);
 
-  const renderTabIcon = (tab: DashboardTab) => {
-    const iconClassName = cn(
-      "workspace-theme-icon",
-      `workspace-theme-icon-${theme}`
-    );
 
-    const iconMap: Record<string, typeof House> = {
-      home: House,
-      career: BriefcaseBusiness,
-      study: BookOpen,
-      memo: NotebookPen,
-      life: HeartPulse,
-    };
+  /* ==========================================================
+     03. WORKSPACE TAB LIST
 
-    const macEmojiMap: Record<string, string> = {
-      home: "🏠",
-      career: "💼",
-      study: "📚",
-      memo: "📄",
-      life: "🌿",
-    };
-
-    // KO: pink-diary.css의 개별 이미지 규격과 함께 사용한다. 시트 좌표는 쓰지 않는다.
-    // EN: Full transparent icons prevent neighboring sprite cells from leaking.
-    const pinkIconMap: Record<string, string> = {
-      home: "/pink-icons/isolated/home.png",
-      career: "/pink-icons/isolated/career.png",
-      study: "/pink-icons/isolated/study.png",
-      memo: "/pink-icons/isolated/study.png",
-      diary: "/pink-icons/isolated/diary.png",
-      life: "/pink-icons/isolated/life.png",
-      calendar: "/pink-icons/isolated/calendar.png",
-    };
-
-    if (theme === "mac-core") {
-      return <span className={iconClassName}>{macEmojiMap[tab.id] ?? "✨"}</span>;
-    }
-
-    /*
-     * KO: Pink Diary는 제공된 이모지에서 분리한 PNG 한 개를 탭마다 그린다.
-     * EN: The fixed image box stays intact when Sidebar.tsx hides the label.
-     */
-    if (theme === "retro") {
-      if (tab.id === "memo") {
-        return <NotebookPen className={iconClassName} aria-hidden="true" />;
-      }
-
-      return (
-        <img
-          src={pinkIconMap[tab.id] ?? (
-            tab.label.trim().toLowerCase() === "diary"
-              ? pinkIconMap.diary
-              : pinkIconMap.study
-          )}
-          className={`${iconClassName} pink-diary-tab-icon pink-diary-tab-icon-${tab.id}`}
-          alt=""
-          aria-hidden="true"
-          draggable={false}
-        />
-      );
-    }
-
-    /*
-     * Pixel Desk uses the supplied Windows 95 sprite instead of Lucide icons.
-     * The sprite CSS fixes the box size so collapsing the sidebar hides only
-     * the label and never stretches or compresses the pixel artwork.
-     */
-    if (theme === "pixel-desk") {
-      const iconId = tab.id === "memo"
-        ? "alerts"
-        : tab.id === "diary" || tab.label.trim().toLowerCase() === "diary"
-          ? "diary"
-          : tab.id;
-
-      return (
-        <img
-          src={`/pixel-icons/${iconId}.png`}
-          className={`${iconClassName} pixel-tab-icon`}
-          alt=""
-          aria-hidden="true"
-          draggable={false}
-        />
-      );
-    }
-
-    const Icon = iconMap[tab.id] ?? FolderOpen;
-
-    return <Icon className={iconClassName} />;
-  };
+     Sidebar와 Topbar에서 동일한 구조를 사용한다.
+     배치 방향은 CSS에서 결정한다.
+     ========================================================== */
 
   return (
     <>
-      {/* Figma Component List: Workspace Tabs / 방향은 배치 위치의 CSS가 결정한다. */}
       <nav
         className={cn(
           "sidebar-workspace-list",
@@ -186,7 +119,6 @@ export const WorkspaceTabsNav = ({
         aria-label="Workspaces"
       >
         {tabs.map((tab) => (
-          /* Figma Component: Workspace Tab / Selected와 Collapsed는 Variant */
           <div
             key={tab.id}
             className={cn(
@@ -195,30 +127,72 @@ export const WorkspaceTabsNav = ({
               activeTabId === tab.id && "is-active"
             )}
           >
-            <button
-              type="button"
-              onClick={() => onSelectTab(tab.id)}
-              className="sidebar-tab-main"
-              title={collapsed ? tab.label : undefined}
-              aria-label={collapsed ? tab.label : undefined}
-            >
-              <span className="sidebar-tab-icon">{renderTabIcon(tab)}</span>
+            {/* 이름 편집 모드:
+                input을 button 안에 중첩하지 않는다. */}
 
-              {!collapsed && editMode && !tab.locked ? (
+            {!collapsed && editMode && !tab.locked ? (
+              <div className="sidebar-tab-main">
+
+                <button
+                  type="button"
+                  className="sidebar-tab-icon"
+                  onClick={() => onSelectTab(tab.id)}
+                  aria-label={`Select ${tab.label}`}
+                  aria-current={
+                    activeTabId === tab.id ? "page" : undefined
+                  }
+                >
+                  <WorkspaceTabIcon
+                    tabId={tab.id}
+                    tabLabel={tab.label}
+                    theme={theme}
+                  />
+                </button>
+
                 <input
                   value={tab.label}
-                  onChange={(event) => onRenameTab(tab.id, event.target.value)}
-                  onClick={(event) => event.stopPropagation()}
+                  onChange={(event) =>
+                    onRenameTab(tab.id, event.target.value)
+                  }
                   className="sidebar-tab-input"
                   spellCheck={false}
                   aria-label={`${tab.label} workspace name`}
                 />
-              ) : !collapsed ? (
-                <span className="sidebar-tab-label">{tab.label}</span>
-              ) : (
-                <span className="sr-only">{tab.label}</span>
-              )}
-            </button>
+
+              </div>
+            ) : (
+
+              /* 일반 선택 모드 */
+
+              <button
+                type="button"
+                onClick={() => onSelectTab(tab.id)}
+                className="sidebar-tab-main"
+                title={collapsed ? tab.label : undefined}
+                aria-label={tab.label}
+                aria-current={
+                  activeTabId === tab.id ? "page" : undefined
+                }
+              >
+                <span className="sidebar-tab-icon">
+                  <WorkspaceTabIcon
+                    tabId={tab.id}
+                    tabLabel={tab.label}
+                    theme={theme}
+                  />
+                </span>
+
+                <span
+                  className={
+                    collapsed ? "sr-only" : "sidebar-tab-label"
+                  }
+                >
+                  {tab.label}
+                </span>
+              </button>
+            )}
+
+            {/* 잠겨 있지 않은 Workspace만 삭제 가능 */}
 
             {editMode && !collapsed && !tab.locked && (
               <button
@@ -235,7 +209,8 @@ export const WorkspaceTabsNav = ({
         ))}
       </nav>
 
-      {/* Secondary Action: Compact Topbar에서 사용하는 Workspace 추가 버튼 */}
+      {/* Workspace 추가 버튼 */}
+
       {showAddButton && editMode && onAddTab && (
         <button
           type="button"

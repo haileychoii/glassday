@@ -124,9 +124,13 @@
   --gd-widget-panel-pad: 9px;
   --gd-control-height-sm: 28px;
   --gd-control-height-md: 30px;
-  --gd-shell-pad-x: 18px;
-  --gd-shell-pad-top: 10px;
-  --gd-shell-pad-bottom: 18px;
+  /* Laptop/Tauri uses the available canvas for widgets. The old 18px side
+     padding was added on top of the main padding and made every widget look
+     inset from the window by an unnecessarily wide frame.
+     한국어: 위젯 내부 여백은 유지하고 바깥 쉘 여백만 줄인다. */
+  --gd-shell-pad-x: 8px;
+  --gd-shell-pad-top: 6px;
+  --gd-shell-pad-bottom: 10px;
   --gd-main-pad-x: 4px;
   --gd-main-pad-y: 4px;
   --gd-topbar-min-height: 56px;
