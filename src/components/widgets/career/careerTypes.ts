@@ -1,13 +1,12 @@
 /**
- * ============================================================
- * [Inactive Legacy Types] Unmounted Career Subcomponent Model
- * ============================================================
- * 이 타입은 같은 career/ 폴더의 미사용 prototype component에서만 참조된다.
- * 현재 CareerWidget과 저장 데이터는 src/types/dashboard.ts의 CareerItem을 사용한다.
- * 두 CareerItem은 필드/status 값이 다르므로 현재 model로 오인하거나 합치지 않는다.
- * ============================================================
+ * Career utility model shared by careerUtils.ts.
+ *
+ * The rendered CareerWidget uses the dashboard CareerItem model, while these
+ * types describe the optional planning sections used by the utility helpers.
+ * Keeping this file separate prevents the utility layer from widening the
+ * persisted dashboard model with fields it does not own.
  */
- export type CareerStatus =
+export type CareerStatus =
   | "Preparing"
   | "Submitted"
   | "Screening"
@@ -81,29 +80,22 @@ export type CareerItem = {
   company: string;
   role: string;
   status: CareerStatus;
-
   priority?: CareerPriority;
   starred?: boolean;
-
   location: string;
   workType: string;
-
   deadline: string;
-
   applicationStartDate: string;
   applicationStartTime: string;
   applicationEndDate: string;
   applicationEndTime: string;
-
   postingUrl: string;
   jobDescription: string;
-
   coverLetterQuestions?: string[];
   stages?: CareerStage[];
   coverLetterItems?: CoverLetterItem[];
   attachments?: CareerAttachment[];
   interviewReviews?: InterviewReview[];
-
   result?: string;
   notes: string;
 };
