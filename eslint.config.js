@@ -6,7 +6,9 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // Tauri embeds generated binary assets with `.js` suffixes; they are build
+  // output, not editable application source, so lint only the source tree.
+  globalIgnores(['dist', 'src-tauri/target', 'target']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

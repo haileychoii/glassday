@@ -80,8 +80,8 @@ export const themeOptions: ThemeOption[] = [
   },
   {
     id: "retro",
-    label: "Retro 98",
-    description: "Pink Y2K retro window theme",
+    label: "Pink Diary",
+    description: "Soft pink stationery and kitty icons",
   },
 ];
 

@@ -147,7 +147,7 @@ export const defaultDashboardTabs: DashboardTab[] = [
   },
   {
     id: "memo",
-    label: "Diary",
+    label: "Memo",
     icon: "📔",
     widgetIds: memoWidgetIds,
     layouts: buildModeLayouts(memoWidgetIds),

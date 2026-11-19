@@ -523,21 +523,10 @@
 .money-section-tabs {
   min-width: 0;
   display: flex;
-  /*
-   * Fixed navigation rail: the detail body owns vertical scrolling, so this
-   * tab row must never collapse when the selected section is taller than the
-   * inline widget viewport. 상세 내용이 길어져도 탭 높이는 유지한다.
-   */
   flex: 0 0 auto;
   flex-wrap: wrap;
   gap: var(--gd-space-xs);
-  position: sticky;
-  top: 0;
-  z-index: 4;
-  padding-block: 2px 5px;
-  background: color-mix(in srgb, hsl(var(--card)) 76%, transparent);
-  backdrop-filter: blur(18px) saturate(135%);
-  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  padding-block: 0 2px;
 }
 
 .money-section-tab {
@@ -550,6 +539,15 @@
   gap: var(--gd-space-xs);
   font-size: 11px;
   font-weight: 850;
+  border-color: var(--gd-widget-control-border, hsl(var(--border) / 0.48));
+  background: var(--gd-widget-control-bg, hsl(var(--secondary) / 0.58));
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.money-section-tab.is-active {
+  border-color: hsl(var(--primary) / 0.46);
+  background: var(--gd-widget-control-active-bg, hsl(var(--primary) / 0.2));
+  color: hsl(var(--foreground) / 0.96);
 }
 
 /* Period filter

@@ -1181,3 +1181,35 @@
     background: var(--ios-secondary-surface, #f7f7fa) !important;
   }
 }
+
+
+/* ============================================================
+ * MOBILE WIDGET EDITOR — CUSTOM HEIGHT
+ *
+ * 연결:
+ * MobileDashboard.tsx → MobileWidgetSlot
+ * useMobileWidgetLayout.tsx → item.height
+ *
+ * 사용자가 높이를 지정한 위젯에만 적용한다.
+ * PC/데스크톱 레이아웃은 변경하지 않는다.
+ * ============================================================ */
+
+.mobile-layout .mobile-dashboard
+  > .mobile-widget-slot[data-mobile-height="custom"] {
+  height: var(--mobile-widget-height) !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+
+/* 모바일 전용 카드의 본문이 지정 높이를 넘으면 스크롤 */
+.mobile-layout .mobile-dashboard
+  > .mobile-widget-slot[data-mobile-height="custom"]
+  > :is(
+    .mobile-study-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+}

@@ -64,6 +64,49 @@
 
 .health-progress-panel {
   min-width: 0;
+  display: grid;
+  gap: 8px;
+  padding: clamp(10px, 1.8cqw, 14px);
+  border: 1px solid var(--gd-widget-border, rgb(255 255 255 / 0.35));
+  border-radius: var(--gd-radius-inner, 14px);
+  background: var(--gd-widget-inset, rgb(255 255 255 / 0.16));
+}
+
+.health-progress-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.health-progress-eyebrow,
+.health-progress-detail {
+  color: var(--muted-foreground, #74717a);
+  font-size: 11px;
+}
+
+.health-progress-primary {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(17px, 2.5cqw, 22px);
+  line-height: 1.15;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.health-progress-primary small {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.health-progress-percent {
+  flex: 0 0 auto;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.health-progress-detail {
+  margin: 0;
 }
 
 .health-reset-button {

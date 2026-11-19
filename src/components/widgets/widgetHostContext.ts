@@ -1,6 +1,16 @@
 /**
- * [UI Bridge] Stable widget DOM hosts, shared by desktop/mobile slots.
- * Not application data or storage. / 화면 이동 때만 사용하는 메모리 내 참조입니다.
+ * [위젯 DOM 이동 브리지 / Widget DOM bridge]
+ *
+ * 연결 순서:
+ * - WidgetRenderer.tsx에서 widget ID마다 host를 한 번 만든다.
+ * - WidgetSlot.tsx가 현재 레이아웃 위치에 host.element를 붙인다.
+ * - 화면 크기나 탭 구성이 바뀌면 기존 DOM을 떼었다가 새 slot에 붙인다.
+ *
+ * 이 파일은 React 위젯 상태나 localStorage를 소유하지 않는다. DOM을 옮길 때
+ * 브라우저가 잃을 수 있는 포커스와 contenteditable 선택 범위만 임시 보관한다.
+ *
+ * This in-memory bridge preserves the mounted widget DOM, input focus, and text
+ * selection across layout changes. Durable app data remains in widget contexts/hooks.
  */
 import { createContext } from "react";
 
@@ -19,6 +29,7 @@ export const createWidgetHost = (id: string): WidgetHost => {
   element.style.opacity = "1";
   element.style.filter = "none";
   element.dataset.widgetInstance = id;
+  // These references exist only during a detach/attach cycle; they are not persisted.
   let focused: HTMLElement | null = null;
   let selection: Range | null = null;
 

@@ -30,6 +30,7 @@ import {
   CalendarDays,
   Check,
   ExternalLink,
+  Maximize2,
   Heart,
   Plus,
   ReceiptText,
@@ -43,6 +44,7 @@ import {
 import { GlassCard } from "../glass/GlassCard";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { cn } from "../../lib/utils";
+import { openWidgetPopup } from "../../lib/widgetPopup";
 import type {
   MoneyCategory,
   MoneyChannel,
@@ -1394,6 +1396,15 @@ export const MoneyWidget = () => {
           <div className="money-widget-actions">
             <button
               type="button"
+              onClick={() => void openWidgetPopup("money")}
+              className="glass-button money-popout-button"
+              title="Open Money in a separate window"
+              aria-label="Open Money in a separate window"
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+            </button>
+            <button
+              type="button"
               onClick={() => {
                 setSection("spending");
                 setExpenseFormOpen(true);
@@ -1424,6 +1435,8 @@ export const MoneyWidget = () => {
                   key={item}
                   type="button"
                   onClick={() => setSection(item)}
+                  aria-label={`${item[0].toUpperCase() + item.slice(1)} section`}
+                  title={item[0].toUpperCase() + item.slice(1)}
                   className={cn("money-section-tab", section === item && "is-active")}
                 >
                   {item === "overview" && <ReceiptText className="w-3.5 h-3.5" />}

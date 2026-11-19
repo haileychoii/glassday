@@ -494,8 +494,8 @@
  */
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.today-focus-widget, .career-widget, .study-widget,
-      .daily-journal-widget, .memo-widget, .health-widget,
-      .mood-widget, .calendar-widget, .today-tasks-widget)
+      .daily-journal-widget, .memo-widget,
+      .calendar-widget, .today-tasks-widget)
   .widget-frame__icon {
   background-image: var(--pd-widget-icon) !important;
   /* KO: 위의 important background 단축 속성이 이 세 값을 초기화하지 못하게 한다.
@@ -507,8 +507,8 @@
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.today-focus-widget, .career-widget, .study-widget,
-      .daily-journal-widget, .memo-widget, .health-widget,
-      .mood-widget, .calendar-widget, .today-tasks-widget)
+      .daily-journal-widget, .memo-widget,
+      .calendar-widget, .today-tasks-widget)
   .widget-frame__icon svg {
   display: none !important;
 }
@@ -531,8 +531,6 @@
 .daily-journal-widget .widget-frame__icon,
 .memo-widget .widget-frame__icon,
 .today-tasks-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/diary.png"); }
-.health-widget .widget-frame__icon,
-.mood-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/life.png"); }
 .calendar-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/calendar.png"); }
 
 /*

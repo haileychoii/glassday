@@ -1,0 +1,44 @@
+/*
+ * Shared corner system, applied after theme and desktop-window styles.
+ * 공통 모서리 규칙입니다. Pixel Desk만 기존 각진 베벨 디자인을 유지합니다.
+ *
+ * Glass cards and dialog shells use one radius on all four corners. Regular
+ * controls use a smaller radius; intentionally circular controls keep their
+ * own shape. This final layer resolves theme overrides that rounded only the
+ * top corners or reset a surface to square.
+ */
+:root:not([data-theme="pixel-desk"]):not(.theme-pixel-desk) {
+  --gd-corner-surface: 16px;
+  --gd-corner-control: 10px;
+  --gd-corner-tile: 12px;
+}
+
+:root:not([data-theme="pixel-desk"]):not(.theme-pixel-desk)
+  :is(.glass-card, .widget-frame, .floating-window,
+      .settings-modal-window, .settings-window, .settings-panel,
+      .memo-window, .memo-floating-window, .calendar-floating-window,
+      .career-modal, .study-modal, .diary-workspace, .mobile-widget-slot) {
+  border-radius: var(--gd-corner-surface) !important;
+}
+
+:root:not([data-theme="pixel-desk"]):not(.theme-pixel-desk)
+  :is(.glass-card-header, .widget-card-header, .widget-frame__header,
+      .floating-window-titlebar, .settings-modal-header,
+      .settings-header, .settings-titlebar, .memo-floating-window-titlebar) {
+  border-radius: var(--gd-corner-control) !important;
+}
+
+:root:not([data-theme="pixel-desk"]):not(.theme-pixel-desk)
+  :is(.settings-theme-card, .settings-action-card, .settings-section,
+      .settings-card, .career-application-card, .career-board-card,
+      .calendar-event-item, .study-subject-card, .diary-note-block,
+      .mobile-card) {
+  border-radius: var(--gd-corner-tile) !important;
+}
+
+:root:not([data-theme="pixel-desk"]):not(.theme-pixel-desk)
+  :is(.glass-button, .settings-section-tab, .theme-segment-button,
+      .calendar-nav-button, .calendar-view-button, .career-small-button,
+      .career-status-select, .settings-theme-card, input, select, textarea) {
+  border-radius: var(--gd-corner-control) !important;
+}

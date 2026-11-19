@@ -1,12 +1,48 @@
-/**
- * Windows desktop glass material for the transparent Tauri host window.
- * 투명한 Tauri 창의 바탕화면 영역은 CSS backdrop-filter가 흐릴 수 없으므로,
- * 이 모듈이 OS 수준 Acrylic/Blur를 적용한다. Web/Vercel 렌더링에는 영향이 없다.
- */
-import { isTauri } from "@tauri-apps/api/core";
-import { Effect, getCurrentWindow } from "@tauri-apps/api/window";
 
-import type { ThemeId } from "../constants/themes";
+/**
+ * ============================================================
+ * GLASSDAY — NATIVE GLASS EFFECT
+ * 파일: src/lib/nativeGlassEffect.ts
+ * ============================================================
+ *
+ * [역할]
+ * - Windows Native Acrylic 효과
+ * - Windows Blur fallback
+ * - 테마별 실제 Window 모서리 동기화
+ *
+ * [연결 구조]
+ *
+ * SettingsModal.tsx
+ *  → Theme Change Event
+ *  → AppShell.tsx
+ *  → nativeGlassEffect.ts
+ *  → src-tauri/src/lib.rs
+ *
+ * 일반 Web / Vercel / Mobile에서는 실행하지 않는다.
+ * ============================================================
+ */
+
+import {
+  invoke,
+  isTauri,
+} from "@tauri-apps/api/core";
+
+import {
+  Effect,
+  getCurrentWindow,
+} from "@tauri-apps/api/window";
+
+import type {
+  ThemeId,
+} from "../constants/themes";
+
+
+/* ============================================================
+   01. GLASS THEME REGISTRY
+
+   Native Acrylic 효과를 적용하는 테마.
+   다른 테마에서는 Native Blur를 제거한다.
+============================================================ */
 
 const GLASS_THEMES: ReadonlySet<ThemeId> = new Set([
   "pastel",
@@ -15,44 +51,167 @@ const GLASS_THEMES: ReadonlySet<ThemeId> = new Set([
   "aurora",
 ]);
 
-// KO: 빠른 테마 전환에서도 마지막 선택이 승리하도록 OS 호출을 순서대로 실행한다.
-// EN: AppShell.tsx can request a new material before the previous native call ends.
-let pendingEffect: Promise<void> = Promise.resolve();
 
-/**
- * Match native blur/tint to the selected glass palette and remove it elsewhere.
- * 선택된 유리 테마와 OS 창 재질을 맞추고, 비유리 테마에서는 효과를 비운다.
- */
-export const syncNativeGlassEffect = (theme: ThemeId): Promise<void> => {
-  if (!isTauri()) return Promise.resolve();
+/* ============================================================
+   02. NATIVE EFFECT QUEUE
 
-  pendingEffect = pendingEffect.catch(() => undefined).then(async () => {
-    const window = getCurrentWindow();
+   테마를 빠르게 연속 변경하더라도
+   마지막으로 선택한 테마가 최종 적용되도록 한다.
+============================================================ */
 
-    if (!GLASS_THEMES.has(theme)) {
-      await window.clearEffects();
-      return;
+let pendingEffect: Promise<void> =
+  Promise.resolve();
+
+
+/* ============================================================
+   03. APPLY WINDOWS MATERIAL
+
+   기존 Glassday의 테마별 Acrylic 색상을 유지한다.
+
+   Acrylic 지원이 불가능한 경우 Blur를 시도한다.
+============================================================ */
+
+const applyNativeMaterial = async (
+  theme: ThemeId
+): Promise<void> => {
+
+  const currentWindow = getCurrentWindow();
+
+  // Mac Core / Pixel Desk / Retro 등
+  if (!GLASS_THEMES.has(theme)) {
+
+    await currentWindow.clearEffects();
+
+    return;
+  }
+
+
+  // 기존 테마별 Native Glass 색상 유지
+  const tint: [
+    number,
+    number,
+    number,
+    number
+  ] =
+
+    theme === "glass-dark" ||
+    theme === "aurora"
+
+      ? [24, 27, 36, 72]
+
+      : theme === "pastel"
+
+        ? [255, 230, 244, 56]
+
+        : [236, 244, 255, 76];
+
+
+  try {
+
+    await currentWindow.setEffects({
+
+      effects: [
+        Effect.Acrylic,
+      ],
+
+      color: tint,
+
+    });
+
+  } catch {
+
+    // Acrylic 미지원 환경의 대체 효과
+    await currentWindow.setEffects({
+
+      effects: [
+        Effect.Blur,
+      ],
+
+      color: tint,
+
+    });
+  }
+};
+
+
+/* ============================================================
+   04. APPLY NATIVE WINDOW SHAPE
+
+   연결: src-tauri/src/lib.rs
+
+   실제 Windows 창 경계와 CSS의 모서리를 일치시킨다.
+
+   Pixel Desk: 직각
+   다른 테마: 둥근 사각형
+============================================================ */
+
+const applyNativeWindowShape = async (
+  theme: ThemeId
+): Promise<void> => {
+
+  await invoke(
+    "set_native_window_shape",
+    {
+      square: theme === "pixel-desk",
     }
+  );
+};
 
-    const tint: [number, number, number, number] =
-      theme === "glass-dark" || theme === "aurora"
-        ? [24, 27, 36, 72]
-        : theme === "pastel"
-          ? [255, 230, 244, 56]
-          : [236, 244, 255, 76];
 
-    try {
-      // KO: CSS backdrop-filter는 WebView 밖의 바탕화면을 흐릴 수 없다.
-      // EN: Native Acrylic blurs the desktop; theme CSS controls the glass tint.
-      await window.setEffects({ effects: [Effect.Acrylic], color: tint });
-    } catch {
-      // KO: Acrylic 미지원 환경에서는 Windows Blur를 시도한다.
-      // EN: Keep the compatibility path, but expose failure for debugging.
-      await window.setEffects({ effects: [Effect.Blur], color: tint });
-    }
-  }).catch((error: unknown) => {
-    console.warn(`[Glassday] Native glass material failed for ${theme}`, error);
-  });
+/* ============================================================
+   05. MAIN THEME SYNCHRONIZATION
+
+   AppShell.tsx에서 호출하는 Public API.
+
+   1. Native Acrylic / Blur 적용
+   2. Native Window 외곽선 적용
+
+   두 작업을 분리하여 Glass 적용에 실패하더라도
+   창 모서리 변경은 계속 수행한다.
+============================================================ */
+
+export const syncNativeGlassEffect = (
+  theme: ThemeId
+): Promise<void> => {
+
+  // 일반 웹 및 모바일 웹에서는 실행하지 않는다.
+  if (!isTauri()) {
+    return Promise.resolve();
+  }
+
+
+  pendingEffect = pendingEffect
+
+    .catch(() => undefined)
+
+    .then(async () => {
+
+      try {
+
+        await applyNativeMaterial(theme);
+
+      } catch (error) {
+
+        console.warn(
+          `[Glassday] Native glass material failed: ${theme}`,
+          error
+        );
+      }
+
+
+      try {
+
+        await applyNativeWindowShape(theme);
+
+      } catch (error) {
+
+        console.warn(
+          `[Glassday] Native window shape failed: ${theme}`,
+          error
+        );
+      }
+    });
+
 
   return pendingEffect;
 };

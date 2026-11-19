@@ -51,6 +51,7 @@
 @import "./widgets/study.css";
 @import "./widgets/timer.css";
 @import "./widgets/diary-workspace.css";
+@import "./widgets/detached-widget.css";
 
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";
@@ -104,6 +105,9 @@
 
 /* Tauri-only host transparency and four-corner clipping must follow themes. */
 @import "./desktop-window.css";
+
+/* Final shared rounded-corner layer; Pixel Desk keeps its square Win95 chrome. */
+@import "./corner-consistency.css";
 
 /* Shared widget fit and narrow-card behavior; theme surfaces remain untouched. */
 @import "./responsive-widgets.css";

@@ -62,7 +62,7 @@ const defaultMonoFallback =
 const defaultHandwritingFallback =
   "'OngleipKonkon', 'Kyobo Handwriting 2020', cursive";
 const pixelDeskFallback =
-  "'Mona12', 'MonaS12', 'RoundedFixedsys', 'NeoDunggeunmo', 'MS Sans Serif', Tahoma, Arial, sans-serif";
+  "'MONAS12', 'Mona12', 'MonaS12', 'RoundedFixedsys', 'NeoDunggeunmo', 'MS Sans Serif', Tahoma, Arial, sans-serif";
 const retroFallback =
   "'Mona12', 'MonaS12', 'RoundedFixedsys', 'NeoDunggeunmo', 'MS Sans Serif', Tahoma, Arial, sans-serif";
 const macCoreFallback =
@@ -300,6 +300,7 @@ export const hasUserSelectedAppFont = () => {
   const defaultValues = new Set([
     DEFAULT_APP_FONT,
     pixelDeskFallback,
+    "'Mona12', 'MonaS12', 'RoundedFixedsys', 'NeoDunggeunmo', 'MS Sans Serif', Tahoma, Arial, sans-serif",
     retroFallback,
     macCoreFallback,
   ]);

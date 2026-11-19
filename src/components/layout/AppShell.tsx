@@ -1,16 +1,43 @@
+
 /**
  * ============================================================
- * [Figma Mapping] Layout / App Shell
+ * GLASSDAY — APP SHELL
+ * 파일: src/components/layout/AppShell.tsx
  * ============================================================
  *
- * WEB
- * - Wide / Laptop layout preview를 기존 방식으로 유지한다.
- * - Laptop에서는 1080 x 720 preview frame을 사용한다.
+ * [역할]
+ * - Glassday 전체 화면의 외부 레이아웃
+ * - Sidebar / Topbar / Main 영역 배치
+ * - Wide / Laptop / Tauri 화면 관리
+ * - Tauri Native Glass 효과 동기화
+ * - 웹 Laptop Preview 이동
  *
- * TAURI
- * - 무조건 Laptop layout을 사용한다.
- * - 웹용 Laptop Preview Chrome을 렌더링하지 않는다.
- * - 실제 Glassday App Shell이 Tauri window 전체를 직접 채운다.
+ * [연결 구조]
+ *
+ * App.tsx
+ * └─ AppShell.tsx
+ *    ├─ Sidebar.tsx
+ *    └─ Main Column
+ *       ├─ Topbar.tsx
+ *       └─ DashboardGrid.tsx
+ *
+ * [관련 CSS]
+ * - src/styles/layout.css
+ * - src/styles/layout-modes.css
+ * - src/styles/responsive.css
+ * - src/styles/overrides.css
+ *
+ * [구조 원칙]
+ * - Tauri는 실제 Window 크기를 그대로 사용한다.
+ * - 웹용 Laptop Preview는 Tauri에서 렌더링하지 않는다.
+ * - 위젯의 크기와 위치는 DashboardGrid에서 계산한다.
+ * - Tauri 외곽 모서리는 전용 CSS에서 관리한다.
+ *
+ * [Figma Mapping]
+ * - App Shell
+ * - Sidebar / Expanded · Collapsed
+ * - Topbar
+ * - Main Content Frame
  * ============================================================
  */
 
@@ -23,6 +50,7 @@ import {
 } from "react";
 
 import { isTauri } from "@tauri-apps/api/core";
+
 import { getCurrentTheme } from "../../constants/themes";
 import { syncNativeGlassEffect } from "../../lib/nativeGlassEffect";
 
@@ -34,198 +62,307 @@ import type {
   DashboardTab,
 } from "../../types/workspace";
 
-const SIDEBAR_COLLAPSED_STORAGE_KEY = "glassday.sidebar.collapsed";
+
+/* ============================================================
+   01. STORAGE CONSTANTS
+
+   기존 Sidebar 상태 및 Laptop Preview 위치를 유지한다.
+============================================================ */
+
+const SIDEBAR_COLLAPSED_STORAGE_KEY =
+  "glassday.sidebar.collapsed";
+
 const LAPTOP_FRAME_POSITION_STORAGE_KEY =
   "glassday.laptopPreview.position.v1";
 
+
+/* ============================================================
+   02. COMPONENT TYPES
+
+   App.tsx에서 전달받는 Props.
+   기존 인터페이스를 변경하지 않는다.
+============================================================ */
+
 type AppShellProps = {
   children: ReactNode;
+
   editMode: boolean;
   layoutMode: DashboardLayoutMode;
+
   tabs: DashboardTab[];
   activeTabId: string;
 
-  onChangeLayoutMode: (mode: DashboardLayoutMode) => void;
+  onChangeLayoutMode: (
+    mode: DashboardLayoutMode
+  ) => void;
+
   onToggleEditMode: () => void;
   onOpenSettings: () => void;
+
   onSelectTab: (tabId: string) => void;
   onAddTab: () => void;
-  onRenameTab: (tabId: string, label: string) => void;
+
+  onRenameTab: (
+    tabId: string,
+    label: string
+  ) => void;
+
   onRemoveTab: (tabId: string) => void;
 };
 
+type FramePosition = {
+  x: number;
+  y: number;
+};
+
+type FrameDragState = {
+  pointerId: number;
+
+  startX: number;
+  startY: number;
+
+  originX: number;
+  originY: number;
+};
+
+
+/* ============================================================
+   03. RESTORE WEB PREVIEW POSITION
+
+   웹 Laptop Preview의 마지막 위치를 복원한다.
+
+   유효하지 않은 저장 데이터는 초기 위치로 복구한다.
+============================================================ */
+
+const restoreFramePosition = (): FramePosition => {
+  if (typeof window === "undefined") {
+    return { x: 0, y: 0 };
+  }
+
+  try {
+    const raw = window.localStorage.getItem(
+      LAPTOP_FRAME_POSITION_STORAGE_KEY
+    );
+
+    if (!raw) {
+      return { x: 0, y: 0 };
+    }
+
+    const parsed = JSON.parse(raw);
+
+    return {
+      x: Number.isFinite(parsed.x)
+        ? Math.max(0, parsed.x)
+        : 0,
+
+      y: Number.isFinite(parsed.y)
+        ? Math.max(0, parsed.y)
+        : 0,
+    };
+
+  } catch {
+    return { x: 0, y: 0 };
+  }
+};
+
+
+/* ============================================================
+   04. APP SHELL
+============================================================ */
+
 export const AppShell = ({
   children,
+
   editMode,
   layoutMode,
+
   tabs,
   activeTabId,
+
   onChangeLayoutMode,
   onToggleEditMode,
   onOpenSettings,
+
   onSelectTab,
   onAddTab,
   onRenameTab,
   onRemoveTab,
+
 }: AppShellProps) => {
-  /*
-   * =========================================================
-   * Runtime
-   * =========================================================
-   */
+
+  /* ----------------------------------------------------------
+     A. RUNTIME
+
+     Tauri: Laptop 모드
+     Web: App.tsx에서 전달받은 모드
+
+     App.tsx에서도 동일한 Layout Mode를 사용하므로
+     DashboardGrid의 저장 모드와 화면 모드가 일치한다.
+  ---------------------------------------------------------- */
 
   const isTauriApp = isTauri();
+
+  const effectiveLayoutMode: DashboardLayoutMode =
+    isTauriApp ? "laptop" : layoutMode;
+
+  const isLaptopMode =
+    effectiveLayoutMode === "laptop";
+
+
+  /* ----------------------------------------------------------
+     B. TRANSPARENT ROOT
+
+     Tauri에서만 Native Window의 투명 배경을 사용한다.
+  ---------------------------------------------------------- */
+
   useEffect(() => {
     const root = document.documentElement;
 
-    if (isTauriApp) {
-      root.classList.add("desktop-transparent");
-    } else {
-      root.classList.remove("desktop-transparent");
-    }
+    root.classList.toggle(
+      "desktop-transparent",
+      isTauriApp
+    );
 
     return () => {
-      root.classList.remove("desktop-transparent");
+      root.classList.remove(
+        "desktop-transparent"
+      );
     };
+
   }, [isTauriApp]);
+
+
+  /* ----------------------------------------------------------
+     C. NATIVE GLASS MATERIAL
+
+     연결: src/lib/nativeGlassEffect.ts
+
+     Windows의 Native Acrylic / Blur 효과를
+     현재 Glassday 테마와 동기화한다.
+
+     웹 화면에는 영향을 주지 않는다.
+  ---------------------------------------------------------- */
 
   useEffect(() => {
     if (!isTauriApp) return;
 
-    // Apply at startup and whenever Settings dispatches the shared theme event.
-    // 앱 시작 때 적용하고 설정 화면의 공통 테마 변경 이벤트마다 동기화한다.
     const applyCurrentGlassMaterial = () => {
-      void syncNativeGlassEffect(getCurrentTheme());
+      void syncNativeGlassEffect(
+        getCurrentTheme()
+      );
     };
 
     applyCurrentGlassMaterial();
-    window.addEventListener("glassday-theme-change", applyCurrentGlassMaterial);
+
+    window.addEventListener(
+      "glassday-theme-change",
+      applyCurrentGlassMaterial
+    );
 
     return () => {
-      window.removeEventListener("glassday-theme-change", applyCurrentGlassMaterial);
+      window.removeEventListener(
+        "glassday-theme-change",
+        applyCurrentGlassMaterial
+      );
     };
+
   }, [isTauriApp]);
-  
-/*
- * Tauri에서는 layout 선택 개념이 필요 없다.
- * Tauri에서는 항상 Laptop layout variant를 사용하되,
- * 실제 viewport 크기는 현재 native window 크기를 따른다.
- */
-  const effectiveLayoutMode: DashboardLayoutMode = isTauriApp
-    ? "laptop"
-    : layoutMode;
 
-  /*
-   * =========================================================
-   * Sidebar state
-   * =========================================================
-   */
 
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-    if (typeof window === "undefined") return false;
+  /* ----------------------------------------------------------
+     D. SIDEBAR STATE
+
+     Sidebar 확장 / 축소 상태를 관리한다.
+
+     Sidebar 너비가 바뀌면 DashboardGrid의
+     ResizeObserver가 실제 Canvas 너비를 다시 측정한다.
+  ---------------------------------------------------------- */
+
+  const [
+    sidebarCollapsed,
+    setSidebarCollapsed,
+  ] = useState(() => {
+
+    if (typeof window === "undefined") {
+      return false;
+    }
 
     return (
-      window.localStorage.getItem(SIDEBAR_COLLAPSED_STORAGE_KEY) === "true"
+      window.localStorage.getItem(
+        SIDEBAR_COLLAPSED_STORAGE_KEY
+      ) === "true"
     );
   });
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
 
     window.localStorage.setItem(
       SIDEBAR_COLLAPSED_STORAGE_KEY,
       String(sidebarCollapsed)
     );
+
   }, [sidebarCollapsed]);
 
-  /*
-   * =========================================================
-   * WEB Laptop Preview position
-   *
-   * Tauri에서는 사용하지 않는다.
-   * Vercel/Web Laptop Preview 기능을 유지하기 위해 남겨둔다.
-   * =========================================================
-   */
 
-  const dragStateRef = useRef<{
-    pointerId: number;
-    startX: number;
-    startY: number;
-    originX: number;
-    originY: number;
-  } | null>(null);
+  /* ----------------------------------------------------------
+     E. WEB LAPTOP PREVIEW STATE
 
-  const [laptopFramePosition, setLaptopFramePosition] = useState(() => {
-    if (typeof window === "undefined") {
-      return {
-        x: 0,
-        y: 0,
-      };
-    }
+     웹에서만 사용하는 가상 Laptop Frame.
 
-    try {
-      const raw = window.localStorage.getItem(
-        LAPTOP_FRAME_POSITION_STORAGE_KEY
-      );
+     Tauri에서는 이 Frame을 표시하지 않는다.
+  ---------------------------------------------------------- */
 
-      if (!raw) {
-        return {
-          x: 0,
-          y: 0,
-        };
-      }
+  const dragStateRef =
+    useRef<FrameDragState | null>(null);
 
-      const parsed = JSON.parse(raw) as {
-        x?: number;
-        y?: number;
-      };
-
-      return {
-        x: typeof parsed.x === "number" ? parsed.x : 0,
-        y: typeof parsed.y === "number" ? parsed.y : 0,
-      };
-    } catch {
-      return {
-        x: 0,
-        y: 0,
-      };
-    }
-  });
+  const [
+    laptopFramePosition,
+    setLaptopFramePosition,
+  ] = useState<FramePosition>(
+    restoreFramePosition
+  );
 
   useEffect(() => {
-    /*
-     * Tauri에서는 Preview frame 위치를 저장할 필요가 없다.
-     */
     if (isTauriApp) return;
-
-    if (typeof window === "undefined") return;
 
     window.localStorage.setItem(
       LAPTOP_FRAME_POSITION_STORAGE_KEY,
       JSON.stringify(laptopFramePosition)
     );
-  }, [isTauriApp, laptopFramePosition]);
 
-  /*
-   * =========================================================
-   * WEB Laptop Preview drag
-   * =========================================================
-   */
+  }, [
+    isTauriApp,
+    laptopFramePosition,
+  ]);
+
+
+  /* ----------------------------------------------------------
+     F. WEB LAPTOP PREVIEW DRAG
+
+     웹용 Preview의 제목 표시줄을 이동할 때만 작동한다.
+
+     실제 Tauri Window 이동과는 별개의 기능이다.
+  ---------------------------------------------------------- */
 
   const startLaptopFrameDrag = (
     event: ReactPointerEvent<HTMLDivElement>
   ) => {
     if (isTauriApp) return;
+    if (event.button !== 0) return;
 
     dragStateRef.current = {
       pointerId: event.pointerId,
+
       startX: event.clientX,
       startY: event.clientY,
+
       originX: laptopFramePosition.x,
       originY: laptopFramePosition.y,
     };
 
-    event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.setPointerCapture(
+      event.pointerId
+    );
   };
 
   const moveLaptopFrameDrag = (
@@ -236,21 +373,27 @@ export const AppShell = ({
     const dragState = dragStateRef.current;
 
     if (!dragState) return;
-    if (dragState.pointerId !== event.pointerId) return;
 
-    const nextX = Math.max(
-      0,
-      dragState.originX + (event.clientX - dragState.startX)
-    );
-
-    const nextY = Math.max(
-      0,
-      dragState.originY + (event.clientY - dragState.startY)
-    );
+    if (
+      dragState.pointerId !== event.pointerId
+    ) {
+      return;
+    }
 
     setLaptopFramePosition({
-      x: nextX,
-      y: nextY,
+      x: Math.max(
+        0,
+        dragState.originX +
+          event.clientX -
+          dragState.startX
+      ),
+
+      y: Math.max(
+        0,
+        dragState.originY +
+          event.clientY -
+          dragState.startY
+      ),
     });
   };
 
@@ -259,189 +402,260 @@ export const AppShell = ({
   ) => {
     if (isTauriApp) return;
 
-    if (dragStateRef.current?.pointerId !== event.pointerId) {
+    if (
+      dragStateRef.current?.pointerId !==
+      event.pointerId
+    ) {
       return;
     }
 
     dragStateRef.current = null;
 
-    event.currentTarget.releasePointerCapture(event.pointerId);
+    if (
+      event.currentTarget.hasPointerCapture(
+        event.pointerId
+      )
+    ) {
+      event.currentTarget.releasePointerCapture(
+        event.pointerId
+      );
+    }
   };
 
-  /*
-   * =========================================================
-   * Actual Glassday App
-   *
-   * WEB / TAURI 모두 동일한 실제 App DOM을 사용한다.
-   * =========================================================
-   */
 
-const shellContent = (
-  <div
-    className={[
-      "glass-panel liquid-shell rounded-[2.2rem] overflow-hidden app-shell-surface",
-      effectiveLayoutMode === "laptop"
-        ? "is-laptop h-full min-h-0"
-        : "is-wide min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
-      isTauriApp ? "is-tauri-app-surface" : "",
-    ]
-      .filter(Boolean)
-      .join(" ")}
-    data-sidebar-collapsed={sidebarCollapsed ? "true" : "false"}
-  >
+  /* ==========================================================
+     G. SHARED APPLICATION SURFACE
+
+     웹과 Tauri에서 공통으로 사용하는 실제 App DOM.
+
+     중요:
+     - Tauri에서는 rounded-[2.2rem]을 적용하지 않는다.
+     - Main Column은 Sidebar를 제외한 나머지 폭을 사용한다.
+     - 자식 위젯 때문에 Main Column이 커지지 않도록
+       min-w-0을 유지한다.
+     - 세로 스크롤은 main에서 담당한다.
+  ========================================================== */
+
+  const shellContent = (
     <div
       className={[
-        "flex app-shell-columns",
-        effectiveLayoutMode === "laptop"
-          ? "h-full min-h-0"
-          : "min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
+        "glass-panel",
+        "liquid-shell",
+        "app-shell-surface",
+        "overflow-hidden",
+        "w-full min-w-0 max-w-full",
+
+        isLaptopMode
+          ? "is-laptop h-full min-h-0"
+          : "is-wide min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
+
+        // 외부 모서리는 Tauri 전용 CSS에서 관리
+        isTauriApp
+          ? "is-tauri-app-surface"
+          : "rounded-[2.2rem]",
       ].join(" ")}
+
+      data-sidebar-collapsed={
+        sidebarCollapsed ? "true" : "false"
+      }
     >
-      <Sidebar
-        tabs={tabs}
-        activeTabId={activeTabId}
-        editMode={editMode}
-        collapsed={sidebarCollapsed}
-        onToggleCollapsed={() =>
-          setSidebarCollapsed((current) => !current)
-        }
-        onSelectTab={onSelectTab}
-        onAddTab={onAddTab}
-        onRenameTab={onRenameTab}
-        onRemoveTab={onRemoveTab}
-      />
+
+      {/* Sidebar와 Main Content를 가로로 배치 */}
 
       <div
         className={[
-          "app-shell-main-column flex-1 min-w-0 flex flex-col",
-          effectiveLayoutMode === "laptop" ? "min-h-0" : "",
+          "app-shell-columns",
+          "flex w-full min-w-0 max-w-full",
+
+          isLaptopMode
+            ? "h-full min-h-0"
+            : "min-h-[calc(100vh-1rem)] md:min-h-[calc(100vh-1.5rem)]",
         ].join(" ")}
       >
-        <Topbar
-          editMode={editMode}
-          layoutMode={effectiveLayoutMode}
+
+        {/* Workspace Navigation */}
+
+        <Sidebar
           tabs={tabs}
           activeTabId={activeTabId}
-          onChangeLayoutMode={
-            isTauriApp ? () => undefined : onChangeLayoutMode
+          editMode={editMode}
+
+          collapsed={sidebarCollapsed}
+
+          onToggleCollapsed={() =>
+            setSidebarCollapsed(
+              (current) => !current
+            )
           }
-          onToggleEditMode={onToggleEditMode}
-          onOpenSettings={onOpenSettings}
+
           onSelectTab={onSelectTab}
           onAddTab={onAddTab}
           onRenameTab={onRenameTab}
           onRemoveTab={onRemoveTab}
         />
 
-        <main
+
+        {/* Sidebar를 제외한 나머지 화면 영역 */}
+
+        <div
           className={[
-            "app-shell-main flex-1 min-w-0 bg-transparent",
-            effectiveLayoutMode === "laptop"
-              ? "min-h-0 overflow-y-auto overflow-x-hidden"
-              : "overflow-visible",
+            "app-shell-main-column",
+            "flex flex-1 flex-col",
+            "min-w-0 max-w-full",
+
+            isLaptopMode ? "min-h-0" : "",
           ].join(" ")}
         >
-          {children}
-        </main>
-      </div>
-    </div>
-  </div>
-);
 
-  /*
-   * =========================================================
-   * TAURI
-   * =========================================================
-   *
-   * 중요:
-   *
-   * Preview frame 없음.
-   * Preview chrome 없음.
-   * Preview 위치 이동 없음.
-   *
-   * Tauri Window 1080 x 720
-   *         =
-   * Glassday App 1080 x 720
-   */
+          {/* 상단 Toolbar */}
+
+          <Topbar
+            editMode={editMode}
+
+            layoutMode={effectiveLayoutMode}
+
+            tabs={tabs}
+            activeTabId={activeTabId}
+
+            onChangeLayoutMode={
+              isTauriApp
+                ? () => undefined
+                : onChangeLayoutMode
+            }
+
+            onToggleEditMode={onToggleEditMode}
+            onOpenSettings={onOpenSettings}
+
+            onSelectTab={onSelectTab}
+            onAddTab={onAddTab}
+            onRenameTab={onRenameTab}
+            onRemoveTab={onRemoveTab}
+          />
+
+
+          {/* 실제 Dashboard / Diary 영역 */}
+
+          <main
+            className={[
+              "app-shell-main",
+              "flex-1",
+              "w-full min-w-0 max-w-full",
+              "bg-transparent",
+
+              isLaptopMode
+                ? "min-h-0 overflow-y-auto overflow-x-hidden"
+                : "overflow-visible",
+            ].join(" ")}
+          >
+            {children}
+          </main>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+
+
+  /* ==========================================================
+     H. TAURI NATIVE WINDOW
+
+     실제 Windows App.
+
+     불필요한 웹 Preview Frame 없이
+     Glassday Surface가 Window 전체를 차지한다.
+
+     외곽 Radius 및 Native Window 관련 스타일은
+     layout.css / overrides.css에서 관리한다.
+  ========================================================== */
 
   if (isTauriApp) {
     return (
       <div
         className="tauri-app-window"
+
         data-layout-mode="laptop"
         data-runtime="tauri"
       >
-        {/*
-         * Tauri Surface
-         * English: The native transparent window hosts the real app directly;
-         * no web preview frame or fake preview chrome is rendered here.
-         * Korean: Tauri에서는 미리보기 프레임 없이 실제 Glassday surface가
-         * 창 전체를 차지하므로, desktop-only CSS는 .tauri-app-window 아래로만 둔다.
-         */}
         {shellContent}
       </div>
     );
   }
 
-  /*
-   * =========================================================
-   * WEB / VERCEL
-   * =========================================================
-   *
-   * 기존 Preview 기능은 그대로 유지한다.
-   */
+
+  /* ==========================================================
+     I. WEB / VERCEL
+
+     기존 Wide / Laptop Preview 기능을 유지한다.
+  ========================================================== */
 
   return (
     <div
       className={[
         "app-mode-stage",
-        "min-h-screen",
-        "relative",
-       
-        "bg-background",
-        "text-foreground",
-        effectiveLayoutMode === "laptop"
+        "min-h-screen relative",
+        "bg-background text-foreground",
+
+        isLaptopMode
           ? "is-laptop-mode overflow-hidden"
           : "is-wide-mode overflow-x-hidden",
       ].join(" ")}
+
       data-layout-mode={effectiveLayoutMode}
       data-runtime="web"
     >
+
+      {/* Web 전용 Background */}
+
       <div className="fixed inset-0 bg-glass-gradient" />
 
-      {effectiveLayoutMode === "laptop" ? (
-        /*
-         * ====================================================
-         * WEB Laptop Preview
-         * ====================================================
-         */
+
+      {isLaptopMode ? (
+
+        /* ====================================================
+           J. WEB LAPTOP PREVIEW
+        ==================================================== */
+
         <div className="laptop-preview-stage relative z-10">
+
           <div
             className="laptop-preview-frame"
+
             style={{
-              transform: `translate(
-                ${laptopFramePosition.x}px,
-                ${laptopFramePosition.y}px
-              )`,
+              transform:
+                `translate(${laptopFramePosition.x}px, ${laptopFramePosition.y}px)`,
             }}
           >
-            {/* WEB 전용 Laptop Preview Chrome */}
+
+            {/* 웹용 가상 제목 표시줄 */}
+
             <div
               className="laptop-preview-chrome"
+
               onPointerDown={startLaptopFrameDrag}
               onPointerMove={moveLaptopFrameDrag}
               onPointerUp={finishLaptopFrameDrag}
               onPointerCancel={finishLaptopFrameDrag}
+
+              onLostPointerCapture={() => {
+                dragStateRef.current = null;
+              }}
             >
+
               <div className="laptop-preview-chrome-side laptop-preview-chrome-left">
+
                 <span className="laptop-preview-traffic">
                   <span className="is-close" />
                   <span className="is-minimize" />
                   <span className="is-expand" />
                 </span>
+
               </div>
 
+
               <div className="laptop-preview-chrome-center">
+
                 <span className="laptop-preview-title">
                   Glassday Laptop App
                 </span>
@@ -449,31 +663,43 @@ const shellContent = (
                 <span className="laptop-preview-subtitle">
                   1080 x 720 preview
                 </span>
+
               </div>
 
+
               <div className="laptop-preview-chrome-side laptop-preview-chrome-right">
+
                 <span className="laptop-preview-mode-pill">
                   Laptop Mode
                 </span>
+
               </div>
+
             </div>
 
+
             {/* 실제 Glassday App */}
+
             <div className="laptop-preview-window">
               {shellContent}
             </div>
+
           </div>
+
         </div>
+
       ) : (
-        /*
-         * ====================================================
-         * WEB Wide
-         * ====================================================
-         */
+
+        /* ====================================================
+           K. WEB WIDE
+        ==================================================== */
+
         <div className="relative z-10 min-h-screen p-2 md:p-3">
           {shellContent}
         </div>
+
       )}
+
     </div>
   );
 };

@@ -518,10 +518,11 @@
 
 .settings-theme-preview-aurora {
   background:
-    radial-gradient(circle at 18% 12%, rgb(63 132 255 / 0.46), transparent 34%),
-    radial-gradient(circle at 76% 18%, rgb(177 98 255 / 0.38), transparent 32%),
-    radial-gradient(circle at 64% 82%, rgb(75 242 214 / 0.18), transparent 34%),
-    linear-gradient(135deg, #101424, #1b1d35 52%, #141827);
+    radial-gradient(ellipse 75% 62% at 14% 34%, rgb(35 126 236 / 0.48), transparent 72%),
+    radial-gradient(ellipse 62% 70% at 84% 23%, rgb(151 83 232 / 0.38), transparent 72%),
+    radial-gradient(ellipse 68% 52% at 56% 82%, rgb(35 194 185 / 0.28), transparent 72%),
+    linear-gradient(124deg, transparent 16%, rgb(44 202 216 / 0.12) 39%, rgb(161 100 235 / 0.13) 51%, transparent 70%),
+    linear-gradient(145deg, #070a16, #101329 48%, #0b1423 76%, #080b18);
 }
 
 .settings-theme-preview-aurora .settings-preview-window {

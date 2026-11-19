@@ -42,6 +42,7 @@ import {
   Check,
   ClipboardList,
   Hash,
+  Maximize2,
   Plus,
   Sparkles,
   Trash2,
@@ -51,6 +52,7 @@ import {
 import { useEffect, useId, useMemo, useState } from "react";
 
 import { GlassCard } from "../glass/GlassCard";
+import { openWidgetPopup } from "../../lib/widgetPopup";
 
 import type {
   JournalClip,
@@ -69,6 +71,7 @@ import {
   getEntryHashtags,
   getJournalProgress,
   getOrCreateJournalEntry,
+  JOURNAL_STORAGE_KEY,
   journalMoodLabels,
   journalMoodOptions,
   loadJournalEntries,
@@ -150,6 +153,20 @@ export const DailyJournalWidget = () => {
   useEffect(() => {
     saveJournalEntries(entries);
   }, [entries]);
+
+  useEffect(() => {
+    // KO: 분리 창과 메인 창은 같은 origin의 localStorage를 공유한다.
+    //     다른 창이 Journal을 저장하면 현재 위젯도 최신 일기를 다시 읽는다.
+    // EN: Refresh this journal when another app window writes the shared record.
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === JOURNAL_STORAGE_KEY) {
+        setEntries(loadJournalEntries());
+      }
+    };
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
 
   /** 요약 표시용 계산값 */
   const progress = getJournalProgress(entry);
@@ -439,6 +456,16 @@ export const DailyJournalWidget = () => {
             }
           >
             →
+          </button>
+
+          <button
+            type="button"
+            className="journal-popout-button"
+            aria-label="Open Daily Journal in a separate window"
+            title="Open Daily Journal in a separate window"
+            onClick={() => void openWidgetPopup("journal")}
+          >
+            <Maximize2 aria-hidden="true" />
           </button>
         </div>
       }

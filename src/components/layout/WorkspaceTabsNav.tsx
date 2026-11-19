@@ -102,7 +102,7 @@ export const WorkspaceTabsNav = ({
       home: "🏠",
       career: "💼",
       study: "📚",
-      memo: "📝",
+      memo: "📄",
       life: "🌿",
     };
 
@@ -112,7 +112,7 @@ export const WorkspaceTabsNav = ({
       home: "/pink-icons/isolated/home.png",
       career: "/pink-icons/isolated/career.png",
       study: "/pink-icons/isolated/study.png",
-      memo: "/pink-icons/isolated/diary.png",
+      memo: "/pink-icons/isolated/study.png",
       diary: "/pink-icons/isolated/diary.png",
       life: "/pink-icons/isolated/life.png",
       calendar: "/pink-icons/isolated/calendar.png",
@@ -127,9 +127,17 @@ export const WorkspaceTabsNav = ({
      * EN: The fixed image box stays intact when Sidebar.tsx hides the label.
      */
     if (theme === "retro") {
+      if (tab.id === "memo") {
+        return <NotebookPen className={iconClassName} aria-hidden="true" />;
+      }
+
       return (
         <img
-          src={pinkIconMap[tab.id] ?? pinkIconMap.diary}
+          src={pinkIconMap[tab.id] ?? (
+            tab.label.trim().toLowerCase() === "diary"
+              ? pinkIconMap.diary
+              : pinkIconMap.study
+          )}
           className={`${iconClassName} pink-diary-tab-icon pink-diary-tab-icon-${tab.id}`}
           alt=""
           aria-hidden="true"
@@ -144,9 +152,15 @@ export const WorkspaceTabsNav = ({
      * the label and never stretches or compresses the pixel artwork.
      */
     if (theme === "pixel-desk") {
+      const iconId = tab.id === "memo"
+        ? "alerts"
+        : tab.id === "diary" || tab.label.trim().toLowerCase() === "diary"
+          ? "diary"
+          : tab.id;
+
       return (
         <img
-          src={`/pixel-icons/${tab.id === "memo" ? "diary" : tab.id}.png`}
+          src={`/pixel-icons/${iconId}.png`}
           className={`${iconClassName} pixel-tab-icon`}
           alt=""
           aria-hidden="true"

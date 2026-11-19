@@ -257,6 +257,51 @@
   overflow: hidden !important;
 }
 
+/*
+ * Career renders four direct grid regions (header, summary, filters, list),
+ * unlike GlassCard widgets that render a header and one body. Restore those
+ * four rows so Pixel's shared two-row rule cannot stack the controls on top of
+ * the application list. The filter pills wrap instead of being clipped by a
+ * hidden horizontal rail. / Career는 자식 구조가 다른 예외이므로 실제 4개
+ * 영역을 각각 배치하고, 필터가 목록 위에 포개지지 않도록 여러 줄로 접는다.
+ */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .career-widget {
+  grid-template-rows:
+    var(--pixel-widget-header-height)
+    auto
+    auto
+    minmax(0, 1fr) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .career-widget > .career-filter-row {
+  min-width: 0 !important;
+  min-height: var(--gd-control-height-sm, 28px) !important;
+  height: auto !important;
+  flex-wrap: wrap !important;
+  align-content: flex-start !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  row-gap: 5px !important;
+}
+
 /* Study/Calendar/Career use the same desktop title geometry as GlassCard widgets. */
 :is(
   html[data-theme="pixel-desk"],
@@ -838,10 +883,22 @@
   html.theme-pixel,
   body.theme-pixel
 ) .app-shell-surface :is(
-  .health-widget .widget-frame__icon,
-  .mood-widget .widget-frame__icon
+  .health-widget .widget-frame__icon
 ) {
   background-image: url("/pixel-icons/health.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .mood-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/mood.png") !important;
 }
 
 :is(

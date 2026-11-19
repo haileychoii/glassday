@@ -49,12 +49,34 @@ body.theme-aurora {
       rgba(144, 74, 215, 0.38) 72%,
       rgba(38, 59, 118, 0.68)
     );
-  /* Aurora wallpaper hook:
-     Replace this custom property when the user picks a personal photo.
-     Korean: 직접 넣을 사진은 여기 변수만 바꾸면 배경 레이어 전체에 반영된다. */
-  --aurora-wallpaper-image: url("/glass-background/glass4.jpeg");
-  --aurora-wallpaper-overlay:
-    linear-gradient(135deg, rgba(6, 10, 20, 0.18), rgba(6, 10, 20, 0.44));
+
+  /*
+   * KO: Aurora 전용 우주 배경. 사진 대신 여러 크기와 각도의 컬러 안개를
+   *     겹쳐 북극광 커튼처럼 보이게 하고, 어두운 중앙부는 카드 글자를 받쳐준다.
+   * EN: Layer diffuse color fields over deep space. Broad angled light bands
+   *     evoke aurora curtains while the dark base preserves widget contrast.
+   */
+  --aurora-wallpaper:
+    radial-gradient(ellipse 72% 58% at 13% 32%, rgba(29, 116, 227, 0.3), transparent 72%),
+    radial-gradient(ellipse 58% 66% at 82% 26%, rgba(135, 76, 221, 0.25), transparent 72%),
+    radial-gradient(ellipse 62% 50% at 55% 76%, rgba(28, 177, 174, 0.2), transparent 72%),
+    radial-gradient(ellipse 38% 46% at 91% 84%, rgba(93, 85, 202, 0.17), transparent 74%),
+    linear-gradient(124deg,
+      transparent 12%,
+      rgba(39, 115, 226, 0.07) 26%,
+      rgba(57, 209, 213, 0.16) 36%,
+      rgba(108, 110, 232, 0.16) 45%,
+      rgba(183, 99, 230, 0.12) 52%,
+      transparent 67%),
+    linear-gradient(145deg, #070a16 0%, #101329 42%, #0b1423 72%, #080b18 100%);
+  --aurora-atmosphere:
+    radial-gradient(ellipse 70% 30% at 46% 8%, rgba(82, 160, 255, 0.12), transparent 76%),
+    linear-gradient(112deg,
+      transparent 18%,
+      rgba(38, 208, 208, 0.055) 35%,
+      rgba(156, 102, 231, 0.09) 46%,
+      rgba(66, 184, 211, 0.055) 55%,
+      transparent 72%);
 
   color: hsl(var(--foreground) / 0.94);
 }
@@ -63,20 +85,14 @@ html[data-theme="aurora"] body,
 body[data-theme="aurora"],
 html.theme-aurora body,
 body.theme-aurora {
-  background:
-    radial-gradient(circle at 14% 16%, rgba(64, 154, 255, 0.22), transparent 28%),
-    radial-gradient(circle at 82% 18%, rgba(175, 92, 255, 0.16), transparent 24%),
-    radial-gradient(circle at 70% 84%, rgba(68, 236, 214, 0.12), transparent 28%),
-    linear-gradient(135deg, #090d1a, #11162a 46%, #0d1220) !important;
+  background: var(--aurora-wallpaper) !important;
 }
 
 html[data-theme="aurora"] .bg-glass-gradient,
 body[data-theme="aurora"] .bg-glass-gradient,
 html.theme-aurora .bg-glass-gradient,
 body.theme-aurora .bg-glass-gradient {
-  background:
-    var(--aurora-wallpaper-overlay),
-    var(--aurora-wallpaper-image) center / cover no-repeat !important;
+  background: var(--aurora-wallpaper) !important;
 }
 
 html[data-theme="aurora"] .bg-glass-gradient::after,
@@ -87,10 +103,23 @@ body.theme-aurora .bg-glass-gradient::after {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 16% 10%, rgba(113, 197, 255, 0.22), transparent 32%),
-    radial-gradient(circle at 80% 12%, rgba(195, 122, 255, 0.18), transparent 28%),
-    linear-gradient(180deg, rgba(7, 10, 18, 0.18), rgba(7, 10, 18, 0.54));
+  background: var(--aurora-atmosphere);
+  background-size: 170% 170%;
+  animation: aurora-drift 42s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift {
+  from { background-position: 0% 28%; opacity: 0.68; }
+  to { background-position: 100% 72%; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="aurora"] .bg-glass-gradient::after,
+  body[data-theme="aurora"] .bg-glass-gradient::after,
+  html.theme-aurora .bg-glass-gradient::after,
+  body.theme-aurora .bg-glass-gradient::after {
+    animation: none;
+  }
 }
 
 html[data-theme="aurora"] :is(.glass-panel, .liquid-shell, .app-shell, .dashboard-shell, .workspace-shell, .desktop-shell, .main-shell),

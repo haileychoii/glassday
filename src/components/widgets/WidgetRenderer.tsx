@@ -22,6 +22,14 @@ import { HealthWidget } from "./HealthWidget";
 import { MoneyWidget } from "./MoneyWidget";
 import { MoodWidget } from "./MoodWidget";
 
+/*
+ * Widget ID와 실제 화면 컴포넌트를 연결하는 단일 렌더러 표다.
+ * 새 ID를 추가할 때는 src/constants/widgets.ts의 registry, 이 표,
+ * src/components/grid/gridDefaults.ts의 기본 배치도 함께 확인한다.
+ *
+ * This is the ID-to-component map. When adding a widget, update the metadata
+ * registry, this renderer, and the default grid layouts together.
+ */
 const widgetComponents: Record<string, ComponentType> = {
   today: TodayFocusWidget,
   alerts: AlertCenterWidget,
@@ -33,6 +41,7 @@ const widgetComponents: Record<string, ComponentType> = {
   career: CareerWidget,
   health: HealthWidget,
   money: MoneyWidget,
+  // Legacy saved layouts may still contain `wealth`; keep it as a data-safe alias.
   wealth: MoneyWidget,
   mood: MoodWidget,
 };
@@ -41,6 +50,9 @@ export const WidgetRenderer = ({ widgetIds, children }: {
   widgetIds: string[];
   children: ReactNode;
 }) => {
+  /* Hosts are created once so switching desktop/mobile slots moves the same
+     widget DOM instead of remounting it and losing unsaved editor state.
+     Host attachment is implemented in widgetHostContext.ts and WidgetSlot.tsx. */
   const [hosts] = useState(() => Object.fromEntries(
     [...new Set([...allWidgetIds, ...Object.keys(widgetComponents)])]
       .map((id) => [id, createWidgetHost(id)]),

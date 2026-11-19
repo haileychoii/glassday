@@ -18,6 +18,9 @@
 .settings-panel {
   width: min(860px, calc(100vw - 40px)) !important;
   max-width: 860px !important;
+  /* 탭 콘텐츠 높이가 바뀌어도 모달의 바깥 경계가 이동하지 않도록 높이를 고정한다.
+     Keep the outer dialog height stable so switching to a shorter tab never shifts its position. */
+  height: min(760px, calc(100vh - 48px)) !important;
   max-height: calc(100vh - 48px) !important;
 
   display: grid !important;
@@ -34,7 +37,7 @@
   min-height: 78px !important;
   height: auto !important;
 
-  padding: 16px 22px !important;
+  padding: 24px 22px 16px !important;
 
   display: flex !important;
   align-items: center !important;
@@ -60,7 +63,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 7px 14px;
+  padding: 15px 14px 7px;
   overflow-x: auto;
   border-bottom: 1px solid hsl(var(--border) / 0.72);
   background: hsl(var(--background) / 0.3);

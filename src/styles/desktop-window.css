@@ -13,9 +13,31 @@ html.desktop-transparent[data-theme] .tauri-app-window {
   background-image: none !important;
 }
 
+/*
+ * KO: 100vw/100vh는 Windows WebView의 viewport 반올림과 native 창 크기
+ *     계산이 어긋날 때 아래쪽을 1px 이상 잘라 모서리가 사각처럼 보일 수 있다.
+ *     호스트를 실제 WebView 영역에 고정해 네 변과 하단 모서리를 모두 보존한다.
+ * EN: Pin the host to the actual WebView viewport. This avoids 100vw/100vh
+ *     rounding past the native client area and clipping the bottom corners.
+ */
+.tauri-app-window {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
 /* KO: 네 모서리는 같은 반경으로 자른다. Pixel Desk만 Win95 사각 창을 유지한다.
    EN: Theme-specific radii apply to the one surface owned by AppShell.tsx. */
 html.desktop-transparent[data-theme] .tauri-app-window > .app-shell-surface {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
   border-radius: var(--gd-native-window-radius, 22px) !important;
   overflow: hidden !important;
 }

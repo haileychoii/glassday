@@ -45,18 +45,47 @@ const defaultItems: DiaryCanvasItem[] = [
 
 const defaultLayouts: Layouts = {
   lg: [
-    { i: "journal", x: 0, y: 0, w: 9, h: 11, minW: 5, minH: 6 },
-    { i: "memo", x: 9, y: 0, w: 7, h: 8, minW: 4, minH: 5 },
+    { i: "journal", x: 0, y: 0, w: 10, h: 10, minW: 9, minH: 9 },
+    { i: "memo", x: 10, y: 0, w: 6, h: 8, minW: 4, minH: 5 },
   ],
   md: [
-    { i: "journal", x: 0, y: 0, w: 9, h: 11, minW: 5, minH: 6 },
-    { i: "memo", x: 9, y: 0, w: 7, h: 8, minW: 4, minH: 5 },
+    { i: "journal", x: 0, y: 0, w: 16, h: 10, minW: 12, minH: 9 },
+    { i: "memo", x: 0, y: 10, w: 8, h: 7, minW: 6, minH: 5 },
   ],
   sm: [
-    { i: "journal", x: 0, y: 0, w: 16, h: 11, minW: 8, minH: 6 },
-    { i: "memo", x: 0, y: 11, w: 16, h: 8, minW: 8, minH: 5 },
+    { i: "journal", x: 0, y: 0, w: 16, h: 10, minW: 8, minH: 9 },
+    { i: "memo", x: 0, y: 10, w: 16, h: 7, minW: 8, minH: 5 },
   ],
 };
+
+/**
+ * KO: 이전 버전에서 저장된 너무 작은 Journal 크기를 읽을 때만 보정한다.
+ *     각 breakpoint의 위치/사용자 배치는 유지하되, 핵심 위젯의 최소 영역과
+ *     16열 캔버스 경계만 보장해 내부 콘텐츠가 잘리는 것을 막는다.
+ * EN: Preserve saved positions while repairing undersized widgets and keeping
+ *     every item inside the 16-column canvas when loading older layouts.
+ */
+const normalizeLayouts = (layouts: Layouts): Layouts =>
+  Object.fromEntries(
+    Object.entries(layouts).map(([breakpoint, layout]) => [
+      breakpoint,
+      layout.map((item) => {
+        const isJournal = item.i === "journal";
+        const minW = Math.min(16, isJournal ? (breakpoint === "sm" ? 8 : 9) : item.minW ?? 3);
+        const minH = isJournal ? 9 : item.minH ?? 3;
+        const w = Math.min(16, Math.max(minW, item.w));
+        return {
+          ...item,
+          x: Math.max(0, Math.min(16 - w, item.x)),
+          y: Math.max(0, item.y),
+          w,
+          h: Math.max(minH, item.h),
+          minW,
+          minH,
+        };
+      }),
+    ])
+  ) as Layouts;
 
 const createNoteId = () =>
   `diary-note-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -100,9 +129,10 @@ const readCanvasStorage = (): DiaryCanvasStorage => {
         ) as Layouts
       : defaultLayouts;
 
+    const safeLayouts = normalizeLayouts(layouts);
     return {
       items: items.length > 0 ? items : defaultItems,
-      layouts: Object.keys(layouts).length > 0 ? layouts : defaultLayouts,
+      layouts: Object.keys(safeLayouts).length > 0 ? safeLayouts : defaultLayouts,
     };
   } catch {
     return { items: defaultItems, layouts: defaultLayouts };
@@ -111,7 +141,7 @@ const readCanvasStorage = (): DiaryCanvasStorage => {
 
 /** A freeform Diary canvas with opt-in movement, resizing, and note blocks. */
 export const DiaryWorkspace = () => {
-  const initialStorage = useMemo(readCanvasStorage, []);
+  const initialStorage = useMemo(() => readCanvasStorage(), []);
   const [items, setItems] = useState<DiaryCanvasItem[]>(initialStorage.items);
   const [layouts, setLayouts] = useState<Layouts>(initialStorage.layouts);
   const [editMode, setEditMode] = useState(false);
@@ -207,7 +237,7 @@ export const DiaryWorkspace = () => {
           layouts={layouts}
           breakpoints={{ lg: 980, md: 620, sm: 0 }}
           cols={{ lg: 16, md: 16, sm: 16 }}
-          rowHeight={54}
+          rowHeight={44}
           width={width}
           margin={[12, 12]}
           containerPadding={[0, 0]}

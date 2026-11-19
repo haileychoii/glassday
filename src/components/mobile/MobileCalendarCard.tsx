@@ -239,6 +239,7 @@ export const MobileCalendarCard = () => {
     const previousOverflow = document.body.style.overflow;
     const previousFocus = document.activeElement instanceof HTMLElement
       ? document.activeElement : null;
+    const trigger = triggerRef.current;
     document.body.style.overflow = "hidden";
     closeRef.current?.focus();
 
@@ -273,7 +274,7 @@ export const MobileCalendarCard = () => {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
       if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
-      else triggerRef.current?.focus({ preventScroll: true });
+      else trigger?.focus({ preventScroll: true });
     };
   }, [detailOpen]);
 

@@ -1,0 +1,100 @@
+/*
+ * KO: App.tsx가 floatingWidget query를 읽으면 이 별도 창 화면만 렌더링한다.
+ *     WidgetSlot은 WidgetRenderer가 유지하는 기존 위젯 host를 이 창 안에 붙인다.
+ * EN: App.tsx renders this shell for the floatingWidget query. WidgetSlot mounts
+ *     the existing persistent widget host inside the independent window.
+ */
+.detached-widget-window {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 8px;
+  width: 100%;
+  height: 100vh;
+  min-width: 0;
+  min-height: 0;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+}
+
+.detached-widget-window__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 34px;
+  padding: 0 2px;
+}
+
+.detached-widget-window__toolbar > strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.detached-widget-window__toolbar > button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--gd-widget-control-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-button, 8px);
+  background: var(--gd-widget-control-bg, hsl(var(--secondary)));
+  color: hsl(var(--foreground));
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.detached-widget-window__toolbar > button.is-pinned {
+  border-color: hsl(var(--primary) / 0.5);
+  background: var(--gd-widget-control-active-bg, hsl(var(--primary) / 0.18));
+}
+
+.detached-widget-window__toolbar > button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.detached-widget-window__toolbar > span {
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+
+.detached-widget-window__content {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+.detached-widget-window__content .widget-instance-root,
+.detached-widget-window__content .widget-instance-root > .glass-card {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.detached-widget-window__content .widget-instance-root {
+  overflow: hidden;
+}
+
+.money-popout-button {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+}
+
+.journal-popout-button svg {
+  width: 14px;
+  height: 14px;
+}

@@ -1,6 +1,5 @@
-
 /* [Figma Mapping] Mobile Web shell only
-   Connections: MobileLayout / MobileNavigation / MobileDashboard.
+   Connections: MobileLayout / MobileNavigation / MobileDashboard / MobileWidgetEditor.
    Existing theme tokens and Widget CSS remain the visual source of truth.
    모바일 전용 클래스에만 적용하며 desktop 좌표/밀도 토큰은 변경하지 않습니다. */
 .mobile-layout {
@@ -209,6 +208,7 @@
 }
 
 /* 좁은 휴대폰의 상단·하단 여백 */
+
 @media (max-width: 420px) {
   .mobile-header {
     padding-inline: max(8px, env(safe-area-inset-left))
@@ -233,6 +233,7 @@
   .mobile-navigation-item span {
     font-size: 11px;
   }
+
 }
 
 /* Today Focus: 모바일에서는 전체 페이지 스크롤 사용 */
@@ -333,7 +334,6 @@ body:has(.mobile-layout)
  *
  * Mac Core의 공통 재질은 유지한다.
  * ============================================================================ */
-
 :is([data-theme="mac-core"], .theme-mac-core) .mobile-layout {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -392,108 +392,9 @@ body:has(.mobile-layout)
   gap: 6px;
 }
 
-/* ============================================================================
- * MAC CORE — DAILY JOURNAL 전용 모바일 헤더 수정
- * ============================================================================
- *
- * [파일]
- * src/styles/mobile.css
- *
- * [연결]
- * DailyJournalWidget.tsx → GlassCard.tsx
- *
- * [화면 구조]
- * .daily-journal-widget
- *   └─ .widget-frame__header
- *       ├─ .widget-frame__title-group
- *       │   └─ 아이콘 + Daily Journal
- *       └─ .widget-frame__actions
- *           └─ .journal-date-nav
- *               └─ 이전 날짜 / 날짜 선택 / 다음 날짜
- *
- * [수정 이유]
- * 기존 display:grid와 actions width:100% 때문에
- * Mac Core에서만 제목과 날짜가 항상 두 줄로 분리됐다.
- *
- * 가로 폭이 충분하면 한 줄, 부족하면 자동 줄바꿈한다.
- * PC 및 다른 테마에는 영향을 주지 않는다.
- * ============================================================================ */
-
-:is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout .daily-journal-widget > .widget-frame__header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 0;
-  padding: 8px 10px;
-  gap: 6px;
-}
-
-/* Journal 제목의 좌측 시작선 */
-:is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout
-  .daily-journal-widget
-  > .widget-frame__header
-  > .widget-frame__title-group {
-  flex: 1 1 108px;
-  min-width: 0;
-  min-height: 0;
-  align-items: center;
-}
-
-/* 날짜 선택 영역: 가로 폭이 충분하면 제목 오른쪽 */
-:is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout
-  .daily-journal-widget
-  > .widget-frame__header
-  > .widget-frame__actions {
-  flex: 0 1 auto;
-  width: auto;
-  max-width: 100%;
-  min-width: 0;
-  margin-left: auto;
-}
-
-/* 날짜 컨트롤은 추가 HTML 래퍼 없이 기존 flex 유지 */
-:is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout .daily-journal-widget .journal-date-nav {
-  display: flex;
-  align-items: center;
-  width: auto;
-  min-width: 0;
-  gap: 4px;
-}
-
-/* 이전 날짜 / 다음 날짜 버튼 */
-:is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout .daily-journal-widget .journal-date-nav button {
-  flex: 0 0 32px;
-  width: 32px;
-  min-width: 32px;
-  height: 32px;
-  min-height: 32px;
-}
-
-/* 날짜 입력창: iOS Safari 자동 확대 방지를 위해 16px 유지 */
-:is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout .daily-journal-widget .journal-date-nav input {
-  flex: 0 1 120px;
-  width: 120px;
-  min-width: 90px;
-  max-width: 120px;
-  height: 32px;
-  min-height: 32px;
-  padding-inline: 3px;
-  font-size: 16px;
-}
-
-/* 날짜·Progress가 헤더와 본문에서 중복되지 않도록
-   Journal 헤더의 부제목만 숨긴다. */
-:is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout .daily-journal-widget .widget-frame__subtitle {
-  display: none;
-}
+/* Journal date/header geometry is owned by mobile-journal.css and
+   theme adaptations by mobile-finish.css. The obsolete Mac Core Journal
+   overrides were removed from this shared shell stylesheet. */
 
 /* ============================================================================
  * MOBILE SETTINGS SHEET
@@ -659,6 +560,7 @@ body:has(.mobile-layout)
     gap: 8px !important;
     border-radius: 14px !important;
   }
+
 }
 
 /* ============================================================================
@@ -779,9 +681,11 @@ body:has(.mobile-layout)
     border-radius: 0 !important;
     box-shadow: none;
   }
+
 }
 
 /* 모바일 위젯 간격 및 폰트 밀도 */
+
 @media (max-width: 767px) {
   .mobile-header {
     padding-block: calc(6px + env(safe-area-inset-top)) 6px;
@@ -821,6 +725,7 @@ body:has(.mobile-layout)
   .mobile-widget-slot .widget-frame__header p {
     font-size: 9px;
   }
+
 }
 
 /* ============================================================================
@@ -933,9 +838,11 @@ body:has(.mobile-layout)
     padding-inline: 5px !important;
     font-size: 7.5px !important;
   }
+
 }
 
 /* Settings 모바일 압축 */
+
 @media (max-width: 767px) {
   body:has(.mobile-layout) .settings-modal-body,
   body:has(.mobile-layout) .settings-body,
@@ -1023,9 +930,11 @@ body:has(.mobile-layout)
     font-size: 10px !important;
     line-height: 1.3 !important;
   }
+
 }
 
 /* 모바일 공통 글자 크기 */
+
 @media (max-width: 767px) {
   .mobile-layout .glass-card-body,
   .mobile-layout .widget-frame__body {
@@ -1041,5 +950,142 @@ body:has(.mobile-layout)
     :is(.today-focus-main h2, .today-focus-hero h2, .today-focus-block h3) {
     font-size: clamp(15px, 4.6vw, 21px);
     line-height: 1.2;
+  }
+
+}
+
+/* ============================================================================
+ * MOBILE WIDGET EDITOR — GRID / HEIGHT / HEADER (MOBILE ONLY)
+ *
+ * Components:
+ * - App.tsx                         : selects dashboard or editor
+ * - MobileLayout.tsx                : data-widget-edit-mode, header actions
+ * - MobileDashboard.tsx             : data-mobile-grid, data-mobile-width,
+ *                                     data-mobile-height, --mobile-widget-height
+ * - useMobileWidgetLayout.tsx       : independently persisted mobile settings
+ * - MobileWidgetEditor.tsx          : editing controls and height slider
+ *
+ * Keep all layout rules inside .mobile-layout. No changes to the desktop
+ * DashboardGrid's 16-column coordinates, Wide/Laptop modes or saved widget data.
+ * ============================================================================ */
+
+/* Two underlying grid columns. The JSX sets grid-column per slot: full spans
+   both columns; half spans one. This rule also acts as a CSS fallback. */
+.mobile-layout .mobile-dashboard[data-mobile-grid="editable"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+/* A slot, not the widget's internal panels, owns dashboard width. */
+.mobile-layout .mobile-dashboard[data-mobile-grid="editable"]
+  > .mobile-widget-slot {
+  min-width: 0;
+  max-width: 100%;
+  justify-self: stretch;
+}
+
+/* The component already sets gridColumn inline. These declarations also
+   support inspection in Figma and protect against old one-column selectors. */
+.mobile-layout .mobile-dashboard[data-mobile-grid="editable"]
+  > .mobile-widget-slot[data-mobile-width="full"] {
+  grid-column: 1 / -1;
+}
+
+.mobile-layout .mobile-dashboard[data-mobile-grid="editable"]
+  > .mobile-widget-slot[data-mobile-width="half"] {
+  grid-column: span 1;
+}
+
+/* Auto height must keep current widget-specific behavior.
+   Do NOT change the CSS of .mobile-widget-slot[data-mobile-height="auto"]. */
+
+/* User-chosen height: higher specificity than the later
+   mobile-study.css/mobile-calendar.css/mobile-career.css auto !important rules.
+   The variable is set as an inline custom property on the slot by React. */
+.mobile-layout .mobile-dashboard[data-mobile-grid="editable"]
+  > .mobile-widget-slot[data-mobile-height="custom"] {
+  height: var(--mobile-widget-height) !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: hidden;
+}
+
+/* Ordinary widgets: Slot -> WidgetSlot (display: contents) -> widget host
+   -> GlassCard. The host remains mounted when layout changes, preserving
+   Memo, Journal and Money local state and any active input. */
+.mobile-layout .mobile-dashboard[data-mobile-grid="editable"]
+  > .mobile-widget-slot[data-mobile-height="custom"]
+  .widget-instance-root {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.mobile-layout .mobile-dashboard[data-mobile-grid="editable"]
+  > .mobile-widget-slot[data-mobile-height="custom"]
+  .widget-instance-root > .glass-card {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+/* Study, Calendar and Career are direct custom mobile cards, not WidgetSlots.
+   Limit scrolling to the card in custom-height mode; keep their full-screen
+   detail/editor screens unaffected. This also wins over the later shared
+   theme CSS (mobile-finish.css) that normally clips card overflow. */
+.mobile-layout .mobile-dashboard[data-mobile-grid="editable"]
+  > .mobile-widget-slot[data-mobile-height="custom"]
+  > :is(.mobile-study-card, .mobile-calendar-card, .mobile-career-card) {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain;
+}
+
+/* In edit mode the top header contains four actions. Keep the current tab
+   title to one ellipsized line so the actions remain fully tappable. */
+.mobile-layout .mobile-heading {
+  min-width: 0;
+}
+
+.mobile-layout .mobile-heading h1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+/* The edit controls sit in the existing MobileLayout scroll area. */
+.mobile-layout[data-widget-edit-mode="true"] .mobile-main {
+  min-width: 0;
+  overflow-y: auto;
+}
+
+/* iOS Safari zooms the page when an input control has a font smaller than 16px. */
+.mobile-layout[data-widget-edit-mode="true"] .mobile-main select {
+  min-height: 44px;
+  font-size: 16px;
+}
+
+/* At the narrowest device widths, 4 header actions must still fit.
+   On tiny phones a half-width widget is too narrow to remain usable. */
+@media (max-width: 359px) {
+  .mobile-layout .mobile-header {
+    gap: 4px;
+  }
+
+  .mobile-layout .mobile-header-actions {
+    gap: 0;
+  }
+
+  .mobile-layout .mobile-header-actions button {
+    width: 36px;
+    min-width: 36px;
+    height: 40px;
+  }
+
+  .mobile-layout .mobile-dashboard[data-mobile-grid="editable"]
+    > .mobile-widget-slot[data-mobile-width="half"] {
+    grid-column: 1 / -1 !important;
   }
 }

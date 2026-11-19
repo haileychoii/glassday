@@ -36,12 +36,16 @@ export const HealthWidget = () => {
     resetValue,
   } = useLocalStorage<HealthData>("glassday.health", defaultHealth);
 
-  const total = health.start - health.target;
-  const progressed = health.start - health.current;
+  // KO: 체중 감량/증량 어느 목표든 시작값에서 목표 방향으로 이동한 양을 계산한다.
+  // EN: Calculate progress toward either a lower-weight or higher-weight goal.
+  const direction = health.target < health.start ? -1 : 1;
+  const total = Math.abs(health.target - health.start);
+  const progressed = Math.max(0, (health.current - health.start) * direction);
+  const remaining = Math.max(0, (health.target - health.current) * direction);
   const progress =
-    total <= 0 ? 0 : Math.max(0, Math.min(100, (progressed / total) * 100));
-
-  const remaining = Math.max(0, health.current - health.target).toFixed(1);
+    total === 0 ? 0 : Math.max(0, Math.min(100, (progressed / total) * 100));
+  const changeLabel = direction < 0 ? "kg lost" : "kg gained";
+  const goalReached = remaining === 0 && progressed >= total && total > 0;
 
   const updateField = <K extends keyof HealthData>(
     key: K,
@@ -68,7 +72,7 @@ export const HealthWidget = () => {
         <div className="health-metrics-grid grid grid-cols-3 gap-2">
           <label className="health-metric-card rounded-2xl bg-white/25 border border-white/40 p-3">
             <div className="text-[11px] text-muted-foreground mb-1">
-              Start
+              Start weight
             </div>
             <input
               type="number"
@@ -81,7 +85,7 @@ export const HealthWidget = () => {
 
           <label className="health-metric-card rounded-2xl bg-white/25 border border-white/40 p-3">
             <div className="text-[11px] text-muted-foreground mb-1">
-              Current
+              Current weight
             </div>
             <input
               type="number"
@@ -94,7 +98,7 @@ export const HealthWidget = () => {
 
           <label className="health-metric-card rounded-2xl bg-white/25 border border-white/40 p-3">
             <div className="text-[11px] text-muted-foreground mb-1">
-              Goal
+              Goal weight
             </div>
             <input
               type="number"
@@ -107,21 +111,37 @@ export const HealthWidget = () => {
         </div>
 
         <div className="health-progress-panel">
-          <div className="flex justify-between text-xs mb-2">
-            <span className="text-muted-foreground">Progress</span>
-            <span className="tabular-nums">{Math.round(progress)}%</span>
+          <div className="health-progress-summary">
+            <div>
+              <span className="health-progress-eyebrow">Progress to goal</span>
+              <strong className="health-progress-primary">
+                {progressed.toFixed(1)} <small>{changeLabel}</small>
+              </strong>
+            </div>
+            <span className="health-progress-percent tabular-nums">
+              {Math.round(progress)}%
+            </span>
           </div>
 
-          <div className="health-progress-track h-2 rounded-full bg-white/30 overflow-hidden">
+          <div
+            className="health-progress-track h-2 rounded-full bg-white/30 overflow-hidden"
+            role="progressbar"
+            aria-label="Weight goal progress"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(progress)}
+          >
             <div
               className="h-full rounded-full progress-gradient transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <div className="text-xs text-muted-foreground mt-2">
-            {remaining}kg to go
-          </div>
+          <p className="health-progress-detail">
+            {goalReached
+              ? "Goal reached"
+              : `${remaining.toFixed(1)} kg remaining · ${total.toFixed(1)} kg total goal`}
+          </p>
         </div>
 
         <label className="health-program-card block rounded-2xl bg-white/25 border border-white/40 p-3">
