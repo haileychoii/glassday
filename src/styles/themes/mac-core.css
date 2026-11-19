@@ -200,10 +200,10 @@
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .liquid-shell::after {
   content: "";
   position: absolute;
-  top: 18px;
+  top: 17px;
   left: 18px;
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   z-index: 3;
   border-radius: 999px;
   background: #ff5f57;
@@ -216,10 +216,63 @@
 
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
   .liquid-shell[data-sidebar-collapsed="true"]::after {
-  left: 13px;
-  transform: scale(0.82);
+  left: 10px;
+  transform: scale(0.78);
   transform-origin: left center;
 }
+
+/*
+ * EN: Mac Core uses familiar color emoji for widget meaning, while the
+ * shared GlassCard still owns the size and alignment of the icon slot.
+ * This keeps Calendar, Journal, Money, and the other widgets consistent.
+ * KO: Mac Core에서는 위젯 의미를 바로 읽을 수 있는 컬러 이모지를 쓰되,
+ * 실제 크기와 정렬은 공통 GlassCard가 계속 책임진다.
+ */
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card-icon {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  flex-basis: 28px !important;
+  border-radius: 8px !important;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  text-align: center;
+}
+
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card-icon > svg {
+  display: none !important;
+}
+
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card-icon::before {
+  display: block;
+}
+
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Today Focus"] .glass-card-icon::before { content: "✨"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Alert Center"] .glass-card-icon::before { content: "🔔"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Calendar"] .glass-card-icon::before { content: "📅"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Daily Journal"] .glass-card-icon::before { content: "📔"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Memo"] .glass-card-icon::before { content: "📝"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Money"] .glass-card-icon::before { content: "💳"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Mood"] .glass-card-icon::before { content: "💗"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Health Progress"] .glass-card-icon::before { content: "🌿"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Study"] .glass-card-icon::before { content: "📚"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Timer"] .glass-card-icon::before { content: "⏱️"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Today Tasks"] .glass-card-icon::before { content: "✅"; }
 
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .liquid-shell > * {
   position: relative;

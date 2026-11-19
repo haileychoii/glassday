@@ -667,6 +667,9 @@ aside .sidebar-workspace-list {
   padding: 0;
 
   flex-shrink: 0;
+
+  display: inline-grid;
+  place-items: center;
 }
 
 .sidebar-brand-title {
@@ -959,10 +962,16 @@ aside .sidebar-workspace-list {
 }
 
 .workspace-theme-icon-mac-core {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
 
-  font-size: 16px;
+  min-width: 28px;
+  min-height: 28px;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 20px;
+  line-height: 1;
+  text-align: center;
+  transform: none;
 }
 
 .workspace-theme-icon-pixel-desk {

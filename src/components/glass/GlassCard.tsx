@@ -65,7 +65,16 @@ export const GlassCard = ({
   subtitleStyle,
 }: GlassCardProps) => {
   return (
-    <section className={`glass-card widget-frame h-full ${className}`}>
+    <section
+      className={`glass-card widget-frame h-full ${className}`}
+      /*
+       * EN: The semantic title lets a theme replace the decorative header
+       * icon without changing every widget component.
+       * KO: 각 위젯을 직접 수정하지 않아도 테마가 의미에 맞는 이모지를
+       * 선택할 수 있도록 제목을 데이터 속성으로 전달한다.
+       */
+      data-widget-title={title}
+    >
       {/* Header row:
           icon + title copy on the left, widget-specific controls on the right */}
       <div className="glass-card-header widget-card-header widget-frame__header">
