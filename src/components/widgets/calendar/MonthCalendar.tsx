@@ -10,8 +10,7 @@
  * Responsive: container의 width/height에 맞춰 cell을 재분배하고 event는 cell 안에 유지한다.
  * ============================================================
  */
-import { useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { useMemo, useState } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
 import { getEventColor } from "../../../constants/colors";
 import type {
@@ -55,7 +54,6 @@ type HoverPreview = {
   notes?: string;
   x: number;
   y: number;
-  interactive?: boolean;
 };
 
 const weekdayLabels = ["월", "화", "수", "목", "금", "토", "일"];
@@ -132,11 +130,6 @@ const doesSegmentTouchColumn = (segment: RangeSegment, column: number) => {
   return column >= segment.startColumn && column < segment.endColumn;
 };
 
-const PREVIEW_WIDTH = 300;
-const PREVIEW_ESTIMATED_HEIGHT = 240;
-const PREVIEW_GAP = 10;
-const PREVIEW_VIEWPORT_PADDING = 12;
-
 const getPreviewPosition = (preview: HoverPreview) => {
   if (typeof window === "undefined") {
     return {
@@ -145,33 +138,9 @@ const getPreviewPosition = (preview: HoverPreview) => {
     };
   }
 
-  /*
-   * English: MonthCalendar sits inside a transformed react-grid-layout item.
-   * The preview is portaled to body below, so these remain true viewport
-   * coordinates and the card can stay beside the pointer without drifting.
-   * Korean: 대시보드 transform 때문에 hover 좌표가 두 번 더해지지 않도록
-   * preview를 body에 렌더링하고 커서와 가장 가까운 방향에 배치한다.
-   */
-  const canOpenRight =
-    preview.x + PREVIEW_GAP + PREVIEW_WIDTH <=
-    window.innerWidth - PREVIEW_VIEWPORT_PADDING;
-  const canOpenBelow =
-    preview.y + PREVIEW_GAP + PREVIEW_ESTIMATED_HEIGHT <=
-    window.innerHeight - PREVIEW_VIEWPORT_PADDING;
-
   return {
-    left: Math.max(
-      PREVIEW_VIEWPORT_PADDING,
-      canOpenRight
-        ? preview.x + PREVIEW_GAP
-        : preview.x - PREVIEW_WIDTH - PREVIEW_GAP
-    ),
-    top: Math.max(
-      PREVIEW_VIEWPORT_PADDING,
-      canOpenBelow
-        ? preview.y + PREVIEW_GAP
-        : preview.y - PREVIEW_ESTIMATED_HEIGHT - PREVIEW_GAP
-    ),
+    left: Math.min(preview.x + 14, window.innerWidth - 320),
+    top: Math.min(preview.y + 14, window.innerHeight - 180),
   };
 };
 
@@ -186,15 +155,6 @@ export const MonthCalendar = ({
   onEventClick,
 }: MonthCalendarProps) => {
   const [hoverPreview, setHoverPreview] = useState<HoverPreview | null>(null);
-  const previewCloseTimerRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (previewCloseTimerRef.current !== null) {
-        window.clearTimeout(previewCloseTimerRef.current);
-      }
-    };
-  }, []);
 
   const baseDate = selectedDate ?? currentDate ?? toDateString(new Date());
 
@@ -280,26 +240,27 @@ export const MonthCalendar = ({
     (onEventClick ?? onSelectEvent)?.(event);
   };
 
-  const cancelPreviewClose = () => {
-    if (previewCloseTimerRef.current === null) return;
-
-    window.clearTimeout(previewCloseTimerRef.current);
-    previewCloseTimerRef.current = null;
-  };
-
-  const schedulePreviewClose = () => {
-    cancelPreviewClose();
-    previewCloseTimerRef.current = window.setTimeout(() => {
-      setHoverPreview(null);
-      previewCloseTimerRef.current = null;
-    }, 140);
-  };
-
-  const showEventPreview = (
+  const showPreview = (
     event: CalendarEvent,
     mouseEvent: ReactMouseEvent<HTMLElement>
   ) => {
-    cancelPreviewClose();
+    setHoverPreview({
+      title: event.title,
+      lines: [
+        `${event.startDate} ${event.startTime} → ${event.endDate} ${event.endTime}`,
+        event.location,
+      ].filter(Boolean),
+      badge: event.source === "career" ? "Career Application" : undefined,
+      notes: event.notes,
+      x: mouseEvent.clientX,
+      y: mouseEvent.clientY,
+    });
+  };
+
+  const movePreview = (
+    event: CalendarEvent,
+    mouseEvent: ReactMouseEvent<HTMLElement>
+  ) => {
     setHoverPreview({
       title: event.title,
       lines: [
@@ -318,14 +279,12 @@ export const MonthCalendar = ({
     eventsToPreview: CalendarEvent[],
     mouseEvent: ReactMouseEvent<HTMLElement>
   ) => {
-    cancelPreviewClose();
     setHoverPreview({
       title,
       lines: eventsToPreview.map(formatPreviewLine),
       events: eventsToPreview,
       x: mouseEvent.clientX,
       y: mouseEvent.clientY,
-      interactive: true,
     });
   };
 
@@ -439,12 +398,12 @@ export const MonthCalendar = ({
                             } as React.CSSProperties
                           }
                           onMouseEnter={(mouseEvent) =>
-                            showEventPreview(event, mouseEvent)
+                            showPreview(event, mouseEvent)
                           }
                           onMouseMove={(mouseEvent) =>
-                            showEventPreview(event, mouseEvent)
+                            movePreview(event, mouseEvent)
                           }
-                          onMouseLeave={schedulePreviewClose}
+                          onMouseLeave={() => setHoverPreview(null)}
                           onClick={(clickEvent) => {
                             clickEvent.stopPropagation();
                             handleEventClick(event);
@@ -524,12 +483,12 @@ export const MonthCalendar = ({
   } as CSSProperties
 }
                       onMouseEnter={(mouseEvent) =>
-                        showEventPreview(event, mouseEvent)
+                        showPreview(event, mouseEvent)
                       }
                       onMouseMove={(mouseEvent) =>
-                        showEventPreview(event, mouseEvent)
+                        movePreview(event, mouseEvent)
                       }
-                      onMouseLeave={schedulePreviewClose}
+                      onMouseLeave={() => setHoverPreview(null)}
                       onClick={(clickEvent) => {
                         clickEvent.stopPropagation();
                         handleEventClick(event);
@@ -546,16 +505,11 @@ export const MonthCalendar = ({
         })}
       </div>
 
-      {hoverPreview &&
-        typeof document !== "undefined" &&
-        createPortal(
+      {hoverPreview && (
         <div
-          className={`calendar-month-event-preview${
-            hoverPreview.interactive ? " is-interactive" : ""
-          }`}
+          className="calendar-month-event-preview"
           style={getPreviewPosition(hoverPreview)}
-          onMouseEnter={cancelPreviewClose}
-          onMouseLeave={schedulePreviewClose}
+          onMouseLeave={() => setHoverPreview(null)}
         >
           <div className="calendar-month-event-preview-title">
             {hoverPreview.title}
@@ -599,8 +553,7 @@ export const MonthCalendar = ({
               {hoverPreview.notes}
             </div>
           )}
-        </div>,
-        document.body
+        </div>
       )}
     </div>
   );

@@ -74,8 +74,8 @@ import {
   JOURNAL_STORAGE_KEY,
   journalMoodLabels,
   journalMoodOptions,
-  JOURNAL_STORAGE_KEY,
-  normalizeJournalEntry,
+  loadJournalEntries,
+  saveJournalEntries,
   todayString,
   updateJournalEntry,
 } from "./journal/journalUtils";
@@ -412,122 +412,6 @@ export const DailyJournalWidget = () => {
   // ============================================================
   // 05. JOURNAL WIDGET UI
   // ============================================================
-
-  if (presentation === "compact") {
-    const compactTasks = entry.todayTasks.slice(0, 3);
-    const reflectionPreview =
-      entry.reflection.trim() || entry.memo.trim() || "오늘의 한 줄을 남겨보세요.";
-
-    return (
-      <>
-        <GlassCard
-          className="daily-journal-widget journal-compact-widget"
-          title="Daily Journal"
-          subtitle={`${entry.date} · ${progress}% filled`}
-          icon={<BookOpen className="w-4 h-4" />}
-          actions={
-            <button
-              type="button"
-              onClick={() => setDetailOpen(true)}
-              className="glass-button journal-expand-button"
-              title="일기 전체 편집"
-              aria-label="Open full journal editor"
-            >
-              <Maximize2 aria-hidden="true" />
-            </button>
-          }
-        >
-          {/* Compact summary / 작은 대시보드 요약
-              Existing JournalEntry is edited directly, so task checks here and
-              the full editor below always stay in sync. / 별도 요약 데이터를 만들지 않는다. */}
-          <div className="journal-compact-content">
-            <div className="journal-compact-metrics">
-              <div>
-                <span>Progress</span>
-                <strong>{progress}%</strong>
-              </div>
-              <div>
-                <span>Tasks</span>
-                <strong>{doneTaskCount}/{entry.todayTasks.length}</strong>
-              </div>
-              <div>
-                <span>Mood</span>
-                <strong>{journalMoodLabels[entry.condition]}</strong>
-              </div>
-            </div>
-
-            <section className="journal-compact-section">
-              <div className="journal-compact-section-title">
-                <ClipboardList aria-hidden="true" />
-                <span>Today</span>
-              </div>
-
-              <div className="journal-compact-tasks">
-                {compactTasks.length === 0 ? (
-                  <button
-                    type="button"
-                    className="journal-compact-empty"
-                    onClick={() => setDetailOpen(true)}
-                  >
-                    오늘 할 일을 추가해 보세요.
-                  </button>
-                ) : (
-                  compactTasks.map((task) => (
-                    <button
-                      key={task.id}
-                      type="button"
-                      className={cx(
-                        "journal-compact-task",
-                        task.done && "is-done"
-                      )}
-                      onClick={() =>
-                        updateTask("todayTasks", task.id, { done: !task.done })
-                      }
-                      aria-label={`${task.text} ${task.done ? "완료 취소" : "완료"}`}
-                    >
-                      <span className="journal-compact-check">
-                        {task.done && <Check aria-hidden="true" />}
-                      </span>
-                      <span>{task.text}</span>
-                    </button>
-                  ))
-                )}
-              </div>
-            </section>
-
-            <button
-              type="button"
-              className="journal-compact-reflection"
-              onClick={() => setDetailOpen(true)}
-            >
-              <Sparkles aria-hidden="true" />
-              <span>{reflectionPreview}</span>
-            </button>
-          </div>
-        </GlassCard>
-
-        {/* Full editor / 전체 편집기
-            FloatingWindow.tsx supplies save-on-close and responsive window bounds.
-            The detail instance shares the same localStorage key via useLocalStorage. */}
-        <FloatingWindow
-          open={detailOpen}
-          title="Daily Journal"
-          subtitle={`${entry.date} · ${progress}% filled`}
-          storageKey="glassday.journal.detailWindow.rect.v1"
-          defaultRect={{ x: 120, y: 64, w: 760, h: 640 }}
-          minWidth={380}
-          minHeight={460}
-          className="journal-detail-window"
-          onClose={() => setDetailOpen(false)}
-        >
-          <DailyJournalWidget
-            presentation="detail"
-            initialDate={selectedDate}
-          />
-        </FloatingWindow>
-      </>
-    );
-  }
 
   return (
     <GlassCard

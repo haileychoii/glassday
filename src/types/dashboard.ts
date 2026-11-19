@@ -25,13 +25,6 @@ export type GoogleSyncStatus = "not_synced" | "pending" | "synced" | "error";
 
 export type CalendarEventSource = "manual" | "career" | "study" | "system";
 
-/**
- * Calendar priority is intentionally shared with Career priority values.
- * English: stored values stay stable while the UI labels `medium` as Normal.
- * Korean: 저장값은 기존 Career와 맞추고 화면에서는 중간 단계를 Normal로 읽기 쉽게 표시한다.
- */
-export type CalendarPriority = "high" | "medium" | "low";
-
 export type CalendarEvent = {
   /** Calendar list key이며 event color fallback 계산에도 사용되는 안정적인 id. */
   id: string;
@@ -45,8 +38,6 @@ export type CalendarEvent = {
   notes: string;
   /** manual/career 등 생성 경로를 구분하며 detail interaction을 결정한다. */
   source: CalendarEventSource;
-  /** Week/Day ordering signal. Missing legacy values are normalized to medium. */
-  priority?: CalendarPriority;
   /** 원본 Career record와 Calendar projection을 연결하는 id. */
   sourceId?: string;
   careerApplicationId?: string;
@@ -65,7 +56,7 @@ export type CareerStatus =
   | "Rejected"
   | "Completed";
 
-export type CareerPriority = CalendarPriority;
+export type CareerPriority = "high" | "medium" | "low";
 
 export type CareerStageStatus = "todo" | "doing" | "done" | "skipped";
 
@@ -121,18 +112,15 @@ export type CareerInterviewReview = {
   notes: string;
 };
 
-/* Career file attachment
-   The historical type name and jobImages/noteImages keys stay unchanged for
-   saved-data compatibility. New records identify image/PDF explicitly.
-   기존 사진 저장 키는 유지하고 kind로 이미지와 PDF를 구분합니다. */
+/* Career image attachment
+   Job-detail and Notes galleries share this model and the same CareerItem
+   snapshot used by Wide/Laptop and cloud sync.
+   직무 사진과 메모 사진은 레이아웃별로 나뉘지 않고 같은 지원 항목에 저장됩니다. */
 export type CareerImageAttachment = {
   id: string;
   name: string;
   dataUrl: string;
   createdAt: string;
-  kind?: "image" | "pdf";
-  mimeType?: string;
-  size?: number;
 };
 
 export type CareerItem = {
@@ -148,16 +136,11 @@ export type CareerItem = {
 
   location: string;
   workType: string;
-  /** @deprecated Legacy overall deadline. New UI stores dates in `stages`. */
   deadline: string;
 
-  /** @deprecated Legacy snapshot fields. New UI stores dates in `stages`. */
   applicationStartDate: string;
-  /** @deprecated Legacy snapshot fields. New UI stores dates in `stages`. */
   applicationStartTime: string;
-  /** @deprecated Legacy snapshot fields. New UI stores dates in `stages`. */
   applicationEndDate: string;
-  /** @deprecated Legacy snapshot fields. New UI stores dates in `stages`. */
   applicationEndTime: string;
 
   postingUrl: string;

@@ -243,7 +243,6 @@ const defaultCalendarEvents: CalendarEvent[] = [
     location: "",
     notes: "",
     source: "manual",
-    priority: "medium",
     color: getPastelColorById("daily-work"),
     googleSyncStatus: "not_synced",
   },
@@ -257,7 +256,6 @@ const defaultCalendarEvents: CalendarEvent[] = [
     location: "",
     notes: "",
     source: "manual",
-    priority: "medium",
     color: getPastelColorById("daily-study"),
     googleSyncStatus: "not_synced",
   },
@@ -441,7 +439,6 @@ const createCareerStageCalendarEvent = (
       .filter(Boolean)
       .join("\n"),
     source: "career",
-    priority: career.priority ?? "medium",
     sourceId: career.id,
     careerApplicationId: career.id,
     careerStageId: stage.id,
@@ -599,7 +596,6 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
   const calendarEvents = rawCalendarEvents.map((event) => ({
     ...event,
     color: event.color ?? getPastelColorById(event.id),
-    priority: normalizePriority(event.priority),
   }));
 
   const careerApplications = dedupeCareerApplications(rawCareerApplications);
@@ -613,12 +609,8 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
   }, [rawCareerApplications, setCareerApplications]);
 
   useEffect(() => {
-    /* Career schedule projection
-       English: only concrete selection stages are projected. Legacy overall
-       application-window fields stay in storage for snapshot compatibility but
-       never create Calendar noise.
-       Korean: 기존 전체 지원기간 값은 데이터 호환용으로만 보존하고, 캘린더에는
-       사용자가 입력한 서류 접수·발표·면접 같은 실제 전형 일정만 표시한다. */
+    /* Career의 지원 기간을 Calendar event로 투영한다.
+       Figma에서는 서로 다른 Component지만 데이터 record는 연결되어 있다. */
     setCalendarEvents((prev) =>
       dedupeCareerApplications(rawCareerApplications)
         .reduce<CalendarEvent[]>(
@@ -653,7 +645,6 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
       location: patch.location ?? "",
       notes: patch.notes ?? "",
       source: patch.source ?? "manual",
-      priority: normalizePriority(patch.priority),
       sourceId: patch.sourceId,
       careerApplicationId: patch.careerApplicationId,
       careerStageId: patch.careerStageId,
@@ -699,7 +690,6 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
           if (updatedEvent.careerStageId) {
             return normalizeCareerItem({
               ...career,
-              priority: updatedEvent.priority ?? career.priority,
               stages: (career.stages ?? []).map((stage) =>
                 stage.id === updatedEvent.careerStageId
                   ? {
@@ -725,7 +715,6 @@ export const DashboardDataProvider = ({ children }: { children: ReactNode }) => 
 
           return normalizeCareerItem({
             ...career,
-            priority: updatedEvent.priority ?? career.priority,
             applicationStartDate: updatedEvent.startDate,
             applicationStartTime: updatedEvent.startTime,
             applicationEndDate: updatedEvent.endDate,
@@ -898,25 +887,18 @@ export const useDashboardData = () => {
   return context;
 };
 
-/* Career attachment migration
-   Older snapshots contain image-only records without kind/mimeType. New PDF
-   entries use the same arrays so desktop, web, backup, and cloud sync keep one
-   source of truth. / 예전 사진은 image로 추론하고 PDF data URL도 보존합니다. */
+/* Career image migration
+   Older saved careers have no image arrays. Both job and Notes attachments use
+   this guard so malformed data cannot block an old local/cloud snapshot.
+   이전 저장 데이터에 사진 필드가 없어도 두 갤러리 모두 빈 배열로 안전하게 복구됩니다. */
 const normalizeCareerImages = (value: unknown): CareerImageAttachment[] => {
   if (!Array.isArray(value)) return [];
 
   return value.flatMap((item) => {
-    const isImage =
-      typeof item?.dataUrl === "string" &&
-      item.dataUrl.startsWith("data:image/");
-    const isPdf =
-      typeof item?.dataUrl === "string" &&
-      item.dataUrl.startsWith("data:application/pdf");
-
     if (
       typeof item?.id !== "string" ||
       typeof item?.dataUrl !== "string" ||
-      (!isImage && !isPdf)
+      !item.dataUrl.startsWith("data:image/")
     ) {
       return [];
     }
@@ -924,21 +906,8 @@ const normalizeCareerImages = (value: unknown): CareerImageAttachment[] => {
     return [
       {
         id: item.id,
-        name:
-          typeof item?.name === "string"
-            ? item.name
-            : isPdf
-              ? "Career document.pdf"
-              : "Career image",
+        name: typeof item?.name === "string" ? item.name : "Job image",
         dataUrl: item.dataUrl,
-        kind: isPdf ? "pdf" : "image",
-        mimeType:
-          typeof item?.mimeType === "string"
-            ? item.mimeType
-            : isPdf
-              ? "application/pdf"
-              : item.dataUrl.slice(5, item.dataUrl.indexOf(";")),
-        size: typeof item?.size === "number" ? item.size : undefined,
         createdAt:
           typeof item?.createdAt === "string"
             ? item.createdAt

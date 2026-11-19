@@ -136,17 +136,6 @@ import type { PopoutWidgetId } from "./lib/widgetPopup";
    Tauri에서 실제 사용하는 모드는 App 내부에서 결정한다.
 ============================================================ */
 
-const HOME_VIEW_MODE_STORAGE_KEY = "glassday.dashboard.homeView.v1";
-type HomeViewMode = "overview" | "widgets";
-
-/* Diary includes react-moveable, which is only needed on its own workspace.
-   해당 탭을 열 때만 편집 엔진을 내려받아 일반 대시보드 시작 번들을 줄인다. */
-const DiaryWorkspace = lazy(() =>
-  import("./components/diary/DiaryWorkspace").then((module) => ({
-    default: module.DiaryWorkspace,
-  }))
-);
-
 const readLayoutModeFromUrl = (): DashboardLayoutMode | null => {
   if (typeof window === "undefined") return null;
 
@@ -471,14 +460,6 @@ function App() {
     if (typeof window === "undefined") return;
     if (isTauriApp) return;
 
-    // UI preference only / 화면 보기 방식만 저장한다.
-    // Widget data and the user's grid coordinates remain in their existing keys.
-    window.localStorage.setItem(HOME_VIEW_MODE_STORAGE_KEY, homeViewMode);
-  }, [homeViewMode]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
     const handleStorageModeChange = (event: Event) => {
       const detail = (
         event as CustomEvent<{
@@ -601,14 +582,6 @@ function App() {
 
       if (matchingTab) {
         setActiveTabId(matchingTab.id);
-
-        /* Overview deep link bridge / 모아보기 상세 이동
-           TodayFocusWidget dispatches this event before opening Calendar/Career/Memo.
-           Switching Home back to the mounted Grid lets those existing components
-           receive their own detail events without duplicating detail UI here. */
-        if (matchingTab.id === "home" && homeViewMode === "overview") {
-          setHomeViewMode("widgets");
-        }
       }
     };
 
@@ -623,7 +596,7 @@ function App() {
         handleOpenWidget
       );
     };
-  }, [homeViewMode, setActiveTabId, tabs]);
+  }, [setActiveTabId, tabs]);
 
 
   /* ----------------------------------------------------------

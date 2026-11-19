@@ -8,14 +8,7 @@
     "build": "tsc -b && vite build",
     "tauri": "tauri",
     "lint": "eslint .",
-    "test:calendar": "node --import ./tests/register-typescript.mjs --test tests/calendar.test.mjs",
-    "test:career": "node --import ./tests/register-typescript.mjs --test tests/career.test.mjs",
-    "test:diary": "node --import ./tests/register-typescript.mjs --test tests/diaryTemplates.test.mjs",
-    "test:storage": "node --import ./tests/register-typescript.mjs --test tests/storage.test.mjs",
-    "test:auth": "node --import ./tests/register-typescript.mjs --test tests/desktopAuth.test.mjs",
-    "preview": "vite preview",
-    "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.0",
@@ -29,7 +22,6 @@
     "react-dom": "^19.2.6",
     "react-grid-layout": "^2.2.3",
     "react-icons": "^5.7.0",
-    "react-moveable": "^0.56.0",
     "react-resizable": "^4.0.2"
   },
   "devDependencies": {

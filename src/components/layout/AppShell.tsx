@@ -50,15 +50,7 @@ import { getCurrentTheme } from "../../constants/themes";
 import { syncNativeGlassEffect } from "../../lib/nativeGlassEffect";
 
 import { Sidebar } from "./Sidebar";
-import { TauriResizeHandles } from "./TauriResizeHandles";
 import { Topbar } from "./Topbar";
-import { getCurrentTheme, type ThemeId } from "../../constants/themes";
-import {
-  applyDefaultTauriZoom,
-  getSavedDesktopPin,
-  setNativeGlassEffect,
-  setDesktopPin,
-} from "../../utils/tauriDesktop";
 
 import type {
   DashboardLayoutMode,
@@ -94,7 +86,6 @@ type AppShellProps = {
 
   tabs: DashboardTab[];
   activeTabId: string;
-  homeViewMode: "overview" | "widgets";
 
   onChangeLayoutMode: (mode: DashboardLayoutMode) => void;
 
@@ -174,7 +165,6 @@ export const AppShell = ({
   activeTabId,
 
   onChangeLayoutMode,
-  onChangeHomeViewMode,
   onToggleEditMode,
   onOpenSettings,
 
@@ -546,14 +536,6 @@ export const AppShell = ({
         data-runtime="tauri"
       >
         {shellContent}
-
-        {/*
-         * Borderless native resize layer
-         * English: `TauriResizeHandles.tsx` restores the eight native resize
-         * directions that disappear when Tauri decorations are disabled.
-         * Korean: 보이는 테두리를 추가하지 않고 가장자리 드래그만 복원한다.
-         */}
-        <TauriResizeHandles />
       </div>
     );
   }
