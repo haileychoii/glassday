@@ -19,6 +19,7 @@
  */
 
 import {
+  Columns3,
   LayoutGrid,
   Monitor,
   Pin,
@@ -46,8 +47,10 @@ type TopbarProps = {
   layoutMode: DashboardLayoutMode;
   tabs: DashboardTab[];
   activeTabId: string;
+  homeViewMode: "overview" | "widgets";
 
   onChangeLayoutMode: (mode: DashboardLayoutMode) => void;
+  onChangeHomeViewMode: (mode: "overview" | "widgets") => void;
   onToggleEditMode: () => void;
   onOpenSettings: () => void;
 
@@ -64,7 +67,9 @@ export const Topbar = ({
   layoutMode,
   tabs,
   activeTabId,
+  homeViewMode,
   onChangeLayoutMode,
+  onChangeHomeViewMode,
   onToggleEditMode,
   onOpenSettings,
   onSelectTab,
@@ -79,6 +84,9 @@ export const Topbar = ({
    * Tauri   -> true
    */
   const isTauriApp = isTauri();
+  const usesDedicatedWorkspace = ["career", "study", "diary"].includes(
+    activeTabId
+  );
 
   /*
    * Tauri-only desktop widget state.
@@ -178,6 +186,41 @@ export const Topbar = ({
           ================================================= */}
 
           <div className="topbar-actions">
+            {/* Home view selector / 홈 보기 전환
+                Overview reuses TodayFocus + AlertCenter, while Widgets keeps the
+                user's saved DashboardGrid untouched. / 저장된 자유 배치를 덮어쓰지 않는다. */}
+            {activeTabId === "home" && !editMode && (
+              <div className="home-view-toggle" aria-label="Home view">
+                <button
+                  type="button"
+                  className={cn(
+                    "home-view-button",
+                    homeViewMode === "overview" && "is-active"
+                  )}
+                  onClick={() => onChangeHomeViewMode("overview")}
+                  aria-pressed={homeViewMode === "overview"}
+                  title="오늘 모아보기"
+                >
+                  <Rows3 aria-hidden="true" />
+                  <span>Overview</span>
+                </button>
+
+                <button
+                  type="button"
+                  className={cn(
+                    "home-view-button",
+                    homeViewMode === "widgets" && "is-active"
+                  )}
+                  onClick={() => onChangeHomeViewMode("widgets")}
+                  aria-pressed={homeViewMode === "widgets"}
+                  title="전체 위젯 보기"
+                >
+                  <Columns3 aria-hidden="true" />
+                  <span>Widgets</span>
+                </button>
+              </div>
+            )}
+
             {/* ===============================================
                 WEB ONLY: Wide / Laptop
 
@@ -259,31 +302,33 @@ export const Topbar = ({
                 Edit
             =============================================== */}
 
-            <button
-              type="button"
-              onClick={onToggleEditMode}
-              className={cn(
-                "glass-button topbar-action-button",
-                editMode && "is-active"
-              )}
-              title={
-                editMode
-                  ? "Finish editing dashboard"
-                  : "Edit dashboard"
-              }
-              aria-label={
-                editMode
-                  ? "Finish editing dashboard"
-                  : "Edit dashboard"
-              }
-              aria-pressed={editMode}
-            >
-              <LayoutGrid className="w-3.5 h-3.5" />
+            {!usesDedicatedWorkspace && (
+              <button
+                type="button"
+                onClick={onToggleEditMode}
+                className={cn(
+                  "glass-button topbar-action-button",
+                  editMode && "is-active"
+                )}
+                title={
+                  editMode
+                    ? "Finish editing dashboard"
+                    : "Edit dashboard"
+                }
+                aria-label={
+                  editMode
+                    ? "Finish editing dashboard"
+                    : "Edit dashboard"
+                }
+                aria-pressed={editMode}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
 
-              <span>
-                {editMode ? "Done" : "Edit"}
-              </span>
-            </button>
+                <span>
+                  {editMode ? "Done" : "Edit"}
+                </span>
+              </button>
+            )}
 
             {/* Keep Settings last so it sits at the far right in every layout.
                 모든 레이아웃에서 설정 버튼이 맨 오른쪽에 오도록 마지막에 배치한다. */}

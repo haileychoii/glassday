@@ -38,6 +38,8 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
+import { getCurrent, onOpenUrl } from "@tauri-apps/plugin-deep-link";
+import { openUrl } from "@tauri-apps/plugin-opener";
 
 import {
   applyGlassdayStorageSnapshot,
@@ -48,7 +50,8 @@ import {
   getGlassdaySnapshotTimestamp,
   isCompatibleGlassdayStorageSnapshot,
   markGlassdayLocalSyncedAt,
-  patchLocalStorageEvents,
+  shouldSyncStorageChange,
+  type GlassdayStorageChangeDetail,
   type GlassdayStorageSnapshot,
 } from "../lib/glassdayStorage";
 import {
@@ -57,6 +60,10 @@ import {
 } from "../constants/dashboardStorage";
 import { applyTheme, getCurrentTheme } from "../constants/themes";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import {
+  DESKTOP_AUTH_CALLBACK_URL,
+  readDesktopAuthCallback,
+} from "../lib/desktopAuth";
 import { isTauri } from "@tauri-apps/api/core";
 import { getCurrent, onOpenUrl } from "@tauri-apps/plugin-deep-link";
 import { openUrl } from "@tauri-apps/plugin-opener";
@@ -208,19 +215,9 @@ const getAuthRedirectUrl = () => {
    * Web Preview의 Wide/Laptop 복원 로직을 사용하지 않는다.
    */
   if (isTauri()) {
-    url.searchParams.set("layout", "laptop");
-
-    window.localStorage.setItem(
-      DASHBOARD_LAYOUT_MODE_KEY,
-      "laptop"
-    );
-
-    window.localStorage.setItem(
-      DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY,
-      "laptop"
-    );
-
-    return url.toString();
+    // The desktop callback is handled without navigating the WebView.
+    // 웹 URL로 이동하면 설치 앱 대신 오래된 배포 화면이 열리므로 전용 주소를 쓴다.
+    return DESKTOP_AUTH_CALLBACK_URL;
   }
 
   /*
@@ -278,6 +275,7 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
      매번 다시 적용하는 문제도 피할 수 있다. */
   const hydratedUserIdRef = useRef<string | null>(null);
   const syncInFlightRef = useRef(false);
+  const handledDesktopAuthCodeRef = useRef<string | null>(null);
 
   const setSyncState = useCallback(
     (status: SyncStatus, message?: string) => {
@@ -472,6 +470,76 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
       console.error(error);
       setSyncState("error", error instanceof Error ? error.message : "Google sign-in could not start.");
     }
+
+    if (desktop) {
+      try {
+        // Supabase generates the PKCE verifier in the app's localStorage.
+        // Open its authorization URL externally so WebView never turns into
+        // the old Vercel site; the deep link returns only the one-time code.
+        // 검증 코드는 앱에 보관하고 브라우저에는 로그인 페이지만 연다.
+        if (!data.url || new URL(data.url).origin !== new URL(import.meta.env.VITE_SUPABASE_URL).origin) {
+          throw new Error("The sign-in URL did not match this Supabase project.");
+        }
+        await openUrl(data.url);
+        setSyncState("authenticating", "Finish Google sign-in in your browser, then return to Glassday.");
+      } catch (openError) {
+        setSyncState("error", openError instanceof Error ? openError.message : String(openError));
+      }
+    }
+  }, [setSyncState]);
+
+  useEffect(() => {
+    if (!supabase || !isTauri()) return;
+
+    const authClient = supabase.auth;
+    let cancelled = false;
+    let unlisten: (() => void) | undefined;
+
+    const handleCallback = async (urls: string[]) => {
+      for (const rawUrl of urls) {
+        const callback = readDesktopAuthCallback(rawUrl);
+        if (!callback || cancelled) continue;
+        if (callback.error) {
+          setSyncState("error", callback.error);
+          continue;
+        }
+        if (!callback.code) continue;
+        if (handledDesktopAuthCodeRef.current === callback.code) continue;
+
+        handledDesktopAuthCodeRef.current = callback.code;
+        setSyncState("authenticating", "Completing Google sign-in...");
+        // supabase.ts enables PKCE only in Tauri; exchange keeps the session
+        // in the original app origin, so theme and dashboard state survive.
+        // 설치 앱의 저장소에 세션을 만들며 현재 화면은 새로고침하지 않는다.
+        const { error } = await authClient.exchangeCodeForSession(callback.code);
+        if (cancelled) return;
+        if (error) setSyncState("error", error.message);
+      }
+    };
+
+    // Register the live listener first, then check a launch-time URL so a
+    // callback arriving between those steps cannot be missed.
+    // 이미 실행 중인 창과 링크로 처음 열린 창을 둘 다 처리한다.
+    void onOpenUrl((urls) => { void handleCallback(urls); })
+      .then((stop) => {
+        if (cancelled) {
+          stop();
+          return;
+        }
+        unlisten = stop;
+        return getCurrent();
+      })
+      .then((urls) => {
+        if (urls && !cancelled) void handleCallback(urls);
+      })
+      .catch((error) => {
+        if (!cancelled) setSyncState("error", String(error));
+      });
+
+    return () => {
+      cancelled = true;
+      unlisten?.();
+    };
   }, [setSyncState]);
 
   useEffect(() => {
@@ -629,10 +697,6 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
   }, [setSyncState]);
 
   useEffect(() => {
-    patchLocalStorageEvents();
-  }, []);
-
-  useEffect(() => {
     if (!supabase) return;
 
     void supabase.auth.getSession().then(({ data, error }) => {
@@ -712,7 +776,11 @@ export const CloudSyncProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!session?.user || !supabase) return;
 
-    const handleStorageChange = () => {
+    const handleStorageChange = (event: Event) => {
+      // Use the snapshot allowlist from glassdayStorage.ts for upload triggers too.
+      // 한국어: 테마·탭 이동은 데이터 변경이 아니므로 900ms 업로드를 예약하지 않는다.
+      const detail = (event as CustomEvent<GlassdayStorageChangeDetail>).detail;
+      if (!shouldSyncStorageChange(detail)) return;
       if (suppressUploadRef.current) return;
 
       if (syncTimeoutRef.current) {

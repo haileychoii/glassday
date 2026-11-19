@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 
 import { GlassCard } from "../glass/GlassCard";
+import { GLASSDAY_STORAGE_EVENT, type GlassdayStorageChangeDetail } from "../../lib/glassdayStorage";
 import {
   getStudyPlannerTotalMinutes,
   readStudyPlannerStorage,
@@ -319,20 +320,26 @@ export const AlertCenterWidget = () => {
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
+    // One event source for writes, resets, and snapshot restores. See
+    // lib/glassdayStorage.ts and DailyJournalWidget.tsx; unrelated edits are ignored.
+    // 한국어: 같은 변경을 위젯별 이벤트로 중복 수신하지 않는다.
+    const relevant = (key: string) => ["glassday.career.", "glassday.study.", "glassday.journal."]
+      .some(prefix => key.startsWith(prefix));
     const refresh = () => setRefreshKey((prev) => prev + 1);
-
-    window.addEventListener("storage", refresh);
-    window.addEventListener("glassday:career-updated", refresh);
-    window.addEventListener("glassday:study-updated", refresh);
-    window.addEventListener("glassday:journal-updated", refresh);
-    window.addEventListener("glassday:journal-cleared", refresh);
+    const handleChange = (event: Event) => {
+      const detail = (event as CustomEvent<GlassdayStorageChangeDetail>).detail;
+      const keys = detail?.keys ?? (detail?.key ? [detail.key] : null);
+      if (!keys || keys.some(relevant)) refresh();
+    };
+    const handleStorage = (event: StorageEvent) => {
+      if (event.storageArea === localStorage && (!event.key || relevant(event.key))) refresh();
+    };
+    window.addEventListener(GLASSDAY_STORAGE_EVENT, handleChange);
+    window.addEventListener("storage", handleStorage);
 
     return () => {
-      window.removeEventListener("storage", refresh);
-      window.removeEventListener("glassday:career-updated", refresh);
-      window.removeEventListener("glassday:study-updated", refresh);
-      window.removeEventListener("glassday:journal-updated", refresh);
-      window.removeEventListener("glassday:journal-cleared", refresh);
+      window.removeEventListener(GLASSDAY_STORAGE_EVENT, handleChange);
+      window.removeEventListener("storage", handleStorage);
     };
   }, []);
 

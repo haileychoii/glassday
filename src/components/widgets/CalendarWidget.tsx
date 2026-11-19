@@ -25,6 +25,7 @@ import {
   ChevronRight,
   ExternalLink,
   Lock,
+  Maximize2,
   Pencil,
   Plus,
   Trash2,
@@ -38,7 +39,11 @@ import {
   OPEN_CALENDAR_EVENT,
   type OpenCalendarEventDetail,
 } from "../../constants/widgetNavigation";
-import type { CalendarEvent, CalendarView } from "../../types/dashboard";
+import type {
+  CalendarEvent,
+  CalendarPriority,
+  CalendarView,
+} from "../../types/dashboard";
 import {
   getEventColor,
   getPastelColorById,
@@ -55,6 +60,7 @@ import {
   formatEventTime,
   getMonthDates,
   getWeekDates,
+  normalizeCalendarPriority,
   sortEvents,
   toLocalDateInput,
 } from "./calendar/calendarUtils";
@@ -89,12 +95,34 @@ type DashboardDataWithCareerDetail = ReturnType<typeof useDashboardData> & {
   openCareerDetail?: (id: string) => void;
 };
 
+type CalendarWidgetProps = {
+  /** Dashboard shows a summary; the FloatingWindow renders the full calendar. */
+  presentation?: "compact" | "detail";
+  /** Compact navigation state is forwarded when opening the full calendar. */
+  initialDate?: string;
+  /** A summary event can open directly in the existing full event editor. */
+  initialEventId?: string;
+};
+
+const calendarPriorityOptions: Array<{
+  value: CalendarPriority;
+  label: string;
+}> = [
+  { value: "high", label: "High" },
+  { value: "medium", label: "Normal" },
+  { value: "low", label: "Low" },
+];
+
 /* Calendar widget keeps one shared data model for:
    - manual calendar events
    - career application windows mirrored into calendar view
    The wide/laptop modes only change presentation, not this data flow. */
 /** Calendar view state와 선택된 event detail state를 함께 관리한다. */
-export const CalendarWidget = () => {
+export const CalendarWidget = ({
+  presentation = "compact",
+  initialDate,
+  initialEventId,
+}: CalendarWidgetProps = {}) => {
   const dashboardData = useDashboardData() as DashboardDataWithCareerDetail;
 
   const {
@@ -106,8 +134,13 @@ export const CalendarWidget = () => {
   } = dashboardData;
 
   const [view, setView] = useState<CalendarView>("day");
-  const [selectedDate, setSelectedDate] = useState(toLocalDateInput());
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState(
+    initialDate ?? toLocalDateInput()
+  );
+  const [editingId, setEditingId] = useState<string | null>(
+    initialEventId ?? null
+  );
+  const [detailOpen, setDetailOpen] = useState(false);
   const [weekEditMode, setWeekEditMode] = useState(false);
 
   const editingEvent = editingId
@@ -126,6 +159,10 @@ export const CalendarWidget = () => {
 
       setSelectedDate(targetEvent.startDate);
       setEditingId(targetEvent.id);
+
+      if (presentation === "compact") {
+        setDetailOpen(true);
+      }
     };
 
     window.addEventListener(OPEN_CALENDAR_EVENT, handleOpenCalendarEvent);
@@ -133,7 +170,7 @@ export const CalendarWidget = () => {
     return () => {
       window.removeEventListener(OPEN_CALENDAR_EVENT, handleOpenCalendarEvent);
     };
-  }, [calendarEvents]);
+  }, [calendarEvents, presentation]);
 
   const visibleEvents = useMemo(() => {
     // Normalize first so manual and career-synced events render through
@@ -281,6 +318,171 @@ export const CalendarWidget = () => {
     openCareerDetail(careerId);
   };
 
+  if (presentation === "compact") {
+    const upcomingEndDate = addDays(selectedDate, 7);
+    const upcomingEvents = sortEvents(calendarEvents)
+      .filter((event) => eventTouchesRange(event, selectedDate, upcomingEndDate))
+      .slice(0, 4);
+    const highPriorityCount = upcomingEvents.filter(
+      (event) => normalizeCalendarPriority(event.priority) === "high"
+    ).length;
+
+    const openCompactEvent = (event: CalendarEvent) => {
+      if (event.source === "career") {
+        openEvent(event);
+        return;
+      }
+
+      setSelectedDate(event.startDate);
+      setEditingId(event.id);
+      setDetailOpen(true);
+    };
+
+    const addFromCompact = () => {
+      createManualEvent();
+      setDetailOpen(true);
+    };
+
+    return (
+      <>
+        <GlassCard
+          className="calendar-widget calendar-compact-widget"
+          title="Calendar"
+          subtitle={formatCalendarSubtitle(selectedDate)}
+          titleStyle={{ color: "hsl(var(--foreground) / 0.96)" }}
+          subtitleStyle={{ color: "hsl(var(--muted-foreground) / 0.82)" }}
+          icon={<CalendarDays className="w-4 h-4" />}
+          actions={
+            <div className="calendar-compact-actions">
+              <button
+                type="button"
+                onClick={() => setDetailOpen(true)}
+                className="glass-button"
+                title="전체 캘린더 열기"
+                aria-label="Open full calendar"
+              >
+                <Maximize2 aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={addFromCompact}
+                className="glass-button"
+                title="일정 추가"
+                aria-label="Add calendar event"
+              >
+                <Plus aria-hidden="true" />
+              </button>
+            </div>
+          }
+        >
+          {/* Compact calendar / 작은 대시보드 캘린더
+              MonthCalendar.tsx and WeekTimeline.tsx remain in the detail Variant;
+              this surface only reads the same DashboardDataContext event list. */}
+          <div className="calendar-compact-content">
+            <div className="calendar-compact-date-nav">
+              <button
+                type="button"
+                onClick={() => setSelectedDate((date) => addDays(date, -1))}
+                aria-label="Previous day"
+              >
+                <ChevronLeft aria-hidden="true" />
+              </button>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(event) => setSelectedDate(event.target.value)}
+                aria-label="Select calendar date"
+              />
+              <button
+                type="button"
+                onClick={() => setSelectedDate((date) => addDays(date, 1))}
+                aria-label="Next day"
+              >
+                <ChevronRight aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="calendar-compact-metrics">
+              <div>
+                <span>Today</span>
+                <strong>{dayEvents.length}</strong>
+              </div>
+              <div>
+                <span>Next 7 days</span>
+                <strong>{upcomingEvents.length}</strong>
+              </div>
+              <div>
+                <span>Priority</span>
+                <strong>{highPriorityCount}</strong>
+              </div>
+            </div>
+
+            <section className="calendar-compact-list" aria-label="Upcoming events">
+              {upcomingEvents.length === 0 ? (
+                <button
+                  type="button"
+                  className="calendar-compact-empty"
+                  onClick={addFromCompact}
+                >
+                  예정된 일정이 없습니다.
+                </button>
+              ) : (
+                upcomingEvents.map((event) => (
+                  <button
+                    key={event.id}
+                    type="button"
+                    className="calendar-compact-event"
+                    onClick={() => openCompactEvent(event)}
+                    title={`${event.title} · ${formatEventTime(event)}`}
+                    style={
+                      {
+                        "--event-color": getEventColor(event),
+                      } as CSSProperties
+                    }
+                  >
+                    <span className="calendar-compact-color" />
+                    <span className="calendar-compact-event-copy">
+                      <strong>{event.title}</strong>
+                      <small>{event.startDate} · {formatEventTime(event)}</small>
+                    </span>
+                    {normalizeCalendarPriority(event.priority) === "high" && (
+                      <span className="calendar-compact-priority">High</span>
+                    )}
+                  </button>
+                ))
+              )}
+            </section>
+          </div>
+        </GlassCard>
+
+        {/* Full calendar / 전체 캘린더
+            The existing Day/Week/Month editor is reused as a detail instance,
+            so no event model or editing behavior is duplicated. */}
+        <FloatingWindow
+          open={detailOpen}
+          title="Calendar"
+          subtitle={formatCalendarSubtitle(selectedDate)}
+          storageKey="glassday.calendar.detailWindow.rect.v1"
+          defaultRect={{ x: 96, y: 48, w: 880, h: 680 }}
+          minWidth={420}
+          minHeight={500}
+          className="calendar-detail-window"
+          onClose={() => {
+            setDetailOpen(false);
+            setEditingId(null);
+          }}
+        >
+          <CalendarWidget
+            key={`${selectedDate}-${editingId ?? "calendar"}`}
+            presentation="detail"
+            initialDate={selectedDate}
+            initialEventId={editingId ?? undefined}
+          />
+        </FloatingWindow>
+      </>
+    );
+  }
+
   return (
     <>
       <GlassCard
@@ -304,7 +506,19 @@ export const CalendarWidget = () => {
           </button>
         }
       >
-        <div className="calendar-widget-frame">
+        <div
+          className={cn("calendar-widget-frame", `is-${view}-view`)}
+        >
+          {/*
+            Calendar view hook / 캘린더 보기 상태 연결점
+            English: calendar.css uses this class only for view-specific geometry,
+            such as removing the redundant Week range label in Pixel Desk. The
+            actual Day/Week/Month content still comes from MonthCalendar.tsx and
+            WeekTimeline.tsx below.
+            Korean: Pixel Desk에서 Week 날짜 범위처럼 중복되는 UI만 보기별로
+            정리한다. 실제 일정 렌더링은 아래 MonthCalendar.tsx와
+            WeekTimeline.tsx가 계속 담당하므로 데이터 동작에는 영향이 없다.
+          */}
           {/* Figma Frame: Date Toolbar / View Segmented Control */}
           <div className="calendar-widget-toolbar">
             <div className="flex items-center gap-1">
@@ -440,6 +654,10 @@ export const CalendarWidget = () => {
                           <span className="calendar-career-badge">Career</span>
                         )}
 
+                        {normalizeCalendarPriority(event.priority) === "high" && (
+                          <span className="calendar-priority-badge">High</span>
+                        )}
+
                         {event.googleSyncStatus === "pending" && (
                           <span className="calendar-pending-badge">Pending</span>
                         )}
@@ -525,6 +743,41 @@ export const CalendarWidget = () => {
                     Open Career Detail
                   </button>
                 )}
+
+                <div className="calendar-field">
+                  <span>Priority</span>
+                  <div
+                    className="calendar-priority-control"
+                    role="radiogroup"
+                    aria-label="Event priority"
+                  >
+                    {calendarPriorityOptions.map((option) => {
+                      const isSelected =
+                        normalizeCalendarPriority(editingEvent.priority) ===
+                        option.value;
+
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          role="radio"
+                          aria-checked={isSelected}
+                          className={cn(
+                            "calendar-priority-option",
+                            `is-${option.value}`,
+                            isSelected && "is-active"
+                          )}
+                          onClick={() =>
+                            updateEditingEvent({ priority: option.value })
+                          }
+                        >
+                          <span aria-hidden="true" />
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
                 <div className="calendar-detail-grid">
                   <label className="calendar-field">

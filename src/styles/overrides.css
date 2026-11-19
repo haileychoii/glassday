@@ -2833,8 +2833,8 @@ body,
     body.theme-pixel
   )
   :is(
-    button,
-    .glass-button,
+    button:not(.calendar-event-item):not(.calendar-week-event):not(.calendar-week-range-bar):not(.calendar-range-chip):not(.calendar-month-single-chip):not(.sidebar-collapse-button),
+    .glass-button:not(.sidebar-collapse-button),
     .calendar-nav-button,
     .calendar-view-button,
     .money-pill,
@@ -2868,7 +2868,7 @@ body,
     body.theme-pixel
   )
   :is(
-    button:active,
+    button:not(.calendar-event-item):not(.calendar-week-event):not(.calendar-week-range-bar):not(.calendar-range-chip):not(.calendar-month-single-chip):active,
     .glass-button:active,
     .calendar-view-button.is-active,
     .money-pill.is-active,
@@ -2998,89 +2998,63 @@ body,
   line-height: 1 !important;
 }
 
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .app-sidebar[data-collapsed="true"]
-  .sidebar-brand,
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .sidebar[data-collapsed="true"]
-  .sidebar-brand,
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .app-mode-stage.is-laptop-mode
-  .app-sidebar[data-collapsed="true"]
-  .sidebar-brand,
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .app-mode-stage.is-laptop-mode
-  .sidebar[data-collapsed="true"]
-  .sidebar-brand {
+/* =========================================================
+   Sidebar fold control / 사이드바 접기 버튼
+
+   English: `Sidebar.tsx` renders one shared collapse control for every theme.
+   Responsive and theme files may change its surface color, but geometry stays
+   here so the button cannot become oval or drift away from the rail center.
+   Korean: 모든 테마가 `Sidebar.tsx`의 같은 버튼을 사용한다. 색상과 테두리는
+   각 테마가 유지하되 크기, 원형, 아이콘 중앙 정렬은 이 최종 규칙이 보장한다.
+========================================================= */
+.sidebar-collapse-button {
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  flex: 0 0 28px !important;
+  aspect-ratio: 1 / 1 !important;
   padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  line-height: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.sidebar-collapse-button > svg {
+  display: block !important;
+  margin: 0 !important;
+  flex: none !important;
+}
+
+/* Removing side padding is important here: a single item inside the old
+   `space-between` brand row otherwise looks right-shifted after the title is
+   hidden. / 제목이 숨겨진 뒤 남은 버튼은 패딩 없이 레일 정중앙에 둔다. */
+.app-sidebar[data-collapsed="true"] .sidebar-brand,
+.sidebar[data-collapsed="true"] .sidebar-brand {
+  padding-inline: 0 !important;
   display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
   place-items: center !important;
   justify-content: center !important;
 }
 
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .app-sidebar[data-collapsed="true"]
-  .sidebar-collapse-button,
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .sidebar[data-collapsed="true"]
-  .sidebar-collapse-button {
+.app-sidebar[data-collapsed="true"] .sidebar-collapse-button,
+.sidebar[data-collapsed="true"] .sidebar-collapse-button {
   margin: 0 !important;
   justify-self: center !important;
   align-self: center !important;
+}
+
+.app-mode-stage.is-laptop-mode .sidebar-collapse-button {
+  width: 22px !important;
+  min-width: 22px !important;
+  max-width: 22px !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  flex-basis: 22px !important;
 }
 
 /* =========================================================
@@ -3209,8 +3183,8 @@ body,
     body.theme-pixel
   )
   :is(
-    button,
-    .glass-button,
+    button:not(.calendar-event-item):not(.calendar-week-event):not(.calendar-week-range-bar):not(.calendar-range-chip):not(.calendar-month-single-chip):not(.sidebar-collapse-button),
+    .glass-button:not(.sidebar-collapse-button),
     .calendar-nav-button,
     .calendar-view-button,
     .career-icon-button,
@@ -3268,7 +3242,7 @@ body,
     body.theme-pixel
   )
   :is(
-    button:active,
+    button:not(.calendar-event-item):not(.calendar-week-event):not(.calendar-week-range-bar):not(.calendar-range-chip):not(.calendar-month-single-chip):active,
     .glass-button:active,
     .calendar-view-button.is-active,
     .career-filter-pill.is-active,
@@ -3786,11 +3760,30 @@ body,
 }
 
 /* Pixel Desk Career add-button guard:
-   English: The faux Win95 titlebar controls are drawn with glass-card
-   pseudo-elements, so Career's real add action needs its own stable action
-   slot and right-side breathing room.
-   Korean: 가짜 최소화/최대화/X 장식과 실제 + 버튼이 같은 오른쪽 공간을
-   공유하지 않도록 Career 헤더 액션 영역을 따로 고정한다. */
+   English: Career renders its four rows directly inside the card instead of
+   using the shared body wrapper. The generic Career reset therefore removed
+   Pixel Desk's 30px titlebar inset and placed the real header underneath the
+   faux Win95 chrome. Restore that inset first, then keep the add action in a
+   stable slot below the decorative controls.
+   Korean: Career는 공통 body wrapper 없이 카드에 네 행을 직접 그리므로,
+   공통 padding 초기화가 Pixel 타이틀바 여백까지 없애 제목과 + 버튼이
+   파란 장식 아래에 숨었다. 카드 첫 행을 타이틀바 아래로 다시 내린다. */
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  .dashboard-grid-item
+  > .career-widget {
+  padding: 30px 0 0 !important;
+  box-sizing: border-box !important;
+}
+
 :is(
     html[data-theme="pixel-desk"],
     body[data-theme="pixel-desk"],
@@ -3874,24 +3867,29 @@ body,
   box-sizing: border-box !important;
 }
 
-/* Tauri desktop type density:
-   English: The native app uses the same laptop layout as the web preview, but
-   in a real always-on desktop window the previous type scale felt oversized.
-   This late layer trims only text density under the Tauri host, so web wide,
-   laptop preview, theme selection, and saved widget data stay unchanged.
-   Korean: Tauri 실제 앱에서만 글씨를 1px 안팎으로 낮춰 오래 띄워두기 좋은
-   밀도로 맞춘다. 메모 본문처럼 사용자가 직접 글꼴/크기를 정하는 영역은
-   건드리지 않는다. */
-.tauri-app-window {
-  --gd-tauri-type-root: 15px;
-  --gd-tauri-type-topbar-title: 15px;
-  --gd-tauri-type-widget-title: 11px;
-  --gd-tauri-type-widget-subtitle: 9.5px;
-  --gd-tauri-type-control: 10.5px;
-  --gd-tauri-type-body: 11px;
-  --gd-tauri-type-meta: 9.5px;
+/* Tauri scale ownership / Tauri 배율 단일 책임
+   English: `src/utils/tauriDesktop.ts` applies WebView zoom 0.8, which already
+   scales typography, controls, and spacing exactly once. Do not add a second
+   Tauri-only font reduction here; 0.8 x 0.8 would make the UI 64% of web size.
+   Korean: `src/utils/tauriDesktop.ts`에서 WebView 전체를 80%로 줄이므로 글씨,
+   버튼, 여백도 함께 줄어든다. 여기서 글씨를 다시 80%로 줄이면 웹 기준 64%가
+   되어 지나치게 작아지므로 Tauri 전용 글자 축소 규칙을 따로 두지 않는다. */
 
-  font-size: var(--gd-tauri-type-root);
+/* Tauri window corner contract:
+   English: `AppShell.tsx` renders `.tauri-app-window` as the native window host
+   and `.app-shell-surface` as its only visible child. Clipping just the child is
+   not sufficient because an internal sidebar, scrollbar, or theme backplate can
+   still paint across a lower corner in WebView2. Non-Pixel themes therefore use
+   a transparent 1px safety gutter and paint containment on both layers.
+   Korean: `AppShell.tsx`의 Tauri host와 실제 app surface를 함께 잘라서 내부
+   스크롤/배경 레이어가 아래 모서리를 사각형으로 다시 덮지 못하게 한다.
+   최신 디자인 규칙에 따라 각진 외곽은 Pixel Desk만 유지한다. */
+html.desktop-transparent:not([data-theme="pixel-desk"]),
+html.desktop-transparent:not([data-theme="pixel-desk"]) body,
+html.desktop-transparent:not([data-theme="pixel-desk"]) #root {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
 /* Exception only: the installed Tauri window uses a denser widget frame. */
@@ -3912,72 +3910,172 @@ body:not(:has(.mobile-layout)) .tauri-app-window {
   --gd-control-height-md: 28px;
 }
 
-.tauri-app-window .topbar,
-.tauri-app-window .topbar-inner {
-  min-height: var(--gd-topbar-min-height) !important;
+html.desktop-transparent:not([data-theme="pixel-desk"])
+  .tauri-app-window
+  > .app-shell-surface {
+  width: 100%;
+  height: 100%;
+  border-radius: calc(var(--gd-tauri-window-radius) - 1px) !important;
+  overflow: hidden !important;
+  clip-path: inset(0 round calc(var(--gd-tauri-window-radius) - 1px));
+  contain: paint;
 }
 
-.tauri-app-window .topbar-title h1 {
-  font-size: var(--gd-tauri-type-topbar-title) !important;
+/* Pixel Desk intentionally keeps the square Windows 95 silhouette.
+   한국어: Pixel Desk만 native host와 surface 모두 각진 창으로 유지한다. */
+html.desktop-transparent[data-theme="pixel-desk"] .tauri-app-window {
+  padding: 0;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+  clip-path: none !important;
+  contain: paint;
 }
 
-.tauri-app-window .topbar-action-button {
-  height: 26px !important;
-  font-size: var(--gd-tauri-type-control) !important;
+html.desktop-transparent[data-theme="pixel-desk"]
+  .tauri-app-window
+  > .app-shell-surface {
+  border-radius: 0 !important;
+  clip-path: none !important;
 }
 
-.tauri-app-window
-  :is(.glass-card-title, .widget-card-title, .widget-frame__title) {
-  font-size: var(--gd-tauri-type-widget-title) !important;
-  line-height: 1.15 !important;
+/* Pixel Desk Calendar final contract / 픽셀 데스크 캘린더 최종 규칙
+   English: `themes/pixel.css` intentionally gives every widget a compact
+   24px title bar and `overrides.css` gives ordinary buttons one gray raised
+   surface. Calendar is the deliberate exception: its + action needs a safe
+   header gutter, while event buttons must keep the `--event-color` provided by
+   MonthCalendar.tsx and WeekTimeline.tsx.
+   Korean: 공통 Pixel 제목줄과 버튼 규칙은 유지하되 Calendar의 + 버튼은
+   충분한 여백을 확보하고, 일정 버튼은 두 컴포넌트가 전달한 저장 색상을
+   회색으로 덮지 않도록 마지막 단계에서 확정한다. */
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  #root
+  .calendar-widget-card
+  > .glass-card-header {
+  min-height: 44px !important;
+  padding: 6px 12px 5px !important;
+  align-items: center !important;
+  gap: 10px !important;
 }
 
-.tauri-app-window
-  :is(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle) {
-  font-size: var(--gd-tauri-type-widget-subtitle) !important;
-  line-height: 1.2 !important;
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  #root
+  .calendar-widget-card
+  > .glass-card-header
+  .glass-card-actions {
+  flex: 0 0 auto !important;
+  margin: 0 1px 0 8px !important;
+  align-self: center !important;
 }
 
-.tauri-app-window
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  #root
+  .calendar-widget-card
+  > .glass-card-header
+  .glass-card-actions
+  > .glass-button {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  padding: 0 !important;
+}
+
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  #root
+  .calendar-widget-card
   :is(
-    button,
-    input,
-    textarea,
-    select,
-    .calendar-date-input,
-    .career-filter-pill,
-    .money-pill,
-    .calendar-view-button,
-    .layout-mode-button
+    .calendar-event-item,
+    .calendar-week-event,
+    .calendar-week-range-bar,
+    .calendar-range-chip,
+    .calendar-month-single-chip
   ) {
-  font-size: var(--gd-tauri-type-control) !important;
+  background: color-mix(in srgb, var(--event-color, #fff3b0) 88%, #d4d0c8 12%) !important;
+  background-image: none !important;
+  opacity: 1 !important;
+  filter: saturate(0.92) brightness(1.02) !important;
 }
 
-.tauri-app-window
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  #root
+  .calendar-widget-card
   :is(
-    .career-list-title strong,
-    .calendar-event-title,
-    .money-transaction-title,
-    .memo-note-title,
-    .study10-task-title,
-    .today-focus-task input,
-    .journal-task input,
-    .mood-row-title
+    .calendar-event-item:hover,
+    .calendar-week-event:hover,
+    .calendar-week-range-bar:hover,
+    .calendar-range-chip:hover,
+    .calendar-month-single-chip:hover
   ) {
-  font-size: var(--gd-tauri-type-body) !important;
+  background: color-mix(in srgb, var(--event-color, #fff3b0) 97%, #ffffff 3%) !important;
+  background-image: none !important;
+  filter: saturate(1.12) brightness(1.01) !important;
+  outline: 1px solid #000080 !important;
+  outline-offset: -2px !important;
 }
 
-.tauri-app-window
-  :is(
-    .career-list-title span,
-    .career-list-meta span,
-    .calendar-event-time,
-    .money-transaction-meta,
-    .memo-note-preview,
-    .study10-task-meta,
-    .today-focus-mini-meta,
-    .mood-row-subtitle
-  ) {
-  font-size: var(--gd-tauri-type-meta) !important;
-  line-height: 1.2 !important;
+/* MonthCalendar.tsx marks today with `.is-today`; the extra #root specificity
+   keeps the navy focus frame above the generic Pixel panel border.
+   / 공통 입체 패널 테두리보다 오늘 표시가 반드시 위에 보이게 한다. */
+:is(
+    html[data-theme="pixel-desk"],
+    body[data-theme="pixel-desk"],
+    html.theme-pixel-desk,
+    body.theme-pixel-desk,
+    html.pixel-desk,
+    body.pixel-desk,
+    html.theme-pixel,
+    body.theme-pixel
+  )
+  #root
+  .calendar-widget-card
+  .calendar-month-day-cell.is-today {
+  border-color: #000080 !important;
+  box-shadow:
+    inset 0 0 0 1px #000080,
+    inset 2px 2px 0 #ffffff,
+    inset -2px -2px 0 #808080 !important;
 }

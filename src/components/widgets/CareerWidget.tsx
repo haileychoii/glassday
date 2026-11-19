@@ -5,7 +5,7 @@
  *
  * 화면 역할:
  * - 지원 현황을 Summary, List, Board로 표시하고 선택한 지원 건을 Floating Detail에서 편집한다.
- * - 지원 기간은 Calendar event와 양방향 연결되며 detail은 Calendar에서도 열 수 있다.
+ * - 전형별 일정만 Calendar event와 양방향 연결되며 detail은 Calendar에서도 열 수 있다.
  *
  * 연결:
  * - Renderer/Detail host: src/components/grid/DashboardGrid.tsx (WidgetId: career)
@@ -25,18 +25,21 @@
  * ============================================================
  */
 import { createPortal } from "react-dom";
+import { isTauri } from "@tauri-apps/api/core";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import {
   BriefcaseBusiness,
   CalendarDays,
   Check,
   ChevronDown,
+  Eye,
   ExternalLink,
   FileText,
   GripHorizontal,
-  ImagePlus,
   LayoutGrid,
   Link2,
   List,
+  Paperclip,
   Plus,
   Trash2,
   X,
@@ -84,6 +87,11 @@ type CareerWidgetProps = {
    * card UI는 숨기고 전용 portal host만 유지한다.
    */
   detailOnly?: boolean;
+  /**
+   * `workspace` is mounted by FocusedWorkspace.tsx and fills one locked tab.
+   * Data, cards, and detail portal remain identical to the grid widget.
+   */
+  surface?: "widget" | "workspace";
 };
 
 const statusOptions: CareerStatus[] = [
@@ -140,6 +148,12 @@ const careerStageStatusOptions: {
 const CAREER_IMAGE_LIMIT = 8;
 const CAREER_IMAGE_MAX_INPUT_BYTES = 12 * 1024 * 1024;
 const CAREER_IMAGE_MAX_EDGE = 1280;
+const CAREER_PDF_MAX_INPUT_BYTES = 2 * 1024 * 1024;
+
+const formatAttachmentSize = (size?: number) => {
+  if (!size) return "PDF";
+  return `${(size / (1024 * 1024)).toFixed(1)} MB PDF`;
+};
 
 const createJobImageId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -149,12 +163,39 @@ const createJobImageId = () => {
   return `career-image-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
-/* Local image preparation
-   Career adds attachment metadata after the shared resizer prepares a compact
-   WebP data URL. / 공통 변환 뒤 Career 항목에 필요한 이름과 ID만 붙입니다. */
-const prepareCareerImage = async (
+const readCareerFileAsDataUrl = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.onerror = () => reject(new Error(`${file.name}: 파일을 읽지 못했어.`));
+    reader.readAsDataURL(file);
+  });
+
+/* Local Career attachment preparation / Career 로컬 첨부 준비
+   Images reuse src/lib/localImage.ts for compact WebP conversion. PDFs keep
+   their original bytes under a strict localStorage-friendly size limit.
+   이미지는 공통 압축기를, PDF는 2MB 제한의 data URL 저장 방식을 사용합니다. */
+const prepareCareerAttachment = async (
   file: File
 ): Promise<CareerImageAttachment> => {
+  const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+
+  if (isPdf) {
+    if (file.size > CAREER_PDF_MAX_INPUT_BYTES) {
+      throw new Error(`${file.name}: PDF는 2MB 이하만 추가할 수 있어.`);
+    }
+
+    return {
+      id: createJobImageId(),
+      name: file.name,
+      dataUrl: await readCareerFileAsDataUrl(file),
+      kind: "pdf",
+      mimeType: "application/pdf",
+      size: file.size,
+      createdAt: new Date().toISOString(),
+    };
+  }
+
   return {
     id: createJobImageId(),
     name: file.name,
@@ -163,6 +204,9 @@ const prepareCareerImage = async (
       maxEdge: CAREER_IMAGE_MAX_EDGE,
       quality: 0.8,
     }),
+    kind: "image",
+    mimeType: file.type || "image/webp",
+    size: file.size,
     createdAt: new Date().toISOString(),
   };
 };
@@ -250,14 +294,7 @@ const getToday = () => {
 };
 
 const getDday = (date: string) => {
-  if (!date) return null;
-
-  const today = new Date(`${getToday()}T00:00:00`);
-  const target = new Date(`${date}T00:00:00`);
-
-  return Math.ceil(
-    (target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  return getCareerDateDiff(date, getToday());
 };
 
 const getDdayLabel = (date: string) => {
@@ -289,40 +326,16 @@ type CareerNextSchedule = {
 };
 
 const getCareerScheduleCandidates = (item: CareerItem): CareerNextSchedule[] => {
-  const stageSchedules = (item.stages ?? [])
-    .filter((stage) => stage.status !== "skipped" && stage.date)
-    .map((stage) => ({
-      label: stage.label || "전형 일정",
-      date: stage.date ?? "",
-    }));
+  const schedule = getNextCareerCardSchedule(item, getToday());
 
-  const fallbackSchedules =
-    item.applicationEndDate || item.deadline
-      ? [
-          {
-            label: "서류 전형",
-            date: item.applicationEndDate || item.deadline,
-          },
-        ]
-      : [];
-
-  return [...stageSchedules, ...fallbackSchedules]
-    .map((schedule) => {
-      const dday = getDday(schedule.date);
-
-      if (dday === null) return null;
-
-      return {
-        ...schedule,
-        dday,
-        tone: getDdayTone(schedule.date),
-      };
-    })
-    .filter(
-      (schedule): schedule is CareerNextSchedule =>
-        schedule !== null && schedule.dday >= 0
-    )
-    .sort((a, b) => a.dday - b.dday);
+  return schedule
+    ? [
+        {
+          ...schedule,
+          tone: getDdayTone(schedule.date),
+        },
+      ]
+    : [];
 };
 
 const getNextCareerSchedule = (item: CareerItem) =>
@@ -371,25 +384,15 @@ const normalizeCareer = (item: CareerItem): CareerItem => ({
    3) the floating detail window owns long-form editing, notes, and cover letters
    4) windowState + dragRef are UI-only state; application data stays in
       DashboardDataContext so it can sync across layouts/devices. */
-const formatApplicationWindow = (item: CareerItem) => {
-  if (!item.applicationStartDate && !item.applicationEndDate) {
-    return "지원기간 미입력";
-  }
-
-  const startDate = item.applicationStartDate || item.applicationEndDate;
-  const endDate = item.applicationEndDate || item.applicationStartDate;
-
-  return `${startDate} ${item.applicationStartTime || "09:00"} → ${endDate} ${
-    item.applicationEndTime || "23:59"
-  }`;
-};
-
 /**
  * CareerWidget
  * DashboardDataContext의 CareerItem을 편집한다. List/Board는 같은 record의 presentation
  * variant이며 Floating Detail에서 저장한 변경은 Calendar projection에도 반영된다.
  */
-export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
+export const CareerWidget = ({
+  detailOnly = false,
+  surface = "widget",
+}: CareerWidgetProps) => {
   const {
     careerApplications,
     activeCareerDetailId,
@@ -413,6 +416,8 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     jobImages: "",
     noteImages: "",
   });
+  const [previewAttachment, setPreviewAttachment] =
+    useState<CareerImageAttachment | null>(null);
 
   // Floating detail window geometry is intentionally separate from the dashboard
   // grid layout. Moving/resizing this editor should not push widgets around.
@@ -442,6 +447,9 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     (optimisticSelectedItem?.id === activeCareerDetailId
       ? optimisticSelectedItem
       : null);
+  const selectedPostingUrl = selectedItem
+    ? normalizeCareerPostingUrl(selectedItem.postingUrl)
+    : null;
 
   useEffect(() => {
     if (selectedFromContext) {
@@ -584,8 +592,6 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
         status: "Preparing",
         postingUrl: "",
         jobDescription: "",
-        applicationStartTime: "09:00",
-        applicationEndTime: "23:59",
         coverLetterItems: [],
         coverLetterQuestions: [],
       })
@@ -608,10 +614,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     updateCareerApplication(selectedItem.id, patch);
   };
 
-  /* Shared Career gallery actions
+  /* Shared Career attachment actions
      The field argument decides whether the attachment belongs to Application
      Core or Notes; validation, limits, and persistence remain identical.
-     field만 바꾸면 두 사진 영역이 같은 저장 규칙을 사용합니다. */
+     field만 바꾸면 두 첨부 영역이 같은 저장 규칙을 사용합니다. */
   const addCareerImages = async (
     event: ReactChangeEvent<HTMLInputElement>,
     field: CareerImageField
@@ -628,7 +634,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     if (availableSlots <= 0) {
       setImageErrors((current) => ({
         ...current,
-        [field]: `사진은 최대 ${CAREER_IMAGE_LIMIT}장까지 저장할 수 있어.`,
+        [field]: `파일은 최대 ${CAREER_IMAGE_LIMIT}개까지 저장할 수 있어.`,
       }));
       return;
     }
@@ -638,10 +644,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
     for (const file of files.slice(0, availableSlots)) {
       try {
-        preparedImages.push(await prepareCareerImage(file));
+        preparedImages.push(await prepareCareerAttachment(file));
       } catch (error) {
         errors.push(
-          error instanceof Error ? error.message : `${file.name}: 사진 추가 실패`
+          error instanceof Error ? error.message : `${file.name}: 첨부 실패`
         );
       }
     }
@@ -653,7 +659,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     }
 
     if (files.length > availableSlots) {
-      errors.push(`최대 ${CAREER_IMAGE_LIMIT}장까지만 저장했어.`);
+      errors.push(`최대 ${CAREER_IMAGE_LIMIT}개까지만 저장했어.`);
     }
 
     setImageErrors((current) => ({
@@ -750,8 +756,8 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
   /* Career attachment gallery
      Application Core and Notes intentionally render through one helper so
-     limits, controls, thumbnail sizing, and accessibility stay identical.
-     직무/메모 사진 UI를 한곳에서 관리해 이후 크기 수정도 동시에 반영됩니다. */
+     images and PDFs share limits, controls, and the in-app preview.
+     직무/메모 이미지와 PDF를 한곳에서 관리해 두 영역이 같은 방식으로 동작합니다. */
   const renderCareerImageGallery = (
     field: CareerImageField,
     title: string,
@@ -759,7 +765,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
   ) => {
     if (!selectedItem) return null;
 
-    const images = selectedItem[field] ?? [];
+    const attachments = selectedItem[field] ?? [];
 
     return (
       <div
@@ -771,16 +777,16 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
           <div>
             <strong>{title}</strong>
             <span>
-              {images.length} / {CAREER_IMAGE_LIMIT}장 · 클릭하면 크게 보기
+              {attachments.length} / {CAREER_IMAGE_LIMIT}개 · 앱 안에서 미리보기
             </span>
           </div>
 
           <label className="career-job-image-add">
-            <ImagePlus className="w-3.5 h-3.5" />
-            Add Photos
+            <Paperclip className="w-3.5 h-3.5" />
+            Add Files
             <input
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/jpeg,image/png,image/webp,application/pdf,.pdf"
               multiple
               onChange={(event) => void addCareerImages(event, field)}
             />
@@ -791,33 +797,49 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
           <div className="career-job-image-error">{imageErrors[field]}</div>
         )}
 
-        {images.length === 0 ? (
+        {attachments.length === 0 ? (
           <div className="career-job-image-empty">{emptyMessage}</div>
         ) : (
           <div className="career-job-image-grid">
-            {images.map((image) => (
-              <figure key={image.id} className="career-job-image-card">
-                <a
-                  href={image.dataUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  title={`${image.name} 크게 보기`}
+            {attachments.map((attachment) => {
+              const isPdf =
+                attachment.kind === "pdf" ||
+                attachment.dataUrl.startsWith("data:application/pdf");
+
+              return (
+              <figure key={attachment.id} className="career-job-image-card">
+                <button
+                  type="button"
+                  className="career-job-image-open"
+                  onClick={() => setPreviewAttachment(attachment)}
+                  title={`${attachment.name} 앱에서 미리보기`}
                 >
-                  <img src={image.dataUrl} alt={image.name} />
-                  <figcaption>{image.name}</figcaption>
-                </a>
+                  {isPdf ? (
+                    <span className="career-pdf-thumbnail" aria-hidden="true">
+                      <FileText className="w-6 h-6" />
+                      <small>{formatAttachmentSize(attachment.size)}</small>
+                    </span>
+                  ) : (
+                    <img src={attachment.dataUrl} alt="" />
+                  )}
+                  <figcaption>
+                    <span>{attachment.name}</span>
+                    <Eye className="w-3 h-3" aria-hidden="true" />
+                  </figcaption>
+                </button>
 
                 <button
                   type="button"
-                  onClick={() => removeCareerImage(field, image.id)}
+                  onClick={() => removeCareerImage(field, attachment.id)}
                   className="career-job-image-delete"
-                  title="Delete photo"
-                  aria-label={`${image.name} 삭제`}
+                  title="Delete attachment"
+                  aria-label={`${attachment.name} 삭제`}
                 >
                   <Trash2 className="w-3 h-3" />
                 </button>
               </figure>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -835,6 +857,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
   const closeWindow = () => {
     setOptimisticSelectedItem(null);
+    setPreviewAttachment(null);
     closeCareerDetail();
   };
 
@@ -976,8 +999,25 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     }));
   };
 
+  const openPostingUrl = (url: string) => {
+    // The list link and detail action share one desktop path. Tauri's opener
+    // (registered in src-tauri/src/lib.rs) launches the system browser; a
+    // WebView target=_blank can leave the installed app on a different page.
+    // 목록과 상세 창 모두 설치 앱에서는 외부 브라우저를 사용한다.
+    if (isTauri()) {
+      void openUrl(url).catch((error: unknown) => {
+        console.error("Could not open career posting", error);
+        window.alert("공고 페이지를 열지 못했어. URL을 확인해 줘.");
+      });
+      return;
+    }
+
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   const renderCareerCard = (item: CareerItem, compact = false) => {
     const nextSchedule = getNextCareerSchedule(item);
+    const postingUrl = normalizeCareerPostingUrl(item.postingUrl);
     const ddayTone = nextSchedule?.tone ?? "none";
     const coverLetterCount =
       item.coverLetterItems?.length ?? item.coverLetterQuestions?.length ?? 0;
@@ -1009,7 +1049,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
             <span className={`career-dday-pill ${ddayTone}`}>
               {nextSchedule
                 ? `${nextSchedule.label} · ${getDdayLabel(nextSchedule.date)}`
-                : "No date"}
+                : "일정 미입력"}
             </span>
 
             <button
@@ -1076,7 +1116,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
           <span>
             <CalendarDays className="w-3 h-3" />
-            {nextSchedule ? "Synced" : "No date"}
+            {nextSchedule ? "Synced" : "일정 미입력"}
           </span>
         </div>
       </article>
@@ -1087,7 +1127,11 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     <>
       {/* Figma Component: Career Widget / detailOnly에서는 이 Grid surface를 렌더링하지 않는다. */}
       {!detailOnly && (
-      <section className="glass-card widget-frame career-widget">
+      <section
+        className={`glass-card widget-frame career-widget${
+          surface === "workspace" ? " career-widget--workspace" : ""
+        }`}
+      >
         {/* Figma Frame: Widget Header / Horizontal Auto Layout / Space Between */}
         <div className="career-widget-header glass-card-header widget-card-header widget-frame__header">
           <div className="career-widget-title-wrap glass-card-title-group widget-card-title-group widget-frame__title-group">
@@ -1243,8 +1287,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                 top: windowState.y,
                 width: windowState.width,
                 height: windowState.height,
-                minWidth: 560,
-                minHeight: 540,
+                /* Match clampWindow on small screens so the detail editor never
+                   forces a 560px surface outside a phone-width viewport. */
+                minWidth: Math.min(560, window.innerWidth - 24),
+                minHeight: Math.min(540, window.innerHeight - 24),
                 display: "grid",
                 gridTemplateRows: "auto minmax(0, 1fr)",
                 overflow: "hidden",
@@ -1277,7 +1323,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                 </div>
 
                 <div className="career-modal-actions">
-                  {selectedItem.postingUrl && (
+                  {selectedPostingUrl && (
                     <button
                       type="button"
                       onClick={() => void openExternalUrl(selectedItem.postingUrl)}
@@ -1360,16 +1406,28 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                     </label>
 
                     <label className="career-field">
-                      <span>Deadline</span>
+                      <span>Location</span>
                       <input
-                        type="date"
-                        value={selectedItem.deadline}
+                        value={selectedItem.location}
                         onChange={(event) =>
                           updateSelectedItem({
-                            deadline: event.target.value,
-                            applicationEndDate: event.target.value,
+                            location: event.target.value,
                           })
                         }
+                        placeholder="Seoul, Remote..."
+                      />
+                    </label>
+
+                    <label className="career-field">
+                      <span>Work Type</span>
+                      <input
+                        value={selectedItem.workType}
+                        onChange={(event) =>
+                          updateSelectedItem({
+                            workType: event.target.value,
+                          })
+                        }
+                        placeholder="신입 / 인턴 / 정규직..."
                       />
                     </label>
 
@@ -1401,123 +1459,23 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                     </label>
                   </div>
 
-                  {/* Job detail photos stay beside the role description they explain. */}
+                  {/* Job files stay beside the role description they explain. */}
                   {renderCareerImageGallery(
                     "jobImages",
-                    "Job Detail Photos",
-                    "직무 설명 캡처, 조직도, 참고 이미지를 추가해봐."
+                    "Job Files",
+                    "공고 PDF, 직무 설명 캡처, 조직도와 참고 이미지를 추가해봐."
                   )}
-                </section>
-
-                <section className="career-detail-section">
-                  <div className="career-section-title">
-                    Application Window · Calendar Sync
-                  </div>
-
-                  <div className="career-sync-note">
-                    End Date 또는 Start Date를 입력하면 Calendar에{" "}
-                    <strong>
-                      {selectedItem.company || "Company"} · Application Window
-                    </strong>
-                    로 자동 생성돼.
-                  </div>
-
-                  <div className="career-detail-grid">
-                    <label className="career-field">
-                      <span>Start Date</span>
-                      <input
-                        type="date"
-                        value={selectedItem.applicationStartDate}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            applicationStartDate: event.target.value,
-                          })
-                        }
-                      />
-                    </label>
-
-                    <label className="career-field">
-                      <span>Start Time</span>
-                      <input
-                        type="time"
-                        value={selectedItem.applicationStartTime}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            applicationStartTime: event.target.value,
-                          })
-                        }
-                      />
-                    </label>
-
-                    <label className="career-field">
-                      <span>End Date</span>
-                      <input
-                        type="date"
-                        value={selectedItem.applicationEndDate}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            applicationEndDate: event.target.value,
-                            deadline: event.target.value,
-                          })
-                        }
-                      />
-                    </label>
-
-                    <label className="career-field">
-                      <span>End Time</span>
-                      <input
-                        type="time"
-                        value={selectedItem.applicationEndTime}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            applicationEndTime: event.target.value,
-                          })
-                        }
-                      />
-                    </label>
-
-                    <label className="career-field">
-                      <span>Location</span>
-                      <input
-                        value={selectedItem.location}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            location: event.target.value,
-                          })
-                        }
-                        placeholder="Seoul, Remote..."
-                      />
-                    </label>
-
-                    <label className="career-field">
-                      <span>Work Type</span>
-                      <input
-                        value={selectedItem.workType}
-                        onChange={(event) =>
-                          updateSelectedItem({
-                            workType: event.target.value,
-                          })
-                        }
-                        placeholder="신입 / 인턴 / 정규직..."
-                      />
-                    </label>
-                  </div>
-
-                  <div className="career-window-preview">
-                    <CalendarDays className="w-4 h-4" />
-                    {formatApplicationWindow(selectedItem)}
-                  </div>
                 </section>
 
                 <section className="career-detail-section career-stage-section">
                   <div className="career-section-row">
                     <div>
                       <div className="career-section-title">
-                        Selection Schedule · Calendar Sync
+                        전형 일정 · Calendar Sync
                       </div>
                       <p className="career-section-subtitle">
-                        서류 발표, 필기, 면접 날짜를 기록하면 Calendar에
-                        자동으로 같이 보여.
+                        서류 접수 기간, 발표일, 필기와 면접처럼 실제로 아는
+                        일정만 입력해. 각 일정은 Calendar에 자동으로 같이 보여.
                       </p>
                     </div>
 
@@ -1650,7 +1608,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
                             <div className="career-stage-bottom">
                               <label className="career-field">
-                                <span>Schedule Type</span>
+                                <span>일정 방식</span>
                                 <select
                                   value={stage.dateMode ?? "single"}
                                   onChange={(event) => {
@@ -1677,7 +1635,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                               </label>
 
                               <label className="career-field">
-                                <span>Date</span>
+                                <span>시작 날짜</span>
                                 <input
                                   type="date"
                                   value={stage.date ?? ""}
@@ -1694,7 +1652,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                               </label>
 
                               <label className="career-field">
-                                <span>Time</span>
+                                <span>시작 시간</span>
                                 <input
                                   type="time"
                                   value={stage.time ?? ""}
@@ -1712,7 +1670,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
                               {stage.dateMode === "range" && (
                                 <label className="career-field">
-                                  <span>End Date</span>
+                                  <span>종료 날짜</span>
                                   <input
                                     type="date"
                                     value={stage.endDate ?? ""}
@@ -1726,7 +1684,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                               )}
 
                               <label className="career-field">
-                                <span>End Time</span>
+                                <span>종료 시간</span>
                                 <input
                                   type="time"
                                   value={stage.endTime ?? ""}
@@ -1994,12 +1952,12 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                     placeholder="지원 전략, 자소서 방향, 면접 준비 메모..."
                   />
 
-                  {/* Notes photos belong to the same application snapshot as text.
-                      면접 메모 사진, 현장 자료, 손글씨 기록을 Notes와 함께 저장합니다. */}
+                  {/* Notes files belong to the same application snapshot as text.
+                      면접 PDF, 현장 사진, 손글씨 기록을 Notes와 함께 저장합니다. */}
                   {renderCareerImageGallery(
                     "noteImages",
-                    "Notes Photos",
-                    "메모와 함께 볼 사진이나 캡처를 추가해봐."
+                    "Notes Files",
+                    "메모와 함께 볼 PDF, 사진이나 캡처를 추가해봐."
                   )}
                 </section>
 
@@ -2030,6 +1988,79 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                 }}
               />
             </div>
+
+            {previewAttachment && (
+              <div
+                className="career-attachment-preview-layer"
+                role="dialog"
+                aria-modal="true"
+                aria-label={`${previewAttachment.name} preview`}
+                onPointerDown={(event) => {
+                  if (event.target === event.currentTarget) {
+                    setPreviewAttachment(null);
+                  }
+                }}
+              >
+                <div className="career-attachment-preview-window">
+                  <header>
+                    <div>
+                      <strong>{previewAttachment.name}</strong>
+                      <span>
+                        {previewAttachment.kind === "pdf" ||
+                        previewAttachment.dataUrl.startsWith(
+                          "data:application/pdf"
+                        )
+                          ? formatAttachmentSize(previewAttachment.size)
+                          : "Image"}
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="career-icon-button"
+                      onClick={() => setPreviewAttachment(null)}
+                      aria-label="Close attachment preview"
+                      title="Close preview"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </header>
+
+                  <div className="career-attachment-preview-body">
+                    {previewAttachment.kind === "pdf" ||
+                    previewAttachment.dataUrl.startsWith(
+                      "data:application/pdf"
+                    ) ? (
+                      <object
+                        data={previewAttachment.dataUrl}
+                        type="application/pdf"
+                        aria-label={`${previewAttachment.name} PDF preview`}
+                      >
+                        <p>
+                          이 환경에서 PDF 미리보기를 열 수 없어. 아래 버튼으로
+                          새 창에서 열어줘.
+                        </p>
+                      </object>
+                    ) : (
+                      <img
+                        src={previewAttachment.dataUrl}
+                        alt={previewAttachment.name}
+                      />
+                    )}
+                  </div>
+
+                  <a
+                    className="career-attachment-open-new"
+                    href={previewAttachment.dataUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Open in new window
+                  </a>
+                </div>
+              </div>
+            )}
           </div>,
           document.body
         )}

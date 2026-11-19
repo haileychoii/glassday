@@ -90,6 +90,11 @@ import { StudyDetailWindow } from "./study/StudyDetailWindow";
 
 type StudyPaintTool = StudyPlannerSubjectId | "erase";
 type StudyPlannerMode = "widget" | "detail";
+
+type StudyWidgetProps = {
+  /** Full-tab mode reuses the detailed planner without opening a floating window. */
+  surface?: "widget" | "workspace";
+};
 type StudySubjectDraft = {
   subjectId: StudyPlannerSubjectId | null;
   name: string;
@@ -111,7 +116,7 @@ const getSubjectStyle = (color: string) =>
  * Widget/Detail이 하나의 v2 storage를 공유해 Wide/Laptop에서도 동일한 학습 기록을 본다.
  * pointer drag painting과 timer 종료가 모두 StudyDayData.blocks를 갱신한다.
  */
-export const StudyWidget = () => {
+export const StudyWidget = ({ surface = "widget" }: StudyWidgetProps) => {
   const today = toLocalDateInput();
   const initialPlanner = useMemo(() => createInitialStudyPlannerStorage(), []);
   const { value: storedPlanner, setValue: setStoredPlanner } =
@@ -599,6 +604,113 @@ export const StudyWidget = () => {
       blocks: { ...previousBlocks },
     }));
     setTimelineHistory((history) => history.slice(0, -1));
+  };
+
+  const renderCompactPlanner = () => {
+    const visibleTasks = selectedDay.tasks.slice(0, 3);
+    const visibleSubjects = subjects
+      .map((subject) => ({
+        ...subject,
+        minutes: subjectTotals[subject.id] ?? 0,
+      }))
+      .filter((subject) => subject.minutes > 0)
+      .sort((a, b) => b.minutes - a.minutes)
+      .slice(0, 3);
+
+    return (
+      <div className="study-compact-planner">
+        {/* Summary metrics reuse the same selectedDay derived values as the
+            detail timeline. / 별도 요약 저장값 없이 기존 planner에서 계산한다. */}
+        <div className="study-compact-metrics">
+          <div>
+            <span>Today</span>
+            <strong>{formatStudyMinutes(totalMinutes)}</strong>
+          </div>
+          <div>
+            <span>Tasks</span>
+            <strong>{completedTasks}/{selectedDay.tasks.length}</strong>
+          </div>
+          <div>
+            <span>Goal</span>
+            <strong>{progress}%</strong>
+          </div>
+        </div>
+
+        <div className="study-compact-progress" aria-label={`Goal ${progress}%`}>
+          <span style={{ width: `${progress}%` }} />
+        </div>
+
+        <section className="study-compact-section">
+          <div className="study-compact-heading">
+            <span>오늘 할 일</span>
+            <small>{formatStudyDate(selectedDate)}</small>
+          </div>
+
+          <div className="study-compact-task-list">
+            {visibleTasks.length === 0 ? (
+              <button
+                type="button"
+                className="study-compact-empty"
+                onClick={() => setDetailOpen(true)}
+              >
+                상세 화면에서 오늘 할 일을 추가해 보세요.
+              </button>
+            ) : (
+              visibleTasks.map((task) => {
+                const subject = getSubject(task.subjectId);
+
+                return (
+                  <button
+                    key={task.id}
+                    type="button"
+                    className={cn(
+                      "study-compact-task",
+                      task.done && "is-done"
+                    )}
+                    style={getSubjectStyle(subject.color)}
+                    onClick={() => updateTask(task.id, { done: !task.done })}
+                  >
+                    <span className="study-compact-check">
+                      {task.done && <Check aria-hidden="true" />}
+                    </span>
+                    <span className="study-compact-task-copy">
+                      <strong>{task.text}</strong>
+                      <small>{subject.label} · {formatStudyMinutes(task.estimatedMinutes)}</small>
+                    </span>
+                  </button>
+                );
+              })
+            )}
+          </div>
+        </section>
+
+        <div className="study-compact-footer">
+          <div className="study-compact-subjects" aria-label="Today subject totals">
+            {visibleSubjects.length === 0 ? (
+              <span className="study-compact-muted">아직 공부 기록이 없어요.</span>
+            ) : (
+              visibleSubjects.map((subject) => (
+                <span key={subject.id} style={getSubjectStyle(subject.color)}>
+                  <i />
+                  {subject.label} {formatStudyMinutes(subject.minutes)}
+                </span>
+              ))
+            )}
+          </div>
+
+          <button
+            type="button"
+            className={cn("study-compact-timer", activeTimer && "is-running")}
+            onClick={activeTimer ? stopTimer : startTimer}
+            disabled={!activeTimer && selectedDate !== today}
+            aria-label={activeTimer ? "Stop study timer" : "Start study timer"}
+          >
+            {activeTimer ? <CircleStop aria-hidden="true" /> : <Play aria-hidden="true" />}
+            <span>{activeTimer ? formatElapsedTimer(timerSeconds) : "Start"}</span>
+          </button>
+        </div>
+      </div>
+    );
   };
 
   const renderPlanner = (mode: StudyPlannerMode) => {
@@ -1118,6 +1230,27 @@ export const StudyWidget = () => {
         )
       : null;
 
+  if (surface === "workspace") {
+    return (
+      <>
+        {/* FocusedWorkspace.tsx owns the tab-sized frame. The detailed planner
+            is rendered inline so Career/Study navigation never creates an
+            extra floating layer or page-length grid. / 탭 안에서 바로 편집한다. */}
+        <GlassCard
+          className="study-widget study-widget--workspace"
+          title="Study Planner"
+          subtitle={`${formatStudyDate(selectedDate)} · ${formatStudyMinutes(
+            totalMinutes
+          )}`}
+          icon={<BookOpenCheck className="w-4 h-4" />}
+        >
+          {renderPlanner("detail")}
+        </GlassCard>
+        {subjectEditorPortal}
+      </>
+    );
+  }
+
   return (
     <>
       {/* Figma Component: Study Widget / compact planner mode */}
@@ -1138,7 +1271,7 @@ export const StudyWidget = () => {
           </button>
         }
       >
-        {renderPlanner("widget")}
+        {renderCompactPlanner()}
       </GlassCard>
 
       {/* Figma Component: Study Detail Floating Window / expanded planner mode */}

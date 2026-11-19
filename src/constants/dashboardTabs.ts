@@ -154,6 +154,17 @@ export const defaultDashboardTabs: DashboardTab[] = [
     locked: true,
   },
   {
+    /* Diary is a free-layout document, not a react-grid-layout workspace.
+       App.tsx mounts DiaryWorkspace for this id; empty layouts preserve the
+       shared DashboardTab persistence contract. / 공통 탭 저장 형식은 유지한다. */
+    id: "diary",
+    label: "Diary",
+    icon: "📔",
+    widgetIds: [],
+    layouts: buildModeLayouts([]),
+    locked: true,
+  },
+  {
     id: "life",
     label: "Life",
     icon: "🌿",

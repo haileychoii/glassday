@@ -40,6 +40,7 @@ import {
   LogOut,
   Mail,
   Palette,
+  Pin,
   RotateCcw,
   Settings,
   Trash2,
@@ -80,6 +81,13 @@ import {
   resetGlassdaySection,
 } from "../../utils/backup";
 import { useCloudSync } from "../../context/CloudSyncContext";
+import { isTauriApp } from "../../utils/runtime";
+import {
+  DEFAULT_TAURI_WINDOW_SIZE,
+  getSavedDesktopPin,
+  resetTauriWindowSize,
+  setDesktopPin,
+} from "../../utils/tauriDesktop";
 
 type SettingsModalProps = {
   /** App의 Settings button이 제어하는 open state. false면 portal을 만들지 않는다. */
@@ -182,6 +190,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const [scrollbarsVisible, setScrollbarsVisible] = useState(() =>
     getSavedScrollbarVisibility()
   );
+  const [desktopPinned, setDesktopPinned] = useState(() =>
+    getSavedDesktopPin()
+  );
   const [customFonts, setCustomFonts] = useState(() => getSavedCustomFonts());
   const [customFontLabel, setCustomFontLabel] = useState("");
   const [customFontFamily, setCustomFontFamily] = useState("");
@@ -229,6 +240,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       setAppFont(getSavedAppFont());
       setDefaultMemoFont(getSavedDefaultMemoFont());
       setScrollbarsVisible(getSavedScrollbarVisibility());
+      setDesktopPinned(getSavedDesktopPin());
       setCustomFonts(getSavedCustomFonts());
     }, 0);
 
@@ -372,6 +384,41 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     setStatus(visible ? "Scrollbars are visible." : "Scrollbars are hidden.");
   };
 
+  const handleDesktopPinChange = (pinned: boolean) => {
+    setDesktopPinned(pinned);
+
+    void setDesktopPin(pinned)
+      .then(() => {
+        setStatus(
+          pinned
+            ? "Glassday is pinned to the desktop."
+            : "Desktop pin is turned off."
+        );
+      })
+      .catch(() => {
+        setStatus("Desktop pin could not be updated.");
+      });
+  };
+
+  /**
+   * English: Restore only the native window size through tauriDesktop.ts;
+   * keeping native calls in that bridge protects the web Settings screen.
+   * Korean: 창 위치와 대시보드 데이터는 건드리지 않고 tauriDesktop.ts를 통해
+   * Tauri 기본 크기만 복원한다. 실패 메시지는 설정 창 안에서 바로 확인한다.
+   */
+  const handleResetDesktopSize = () => {
+    void resetTauriWindowSize()
+      .then(() => {
+        setStatus(
+          `Window restored to ${DEFAULT_TAURI_WINDOW_SIZE.width} x ${DEFAULT_TAURI_WINDOW_SIZE.height}.`
+        );
+      })
+      .catch((error: unknown) => {
+        console.warn("Unable to restore the default Tauri window size.", error);
+        setStatus("Window size could not be restored.");
+      });
+  };
+
   const handleAddCustomFont = async () => {
     const trimmedLabel = customFontLabel.trim();
     const trimmedFamily = customFontFamily.trim();
@@ -423,7 +470,16 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     if (!file) return;
 
     try {
-      await importGlassdayBackupFile(file);
+      const imported = await importGlassdayBackupFile(file, () => window.confirm(
+        "백업에 포함된 위젯 데이터를 덮어씁니다. 계속할까요?"
+      ));
+      if (!imported) {
+        setStatus("Import cancelled. Your data has not changed.");
+        return;
+      }
+      // Full imports may replace custom fonts as well as content. Bootstrap in
+      // App.tsx restores those resources; targeted resets below need no reload.
+      // 한국어: 전체 복원만 재시작하고 배치·개별 위젯 초기화는 즉시 반영한다.
       setStatus("Backup imported. Reloading...");
 
       window.setTimeout(() => {
@@ -445,14 +501,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     if (!ok) return;
 
     resetGlassdayLayout();
-    localStorage.removeItem("glassday.dashboard.tabs.v1");
-    localStorage.removeItem("glassday.dashboard.activeTab.v1");
-
-    setStatus("Layout reset. Reloading...");
-
-    window.setTimeout(() => {
-      window.location.reload();
-    }, 450);
+    setStatus("Layout reset. Your widget data is unchanged.");
   };
 
   const handleResetSection = (section: string, label: string) => {
@@ -462,11 +511,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
     resetGlassdaySection(section);
 
-    setStatus(`${label} reset. Reloading...`);
-
-    window.setTimeout(() => {
-      window.location.reload();
-    }, 450);
+    setStatus(`${label} reset.`);
   };
 
   const handleResetAll = () => {

@@ -1,0 +1,263 @@
+/* ============================================================
+   [Home] One-screen Overview / 한 화면 모아보기
+
+   TSX: src/components/home/HomeOverview.tsx
+   Reused widgets: TodayFocusWidget + AlertCenterWidget
+
+   Desktop/Tauri는 현재 main 높이를 두 카드가 나눠 써서 page scroll을 만들지
+   않는다. Mobile은 손가락으로 자연스럽게 읽을 수 있도록 한 열로 전환한다.
+   Theme 색상은 기존 glass-card와 glass-button token을 그대로 상속한다.
+   ============================================================ */
+
+/* Topbar segmented view control / 상단 보기 전환
+   This changes presentation only; DashboardGrid coordinates are never rewritten. */
+.home-view-toggle {
+  min-width: 0;
+  height: var(--gd-control-height-md, 32px);
+  padding: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+  border: 1px solid hsl(var(--foreground) / 0.12);
+  border-radius: 999px;
+  background: hsl(var(--background) / 0.2);
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.22);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.home-view-button {
+  min-width: 0;
+  height: 24px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 999px;
+  color: hsl(var(--muted-foreground) / 0.88);
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 800;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.home-view-button svg {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+
+.home-view-button:hover {
+  color: hsl(var(--foreground) / 0.92);
+  background: hsl(var(--foreground) / 0.06);
+}
+
+.home-view-button.is-active {
+  color: hsl(var(--foreground) / 0.96);
+  background: hsl(var(--background) / 0.68);
+  box-shadow:
+    0 1px 4px hsl(var(--foreground) / 0.08),
+    inset 0 1px 0 hsl(0 0% 100% / 0.36);
+}
+
+.home-overview {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding:
+    var(--gd-shell-pad-top)
+    var(--gd-shell-pad-x)
+    var(--gd-shell-pad-bottom);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
+  overflow: hidden;
+}
+
+.home-overview-header {
+  min-width: 0;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.home-overview-heading {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.home-overview-heading > svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  color: hsl(var(--foreground) / 0.62);
+}
+
+.home-overview-heading h2,
+.home-overview-heading p {
+  margin: 0;
+}
+
+.home-overview-heading h2 {
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 850;
+  color: hsl(var(--foreground) / 0.92);
+}
+
+.home-overview-heading p {
+  margin-top: 2px;
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: hsl(var(--muted-foreground) / 0.82);
+}
+
+.home-overview-all-button {
+  min-width: 0;
+  height: var(--gd-control-height-md, 32px);
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.home-overview-all-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.home-overview-grid {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.16fr) minmax(280px, 0.84fr);
+  gap: 10px;
+}
+
+.home-overview-panel {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.home-overview-panel > .glass-card {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Overview density / 모아보기 밀도
+   Today Focus의 원본 기능은 유지하고, 첫 화면에는 Top 3와 연결 요약이 더 많이
+   보이도록 카드 내부 간격만 한 단계 줄인다. */
+.home-overview .today-focus-widget .glass-card-body,
+.home-overview .alert-center-widget .glass-card-body {
+  scrollbar-gutter: stable;
+}
+
+.home-overview .today-focus-section,
+.home-overview .today-focus-hero {
+  padding: 8px 10px;
+}
+
+.home-overview .today-focus-task-list,
+.home-overview .today-focus-mini-list,
+.home-overview .today-focus-memo-list,
+.home-overview .alert-center-list {
+  gap: 6px;
+}
+
+.home-overview .today-focus-task {
+  min-height: 30px;
+  padding: 6px 8px;
+}
+
+.home-overview .alert-center-item {
+  min-height: 52px;
+  padding: 8px 10px;
+}
+
+/* Narrow desktop/tablet: 요약 카드를 위아래로 두되 각 카드의 내용은 자체 scroll. */
+@media (max-width: 900px) {
+  .home-overview {
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  .home-overview-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(420px, 58vh) minmax(300px, 42vh);
+  }
+}
+
+/* Mobile: App main이 page scroll을 담당하고 각 카드 높이는 읽기 쉬운 값으로 고정한다. */
+@media (max-width: 768px) {
+  .home-overview {
+    padding:
+      var(--gd-shell-pad-top)
+      var(--gd-shell-pad-x)
+      var(--gd-shell-pad-bottom);
+    gap: 12px;
+  }
+
+  .home-overview-grid {
+    gap: 12px;
+    grid-template-rows: minmax(520px, auto) minmax(320px, auto);
+  }
+
+  .home-overview-panel {
+    overflow: visible;
+  }
+
+  .home-overview-all-button span {
+    display: none;
+  }
+
+  .home-view-button span {
+    display: none;
+  }
+
+  .home-view-button {
+    width: 28px;
+    min-width: 28px;
+    padding: 0;
+  }
+
+  .home-overview-all-button {
+    width: 36px;
+    min-width: 36px;
+    padding: 0;
+  }
+}
+
+/* Pixel Desk/Retro follow their square window grammar instead of modern pills. */
+html[data-theme="pixel-desk"] .home-overview-all-button,
+body[data-theme="pixel-desk"] .home-overview-all-button,
+html[data-theme="pixel-desk"] .home-view-toggle,
+body[data-theme="pixel-desk"] .home-view-toggle,
+html[data-theme="pixel-desk"] .home-view-button,
+body[data-theme="pixel-desk"] .home-view-button,
+html[data-theme="retro"] .home-overview-all-button,
+body[data-theme="retro"] .home-overview-all-button,
+html[data-theme="retro"] .home-view-toggle,
+body[data-theme="retro"] .home-view-toggle,
+html[data-theme="retro"] .home-view-button,
+body[data-theme="retro"] .home-view-button {
+  border-radius: 0;
+}

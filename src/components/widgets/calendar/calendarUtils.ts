@@ -8,7 +8,33 @@
  * 저장된 CalendarEvent 날짜 해석 전체를 함께 확인한다.
  * ============================================================
  */
-import type { CalendarEvent } from "../../../types/dashboard";
+import type {
+  CalendarEvent,
+  CalendarPriority,
+} from "../../../types/dashboard";
+
+const calendarPriorityRank: Record<CalendarPriority, number> = {
+  high: 0,
+  medium: 1,
+  low: 2,
+};
+
+/**
+ * Old local snapshots do not have a priority field.
+ * English: treat missing or unknown values as Normal without rewriting dates.
+ * Korean: 예전 저장 데이터는 중요도가 없어도 Normal 일정으로 안전하게 표시한다.
+ */
+export const normalizeCalendarPriority = (
+  value: unknown
+): CalendarPriority => {
+  return value === "high" || value === "low" || value === "medium"
+    ? value
+    : "medium";
+};
+
+export const getCalendarPriorityRank = (event: CalendarEvent) => {
+  return calendarPriorityRank[normalizeCalendarPriority(event.priority)];
+};
 
 export const toLocalDateInput = (date = new Date()) => {
   const year = date.getFullYear();
@@ -105,10 +131,35 @@ export const eventTouchesRange = (
 
 export const sortEvents = (events: CalendarEvent[]) => {
   return [...events].sort((a, b) => {
+    const priorityDifference =
+      getCalendarPriorityRank(a) - getCalendarPriorityRank(b);
+
+    if (priorityDifference !== 0) return priorityDifference;
+
     const aValue = `${a.startDate} ${a.startTime}`;
     const bValue = `${b.startDate} ${b.startTime}`;
 
-    return aValue.localeCompare(bValue);
+    return aValue.localeCompare(bValue) || a.title.localeCompare(b.title);
+  });
+};
+
+/**
+ * All-day/range events use the user's decision order.
+ * English: priority wins first, then the closest deadline, then a stable tie-break.
+ * Korean: 중요도가 같으면 종료일이 촉박한 일정부터 펼친 목록 위에 배치한다.
+ */
+export const sortAllDayEvents = (events: CalendarEvent[]) => {
+  return [...events].sort((a, b) => {
+    const priorityDifference =
+      getCalendarPriorityRank(a) - getCalendarPriorityRank(b);
+
+    if (priorityDifference !== 0) return priorityDifference;
+    if (a.endDate !== b.endDate) return a.endDate.localeCompare(b.endDate);
+    if (a.startDate !== b.startDate) {
+      return a.startDate.localeCompare(b.startDate);
+    }
+
+    return a.title.localeCompare(b.title);
   });
 };
 
