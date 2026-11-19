@@ -1,0 +1,137 @@
+/* ============================================================
+   GLASSDAY — SHARED WIDGET SYSTEM
+
+   Runtime owners / 실행 주체:
+   - Web desktop: App.tsx -> AppShell.tsx -> DashboardGrid.tsx
+   - Tauri desktop: the same AppShell/DashboardGrid tree with `isTauri()` mode
+   - Mobile web: App.tsx -> MobileLayout.tsx -> MobileDashboard.tsx
+
+   Component owners / 컴포넌트 연결:
+   - GlassCard.tsx owns the shared header/body DOM contract.
+   - WidgetSlot.tsx moves the persistent widget host between layouts.
+   - widgetHostContext.ts keeps a widget mounted while its slot changes.
+   - Each `src/styles/widgets/*.css` file owns inner content only.
+   - This file owns the ordinary desktop frame geometry that every widget
+     should share: title, subtitle, icon slot, header gap, and body start.
+
+   Theme contract / 테마 계약:
+   - themes/*.css and theme-surfaces.css may change color, material, border,
+     shadow, radius, and contrast.
+   - They must not redefine ordinary widget title size or frame padding.
+   - Pixel Desk and a genuinely dense calendar view may opt into an explicit
+     exception selector in their own file; that exception must be documented.
+   ============================================================ */
+
+/* Every theme receives the same semantic widget-surface roles. The values
+   come from theme-surfaces.css; this alias block keeps the contract explicit
+   for Mac Core, Pixel Desk, and Pink Diary as well. */
+:where(
+  html[data-theme="pastel"],
+  body[data-theme="pastel"],
+  html[data-theme="glass-light"],
+  body[data-theme="glass-light"],
+  html[data-theme="glass-dark"],
+  body[data-theme="glass-dark"],
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html[data-theme="mac-core"],
+  body[data-theme="mac-core"],
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html[data-theme="retro"],
+  body[data-theme="retro"]
+) {
+  --gd-widget-panel-bg: var(--gd-inner-bg);
+  --gd-widget-panel-border: var(--gd-inner-border);
+  --gd-widget-panel-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.28);
+  --gd-widget-control-bg: var(--gd-control-bg);
+  --gd-widget-control-border: var(--gd-control-border);
+  --gd-widget-control-active-bg: var(--gd-control-active-bg);
+}
+
+/* Aurora has a named holographic palette. Preserve it while keeping the
+   same semantic roles as every other theme. */
+:where(html[data-theme="aurora"], body[data-theme="aurora"]) {
+  --gd-widget-panel-bg: var(--aurora-panel-bg);
+  --gd-widget-panel-border: var(--aurora-panel-border);
+  --gd-widget-panel-shadow: 0 10px 28px rgb(0 0 0 / 0.18);
+  --gd-widget-control-bg: var(--aurora-control-bg);
+  --gd-widget-control-border: var(--aurora-control-border);
+  --gd-widget-control-active-bg: var(--aurora-active-bg);
+}
+
+/*
+ * Desktop/Tauri shared frame.
+ *
+ * Mobile has a separate information hierarchy and intentionally uses the
+ * compact rules in mobile*.css. Keeping this guard prevents desktop cleanup
+ * from changing phone touch targets or the mobile widget editor.
+ */
+@media (min-width: 769px) {
+  .app-mode-stage
+    :where(.glass-card, .widget-frame)
+    > :where(.glass-card-header, .widget-card-header, .widget-frame__header) {
+    min-height: var(--gd-widget-header-min-height) !important;
+    padding:
+      var(--gd-widget-header-anchor-y)
+      var(--gd-widget-pad-x)
+      var(--gd-widget-header-pad-bottom) !important;
+    gap: var(--gd-widget-header-gap) !important;
+  }
+
+  .app-mode-stage
+    :where(.glass-card, .widget-frame)
+    > :where(.glass-card-header, .widget-card-header, .widget-frame__header)
+    > :where(.glass-card-title-group, .widget-card-title-group, .widget-frame__title-group) {
+    min-height: var(--gd-widget-header-icon-size) !important;
+    align-items: center !important;
+    gap: var(--gd-widget-title-group-gap) !important;
+  }
+
+  .app-mode-stage
+    :where(.glass-card, .widget-frame)
+    > :where(.glass-card-header, .widget-card-header, .widget-frame__header)
+    :where(.glass-card-icon, .widget-card-icon, .widget-frame__icon) {
+    width: var(--gd-widget-header-icon-size) !important;
+    height: var(--gd-widget-header-icon-size) !important;
+    min-width: var(--gd-widget-header-icon-size) !important;
+    flex: 0 0 var(--gd-widget-header-icon-size) !important;
+  }
+
+  .app-mode-stage
+    :where(.glass-card, .widget-frame)
+    > :where(.glass-card-header, .widget-card-header, .widget-frame__header)
+    :where(.glass-card-copy, .widget-card-copy, .widget-frame__copy) {
+    min-height: var(--gd-widget-header-icon-size) !important;
+    gap: var(--gd-widget-copy-gap) !important;
+    justify-content: center !important;
+  }
+
+  .app-mode-stage
+    :where(.glass-card, .widget-frame)
+    > :where(.glass-card-header, .widget-card-header, .widget-frame__header)
+    :where(.glass-card-title, .widget-card-title, .widget-frame__title) {
+    margin: 0 !important;
+    font-size: var(--gd-widget-title-size) !important;
+    line-height: var(--gd-widget-title-line-height) !important;
+  }
+
+  .app-mode-stage
+    :where(.glass-card, .widget-frame)
+    > :where(.glass-card-header, .widget-card-header, .widget-frame__header)
+    :where(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle) {
+    margin: 0 !important;
+    font-size: var(--gd-widget-subtitle-size) !important;
+    line-height: var(--gd-widget-subtitle-line-height) !important;
+  }
+
+  .app-mode-stage
+    :where(.glass-card, .widget-frame)
+    > :where(.glass-card-body, .widget-frame__body) {
+    min-height: 0 !important;
+    padding:
+      var(--gd-widget-content-gap-top)
+      var(--gd-widget-pad-x)
+      var(--gd-widget-pad-y) !important;
+  }
+}

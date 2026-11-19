@@ -1087,7 +1087,16 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     <>
       {/* Figma Component: Career Widget / detailOnly에서는 이 Grid surface를 렌더링하지 않는다. */}
       {!detailOnly && (
-      <section className="glass-card widget-frame career-widget">
+      <section
+        className="glass-card widget-frame career-widget"
+        /*
+         * EN: Career owns a custom header for its pipeline controls, but it
+         * still participates in the shared Mac Core icon contract.
+         * KO: Career는 파이프라인 전용 header를 쓰지만 공통 위젯 의미 아이콘
+         * 계약에도 참여하도록 제목을 데이터 속성으로 전달한다.
+         */
+        data-widget-title="Career"
+      >
         {/* Figma Frame: Widget Header / Horizontal Auto Layout / Space Between */}
         <div className="career-widget-header glass-card-header widget-card-header widget-frame__header">
           <div className="career-widget-title-wrap glass-card-title-group widget-card-title-group widget-frame__title-group">

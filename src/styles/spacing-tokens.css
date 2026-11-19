@@ -62,6 +62,26 @@
   --gd-widget-inline-gap: var(--gd-space-xs);
   --gd-widget-section-gap-tight: var(--gd-space-xs);
   --gd-widget-section-gap: var(--gd-space-sm);
+
+  /*
+   * Widget Frame contract / 위젯 프레임 계약
+   *
+   * EN: These values are the single geometry source for ordinary widget
+   * headers. Theme files may change color/material, and a genuinely dense
+   * view may opt into an explicit exception class, but a widget should not
+   * invent a different title size or header padding by default.
+   * KO: 일반 위젯 제목과 header의 기준값은 여기서만 정한다. 테마는 색과
+   * 재질만 바꾸고, 정말 좁은 특수 화면만 예외 클래스로 별도 선언한다.
+   */
+  --gd-widget-title-size: var(--gd-widget-desktop-title-size);
+  --gd-widget-subtitle-size: var(--gd-widget-desktop-subtitle-size);
+  --gd-widget-title-line-height: 1.2;
+  --gd-widget-subtitle-line-height: 1.25;
+  --gd-widget-header-icon-size: var(--gd-widget-desktop-icon-size);
+  --gd-widget-header-gap: var(--gd-space-md);
+  --gd-widget-title-group-gap: var(--gd-space-xs);
+  --gd-widget-copy-gap: 3px;
+  --gd-widget-header-min-height: var(--gd-widget-desktop-header-height);
   /* Shared vertical rhythm
      Use this as the margin between sibling content sections. Horizontal item
      groups may keep their local `gap`, but top-level panels should not invent

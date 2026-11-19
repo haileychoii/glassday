@@ -258,6 +258,8 @@
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
   .glass-card[data-widget-title="Calendar"] .glass-card-icon::before { content: "📅"; }
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Career"] .glass-card-icon::before { content: "💼"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
   .glass-card[data-widget-title="Daily Journal"] .glass-card-icon::before { content: "📔"; }
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
   .glass-card[data-widget-title="Memo"] .glass-card-icon::before { content: "📝"; }
@@ -269,6 +271,8 @@
   .glass-card[data-widget-title="Health Progress"] .glass-card-icon::before { content: "🌿"; }
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
   .glass-card[data-widget-title="Study"] .glass-card-icon::before { content: "📚"; }
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .glass-card[data-widget-title="Study Planner"] .glass-card-icon::before { content: "📚"; }
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
   .glass-card[data-widget-title="Timer"] .glass-card-icon::before { content: "⏱️"; }
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
