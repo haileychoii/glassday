@@ -37,6 +37,9 @@ use tauri::Manager;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 #[cfg(target_os = "windows")]
+use std::ffi::c_void;
+
+#[cfg(target_os = "windows")]
 use windows::Win32::Foundation::HWND;
 
 #[cfg(target_os = "windows")]
@@ -61,6 +64,94 @@ const WINDOW_RADIUS: f64 = 10.0;
 
 #[cfg(target_os = "windows")]
 static SQUARE_WINDOW: AtomicBool = AtomicBool::new(false);
+
+
+/* ============================================================
+   02-B. WINDOWS ACCENT BLUR
+
+   Tauri의 일반 WindowEffect는 비활성 창에서 tint가 불투명해질 수 있어
+   Windows 창 자체의 composition layer에 blur를 직접 적용한다.
+
+   / EN: This keeps the WebView transparent while the Windows compositor
+   owns the blurred desktop backdrop. The CSS layer remains responsible for
+   theme colors and cards.
+   ============================================================ */
+
+#[cfg(target_os = "windows")]
+const ACCENT_DISABLED: u32 = 0;
+
+#[cfg(target_os = "windows")]
+const ACCENT_ENABLE_ACRYLICBLURBEHIND: u32 = 4;
+
+#[cfg(target_os = "windows")]
+const WCA_ACCENT_POLICY: u32 = 19;
+
+#[cfg(target_os = "windows")]
+#[repr(C)]
+struct AccentPolicy {
+    accent_state: u32,
+    accent_flags: u32,
+    gradient_color: u32,
+    animation_id: u32,
+}
+
+#[cfg(target_os = "windows")]
+#[repr(C)]
+struct WindowCompositionAttributeData {
+    attribute: u32,
+    data: *mut c_void,
+    size: usize,
+}
+
+#[cfg(target_os = "windows")]
+#[link(name = "user32")]
+unsafe extern "system" {
+    fn SetWindowCompositionAttribute(
+        hwnd: HWND,
+        data: *mut WindowCompositionAttributeData,
+    ) -> i32;
+}
+
+#[cfg(target_os = "windows")]
+fn apply_native_blur(
+    hwnd: HWND,
+    enabled: bool,
+    dark: bool,
+) -> Result<(), String> {
+    // ARGB: 낮은 alpha를 사용해 바탕화면 blur가 검정 판으로 굳지 않게 한다.
+    let gradient_color = if dark {
+        0x88202736
+    } else {
+        0x88F4F7FF
+    };
+
+    let mut policy = AccentPolicy {
+        accent_state: if enabled {
+            ACCENT_ENABLE_ACRYLICBLURBEHIND
+        } else {
+            ACCENT_DISABLED
+        },
+        accent_flags: 2,
+        gradient_color,
+        animation_id: 0,
+    };
+
+    let mut data = WindowCompositionAttributeData {
+        attribute: WCA_ACCENT_POLICY,
+        data: (&mut policy as *mut AccentPolicy).cast(),
+        size: std::mem::size_of::<AccentPolicy>(),
+    };
+
+    let result = unsafe {
+        SetWindowCompositionAttribute(hwnd, &mut data)
+    };
+
+    if result != 0 {
+        Ok(())
+    } else {
+        Err("Windows composition blur could not be applied".into())
+    }
+}
 
 
 /* ============================================================
@@ -213,6 +304,41 @@ fn set_native_window_shape(
     {
         let _ = (window, square);
 
+        Ok(())
+    }
+}
+
+
+/* ============================================================
+   05-B. TAURI COMMAND — DESKTOP BLUR
+
+   연결: src/lib/nativeGlassEffect.ts
+   - glass 테마: enabled=true
+   - Pixel Desk / Mac Core / Pink Diary: enabled=false
+   ============================================================ */
+
+#[tauri::command]
+fn set_native_window_blur(
+    window: tauri::WebviewWindow,
+    enabled: bool,
+    dark: bool,
+) -> Result<(), String> {
+    #[cfg(target_os = "windows")]
+    {
+        if window.label() != "main" {
+            return Ok(());
+        }
+
+        let hwnd = window
+            .hwnd()
+            .map_err(|error| error.to_string())?;
+
+        return apply_native_blur(hwnd, enabled, dark);
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    {
+        let _ = (window, enabled, dark);
         Ok(())
     }
 }
@@ -375,7 +501,8 @@ pub fn run() {
 
         .invoke_handler(
             tauri::generate_handler![
-                set_native_window_shape
+                set_native_window_shape,
+                set_native_window_blur
             ]
         )
 

@@ -104,6 +104,9 @@ html.desktop-transparent[data-theme]
   padding: 0;
 
   border-radius: inherit !important;
+  /* The native window region supplies the silhouette. A second 1px shell
+     border creates the bright rectangle visible around Tauri glass windows. */
+  border: 0 !important;
   overflow: hidden !important;
 
   isolation: isolate;

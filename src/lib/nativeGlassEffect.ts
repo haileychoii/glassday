@@ -23,7 +23,7 @@
  */
 
 import { invoke, isTauri } from "@tauri-apps/api/core";
-import { Effect, getCurrentWindow } from "@tauri-apps/api/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 import type { ThemeId } from "../constants/themes";
 
@@ -54,7 +54,7 @@ const GLASS_THEMES: ReadonlySet<ThemeId> = new Set([
    the native backdrop after the inactive-window behavior is verified there.
    ============================================================ */
 
-const USE_NATIVE_DESKTOP_BACKDROP = false;
+const USE_NATIVE_DESKTOP_BACKDROP = true;
 
 
 /* ============================================================
@@ -72,9 +72,10 @@ let pendingEffect: Promise<void> = Promise.resolve();
 
    Windows 바탕화면에 실제 glass material을 적용한다.
 
-   현재 기본값에서는 호출하지 않고 CSS glass fallback을 사용한다.
-   아래 native 경로는 향후 WinUI/Win32 shell로 교체할 때 참고할 수 있도록
-   삭제하지 않고 보존한다.
+   Tauri의 기본 WindowEffect 대신 src-tauri/src/lib.rs의 Windows
+   composition command를 호출한다. 이 경로는 WebView의 CSS 레이어와
+   분리되어 있어 포커스 변경 때 native tint가 임의로 덧씌워지는 문제를
+   줄인다.
 
    Blur를 먼저 선택하는 이유:
    - Windows Acrylic은 창이 포커스를 잃을 때 tint가 진해지거나
@@ -91,34 +92,22 @@ const applyNativeMaterial = async (
 ): Promise<void> => {
   const currentWindow = getCurrentWindow();
 
-  // 일반 테마 또는 CSS fallback 모드에서는 native 효과를 확실히 제거한다.
+  // 일반 테마에서는 native 효과를 확실히 제거한다.
   // 이 호출이 있어야 이전 실행에서 남은 Acrylic/Blur가 다음 테마에 남지 않는다.
   if (!USE_NATIVE_DESKTOP_BACKDROP || !GLASS_THEMES.has(theme)) {
     await currentWindow.clearEffects();
     return;
   }
 
-  // 테마별 tint 색상은 유지하되, 알파값은 native material에 전달한다.
-  const tint: [number, number, number, number] =
-    theme === "glass-dark" || theme === "aurora"
-      ? [24, 27, 36, 72]
-      : theme === "pastel"
-        ? [255, 230, 244, 56]
-        : [236, 244, 255, 76];
-
   try {
-    // Native fallback을 다시 켤 경우 Blur에는 native tint를 전달하지 않는다.
-    // Windows가 포커스를 잃었을 때 tint가 검정 사각형처럼 굳는 것을
-    // 막고, 실제 색상은 각 테마 CSS의 glass layer가 담당하게 한다.
-    await currentWindow.setEffects({
-      effects: [Effect.Blur],
+    // Rust의 Windows composition layer가 실제 바탕화면 blur를 담당한다.
+    await invoke("set_native_window_blur", {
+      enabled: true,
+      dark: theme === "glass-dark" || theme === "aurora",
     });
   } catch {
-    // Blur 미지원 환경에서만 Acrylic을 대체 효과로 사용한다.
-    await currentWindow.setEffects({
-      effects: [Effect.Acrylic],
-      color: tint,
-    });
+    // native blur가 지원되지 않아도 CSS glass 화면은 계속 사용할 수 있다.
+    await currentWindow.clearEffects();
   }
 };
 
