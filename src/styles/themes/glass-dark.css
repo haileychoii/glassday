@@ -7,7 +7,7 @@
 
    TAURI
    - 검은색/차콜 기반의 투명 glass material
-   - 실제 Windows Desktop이 뒤로 보이되 텍스트는 blur로 흐려짐
+   - Tauri에서는 native backdrop 대신 안정적인 CSS glass layer 사용
    - Aurora처럼 남색/보라색 tint를 넣지 않음
    ============================================================ */
 
@@ -142,7 +142,7 @@ body.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient {
 /* ============================================================
    4. APP SHELL
 
-   Glassday 전체를 받치는 큰 남색 판을 제거한다.
+   Glassday 전체를 받치는 큰 남색 판 대신 CSS glass fallback을 만든다.
 
    IMPORTANT:
    Sidebar / Topbar / Widgets까지 제거하는 게 아니다.
@@ -162,23 +162,22 @@ html.desktop-transparent[data-theme="glass-dark"]
 
 body.desktop-transparent[data-theme="glass-dark"]
   .app-shell-surface.liquid-shell {
-  /* Tauri glass backplate
-     Keep the desktop visible and use blur, not opaque navy/black paint, as the
-     main material. / 검은 판이 아니라 투명도와 blur가 주인공인 dark glass다. */
+  /* Tauri CSS glass fallback.
+     Native desktop blur is intentionally disabled in nativeGlassEffect.ts;
+     this layer therefore owns the stable dark glass appearance. */
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%),
     var(--gd-dark-shell-bg) !important;
-  /* Keep the smoked layer light so the native Blur remains visible even when
-     the Tauri window loses focus. / 포커스를 잃어도 native Blur가 보이도록
-     검정 덮개를 얇게 유지한다. */
+  /* Keep the smoked layer light so the CSS glass stays translucent without
+     exposing an unstable native inactive-window material. */
   background-color: rgba(0, 0, 0, 0.08) !important;
   background-image:
     linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%),
     var(--gd-dark-shell-bg) !important;
 
   /*
-   * The shell owns one neutral black blur layer.
-   * Korean: 남색/보라 tint 없이 검정 유리 막만 만들어 뒤 배경 텍스트를 흐린다.
+   * The shell owns one neutral CSS glass layer.
+   * Korean: native backdrop 대신 CSS가 일관된 검정 유리 표면을 담당한다.
    */
   backdrop-filter:
     blur(54px)

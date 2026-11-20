@@ -31,8 +31,8 @@ import type { ThemeId } from "../constants/themes";
 /* ============================================================
    01. GLASS THEME REGISTRY
 
-   Native glass material을 사용하는 테마 목록.
-   나머지 테마에서는 Native 효과를 제거한다.
+   CSS glass fallback을 사용하는 테마 목록.
+   Tauri native backdrop은 현재 기본적으로 비활성화한다.
    ============================================================ */
 
 const GLASS_THEMES: ReadonlySet<ThemeId> = new Set([
@@ -41,6 +41,20 @@ const GLASS_THEMES: ReadonlySet<ThemeId> = new Set([
   "glass-dark",
   "aurora",
 ]);
+
+
+/* ============================================================
+   01-B. NATIVE BACKDROP FEATURE FLAG
+
+   현재 Windows Tauri transparent window에서는 native Blur/Acrylic이
+   포커스를 잃을 때 불투명한 검정/회색 레이어로 바뀌는 문제가 있다.
+   그래서 지금의 제품 동작은 CSS glass fallback을 기본값으로 삼는다.
+
+   / EN: Keep this flag explicit so a future WinUI/Win32 shell can re-enable
+   the native backdrop after the inactive-window behavior is verified there.
+   ============================================================ */
+
+const USE_NATIVE_DESKTOP_BACKDROP = false;
 
 
 /* ============================================================
@@ -58,6 +72,10 @@ let pendingEffect: Promise<void> = Promise.resolve();
 
    Windows 바탕화면에 실제 glass material을 적용한다.
 
+   현재 기본값에서는 호출하지 않고 CSS glass fallback을 사용한다.
+   아래 native 경로는 향후 WinUI/Win32 shell로 교체할 때 참고할 수 있도록
+   삭제하지 않고 보존한다.
+
    Blur를 먼저 선택하는 이유:
    - Windows Acrylic은 창이 포커스를 잃을 때 tint가 진해지거나
      불투명한 사각형처럼 보이는 경우가 있다.
@@ -73,8 +91,9 @@ const applyNativeMaterial = async (
 ): Promise<void> => {
   const currentWindow = getCurrentWindow();
 
-  // Mac Core / Pixel Desk / Pink Diary
-  if (!GLASS_THEMES.has(theme)) {
+  // 일반 테마 또는 CSS fallback 모드에서는 native 효과를 확실히 제거한다.
+  // 이 호출이 있어야 이전 실행에서 남은 Acrylic/Blur가 다음 테마에 남지 않는다.
+  if (!USE_NATIVE_DESKTOP_BACKDROP || !GLASS_THEMES.has(theme)) {
     await currentWindow.clearEffects();
     return;
   }
@@ -88,7 +107,7 @@ const applyNativeMaterial = async (
         : [236, 244, 255, 76];
 
   try {
-    // Blur에는 native tint를 전달하지 않는다.
+    // Native fallback을 다시 켤 경우 Blur에는 native tint를 전달하지 않는다.
     // Windows가 포커스를 잃었을 때 tint가 검정 사각형처럼 굳는 것을
     // 막고, 실제 색상은 각 테마 CSS의 glass layer가 담당하게 한다.
     await currentWindow.setEffects({
