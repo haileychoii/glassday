@@ -88,10 +88,11 @@ const applyNativeMaterial = async (
         : [236, 244, 255, 76];
 
   try {
-    // 비활성 창에서도 데스크톱이 보이는 안정적인 기본 효과.
+    // Blur에는 native tint를 전달하지 않는다.
+    // Windows가 포커스를 잃었을 때 tint가 검정 사각형처럼 굳는 것을
+    // 막고, 실제 색상은 각 테마 CSS의 glass layer가 담당하게 한다.
     await currentWindow.setEffects({
       effects: [Effect.Blur],
-      color: tint,
     });
   } catch {
     // Blur 미지원 환경에서만 Acrylic을 대체 효과로 사용한다.
