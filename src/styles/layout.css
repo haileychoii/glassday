@@ -50,6 +50,14 @@
 
   display: grid !important;
   grid-template-rows: auto auto minmax(0, 1fr) !important;
+  /*
+   * EN: Prevent the two auto rows (header and section tabs) from stretching
+   * into the free height of the fixed modal. Only the scroll body should own
+   * the remaining space.
+   * KO: 고정 높이 Settings 창에서 헤더와 탭 행이 남는 공간을 나눠 갖지
+   * 않도록 한다. 남은 높이는 설정 본문과 스크롤 영역에만 사용한다.
+   */
+  align-content: start !important;
 
   overflow: hidden !important;
   box-sizing: border-box !important;
