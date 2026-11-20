@@ -45,16 +45,16 @@ const defaultItems: DiaryCanvasItem[] = [
 
 const defaultLayouts: Layouts = {
   lg: [
-    { i: "journal", x: 0, y: 0, w: 10, h: 10, minW: 9, minH: 9 },
-    { i: "memo", x: 10, y: 0, w: 6, h: 8, minW: 4, minH: 5 },
+    { i: "journal", x: 0, y: 0, w: 10, h: 9, minW: 9, minH: 8 },
+    { i: "memo", x: 10, y: 0, w: 6, h: 8, minW: 4, minH: 6 },
   ],
   md: [
-    { i: "journal", x: 0, y: 0, w: 16, h: 10, minW: 12, minH: 9 },
-    { i: "memo", x: 0, y: 10, w: 8, h: 7, minW: 6, minH: 5 },
+    { i: "journal", x: 0, y: 0, w: 16, h: 9, minW: 12, minH: 8 },
+    { i: "memo", x: 0, y: 9, w: 8, h: 7, minW: 6, minH: 6 },
   ],
   sm: [
-    { i: "journal", x: 0, y: 0, w: 16, h: 10, minW: 8, minH: 9 },
-    { i: "memo", x: 0, y: 10, w: 16, h: 7, minW: 8, minH: 5 },
+    { i: "journal", x: 0, y: 0, w: 16, h: 9, minW: 8, minH: 8 },
+    { i: "memo", x: 0, y: 9, w: 16, h: 7, minW: 8, minH: 6 },
   ],
 };
 
@@ -72,7 +72,7 @@ const normalizeLayouts = (layouts: Layouts): Layouts =>
       layout.map((item) => {
         const isJournal = item.i === "journal";
         const minW = Math.min(16, isJournal ? (breakpoint === "sm" ? 8 : 9) : item.minW ?? 3);
-        const minH = isJournal ? 9 : item.minH ?? 3;
+        const minH = isJournal ? 8 : item.minH ?? 3;
         const w = Math.min(16, Math.max(minW, item.w));
         return {
           ...item,
@@ -142,18 +142,18 @@ const readCanvasStorage = (): DiaryCanvasStorage => {
 /** A freeform Diary canvas with opt-in movement, resizing, and note blocks. */
 export const DiaryWorkspace = () => {
   const initialStorage = useMemo(() => readCanvasStorage(), []);
-  const [items, setItems] = useState<DiaryCanvasItem[]>(initialStorage.items);
-  const [layouts, setLayouts] = useState<Layouts>(initialStorage.layouts);
+  // Keep the two persisted values in one state object. A Quick Note delete
+  // then causes one render and one localStorage write instead of two.
+  // Quick Note 삭제 시 items/layouts를 각각 갱신하지 않아 불필요한 재계산을 막는다.
+  const [canvas, setCanvas] = useState<DiaryCanvasStorage>(initialStorage);
+  const { items, layouts } = canvas;
   const [editMode, setEditMode] = useState(false);
   const gridWidthRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(1080);
 
   useEffect(() => {
-    window.localStorage.setItem(
-      DIARY_CANVAS_KEY,
-      JSON.stringify({ items, layouts } satisfies DiaryCanvasStorage)
-    );
-  }, [items, layouts]);
+    window.localStorage.setItem(DIARY_CANVAS_KEY, JSON.stringify(canvas));
+  }, [canvas]);
 
   useEffect(() => {
     if (!gridWidthRef.current) return;
@@ -171,38 +171,38 @@ export const DiaryWorkspace = () => {
 
   const addNote = () => {
     const id = createNoteId();
-    setItems((current) => [
-      ...current,
-      { i: id, kind: "note", text: "새로운 기록" },
-    ]);
-    setLayouts((current) => ({
-      ...current,
-      lg: [...(current.lg ?? []), { i: id, x: 0, y: 12, w: 4, h: 4, minW: 3, minH: 3 }],
-      md: [...(current.md ?? []), { i: id, x: 0, y: 12, w: 4, h: 4, minW: 3, minH: 3 }],
-      sm: [...(current.sm ?? []), { i: id, x: 0, y: 20, w: 8, h: 4, minW: 6, minH: 3 }],
+    setCanvas((current) => ({
+      items: [...current.items, { i: id, kind: "note", text: "새로운 기록" }],
+      layouts: {
+        ...current.layouts,
+        lg: [...(current.layouts.lg ?? []), { i: id, x: 0, y: 12, w: 4, h: 4, minW: 3, minH: 3 }],
+        md: [...(current.layouts.md ?? []), { i: id, x: 0, y: 16, w: 4, h: 4, minW: 3, minH: 3 }],
+        sm: [...(current.layouts.sm ?? []), { i: id, x: 0, y: 16, w: 8, h: 4, minW: 6, minH: 3 }],
+      },
     }));
   };
 
   const updateNote = (id: string, text: string) => {
-    setItems((current) =>
-      current.map((item) => (item.i === id ? { ...item, text } : item))
-    );
+    setCanvas((current) => ({
+      ...current,
+      items: current.items.map((item) => (item.i === id ? { ...item, text } : item)),
+    }));
   };
 
   const removeNote = (id: string) => {
-    setItems((current) => current.filter((item) => item.i !== id));
-    setLayouts((current) =>
-      Object.fromEntries(
-        Object.entries(current).map(([key, layout]) => [
+    setCanvas((current) => ({
+      items: current.items.filter((item) => item.i !== id),
+      layouts: Object.fromEntries(
+        Object.entries(current.layouts).map(([key, layout]) => [
           key,
           layout.filter((item) => item.i !== id),
         ])
-      ) as Layouts
-    );
+      ) as Layouts,
+    }));
   };
 
   const handleLayoutChange = (nextLayouts: Layouts) => {
-    if (editMode) setLayouts(nextLayouts);
+    if (editMode) setCanvas((current) => ({ ...current, layouts: nextLayouts }));
   };
 
   return (
@@ -241,11 +241,12 @@ export const DiaryWorkspace = () => {
           width={width}
           margin={[12, 12]}
           containerPadding={[0, 0]}
-          compactType={null}
-          preventCollision={false}
-          allowOverlap={true}
+          compactType="vertical"
+          preventCollision={true}
+          allowOverlap={false}
           isDraggable={editMode}
           isResizable={editMode}
+          draggableCancel=".diary-note-block button, .diary-note-block textarea"
           onLayoutChange={handleLayoutChange}
         >
           {items.map((item) => (
@@ -256,7 +257,14 @@ export const DiaryWorkspace = () => {
                     <Grip aria-hidden="true" />
                     <span>Quick note</span>
                     {editMode && (
-                      <button type="button" onClick={() => removeNote(item.i)} aria-label="Delete note">
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          removeNote(item.i);
+                        }}
+                        aria-label="Delete note"
+                      >
                         <Trash2 aria-hidden="true" />
                       </button>
                     )}

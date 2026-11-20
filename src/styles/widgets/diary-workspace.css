@@ -13,7 +13,7 @@
   width: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 16px;
+  padding: 12px;
   color: hsl(var(--foreground));
 }
 
@@ -21,8 +21,8 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 12px;
+  gap: 14px;
+  margin-bottom: 10px;
 }
 
 .diary-workspace__heading {
@@ -46,8 +46,8 @@
 }
 
 .diary-workspace__heading h2 {
-  margin: 5px 0 3px;
-  font-size: clamp(20px, 2vw, 28px);
+  margin: 4px 0 2px;
+  font-size: clamp(18px, 1.7vw, 24px);
   line-height: 1.12;
   letter-spacing: 0;
 }
@@ -55,7 +55,7 @@
 .diary-workspace__heading p {
   margin: 0;
   color: hsl(var(--muted-foreground) / 0.78);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .diary-workspace__actions {
@@ -93,8 +93,8 @@
 
 .diary-workspace__canvas {
   width: 100%;
-  min-height: 620px;
-  padding: 10px;
+  min-height: 460px;
+  padding: 8px;
   border: 1px solid hsl(var(--border) / 0.62);
   border-radius: var(--gd-radius-panel, 18px);
   background:
@@ -113,7 +113,7 @@
 }
 
 .diary-canvas-grid {
-  min-height: 590px;
+  min-height: 420px;
 }
 
 .diary-canvas-item {
@@ -250,8 +250,8 @@
   }
 
   .diary-workspace__canvas {
-    min-height: 560px;
-    padding: 6px;
+    min-height: 420px;
+    padding: 5px;
   }
 }
 
