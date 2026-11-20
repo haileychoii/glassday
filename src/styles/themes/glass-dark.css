@@ -168,9 +168,10 @@ body.desktop-transparent[data-theme="glass-dark"]
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%),
     var(--gd-dark-shell-bg) !important;
-  /* Slightly stronger smoked layer keeps the desktop behind readable only as
-     a blur, while the native Acrylic effect still supplies transparency. */
-  background-color: rgba(0, 0, 0, 0.28) !important;
+  /* Keep the smoked layer light so the native Blur remains visible even when
+     the Tauri window loses focus. / 포커스를 잃어도 native Blur가 보이도록
+     검정 덮개를 얇게 유지한다. */
+  background-color: rgba(0, 0, 0, 0.16) !important;
   background-image:
     linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%),
     var(--gd-dark-shell-bg) !important;

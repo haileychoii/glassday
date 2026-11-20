@@ -31,8 +31,8 @@ import type { ThemeId } from "../constants/themes";
 /* ============================================================
    01. GLASS THEME REGISTRY
 
-   Native Acrylic을 사용하는 테마 목록.
-   나머지 테마에서는 Native Blur를 제거한다.
+   Native glass material을 사용하는 테마 목록.
+   나머지 테마에서는 Native 효과를 제거한다.
    ============================================================ */
 
 const GLASS_THEMES: ReadonlySet<ThemeId> = new Set([
@@ -56,8 +56,16 @@ let pendingEffect: Promise<void> = Promise.resolve();
 /* ============================================================
    03. NATIVE GLASS MATERIAL
 
-   Windows 바탕화면에 실제 Acrylic 효과를 적용한다.
-   Acrylic 적용에 실패하면 Blur를 시도한다.
+   Windows 바탕화면에 실제 glass material을 적용한다.
+
+   Blur를 먼저 선택하는 이유:
+   - Windows Acrylic은 창이 포커스를 잃을 때 tint가 진해지거나
+     불투명한 사각형처럼 보이는 경우가 있다.
+   - Blur는 비활성 상태에서도 상대적으로 일관된 투명도를 유지한다.
+   - Blur를 지원하지 않는 환경만 Acrylic으로 보완한다.
+
+   / EN: Blur is intentionally preferred over Acrylic because Acrylic can
+   become heavily tinted when a transparent Tauri window loses focus.
    ============================================================ */
 
 const applyNativeMaterial = async (
@@ -71,7 +79,7 @@ const applyNativeMaterial = async (
     return;
   }
 
-  // 기존 테마별 Acrylic 색상 유지
+  // 테마별 tint 색상은 유지하되, 알파값은 native material에 전달한다.
   const tint: [number, number, number, number] =
     theme === "glass-dark" || theme === "aurora"
       ? [24, 27, 36, 72]
@@ -80,14 +88,15 @@ const applyNativeMaterial = async (
         : [236, 244, 255, 76];
 
   try {
+    // 비활성 창에서도 데스크톱이 보이는 안정적인 기본 효과.
     await currentWindow.setEffects({
-      effects: [Effect.Acrylic],
+      effects: [Effect.Blur],
       color: tint,
     });
   } catch {
-    // Acrylic 미지원 환경의 대체 효과
+    // Blur 미지원 환경에서만 Acrylic을 대체 효과로 사용한다.
     await currentWindow.setEffects({
-      effects: [Effect.Blur],
+      effects: [Effect.Acrylic],
       color: tint,
     });
   }
