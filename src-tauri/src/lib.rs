@@ -37,19 +37,7 @@ use tauri::Manager;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 #[cfg(target_os = "windows")]
-use std::ffi::c_void;
-
-#[cfg(target_os = "windows")]
 use windows::Win32::Foundation::HWND;
-
-#[cfg(target_os = "windows")]
-use windows::Win32::System::LibraryLoader::{
-    GetModuleHandleW,
-    GetProcAddress,
-};
-
-#[cfg(target_os = "windows")]
-use windows::core::{s, w};
 
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Gdi::{
@@ -73,108 +61,6 @@ const WINDOW_RADIUS: f64 = 10.0;
 
 #[cfg(target_os = "windows")]
 static SQUARE_WINDOW: AtomicBool = AtomicBool::new(false);
-
-#[cfg(target_os = "windows")]
-static NATIVE_BLUR_ENABLED: AtomicBool = AtomicBool::new(false);
-
-#[cfg(target_os = "windows")]
-static NATIVE_BLUR_DARK: AtomicBool = AtomicBool::new(false);
-
-
-/* ============================================================
-   02-B. WINDOWS ACCENT BLUR
-
-   Tauri의 일반 WindowEffect는 비활성 창에서 tint가 불투명해질 수 있어
-   Windows 창 자체의 composition layer에 blur를 직접 적용한다.
-
-   / EN: This keeps the WebView transparent while the Windows compositor
-   owns the blurred desktop backdrop. The CSS layer remains responsible for
-   theme colors and cards.
-   ============================================================ */
-
-#[cfg(target_os = "windows")]
-const ACCENT_DISABLED: u32 = 0;
-
-#[cfg(target_os = "windows")]
-const ACCENT_ENABLE_ACRYLICBLURBEHIND: u32 = 4;
-
-#[cfg(target_os = "windows")]
-const WCA_ACCENT_POLICY: u32 = 19;
-
-#[cfg(target_os = "windows")]
-#[repr(C)]
-struct AccentPolicy {
-    accent_state: u32,
-    accent_flags: u32,
-    gradient_color: u32,
-    animation_id: u32,
-}
-
-#[cfg(target_os = "windows")]
-#[repr(C)]
-struct WindowCompositionAttributeData {
-    attribute: u32,
-    data: *mut c_void,
-    size: usize,
-}
-
-#[cfg(target_os = "windows")]
-fn apply_native_blur(
-    hwnd: HWND,
-    enabled: bool,
-    dark: bool,
-) -> Result<(), String> {
-    // Windows AccentPolicy는 일반적인 ARGB가 아니라 ABGR 순서를 사용한다.
-    // 채널을 잘못 넣으면 dark navy가 갈색으로 뒤집혀 보인다.
-    // 낮은 alpha를 사용해 바탕화면 blur가 검정 판으로 굳지 않게 한다.
-    let gradient_color = if dark {
-        0x88241B18
-    } else {
-        0x88FFF7F4
-    };
-
-    let mut policy = AccentPolicy {
-        accent_state: if enabled {
-            ACCENT_ENABLE_ACRYLICBLURBEHIND
-        } else {
-            ACCENT_DISABLED
-        },
-        accent_flags: 2,
-        gradient_color,
-        animation_id: 0,
-    };
-
-    let mut data = WindowCompositionAttributeData {
-        attribute: WCA_ACCENT_POLICY,
-        data: (&mut policy as *mut AccentPolicy).cast(),
-        size: std::mem::size_of::<AccentPolicy>(),
-    };
-
-    // The API is exported by user32.dll but is not part of the public
-    // windows-rs import surface, so resolve it at runtime instead of asking
-    // the linker for a static symbol that may not exist in the import lib.
-    let user32 = unsafe {
-        GetModuleHandleW(w!("user32.dll"))
-            .map_err(|error| error.to_string())?
-    };
-    let procedure = unsafe {
-        GetProcAddress(user32, s!("SetWindowCompositionAttribute"))
-            .ok_or_else(|| "SetWindowCompositionAttribute is unavailable".to_string())?
-    };
-    let set_window_composition_attribute: unsafe extern "system" fn(
-        HWND,
-        *mut WindowCompositionAttributeData,
-    ) -> i32 = unsafe { std::mem::transmute(procedure) };
-    let result = unsafe {
-        set_window_composition_attribute(hwnd, &mut data)
-    };
-
-    if result != 0 {
-        Ok(())
-    } else {
-        Err("Windows composition blur could not be applied".into())
-    }
-}
 
 
 /* ============================================================
@@ -333,48 +219,6 @@ fn set_native_window_shape(
 
 
 /* ============================================================
-   05-B. TAURI COMMAND — DESKTOP BLUR
-
-   연결: src/lib/nativeGlassEffect.ts
-   - glass 테마: enabled=true
-   - Pixel Desk / Mac Core / Pink Diary: enabled=false
-   ============================================================ */
-
-#[tauri::command]
-fn set_native_window_blur(
-    window: tauri::WebviewWindow,
-    enabled: bool,
-    dark: bool,
-) -> Result<(), String> {
-    #[cfg(target_os = "windows")]
-    {
-        if window.label() != "main" {
-            return Ok(());
-        }
-
-        let hwnd = window
-            .hwnd()
-            .map_err(|error| error.to_string())?;
-
-        let result = apply_native_blur(hwnd, enabled, dark);
-
-        // Focus 전환 때 같은 설정을 재적용하기 위한 마지막 상태 저장.
-        // / EN: The native layer is reapplied after activation changes.
-        NATIVE_BLUR_ENABLED.store(enabled, Ordering::Relaxed);
-        NATIVE_BLUR_DARK.store(dark, Ordering::Relaxed);
-
-        return result;
-    }
-
-    #[cfg(not(target_os = "windows"))]
-    {
-        let _ = (window, enabled, dark);
-        Ok(())
-    }
-}
-
-
-/* ============================================================
    06. APPLICATION ENTRY POINT
 
    Glassday 앱 실행 및 플러그인 등록
@@ -514,23 +358,6 @@ pub fn run() {
                         }
                     }
 
-                    // Windows가 비활성/활성 전환 과정에서 composition layer를
-                    // 다시 칠할 수 있으므로, 양쪽 Focus 상태에서 native blur를
-                    // 마지막 테마 설정으로 재적용한다.
-                    tauri::WindowEvent::Focused(_) => {
-                        if let Ok(hwnd) = window.hwnd() {
-                            if let Err(error) = apply_native_blur(
-                                hwnd,
-                                NATIVE_BLUR_ENABLED.load(Ordering::Relaxed),
-                                NATIVE_BLUR_DARK.load(Ordering::Relaxed),
-                            ) {
-                                log::warn!(
-                                    "Native blur focus refresh failed: {error}"
-                                );
-                            }
-                        }
-                    }
-
                     _ => {}
                 }
             }
@@ -548,8 +375,7 @@ pub fn run() {
 
         .invoke_handler(
             tauri::generate_handler![
-                set_native_window_shape,
-                set_native_window_blur
+                set_native_window_shape
             ]
         )
 

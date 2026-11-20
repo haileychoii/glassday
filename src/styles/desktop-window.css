@@ -9,7 +9,7 @@
    - src/lib/nativeGlassEffect.ts
 
    담당 기능:
-   - Tauri 창의 투명 배경
+   - Tauri 창의 안정적인 native 배경
    - 실제 WebView 영역에 맞춘 외곽선
    - 네 모서리 Radius 통일
 
@@ -17,7 +17,7 @@
    ============================================================ */
 
 
-/* 01. Tauri WebView 투명 배경 */
+/* 01. Tauri WebView base background */
 
 html.desktop-transparent:has(.tauri-app-window),
 html.desktop-transparent:has(.tauri-app-window) body,
@@ -30,7 +30,9 @@ html.desktop-transparent:has(.tauri-app-window) #root {
   margin: 0;
   padding: 0;
 
-  background: transparent !important;
+  /* The native window is intentionally opaque; glassmorphism lives inside
+     the React surface so focus changes cannot recolor the whole window. */
+  background: hsl(var(--background, 231 32% 8%)) !important;
   background-image: none !important;
 
   overflow: hidden;
@@ -61,13 +63,12 @@ html.desktop-transparent .tauri-app-window {
 
   border-radius: var(--gd-native-window-radius);
 
-  background: transparent !important;
+  /* The native window is opaque; the glass effect is inside the app shell. */
+  background: hsl(var(--background, 231 32% 8%)) !important;
   background-image: none !important;
 
   box-shadow: none;
-  /* Keep the transparent WebView and its one visible shell in the same
-     compositing context. This prevents a second square-looking layer from
-     leaking around the rounded native window. */
+  /* Keep the WebView and its one visible shell in one compositing context. */
   isolation: isolate;
   background-clip: padding-box;
   overflow: hidden;
