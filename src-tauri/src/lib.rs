@@ -43,6 +43,15 @@ use std::ffi::c_void;
 use windows::Win32::Foundation::HWND;
 
 #[cfg(target_os = "windows")]
+use windows::Win32::System::LibraryLoader::{
+    GetModuleHandleW,
+    GetProcAddress,
+};
+
+#[cfg(target_os = "windows")]
+use windows::core::{s, w};
+
+#[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Gdi::{
     CreateRoundRectRgn,
     DeleteObject,
@@ -104,15 +113,6 @@ struct WindowCompositionAttributeData {
 }
 
 #[cfg(target_os = "windows")]
-#[link(name = "user32")]
-unsafe extern "system" {
-    fn SetWindowCompositionAttribute(
-        hwnd: HWND,
-        data: *mut WindowCompositionAttributeData,
-    ) -> i32;
-}
-
-#[cfg(target_os = "windows")]
 fn apply_native_blur(
     hwnd: HWND,
     enabled: bool,
@@ -142,8 +142,23 @@ fn apply_native_blur(
         size: std::mem::size_of::<AccentPolicy>(),
     };
 
+    // The API is exported by user32.dll but is not part of the public
+    // windows-rs import surface, so resolve it at runtime instead of asking
+    // the linker for a static symbol that may not exist in the import lib.
+    let user32 = unsafe {
+        GetModuleHandleW(w!("user32.dll"))
+            .map_err(|error| error.to_string())?
+    };
+    let procedure = unsafe {
+        GetProcAddress(user32, s!("SetWindowCompositionAttribute"))
+            .ok_or_else(|| "SetWindowCompositionAttribute is unavailable".to_string())?
+    };
+    let set_window_composition_attribute: unsafe extern "system" fn(
+        HWND,
+        *mut WindowCompositionAttributeData,
+    ) -> i32 = unsafe { std::mem::transmute(procedure) };
     let result = unsafe {
-        SetWindowCompositionAttribute(hwnd, &mut data)
+        set_window_composition_attribute(hwnd, &mut data)
     };
 
     if result != 0 {
