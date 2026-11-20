@@ -29,6 +29,7 @@
 
 @import "./layout.css";
 @import "./layout-modes.css";
+@import "./workspace-appearance.css";
 @import "./controls.css";
 @import "./dashboard-grid.css";
 @import "./overlays.css";

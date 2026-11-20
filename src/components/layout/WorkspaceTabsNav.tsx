@@ -32,6 +32,7 @@ import { cn } from "../../lib/utils";
 import type { DashboardTab } from "../../types/workspace";
 
 import { WorkspaceTabIcon } from "./WorkspaceTabIcon";
+import { WorkspaceAppearanceDialog } from "./WorkspaceAppearanceDialog";
 
 
 /* ============================================================
@@ -48,6 +49,10 @@ type WorkspaceTabsNavProps = {
   onAddTab?: () => void;
   onRenameTab: (tabId: string, label: string) => void;
   onRemoveTab: (tabId: string) => void;
+  onUpdateTabAppearance?: (
+    tabId: string,
+    appearance: { icon: string; background: string; iconSource?: string }
+  ) => void;
 
   className?: string;
   addButtonClassName?: string;
@@ -68,6 +73,7 @@ export const WorkspaceTabsNav = ({
   onAddTab,
   onRenameTab,
   onRemoveTab,
+  onUpdateTabAppearance,
   className,
   addButtonClassName,
   showAddButton = false,
@@ -76,6 +82,7 @@ export const WorkspaceTabsNav = ({
   const [theme, setTheme] = useState<ThemeId>(
     () => getCurrentTheme()
   );
+  const [appearanceTabId, setAppearanceTabId] = useState<string | null>(null);
 
   // Settings에서 테마를 변경하면 아이콘도 변경한다.
   useEffect(() => {
@@ -136,7 +143,13 @@ export const WorkspaceTabsNav = ({
                 <button
                   type="button"
                   className="sidebar-tab-icon"
-                  onClick={() => onSelectTab(tab.id)}
+                  onClick={() => {
+                    if (editMode && onUpdateTabAppearance) {
+                      setAppearanceTabId(tab.id);
+                      return;
+                    }
+                    onSelectTab(tab.id);
+                  }}
                   aria-label={`Select ${tab.label}`}
                   aria-current={
                     activeTabId === tab.id ? "page" : undefined
@@ -146,6 +159,7 @@ export const WorkspaceTabsNav = ({
                     tabId={tab.id}
                     tabLabel={tab.label}
                     theme={theme}
+                    icon={tab.icon}
                   />
                 </button>
 
@@ -179,6 +193,7 @@ export const WorkspaceTabsNav = ({
                     tabId={tab.id}
                     tabLabel={tab.label}
                     theme={theme}
+                    icon={tab.icon}
                   />
                 </span>
 
@@ -226,6 +241,19 @@ export const WorkspaceTabsNav = ({
           <Plus className="w-3.5 h-3.5" />
         </button>
       )}
+
+      {appearanceTabId && onUpdateTabAppearance && (() => {
+        const appearanceTab = tabs.find((tab) => tab.id === appearanceTabId);
+        if (!appearanceTab) return null;
+        return (
+          <WorkspaceAppearanceDialog
+            tab={appearanceTab}
+            theme={theme}
+            onSave={onUpdateTabAppearance}
+            onClose={() => setAppearanceTabId(null)}
+          />
+        );
+      })()}
     </>
   );
 };

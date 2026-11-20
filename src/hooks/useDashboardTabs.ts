@@ -34,7 +34,7 @@
  * ============================================================
  */
 
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { useLocalStorage } from "./useLocalStorage";
 
@@ -662,6 +662,15 @@ const removeWidgetFromLayouts = (
 
 export const useDashboardTabs = () => {
 
+  /*
+   * EN: Sidebar and compact Topbar both expose an add button at different
+   * responsive breakpoints. A fast duplicate click, or a click that lands
+   * during a breakpoint handoff, must still create only one workspace.
+   * KO: 반응형 전환 중 두 버튼이 잠깐 함께 존재할 수 있으므로 짧은
+   * 이벤트 중복 방지 창을 둔다. 저장된 탭 자체를 임의로 합치지는 않는다.
+   */
+  const lastAddTabAtRef = useRef(0);
+
 
   /* ----------------------------------------------------------
      A. LOCAL STORAGE STATE
@@ -903,6 +912,14 @@ export const useDashboardTabs = () => {
 
   const addTab = useCallback(() => {
 
+    const now = Date.now();
+
+    if (now - lastAddTabAtRef.current < 350) {
+      return;
+    }
+
+    lastAddTabAtRef.current = now;
+
     const newTab = createNewTab();
 
     setTabs((previousTabs) => [
@@ -916,6 +933,23 @@ export const useDashboardTabs = () => {
     setTabs,
     setActiveTabId,
   ]);
+
+
+  /*
+   * Workspace appearance is kept beside the tab metadata, while widget
+   * contents and grid coordinates continue to use their existing storage.
+   * This lets Sidebar/WorkspaceTabsNav update only icon/background without
+   * rewriting widget layouts or diary data.
+   */
+  const updateTabAppearance = useCallback((
+    tabId: string,
+    appearance: Pick<DashboardTab, "icon" | "background" | "iconSource">
+  ) => {
+    updateTab(tabId, (currentTab) => ({
+      ...currentTab,
+      ...appearance,
+    }));
+  }, [updateTab]);
 
 
   /* ----------------------------------------------------------
@@ -1017,6 +1051,7 @@ export const useDashboardTabs = () => {
 
     // Workspace Actions
     addTab,
+    updateTabAppearance,
     renameTab,
     removeTab,
   };

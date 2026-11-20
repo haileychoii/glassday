@@ -70,7 +70,19 @@ export type DashboardTab = {
   /** activeTab 및 저장 payload에서 사용하는 Workspace 영구 key. */
   id: WorkspaceId;
   label: string;
+  /**
+   * Workspace navigation icon.
+   *
+   * EN: This may be an emoji, an isolated image URL, or a sprite descriptor
+   * understood by WorkspaceTabIcon.tsx. It is optional in storage so old
+   * localStorage records continue to load with their previous icon fallback.
+   * KO: 기존 저장 데이터와의 호환을 위해 선택 필드로 유지한다.
+   */
   icon: string;
+  /** Optional CSS color/gradient used behind this workspace's dashboard. */
+  background?: string;
+  /** Optional user-selected icon source retained for future asset management. */
+  iconSource?: string;
   widgetIds: WidgetId[];
   /** Wide Web 편집이 Laptop App 배치를 덮어쓰지 않도록 mode별로 분리된 layout. */
   layouts: DashboardModeLayouts;

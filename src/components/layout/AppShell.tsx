@@ -96,6 +96,10 @@ type AppShellProps = {
   onAddTab: () => void;
   onRenameTab: (tabId: string, label: string) => void;
   onRemoveTab: (tabId: string) => void;
+  onUpdateTabAppearance: (
+    tabId: string,
+    appearance: { icon: string; background: string; iconSource?: string }
+  ) => void;
 };
 
 type FramePosition = {
@@ -172,6 +176,7 @@ export const AppShell = ({
   onAddTab,
   onRenameTab,
   onRemoveTab,
+  onUpdateTabAppearance,
 }: AppShellProps) => {
 
 
@@ -192,6 +197,9 @@ export const AppShell = ({
 
   const isLaptopMode =
     effectiveLayoutMode === "laptop";
+
+  const activeWorkspaceBackground =
+    tabs.find((tab) => tab.id === activeTabId)?.background;
 
 
   /* ----------------------------------------------------------
@@ -422,6 +430,7 @@ export const AppShell = ({
       data-sidebar-collapsed={
         sidebarCollapsed ? "true" : "false"
       }
+      style={activeWorkspaceBackground ? { background: activeWorkspaceBackground } : undefined}
     >
 
       {/* Sidebar + Main Content */}
@@ -453,6 +462,7 @@ export const AppShell = ({
           onAddTab={onAddTab}
           onRenameTab={onRenameTab}
           onRemoveTab={onRemoveTab}
+          onUpdateTabAppearance={onUpdateTabAppearance}
         />
 
 

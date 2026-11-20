@@ -299,6 +299,7 @@ function App() {
     removeWidgetFromActiveTab,
 
     addTab,
+    updateTabAppearance,
     renameTab,
     removeTab,
   } = useDashboardTabs();
@@ -754,6 +755,7 @@ function App() {
               onAddTab={addTab}
               onRenameTab={renameTab}
               onRemoveTab={removeTab}
+              onUpdateTabAppearance={updateTabAppearance}
             >
 
               {/* 실제 위젯 배치 및 크기 변경 영역 */}

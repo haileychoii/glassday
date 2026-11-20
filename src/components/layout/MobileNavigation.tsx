@@ -70,7 +70,8 @@ const NavigationContent = ({ tabs, activeTabId, onSelectTab, onOpenQuickCapture 
             <WorkspaceTabIcon 
               tabId={tab.id}
               tabLabel={tab.label}
-              theme={theme} />
+              theme={theme}
+              icon={tab.icon} />
           </span>
           <span>{tab.label}</span>
         </button>

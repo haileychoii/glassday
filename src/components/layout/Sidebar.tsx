@@ -38,6 +38,10 @@ type SidebarProps = {
   onAddTab: () => void;
   onRenameTab: (tabId: string, label: string) => void;
   onRemoveTab: (tabId: string) => void;
+  onUpdateTabAppearance: (
+    tabId: string,
+    appearance: { icon: string; background: string; iconSource?: string }
+  ) => void;
 };
 
 /** Sidebar는 배치와 collapse control만 담당하며 Tab interaction은 WorkspaceTabsNav가 담당한다. */
@@ -51,6 +55,7 @@ export const Sidebar = ({
   onAddTab,
   onRenameTab,
   onRemoveTab,
+  onUpdateTabAppearance,
 }: SidebarProps) => {
   return (
     <aside
@@ -106,6 +111,7 @@ export const Sidebar = ({
           onSelectTab={onSelectTab}
           onRenameTab={onRenameTab}
           onRemoveTab={onRemoveTab}
+          onUpdateTabAppearance={onUpdateTabAppearance}
         />
       </div>
     </aside>

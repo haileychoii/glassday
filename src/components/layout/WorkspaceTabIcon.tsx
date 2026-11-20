@@ -30,11 +30,13 @@ import {
 } from "lucide-react";
 
 import type { ThemeId } from "../../constants/themes";
+import { decodeWorkspaceSprite } from "../../constants/workspaceAppearance";
 
 type WorkspaceTabIconProps = {
   tabId: string;
   tabLabel?: string;
   theme: ThemeId;
+  icon?: string;
 };
 
 
@@ -97,7 +99,38 @@ export const WorkspaceTabIcon = ({
   tabId,
   tabLabel,
   theme,
+  icon,
 }: WorkspaceTabIconProps) => {
+
+  const selectedSprite = icon ? decodeWorkspaceSprite(icon) : null;
+
+  // Custom sprite cells are rendered before theme fallbacks so a user choice
+  // remains stable when the global theme changes.
+  if (selectedSprite) {
+    const { src, cols, rows, col, row } = selectedSprite;
+    return (
+      <span
+        className="workspace-custom-sprite-icon"
+        aria-hidden="true"
+        style={{
+          backgroundImage: `url("${src}")`,
+          backgroundSize: `${cols * 100}% ${rows * 100}%`,
+          backgroundPosition: `${cols === 1 ? 0 : (col / (cols - 1)) * 100}% ${rows === 1 ? 0 : (row / (rows - 1)) * 100}%`,
+        }}
+      />
+    );
+  }
+
+  if (icon?.startsWith("data:image/") || icon?.startsWith("/")) {
+    return <img src={icon} className="workspace-custom-image-icon" alt="" aria-hidden="true" draggable={false} />;
+  }
+
+  // New workspaces may use an emoji directly. Built-in workspace IDs keep
+  // their theme-specific icon mapping below for backwards compatibility.
+  const builtInWorkspaceIds = new Set(["home", "career", "study", "memo", "diary", "life", "calendar"]);
+  if (icon && !builtInWorkspaceIds.has(tabId)) {
+    return <span className="workspace-custom-emoji-icon" aria-hidden="true">{icon}</span>;
+  }
 
   // 사용자가 추가한 Diary 탭도 같은 아이콘을 사용한다.
   const iconId =

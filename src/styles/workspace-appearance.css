@@ -1,0 +1,189 @@
+/*
+ * Workspace appearance picker.
+ *
+ * EN: Navigation icons use a fixed square box. Sprite sheets are cropped by
+ * the component's background-position, while this file only controls the
+ * picker surface and does not alter widget geometry.
+ * KO: 아이콘 선택창은 네비게이션 위에 뜨는 작은 보조 UI다. 위젯 배치나
+ * 테마의 공통 모서리 값에는 관여하지 않는다.
+ */
+
+.workspace-custom-sprite-icon,
+.workspace-custom-image-icon,
+.workspace-custom-emoji-icon {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  object-fit: contain;
+  line-height: 1;
+}
+
+.workspace-custom-sprite-icon {
+  background-size: 100% 100%;
+}
+
+.workspace-custom-image-icon {
+  object-fit: contain;
+}
+
+.workspace-custom-emoji-icon {
+  font-size: 20px;
+}
+
+.workspace-appearance-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: hsl(220 22% 12% / 0.32);
+}
+
+.workspace-appearance-dialog {
+  width: min(460px, 100%);
+  max-height: min(680px, calc(100vh - 40px));
+  overflow-y: auto;
+  padding: 18px;
+  border: 1px solid hsl(var(--border) / 0.55);
+  border-radius: 14px;
+  background: hsl(var(--card) / 0.98);
+  color: hsl(var(--foreground));
+  box-shadow: 0 20px 60px hsl(220 40% 8% / 0.25);
+}
+
+.workspace-appearance-header,
+.workspace-appearance-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.workspace-appearance-header h2,
+.workspace-appearance-section h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.workspace-appearance-header p {
+  margin: 3px 0 0;
+  font-size: 11px;
+  opacity: 0.68;
+}
+
+.workspace-appearance-header > button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid hsl(var(--border) / 0.6);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.workspace-appearance-section {
+  margin-top: 18px;
+}
+
+.workspace-icon-option-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 9px;
+}
+
+.workspace-icon-option-grid button,
+.workspace-background-option-grid button {
+  border: 1px solid hsl(var(--border) / 0.45);
+  border-radius: 8px;
+  background: hsl(var(--background) / 0.52);
+  cursor: pointer;
+}
+
+.workspace-icon-option-grid button {
+  display: grid;
+  place-items: center;
+  min-height: 42px;
+}
+
+.workspace-icon-option-grid button.is-selected,
+.workspace-background-option-grid button.is-selected {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.18);
+}
+
+.workspace-icon-option-preview {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+}
+
+.workspace-background-option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 9px;
+}
+
+.workspace-background-option-grid button {
+  min-height: 38px;
+  color: hsl(var(--foreground));
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.workspace-upload-button {
+  display: inline-flex;
+  margin-top: 10px;
+  padding: 6px 9px;
+  border: 1px solid hsl(var(--border) / 0.45);
+  border-radius: 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.workspace-upload-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.workspace-appearance-actions {
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.workspace-appearance-actions button {
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid hsl(var(--border) / 0.48);
+  border-radius: 8px;
+  background: hsl(var(--background) / 0.7);
+  color: inherit;
+  cursor: pointer;
+}
+
+.workspace-appearance-actions button:last-child {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+@media (max-width: 520px) {
+  .workspace-icon-option-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
