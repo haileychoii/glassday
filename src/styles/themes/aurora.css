@@ -130,10 +130,6 @@ body.desktop-transparent.theme-aurora .app-shell-surface {
   background-size: 180% 180% !important;
   background-position: 50% 50% !important;
   background-attachment: fixed !important;
-  /* Tauri는 native decorations를 끄므로 shell 자체가 유일한 창 경계다.
-     별도 사각형을 덧대지 않고 앱 표면에만 얇은 선을 그린다. */
-  border: 1px solid var(--aurora-shell-border) !important;
-  box-sizing: border-box;
 }
 
 /*
