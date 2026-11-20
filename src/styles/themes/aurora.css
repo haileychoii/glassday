@@ -18,37 +18,37 @@ html.theme-aurora,
 body.theme-aurora {
   --background: 231 32% 8%;
   --foreground: 222 38% 95%;
-  --primary: 194 100% 72%;
-  /* Keep secondary labels readable over the brighter cyan/violet ribbons. */
-  --muted-foreground: 220 30% 86%;
+  --primary: 194 76% 70%;
+  /* Softer labels keep the muted aurora background calm and readable. */
+  --muted-foreground: 220 22% 82%;
 
   --aurora-shell-bg:
-    linear-gradient(180deg, rgba(16, 20, 36, 0.26), rgba(8, 11, 24, 0.12));
-  --aurora-shell-border: rgba(172, 197, 255, 0.18);
+    linear-gradient(180deg, rgba(20, 24, 43, 0.34), rgba(9, 12, 25, 0.22));
+  --aurora-shell-border: rgba(174, 188, 228, 0.15);
   --aurora-shell-shadow:
     0 28px 82px rgba(2, 4, 12, 0.34),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
   --aurora-card-bg:
-    linear-gradient(145deg, rgba(22, 28, 49, 0.34), rgba(10, 14, 28, 0.16));
-  --aurora-card-border: rgba(168, 198, 255, 0.18);
+    linear-gradient(145deg, rgba(29, 34, 57, 0.40), rgba(12, 16, 31, 0.24));
+  --aurora-card-border: rgba(174, 187, 226, 0.16);
   --aurora-card-shadow:
     0 20px 56px rgba(2, 4, 12, 0.26),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
   --aurora-panel-bg:
-    linear-gradient(145deg, rgba(27, 34, 58, 0.34), rgba(12, 16, 30, 0.16));
-  --aurora-panel-border: rgba(170, 191, 240, 0.16);
+    linear-gradient(145deg, rgba(35, 40, 65, 0.38), rgba(15, 18, 34, 0.24));
+  --aurora-panel-border: rgba(171, 184, 221, 0.14);
   --aurora-control-bg:
-    linear-gradient(145deg, rgba(36, 44, 70, 0.72), rgba(17, 22, 38, 0.54));
-  --aurora-control-border: rgba(182, 202, 246, 0.2);
+    linear-gradient(145deg, rgba(48, 55, 82, 0.70), rgba(20, 24, 43, 0.58));
+  --aurora-control-border: rgba(180, 190, 222, 0.18);
   --aurora-active-bg:
     linear-gradient(
       135deg,
-      rgba(38, 92, 190, 0.62),
-      rgba(88, 84, 196, 0.42) 44%,
-      rgba(144, 74, 215, 0.38) 72%,
-      rgba(38, 59, 118, 0.68)
+      rgba(48, 104, 153, 0.58),
+      rgba(103, 94, 157, 0.42) 44%,
+      rgba(154, 108, 167, 0.34) 72%,
+      rgba(40, 59, 99, 0.64)
     );
 
   /*
@@ -60,26 +60,26 @@ body.theme-aurora {
   --aurora-wallpaper:
     /* Soft light ribbons: the broad transparent bands create the dreamy
        aurora feeling without turning the dashboard into a busy wallpaper. */
-    radial-gradient(ellipse 54% 86% at 12% 24%, rgba(47, 151, 255, 0.34), transparent 72%),
-    radial-gradient(ellipse 42% 72% at 38% 82%, rgba(48, 224, 207, 0.26), transparent 74%),
-    radial-gradient(ellipse 48% 88% at 76% 18%, rgba(180, 91, 255, 0.3), transparent 72%),
-    radial-gradient(ellipse 36% 54% at 92% 76%, rgba(83, 117, 255, 0.23), transparent 76%),
+    radial-gradient(ellipse 58% 86% at 10% 20%, rgba(74, 125, 178, 0.24), transparent 74%),
+    radial-gradient(ellipse 46% 70% at 36% 84%, rgba(86, 157, 151, 0.18), transparent 76%),
+    radial-gradient(ellipse 52% 86% at 78% 16%, rgba(145, 111, 171, 0.22), transparent 74%),
+    radial-gradient(ellipse 40% 58% at 94% 78%, rgba(92, 116, 164, 0.16), transparent 78%),
     linear-gradient(112deg,
       transparent 8%,
-      rgba(36, 171, 255, 0.08) 20%,
-      rgba(57, 232, 214, 0.2) 32%,
-      rgba(105, 126, 255, 0.18) 43%,
-      rgba(211, 101, 255, 0.2) 54%,
-      rgba(73, 218, 205, 0.08) 67%,
+      rgba(74, 139, 190, 0.05) 20%,
+      rgba(91, 165, 157, 0.12) 32%,
+      rgba(119, 128, 175, 0.11) 43%,
+      rgba(181, 124, 170, 0.13) 54%,
+      rgba(91, 157, 151, 0.05) 67%,
       transparent 82%),
-    linear-gradient(148deg, #070a19 0%, #101a3a 38%, #11142e 66%, #080b19 100%);
+    linear-gradient(148deg, #0b0f1d 0%, #151b32 38%, #18172d 66%, #0b0e1a 100%);
   --aurora-atmosphere:
-    radial-gradient(ellipse 70% 30% at 46% 8%, rgba(82, 160, 255, 0.12), transparent 76%),
+    radial-gradient(ellipse 70% 30% at 46% 8%, rgba(126, 151, 202, 0.08), transparent 76%),
     linear-gradient(112deg,
       transparent 18%,
-      rgba(38, 208, 208, 0.055) 35%,
-      rgba(156, 102, 231, 0.09) 46%,
-      rgba(66, 184, 211, 0.055) 55%,
+      rgba(91, 165, 157, 0.04) 35%,
+      rgba(159, 123, 169, 0.06) 46%,
+      rgba(104, 145, 176, 0.04) 55%,
       transparent 72%);
 
   color: hsl(var(--foreground) / 0.94);
