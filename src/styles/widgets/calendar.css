@@ -2953,6 +2953,32 @@ body.theme-pixel-desk .career-cover-status-select option {
   }
 }
 
+/* Month-only vertical fit.
+   The shared calendar frame stays comfortable for Day/Week. Month view gets
+   a tighter title-to-grid rhythm so the six calendar rows receive more height
+   without shrinking the event chips themselves. / 월간 화면만 상단 간격을 압축한다. */
+.calendar-widget-frame:has(.calendar-view-body.is-month-view) {
+  gap: 6px !important;
+}
+
+.calendar-widget-frame:has(.calendar-view-body.is-month-view) .calendar-current-label {
+  margin-top: 0 !important;
+  line-height: 1.05 !important;
+}
+
+.calendar-view-body.is-month-view {
+  padding-top: 0 !important;
+}
+
+.calendar-view-body.is-month-view .calendar-month-board {
+  gap: 3px !important;
+}
+
+.calendar-view-body.is-month-view .calendar-month-weekdays {
+  margin-bottom: 2px !important;
+  line-height: 1 !important;
+}
+
 .calendar-floating-window {
   container-type: inline-size;
   container-name: calendar-floating-window;
