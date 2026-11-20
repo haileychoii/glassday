@@ -855,7 +855,14 @@ body.theme-retro .calendar-event-time {
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .settings-modal-window {
   display: grid !important;
-  grid-template-rows: var(--retro-titlebar-height) minmax(0, 1fr) !important;
+  /*
+   * SettingsModal has three direct children:
+   * header -> section tabs -> scroll body.
+   * EN: Keep three explicit rows so the tab bar cannot become a tall empty
+   * middle row and push Backup/Theme content to the bottom of the window.
+   * KO: 탭을 별도 행으로 고정해 실제 설정 내용이 바로 아래에 붙게 한다.
+   */
+  grid-template-rows: var(--retro-titlebar-height) auto minmax(0, 1fr) !important;
   overflow: hidden !important;
   background: var(--retro-panel) !important;
   color: var(--retro-text) !important;
