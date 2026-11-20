@@ -74,6 +74,12 @@ const WINDOW_RADIUS: f64 = 10.0;
 #[cfg(target_os = "windows")]
 static SQUARE_WINDOW: AtomicBool = AtomicBool::new(false);
 
+#[cfg(target_os = "windows")]
+static NATIVE_BLUR_ENABLED: AtomicBool = AtomicBool::new(false);
+
+#[cfg(target_os = "windows")]
+static NATIVE_BLUR_DARK: AtomicBool = AtomicBool::new(false);
+
 
 /* ============================================================
    02-B. WINDOWS ACCENT BLUR
@@ -348,7 +354,14 @@ fn set_native_window_blur(
             .hwnd()
             .map_err(|error| error.to_string())?;
 
-        return apply_native_blur(hwnd, enabled, dark);
+        let result = apply_native_blur(hwnd, enabled, dark);
+
+        // Focus 전환 때 같은 설정을 재적용하기 위한 마지막 상태 저장.
+        // / EN: The native layer is reapplied after activation changes.
+        NATIVE_BLUR_ENABLED.store(enabled, Ordering::Relaxed);
+        NATIVE_BLUR_DARK.store(dark, Ordering::Relaxed);
+
+        return result;
     }
 
     #[cfg(not(target_os = "windows"))]
@@ -494,6 +507,23 @@ pub fn run() {
                             {
                                 log::warn!(
                                     "Window region update failed: {error}"
+                                );
+                            }
+                        }
+                    }
+
+                    // Windows가 비활성/활성 전환 과정에서 composition layer를
+                    // 다시 칠할 수 있으므로, 양쪽 Focus 상태에서 native blur를
+                    // 마지막 테마 설정으로 재적용한다.
+                    tauri::WindowEvent::Focused(_) => {
+                        if let Ok(hwnd) = window.hwnd() {
+                            if let Err(error) = apply_native_blur(
+                                hwnd,
+                                NATIVE_BLUR_ENABLED.load(Ordering::Relaxed),
+                                NATIVE_BLUR_DARK.load(Ordering::Relaxed),
+                            ) {
+                                log::warn!(
+                                    "Native blur focus refresh failed: {error}"
                                 );
                             }
                         }
