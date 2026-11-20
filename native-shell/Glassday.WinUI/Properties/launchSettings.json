@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Glassday.WinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Glassday.WinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
