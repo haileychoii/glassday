@@ -3421,3 +3421,45 @@ body.theme-glass-dark .calendar-floating-window .event-color-picker {
   :is(strong, span, .calendar-event-title, .calendar-event-time, .calendar-event-location) {
   color: #111111 !important;
 }
+
+/* Event color contract / 일정 색상 계약
+   MonthCalendar.tsx supplies --event-color from the saved event color. Keep
+   that color visible in the resting state; theme chrome must not turn every
+   event into a gray chip. Hover deepens the same color without changing layout. */
+.calendar-month-single-chip,
+.calendar-month-range-layer .calendar-range-chip {
+  background: var(--event-color, #bfd8ff) !important;
+  opacity: 0.92 !important;
+  color: hsl(230 28% 18% / 0.9) !important;
+  border-color: color-mix(in srgb, var(--event-color, #bfd8ff) 72%, #ffffff 28%) !important;
+  filter: saturate(1.08) brightness(1.02) !important;
+  transition: filter 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.calendar-month-single-chip:hover,
+.calendar-month-range-layer .calendar-range-chip:hover {
+  background: color-mix(in srgb, var(--event-color, #bfd8ff) 78%, #6c557d 22%) !important;
+  opacity: 1 !important;
+  filter: saturate(1.3) brightness(0.94) !important;
+  box-shadow:
+    0 6px 14px color-mix(in srgb, var(--event-color, #bfd8ff) 42%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / 0.72) !important;
+}
+
+/* Existing hover details remain intentionally small so they do not cover the
+   month grid. / 일정 위에 뜨는 정보는 달력 가독성을 위해 작은 팝업으로 둔다. */
+.calendar-month-event-preview {
+  width: min(230px, calc(100vw - 24px)) !important;
+  padding: 9px 10px !important;
+  border-radius: 11px !important;
+}
+
+.calendar-month-event-preview-title {
+  margin-bottom: 4px !important;
+  font-size: 12px !important;
+}
+
+.calendar-month-event-preview-time,
+.calendar-month-event-preview-line {
+  font-size: 10px !important;
+}
