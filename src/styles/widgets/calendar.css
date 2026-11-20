@@ -975,6 +975,23 @@
   color: hsl(var(--foreground) / 0.34) !important;
 }
 
+/* Empty all-day state: do not reserve a full event row when there is nothing
+   to show. The normal all-day height remains unchanged when range events exist.
+   일정이 하나도 없을 때만 빈 행을 접어 시간표가 위로 올라오게 한다. */
+.calendar-week-all-day:has(.calendar-week-all-day-empty) {
+  min-height: 26px !important;
+  height: 26px !important;
+}
+
+.calendar-week-all-day:has(.calendar-week-all-day-empty) .calendar-week-all-day-grid {
+  min-height: 0 !important;
+  padding: 3px 6px !important;
+}
+
+.calendar-week-all-day:has(.calendar-week-all-day-empty) .calendar-week-all-day-label {
+  padding: 0 !important;
+}
+
 /* old range chips가 week column 안에서 보이면 숨김 */
 .calendar-week-day-column .calendar-range-stack,
 .calendar-week-day-column .calendar-range-chip {

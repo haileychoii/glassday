@@ -134,4 +134,26 @@
       var(--gd-widget-pad-x)
       var(--gd-widget-pad-y) !important;
   }
+
+  /* Shared compact add control:
+     Header plus buttons use one stable size across Calendar, Career, Money,
+     Memo, Journal and Today Focus. Widget-specific content buttons are not
+     matched because they are not direct children of the header action group. */
+  .app-mode-stage
+    :where(.glass-card-actions, .widget-frame__actions)
+    > button:has(svg.lucide-plus) {
+    width: 30px !important;
+    height: 28px !important;
+    min-width: 30px !important;
+    min-height: 28px !important;
+    padding: 0 !important;
+    flex: 0 0 30px !important;
+  }
+
+  .app-mode-stage
+    :where(.glass-card-actions, .widget-frame__actions)
+    > button:has(svg.lucide-plus) svg {
+    width: 14px;
+    height: 14px;
+  }
 }
