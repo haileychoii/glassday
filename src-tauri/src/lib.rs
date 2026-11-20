@@ -124,11 +124,13 @@ fn apply_native_blur(
     enabled: bool,
     dark: bool,
 ) -> Result<(), String> {
-    // ARGB: 낮은 alpha를 사용해 바탕화면 blur가 검정 판으로 굳지 않게 한다.
+    // Windows AccentPolicy는 일반적인 ARGB가 아니라 ABGR 순서를 사용한다.
+    // 채널을 잘못 넣으면 dark navy가 갈색으로 뒤집혀 보인다.
+    // 낮은 alpha를 사용해 바탕화면 blur가 검정 판으로 굳지 않게 한다.
     let gradient_color = if dark {
-        0x88202736
+        0x88241B18
     } else {
-        0x88F4F7FF
+        0x88FFF7F4
     };
 
     let mut policy = AccentPolicy {
