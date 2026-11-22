@@ -472,13 +472,17 @@ body:has(.mobile-layout) .mobile-layout .daily-journal-widget .journal-content {
   .mobile-study-card__heading
 ) {
   display: flex !important;
+  position: relative !important;
+  isolation: isolate !important;
   grid-column: 1 / -1 !important;
-  width: calc(100% + 2 * var(--mobile-widget-inset)) !important;
+  width: 100% !important;
   min-width: 0 !important;
-  margin-inline: calc(-1 * var(--mobile-widget-inset)) !important;
+  margin-inline: 0 !important;
   justify-self: stretch !important;
   align-self: stretch !important;
   box-sizing: border-box !important;
+  background: transparent !important;
+  overflow: visible !important;
 }
 
 /* One semantic surface fills every header from edge to edge. It follows the
@@ -493,15 +497,37 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :i
   justify-self: stretch !important;
   align-self: stretch !important;
   min-width: 0 !important;
-  background: var(--mobile-widget-header-surface) !important;
+  background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
   border-radius: 0 !important;
 }
 
-/* GlassCard headers fill their full grid row; purpose-built mobile cards bleed
- * only across their known inner padding. This prevents short title strips when
- * a theme changes card padding. / 공통 프레임은 전체 열, 전용 카드는 내부 여백만큼 확장합니다. */
+/* Paint the purpose-built card title surfaces independently from the heading
+ * width. The background layer crosses the card's shared inner padding while
+ * text and controls stay on the normal content line.
+ * 전용 카드의 제목 배경만 좌우 내부 여백을 넘어 칠하고 글자와 버튼 위치는 유지합니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
+) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading)::before {
+  content: "" !important;
+  position: absolute !important;
+  z-index: 0 !important;
+  inset: 0 calc(-1 * var(--mobile-widget-inset)) !important;
+  background: var(--mobile-widget-header-surface) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
+) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* GlassCard headers fill their full grid row; they have no inner card padding. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   > .widget-instance-root > .glass-card > .widget-frame__header {
   width: 100% !important;
