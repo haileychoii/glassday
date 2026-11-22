@@ -21,8 +21,10 @@ import {
   ListTodo,
   NotebookPen,
 } from "lucide-react";
+import { TbBookFilled } from "react-icons/tb";
 
 import { STUDY_PLANNER_STORAGE_KEY } from "../../constants/study";
+import { getCurrentTheme } from "../../constants/themes";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import type { StudyPlannerStorage } from "../../types/study";
 import {
@@ -48,6 +50,10 @@ const VIEWS: ReadonlyArray<{
 ];
 
 export const MobileStudyCard = () => {
+  const [theme, setTheme] = useState(() => getCurrentTheme());
+  const StudyHeadingIcon = theme === "glass-light" || theme === "glass-dark"
+    ? TbBookFilled
+    : BookOpenCheck;
   const initialPlanner = useMemo(() => createInitialStudyPlannerStorage(), []);
   const { value: rawPlanner } = useLocalStorage<StudyPlannerStorage>(
     STUDY_PLANNER_STORAGE_KEY,
@@ -70,6 +76,15 @@ export const MobileStudyCard = () => {
   const [view, setView] = useState<StudyView>("timeline");
   const closeButton = useRef<HTMLButtonElement>(null);
   const panelId = useId();
+
+  useEffect(() => {
+    const handleThemeChange = (event: Event) => {
+      const nextTheme = (event as CustomEvent<string>).detail;
+      if (nextTheme) setTheme(nextTheme as ReturnType<typeof getCurrentTheme>);
+    };
+    window.addEventListener("glassday-theme-change", handleThemeChange);
+    return () => window.removeEventListener("glassday-theme-change", handleThemeChange);
+  }, []);
 
   const open = (nextView: StudyView) => {
     setView(nextView);
@@ -131,7 +146,7 @@ export const MobileStudyCard = () => {
       <section className="mobile-study-card" aria-label="오늘의 공부 현황">
         <div className="mobile-study-card__heading">
           <span className="mobile-study-card__eyebrow">
-            <BookOpenCheck size={15} aria-hidden="true" /> Study Planner
+            <StudyHeadingIcon className="mobile-glass-filled-heading-icon" size={18} aria-hidden="true" /> Study Planner
           </span>
           <button
             type="button"

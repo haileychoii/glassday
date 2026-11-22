@@ -15,9 +15,12 @@ import { useEffect, useRef, useState } from "react";
 import {
   Maximize2, Pause, Play, RotateCcw, SkipForward, TimerReset,
 } from "lucide-react";
+import { TbClockHour4Filled } from "react-icons/tb";
 import { FloatingWindow } from "../common/FloatingWindow";
 import { GlassCard } from "../glass/GlassCard";
 import { cn } from "../../lib/utils";
+import { getCurrentTheme } from "../../constants/themes";
+import { useResponsiveLayout } from "../../hooks/useResponsiveLayout";
 import type { StudyPomodoroMode } from "../../types/study";
 import {
   formatTimerClock,
@@ -246,13 +249,27 @@ const TimerSurface = ({ controller, floating = false }: {
  */
 export const TimerWidget = () => {
   const [floatingOpen, setFloatingOpen] = useState(false);
+  const [theme, setTheme] = useState(() => getCurrentTheme());
+  const isMobile = useResponsiveLayout();
   const controller = usePomodoroTimer();
+  const TimerHeadingIcon = isMobile && (theme === "glass-light" || theme === "glass-dark")
+    ? TbClockHour4Filled
+    : TimerReset;
+
+  useEffect(() => {
+    const handleThemeChange = (event: Event) => {
+      const nextTheme = (event as CustomEvent<string>).detail;
+      if (nextTheme) setTheme(nextTheme as ReturnType<typeof getCurrentTheme>);
+    };
+    window.addEventListener("glassday-theme-change", handleThemeChange);
+    return () => window.removeEventListener("glassday-theme-change", handleThemeChange);
+  }, []);
 
   return (
     <>
       <GlassCard className="timer-widget" title="Timer"
         subtitle={`${getPomodoroModeLabel(controller.pomodoro.mode)} · ${formatTimerClock(controller.remainingSeconds)}`}
-        icon={<TimerReset size={16} />}
+        icon={<TimerHeadingIcon className="mobile-glass-filled-heading-icon" size={18} />}
         actions={
           <button type="button" className="glass-button timer-widget-open" title="Open timer window"
             aria-label="Open timer window" onClick={() => setFloatingOpen(true)}>

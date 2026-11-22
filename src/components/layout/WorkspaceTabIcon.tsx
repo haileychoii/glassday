@@ -13,11 +13,19 @@ import {
   House,
   NotebookPen,
 } from "lucide-react";
+import {
+  TbBookFilled,
+  TbBriefcaseFilled,
+  TbFileTextFilled,
+  TbHeartFilled,
+  TbHomeFilled,
+} from "react-icons/tb";
 import type { ThemeId } from "../../constants/themes";
 
 type WorkspaceTabIconProps = {
   tabId: string;
   theme: ThemeId;
+  mobile?: boolean;
 };
 
 const lucideIcons: Record<string, typeof House> = {
@@ -46,8 +54,21 @@ const pinkDiaryIcons: Record<string, string> = {
   calendar: "/pink-icons/isolated/calendar.png",
 };
 
-export const WorkspaceTabIcon = ({ tabId, theme }: WorkspaceTabIconProps) => {
+const glassMobileIcons = {
+  home: TbHomeFilled,
+  career: TbBriefcaseFilled,
+  study: TbBookFilled,
+  memo: TbFileTextFilled,
+  life: TbHeartFilled,
+};
+
+export const WorkspaceTabIcon = ({ tabId, theme, mobile = false }: WorkspaceTabIconProps) => {
   const className = `workspace-theme-icon workspace-theme-icon-${theme}`;
+
+  if (mobile && (theme === "glass-light" || theme === "glass-dark")) {
+    const Icon = glassMobileIcons[tabId as keyof typeof glassMobileIcons] ?? TbHomeFilled;
+    return <Icon className={`${className} workspace-theme-icon-filled`} aria-hidden="true" />;
+  }
 
   if (theme === "mac-core") {
     return <span className={className} aria-hidden="true">{macEmoji[tabId] ?? "✨"}</span>;

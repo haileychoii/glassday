@@ -67,7 +67,7 @@ const NavigationContent = ({ tabs, activeTabId, onSelectTab, onOpenQuickCapture 
           title={tab.label}
         >
           <span className="mobile-navigation-icon">
-            <WorkspaceTabIcon tabId={tab.id} theme={theme} />
+            <WorkspaceTabIcon tabId={tab.id} theme={theme} mobile />
           </span>
           <span>{tab.label}</span>
         </button>
