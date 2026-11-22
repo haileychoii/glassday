@@ -471,8 +471,14 @@ body:has(.mobile-layout) .mobile-layout .daily-journal-widget .journal-content {
   .mobile-calendar-card__header,
   .mobile-study-card__heading
 ) {
+  display: flex !important;
+  grid-column: 1 / -1 !important;
   width: calc(100% + 2 * var(--mobile-widget-inset)) !important;
+  min-width: 0 !important;
   margin-inline: calc(-1 * var(--mobile-widget-inset)) !important;
+  justify-self: stretch !important;
+  align-self: stretch !important;
+  box-sizing: border-box !important;
 }
 
 /* One semantic surface fills every header from edge to edge. It follows the
@@ -483,10 +489,24 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card, .mobile-calendar-card, .mobile-study-card
 ) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
+  grid-column: 1 / -1 !important;
+  justify-self: stretch !important;
+  align-self: stretch !important;
+  min-width: 0 !important;
   background: var(--mobile-widget-header-surface) !important;
   border: 0 !important;
   box-shadow: none !important;
   border-radius: 0 !important;
+}
+
+/* GlassCard headers fill their full grid row; purpose-built mobile cards bleed
+ * only across their known inner padding. This prevents short title strips when
+ * a theme changes card padding. / 공통 프레임은 전체 열, 전용 카드는 내부 여백만큼 확장합니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > .widget-instance-root > .glass-card > .widget-frame__header {
+  width: 100% !important;
+  margin-inline: 0 !important;
+  box-sizing: border-box !important;
 }
 
 :is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
