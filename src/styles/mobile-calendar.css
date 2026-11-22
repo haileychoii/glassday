@@ -115,7 +115,6 @@ body:has(.mobile-layout) .mobile-calendar-detail * {
   font-size: 11px;
   color: hsl(var(--muted-foreground));
 }
-.mobile-layout .mobile-calendar-add,
 body:has(.mobile-layout) .mobile-calendar-detail__add {
   flex: 0 0 auto;
   width: 44px;

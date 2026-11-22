@@ -11,6 +11,7 @@
 .mobile-layout {
   --mobile-widget-gap: 8px;
   --mobile-widget-inset: 10px;
+  --mobile-widget-header-surface: var(--gd-surface-bg, hsl(var(--card)));
   --mobile-widget-title-size: 14px;
   --mobile-widget-subtitle-size: 11px;
   --mobile-widget-header-min-height: 48px;
@@ -305,6 +306,11 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] :is(
   --pd-mobile-surface: #fffafd;
   --pd-mobile-panel: #fff4f8;
   --pd-mobile-line: #ead7e0;
+  --mobile-widget-header-surface: var(--pd-mobile-surface);
+}
+
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .mobile-layout {
+  --mobile-widget-header-surface: var(--mac-widget-bg);
 }
 
 :is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout .mobile-main {
@@ -469,33 +475,24 @@ body:has(.mobile-layout) .mobile-layout .daily-journal-widget .journal-content {
   margin-inline: calc(-1 * var(--mobile-widget-inset)) !important;
 }
 
-/* One explicit title fill wins over legacy per-widget theme selectors. Modern
- * themes match their card surface; Pixel Desk keeps its familiar navy caption.
- * 모든 위젯 제목 배경을 한 규칙으로 맞추되 Pixel Desk의 남색 제목줄은 유지합니다. */
+/* One semantic surface fills every header from edge to edge. It follows the
+ * widget surface (including dark glass); themes can change the token without
+ * changing the mobile header geometry. / 다크 테마를 밝게 덮지 않고 표면 토큰을 씁니다. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__header,
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card, .mobile-calendar-card, .mobile-study-card
 ) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
-  background-color: hsl(var(--card)) !important;
-  background-image: none !important;
+  background: var(--mobile-widget-header-surface) !important;
   border: 0 !important;
   box-shadow: none !important;
+  border-radius: 0 !important;
 }
 
 :is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
     html.theme-pixel-desk, body.theme-pixel-desk, html.pixel-desk, body.pixel-desk,
-    html.theme-pixel, body.theme-pixel) .mobile-layout
-  .mobile-widget-slot[data-widget-id] .widget-frame__header,
-:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
-    html.theme-pixel-desk, body.theme-pixel-desk, html.pixel-desk, body.pixel-desk,
-    html.theme-pixel, body.theme-pixel) .mobile-layout
-  .mobile-widget-slot[data-widget-id] > :is(
-    .mobile-career-card, .mobile-calendar-card, .mobile-study-card
-  ) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
-  background: var(--w95-title, #000080) !important;
-  color: var(--w95-light, #fff) !important;
-  border: 0 !important;
+    html.theme-pixel, body.theme-pixel) .mobile-layout {
+  --mobile-widget-header-surface: var(--w95-title, #000080);
 }
 
 :is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
@@ -503,6 +500,16 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :i
     html.theme-pixel, body.theme-pixel) .mobile-layout
   .mobile-widget-slot[data-widget-id] :is(.widget-frame__title, .widget-frame__icon) {
   color: var(--w95-light, #fff) !important;
+}
+
+/* Journal groups its date controls beside the title. Remove their separate
+ * wrapper fills so the full header reads as one continuous bar.
+ * Journal 제목과 날짜 조작부가 조각나 보이지 않게 바깥 래퍼 칠을 통일합니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  .widget-frame__header > :is(.widget-frame__title-group, .widget-frame__actions) {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 /* Quick Capture is a narrow utility key, not a full-width navigation tab.
