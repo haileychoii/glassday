@@ -25,10 +25,8 @@
   --gd-inner-border: rgb(255 255 255 / 0.48);
   --mobile-widget-header-surface: var(--gd-inner-bg);
   background:
-    radial-gradient(ellipse at 14% 8%, rgb(152 222 255 / 0.54), transparent 34%),
-    radial-gradient(ellipse at 86% 16%, rgb(211 183 255 / 0.48), transparent 36%),
-    radial-gradient(ellipse at 72% 88%, rgb(255 199 227 / 0.44), transparent 38%),
-    linear-gradient(145deg, #edf2fa, #f8f7fc 52%, #e9edf6) !important;
+    linear-gradient(145deg, rgb(249 245 255 / 0.14), rgb(221 236 251 / 0.08)),
+    url("/glass-background/glass3.jpeg") center / cover no-repeat !important;
 }
 
 :is(html, body):is([data-theme="glass-dark"], .theme-glass-dark) .mobile-layout {
@@ -52,10 +50,11 @@
   --gd-inner-border: rgb(255 255 255 / 0.2);
   --mobile-widget-header-surface: var(--gd-inner-bg);
   background:
-    radial-gradient(ellipse at 14% 8%, rgb(208 220 240 / 0.14), transparent 34%),
-    radial-gradient(ellipse at 88% 18%, rgb(132 156 188 / 0.13), transparent 36%),
-    radial-gradient(ellipse at 68% 90%, rgb(178 187 204 / 0.09), transparent 38%),
-    linear-gradient(145deg, #1b1e24, #0f1116 54%, #191c22) !important;
+    radial-gradient(ellipse at 50% 48%, rgb(255 239 170 / 0.9) 0, rgb(255 205 151 / 0.5) 13%, transparent 34%),
+    radial-gradient(ellipse at 42% 37%, rgb(238 104 174 / 0.78) 0, transparent 30%),
+    radial-gradient(ellipse at 60% 37%, rgb(235 128 156 / 0.72) 0, transparent 31%),
+    radial-gradient(ellipse at 50% 63%, rgb(110 151 228 / 0.56) 0, transparent 34%),
+    radial-gradient(ellipse at 50% 46%, #24252b 0, #0c0d10 68%, #050506 100%) !important;
 }
 
 :is(html, body):is(
