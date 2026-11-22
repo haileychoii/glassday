@@ -178,8 +178,21 @@
   body:has(.mobile-layout) .timer-floating-window
 ) .timer-widget-layout:not(.is-settings-visible)
   .timer-widget-clock {
-  font-size: clamp(30px, 10cqi, 38px);
-  line-height: 1.05;
+  /* Keep the full timer value inside the circular stage on narrow phones. */
+  font-size: clamp(28px, 9cqi, 34px);
+  line-height: 1;
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+:is(
+  .mobile-layout [data-widget-id="timer"],
+  body:has(.mobile-layout) .timer-floating-window
+) .timer-widget-layout:not(.is-settings-visible)
+  .timer-widget-clock-stack {
+  width: max-content;
+  max-width: 100%;
+  white-space: nowrap;
 }
 
 :is(
