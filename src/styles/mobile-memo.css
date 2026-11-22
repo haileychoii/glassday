@@ -38,15 +38,12 @@
  * 1. 모바일 대시보드의 Memo 위젯
  * ============================================================================
  *
- * mobile.css의 공통 위젯 높이를 Memo에 한해서 조정한다.
- *
- * 10분 시간표처럼 긴 콘텐츠가 아니라,
- * 짧은 메모 미리보기이므로 300~430px 정도만 사용한다.
+ * Memo uses the shared scroll-card height token from mobile-common.css.
+ * This file owns Memo internals; shared widget size stays in one place.
  * ============================================================================ */
 
 .mobile-layout
 .mobile-widget-slot[data-widget-id="memo"] {
-  height: clamp(300px, 46svh, 430px);
   min-width: 0;
 }
 

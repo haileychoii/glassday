@@ -89,6 +89,13 @@
      / 스크롤바가 카드 테두리를 덮어 잘린 것처럼 보이지 않게 하는 여백. */
   --gd-widget-scroll-content-inset: var(--gd-space-xs);
 
+  /* Mobile dashboard geometry is shared across every visual theme. */
+  --gd-mobile-widget-gap: var(--gd-space-sm);
+  --gd-mobile-widget-inset: var(--gd-space-md);
+  --gd-mobile-widget-header-height: 48px;
+  --gd-mobile-widget-long-height: clamp(320px, 52svh, 460px);
+  --gd-mobile-widget-timer-height: clamp(260px, 38svh, 336px);
+
   /* 2b. Shell spacing
      These map directly to Figma frame paddings and widths.
      특히 laptop 모드 정리할 때는 아래 순서로 보면 편하다:

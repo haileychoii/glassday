@@ -9,18 +9,31 @@
  */
 
 .mobile-layout {
-  --mobile-widget-gap: 8px;
-  --mobile-widget-inset: 10px;
+  --mobile-widget-gap: var(--gd-mobile-widget-gap);
+  --mobile-widget-inset: var(--gd-mobile-widget-inset);
+  --mobile-page-gap: var(--gd-mobile-widget-gap);
+  --mobile-section-gap: var(--gd-mobile-widget-gap);
   --mobile-widget-header-surface: var(--gd-surface-bg, hsl(var(--card)));
-  --mobile-widget-header-height: 48px;
-  --mobile-widget-header-pad-inline: 10px;
+  --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
+  --mobile-widget-header-pad-inline: var(--gd-mobile-widget-inset);
   --mobile-widget-title-size: 14px;
   --mobile-widget-subtitle-size: 11px;
-  --mobile-widget-header-min-height: 48px;
+  --mobile-widget-header-min-height: var(--gd-mobile-widget-header-height);
   --mobile-widget-icon-size: 22px;
   /* A 40px control stays compact in dense widget headers but is easier to tap.
    * 좁은 헤더를 과하게 키우지 않으면서 손가락으로 누르기 쉽게 맞춥니다. */
   --mobile-widget-action-size: 40px;
+}
+
+/* Keep legacy aliases on the same token even where older theme layers declared
+ * their own mobile values. / 기존 별칭도 모든 테마에서 공용 토큰을 따릅니다. */
+body:has(.mobile-layout) .mobile-layout {
+  --mobile-widget-gap: var(--gd-mobile-widget-gap);
+  --mobile-widget-inset: var(--gd-mobile-widget-inset);
+  --mobile-page-gap: var(--gd-mobile-widget-gap);
+  --mobile-section-gap: var(--gd-mobile-widget-gap);
+  --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
+  --mobile-widget-header-min-height: var(--gd-mobile-widget-header-height);
 }
 
 /* Give every widget one shared column, width, and vertical rhythm.
@@ -33,11 +46,15 @@
   margin-inline: auto !important;
   grid-template-columns: minmax(0, 1fr) !important;
   gap: var(--mobile-widget-gap) !important;
-  padding: 8px max(10px, env(safe-area-inset-right))
+  padding: 8px max(var(--mobile-widget-inset), env(safe-area-inset-right))
     calc(18px + env(safe-area-inset-bottom))
-    max(10px, env(safe-area-inset-left)) !important;
-  /* The scrollbar already occupies the outer edge; leave only a tiny inner gap. */
-  padding-right: max(3px, env(safe-area-inset-right)) !important;
+    max(var(--mobile-widget-inset), env(safe-area-inset-left)) !important;
+}
+
+/* The dashboard alone owns the outer screen gutter. No theme or card wrapper
+ * may add a second offset around a widget. / 바깥 위치와 간격은 대시보드만 소유합니다. */
+.mobile-layout .mobile-main {
+  padding: 0 !important;
 }
 
 .mobile-layout .mobile-widget-slot {
@@ -45,6 +62,7 @@
   max-width: 100% !important;
   min-width: 0 !important;
   margin: 0 !important;
+  padding: 0 !important;
   justify-self: stretch !important;
 }
 
@@ -85,6 +103,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
+  margin: 0 !important;
   box-sizing: border-box !important;
 }
 
@@ -215,7 +234,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
 
 /* Every mobile widget uses one fixed title-row contract, including Career and
  * Journal. Theme files may skin this row but cannot change its height, padding,
- * or alignment. / 커리어와 저널을 포함한 모든 위젯 제목줄의 세로 치수를 통일합니다. */
+ * or alignment. / 커리어와 저널을 포함한 모든 위젯 제목줄의 치수를 통일합니다. */
 .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
   > :is(.glass-card, .career-widget) > .widget-frame__header,
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
@@ -424,7 +443,7 @@ body:has(.mobile-layout) .settings-section-tab {
 
 /* GlassCard bodies and purpose-built cards start content at the same inset.
  * 본문 시작선과 전용 카드의 내용 시작선을 동일하게 맞춥니다. */
-.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card:not(.daily-journal-widget)
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card
   > .widget-frame__body {
   min-width: 0 !important;
   padding: var(--mobile-widget-inset) !important;
@@ -438,16 +457,31 @@ body:has(.mobile-layout) .settings-section-tab {
   --timer-stage-size: min(168px, 46cqi, calc(100cqb - 98px));
 }
 
-.mobile-layout .mobile-widget-slot[data-widget-id="journal"] > .widget-instance-root
-  > .daily-journal-widget > .widget-frame__body {
-  padding: var(--mobile-widget-inset) !important;
-}
-
 /* The Journal scrolls inside the widget; avoid reserving a second right gutter
  * beside the page's own scrollbar. / Journal 내부에 추가 여백을 예약하지 않습니다. */
 body:has(.mobile-layout) .mobile-layout .daily-journal-widget .journal-content {
   scrollbar-gutter: auto !important;
   padding-right: 0 !important;
+}
+
+/* Frame-level padding is identical in every theme and for every GlassCard.
+ * 테마와 위젯 종류에 상관없이 카드 프레임 안쪽 여백을 하나로 고정합니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > .widget-instance-root > .glass-card {
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > .widget-instance-root > .glass-card > .widget-frame__header {
+  padding: 8px var(--mobile-widget-inset) !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > .widget-instance-root > .glass-card > .widget-frame__body {
+  margin: 0 !important;
+  padding: var(--mobile-widget-inset) !important;
 }
 
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
@@ -579,4 +613,23 @@ body:has(.mobile-layout) .mobile-navigation-capture {
   height: 44px !important;
   border-radius: 12px !important;
   box-shadow: none !important;
+}
+
+/* Natural-height cards follow their content. Keep a fixed scroll surface only
+ * for long-form Journal/Memo and the dedicated Timer panel. */
+.mobile-layout .mobile-dashboard > .mobile-widget-slot {
+  height: auto !important;
+  min-height: 0 !important;
+  align-self: start;
+}
+
+.mobile-layout .mobile-dashboard > .mobile-widget-slot:is(
+  [data-widget-id="journal"],
+  [data-widget-id="memo"]
+) {
+  height: var(--gd-mobile-widget-long-height) !important;
+}
+
+.mobile-layout .mobile-dashboard > .mobile-widget-slot[data-widget-id="timer"] {
+  height: var(--gd-mobile-widget-timer-height) !important;
 }

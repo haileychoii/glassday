@@ -36,9 +36,6 @@
   .theme-aurora, .theme-mac-core, .theme-retro, .theme-pixel-desk
 ) .mobile-layout {
   /* The card already has an outer 10px dashboard gutter. Remove nested 12px. */
-  & .mobile-widget-slot .glass-card.memo-widget > .widget-frame__body {
-    padding-inline: 4px !important;
-  }
   & .mobile-widget-slot[data-widget-id="memo"]
     :is(.memo-workspace, .memo-list-panel) {
     padding-inline: 4px !important;
@@ -57,9 +54,6 @@
     padding-inline: 8px !important;
     /* Previous "stable both-edges" reserves visible blank space on BOTH sides. */
     scrollbar-gutter: auto !important;
-  }
-  & .mobile-widget-slot .glass-card.daily-journal-widget > .widget-frame__body {
-    padding-inline: 5px !important;
   }
   & .daily-journal-widget {
     --journal-body-pad-x: 5px;
@@ -118,8 +112,6 @@
   [data-theme="aurora"], .theme-aurora,
   [data-theme="retro"], .theme-retro
 ) .mobile-layout {
-  --mobile-widget-inset: 10px;
-  --mobile-widget-header-height: 48px;
   --mobile-widget-icon-size: 24px;
   /* 01. 모든 위젯이 같은 대시보드 열 너비를 사용 */
   & .mobile-dashboard > .mobile-widget-slot,
@@ -391,7 +383,6 @@
   --ios-radius: 18px;
   --ios-inner-radius: 12px;
   --ios-shadow: 0 2px 12px rgb(22 24 32 / 0.035);
-  --ios-horizontal-inset: 12px;
   --gd-radius-widget: var(--ios-radius);
   --gd-radius-card: var(--ios-inner-radius);
   --gd-radius-inner: var(--ios-inner-radius);
@@ -1085,17 +1076,7 @@
  * ============================================================================ */
 
 body:has(.mobile-layout) .mobile-layout {
-  --mobile-page-gap: 8px;
-  --mobile-widget-inset: 10px;
-  --mobile-section-gap: 8px;
   --mobile-control-gap: 6px;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-dashboard {
-  gap: var(--mobile-page-gap) !important;
-  padding: 8px max(10px, env(safe-area-inset-right))
-    calc(18px + env(safe-area-inset-bottom))
-    max(10px, env(safe-area-inset-left)) !important;
 }
 
 /* The slot and the host are layout plumbing, so they must not look like extra cards.
