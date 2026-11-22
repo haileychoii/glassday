@@ -547,6 +547,19 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   color: var(--w95-light, #fff) !important;
 }
 
+/* Pixel Desk uses a real navy caption on standard GlassCard widgets. The
+ * shared mobile rule clears header fills for glass themes; restore the Pixel
+ * caption here while keeping the same common row dimensions.
+ * 공통 모바일 규칙이 지운 Pixel Desk 일반 위젯의 남색 제목줄을 복원합니다. */
+:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+    html.theme-pixel-desk, body.theme-pixel-desk, html.pixel-desk, body.pixel-desk,
+    html.theme-pixel, body.theme-pixel) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > .widget-instance-root > :is(.glass-card, .career-widget) > .widget-frame__header {
+  background: var(--w95-title, #000080) !important;
+  background-image: none !important;
+  color: var(--w95-light, #fff) !important;
+}
+
 /* Journal groups its date controls beside the title. Remove their separate
  * wrapper fills so the full header reads as one continuous bar.
  * Journal 제목과 날짜 조작부가 조각나 보이지 않게 바깥 래퍼 칠을 통일합니다. */
