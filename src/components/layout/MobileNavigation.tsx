@@ -55,7 +55,7 @@ const NavigationContent = ({ tabs, activeTabId, onSelectTab, onOpenQuickCapture 
         title="Quick Capture"
         onClick={onOpenQuickCapture}
       >
-        <Plus size={21} aria-hidden="true" />
+        <Plus size={21} strokeWidth={2.4} aria-hidden="true" />
       </button>
       {tabs.map((tab) => (
         <button

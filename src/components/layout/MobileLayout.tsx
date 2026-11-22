@@ -37,7 +37,7 @@ export const MobileLayout = ({ tabs, activeTabId, onSelectTab, onOpenSearch,
         <div className="mobile-heading"><span>Glassday</span><h1>{label}</h1></div>
         <div className="mobile-header-actions">
           <button type="button" aria-label="Search Glassday" title="Search" onClick={onOpenSearch}><Search size={19} /></button>
-          <button type="button" aria-label="Quick Capture" title="Quick Capture" onClick={onOpenQuickCapture}><Plus size={21} /></button>
+          <button type="button" className="mobile-header-quick-capture" aria-label="Quick Capture" title="Quick Capture" onClick={onOpenQuickCapture}><Plus size={21} strokeWidth={2.4} /></button>
           <button type="button" aria-label="Open settings" title="Settings" onClick={onOpenSettings}><Settings size={19} /></button>
         </div>
       </header>
