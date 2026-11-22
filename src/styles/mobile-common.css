@@ -16,6 +16,7 @@
   --mobile-widget-header-surface: var(--gd-surface-bg, hsl(var(--card)));
   --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
   --mobile-widget-header-pad-inline: var(--gd-mobile-widget-inset);
+  --mobile-widget-header-pad-block: var(--gd-mobile-widget-header-pad-y);
   --mobile-widget-title-size: 14px;
   --mobile-widget-subtitle-size: 11px;
   --mobile-widget-header-min-height: var(--gd-mobile-widget-header-height);
@@ -33,6 +34,7 @@ body:has(.mobile-layout) .mobile-layout {
   --mobile-page-gap: var(--gd-mobile-widget-gap);
   --mobile-section-gap: var(--gd-mobile-widget-gap);
   --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
+  --mobile-widget-header-pad-block: var(--gd-mobile-widget-header-pad-y);
   --mobile-widget-header-min-height: var(--gd-mobile-widget-header-height);
 }
 
@@ -248,7 +250,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
   height: var(--mobile-widget-header-height) !important;
   min-height: var(--mobile-widget-header-height) !important;
   max-height: var(--mobile-widget-header-height) !important;
-  padding: 4px var(--mobile-widget-header-pad-inline) !important;
+  padding: var(--mobile-widget-header-pad-block)
+    var(--mobile-widget-header-pad-inline) !important;
   gap: 8px !important;
   box-sizing: border-box !important;
   border-bottom: 0 !important;
@@ -475,7 +478,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   > .widget-instance-root > .glass-card > .widget-frame__header {
-  padding: 8px var(--mobile-widget-inset) !important;
+  padding: var(--mobile-widget-header-pad-block)
+    var(--mobile-widget-header-pad-inline) !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
@@ -490,7 +494,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .mobile-study-card
 ) {
   --mobile-card-inset: var(--mobile-widget-inset);
-  gap: var(--mobile-widget-gap) !important;
+  gap: var(--mobile-widget-inset) !important;
   padding: 0 var(--mobile-widget-inset) var(--mobile-widget-inset) !important;
   box-sizing: border-box !important;
 }

@@ -93,6 +93,7 @@
   --gd-mobile-widget-gap: var(--gd-space-sm);
   --gd-mobile-widget-inset: var(--gd-space-md);
   --gd-mobile-widget-header-height: 48px;
+  --gd-mobile-widget-header-pad-y: var(--gd-space-2xs);
   --gd-mobile-widget-long-height: clamp(320px, 52svh, 460px);
   --gd-mobile-widget-timer-height: clamp(260px, 38svh, 336px);
 
