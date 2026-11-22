@@ -26,17 +26,9 @@
   --mobile-widget-action-size: 40px;
 }
 
-/* Keep legacy aliases on the same token even where older theme layers declared
- * their own mobile values. / 기존 별칭도 모든 테마에서 공용 토큰을 따릅니다. */
-body:has(.mobile-layout) .mobile-layout {
-  --mobile-widget-gap: var(--gd-mobile-widget-gap);
-  --mobile-widget-inset: var(--gd-mobile-widget-inset);
-  --mobile-page-gap: var(--gd-mobile-widget-gap);
-  --mobile-section-gap: var(--gd-mobile-widget-gap);
-  --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
-  --mobile-widget-header-pad-block: var(--gd-mobile-widget-header-pad-y);
-  --mobile-widget-header-min-height: var(--gd-mobile-widget-header-height);
-}
+/* Intentional exceptions belong in the owning theme/widget file: override one
+ * `--mobile-widget-*` alias on its themed layout or target slot/card. Shared
+ * geometry consumes these aliases, so scoped token overrides stay effective. */
 
 /* Give every widget one shared column, width, and vertical rhythm.
  * 모바일 위젯은 한 열과 같은 폭, 같은 위젯 사이 간격을 사용합니다. */
