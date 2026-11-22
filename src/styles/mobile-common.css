@@ -12,6 +12,8 @@
   --mobile-widget-gap: 8px;
   --mobile-widget-inset: 10px;
   --mobile-widget-header-surface: var(--gd-surface-bg, hsl(var(--card)));
+  --mobile-widget-header-height: 48px;
+  --mobile-widget-header-pad-inline: 10px;
   --mobile-widget-title-size: 14px;
   --mobile-widget-subtitle-size: 11px;
   --mobile-widget-header-min-height: 48px;
@@ -211,36 +213,33 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
   overflow: visible !important;
 }
 
-/* Native and GlassCard widgets share a single header height and inset.
- * Journal keeps its two-row date toolbar, but uses the same title typography. */
-.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card:not(.daily-journal-widget)
-  > .widget-frame__header,
+/* Every mobile widget uses one fixed title-row contract, including Career and
+ * Journal. Theme files may skin this row but cannot change its height, padding,
+ * or alignment. / 커리어와 저널을 포함한 모든 위젯 제목줄의 세로 치수를 통일합니다. */
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
+  > :is(.glass-card, .career-widget) > .widget-frame__header,
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
-  .mobile-career-card,
-  .mobile-calendar-card,
-  .mobile-study-card
-) > :is(
-  .mobile-career-card__header,
-  .mobile-calendar-card__header,
-  .mobile-study-card__heading
-) {
-  min-height: var(--mobile-widget-header-min-height) !important;
-  height: auto !important;
-  padding: 8px var(--mobile-widget-inset) !important;
-  gap: 8px !important;
-  box-sizing: border-box !important;
+  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
+) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   flex-wrap: nowrap !important;
+  width: 100% !important;
+  height: var(--mobile-widget-header-height) !important;
+  min-height: var(--mobile-widget-header-height) !important;
+  max-height: var(--mobile-widget-header-height) !important;
+  padding: 4px var(--mobile-widget-header-pad-inline) !important;
+  gap: 8px !important;
+  box-sizing: border-box !important;
   border-bottom: 0 !important;
 }
 
-.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card
-  > .widget-frame__header > .widget-frame__title-group,
-.mobile-layout .mobile-widget-slot[data-widget-id] > .mobile-career-card > .mobile-career-card__header,
-.mobile-layout .mobile-widget-slot[data-widget-id] > .mobile-calendar-card > .mobile-calendar-card__header,
-.mobile-layout .mobile-widget-slot[data-widget-id] > .mobile-study-card > .mobile-study-card__heading {
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
+  > :is(.glass-card, .career-widget) > .widget-frame__header > .widget-frame__title-group,
+.mobile-layout .mobile-widget-slot[data-widget-id] > .mobile-career-card > .mobile-career-card__header > .mobile-career-card__heading,
+.mobile-layout .mobile-widget-slot[data-widget-id] > .mobile-calendar-card > .mobile-calendar-card__header > .mobile-calendar-card__label,
+.mobile-layout .mobile-widget-slot[data-widget-id] > .mobile-study-card > .mobile-study-card__heading > .mobile-study-card__eyebrow {
   display: flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
