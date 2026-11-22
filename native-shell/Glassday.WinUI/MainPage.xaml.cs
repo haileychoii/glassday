@@ -29,7 +29,16 @@ public sealed partial class MainPage : Page
 
         // Development uses Vite. GLASSDAY_DEV_URL supports a different local port.
         var devUrl = Environment.GetEnvironmentVariable("GLASSDAY_DEV_URL");
+        var baseUrl = string.IsNullOrWhiteSpace(devUrl)
+            ? "http://localhost:5173"
+            : devUrl;
+
+        // KO: WinUI는 React 앱 안에서 네이티브 데스크톱 셸로 인식되어야
+        //     Tauri와 같은 Laptop layout과 창 실루엣을 사용한다.
+        // EN: Mark the WebView as the native desktop shell so React uses the
+        //     same Laptop layout and window silhouette as the Tauri build.
+        var separator = baseUrl.Contains("?") ? "&" : "?";
         DashboardWebView.Source = new Uri(
-            string.IsNullOrWhiteSpace(devUrl) ? "http://localhost:5173" : devUrl);
+            $"{baseUrl}{separator}shell=winui&layout=laptop");
     }
 }

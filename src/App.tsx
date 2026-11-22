@@ -42,7 +42,7 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
-import { isTauri } from "@tauri-apps/api/core";
+import { isNativeDesktopShell } from "./utils/runtime";
 
 /* 01. APP SHELLS */
 
@@ -185,7 +185,7 @@ function App() {
      창 크기 대응은 DashboardGrid가 담당한다.
   ---------------------------------------------------------- */
 
-  const isTauriApp = isTauri();
+  const isTauriApp = isNativeDesktopShell;
 
   const responsiveMobile = useResponsiveLayout();
 

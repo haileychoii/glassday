@@ -36,6 +36,7 @@ import type {
   DashboardTab,
 } from "../../types/workspace";
 import { WorkspaceTabsNav } from "./WorkspaceTabsNav";
+import { isNativeDesktopShell } from "../../utils/runtime";
 import {
   getTauriWindowPinned,
   setTauriWindowPinned,
@@ -78,7 +79,8 @@ export const Topbar = ({
    * Web     -> false
    * Tauri   -> true
    */
-  const isTauriApp = isTauri();
+  const isTauriWindow = isTauri();
+  const isTauriApp = isNativeDesktopShell;
 
   /*
    * Tauri-only desktop widget state.
@@ -88,7 +90,7 @@ export const Topbar = ({
   const [isPinned, setIsPinned] = useState(false);
 
   useEffect(() => {
-    if (!isTauriApp) return;
+    if (!isTauriWindow) return;
 
     const savedPinned = window.localStorage.getItem(
       TAURI_PINNED_STORAGE_KEY
@@ -105,7 +107,7 @@ export const Topbar = ({
     void getTauriWindowPinned()
       .then(setIsPinned)
       .catch(() => setIsPinned(false));
-  }, [isTauriApp]);
+  }, [isTauriWindow]);
 
   const togglePinned = () => {
     const nextPinned = !isPinned;
@@ -234,7 +236,7 @@ export const Topbar = ({
               </div>
             )}
 
-            {isTauriApp && (
+            {isTauriWindow && (
               <button
                 type="button"
                 onClick={togglePinned}

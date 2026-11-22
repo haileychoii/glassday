@@ -44,7 +44,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { isTauri } from "@tauri-apps/api/core";
+import { isNativeDesktopShell } from "../../utils/runtime";
 
 import { getCurrentTheme } from "../../constants/themes";
 import { syncNativeGlassEffect } from "../../lib/nativeGlassEffect";
@@ -190,7 +190,7 @@ export const AppShell = ({
      App.tsx에서도 동일한 기준을 사용해야 한다.
      ---------------------------------------------------------- */
 
-  const isTauriApp = isTauri();
+  const isTauriApp = isNativeDesktopShell;
 
   const effectiveLayoutMode: DashboardLayoutMode =
     isTauriApp ? "laptop" : layoutMode;
