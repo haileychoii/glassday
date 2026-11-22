@@ -18,17 +18,31 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TitleBar x:Name="AppTitleBar" Title="Glassday.WinUI">
-            <TitleBar.IconSource>
-                <ImageIconSource ImageSource="Assets/AppIcon.ico" />
-            </TitleBar.IconSource>
-        </TitleBar>
-
+        <!--
+            KO: React 대시보드가 자체 헤더를 그리므로 WinUI 기본 제목/아이콘은
+            중복해서 표시하지 않는다. 투명하게 두어 창 위의 검은 기본 띠가
+            웹 화면을 덮지 않도록 한다.
+            EN: The React dashboard owns its visible header. Keeping the native
+            title bar transparent prevents the default black strip from covering it.
+        -->
         <!--
             The Frame hosts pages for your application content. Add your UI to
             MainPage.xaml rather than here so you can use Page features such as
             navigation events and the Loaded lifecycle.
         -->
-        <Frame x:Name="RootFrame" Grid.Row="1" />
+        <!--
+            KO: 두 행 전체를 차지하게 해 웹 대시보드가 네이티브 제목줄 아래로
+            밀리지 않게 한다. TitleBar는 아래에서 투명 오버레이로만 동작한다.
+            EN: Span the full window so the dashboard is not pushed below a native
+            title row; the transparent TitleBar is only an overlay for dragging.
+        -->
+        <Frame x:Name="RootFrame" Grid.RowSpan="2" />
+
+        <TitleBar
+            x:Name="AppTitleBar"
+            Grid.Row="0"
+            Title=""
+            Background="Transparent">
+        </TitleBar>
     </Grid>
 </Window>
