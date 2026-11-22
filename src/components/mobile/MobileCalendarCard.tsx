@@ -397,10 +397,6 @@ export const MobileCalendarCard = () => {
             <strong>{displaySelectedDate(selectedDate)}</strong>
             <span>이번 달 등록 일정 {monthCount}개</span>
           </div>
-          <button type="button" className="mobile-calendar-add" onClick={createEvent}
-            aria-label={`${selectedDate}에 새 일정 추가`}>
-            <Plus size={18} aria-hidden="true" />
-          </button>
         </div>
 
         {renderWeekStrip(weekDates)}
