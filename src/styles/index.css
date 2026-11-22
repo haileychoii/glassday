@@ -108,5 +108,6 @@
 /* Shared widget fit and narrow-card behavior; theme surfaces remain untouched. */
 @import "./responsive-widgets.css";
 
-/* Final mobile geometry layer: shared spacing/type wins over theme sizing. */
+/* Shared mobile geometry and final theme materials. */
 @import "./mobile-common.css";
+@import "./mobile-glass.css";
