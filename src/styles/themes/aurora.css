@@ -4,6 +4,17 @@
    applyTheme()가 .theme-glass-dark compatibility class도 함께 붙여 dark Widget selector를 재사용한다.
    이 파일은 그 위에 deeper aurora background/surface/accent를 덮어쓴다.
    Figma에서는 Glass Dark와 구조가 같은 별도 Color/Effect Variable mode로 매핑한다.
+
+   시각 방향:
+   - 깊은 남청색 바탕 위에 청록·보라색 광막이 흐르는 holographic night glass
+   - Glass Dark보다 색감과 atmosphere가 강하지만, 위젯 본문 대비는 더 낮추지 않는다.
+   - 카드 구조와 위젯 spacing은 Glass Dark와 공유하고 surface token만 변경한다.
+
+   연결 규칙:
+   - constants/themes.ts의 applyTheme("aurora")가 theme-aurora와
+     theme-glass-dark compatibility class를 함께 부여한다.
+   - widget-system.css가 aurora-panel/control semantic token을 위젯에 전달한다.
+   - 제목 크기, header padding, widget body geometry를 이 파일에서 재정의하지 않는다.
    ============================================================ */
 /* =========================================================
    AURORA THEME

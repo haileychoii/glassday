@@ -1,10 +1,22 @@
-/* =========================================================
-   Glassday Theme: Retro
-   Inspired by retro-react / Win 95-98 UI
-   - cleaner than pixel-desk
-   - blush pink desktop, cream panels, rose titlebars
-   - no glass blur
-========================================================= */
+/* ============================================================
+   [Theme Variant] Retro / Pink Diary
+   Registry ID: retro / selectors: data-theme="retro", .theme-retro
+
+   시각 방향:
+   - Win 95/98 window chrome를 기반으로 한 핑크 Y2K desktop
+   - 핑크 wallpaper, cream client area, rose titlebar, raised/sunken bevel
+   - glass blur보다 명확한 면과 0px 사각형 모서리를 우선한다.
+
+   파일 역할:
+   - retro.css: Retro 색상 token, window chrome, widget surface 예외
+   - pink-diary.css: Pink Diary 장식/아이콘/최종 skin layer
+   - pixel.css: Pixel Desk 전용이므로 Retro와 공유하지 않는다.
+
+   유지 규칙:
+   - 공통 padding/gap/title typography는 spacing-tokens.css를 따른다.
+   - radius: 0, bevel, pixelated image-rendering은 Retro의 의도된 예외다.
+   - interaction polish의 둥근 테마 hover lift는 Retro에 적용하지 않는다.
+============================================================ */
 
 html[data-theme="retro"],
 body[data-theme="retro"],

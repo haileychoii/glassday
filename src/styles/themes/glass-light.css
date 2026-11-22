@@ -5,6 +5,18 @@
    Figma variables: light transparent glass, holographic accent, readable inner surface.
    desktop-transparent class에서는 Tauri wallpaper transparency를 위한 배경 규칙을 별도 적용한다.
    layout geometry는 건드리지 않고 surface/blur/border/text contrast만 담당한다.
+
+   시각 방향:
+   - Glassmorphism이 기본이다: 분위기 있는 배경이 화면에 깔리고 위젯 표면은
+     반투명하게 유지하며 backdrop blur로 뒤 배경이 부드럽게 비쳐 보이게 한다.
+   - 밝은 무채색 유리에 파란색·보라색 holographic reflection을 더한다.
+   - Tauri wallpaper 또는 웹 배경의 존재감은 유지하되, 컨트롤 글자는 선명하게 둔다.
+   - 밝은 배경에서도 foreground/muted-foreground 대비를 확보한다.
+
+   적용 범위:
+   - 웹: data-theme="glass-light"와 theme-glass-light
+   - Tauri 투명창: desktop-transparent 조합 selector
+   - geometry는 base.css와 widget-system.css가 소유한다.
    ============================================================ */
 /* =========================================================
    Theme: Glass Light

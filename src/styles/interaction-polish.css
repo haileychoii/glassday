@@ -1,0 +1,133 @@
+/* ============================================================
+   GLASSDAY — Interaction polish
+
+   Small, shared interaction rules only. Theme files keep ownership of
+   palette, borders and shadows; this file owns timing, focus and motion.
+   ============================================================ */
+
+:root {
+  --gd-motion-fast: 140ms;
+  --gd-motion-base: 180ms;
+  --gd-motion-slow: 260ms;
+  --gd-motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Keep the common card surface calm while making state changes feel deliberate. */
+.glass-card,
+.widget-frame,
+.settings-theme-card,
+.workspace-tab,
+.settings-action-card,
+.workspace-icon-option-grid button,
+.workspace-background-option-grid button,
+.topbar-action-button,
+.icon-button,
+.control-button {
+  transition:
+    background-color var(--gd-motion-base) var(--gd-motion-ease),
+    border-color var(--gd-motion-base) var(--gd-motion-ease),
+    box-shadow var(--gd-motion-base) var(--gd-motion-ease),
+    color var(--gd-motion-fast) ease,
+    transform var(--gd-motion-fast) var(--gd-motion-ease);
+}
+
+/* Dialogs enter with a small spatial cue instead of a hard pop. */
+.settings-modal-backdrop,
+.workspace-appearance-backdrop {
+  background: hsl(var(--foreground) / 0.1);
+  backdrop-filter: blur(5px) saturate(112%);
+  -webkit-backdrop-filter: blur(5px) saturate(112%);
+}
+
+.settings-modal-window,
+.workspace-appearance-dialog,
+.floating-window {
+  transition:
+    opacity var(--gd-motion-slow) var(--gd-motion-ease),
+    transform var(--gd-motion-slow) var(--gd-motion-ease),
+    box-shadow var(--gd-motion-base) var(--gd-motion-ease);
+}
+
+@starting-style {
+  .settings-modal-window,
+  .workspace-appearance-dialog,
+  .floating-window {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .settings-theme-card:hover,
+  .settings-action-card:hover,
+  .workspace-icon-option-grid button:hover,
+  .workspace-background-option-grid button:hover {
+    transform: translateY(-1px);
+    border-color: hsl(var(--ring) / 0.48);
+  }
+}
+
+.settings-theme-card:focus-visible,
+.settings-action-card:focus-visible,
+.workspace-icon-option-grid button:focus-visible,
+.workspace-background-option-grid button:focus-visible {
+  outline: 2px solid hsl(var(--ring) / 0.82);
+  outline-offset: 3px;
+}
+
+/* A restrained lift is reserved for pointer devices and rounded themes.
+   Pixel/Retro geometry stays still and square. */
+@media (hover: hover) and (pointer: fine) {
+  :is(
+    html[data-theme="pastel"],
+    body[data-theme="pastel"],
+    html[data-theme="glass-light"],
+    body[data-theme="glass-light"],
+    html[data-theme="glass-dark"],
+    body[data-theme="glass-dark"],
+    html[data-theme="aurora"],
+    body[data-theme="aurora"],
+    html[data-theme="mac-core"],
+    body[data-theme="mac-core"]
+  ) .app-mode-stage .glass-card:not(.is-dragging):hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 26px 62px -44px hsl(var(--foreground) / 0.4),
+      inset 0 1px 0 hsl(0 0% 100% / 0.72);
+  }
+}
+
+/* Make focus feel like a state, not a browser accident. */
+:where(button, input, select, textarea, [role="button"]):focus-visible {
+  outline: 2px solid hsl(var(--ring) / 0.82);
+  outline-offset: 3px;
+}
+
+:where(.glass-button, .icon-button, .control-button, .topbar-action-button):focus-visible {
+  box-shadow:
+    0 0 0 3px hsl(var(--ring) / 0.18),
+    inset 0 1px 0 hsl(0 0% 100% / 0.62);
+}
+
+@media (prefers-contrast: more) {
+  :where(button, input, select, textarea, [role="button"]):focus-visible {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+
+  .glass-card,
+  .widget-frame {
+    border-color: hsl(var(--foreground) / 0.34);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -562,10 +562,12 @@
 .today-focus-section-title {
   display: flex;
   align-items: center;
-  gap: var(--gd-widget-section-title-gap);
-  margin-bottom: var(--gd-widget-section-title-bottom);
-  font-size: 12px;
-  font-weight: 850;
+  gap: var(--gd-section-title-gap);
+  margin-bottom: var(--gd-section-title-margin-bottom);
+  font-size: var(--gd-section-title-size);
+  font-weight: var(--gd-section-title-weight);
+  line-height: var(--gd-section-title-line-height);
+  letter-spacing: var(--gd-section-title-tracking);
   color: hsl(var(--foreground) / 0.82);
 }
 

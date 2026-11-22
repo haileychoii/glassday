@@ -11,6 +11,12 @@
  * - GlassCard.tsx + each widget: shared card, title bar, and body surfaces
  * - DiaryWorkspace.tsx + diary-workspace.css: editable diary paper canvas
  * - No widget data, layout coordinates, or app-icon artwork is changed here.
+ *
+ * Ownership:
+ * - This is not a separate ThemeId; retro is the persisted theme id.
+ * - retro.css owns the base Win 98/pink window language.
+ * - This file owns the final stationery, kitty icon, accent and decorative layer.
+ * - Shared widget padding, title size and responsive geometry remain outside.
  */
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
   --pd-ink: #493440;

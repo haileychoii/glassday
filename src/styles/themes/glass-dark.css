@@ -9,6 +9,18 @@
    - 검은색/차콜 기반의 투명 glass material
    - Tauri에서는 native backdrop 대신 안정적인 CSS glass layer 사용
    - Aurora처럼 남색/보라색 tint를 넣지 않음
+
+   시각 방향:
+   - Glass Light와 같은 glassmorphism 재료를 어두운 색으로 표현한다.
+   - 배경 이미지/분위기가 남고, 위젯은 반투명 charcoal 표면과 blur를 통해
+     뒤 배경이 흐릿하게 비쳐 보이게 한다.
+   - 파란/보라 Aurora tint는 섞지 않고 검정·회색·흰 반사광으로 깊이를 만든다.
+   - 어두운 표면 위에서도 title, subtitle, control 상태가 분리되도록 대비를 유지한다.
+
+   주의:
+   - 이 파일의 desktop-transparent selector는 Tauri 전용 fallback이다.
+   - 일반 웹용 semantic surface는 theme-surfaces.css의 glass-dark 블록을 따른다.
+   - Aurora는 applyTheme()의 compatibility class를 통해 별도 aurora.css에서 재정의한다.
    ============================================================ */
 
 

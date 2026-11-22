@@ -60,6 +60,35 @@
   --gd-widget-control-active-bg: var(--aurora-active-bg);
 }
 
+/* ============================================================
+   Narrow-grid safety
+
+   This used to live in responsive-widgets.css. It belongs here because it
+   is part of the widget frame contract, not a separate responsive system.
+   ============================================================ */
+
+@media (min-width: 768px) {
+  .glass-card.widget-frame > .widget-frame__header,
+  .glass-card.widget-frame > .widget-frame__body,
+  .glass-card.widget-frame .widget-frame__title-group,
+  .glass-card.widget-frame .widget-frame__actions {
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .glass-card.widget-frame .widget-frame__actions {
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .glass-card.widget-frame .widget-frame__actions > *,
+  .glass-card.widget-frame :where(input, select, textarea) {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
 /*
  * Desktop/Tauri shared frame.
  *

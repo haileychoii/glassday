@@ -199,9 +199,10 @@ main {
 
 .glass-card-title,
 .widget-frame__title {
-  font-size: var(--gd-widget-desktop-title-size);
-  font-weight: 800;
-  line-height: 1.2;
+  font-size: var(--gd-widget-title-size);
+  font-weight: var(--gd-widget-title-weight);
+  line-height: var(--gd-widget-title-line-height);
+  letter-spacing: var(--gd-widget-title-tracking);
   color: hsl(var(--foreground) / 0.86);
   display: block;
   opacity: 1;
@@ -211,9 +212,10 @@ main {
 .glass-card-subtitle,
 .widget-frame__subtitle {
   margin: 0;
-  font-size: var(--gd-widget-desktop-subtitle-size);
-  font-weight: 650;
-  line-height: 1.25;
+  font-size: var(--gd-widget-subtitle-size);
+  font-weight: var(--gd-widget-subtitle-weight);
+  line-height: var(--gd-widget-subtitle-line-height);
+  letter-spacing: var(--gd-widget-subtitle-tracking);
   color: hsl(var(--muted-foreground) / 0.68);
   display: block;
   opacity: 1;
@@ -295,9 +297,10 @@ main {
 .widget-card-copy h3,
 .widget-frame__copy > h3 {
   margin: 0;
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.2;
+  font-size: var(--gd-widget-title-size);
+  font-weight: var(--gd-widget-title-weight);
+  line-height: var(--gd-widget-title-line-height);
+  letter-spacing: var(--gd-widget-title-tracking);
   color: hsl(var(--foreground) / 0.86);
   display: block;
   opacity: 1;
@@ -307,9 +310,10 @@ main {
 .widget-card-copy p,
 .widget-frame__copy > p {
   margin: 0;
-  font-size: 11px;
-  font-weight: 650;
-  line-height: 1.25;
+  font-size: var(--gd-widget-subtitle-size);
+  font-weight: var(--gd-widget-subtitle-weight);
+  line-height: var(--gd-widget-subtitle-line-height);
+  letter-spacing: var(--gd-widget-subtitle-tracking);
   color: hsl(var(--muted-foreground) / 0.68);
   display: block;
   opacity: 1;

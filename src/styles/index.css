@@ -132,11 +132,13 @@
 
 
 /* ============================================================
-   09. FINAL GEOMETRY
+   09. FINAL SHARED SYSTEMS
 
-   위젯 너비, 작은 화면 대응, 모바일 공통 여백
+   widget-system = widget frame geometry + narrow-grid safety
+   mobile-common = mobile-only layout and touch sizing
+   interaction-polish = motion, focus and reduced-motion behavior
    ============================================================ */
 
-@import "./responsive-widgets.css";
 @import "./widget-system.css";
 @import "./mobile-common.css";
+@import "./interaction-polish.css";

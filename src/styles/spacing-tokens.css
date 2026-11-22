@@ -74,7 +74,11 @@
    * 재질만 바꾸고, 정말 좁은 특수 화면만 예외 클래스로 별도 선언한다.
    */
   --gd-widget-title-size: var(--gd-widget-desktop-title-size);
+  --gd-widget-title-weight: 800;
+  --gd-widget-title-tracking: -0.015em;
   --gd-widget-subtitle-size: var(--gd-widget-desktop-subtitle-size);
+  --gd-widget-subtitle-weight: 650;
+  --gd-widget-subtitle-tracking: 0;
   --gd-widget-title-line-height: 1.2;
   --gd-widget-subtitle-line-height: 1.25;
   --gd-widget-header-icon-size: var(--gd-widget-desktop-icon-size);
@@ -95,6 +99,12 @@
   --gd-widget-inner-radius: var(--gd-radius-inner);
   --gd-widget-section-title-gap: 7px;
   --gd-widget-section-title-bottom: var(--gd-space-sm);
+  --gd-section-title-size: 12px;
+  --gd-section-title-weight: 800;
+  --gd-section-title-line-height: 1.2;
+  --gd-section-title-tracking: -0.01em;
+  --gd-section-title-gap: var(--gd-widget-section-title-gap);
+  --gd-section-title-margin-bottom: var(--gd-widget-section-title-bottom);
 
   /* 2c. Scrollbar skin
      Keep widget/body scrollbars on the same visual system unless a theme

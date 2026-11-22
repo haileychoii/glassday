@@ -5,6 +5,18 @@
    Figma variables: soft pink/lavender/sky surfaces, translucent borders, gentle shadow.
    영향: AppShell, Sidebar, Topbar, Widget/Floating surfaces와 selected controls.
    구조/spacing은 바꾸지 않고 base/layout/widget selector의 material을 덮어쓴다.
+
+   시각 방향:
+   - Pastel은 Glass Light/Dark와 같은 glassmorphism 계열이다.
+   - 배경의 색감과 장식이 화면 뒤에 남고, 위젯은 투명한 표면과 backdrop blur로
+     배경이 흐릿하게 비쳐 보이도록 한다.
+   - 핑크·라벤더·스카이 tint와 흰 반사광으로 밝고 부드러운 느낌을 만든다.
+   - 텍스트는 진한 남보라색으로 유지해 작은 위젯에서도 읽히게 한다.
+
+   유지 규칙:
+   - 공통 여백/제목 크기/위젯 header 높이는 spacing-tokens.css를 사용한다.
+   - 이 파일에서는 색상, surface, blur, border, shadow만 조정한다.
+   - Pixel/Retro처럼 사각형 chrome을 만들지 않는다.
    ============================================================ */
 /* Pastel / Glass / Pixel에서는 큰 Workspace Home 헤더 숨김 */
 :not(.theme-ios) .dashboard-tab-header,

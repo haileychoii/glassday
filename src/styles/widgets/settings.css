@@ -140,10 +140,12 @@
 .settings-section-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 14px;
-  font-size: 13px;
-  font-weight: 800;
+  gap: var(--gd-section-title-gap);
+  margin-bottom: var(--gd-section-title-margin-bottom);
+  font-size: var(--gd-section-title-size);
+  font-weight: var(--gd-section-title-weight);
+  line-height: var(--gd-section-title-line-height);
+  letter-spacing: var(--gd-section-title-tracking);
   color: hsl(var(--foreground) / 0.68);
 }
 

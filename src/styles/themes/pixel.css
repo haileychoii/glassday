@@ -28,6 +28,11 @@
  * body:has(.mobile-layout)를 기준으로 모바일 여부를 판정한다.
  * 별도 DOM wrapper는 추가하지 않는다.
  *
+ * [시각 방향]
+ * - Pixel Desk는 둥근 glass가 아니라 90년대 데스크톱 창과 사각형 chrome을 유지한다.
+ * - 공통 spacing token은 공유하지만 radius, bevel, titlebar, pixel icon은 이 테마가 예외로 소유한다.
+ * - 공통 interaction polish가 Pixel의 사각형 외형이나 titlebar 구조를 덮어쓰면 안 된다.
+ *
  * [브라우저 지원]
  * :is(), :where(), :has()는 기존 프로젝트에서도 사용 중인 최신 CSS 선택자.
  * ============================================================================ */

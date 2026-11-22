@@ -655,10 +655,12 @@
 }
 
 .career-section-title {
-  font-size: 12px;
-  font-weight: 850;
+  font-size: var(--gd-section-title-size);
+  font-weight: var(--gd-section-title-weight);
+  line-height: var(--gd-section-title-line-height);
+  letter-spacing: var(--gd-section-title-tracking);
   color: hsl(var(--foreground) / 0.7);
-  margin-bottom: var(--gd-widget-section-title-bottom);
+  margin-bottom: var(--gd-section-title-margin-bottom);
 }
 
 .career-section-sub {

@@ -14,6 +14,13 @@
  * - Mobile reference: src/styles/mobile-pixel.css
  * - Desktop shell: src/components/layout/AppShell.tsx
  * - Desktop widgets: src/components/grid/DashboardGrid.tsx + GlassCard.tsx
+ *
+ * Ownership:
+ * - This is a final Pixel Desk visual layer, not a second ThemeId.
+ * - pixel.css owns the shared Pixel palette and base rules.
+ * - This file only resolves desktop parity: bevel, titlebar, panel and icon chrome.
+ * - Grid dimensions, widget content, shared spacing and React behavior stay owned
+ *   by their original layout/token/component files.
  * ============================================================================ */
 
 :is(
