@@ -674,6 +674,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
   > .widget-instance-root > .glass-card.timer-widget > .widget-frame__body
   > .timer-widget-layout {
+  position: relative !important;
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) !important;
   grid-template-rows: minmax(0, 1fr) !important;
@@ -686,8 +687,10 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
   .timer-widget-layout:not(.is-settings-visible) > .timer-widget-main-card {
-  width: 100% !important;
-  height: 100% !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: auto !important;
+  height: auto !important;
   min-width: 0 !important;
   min-height: 0 !important;
   background: var(--gd-widget-panel-bg, hsl(var(--card) / 0.48)) !important;
