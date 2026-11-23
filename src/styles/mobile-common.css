@@ -622,7 +622,9 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
   .timer-widget-layout:not(.is-settings-visible) .timer-widget-focus-stage {
-  --timer-stage-size: min(164px, 100cqi, 100cqb) !important;
+  /* Keep the clock and its mode label inside the center track even when
+   * container query block units resolve against the full timer widget. */
+  --timer-stage-size: min(124px, 100cqi, 100cqb) !important;
   width: var(--timer-stage-size) !important;
   height: var(--timer-stage-size) !important;
   max-width: 100% !important;
@@ -655,8 +657,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
   > .widget-instance-root > .glass-card.timer-widget > .widget-frame__body {
-  display: flex !important;
-  flex-direction: column !important;
+  display: grid !important;
+  grid-template-rows: minmax(0, 1fr) !important;
   width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
@@ -676,7 +678,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
   height: 100% !important;
   min-width: 0 !important;
   min-height: 0 !important;
-  flex: 1 1 auto !important;
+  align-self: stretch !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
