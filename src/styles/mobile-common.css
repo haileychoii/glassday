@@ -599,9 +599,12 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
   .timer-widget-layout:not(.is-settings-visible) .timer-widget-time-editor-shell {
   grid-row: 2 !important;
   width: 100% !important;
-  height: 100% !important;
+  /* Let the grid row determine height; 100% here means the whole panel, not
+   * the middle track, and makes the clock overlap the mode/action rows. */
+  height: auto !important;
   min-width: 0 !important;
   min-height: 0 !important;
+  align-self: stretch !important;
   container-type: size;
   display: grid !important;
   place-items: center !important;
