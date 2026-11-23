@@ -884,7 +884,7 @@
 }
 
 /* F. Narrow screens use two rows, with date controls spanning the card width. */
-@media (max-width: 380px) {
+@media (max-width: 430px) {
   .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget {
     grid-template-rows: 76px minmax(0, 1fr) !important;
   }
@@ -1053,7 +1053,7 @@ body:has(.mobile-layout) .mobile-layout
 }
 
 /* H. Mac Core: keep the lighter iOS toolbar when the date row is separate. */
-@media (max-width: 380px) {
+@media (max-width: 430px) {
   :is(html, body):is([data-theme="mac-core"], .theme-mac-core)
     .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
       > .widget-frame__header > .widget-frame__actions {

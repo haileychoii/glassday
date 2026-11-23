@@ -415,63 +415,6 @@
   padding: 7px 8px;
 }
 
-/* 08. 작은 휴대폰
- *
- * 제목 + 날짜를 2행으로 배치한다.
- * 제목 34px, 날짜 42px = 총 76px
- *
- * 한 행으로 무리하게 압축해서 겹치는 문제를 방지한다.
- */
-@media (max-width: 380px) {
-  .mobile-layout .mobile-widget-slot
-    .glass-card.daily-journal-widget {
-    grid-template-rows: 76px minmax(0, 1fr) !important;
-  }
-
-  .mobile-layout .mobile-widget-slot
-    .daily-journal-widget > .widget-frame__header {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    grid-template-rows: 34px 42px !important;
-
-    height: 76px !important;
-    min-height: 76px !important;
-
-    padding: 0 !important;
-    gap: 0 !important;
-  }
-
-  .mobile-layout .mobile-widget-slot
-    .daily-journal-widget > .widget-frame__header
-    > .widget-frame__title-group {
-    grid-row: 1;
-    width: 100% !important;
-    padding: 0 9px !important;
-  }
-
-  .mobile-layout .mobile-widget-slot
-    .daily-journal-widget > .widget-frame__header
-    > .widget-frame__actions {
-    grid-row: 2;
-
-    width: 100% !important;
-    height: 42px !important;
-
-    padding: 3px 8px !important;
-    border-top: 1px solid
-      var(--gd-widget-panel-border, hsl(var(--border))) !important;
-  }
-
-  .mobile-layout .daily-journal-widget .journal-date-nav {
-    grid-template-columns: 32px minmax(0, 1fr) 32px !important;
-    width: 100% !important;
-  }
-
-  .mobile-layout .daily-journal-widget .journal-score-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-}
-
 /* Pixel Desk keeps only its Win95 colors here; shared responsive dimensions
  * come from mobile-common.css and the theme-neutral rules above.
  * Pixel Desk의 색만 여기서 정하고 크기/여백은 공통 모바일 파일이 담당합니다. */
