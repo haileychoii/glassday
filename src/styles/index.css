@@ -111,3 +111,6 @@
 /* Shared mobile geometry and final theme materials. */
 @import "./mobile-common.css";
 @import "./mobile-glass.css";
+
+/* Pixel Desk title bars are shared by every desktop and mobile widget. */
+@import "./themes/pixel-widget-headers.css";

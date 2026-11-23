@@ -148,42 +148,6 @@
   body.pixel-desk,
   html.theme-pixel,
   body.theme-pixel
-) .app-shell-surface .widget-frame__header {
-  background: var(--pixel-desktop-title) !important;
-  background-image: none !important;
-  color: var(--pixel-desktop-light) !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface .widget-frame__header :is(
-  .widget-frame__title,
-  .widget-frame__subtitle,
-  .widget-frame__copy,
-  .widget-frame__icon
-) {
-  color: var(--pixel-desktop-light) !important;
-}
-
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
 ) .app-shell-surface .widget-frame__body {
   background: var(--pixel-desktop-bg) !important;
   background-image: none !important;
