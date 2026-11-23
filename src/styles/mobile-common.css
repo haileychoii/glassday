@@ -626,3 +626,50 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
   height: 42px !important;
   min-height: 42px !important;
 }
+
+/* The timer body is the remaining grid row below the shared widget header.
+ * Its desktop `height: 100%` used to request the whole card height again,
+ * leaving the mobile timer panel/body out of sync with the outer frame. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
+  > .widget-instance-root > .glass-card.timer-widget {
+  display: grid !important;
+  grid-template-rows: var(--mobile-widget-header-height) minmax(0, 1fr) !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
+  > .widget-instance-root > .glass-card.timer-widget > .widget-frame__body {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
+  > .widget-instance-root > .glass-card.timer-widget > .widget-frame__body
+  > .timer-widget-layout {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
+  .timer-widget-layout:not(.is-settings-visible) > .timer-widget-main-card {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
