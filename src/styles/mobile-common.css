@@ -40,9 +40,12 @@
   margin-inline: auto !important;
   grid-template-columns: minmax(0, 1fr) !important;
   gap: var(--mobile-widget-gap) !important;
-  padding: 8px max(var(--mobile-widget-inset), env(safe-area-inset-right))
-    calc(18px + env(safe-area-inset-bottom))
-    max(var(--mobile-widget-inset), env(safe-area-inset-left)) !important;
+  /* The same fixed inset owns both outer edges for every theme. Do not let
+   * theme/browser safe-area values make one side wider than the other. */
+  padding: 8px var(--mobile-widget-inset)
+    calc(18px + env(safe-area-inset-bottom)) !important;
+  box-sizing: border-box !important;
+  justify-self: stretch !important;
 }
 
 /* The dashboard alone owns the outer screen gutter. No theme or card wrapper
