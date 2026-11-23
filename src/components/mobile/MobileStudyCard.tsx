@@ -144,9 +144,12 @@ export const MobileStudyCard = () => {
   return (
     <>
       <section className="mobile-study-card" aria-label="오늘의 공부 현황">
-        <div className="mobile-study-card__heading">
-          <span className="mobile-study-card__eyebrow">
-            <StudyHeadingIcon className="mobile-glass-filled-heading-icon" size={18} aria-hidden="true" /> Study Planner
+        <div className="mobile-study-card__heading widget-frame__header">
+          <span className="mobile-study-card__eyebrow widget-frame__title-group">
+            <span className="widget-frame__icon" aria-hidden="true">
+              <StudyHeadingIcon className="mobile-glass-filled-heading-icon" size={18} />
+            </span>
+            <strong className="widget-frame__title">Study Planner</strong>
           </span>
           <button
             type="button"

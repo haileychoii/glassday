@@ -311,10 +311,12 @@ export const MobileCareerCard = () => {
          높이를 자동으로 계산하며 PC의 CareerWidget은 별도 인스턴스로 만들지 않음.
          ================================================================ */}
       <section className="mobile-career-card" aria-label="Career 지원 현황">
-        <div className="mobile-career-card__header">
-          <div className="mobile-career-card__heading">
-            <BriefcaseBusiness size={17} aria-hidden="true" />
-            <strong>Career</strong>
+        <div className="mobile-career-card__header widget-frame__header">
+          <div className="mobile-career-card__heading widget-frame__title-group">
+            <span className="widget-frame__icon" aria-hidden="true">
+              <BriefcaseBusiness size={18} />
+            </span>
+            <strong className="widget-frame__title">Career</strong>
           </div>
           <button
             type="button"

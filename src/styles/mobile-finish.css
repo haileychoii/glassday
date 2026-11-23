@@ -112,7 +112,6 @@
   [data-theme="aurora"], .theme-aurora,
   [data-theme="retro"], .theme-retro
 ) .mobile-layout {
-  --mobile-widget-icon-size: 24px;
   /* 01. 모든 위젯이 같은 대시보드 열 너비를 사용 */
   & .mobile-dashboard > .mobile-widget-slot,
   & .mobile-widget-slot .widget-instance-root {
@@ -163,123 +162,6 @@
   ) > :not(:first-child) {
     min-width: 0 !important;
     margin-inline: var(--mobile-widget-inset) !important;
-  }
-  /* 04. 모든 위젯의 제목줄을 48px로 통일
-   *
-   * Journal은 날짜 선택 영역을 별도로 사용하므로
-   * 아래의 Journal 전용 규칙에서 처리한다.
-   */
-  & :is(
-    .mobile-widget-slot
-      .glass-card:not(.daily-journal-widget)
-      > .widget-frame__header,
-    .mobile-study-card
-      > .mobile-study-card__heading,
-    .mobile-calendar-card
-      > .mobile-calendar-card__header,
-    .mobile-career-card
-      > .mobile-career-card__header
-  ) {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    height: var(--mobile-widget-header-height) !important;
-    min-height: var(--mobile-widget-header-height) !important;
-    margin: 0 !important;
-    padding: 0 var(--mobile-widget-inset) !important;
-    gap: 8px !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    box-sizing: border-box !important;
-  }
-  /* 05. 모든 제목 아이콘의 차지하는 영역: 24×24px
-   *
-   * GlassCard는 아이콘을 감싸는 div가 있다.
-   * Career/Study/Calendar는 SVG를 직접 사용한다.
-   *
-   * 두 구조 모두 동일한 공간을 차지하게 만든다.
-   */
-  & :is(
-    .mobile-widget-slot .widget-frame__icon,
-    .mobile-study-card__eyebrow > svg,
-    .mobile-calendar-card__label > svg,
-    .mobile-career-card__heading > svg
-  ) {
-    display: inline-flex !important;
-    flex: 0 0 var(--mobile-widget-icon-size) !important;
-    width: var(--mobile-widget-icon-size) !important;
-    min-width: var(--mobile-widget-icon-size) !important;
-    height: var(--mobile-widget-icon-size) !important;
-    margin: 0 !important;
-    padding: 2px !important;
-    border: 1px solid var(--gd-widget-control-border) !important;
-    border-radius: 7px !important;
-    background: var(--gd-widget-control-bg) !important;
-    box-shadow: none !important;
-    box-sizing: border-box !important;
-  }
-  & .mobile-widget-slot .widget-frame__icon {
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  & .mobile-widget-slot .widget-frame__icon svg {
-    display: block !important;
-    width: 18px !important;
-    height: 18px !important;
-    flex: none !important;
-  }
-  /* 06. 제목의 위치와 글자 시작선 통일 */
-  & :is(
-    .mobile-widget-slot .widget-frame__title-group,
-    .mobile-study-card__eyebrow,
-    .mobile-calendar-card__label,
-    .mobile-career-card__heading
-  ) {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    margin: 0 !important;
-    gap: 7px !important;
-  }
-  & .mobile-widget-slot .widget-frame__copy {
-    display: flex !important;
-    align-items: flex-start !important;
-    justify-content: center !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    gap: 0 !important;
-  }
-  /* 07. 제목 폰트 통일
-   *
-   * 각 테마의 foreground 색상은 유지한다.
-   */
-  & :is(
-    .mobile-widget-slot .widget-frame__title,
-    .mobile-study-card__eyebrow,
-    .mobile-calendar-card__label,
-    .mobile-career-card__heading,
-    .mobile-career-card__heading strong
-  ) {
-    min-width: 0 !important;
-    margin: 0 !important;
-    color: hsl(var(--foreground)) !important;
-    font-size: 14px !important;
-    font-weight: 700 !important;
-    line-height: 1.25 !important;
-    letter-spacing: -0.015em !important;
-    white-space: nowrap !important;
-  }
-  & .mobile-widget-slot .widget-frame__title {
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
   }
   /* 08. 일반 위젯의 부제목만 모바일 헤더에서 숨김
    *
@@ -474,12 +356,7 @@
     box-shadow: none !important;
   }
   /* Widget geometry and type scale are owned by mobile-common.css. */
-  & :is(
-    .widget-frame__icon,
-    .mobile-study-card__eyebrow > svg,
-    .mobile-calendar-card__label > svg,
-    .mobile-career-card__heading > svg
-  ) {
+  & .widget-frame__icon {
     color: var(--ios-tint) !important;
     background: transparent !important;
     border: 0 !important;

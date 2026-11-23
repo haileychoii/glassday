@@ -226,91 +226,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
   overflow: visible !important;
 }
 
-/* Every mobile widget uses one fixed title-row contract, including Career and
- * Journal. Theme files may skin this row but cannot change its height, padding,
- * or alignment. / 커리어와 저널을 포함한 모든 위젯 제목줄의 치수를 통일합니다. */
-.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
-  > :is(.glass-card, .career-widget) > .widget-frame__header,
-.mobile-layout .mobile-widget-slot[data-widget-id] > :is(
-  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
-) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  flex-wrap: nowrap !important;
-  width: 100% !important;
-  height: var(--mobile-widget-header-height) !important;
-  min-height: var(--mobile-widget-header-height) !important;
-  max-height: var(--mobile-widget-header-height) !important;
-  padding: var(--mobile-widget-header-pad-block)
-    var(--mobile-widget-header-pad-inline) !important;
-  gap: 8px !important;
-  box-sizing: border-box !important;
-  border-bottom: 0 !important;
-}
-
-.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
-  > :is(.glass-card, .career-widget) > .widget-frame__header > .widget-frame__title-group,
-.mobile-layout .mobile-widget-slot[data-widget-id] > .mobile-career-card > .mobile-career-card__header > .mobile-career-card__heading,
-.mobile-layout .mobile-widget-slot[data-widget-id] > .mobile-calendar-card > .mobile-calendar-card__header > .mobile-calendar-card__label,
-.mobile-layout .mobile-widget-slot[data-widget-id] > .mobile-study-card > .mobile-study-card__heading > .mobile-study-card__eyebrow {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  min-width: 0 !important;
-  gap: 8px !important;
-}
-
-/* Header icons are glyphs rather than buttons; remove their theme tile while
- * keeping standalone Pink Diary artwork intact. / 제목 아이콘을 도형 밖에 둡니다. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] :is(
-  .widget-frame__icon,
-  .mobile-career-card__heading > svg,
-  .mobile-calendar-card__label > svg,
-  .mobile-study-card__eyebrow > svg
-) {
-  background-color: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-
-/* Remove theme gradients behind icon glyphs; Retro's isolated PNG artwork is
- * intentionally retained because it is itself the icon, not its container.
- * 글리프 뒤의 색 타일만 제거하고 Pink Diary의 독립 그림 아이콘은 보존합니다. */
-:is(html, body):is(
-  [data-theme="pastel"], [data-theme="glass-light"], [data-theme="glass-dark"],
-  [data-theme="aurora"], [data-theme="mac-core"], [data-theme="pixel-desk"],
-  .theme-pastel, .theme-glass-light, .theme-glass-dark, .theme-aurora,
-  .theme-mac-core, .theme-pixel-desk
-) .mobile-layout .mobile-widget-slot[data-widget-id] .widget-frame__icon {
-  background-image: none !important;
-}
-
-/* Modern themes let the card surface continue behind every title row. Pixel
- * Desk retains its signature blue bevel title bars. / Pixel 제목줄은 보존합니다. */
-:is(html, body):is(
-  [data-theme="pastel"], [data-theme="glass-light"], [data-theme="glass-dark"],
-  [data-theme="aurora"], [data-theme="mac-core"], [data-theme="retro"],
-  .theme-pastel, .theme-glass-light, .theme-glass-dark, .theme-aurora,
-  .theme-mac-core, .theme-retro
-) .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
-  > .glass-card > .widget-frame__header,
-:is(html, body):is(
-  [data-theme="pastel"], [data-theme="glass-light"], [data-theme="glass-dark"],
-  [data-theme="aurora"], [data-theme="mac-core"], [data-theme="retro"],
-  .theme-pastel, .theme-glass-light, .theme-glass-dark, .theme-aurora,
-  .theme-mac-core, .theme-retro
-) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
-  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
-) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
-  background: transparent !important;
-  background-image: none !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
 /* Pink Diary is a mobile theme with one calm rose surface system. Older theme
  * layers contain repeated gradients; these mobile-only rules make widget chrome
  * and inner panels agree without changing desktop or saved note colors.
@@ -341,15 +256,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] :is(
 }
 
 :is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
-  .mobile-widget-slot .glass-card > .widget-frame__header,
-:is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
-  :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
-  background: var(--pd-mobile-surface) !important;
-  background-image: none !important;
-  border: 0 !important;
-}
-
-:is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
   :is(.journal-summary-card, .journal-section, .alert-center-item,
       .mobile-career-metrics > div, .mobile-career-next,
       .mobile-calendar-card__summary, .mobile-study-card__metric,
@@ -358,20 +264,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] :is(
   background-image: none !important;
   border: 1px solid var(--pd-mobile-line) !important;
   box-shadow: none !important;
-}
-
-/* Use one readable title scale without changing theme-specific font families.
- * Pixel/Retro/Mac Core 글꼴은 유지하고 글자 크기와 줄 간격만 통일합니다. */
-.mobile-layout .mobile-widget-slot[data-widget-id] .widget-frame__title,
-.mobile-layout .mobile-widget-slot[data-widget-id] .mobile-career-card__heading,
-.mobile-layout .mobile-widget-slot[data-widget-id] .mobile-career-card__heading strong,
-.mobile-layout .mobile-widget-slot[data-widget-id] .mobile-calendar-card__label,
-.mobile-layout .mobile-widget-slot[data-widget-id] .mobile-study-card__eyebrow {
-  min-width: 0 !important;
-  margin: 0 !important;
-  font-size: var(--mobile-widget-title-size) !important;
-  line-height: 1.25 !important;
-  letter-spacing: 0 !important;
 }
 
 /* The Settings portal is outside MobileLayout in the DOM; scope it through the
@@ -400,25 +292,6 @@ body:has(.mobile-layout) .settings-section-tab {
   display: none !important;
   font-size: var(--mobile-widget-subtitle-size) !important;
   line-height: 1.3 !important;
-}
-
-.mobile-layout .mobile-widget-slot[data-widget-id] :is(
-  .widget-frame__icon,
-  .mobile-career-card__heading > svg,
-  .mobile-calendar-card__label > svg,
-  .mobile-study-card__eyebrow > svg
-) {
-  flex: 0 0 var(--mobile-widget-icon-size) !important;
-  width: var(--mobile-widget-icon-size) !important;
-  min-width: var(--mobile-widget-icon-size) !important;
-  height: var(--mobile-widget-icon-size) !important;
-  padding: 0 !important;
-}
-
-.mobile-layout .mobile-widget-slot[data-widget-id]
-  .widget-frame__icon svg {
-  width: 18px !important;
-  height: 18px !important;
 }
 
 .mobile-layout .mobile-widget-slot[data-widget-id] :is(
@@ -469,12 +342,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > .widget-instance-root > .glass-card > .widget-frame__header {
-  padding: var(--mobile-widget-header-pad-block)
-    var(--mobile-widget-header-pad-inline) !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   > .widget-instance-root > .glass-card > .widget-frame__body {
   margin: 0 !important;
   padding: var(--mobile-widget-inset) !important;
@@ -514,24 +381,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   overflow: visible !important;
 }
 
-/* One semantic surface fills every header from edge to edge. It follows the
- * widget surface (including dark glass); themes can change the token without
- * changing the mobile header geometry. / 다크 테마를 밝게 덮지 않고 표면 토큰을 씁니다. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  .widget-frame__header,
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
-  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
-) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
-  grid-column: 1 / -1 !important;
-  justify-self: stretch !important;
-  align-self: stretch !important;
-  min-width: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-}
-
 /* Paint the purpose-built card title surfaces independently from the heading
  * width. The background layer crosses the card's shared inner padding while
  * text and controls stay on the normal content line.
@@ -556,14 +405,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :i
   z-index: 1 !important;
 }
 
-/* GlassCard headers fill their full grid row; they have no inner card padding. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > .widget-instance-root > .glass-card > .widget-frame__header {
-  width: 100% !important;
-  margin-inline: 0 !important;
-  box-sizing: border-box !important;
-}
-
 :is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
     html.theme-pixel-desk, body.theme-pixel-desk, html.pixel-desk, body.pixel-desk,
     html.theme-pixel, body.theme-pixel) .mobile-layout {
@@ -575,29 +416,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
     html.theme-pixel, body.theme-pixel) .mobile-layout
   .mobile-widget-slot[data-widget-id] :is(.widget-frame__title, .widget-frame__icon) {
   color: var(--w95-light, #fff) !important;
-}
-
-/* Pixel Desk uses a real navy caption on standard GlassCard widgets. The
- * shared mobile rule clears header fills for glass themes; restore the Pixel
- * caption here while keeping the same common row dimensions.
- * 공통 모바일 규칙이 지운 Pixel Desk 일반 위젯의 남색 제목줄을 복원합니다. */
-:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
-    html.theme-pixel-desk, body.theme-pixel-desk, html.pixel-desk, body.pixel-desk,
-    html.theme-pixel, body.theme-pixel) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > .widget-instance-root > :is(.glass-card, .career-widget) > .widget-frame__header {
-  background: var(--w95-title, #000080) !important;
-  background-image: none !important;
-  color: var(--w95-light, #fff) !important;
-}
-
-/* Journal groups its date controls beside the title. Remove their separate
- * wrapper fills so the full header reads as one continuous bar.
- * Journal 제목과 날짜 조작부가 조각나 보이지 않게 바깥 래퍼 칠을 통일합니다. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  .widget-frame__header > :is(.widget-frame__title-group, .widget-frame__actions) {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
 }
 
 /* Quick Capture is a narrow utility key, not a full-width navigation tab.
@@ -624,6 +442,139 @@ body:has(.mobile-layout) .mobile-navigation-capture {
   [data-widget-id="memo"]
 ) {
   height: var(--gd-mobile-widget-long-height) !important;
+}
+
+/* FINAL MOBILE WIDGET HEADER CONTRACT
+ * Standard GlassCards and the three compact mobile cards now share the same
+ * title class, icon slot, type scale and surface token. Dedicated cards already
+ * have the shared outer inset, so their header itself must add no second inset.
+ * 일반 위젯과 모바일 전용 카드의 제목/아이콘/배경/시작선을 한 규칙으로 맞춥니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > .widget-instance-root > :is(.glass-card:not(.daily-journal-widget), .career-widget)
+  > .widget-frame__header,
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card)
+  > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+  height: var(--mobile-widget-header-height) !important;
+  min-height: var(--mobile-widget-header-height) !important;
+  max-height: var(--mobile-widget-header-height) !important;
+  padding-block: var(--mobile-widget-header-pad-block) !important;
+  padding-inline: var(--mobile-widget-header-pad-inline) !important;
+  gap: 8px !important;
+  box-sizing: border-box !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: var(--mobile-widget-header-surface) !important;
+  background-image: none !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card)
+  > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
+  /* The card itself owns the shared inset. Do not inset this row twice. */
+  padding-inline: 0 !important;
+  background: transparent !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  .widget-frame__header > .widget-frame__title-group,
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card)
+  > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading)
+  > .widget-frame__title-group {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 8px !important;
+  background: transparent !important;
+}
+
+/* Journal's date navigation shares the same title anchor while retaining its
+ * two-row layout on narrow screens. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > .widget-instance-root > .glass-card.daily-journal-widget > .widget-frame__header {
+  padding-inline: 0 !important;
+  background: var(--mobile-widget-header-surface) !important;
+  background-image: none !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  .daily-journal-widget > .widget-frame__header > .widget-frame__title-group {
+  padding-inline: var(--mobile-widget-header-pad-inline) !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  .daily-journal-widget > .widget-frame__header > .widget-frame__actions {
+  padding-right: var(--mobile-widget-header-pad-inline) !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  .widget-frame__header > .widget-frame__title-group {
+  padding-inline: 0 !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > .widget-instance-root > .glass-card:not(.daily-journal-widget) > .widget-frame__header
+  > .widget-frame__title-group {
+  padding-left: 0 !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  .widget-frame__icon {
+  display: inline-flex !important;
+  flex: 0 0 var(--mobile-widget-icon-size) !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: var(--mobile-widget-icon-size) !important;
+  min-width: var(--mobile-widget-icon-size) !important;
+  height: var(--mobile-widget-icon-size) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  .widget-frame__icon svg {
+  display: block !important;
+  flex: none !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  .widget-frame__title {
+  min-width: 0 !important;
+  margin: 0 !important;
+  font-size: var(--mobile-widget-title-size) !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  .widget-frame__header > .widget-frame__actions {
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+  margin-left: auto !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .mobile-layout .mobile-dashboard > .mobile-widget-slot[data-widget-id="timer"] {

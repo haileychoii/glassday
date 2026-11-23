@@ -378,9 +378,12 @@ export const MobileCalendarCard = () => {
       {/* [모바일 홈/워크스페이스의 Calendar 카드]
           상위 MobileDashboard가 위젯 높이를 auto로 변경해 이 카드의 크기를 내용에 맞춥니다. */}
       <section className="mobile-calendar-card" aria-label="모바일 캘린더 요약">
-        <header className="mobile-calendar-card__header">
-          <span className="mobile-calendar-card__label">
-            <CalendarDays size={17} aria-hidden="true" /> Calendar
+        <header className="mobile-calendar-card__header widget-frame__header">
+          <span className="mobile-calendar-card__label widget-frame__title-group">
+            <span className="widget-frame__icon" aria-hidden="true">
+              <CalendarDays size={18} />
+            </span>
+            <strong className="widget-frame__title">Calendar</strong>
           </span>
           <button
             type="button"
