@@ -5,13 +5,9 @@
  */
 
 :is(html, body):is([data-theme="glass-light"], .theme-glass-light) .mobile-layout {
-  --gd-surface-bg: linear-gradient(
-    155deg,
-    rgb(255 255 255 / 0.58) 0%,
-    rgb(255 255 255 / 0.44) 48%,
-    rgb(237 241 255 / 0.34) 100%
-  );
-  --gd-surface-border: rgb(255 255 255 / 0.72);
+  /* One opacity per surface role keeps every widget equally translucent. */
+  --gd-surface-bg: rgb(255 255 255 / 0.38);
+  --gd-surface-border: rgb(255 255 255 / 0.62);
   --gd-surface-shadow:
     0 22px 48px rgb(45 55 95 / 0.16),
     0 3px 10px rgb(45 55 95 / 0.08),
@@ -19,18 +15,14 @@
     inset 1px 0 0 rgb(255 255 255 / 0.34),
     inset 0 -1px 0 rgb(255 255 255 / 0.2);
   --gd-surface-filter: blur(34px) saturate(132%) contrast(103%);
-  --gd-inner-bg: linear-gradient(
-    150deg,
-    rgb(255 255 255 / 0.46),
-    rgb(255 255 255 / 0.3)
-  );
-  --gd-inner-border: rgb(255 255 255 / 0.54);
-  --mobile-glass-control-bg: linear-gradient(
-    145deg,
-    rgb(255 255 255 / 0.38),
-    rgb(255 255 255 / 0.2)
-  );
-  --mobile-glass-control-border: rgb(255 255 255 / 0.48);
+  --gd-inner-bg: rgb(255 255 255 / 0.24);
+  --gd-inner-border: rgb(255 255 255 / 0.44);
+  --mobile-glass-control-bg: rgb(255 255 255 / 0.18);
+  --mobile-glass-control-border: rgb(255 255 255 / 0.42);
+  --gd-control-bg: var(--mobile-glass-control-bg);
+  --gd-control-border: var(--mobile-glass-control-border);
+  --gd-widget-control-bg: var(--mobile-glass-control-bg);
+  --gd-widget-control-border: var(--mobile-glass-control-border);
   --mobile-glass-nav-icon-bg: linear-gradient(
     145deg,
     rgb(255 255 255 / 0.3),
@@ -50,12 +42,7 @@
 }
 
 :is(html, body):is([data-theme="glass-dark"], .theme-glass-dark) .mobile-layout {
-  --gd-surface-bg: linear-gradient(
-    155deg,
-    rgb(255 255 255 / 0.25) 0%,
-    rgb(255 255 255 / 0.16) 46%,
-    rgb(9 11 20 / 0.3) 100%
-  );
+  --gd-surface-bg: rgb(255 255 255 / 0.18);
   --gd-surface-border: rgb(255 255 255 / 0.38);
   --gd-surface-shadow:
     0 24px 56px rgb(0 0 0 / 0.3),
@@ -64,18 +51,14 @@
     inset 1px 0 0 rgb(255 255 255 / 0.1),
     inset 0 -1px 0 rgb(255 255 255 / 0.08);
   --gd-surface-filter: blur(34px) saturate(142%) contrast(106%);
-  --gd-inner-bg: linear-gradient(
-    150deg,
-    rgb(255 255 255 / 0.2),
-    rgb(255 255 255 / 0.1)
-  );
-  --gd-inner-border: rgb(255 255 255 / 0.28);
-  --mobile-glass-control-bg: linear-gradient(
-    145deg,
-    rgb(255 255 255 / 0.18),
-    rgb(255 255 255 / 0.075)
-  );
-  --mobile-glass-control-border: rgb(255 255 255 / 0.24);
+  --gd-inner-bg: rgb(255 255 255 / 0.1);
+  --gd-inner-border: rgb(255 255 255 / 0.24);
+  --mobile-glass-control-bg: rgb(255 255 255 / 0.075);
+  --mobile-glass-control-border: rgb(255 255 255 / 0.2);
+  --gd-control-bg: var(--mobile-glass-control-bg);
+  --gd-control-border: var(--mobile-glass-control-border);
+  --gd-widget-control-bg: var(--mobile-glass-control-bg);
+  --gd-widget-control-border: var(--mobile-glass-control-border);
   --mobile-glass-nav-icon-bg: linear-gradient(
     145deg,
     rgb(255 255 255 / 0.13),
