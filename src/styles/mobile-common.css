@@ -672,4 +672,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
   height: 100% !important;
   min-width: 0 !important;
   min-height: 0 !important;
+  background: var(--gd-widget-panel-bg, hsl(var(--card) / 0.48)) !important;
+  background-image: none !important;
+  border: 1px solid var(--gd-widget-panel-border, hsl(var(--border) / 0.34)) !important;
 }
