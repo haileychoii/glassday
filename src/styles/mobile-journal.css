@@ -488,14 +488,6 @@
   .theme-pixel-desk
 ) .mobile-layout .mobile-widget-slot
   .daily-journal-widget > .widget-frame__header {
-  background: #c0c0c0 !important;
-}
-
-:is(html, body):is(
-  [data-theme="pixel-desk"],
-  .theme-pixel-desk
-) .mobile-layout .daily-journal-widget
-  > .widget-frame__header > .widget-frame__title-group {
   background: #000080 !important;
   color: #ffffff !important;
 }
@@ -504,9 +496,19 @@
   [data-theme="pixel-desk"],
   .theme-pixel-desk
 ) .mobile-layout .daily-journal-widget
+  > .widget-frame__header > .widget-frame__title-group {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+:is(html, body):is(
+  [data-theme="pixel-desk"],
+  .theme-pixel-desk
+) .mobile-layout .daily-journal-widget
   > .widget-frame__header > .widget-frame__actions {
-  background: #c0c0c0 !important;
-  border-top: 1px solid #808080 !important;
+  background: transparent !important;
+  border-top: 0 !important;
+  color: #ffffff !important;
 }
 
 :is(html, body):is(
