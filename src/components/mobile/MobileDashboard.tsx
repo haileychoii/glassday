@@ -195,7 +195,7 @@ export const MobileDashboard = ({
                * - Timer
                * - Money
                * - Daily Journal
-               * - Health
+               * - Habit Tracker
                * - Mood
                */
               <WidgetSlot widgetId={id} />

@@ -278,7 +278,6 @@
 /* progress bar: mint → pink */
 .theme-pastel .today-tasks-progress-fill,
 .theme-pastel .progress-fill,
-.theme-pastel .health-progress-fill,
 .theme-pastel .money-progress-fill {
   background:
     linear-gradient(
@@ -541,7 +540,6 @@
 /* progress만 민트 → 핑크 */
 .theme-pastel .today-tasks-progress-fill,
 .theme-pastel .progress-fill,
-.theme-pastel .health-progress-fill,
 .theme-pastel .money-progress-fill {
   background:
     linear-gradient(

@@ -23,7 +23,6 @@ export type WidgetCategory =
   | "life"
   | "career"
   | "study"
-  | "health"
   | "money"
   | "system"
   | string;

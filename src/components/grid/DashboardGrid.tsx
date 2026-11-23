@@ -75,7 +75,7 @@ const FOCUSED_WIDGETS_BY_TAB: Record<string, WidgetId[]> = {
   career: ["career", "calendar"],
   study: ["study", "timer", "calendar"],
   memo: ["memo", "journal"],
-  life: ["health", "mood", "money", "calendar"],
+  life: ["habitTracker", "mood", "money", "calendar"],
 };
 
 /*
@@ -87,7 +87,7 @@ const COMPACT_HEIGHTS_BY_TAB: Record<string, Partial<Record<WidgetId, number>>> 
   home: { today: 4, calendar: 6, memo: 7 },
   career: { career: 8, calendar: 7 },
   study: { study: 9, timer: 6, calendar: 7 },
-  life: { health: 6, mood: 6, money: 6, calendar: 7 },
+  life: { habitTracker: 7, mood: 6, money: 6, calendar: 7 },
 };
 
 type Breakpoint = "lg" | "md" | "sm";

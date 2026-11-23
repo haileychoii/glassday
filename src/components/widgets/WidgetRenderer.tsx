@@ -18,7 +18,7 @@ import { MemoWidget } from "./MemoWidget";
 import { StudyWidget } from "./StudyWidget";
 import { TimerWidget } from "./TimerWidget";
 import { CareerWidget } from "./CareerWidget";
-import { HealthWidget } from "./HealthWidget";
+import { HabitTrackerWidget } from "./HabitTrackerWidget";
 import { MoneyWidget } from "./MoneyWidget";
 import { MoodWidget } from "./MoodWidget";
 
@@ -31,7 +31,7 @@ const widgetComponents: Record<string, ComponentType> = {
   study: StudyWidget,
   timer: TimerWidget,
   career: CareerWidget,
-  health: HealthWidget,
+  habitTracker: HabitTrackerWidget,
   money: MoneyWidget,
   wealth: MoneyWidget,
   mood: MoodWidget,

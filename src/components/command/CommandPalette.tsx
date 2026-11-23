@@ -86,7 +86,7 @@ const preferredTabsByWidget: Partial<Record<WidgetId, string>> = {
   timer: "study",
   memo: "memo",
   journal: "life",
-  health: "life",
+  habitTracker: "life",
   money: "life",
   mood: "life",
 };

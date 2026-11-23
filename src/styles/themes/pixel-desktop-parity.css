@@ -430,7 +430,6 @@
   .memo-list-panel,
   .memo-note-item,
   .mood-row,
-  .health-metric-card,
   .study-subject-card,
   .study-task,
   .study-record-item,
@@ -710,7 +709,7 @@
   .study-widget .widget-frame__icon,
   .timer-widget .widget-frame__icon,
   .money-widget .widget-frame__icon,
-  .health-widget .widget-frame__icon,
+  .habit-tracker-widget .widget-frame__icon,
   .mood-widget .widget-frame__icon
 ) {
   background-repeat: no-repeat !important;
@@ -838,10 +837,22 @@
   html.theme-pixel,
   body.theme-pixel
 ) .app-shell-surface :is(
-  .health-widget .widget-frame__icon,
-  .mood-widget .widget-frame__icon
+  .habit-tracker-widget .widget-frame__icon
 ) {
-  background-image: url("/pixel-icons/health.png") !important;
+  background-image: url("/pixel-icons/life.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .mood-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/mood.png") !important;
 }
 
 :is(
@@ -864,7 +875,7 @@
   .study-widget,
   .timer-widget,
   .money-widget,
-  .health-widget,
+  .habit-tracker-widget,
   .mood-widget
 ) .widget-frame__icon > svg {
   display: none !important;

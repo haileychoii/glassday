@@ -494,7 +494,7 @@
  */
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.today-focus-widget, .career-widget, .study-widget,
-      .daily-journal-widget, .memo-widget, .health-widget,
+      .daily-journal-widget, .memo-widget, .habit-tracker-widget,
       .mood-widget, .calendar-widget, .today-tasks-widget)
   .widget-frame__icon {
   background-image: var(--pd-widget-icon) !important;
@@ -507,7 +507,7 @@
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.today-focus-widget, .career-widget, .study-widget,
-      .daily-journal-widget, .memo-widget, .health-widget,
+      .daily-journal-widget, .memo-widget, .habit-tracker-widget,
       .mood-widget, .calendar-widget, .today-tasks-widget)
   .widget-frame__icon svg {
   display: none !important;
@@ -531,7 +531,7 @@
 .daily-journal-widget .widget-frame__icon,
 .memo-widget .widget-frame__icon,
 .today-tasks-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/diary.png"); }
-.health-widget .widget-frame__icon,
+.habit-tracker-widget .widget-frame__icon,
 .mood-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/life.png"); }
 .calendar-widget .widget-frame__icon { --pd-widget-icon: url("/pink-icons/isolated/calendar.png"); }
 

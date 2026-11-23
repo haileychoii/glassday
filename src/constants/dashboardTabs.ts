@@ -78,7 +78,7 @@ const homeWidgetIds: WidgetId[] = [
   "career",
   "study",
   "timer",
-  "health",
+  "habitTracker",
   "money",
   "mood",
 ];
@@ -112,7 +112,7 @@ const memoWidgetIds: WidgetId[] = [
 const lifeWidgetIds: WidgetId[] = [
   "alerts",
   "journal",
-  "health",
+  "habitTracker",
   "mood",
   "money",
   "calendar",

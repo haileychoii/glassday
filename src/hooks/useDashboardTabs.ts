@@ -105,6 +105,10 @@ const createId = () => {
   return `tab-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
+/** Retired Health widgets keep their saved position as Habit Tracker. */
+const migrateWidgetId = (id: WidgetId): WidgetId =>
+  id === "health" ? "habitTracker" : id;
+
 const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 };
@@ -138,9 +142,13 @@ const normalizeLayoutItem = (item: GridLayoutItem): GridLayoutItem => {
 const normalizeLayoutArray = (value: unknown): GridLayoutItem[] => {
   if (!Array.isArray(value)) return [];
 
-  return value
+  const normalized = value
     .filter((item: unknown): item is GridLayoutItem => isLayoutItem(item))
-    .map((item) => normalizeLayoutItem(item));
+    .map((item) =>
+      normalizeLayoutItem({ ...item, i: migrateWidgetId(item.i) })
+    );
+
+  return [...new Map(normalized.map((item) => [item.i, item])).values()];
 };
 
 const emptyLayouts = (): Layouts => ({
@@ -245,7 +253,9 @@ const normalizeTab = (
     id: String(tab.id),
     label: tab.label || "Untitled",
     icon: tab.icon || "✨",
-    widgetIds: Array.isArray(tab.widgetIds) ? tab.widgetIds : [],
+    widgetIds: Array.isArray(tab.widgetIds)
+      ? [...new Set(tab.widgetIds.map(migrateWidgetId))]
+      : [],
     layouts: normalizeModeLayouts(tab.layouts),
     locked: Boolean(tab.locked),
   };
