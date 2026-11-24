@@ -32,89 +32,9 @@
   overflow: hidden;
 }
 
-/* 02. 제목 + 날짜 선택
- *
- * 충분한 화면 폭에서는 한 행에 표시한다.
- * 제목과 날짜가 서로 겹치지 않도록 너비를 제한한다.
- */
-.mobile-layout .mobile-widget-slot .daily-journal-widget
-  > .widget-frame__header {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-
-  width: 100% !important;
-  height: 48px !important;
-  min-height: 48px !important;
-
-  padding: 0 8px !important;
-  margin: 0 !important;
-  gap: 6px !important;
-
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-/* 제목 그룹: 아이콘 + Daily Journal */
-.mobile-layout .mobile-widget-slot .daily-journal-widget
-  > .widget-frame__header
-  > .widget-frame__title-group {
-  display: flex !important;
-  flex: 1 1 auto !important;
-
-  align-items: center !important;
-
-  width: auto !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  height: auto !important;
-
-  padding: 0 !important;
-  margin: 0 !important;
-  gap: 6px !important;
-}
-
 /* 날짜가 이미 표시되므로 중복 부제목 제거 */
 .mobile-layout .daily-journal-widget .widget-frame__subtitle {
   display: none !important;
-}
-
-.mobile-layout .daily-journal-widget .widget-frame__copy {
-  min-width: 0 !important;
-  min-height: 0 !important;
-  justify-content: center !important;
-}
-
-.mobile-layout .daily-journal-widget .widget-frame__title {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  font-size: 14px;
-  line-height: 1.25;
-}
-
-/* 날짜 컨트롤이 제목을 밀어내지 않도록 분리 */
-.mobile-layout .mobile-widget-slot .daily-journal-widget
-  > .widget-frame__header > .widget-frame__actions {
-  display: flex !important;
-  flex: 0 0 auto !important;
-
-  align-items: center !important;
-
-  width: auto !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  height: auto !important;
-
-  padding: 0 !important;
-  margin: 0 !important;
-
-  border: 0 !important;
-  background: transparent !important;
 }
 
 /* 03. 날짜 선택

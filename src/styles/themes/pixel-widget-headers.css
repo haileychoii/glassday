@@ -124,37 +124,3 @@
   background-image: none !important;
   color: var(--pixel-desktop-light, #ffffff) !important;
 }
-
-/* Journal keeps its compact date controls, but its entire title row still uses
- * the same shared Pixel bar as every other mobile widget. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-  > .widget-instance-root > .daily-journal-widget > .widget-frame__header {
-  background: var(--w95-title, #000080) !important;
-  background-image: none !important;
-  color: var(--w95-light, #ffffff) !important;
-}
-
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-  > .widget-instance-root > .daily-journal-widget > .widget-frame__header
-  > :is(.widget-frame__title-group, .widget-frame__actions) {
-  background: transparent !important;
-  color: var(--w95-light, #ffffff) !important;
-}

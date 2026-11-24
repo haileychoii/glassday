@@ -340,8 +340,8 @@
     display: none !important;
   }
   /* 4. iOS WIDGET HEADERS — 공통 아이콘/타이틀/액션 일렬 정렬.
-   * Daily Journal은 별도의 날짜 행을 갖기 때문에 제외한다. */
-  & .mobile-widget-slot .glass-card:not(.daily-journal-widget) > .widget-frame__header,
+   * Journal도 같은 제목줄을 쓰고 날짜 조작부만 별도 행으로 둔다. */
+  & .mobile-widget-slot .glass-card > .widget-frame__header,
   & :is(
     .mobile-study-card__heading,
     .mobile-calendar-card__header,
@@ -434,15 +434,8 @@
     border: 1px solid var(--ios-separator) !important;
     box-shadow: none !important;
   }
-  /* Journal의 높이·줄 배치는 파일 끝의 COMPACT JOURNAL 규칙에서 관리. */
-  & .daily-journal-widget > .widget-frame__header {
-    background: var(--ios-surface) !important;
-    border-bottom: 0 !important;
-    border-radius: 0 !important;
-  }
-  & .daily-journal-widget > .widget-frame__header > .widget-frame__title-group {
-    background: var(--ios-surface) !important;
-  }
+  /* Date navigation keeps its own toolbar surface; the title uses the shared
+   * mobile widget header contract like every other widget. */
   & .daily-journal-widget > .widget-frame__header > .widget-frame__actions {
     background: var(--ios-secondary-surface) !important;
     border-top: 0.5px solid var(--ios-separator) !important;
@@ -682,26 +675,12 @@
   width: 100% !important;
   height: 48px !important;
   min-height: 48px !important;
-  padding: 0 8px !important;
+  padding-block: var(--mobile-widget-header-pad-block) !important;
+  padding-inline: var(--mobile-widget-header-pad-inline) !important;
   margin: 0 !important;
-  gap: 6px !important;
+  gap: 8px !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
-}
-
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-  > .widget-frame__header > .widget-frame__title-group {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  flex: 1 1 auto !important;
-  width: auto !important;
-  height: auto !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  gap: 6px !important;
 }
 
 .mobile-layout .daily-journal-widget .widget-frame__subtitle {
@@ -885,34 +864,6 @@
 
 /* F. Narrow screens use two rows, with date controls spanning the card width. */
 @media (max-width: 430px) {
-  .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget {
-    grid-template-rows: 76px minmax(0, 1fr) !important;
-  }
-  .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-    > .widget-frame__header {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    grid-template-rows: 34px 42px !important;
-    height: 76px !important;
-    min-height: 76px !important;
-    padding: 0 !important;
-    gap: 0 !important;
-  }
-  .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-    > .widget-frame__header > .widget-frame__title-group {
-    grid-row: 1;
-    width: 100% !important;
-    height: 34px !important;
-    padding-inline: 9px !important;
-  }
-  .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-    > .widget-frame__header > .widget-frame__actions {
-    grid-row: 2;
-    width: 100% !important;
-    height: 42px !important;
-    padding: 3px 8px !important;
-    border-top: 1px solid var(--journal-panel-border) !important;
-  }
   .mobile-layout .daily-journal-widget .journal-date-nav {
     grid-template-columns: 40px minmax(0, 1fr) 40px !important;
     width: 100% !important;

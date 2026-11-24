@@ -463,7 +463,7 @@ body:has(.mobile-layout) .mobile-navigation-capture {
  * have the shared outer inset, so their header itself must add no second inset.
  * 일반 위젯과 모바일 전용 카드의 제목/아이콘/배경/시작선을 한 규칙으로 맞춥니다. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > .widget-instance-root > :is(.glass-card:not(.daily-journal-widget), .career-widget)
+  > .widget-instance-root > :is(.glass-card, .career-widget)
   > .widget-frame__header,
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   > :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card)
@@ -514,34 +514,56 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   background: transparent !important;
 }
 
-/* Journal's date navigation shares the same title anchor while retaining its
- * two-row layout on narrow screens. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > .widget-instance-root > .glass-card.daily-journal-widget > .widget-frame__header {
-  padding-inline: 0 !important;
-  background: var(--mobile-widget-header-surface) !important;
-  background-image: none !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  .daily-journal-widget > .widget-frame__header > .widget-frame__title-group {
-  padding-inline: var(--mobile-widget-header-pad-inline) !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  .daily-journal-widget > .widget-frame__header > .widget-frame__actions {
-  padding-right: var(--mobile-widget-header-pad-inline) !important;
-}
-
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__header > .widget-frame__title-group {
   padding-inline: 0 !important;
 }
 
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > .widget-instance-root > .glass-card:not(.daily-journal-widget) > .widget-frame__header
-  > .widget-frame__title-group {
-  padding-left: 0 !important;
+/* On narrow phones Journal places its date controls below the title, while
+ * keeping the title row identical in height, inset, icon size, and type to
+ * every other widget header. */
+@media (max-width: 430px) {
+  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
+    > .widget-instance-root > .glass-card.daily-journal-widget {
+    grid-template-rows: calc(var(--mobile-widget-header-height) + 42px) minmax(0, 1fr) !important;
+  }
+
+  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
+    > .widget-instance-root > .glass-card.daily-journal-widget > .widget-frame__header {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: var(--mobile-widget-header-height) 42px !important;
+    height: calc(var(--mobile-widget-header-height) + 42px) !important;
+    min-height: calc(var(--mobile-widget-header-height) + 42px) !important;
+    max-height: none !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    padding-block: 0 !important;
+    gap: 0 !important;
+  }
+
+  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
+    > .widget-instance-root > .glass-card.daily-journal-widget > .widget-frame__header
+    > .widget-frame__title-group {
+    grid-row: 1 !important;
+    width: 100% !important;
+    height: var(--mobile-widget-header-height) !important;
+    min-height: var(--mobile-widget-header-height) !important;
+    align-self: stretch !important;
+  }
+
+  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
+    > .widget-instance-root > .glass-card.daily-journal-widget > .widget-frame__header
+    > .widget-frame__actions {
+    grid-row: 2 !important;
+    width: 100% !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    max-height: 42px !important;
+    padding: 0 !important;
+    align-self: stretch !important;
+    border-top: 1px solid var(--journal-panel-border) !important;
+  }
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
