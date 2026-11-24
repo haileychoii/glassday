@@ -10,9 +10,9 @@
    * Mobile uses a quieter 4px radius scale while preserving the glass material. */
   --gd-radius-app: 20px;
   --gd-radius-panel: 16px;
-  --gd-radius-widget: 16px;
-  --gd-radius-card: 12px;
-  --gd-radius-inner: 8px;
+  --gd-radius-widget: 12px;
+  --gd-radius-card: 8px;
+  --gd-radius-inner: 6px;
   --gd-widget-inner-radius: var(--gd-radius-inner);
   --journal-radius: var(--gd-radius-inner);
   --mobile-glass-control-bg: var(--gd-control-bg);
@@ -30,9 +30,9 @@
   /* Match Glass Light's restrained mobile corner scale. */
   --gd-radius-app: 20px;
   --gd-radius-panel: 16px;
-  --gd-radius-widget: 16px;
-  --gd-radius-card: 12px;
-  --gd-radius-inner: 8px;
+  --gd-radius-widget: 12px;
+  --gd-radius-card: 8px;
+  --gd-radius-inner: 6px;
   --gd-widget-inner-radius: var(--gd-radius-inner);
   --journal-radius: var(--gd-radius-inner);
   --mobile-glass-control-bg: var(--gd-control-bg);
@@ -62,6 +62,15 @@
   backdrop-filter: var(--gd-surface-filter) !important;
   -webkit-backdrop-filter: var(--gd-surface-filter) !important;
   background-clip: padding-box !important;
+  border-radius: var(--gd-radius-widget) !important;
+}
+
+/* Mobile Study is a dedicated card (not a .glass-card frame), so pin its
+ * geometry here instead of relying on the generic widget-frame selector. */
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout .mobile-study-card {
   border-radius: var(--gd-radius-widget) !important;
 }
 
