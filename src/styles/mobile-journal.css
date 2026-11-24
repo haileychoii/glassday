@@ -137,8 +137,10 @@
   display: grid !important;
   grid-template-columns: 40px minmax(0, 1fr) 40px !important;
   align-items: center !important;
-  width: 100% !important;
+  width: min(100%, 256px) !important;
   min-width: 0 !important;
+  margin-inline: auto !important;
+  justify-self: center !important;
   gap: 8px !important;
 }
 .mobile-layout .daily-journal-widget .journal-date-nav :is(button, input) {
@@ -155,6 +157,7 @@
 .mobile-layout .daily-journal-widget .journal-date-nav input {
   padding-inline: 3px !important;
   font-size: 16px !important; /* iOS Safari: avoid focus zoom */
+  text-align: center !important;
 }
 
 /* C. Summary and all journal sections share ONE vertical scroller.
@@ -292,16 +295,6 @@
 
 /* F. Keep the date readable on narrow phones without moving it into the title. */
 @media (max-width: 430px) {
-  .mobile-layout .daily-journal-widget .journal-date-nav {
-    grid-template-columns: 40px minmax(0, 1fr) 40px !important;
-    width: 100% !important;
-    gap: 6px !important;
-  }
-  .mobile-layout .daily-journal-widget .journal-date-nav :is(button, input) {
-    width: auto !important;
-    min-width: 0 !important;
-    justify-self: stretch !important;
-  }
   .mobile-layout .daily-journal-widget .journal-date-nav input {
     font-size: 14px !important;
   }
