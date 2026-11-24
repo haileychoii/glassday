@@ -75,16 +75,6 @@
   [data-theme="pixel-desk"],
   .theme-pixel-desk
 ) .mobile-layout .daily-journal-widget
-  > .widget-frame__header > .widget-frame__actions {
-  background: transparent !important;
-  border-top: 0 !important;
-  color: #ffffff !important;
-}
-
-:is(html, body):is(
-  [data-theme="pixel-desk"],
-  .theme-pixel-desk
-) .mobile-layout .daily-journal-widget
   .journal-date-nav {
   color: #000000 !important;
 }
@@ -118,12 +108,14 @@
  *   .journal-main-scroll (Today / Tomorrow / entries)
  *
  * Desktop/Tauri: untouched, including the Summary metrics and data storage.
- * Pixel Desk: retains navy title + grey date toolbar in a shorter two-row header.
- * Modern/Mac Core: one 48px row where possible; two rows only on narrow phones.
+ * Every theme uses the shared title row; date navigation starts the body content.
  * ============================================================================ */
 
 /* Desktop layout keeps its existing always-visible Summary. */
 .daily-journal-widget .journal-summary-toggle {
+  display: none;
+}
+.daily-journal-widget .journal-date-nav--body {
   display: none;
 }
 
@@ -131,38 +123,31 @@
   display: none !important;
 }
 
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-  > .widget-frame__header > .widget-frame__actions {
-  display: flex !important;
-  align-items: center !important;
-  flex: 0 0 auto !important;
-  width: auto !important;
-  height: auto !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  gap: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
+/* Keep the shared title row clean; mobile date navigation is in the body. */
+.mobile-layout .daily-journal-widget > .widget-frame__header > .widget-frame__actions {
+  display: none !important;
+}
+.mobile-layout .daily-journal-widget .journal-date-nav--body {
+  display: grid !important;
+  margin-bottom: 7px !important;
 }
 
 /* The native date input keeps its onChange and picker behavior. */
 .mobile-layout .daily-journal-widget .journal-date-nav {
   display: grid !important;
-  grid-template-columns: 28px 116px 28px !important;
+  grid-template-columns: 40px minmax(0, 1fr) 40px !important;
   align-items: center !important;
-  width: auto !important;
+  width: 100% !important;
   min-width: 0 !important;
-  gap: 4px !important;
+  gap: 8px !important;
 }
 .mobile-layout .daily-journal-widget .journal-date-nav :is(button, input) {
   flex: none !important;
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
-  height: 34px !important;
-  min-height: 34px !important;
+  height: 40px !important;
+  min-height: 40px !important;
   margin: 0 !important;
   padding: 0 !important;
   box-sizing: border-box !important;
@@ -305,7 +290,7 @@
   font-size: 16px !important;
 }
 
-/* F. Narrow screens use two rows, with date controls spanning the card width. */
+/* F. Keep the date readable on narrow phones without moving it into the title. */
 @media (max-width: 430px) {
   .mobile-layout .daily-journal-widget .journal-date-nav {
     grid-template-columns: 40px minmax(0, 1fr) 40px !important;

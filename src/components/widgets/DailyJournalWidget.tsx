@@ -396,54 +396,50 @@ export const DailyJournalWidget = () => {
   // 05. JOURNAL WIDGET UI
   // ============================================================
 
+  const renderDateNavigation = (placement: "header" | "body") => (
+    <div
+      className={`journal-date-nav journal-date-nav--${placement}`}
+      aria-label="Journal date"
+    >
+      <button
+        type="button"
+        aria-label="Previous journal date"
+        onClick={() =>
+          setSelectedDate((prev) => addDaysToDateString(prev, -1))
+        }
+      >
+        ←
+      </button>
+
+      <input
+        type="date"
+        value={selectedDate}
+        aria-label="Select journal date"
+        onChange={(event) => setSelectedDate(event.target.value)}
+      />
+
+      <button
+        type="button"
+        aria-label="Next journal date"
+        onClick={() =>
+          setSelectedDate((prev) => addDaysToDateString(prev, 1))
+        }
+      >
+        →
+      </button>
+    </div>
+  );
+
   return (
     <GlassCard
       className="daily-journal-widget"
       title="Daily Journal"
       subtitle={`${entry.date} · ${progress}% filled`}
       icon={<BookOpen className="w-4 h-4" />}
-      actions={
-        /*
-         * 날짜 탐색은 기존 GlassCard의 actions를 재사용한다.
-         * 모바일 헤더의 공통 크기는 mobile-common.css, 날짜 배치는 mobile-journal.css가 담당한다.
-         */
-        <div className="journal-date-nav">
-          <button
-            type="button"
-            aria-label="Previous journal date"
-            onClick={() =>
-              setSelectedDate((prev) =>
-                addDaysToDateString(prev, -1)
-              )
-            }
-          >
-            ←
-          </button>
-
-          <input
-            type="date"
-            value={selectedDate}
-            aria-label="Select journal date"
-            onChange={(event) =>
-              setSelectedDate(event.target.value)
-            }
-          />
-
-          <button
-            type="button"
-            aria-label="Next journal date"
-            onClick={() =>
-              setSelectedDate((prev) =>
-                addDaysToDateString(prev, 1)
-              )
-            }
-          >
-            →
-          </button>
-        </div>
-      }
+      actions={renderDateNavigation("header")}
     >
       <div className="journal-content">
+        {renderDateNavigation("body")}
 
         {/* ==================================================
             06. SUMMARY TOGGLE

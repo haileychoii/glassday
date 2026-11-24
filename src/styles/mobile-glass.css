@@ -46,47 +46,6 @@
     url("/glass-background/darkbackground1.jpg") center / cover no-repeat !important;
 }
 
-:is(html, body):is(
-  [data-theme="glass-light"], .theme-glass-light,
-  [data-theme="glass-dark"], .theme-glass-dark
-) .mobile-layout :is(
-  .mobile-widget-slot .glass-card,
-  .mobile-study-card,
-  .mobile-calendar-card,
-  .mobile-career-card
-) {
-  color: hsl(var(--foreground) / 0.92) !important;
-  background: var(--gd-surface-bg) !important;
-  border-color: var(--gd-surface-border) !important;
-  box-shadow: var(--gd-surface-shadow) !important;
-  backdrop-filter: var(--gd-surface-filter) !important;
-  -webkit-backdrop-filter: var(--gd-surface-filter) !important;
-  background-clip: padding-box !important;
-  border-radius: var(--gd-radius-widget) !important;
-}
-
-/* Mobile Study is a dedicated card (not a .glass-card frame), so pin its
- * geometry here instead of relying on the generic widget-frame selector. */
-:is(html, body):is(
-  [data-theme="glass-light"], .theme-glass-light,
-  [data-theme="glass-dark"], .theme-glass-dark
-) .mobile-layout .mobile-study-card {
-  border-radius: var(--gd-radius-widget) !important;
-}
-
-:is(html, body):is(
-  [data-theme="glass-light"], .theme-glass-light,
-  [data-theme="glass-dark"], .theme-glass-dark
-) .mobile-layout .mobile-widget-slot :is(
-  .widget-frame__header,
-  .mobile-study-card__heading,
-  .mobile-calendar-card__header,
-  .mobile-career-card__header
-) {
-  background: var(--mobile-widget-header-surface) !important;
-  background-image: none !important;
-}
-
 /* Give nested panels and controls a clear, smaller radius step than the widget.
  * Keep circular icon buttons circular; these rules target content surfaces. */
 :is(html, body):is(

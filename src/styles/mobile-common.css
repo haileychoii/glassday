@@ -22,7 +22,7 @@
   --mobile-tight-gap: var(--mobile-space-1);
   --mobile-control-gap: 6px;
   --mobile-page-gutter: var(--mobile-space-4);
-  --mobile-widget-header-surface: var(--gd-surface-bg, hsl(var(--card)));
+  --mobile-widget-header-surface: var(--gd-widget-panel-bg, var(--gd-surface-bg, hsl(var(--card))));
   --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
   --mobile-widget-header-pad-inline: var(--gd-mobile-widget-inset);
   --mobile-widget-header-pad-block: var(--gd-mobile-widget-header-pad-y);
@@ -533,6 +533,30 @@ body:has(.mobile-layout) .mobile-navigation-capture {
   height: var(--gd-mobile-widget-long-height) !important;
 }
 
+/* Shared modern-theme widget surface: one rule owns standard and dedicated
+ * cards. Theme files supply token values only; they do not restyle one widget.
+ * 모바일 공통 카드 재질은 위젯 종류마다 따로 배경을 정의하지 않습니다. */
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora
+) .mobile-layout :is(
+  .mobile-widget-slot .glass-card,
+  .mobile-study-card,
+  .mobile-calendar-card,
+  .mobile-career-card
+) {
+  color: hsl(var(--foreground) / 0.92) !important;
+  border: 1px solid var(--gd-surface-border) !important;
+  border-radius: var(--gd-radius-widget, 18px) !important;
+  background: var(--gd-surface-bg) !important;
+  background-clip: padding-box !important;
+  box-shadow: var(--gd-surface-shadow) !important;
+  backdrop-filter: var(--gd-surface-filter, blur(20px)) !important;
+  -webkit-backdrop-filter: var(--gd-surface-filter, blur(20px)) !important;
+}
+
 /* FINAL MOBILE WIDGET HEADER CONTRACT
  * Standard GlassCards and the three compact mobile cards now share the same
  * title class, icon slot, type scale and surface token. Dedicated cards already
@@ -560,7 +584,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   border-radius: 0 !important;
   box-shadow: none !important;
   background: var(--mobile-widget-header-surface) !important;
-  background-image: none !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
@@ -593,53 +616,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__header > .widget-frame__title-group {
   padding-inline: 0 !important;
-}
-
-/* On narrow phones Journal places its date controls below the title, while
- * keeping the title row identical in height, inset, icon size, and type to
- * every other widget header. */
-@media (max-width: 430px) {
-  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-    > .widget-instance-root > .glass-card.daily-journal-widget {
-    grid-template-rows: calc(var(--mobile-widget-header-height) + 42px) minmax(0, 1fr) !important;
-  }
-
-  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-    > .widget-instance-root > .glass-card.daily-journal-widget > .widget-frame__header {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    grid-template-rows: var(--mobile-widget-header-height) 42px !important;
-    height: calc(var(--mobile-widget-header-height) + 42px) !important;
-    min-height: calc(var(--mobile-widget-header-height) + 42px) !important;
-    max-height: none !important;
-    align-items: stretch !important;
-    justify-content: stretch !important;
-    padding-block: 0 !important;
-    gap: 0 !important;
-  }
-
-  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-    > .widget-instance-root > .glass-card.daily-journal-widget > .widget-frame__header
-    > .widget-frame__title-group {
-    grid-row: 1 !important;
-    width: 100% !important;
-    height: var(--mobile-widget-header-height) !important;
-    min-height: var(--mobile-widget-header-height) !important;
-    align-self: stretch !important;
-  }
-
-  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-    > .widget-instance-root > .glass-card.daily-journal-widget > .widget-frame__header
-    > .widget-frame__actions {
-    grid-row: 2 !important;
-    width: 100% !important;
-    height: 42px !important;
-    min-height: 42px !important;
-    max-height: 42px !important;
-    padding: 0 !important;
-    align-self: stretch !important;
-    border-top: 1px solid var(--journal-panel-border) !important;
-  }
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]

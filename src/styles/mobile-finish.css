@@ -65,55 +65,8 @@
     scrollbar-gutter: auto !important;
   }
 }
-/* ============================================================
- * 1-2. MODERN THEME MATERIALS
- *
- * 각 테마가 원래 사용하는 배경, 테두리, 그림자를 적용.
- * 구조는 통일하고 색상만 다르게 유지한다.
- *
- * Pixel Desk / Mac Core / Retro의 고유 재질은 변경하지 않음.
- * ============================================================ */
-:is(html, body):is(
-  [data-theme="pastel"], .theme-pastel,
-  [data-theme="glass-light"], .theme-glass-light,
-  [data-theme="glass-dark"], .theme-glass-dark,
-  [data-theme="aurora"], .theme-aurora
-) .mobile-layout {
-  /* 일반 + 독립형 위젯의 카드 재질 통일 */
-  & :is(
-    .mobile-widget-slot .glass-card,
-    .mobile-study-card,
-    .mobile-calendar-card,
-    .mobile-career-card
-  ) {
-    border: 1px solid var(--gd-surface-border) !important;
-    border-radius: var(--gd-radius-widget, 18px) !important;
-    background: var(--gd-surface-bg) !important;
-    box-shadow: var(--gd-surface-shadow) !important;
-    backdrop-filter:
-      var(--gd-surface-filter, blur(20px)) !important;
-    -webkit-backdrop-filter:
-      var(--gd-surface-filter, blur(20px)) !important;
-  }
-  /* 제목줄 배경과 하단 구분선 통일 */
-  & :is(
-    .mobile-widget-slot
-      .glass-card:not(.daily-journal-widget)
-      > .widget-frame__header,
-    .mobile-study-card > .mobile-study-card__heading,
-    .mobile-calendar-card > .mobile-calendar-card__header,
-    .mobile-career-card > .mobile-career-card__header,
-    .daily-journal-widget
-      > .widget-frame__header
-      > .widget-frame__title-group
-  ) {
-    background: var(--gd-widget-panel-bg) !important;
-    border: 0 !important;
-    border-bottom:
-      1px solid var(--gd-widget-panel-border) !important;
-    box-shadow: none !important;
-  }
-}
+/* Widget frame material and header rules live in mobile-common.css. This file
+ * keeps theme-specific materials and controls, with no second frame override. */
 /* 2. MAC CORE / MOBILE — iOS System Colors + semantic design tokens.
  * 다른 테마에 영향을 주지 않으며 색상/여백을 여기서 한 번만 정한다. */
 :is(
@@ -301,12 +254,6 @@
     background: var(--ios-surface) !important;
     border: 1px solid var(--ios-separator) !important;
     box-shadow: none !important;
-  }
-  /* Date navigation keeps its own toolbar surface; the title uses the shared
-   * mobile widget header contract like every other widget. */
-  & .daily-journal-widget > .widget-frame__header > .widget-frame__actions {
-    background: var(--ios-secondary-surface) !important;
-    border-top: 0.5px solid var(--ios-separator) !important;
   }
   /* Memo: iOS Notes처럼 리스트는 그룹형, 실제 에디터는 흰 종이.
    * 메모마다 저장된 paper surface / text color를 최우선으로 존중한다. */
@@ -497,14 +444,5 @@
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
-  }
-}
-
-/* H. Mac Core: keep the lighter iOS toolbar when the date row is separate. */
-@media (max-width: 430px) {
-  :is(html, body):is([data-theme="mac-core"], .theme-mac-core)
-    .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-      > .widget-frame__header > .widget-frame__actions {
-    background: var(--ios-secondary-surface, #f7f7fa) !important;
   }
 }
