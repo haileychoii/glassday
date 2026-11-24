@@ -6,6 +6,15 @@
 
 :is(html, body):is([data-theme="glass-light"], .theme-glass-light) .mobile-layout {
   /* Glass material comes from theme-surfaces.css at every viewport size. */
+  /* Desktop's 26/22/18px radii make compact phone widgets look inflated.
+   * Mobile uses a quieter 4px radius scale while preserving the glass material. */
+  --gd-radius-app: 20px;
+  --gd-radius-panel: 16px;
+  --gd-radius-widget: 16px;
+  --gd-radius-card: 12px;
+  --gd-radius-inner: 8px;
+  --gd-widget-inner-radius: var(--gd-radius-inner);
+  --journal-radius: var(--gd-radius-inner);
   --mobile-glass-control-bg: var(--gd-control-bg);
   --mobile-glass-control-border: var(--gd-control-border);
   --mobile-glass-nav-icon-bg: var(--gd-control-bg);
@@ -18,6 +27,14 @@
 
 :is(html, body):is([data-theme="glass-dark"], .theme-glass-dark) .mobile-layout {
   /* Glass material comes from theme-surfaces.css at every viewport size. */
+  /* Match Glass Light's restrained mobile corner scale. */
+  --gd-radius-app: 20px;
+  --gd-radius-panel: 16px;
+  --gd-radius-widget: 16px;
+  --gd-radius-card: 12px;
+  --gd-radius-inner: 8px;
+  --gd-widget-inner-radius: var(--gd-radius-inner);
+  --journal-radius: var(--gd-radius-inner);
   --mobile-glass-control-bg: var(--gd-control-bg);
   --mobile-glass-control-border: var(--gd-control-border);
   --mobile-glass-nav-icon-bg: var(--gd-control-bg);
@@ -45,6 +62,7 @@
   backdrop-filter: var(--gd-surface-filter) !important;
   -webkit-backdrop-filter: var(--gd-surface-filter) !important;
   background-clip: padding-box !important;
+  border-radius: var(--gd-radius-widget) !important;
 }
 
 :is(html, body):is(
@@ -58,6 +76,53 @@
 ) {
   background: var(--mobile-widget-header-surface) !important;
   background-image: none !important;
+}
+
+/* Give nested panels and controls a clear, smaller radius step than the widget.
+ * Keep circular icon buttons circular; these rules target content surfaces. */
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout :is(
+  .today-focus-main,
+  .today-focus-hero,
+  .today-focus-section,
+  .today-focus-block,
+  .today-mini-main,
+  .today-mini-next,
+  .today-tasks-progress,
+  .calendar-event-item,
+  .calendar-event-card,
+  .calendar-mini-card,
+  .career-list-item,
+  .memo-note-item,
+  .alert-item,
+  .journal-section,
+  .study-card,
+  .mobile-study-card__metric,
+  .mobile-study-card__upcoming,
+  .mobile-calendar-card__summary,
+  .mobile-career-metrics > div,
+  .mobile-career-next,
+  .timer-widget-main-card,
+  .timer-widget-settings-card
+) {
+  border-radius: var(--gd-radius-card) !important;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout :is(
+  .journal-date-nav :is(button, input),
+  .journal-summary-toggle,
+  .journal-section :is(input, textarea, select),
+  .journal-mood-select,
+  .mobile-calendar-card__day,
+  .timer-widget-mode-button,
+  .timer-widget-secondary
+) {
+  border-radius: var(--gd-radius-inner) !important;
 }
 
 :is(html, body):is(
@@ -135,7 +200,7 @@
   [data-theme="glass-dark"], .theme-glass-dark
 ) .mobile-layout .mobile-navigation-item {
   gap: 2px !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   background: transparent !important;
 }
 
@@ -149,7 +214,7 @@
   width: 32px !important;
   height: 30px !important;
   border: 1px solid var(--mobile-glass-nav-icon-border) !important;
-  border-radius: 11px !important;
+  border-radius: 10px !important;
   background: var(--mobile-glass-nav-icon-bg) !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
@@ -199,7 +264,7 @@
 ) {
   color: hsl(var(--primary)) !important;
   border: 1px solid var(--mobile-glass-nav-icon-active-border) !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   background: var(--mobile-glass-nav-icon-active-bg) !important;
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.72),
