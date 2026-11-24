@@ -17,21 +17,6 @@
  * PC, Tauri, 데이터 저장 로직에는 영향을 주지 않는다.
  * ============================================================================ */
 
-/* 01. Journal 외곽
- *
- * 일반적인 휴대폰에서는 헤더 48px만 고정한다.
- * 기존 86px 또는 96px 고정 헤더는 사용하지 않는다.
- */
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget {
-  display: grid !important;
-  grid-template-rows: 48px minmax(0, 1fr) !important;
-
-  min-width: 0;
-  min-height: 0;
-  padding: 0 !important;
-  overflow: hidden;
-}
-
 /* 날짜가 이미 표시되므로 중복 부제목 제거 */
 .mobile-layout .daily-journal-widget .widget-frame__subtitle {
   display: none !important;
@@ -101,7 +86,6 @@
   min-width: 0 !important;
   min-height: 0 !important;
 
-  padding: 6px !important;
   overflow: hidden !important;
 }
 

@@ -63,10 +63,6 @@
    위젯 자체의 스크롤 영역을 추가로 만들지 않는다.
    ============================================================================ */
 
-.mobile-layout [data-widget-id="money"] .money-widget .glass-card-body {
-  padding: 6px 8px 8px;
-}
-
 .mobile-layout [data-widget-id="money"] .money-detail {
   min-width: 0;
   gap: 8px;
