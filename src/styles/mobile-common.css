@@ -29,6 +29,7 @@
   --mobile-widget-title-size: 14px;
   --mobile-widget-subtitle-size: 11px;
   --mobile-widget-header-min-height: var(--gd-mobile-widget-header-height);
+  --mobile-widget-min-body-height: 120px;
   --mobile-widget-icon-size: 22px;
   /* A 40px control stays compact in dense widget headers but is easier to tap.
    * 좁은 헤더를 과하게 키우지 않으면서 손가락으로 누르기 쉽게 맞춥니다. */
@@ -196,9 +197,9 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
 .mobile-layout .mobile-widget-slot[data-widget-id]:not([data-widget-id="memo"]):not([data-widget-id="timer"]):not([data-widget-id="journal"])
   > .widget-instance-root > .glass-card {
   display: grid !important;
-  grid-template-rows: auto auto !important;
+  grid-template-rows: auto minmax(var(--mobile-widget-min-body-height), auto) !important;
   height: auto !important;
-  min-height: 0 !important;
+  min-height: var(--mobile-widget-min-body-height) !important;
   max-height: none !important;
   padding: 0 !important;
   overflow: visible !important;
@@ -207,9 +208,17 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
 .mobile-layout .mobile-widget-slot[data-widget-id]:not([data-widget-id="memo"]):not([data-widget-id="timer"]):not([data-widget-id="journal"])
   > .widget-instance-root > .glass-card > .widget-frame__body {
   height: auto !important;
-  min-height: 0 !important;
+  min-height: var(--mobile-widget-min-body-height) !important;
   max-height: none !important;
   overflow: visible !important;
+}
+
+/* Long/fixed cards also keep a real body row when their inner layout has no
+ * intrinsic height (for example an empty Journal or Memo). This prevents the
+ * card from rendering as only a one-pixel border line. */
+.mobile-layout .mobile-widget-slot[data-widget-id]
+  > .widget-instance-root > .glass-card > .widget-frame__body {
+  min-height: var(--mobile-widget-min-body-height) !important;
 }
 
 /* Today Focus and Alert Center are content-height cards on mobile. Their desktop
