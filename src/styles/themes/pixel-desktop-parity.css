@@ -234,7 +234,6 @@
 ) .app-shell-surface :is(
   .glass-card > .widget-frame__header,
   .career-widget > .widget-frame__header,
-  .mobile-study-card__heading,
   .mobile-calendar-card__header,
   .mobile-career-card__header
 ) {
@@ -263,7 +262,6 @@
   .widget-frame__title-group,
   .widget-frame__copy,
   .career-widget-title-wrap,
-  .mobile-study-card__eyebrow,
   .mobile-calendar-card__label,
   .mobile-career-card__heading
 ) {
@@ -284,7 +282,6 @@
   body.theme-pixel
 ) .app-shell-surface :is(
   .widget-frame__icon,
-  .mobile-study-card__eyebrow > svg,
   .mobile-calendar-card__label > svg,
   .mobile-career-card__heading > svg
 ) {
@@ -310,7 +307,6 @@
   body.theme-pixel
 ) .app-shell-surface :is(
   .widget-frame__title,
-  .mobile-study-card__eyebrow,
   .mobile-calendar-card__label,
   .mobile-career-card__heading,
   .mobile-career-card__heading strong

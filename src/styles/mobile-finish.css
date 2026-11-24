@@ -137,7 +137,6 @@
    */
   & :is(
     .mobile-widget-slot .glass-card,
-    .mobile-study-card,
     .mobile-calendar-card,
     .mobile-career-card
   ) {
@@ -162,7 +161,6 @@
    * Journal도 같은 제목줄을 쓰고 날짜 조작부만 별도 행으로 둔다. */
   & .mobile-widget-slot .glass-card > .widget-frame__header,
   & :is(
-    .mobile-study-card__heading,
     .mobile-calendar-card__header,
     .mobile-career-card__header
   ) {
@@ -182,7 +180,7 @@
     border-radius: 0 !important;
     box-shadow: none !important;
   }
-  & :is(.widget-frame__title, .mobile-study-card__eyebrow, .mobile-calendar-card__label,
+  & :is(.widget-frame__title, .mobile-calendar-card__label,
     .mobile-career-card__heading, .mobile-career-card__heading strong) {
     font-weight: 700 !important;
     color: var(--ios-label) !important;
@@ -193,7 +191,6 @@
   /* 5. Native iOS actions — toolbar 버튼은 얇은 무채색 배경, 텍스트 액션은 파란색. */
   & :is(
     .widget-frame__actions button,
-    .mobile-study-card__open,
     .mobile-calendar-card__open,
     .mobile-career-card__open
   ) {
@@ -205,7 +202,7 @@
     box-shadow: none !important;
     font-weight: 650 !important;
   }
-  & :is(.widget-frame__actions button, .mobile-study-card__open,
+  & :is(.widget-frame__actions button,
       .mobile-calendar-card__open, .mobile-career-card__open):active {
     background: var(--ios-tint-soft) !important;
   }
@@ -216,8 +213,6 @@
     .journal-summary-card:not(.journal-score-strip-card),
     .journal-section,
     .journal-score-inline,
-    .mobile-study-card__metric,
-    .mobile-study-card__upcoming,
     .mobile-calendar-card__summary,
     .mobile-career-metrics > div,
     .mobile-career-next,

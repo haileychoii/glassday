@@ -14,7 +14,6 @@
   .widget-frame__header,
   .glass-card-header,
   .widget-card-header,
-  .mobile-study-card__heading,
   .mobile-calendar-card__header,
   .mobile-career-card__header
 ) {
@@ -39,7 +38,6 @@
   .widget-frame__header,
   .glass-card-header,
   .widget-card-header,
-  .mobile-study-card__heading,
   .mobile-calendar-card__header,
   .mobile-career-card__header
 ) :is(
@@ -80,8 +78,8 @@
   html.theme-pixel,
   body.theme-pixel
 ) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > :is(.mobile-study-card, .mobile-calendar-card, .mobile-career-card)
-  > :is(.mobile-study-card__heading, .mobile-calendar-card__header, .mobile-career-card__header) {
+  > :is( .mobile-calendar-card, .mobile-career-card)
+  > :is( .mobile-calendar-card__header, .mobile-career-card__header) {
   background: var(--w95-title, #000080) !important;
   background-image: none !important;
   color: var(--w95-light, #ffffff) !important;
@@ -98,8 +96,8 @@
   html.theme-pixel,
   body.theme-pixel
 ) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > :is(.mobile-study-card, .mobile-calendar-card, .mobile-career-card)
-  > :is(.mobile-study-card__heading, .mobile-calendar-card__header, .mobile-career-card__header)::before {
+  > :is( .mobile-calendar-card, .mobile-career-card)
+  > :is( .mobile-calendar-card__header, .mobile-career-card__header)::before {
   background: var(--w95-title, #000080) !important;
 }
 

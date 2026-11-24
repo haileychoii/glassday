@@ -14,7 +14,6 @@
  *   └─ mobile-pixel.css (현재 파일, 마지막 import)
  *
  * src/components/mobile/MobileDashboard.tsx
- *   ├─ MobileStudyCard.tsx     → .mobile-study-card
  *   ├─ MobileCalendarCard.tsx  → .mobile-calendar-card
  *   ├─ MobileCareerCard.tsx    → .mobile-career-card
  *   └─ WidgetSlot.tsx
@@ -78,7 +77,6 @@
 
   & :is(
     .mobile-widget-slot .glass-card,
-    .mobile-study-card,
     .mobile-calendar-card,
     .mobile-career-card
   ) {
@@ -130,7 +128,6 @@
    * ========================================================= */
 
   & :is(
-    .mobile-study-card,
     .mobile-calendar-card,
     .mobile-career-card
   ) {
@@ -162,7 +159,6 @@
 
   & :is(
     .widget-frame__icon,
-    .mobile-study-card__eyebrow > svg,
     .mobile-calendar-card__label > svg,
     .mobile-career-card__heading > svg
   ) {
@@ -178,7 +174,6 @@
 
   & :is(
     .widget-frame__title,
-    .mobile-study-card__eyebrow,
     .mobile-calendar-card__label,
     .mobile-career-card__heading,
     .mobile-career-card__heading strong
@@ -207,7 +202,6 @@
 
   & :is(
     .widget-frame__actions button,
-    .mobile-study-card__open,
     .mobile-calendar-card__open,
     .mobile-career-card__open
   ) {
@@ -249,8 +243,6 @@
 
   & :is(
     .mobile-calendar-card__summary,
-    .mobile-study-card__metric,
-    .mobile-study-card__upcoming,
     .mobile-career-metrics > div,
     .mobile-career-next
   ) {
@@ -358,7 +350,6 @@
 
   & :is(
     .mobile-calendar-week-day,
-    .mobile-study-card__shortcuts > button,
     .mobile-career-card__add,
     .money-pill,
     .money-section-tab,
@@ -528,7 +519,6 @@
   /* 상세 페이지 공통 회색 배경 */
 
   & :is(
-    .mobile-study-detail,
     .mobile-calendar-detail,
     .mobile-career-detail
   ) {
@@ -539,7 +529,6 @@
   /* 상세 페이지 공통 남색 제목줄 */
 
   & :is(
-    .mobile-study-detail__header,
     .mobile-calendar-detail__header,
     .mobile-career-detail__header
   ) {
@@ -551,7 +540,6 @@
   }
 
   & :is(
-    .mobile-study-detail__heading strong,
     .mobile-calendar-detail__header h2,
     .mobile-career-detail__header h2
   ) {

@@ -1,7 +1,7 @@
 /*
  * Shared mobile widget geometry for every theme.
- * Connected components: MobileDashboard / MobileCareerCard / MobileCalendarCard /
- * MobileStudyCard and GlassCard's widget-frame header/body.
+ * Connected components: MobileDashboard, MobileCareerCard, MobileCalendarCard,
+ * and GlassCard's widget-frame header/body.
  * Theme styles keep ownership of color, material, font family, and bevels;
  * this final layer owns only spacing, title scale, and alignment.
  * 모든 테마의 모바일 공통 규격 파일입니다. 테마 CSS는 색과 표면 재질을,
@@ -142,9 +142,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > .w
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="career"]
   .mobile-career-card__heading,
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
-  .mobile-calendar-card__label,
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="study"]
-  .mobile-study-card__eyebrow {
+  .mobile-calendar-card__label {
   flex: 1 1 auto !important;
   min-width: 0 !important;
   justify-content: flex-start !important;
@@ -155,9 +153,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
 .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card,
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
-  .mobile-calendar-card,
-  .mobile-study-card
-) {
+  .mobile-calendar-card) {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -182,9 +178,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
 
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
-  .mobile-calendar-card,
-  .mobile-study-card
-) > :not(:first-child) {
+  .mobile-calendar-card) > :not(:first-child) {
   min-width: 0 !important;
   margin-inline: 0 !important;
 }
@@ -336,7 +330,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
 :is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
   .mobile-widget-slot .glass-card,
 :is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
-  :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card) {
+  :is(.mobile-career-card, .mobile-calendar-card) {
   background: var(--pd-mobile-surface) !important;
   border-color: var(--pd-mobile-line) !important;
   box-shadow: 0 3px 10px rgb(137 88 111 / 0.06) !important;
@@ -345,8 +339,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
 :is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
   :is(.journal-summary-card, .journal-section, .alert-center-item,
       .mobile-career-metrics > div, .mobile-career-next,
-      .mobile-calendar-card__summary, .mobile-study-card__metric,
-      .mobile-study-card__upcoming) {
+      .mobile-calendar-card__summary) {
   background: var(--pd-mobile-panel) !important;
   background-image: none !important;
   border: 1px solid var(--pd-mobile-line) !important;
@@ -384,9 +377,7 @@ body:has(.mobile-layout) .settings-section-tab {
 .mobile-layout .mobile-widget-slot[data-widget-id] :is(
   .widget-frame__actions button,
   .mobile-career-card__open,
-  .mobile-calendar-card__open,
-  .mobile-study-card__open
-) {
+  .mobile-calendar-card__open) {
   min-width: var(--mobile-widget-action-size) !important;
   min-height: var(--mobile-widget-action-size) !important;
   height: var(--mobile-widget-action-size) !important;
@@ -456,9 +447,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo
 
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
-  .mobile-calendar-card,
-  .mobile-study-card
-) {
+  .mobile-calendar-card) {
   --mobile-card-inset: var(--mobile-widget-inset);
   gap: var(--mobile-widget-inset) !important;
   padding: 0 var(--mobile-widget-inset) var(--mobile-widget-inset) !important;
@@ -466,20 +455,15 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo
 }
 
 body:has(.mobile-layout) .mobile-layout
-  :is(.mobile-career-card__preview, .mobile-calendar-agenda,
-      .mobile-study-card__shortcuts, .mobile-study-card__metrics) {
+  :is(.mobile-career-card__preview, .mobile-calendar-agenda) {
   gap: var(--mobile-control-gap) !important;
 }
 
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
-  .mobile-calendar-card,
-  .mobile-study-card
-) > :is(
+  .mobile-calendar-card) > :is(
   .mobile-career-card__header,
-  .mobile-calendar-card__header,
-  .mobile-study-card__heading
-) {
+  .mobile-calendar-card__header) {
   display: flex !important;
   position: relative !important;
   isolation: isolate !important;
@@ -499,8 +483,7 @@ body:has(.mobile-layout) .mobile-layout
  * text and controls stay on the normal content line.
  * 전용 카드의 제목 배경만 좌우 내부 여백을 넘어 칠하고 글자와 버튼 위치는 유지합니다. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
-  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
-) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading)::before {
+  .mobile-career-card, .mobile-calendar-card) > :is(.mobile-career-card__header, .mobile-calendar-card__header)::before {
   content: "" !important;
   position: absolute !important;
   z-index: 0 !important;
@@ -512,8 +495,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :i
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
-  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
-) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) > * {
+  .mobile-career-card, .mobile-calendar-card) > :is(.mobile-career-card__header, .mobile-calendar-card__header) > * {
   position: relative !important;
   z-index: 1 !important;
 }
@@ -567,7 +549,6 @@ body:has(.mobile-layout) .mobile-navigation-capture {
   [data-theme="aurora"], .theme-aurora
 ) .mobile-layout :is(
   .mobile-widget-slot .glass-card,
-  .mobile-study-card,
   .mobile-calendar-card,
   .mobile-career-card
 ) {
@@ -590,8 +571,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   > .widget-instance-root > :is(.glass-card, .career-widget)
   > .widget-frame__header,
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card)
-  > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
+  > :is(.mobile-career-card, .mobile-calendar-card)
+  > :is(.mobile-career-card__header, .mobile-calendar-card__header) {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
@@ -611,8 +592,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card)
-  > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
+  > :is(.mobile-career-card, .mobile-calendar-card)
+  > :is(.mobile-career-card__header, .mobile-calendar-card__header) {
   /* The card itself owns the shared inset. Do not inset this row twice. */
   padding-inline: 0 !important;
   background: transparent !important;
@@ -621,8 +602,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__header > .widget-frame__title-group,
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card)
-  > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading)
+  > :is(.mobile-career-card, .mobile-calendar-card)
+  > :is(.mobile-career-card__header, .mobile-calendar-card__header)
   > .widget-frame__title-group {
   display: flex !important;
   align-items: center !important;
@@ -721,7 +702,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="care
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  :is(.mobile-career-card__open, .mobile-calendar-card__open, .mobile-study-card__open) {
+  :is(.mobile-career-card__open, .mobile-calendar-card__open) {
   flex: 0 0 auto !important;
   width: max-content !important;
   min-width: max-content !important;

@@ -58,7 +58,6 @@
 /* Mobile shell and feature layouts. */
 
 @import "./mobile.css";
-@import "./mobile-study.css";
 @import "./mobile-calendar.css";
 @import "./mobile-career.css";
 @import "./mobile-memo.css";

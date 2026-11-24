@@ -8,7 +8,6 @@ import { widgetRegistry } from "../../constants/widgets";
 
 import { WidgetSlot } from "../widgets/WidgetSlot";
 
-import { MobileStudyCard } from "./MobileStudyCard";
 import { MobileCalendarCard } from "./MobileCalendarCard";
 import { MobileCareerCard } from "./MobileCareerCard";
 
@@ -34,10 +33,6 @@ export const MobileDashboard = ({
         const slotClassName = [
           "mobile-widget-slot",
 
-          id === "study"
-            ? "mobile-widget-slot--study"
-            : "",
-
           id === "calendar"
             ? "mobile-widget-slot--calendar"
             : "",
@@ -57,9 +52,7 @@ export const MobileDashboard = ({
             role="region"
             aria-label={widgetRegistry[id]?.label ?? id}
           >
-            {id === "study" ? (
-              <MobileStudyCard />
-            ) : id === "calendar" ? (
+            {id === "calendar" ? (
               <MobileCalendarCard />
             ) : id === "career" ? (
               <MobileCareerCard />
