@@ -26,7 +26,7 @@
   --mobile-glass-nav-icon-active-border: var(--gd-control-border);
   --mobile-widget-header-surface: var(--gd-inner-bg);
   background:
-    url("/glass-background/mobile-glass-dark.jpg") center / cover no-repeat !important;
+    url("/glass-background/darkbackground1.jpg") center / cover no-repeat !important;
 }
 
 :is(html, body):is(
