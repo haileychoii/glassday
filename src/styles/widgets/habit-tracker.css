@@ -291,6 +291,23 @@
 
 .mobile-layout .habit-tracker__mobile-form {
   margin: 0;
+  gap: 6px;
+}
+
+.mobile-layout .habit-tracker__mobile-form input {
+  height: 36px;
+  min-height: 36px;
+  padding: 0 9px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.mobile-layout .habit-tracker__mobile-form button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  height: 36px;
+  padding-inline: 10px;
+  font-size: 11px;
 }
 
 .habit-tracker__week-heading {
@@ -385,6 +402,61 @@
 }
 
 .habit-tracker__mobile-streak svg { color: var(--habit-accent); }
+
+.habit-tracker__edit-toggle,
+.habit-tracker__edit-form button {
+  display: grid;
+  flex: 0 0 32px;
+  place-items: center;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+  color: hsl(var(--muted-foreground));
+  border: 1px solid var(--gd-widget-control-border, hsl(var(--border) / 0.5));
+  border-radius: 9px;
+  background: var(--gd-widget-control-bg, hsl(var(--background) / 0.4));
+  cursor: pointer;
+}
+
+.habit-tracker__edit-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32px 32px;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+}
+
+.habit-tracker__edit-form input {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  padding: 0 9px;
+  color: hsl(var(--foreground));
+  border: 1px solid var(--gd-widget-control-border, hsl(var(--border) / 0.55));
+  border-radius: 9px;
+  outline: none;
+  background: var(--gd-widget-control-bg, hsl(var(--background) / 0.5));
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.habit-tracker__edit-form button[type="submit"] {
+  color: hsl(var(--primary-foreground));
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary));
+}
+
+.habit-tracker__edit-form :is(input, button):focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+.habit-tracker__edit-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 
 .habit-tracker__history-toggle {
   flex: none;
@@ -518,6 +590,7 @@
   .habit-tracker__mobile-card { padding-inline: 6px; }
   .habit-tracker__mobile-card-head { gap: 5px; }
   .habit-tracker__mobile-streak { font-size: 9px; }
+  .habit-tracker__history-toggle { min-width: 34px; padding-inline: 3px; }
 }
 
 @container habit-tracker (max-width: 340px) {

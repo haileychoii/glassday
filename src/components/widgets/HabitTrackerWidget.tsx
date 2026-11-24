@@ -1,5 +1,5 @@
 import { useMemo, useState, type CSSProperties, type FormEvent } from "react";
-import { Check, Flame, ListChecks, Plus, Trash2 } from "lucide-react";
+import { Check, Flame, ListChecks, Pencil, Plus, Trash2, X } from "lucide-react";
 import { GlassCard } from "../glass/GlassCard";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 
@@ -67,6 +67,8 @@ const normalizeHabits = (value: Habit[]) => {
 export const HabitTrackerWidget = () => {
   const [showForm, setShowForm] = useState(false);
   const [expandedHabitId, setExpandedHabitId] = useState<string | null>(null);
+  const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
   const [name, setName] = useState("");
   const { value, setValue } = useLocalStorage<Habit[]>(STORAGE_KEY, EMPTY_HABITS);
   const habits = useMemo(() => normalizeHabits(value), [value]);
@@ -112,6 +114,28 @@ export const HabitTrackerWidget = () => {
         return { ...habit, completedDates: [...completed].sort() };
       })
     );
+  };
+
+  const startEditingHabit = (habit: Habit) => {
+    setEditingHabitId(habit.id);
+    setEditName(habit.name);
+  };
+
+  const saveHabitName = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmedName = editName.trim();
+    if (!editingHabitId || !trimmedName) return;
+
+    setValue((current) => normalizeHabits(current).map((habit) =>
+      habit.id === editingHabitId ? { ...habit, name: trimmedName } : habit
+    ));
+    setEditingHabitId(null);
+    setEditName("");
+  };
+
+  const cancelEditingHabit = () => {
+    setEditingHabitId(null);
+    setEditName("");
   };
 
   const removeHabit = (habitId: string) => {
@@ -269,6 +293,7 @@ export const HabitTrackerWidget = () => {
                   habit.completedDates.includes(getDateKey(day))
                 ).length;
                 const expanded = expandedHabitId === habit.id;
+                const editing = editingHabitId === habit.id;
 
                 return (
                   <li
@@ -286,6 +311,14 @@ export const HabitTrackerWidget = () => {
                       </span>
                       <button
                         type="button"
+                        className="habit-tracker__edit-toggle"
+                        aria-label={`${habit.name} 이름 편집`}
+                        onClick={() => startEditingHabit(habit)}
+                      >
+                        <Pencil size={14} aria-hidden="true" />
+                      </button>
+                      <button
+                        type="button"
                         className="habit-tracker__history-toggle"
                         aria-expanded={expanded}
                         aria-label={`${habit.name} ${expanded ? "28일 기록 접기" : "28일 기록 보기"}`}
@@ -294,6 +327,25 @@ export const HabitTrackerWidget = () => {
                         {expanded ? "주간" : "기록"}
                       </button>
                     </div>
+                    {editing && (
+                      <form className="habit-tracker__edit-form" onSubmit={saveHabitName}>
+                        <label className="sr-only" htmlFor={`habit-tracker-edit-${habit.id}`}>
+                          {habit.name} 이름 수정
+                        </label>
+                        <input
+                          id={`habit-tracker-edit-${habit.id}`}
+                          maxLength={32}
+                          value={editName}
+                          onChange={(event) => setEditName(event.target.value)}
+                        />
+                        <button type="submit" aria-label="습관 이름 저장" disabled={!editName.trim()}>
+                          <Check size={15} aria-hidden="true" />
+                        </button>
+                        <button type="button" aria-label="이름 수정 취소" onClick={cancelEditingHabit}>
+                          <X size={15} aria-hidden="true" />
+                        </button>
+                      </form>
+                    )}
                     <div className="habit-tracker__week-days">
                       {weekDates.map((day) => {
                         const date = getDateKey(day);
