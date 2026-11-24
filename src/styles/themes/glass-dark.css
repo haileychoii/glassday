@@ -487,9 +487,7 @@ html.desktop-transparent[data-theme="glass-dark"] :is(
   .timer-widget-secondary,
   .money-budget-mini,
   .money-donut-center,
-  .money-transaction-row,
-  .health-metric-card,
-  .health-program-card
+  .money-transaction-row
 ),
 
 body.desktop-transparent[data-theme="glass-dark"] :is(
@@ -508,9 +506,7 @@ body.desktop-transparent[data-theme="glass-dark"] :is(
   .timer-widget-secondary,
   .money-budget-mini,
   .money-donut-center,
-  .money-transaction-row,
-  .health-metric-card,
-  .health-program-card
+  .money-transaction-row
 ) {
   background:
     var(--gd-dark-control-bg) !important;

@@ -108,7 +108,7 @@ WidgetId
 | Timer | `components/widgets/TimerWidget.tsx` | `widgets/timer.css` | usePomodoroTimer | `study.ts` | semantic accent | `timer` | Widget / Timer |
 | Memo | `components/widgets/MemoWidget.tsx` | `widgets/memo.css` | useLocalStorage, fonts/themes | local MemoNote | paper palette + Theme | `memo` | Widget / Memo |
 | Daily Journal | `components/widgets/DailyJournalWidget.tsx` | `widgets/journal.css` | journalUtils | `journal.ts` | inner surface token | `journal` | Widget / Daily Journal |
-| Health | `components/widgets/HealthWidget.tsx` | `base.css`, Theme CSS | useLocalStorage | local HealthData | Theme surface | `health` | Widget / Health |
+| Habit Tracker | `components/widgets/HabitTrackerWidget.tsx` | `widgets/habit-tracker.css` | useLocalStorage | local Habit[] | shared surface tokens | `habitTracker` | Widget / Habit Tracker |
 | Money | `components/widgets/MoneyWidget.tsx` | `widgets/money.css` | useLocalStorage, moneyUtils | `money.ts` | category color + Theme | `money` | Widget / Money |
 | Mood | `components/widgets/MoodWidget.tsx` | `widgets/mood.css` | useLocalStorage | local MoodValues | metric accent + Theme | `mood` | Widget / Mood |
 
@@ -307,7 +307,7 @@ Context key:
 | Memo | MemoWidget | `glassday.memo.notes.v2` 및 selection/list/width key |
 | Money | MoneyWidget | `glassday.money` |
 | Mood | MoodWidget | `glassday.mood` |
-| Health | HealthWidget | `glassday.health` |
+| Habit Tracker | HabitTrackerWidget | `glassday.habits.tracker.v1` |
 | Today Focus tasks | TodayFocusWidget | `glassday.todayFocus.tasks.v1` |
 | Theme | themes.ts | `glassday.theme` |
 | Interface font | fonts.ts | `glassday.ui.font.v1` |

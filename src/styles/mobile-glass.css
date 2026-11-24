@@ -1,0 +1,244 @@
+/*
+ * Mobile-only wallpaper for Glass Light and Glass Dark.
+ * Widget/control material tokens stay shared with the desktop theme; only the
+ * mobile shell needs its own wallpaper for backdrop-filter to sample.
+ */
+
+:is(html, body):is([data-theme="glass-light"], .theme-glass-light) .mobile-layout {
+  /* Glass material comes from theme-surfaces.css at every viewport size. */
+  --mobile-glass-control-bg: var(--gd-control-bg);
+  --mobile-glass-control-border: var(--gd-control-border);
+  --mobile-glass-nav-icon-bg: var(--gd-control-bg);
+  --mobile-glass-nav-icon-border: var(--gd-control-border);
+  --mobile-glass-nav-icon-active-bg: var(--gd-control-active-bg);
+  --mobile-glass-nav-icon-active-border: var(--gd-control-border);
+  --mobile-widget-header-surface: var(--gd-inner-bg);
+  background: url("/glass-background/mobile-glass-light.jpg") center / cover no-repeat !important;
+}
+
+:is(html, body):is([data-theme="glass-dark"], .theme-glass-dark) .mobile-layout {
+  /* Glass material comes from theme-surfaces.css at every viewport size. */
+  --mobile-glass-control-bg: var(--gd-control-bg);
+  --mobile-glass-control-border: var(--gd-control-border);
+  --mobile-glass-nav-icon-bg: var(--gd-control-bg);
+  --mobile-glass-nav-icon-border: var(--gd-control-border);
+  --mobile-glass-nav-icon-active-bg: var(--gd-control-active-bg);
+  --mobile-glass-nav-icon-active-border: var(--gd-control-border);
+  --mobile-widget-header-surface: var(--gd-inner-bg);
+  background:
+    url("/glass-background/darkbackground1.jpg") center / cover no-repeat !important;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout :is(
+  .mobile-widget-slot .glass-card,
+  .mobile-study-card,
+  .mobile-calendar-card,
+  .mobile-career-card
+) {
+  color: hsl(var(--foreground) / 0.92) !important;
+  background: var(--gd-surface-bg) !important;
+  border-color: var(--gd-surface-border) !important;
+  box-shadow: var(--gd-surface-shadow) !important;
+  backdrop-filter: var(--gd-surface-filter) !important;
+  -webkit-backdrop-filter: var(--gd-surface-filter) !important;
+  background-clip: padding-box !important;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout .mobile-widget-slot :is(
+  .widget-frame__header,
+  .mobile-study-card__heading,
+  .mobile-calendar-card__header,
+  .mobile-career-card__header
+) {
+  background: var(--mobile-widget-header-surface) !important;
+  background-image: none !important;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout :is(
+  .today-focus-main,
+  .today-focus-hero,
+  .today-focus-section,
+  .today-focus-block,
+  .today-mini-main,
+  .today-mini-next,
+  .today-tasks-progress,
+  .calendar-event-item,
+  .calendar-event-card,
+  .calendar-mini-card,
+  .career-list-item,
+  .memo-note-item,
+  .alert-item,
+  .journal-section,
+  .study-card,
+  .mobile-study-card__metric,
+  .mobile-study-card__upcoming,
+  .mobile-calendar-card__summary,
+  .mobile-career-metrics > div,
+  .mobile-career-next,
+  .timer-widget-main-card,
+  .timer-widget-settings-card
+) {
+  background: var(--gd-inner-bg) !important;
+  border-color: var(--gd-inner-border) !important;
+  box-shadow: var(--gd-widget-panel-shadow) !important;
+}
+
+/* Timer's compact mobile layout clears its panel background so controls can
+ * sit directly on wallpaper. Restore the shared inner-glass layer here; this
+ * keeps the clock readable and gives it the same depth as Study's metric tiles.
+ * 타이머 모바일 패널의 투명 초기화보다 Glass 테마의 공통 안쪽 표면을 우선합니다. */
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout [data-widget-id="timer"] :is(
+  .timer-widget-main-card,
+  .timer-widget-settings-card
+) {
+  background: var(--gd-inner-bg) !important;
+  background-image: var(--gd-inner-bg) !important;
+  border: 1px solid var(--gd-inner-border) !important;
+  border-radius: var(--gd-widget-inner-radius, var(--gd-radius-card, 18px)) !important;
+  box-shadow: var(--gd-widget-panel-shadow) !important;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout [data-widget-id="timer"] :is(
+  .timer-widget-mode-button:not(.is-active),
+  .timer-widget-secondary
+) {
+  color: hsl(var(--foreground) / 0.88) !important;
+  background: var(--mobile-glass-control-bg) !important;
+  border: 1px solid var(--mobile-glass-control-border) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.34),
+    0 3px 10px rgb(31 40 75 / 0.07) !important;
+  backdrop-filter: blur(16px) saturate(165%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(165%) !important;
+}
+
+/* Filled Tabler glyphs replace the thin default line icons on mobile Glass.
+ * The selected workspace sits in a small frosted badge so the active state
+ * reads clearly without the old solid navigation tile. */
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout .mobile-navigation-item {
+  gap: 2px !important;
+  border-radius: 14px !important;
+  background: transparent !important;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout .mobile-navigation-icon {
+  display: grid !important;
+  flex: 0 0 32px !important;
+  place-items: center !important;
+  width: 32px !important;
+  height: 30px !important;
+  border: 1px solid var(--mobile-glass-nav-icon-border) !important;
+  border-radius: 11px !important;
+  background: var(--mobile-glass-nav-icon-bg) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout .mobile-navigation-icon .workspace-theme-icon-filled {
+  width: 21px !important;
+  height: 21px !important;
+  font-size: 21px !important;
+  filter: none !important;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout .mobile-navigation-item[aria-current="page"] {
+  color: hsl(var(--primary)) !important;
+  background: transparent !important;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout .mobile-navigation-item[aria-current="page"] .mobile-navigation-icon {
+  border-color: var(--mobile-glass-nav-icon-active-border) !important;
+  background: var(--mobile-glass-nav-icon-active-bg) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.78),
+    0 5px 14px hsl(var(--primary) / 0.16) !important;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout :is(
+  .mobile-header-actions button,
+  .mobile-navigation-capture
+) {
+  color: hsl(var(--primary)) !important;
+  border: 1px solid var(--mobile-glass-nav-icon-active-border) !important;
+  border-radius: 14px !important;
+  background: var(--mobile-glass-nav-icon-active-bg) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.72),
+    0 6px 16px hsl(var(--primary) / 0.12) !important;
+  backdrop-filter: blur(16px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout .mobile-header-actions button:not(.mobile-header-quick-capture) {
+  color: hsl(var(--foreground) / 0.86) !important;
+  border-color: var(--mobile-glass-nav-icon-border) !important;
+  background: var(--mobile-glass-nav-icon-bg) !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.48) !important;
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout .mobile-header-actions button:active,
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout .mobile-navigation-capture:active {
+  background: var(--mobile-glass-nav-icon-bg) !important;
+  transform: scale(0.96);
+}
+
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout .mobile-glass-filled-heading-icon {
+  fill: currentColor;
+  filter: drop-shadow(0 1px 2px rgb(31 42 71 / 0.14));
+}

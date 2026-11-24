@@ -64,7 +64,7 @@
 @import "./widgets/alert-center.css";
 @import "./widgets/calendar.css";
 @import "./widgets/career.css";
-@import "./widgets/health.css";
+@import "./widgets/habit-tracker.css";
 @import "./widgets/journal.css";
 @import "./widgets/memo.css";
 @import "./widgets/money.css";
@@ -109,6 +109,7 @@
 @import "./mobile-pixel.css";
 @import "./mobile-journal.css";
 @import "./mobile-finish.css";
+@import "./mobile-glass.css";
 
 
 /* ============================================================
@@ -119,6 +120,7 @@
 
 @import "./themes/pixel-desktop-parity.css";
 @import "./themes/pink-diary.css";
+@import "./themes/pixel-widget-headers.css";
 
 
 /* ============================================================

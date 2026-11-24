@@ -131,7 +131,6 @@ const DEFAULT_SIZE: MobileWidgetSize = {
 const HALF_WIDTH_WIDGETS = new Set([
   "alerts",
   "timer",
-  "health",
   "mood",
 ]);
 
@@ -159,6 +158,13 @@ const toIds = (value: unknown): string[] => {
     ),
   ];
 };
+
+/** Keep mobile-only Health placement/settings attached to its replacement. */
+const migrateMobileWidgetId = (id: string) =>
+  id === "health" ? "habitTracker" : id;
+
+const migrateMobileWidgetIds = (value: unknown) =>
+  [...new Set(toIds(value).map(migrateMobileWidgetId))];
 
 /** 허용 범위 밖으로 저장된 높이를 정상 범위로 보정 */
 const normalizeHeight = (
@@ -217,7 +223,7 @@ const normalizeTabLayout = (
   const base = toIds(baseWidgetIds);
 
   // 모바일에서 추가한 위젯만 별도로 보관한다.
-  const added = toIds(raw.added).filter(
+  const added = migrateMobileWidgetIds(raw.added).filter(
     (id) =>
       registeredWidgetIds.includes(id) &&
       !base.includes(id)
@@ -227,7 +233,7 @@ const normalizeTabLayout = (
   const allowedSet = new Set(allowed);
 
   // 사용자 순서를 우선하고, 나중에 새로 생긴 위젯은 뒤에 추가.
-  const savedOrder = toIds(raw.order).filter(
+  const savedOrder = migrateMobileWidgetIds(raw.order).filter(
     (id) => allowedSet.has(id)
   );
 
@@ -236,7 +242,7 @@ const normalizeTabLayout = (
     ...allowed.filter((id) => !savedOrder.includes(id)),
   ];
 
-  const hidden = toIds(raw.hidden).filter(
+  const hidden = migrateMobileWidgetIds(raw.hidden).filter(
     (id) => allowedSet.has(id)
   );
 
@@ -247,7 +253,8 @@ const normalizeTabLayout = (
   const sizes: Record<string, MobileWidgetSize> = {};
 
   for (const id of allowed) {
-    sizes[id] = normalizeSize(rawSizes[id], id);
+    const oldId = id === "habitTracker" ? "health" : id;
+    sizes[id] = normalizeSize(rawSizes[id] ?? rawSizes[oldId], id);
   }
 
   return {

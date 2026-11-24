@@ -40,217 +40,220 @@
  * ============================================================================ */
 
 
-/* 1. 모바일 대시보드의 Timer 카드 높이
- *
- * 기존 mobile.css:
- * .mobile-widget-slot { height: clamp(300px, 64svh, 560px) }
- *
- * Timer는 긴 목록이 없으므로 별도 높이를 사용한다.
- * PC Grid 설정과 저장된 위젯 크기에는 영향이 없다.
- */
-.mobile-layout [data-widget-id="timer"] {
-  height: clamp(300px, 38svh, 336px);
+/* Single mobile layout contract for the dashboard and floating timer.
+ * Header/body sizing comes from the shared widget frame; this file owns only
+ * the timer's three rows and fits the ring inside the middle row. */
+@media (max-width: 767px) {
+  .mobile-layout .mobile-dashboard > .mobile-widget-slot[data-widget-id="timer"] {
+    height: var(--gd-mobile-widget-timer-height) !important;
+  }
+
+  /* Pass the timer slot's fixed mobile height through its portal host and
+   * shared card. Without this chain, the card stays content-height and leaves
+   * an unused strip at the bottom of the slot. */
+  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
+    > .widget-instance-root {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+
+  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
+    > .widget-instance-root > .glass-card.timer-widget {
+    display: grid !important;
+    grid-template-rows: var(--mobile-widget-header-height) minmax(0, 1fr) !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
+    > .widget-instance-root > .glass-card.timer-widget > .widget-frame__body {
+    display: grid !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    grid-row: 2 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    align-self: stretch !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
+    > .widget-instance-root > .glass-card.timer-widget > .widget-frame__body
+    > .timer-widget-layout {
+    position: relative !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    align-self: stretch !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible) > .timer-widget-main-card {
+    position: relative !important;
+    display: grid !important;
+    grid-row: 1 !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: 40px minmax(0, 1fr) 44px !important;
+    gap: var(--gd-mobile-space-2) !important;
+    align-content: stretch !important;
+    justify-items: stretch !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-meta {
+    display: none !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-mode-row {
+    display: flex !important;
+    grid-row: 1 !important;
+    align-self: stretch !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: var(--gd-mobile-space-2) !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-mode-button {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 var(--gd-mobile-space-1) !important;
+    border-radius: 10px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-time-editor-shell {
+    display: grid !important;
+    grid-row: 2 !important;
+    align-self: stretch !important;
+    justify-self: stretch !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    container-type: size !important;
+    place-items: center !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-focus-stage {
+    /* Fill the middle track while preserving a gap above the action row. */
+    --timer-stage-size: min(116px, 100cqi, 100cqb) !important;
+    --timer-ring-radius: calc(var(--timer-stage-size) * 0.4) !important;
+    display: grid !important;
+    place-items: center !important;
+    width: var(--timer-stage-size) !important;
+    height: var(--timer-stage-size) !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    justify-self: center !important;
+    align-self: center !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-clock-stack {
+    width: max-content !important;
+    max-width: 100% !important;
+    gap: 2px !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-clock {
+    font-size: clamp(28px, 8cqi, 32px) !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible)
+    :is(.timer-widget-duration-label, .timer-widget-remaining-label) {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row {
+    display: flex !important;
+    grid-row: 3 !important;
+    align-self: stretch !important;
+    width: 100% !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    gap: var(--gd-mobile-space-2) !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row
+    :is(.timer-widget-primary, .timer-widget-secondary) {
+    display: inline-flex !important;
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 var(--gd-mobile-space-2) !important;
+    border-radius: 10px !important;
+    font-size: 12px !important;
+  }
 }
-
-
-/* 2. 공통 타이머 영역
- *
- * .timer-widget-layout
- *   TimerSurface의 실제 루트
- *
- * .timer-widget-main-card
- *   모드 선택, 원형 시계, 실행 버튼을 표시하는 영역
- *
- * 기본 Compact Mode는 모드 버튼과 Reset/Next를 숨긴다.
- * 모바일에서는 세 줄을 명확하게 배치한다.
- *
- * 첫 줄: Focus / Short break / Long break
- * 둘째 줄: 진행 시계
- * 셋째 줄: Start/Pause / Reset / Next
- */
-:is(
-  .mobile-layout [data-widget-id="timer"],
-  body:has(.mobile-layout) .timer-floating-window
-) .timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-main-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: 36px minmax(0, 1fr) 42px;
-  gap: 4px;
-
-  padding: 6px;
-  align-content: stretch;
-
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-/* The desktop card inserts session metadata between the clock and actions.
- * Mobile uses an explicit three-row layout, so that extra implicit grid row
- * otherwise pushes controls into the action row. / 모바일 3행 배치와 충돌하는
- * 보조 세션 문구를 숨겨 버튼 겹침을 방지합니다. */
-:is(
-  .mobile-layout [data-widget-id="timer"],
-  body:has(.mobile-layout) .timer-floating-window
-) .timer-widget-layout:not(.is-settings-visible) .timer-widget-meta {
-  display: none !important;
-}
-
-
-/* 3. 모드 선택
- *
- * TSX: .timer-widget-mode-row
- *
- * 기존 Compact Mode의 display:none을 해제한다.
- * 모드 선택 함수 setMode()는 그대로 사용한다.
- */
-:is(
-  .mobile-layout [data-widget-id="timer"],
-  body:has(.mobile-layout) .timer-floating-window
-) .timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-mode-row {
-  display: flex;
-  grid-row: 1;
-
-  width: 100%;
-  min-width: 0;
-  gap: 5px;
-}
-
-:is(
-  .mobile-layout [data-widget-id="timer"],
-  body:has(.mobile-layout) .timer-floating-window
-) .timer-widget-mode-button {
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 36px;
-
-  padding: 0 4px;
-  border-radius: 9px;
-
-  font-size: 11px;
-  white-space: nowrap;
-}
-
-
-/* 4. 원형 시계
- *
- * TSX:
- * .timer-widget-time-editor-shell
- *   └─ .timer-widget-focus-stage
- *       ├─ .timer-widget-progress-svg
- *       └─ .timer-widget-clock-stack
- *
- * 기존 SVG를 그대로 사용한다.
- * SVG viewBox가 120 × 120, circle 반지름이 48이므로
- * 실제 링 반지름은 크기의 약 40%다.
- *
- * --timer-ring-radius는 진행 위치 점의 계산에도 사용된다.
- * 두 값이 달라지면 점이 원형 선에서 벗어나므로 함께 관리한다.
- */
-:is(
-  .mobile-layout [data-widget-id="timer"],
-  body:has(.mobile-layout) .timer-floating-window
-) .timer-widget-time-editor-shell {
-  grid-row: 2;
-  min-height: 0;
-  align-self: center;
-  justify-self: center;
-}
-
-:is(
-  .mobile-layout [data-widget-id="timer"],
-  body:has(.mobile-layout) .timer-floating-window
-) .timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-focus-stage {
-  --timer-stage-size:
-    min(168px, 46cqi, calc(100cqb - 98px));
-
-  --timer-ring-radius:
-    calc(var(--timer-stage-size) * 0.4);
-
-  width: var(--timer-stage-size);
-  height: var(--timer-stage-size);
-
-  min-width: 0;
-  min-height: 0;
-  max-width: 100%;
-  max-height: 100%;
-}
-
-
-/* 시계 숫자와 보조 텍스트
- *
- * formatTimerClock()에서 생성하는 시간 문자열은
- * 실제 글씨 크기만 조절하고 계산 방식은 건드리지 않는다.
- */
-:is(
-  .mobile-layout [data-widget-id="timer"],
-  body:has(.mobile-layout) .timer-floating-window
-) .timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-clock {
-  font-size: clamp(30px, 10cqi, 38px);
-  line-height: 1.05;
-}
-
-:is(
-  .mobile-layout [data-widget-id="timer"],
-  body:has(.mobile-layout) .timer-floating-window
-) .timer-widget-layout:not(.is-settings-visible)
-  :is(.timer-widget-duration-label, .timer-widget-remaining-label) {
-  font-size: 11px;
-  line-height: 1.2;
-}
-
-
-/* 5. 실행 버튼
- *
- * TSX:
- * .timer-widget-action-row
- *   ├─ .timer-widget-primary   Start / Pause
- *   ├─ .timer-widget-secondary Reset
- *   └─ .timer-widget-secondary Next
- *
- * toggle(), reset(), skip()은 모두 기존 훅에서 제공한다.
- *
- * 단지 숨겨진 보조 버튼을 표시하고 높이를 맞춘다.
- */
-:is(
-  .mobile-layout [data-widget-id="timer"],
-  body:has(.mobile-layout) .timer-floating-window
-) .timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-action-row {
-  grid-row: 3;
-
-  display: flex;
-  width: 100%;
-  height: 42px;
-  min-height: 42px;
-  gap: 6px;
-}
-
-:is(
-  .mobile-layout [data-widget-id="timer"],
-  body:has(.mobile-layout) .timer-floating-window
-) .timer-widget-layout:not(.is-settings-visible)
-  .timer-widget-action-row
-  :is(.timer-widget-primary, .timer-widget-secondary) {
-  display: inline-flex;
-
-  flex: 1 1 0;
-  width: auto;
-  min-width: 0;
-  height: 42px;
-  min-height: 42px;
-
-  padding: 0 6px;
-  border-radius: 10px;
-
-  font-size: 12px;
-}
-
 
 /* 6. 시간 설정 팝오버
  *

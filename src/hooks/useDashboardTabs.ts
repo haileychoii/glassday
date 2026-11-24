@@ -234,6 +234,10 @@ const isLayoutItem = (
   );
 };
 
+/** Migrate the retired Health widget ID without discarding saved placement. */
+const migrateWidgetId = (id: string): string =>
+  id === "health" ? "habitTracker" : id;
+
 
 /* ============================================================
    06. GRID ITEM NORMALIZATION
@@ -279,7 +283,7 @@ const normalizeLayoutItem = (
 
   return {
     ...item,
-    i: item.i,
+    i: migrateWidgetId(item.i),
 
     x: safeX,
     y: safeY,
@@ -523,7 +527,7 @@ const normalizeTab = (
     icon: tab.icon || "✨",
 
     widgetIds: Array.isArray(tab.widgetIds)
-      ? [...new Set(tab.widgetIds)]
+      ? [...new Set(tab.widgetIds.map(migrateWidgetId))]
       : [],
 
     layouts: normalizeModeLayouts(tab.layouts),

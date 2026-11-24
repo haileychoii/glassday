@@ -35,14 +35,7 @@
   .theme-pastel, .theme-glass-light, .theme-glass-dark,
   .theme-aurora, .theme-mac-core, .theme-retro, .theme-pixel-desk
 ) .mobile-layout {
-  /* The card already has an outer 10px dashboard gutter. Remove nested 12px. */
-  & .mobile-widget-slot .glass-card.memo-widget > .widget-frame__body {
-    padding-inline: 4px !important;
-  }
-  & .mobile-widget-slot[data-widget-id="memo"]
-    :is(.memo-workspace, .memo-list-panel) {
-    padding-inline: 4px !important;
-  }
+  /* Memo's frame inset is owned by mobile-common.css. Keep only editor sizing. */
   & .mobile-widget-slot[data-widget-id="memo"] .memo-editor-shell {
     width: 100% !important;
     max-width: none !important;
@@ -54,19 +47,9 @@
     width: 100% !important;
     max-width: none !important;
     margin-inline: 0 !important;
-    padding-inline: 8px !important;
+    padding-inline: 0 !important;
     /* Previous "stable both-edges" reserves visible blank space on BOTH sides. */
     scrollbar-gutter: auto !important;
-  }
-  & .mobile-widget-slot .glass-card.daily-journal-widget > .widget-frame__body {
-    padding-inline: 5px !important;
-  }
-  & .daily-journal-widget {
-    --journal-body-pad-x: 5px;
-    --journal-gap: 7px;
-  }
-  & .daily-journal-widget :is(.journal-summary-card, .journal-section) {
-    padding-inline: 8px !important;
   }
 }
 /* Memo detail/full-screen view lives under document.body, outside .mobile-layout. */
@@ -92,237 +75,7 @@
     scrollbar-gutter: auto !important;
   }
 }
-/* ============================================================
- * 1-1. MOBILE WIDGET — SHARED FRAME & HEADER
- *
- * 파일: src/styles/mobile-finish.css
- *
- * 연결 컴포넌트:
- * - GlassCard.tsx          : 일반 위젯
- * - MobileCareerCard.tsx   : Career
- * - MobileStudyCard.tsx    : Study
- * - MobileCalendarCard.tsx : Calendar
- * - DailyJournalWidget.tsx: Journal
- *
- * 공통 모바일 규격의 이전 선언입니다. 실제 치수의 최종 기준은
- * index.css 마지막에 불러오는 mobile-common.css가 모든 테마에 적용합니다.
- * 이 파일의 역할은 모바일 세부 화면 보정이며 테마별 치수 소유자가 아닙니다.
- *
- * 모든 위젯의 폭 / 제목 높이 / 아이콘 / 글자 / 버튼 위치를
- * 통일한다. 색상과 재질은 각 테마의 기존 토큰을 사용한다.
- * ============================================================ */
-:is(html, body):is(
-  [data-theme="pastel"], .theme-pastel,
-  [data-theme="glass-light"], .theme-glass-light,
-  [data-theme="glass-dark"], .theme-glass-dark,
-  [data-theme="aurora"], .theme-aurora,
-  [data-theme="retro"], .theme-retro
-) .mobile-layout {
-  --mobile-widget-inset: 10px;
-  --mobile-widget-header-height: 48px;
-  --mobile-widget-icon-size: 24px;
-  /* 01. 모든 위젯이 같은 대시보드 열 너비를 사용 */
-  & .mobile-dashboard > .mobile-widget-slot,
-  & .mobile-widget-slot .widget-instance-root {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    margin-inline: 0 !important;
-    box-sizing: border-box !important;
-  }
-  /* 02. 기본 위젯 + 모바일 전용 위젯의 외곽 폭 통일 */
-  & :is(
-    .mobile-widget-slot .glass-card,
-    .mobile-study-card,
-    .mobile-calendar-card,
-    .mobile-career-card
-  ) {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-  }
-  /* 03. 전용 카드의 중복 패딩 제거
-   *
-   * 이전:
-   * Career 8px / Study 12px / Calendar 15px
-   *
-   * 수정:
-   * 카드 바깥 패딩 0
-   * 제목줄 전체 폭 사용
-   * 본문에만 좌우 10px
-   */
-  & :is(
-    .mobile-study-card,
-    .mobile-calendar-card,
-    .mobile-career-card
-  ) {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    padding: 0 0 10px !important;
-    gap: 8px !important;
-  }
-  & :is(
-    .mobile-study-card,
-    .mobile-calendar-card,
-    .mobile-career-card
-  ) > :not(:first-child) {
-    min-width: 0 !important;
-    margin-inline: var(--mobile-widget-inset) !important;
-  }
-  /* 04. 모든 위젯의 제목줄을 48px로 통일
-   *
-   * Journal은 날짜 선택 영역을 별도로 사용하므로
-   * 아래의 Journal 전용 규칙에서 처리한다.
-   */
-  & :is(
-    .mobile-widget-slot
-      .glass-card:not(.daily-journal-widget)
-      > .widget-frame__header,
-    .mobile-study-card
-      > .mobile-study-card__heading,
-    .mobile-calendar-card
-      > .mobile-calendar-card__header,
-    .mobile-career-card
-      > .mobile-career-card__header
-  ) {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    height: var(--mobile-widget-header-height) !important;
-    min-height: var(--mobile-widget-header-height) !important;
-    margin: 0 !important;
-    padding: 0 var(--mobile-widget-inset) !important;
-    gap: 8px !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    box-sizing: border-box !important;
-  }
-  /* 05. 모든 제목 아이콘의 차지하는 영역: 24×24px
-   *
-   * GlassCard는 아이콘을 감싸는 div가 있다.
-   * Career/Study/Calendar는 SVG를 직접 사용한다.
-   *
-   * 두 구조 모두 동일한 공간을 차지하게 만든다.
-   */
-  & :is(
-    .mobile-widget-slot .widget-frame__icon,
-    .mobile-study-card__eyebrow > svg,
-    .mobile-calendar-card__label > svg,
-    .mobile-career-card__heading > svg
-  ) {
-    display: inline-flex !important;
-    flex: 0 0 var(--mobile-widget-icon-size) !important;
-    width: var(--mobile-widget-icon-size) !important;
-    min-width: var(--mobile-widget-icon-size) !important;
-    height: var(--mobile-widget-icon-size) !important;
-    margin: 0 !important;
-    padding: 2px !important;
-    border: 1px solid var(--gd-widget-control-border) !important;
-    border-radius: 7px !important;
-    background: var(--gd-widget-control-bg) !important;
-    box-shadow: none !important;
-    box-sizing: border-box !important;
-  }
-  & .mobile-widget-slot .widget-frame__icon {
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  & .mobile-widget-slot .widget-frame__icon svg {
-    display: block !important;
-    width: 18px !important;
-    height: 18px !important;
-    flex: none !important;
-  }
-  /* 06. 제목의 위치와 글자 시작선 통일 */
-  & :is(
-    .mobile-widget-slot .widget-frame__title-group,
-    .mobile-study-card__eyebrow,
-    .mobile-calendar-card__label,
-    .mobile-career-card__heading
-  ) {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    margin: 0 !important;
-    gap: 7px !important;
-  }
-  & .mobile-widget-slot .widget-frame__copy {
-    display: flex !important;
-    align-items: flex-start !important;
-    justify-content: center !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    gap: 0 !important;
-  }
-  /* 07. 제목 폰트 통일
-   *
-   * 각 테마의 foreground 색상은 유지한다.
-   */
-  & :is(
-    .mobile-widget-slot .widget-frame__title,
-    .mobile-study-card__eyebrow,
-    .mobile-calendar-card__label,
-    .mobile-career-card__heading,
-    .mobile-career-card__heading strong
-  ) {
-    min-width: 0 !important;
-    margin: 0 !important;
-    color: hsl(var(--foreground)) !important;
-    font-size: 14px !important;
-    font-weight: 700 !important;
-    line-height: 1.25 !important;
-    letter-spacing: -0.015em !important;
-    white-space: nowrap !important;
-  }
-  & .mobile-widget-slot .widget-frame__title {
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-  /* 08. 일반 위젯의 부제목만 모바일 헤더에서 숨김
-   *
-   * 부제목 때문에 어떤 위젯은 2줄,
-   * 어떤 위젯은 1줄이 되는 문제를 막는다.
-   * 본문 데이터는 삭제되지 않는다.
-   */
-  & .mobile-widget-slot .widget-frame__subtitle {
-    display: none !important;
-  }
-  /* 09. 제목 오른쪽 액션 영역 */
-  & .mobile-widget-slot .widget-frame__actions {
-    display: flex !important;
-    align-items: center !important;
-    flex: 0 0 auto !important;
-    min-width: 0 !important;
-    margin-left: auto !important;
-    flex-wrap: nowrap !important;
-  }
-  & :is(
-    .mobile-widget-slot .widget-frame__actions button,
-    .mobile-study-card__open,
-    .mobile-calendar-card__open,
-    .mobile-career-card__open
-  ) {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    flex: 0 0 auto !important;
-    min-height: 32px !important;
-    font-size: 12px !important;
-    line-height: 1.2 !important;
-    white-space: nowrap !important;
-  }
-}
+/* Shared mobile frame geometry is defined once in mobile-common.css. */
 /* ============================================================
  * 1-2. MODERN THEME MATERIALS
  *
@@ -391,7 +144,6 @@
   --ios-radius: 18px;
   --ios-inner-radius: 12px;
   --ios-shadow: 0 2px 12px rgb(22 24 32 / 0.035);
-  --ios-horizontal-inset: 12px;
   --gd-radius-widget: var(--ios-radius);
   --gd-radius-card: var(--ios-inner-radius);
   --gd-radius-inner: var(--ios-inner-radius);
@@ -467,8 +219,8 @@
     display: none !important;
   }
   /* 4. iOS WIDGET HEADERS — 공통 아이콘/타이틀/액션 일렬 정렬.
-   * Daily Journal은 별도의 날짜 행을 갖기 때문에 제외한다. */
-  & .mobile-widget-slot .glass-card:not(.daily-journal-widget) > .widget-frame__header,
+   * Journal도 같은 제목줄을 쓰고 날짜 조작부만 별도 행으로 둔다. */
+  & .mobile-widget-slot .glass-card > .widget-frame__header,
   & :is(
     .mobile-study-card__heading,
     .mobile-calendar-card__header,
@@ -483,12 +235,7 @@
     box-shadow: none !important;
   }
   /* Widget geometry and type scale are owned by mobile-common.css. */
-  & :is(
-    .widget-frame__icon,
-    .mobile-study-card__eyebrow > svg,
-    .mobile-calendar-card__label > svg,
-    .mobile-career-card__heading > svg
-  ) {
+  & .widget-frame__icon {
     color: var(--ios-tint) !important;
     background: transparent !important;
     border: 0 !important;
@@ -566,15 +313,8 @@
     border: 1px solid var(--ios-separator) !important;
     box-shadow: none !important;
   }
-  /* Journal의 높이·줄 배치는 파일 끝의 COMPACT JOURNAL 규칙에서 관리. */
-  & .daily-journal-widget > .widget-frame__header {
-    background: var(--ios-surface) !important;
-    border-bottom: 0 !important;
-    border-radius: 0 !important;
-  }
-  & .daily-journal-widget > .widget-frame__header > .widget-frame__title-group {
-    background: var(--ios-surface) !important;
-  }
+  /* Date navigation keeps its own toolbar surface; the title uses the shared
+   * mobile widget header contract like every other widget. */
   & .daily-journal-widget > .widget-frame__header > .widget-frame__actions {
     background: var(--ios-secondary-surface) !important;
     border-top: 0.5px solid var(--ios-separator) !important;
@@ -793,49 +533,6 @@
   display: none;
 }
 
-/* A. Journal occupies the same card width as other mobile widgets. */
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget {
-  display: grid !important;
-  grid-template-rows: 48px minmax(0, 1fr) !important;
-  padding: 0 !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-}
-
-/* B. Date navigation sits beside title on normal-width phones. */
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-  > .widget-frame__header {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  width: 100% !important;
-  height: 48px !important;
-  min-height: 48px !important;
-  padding: 0 8px !important;
-  margin: 0 !important;
-  gap: 6px !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
-}
-
-.mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-  > .widget-frame__header > .widget-frame__title-group {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  flex: 1 1 auto !important;
-  width: auto !important;
-  height: auto !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  gap: 6px !important;
-}
-
 .mobile-layout .daily-journal-widget .widget-frame__subtitle {
   display: none !important;
 }
@@ -889,7 +586,6 @@
   grid-template-rows: minmax(0, 1fr) !important;
   min-width: 0 !important;
   min-height: 0 !important;
-  padding: 6px !important;
   overflow: hidden !important;
 }
 .mobile-layout .daily-journal-widget .journal-content {
@@ -1016,38 +712,19 @@
 }
 
 /* F. Narrow screens use two rows, with date controls spanning the card width. */
-@media (max-width: 380px) {
-  .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget {
-    grid-template-rows: 76px minmax(0, 1fr) !important;
-  }
-  .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-    > .widget-frame__header {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    grid-template-rows: 34px 42px !important;
-    height: 76px !important;
-    min-height: 76px !important;
-    padding: 0 !important;
-    gap: 0 !important;
-  }
-  .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-    > .widget-frame__header > .widget-frame__title-group {
-    grid-row: 1;
-    width: 100% !important;
-    height: 34px !important;
-    padding-inline: 9px !important;
-  }
-  .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
-    > .widget-frame__header > .widget-frame__actions {
-    grid-row: 2;
-    width: 100% !important;
-    height: 42px !important;
-    padding: 3px 8px !important;
-    border-top: 1px solid var(--journal-panel-border) !important;
-  }
+@media (max-width: 430px) {
   .mobile-layout .daily-journal-widget .journal-date-nav {
-    grid-template-columns: 32px minmax(0, 1fr) 32px !important;
+    grid-template-columns: 40px minmax(0, 1fr) 40px !important;
     width: 100% !important;
+    gap: 6px !important;
+  }
+  .mobile-layout .daily-journal-widget .journal-date-nav :is(button, input) {
+    width: auto !important;
+    min-width: 0 !important;
+    justify-self: stretch !important;
+  }
+  .mobile-layout .daily-journal-widget .journal-date-nav input {
+    font-size: 14px !important;
   }
   .mobile-layout .daily-journal-widget .journal-score-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -1085,17 +762,7 @@
  * ============================================================================ */
 
 body:has(.mobile-layout) .mobile-layout {
-  --mobile-page-gap: 8px;
-  --mobile-widget-inset: 10px;
-  --mobile-section-gap: 8px;
   --mobile-control-gap: 6px;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-dashboard {
-  gap: var(--mobile-page-gap) !important;
-  padding: 8px max(10px, env(safe-area-inset-right))
-    calc(18px + env(safe-area-inset-bottom))
-    max(10px, env(safe-area-inset-left)) !important;
 }
 
 /* The slot and the host are layout plumbing, so they must not look like extra cards.
@@ -1133,15 +800,12 @@ body:has(.mobile-layout) .mobile-layout
   overflow: hidden !important;
 }
 
-/* All ordinary GlassCards share one body inset. Journal owns a separate compact
- * scrolling geometry below, so it is intentionally excluded here.
- * 일반 GlassCard만 공통 본문 여백을 사용하고 Journal의 전용 스크롤 구조는 보존한다. */
+/* Body spacing belongs to mobile-common.css. Keep only the shared body surface
+ * cleanup here so no theme file can redefine a widget's inset. */
 body:has(.mobile-layout) .mobile-layout
   .mobile-widget-slot .glass-card:not(.daily-journal-widget)
   > .widget-frame__body {
   min-width: 0 !important;
-  margin: 0 !important;
-  padding: var(--mobile-widget-inset) !important;
   border: 0 !important;
   background: transparent !important;
   background-image: none !important;
@@ -1195,7 +859,7 @@ body:has(.mobile-layout) .mobile-layout
 }
 
 /* H. Mac Core: keep the lighter iOS toolbar when the date row is separate. */
-@media (max-width: 380px) {
+@media (max-width: 430px) {
   :is(html, body):is([data-theme="mac-core"], .theme-mac-core)
     .mobile-layout .mobile-widget-slot .glass-card.daily-journal-widget
       > .widget-frame__header > .widget-frame__actions {

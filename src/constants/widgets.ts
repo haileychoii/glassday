@@ -79,12 +79,12 @@ export const widgetRegistry: Record<WidgetId, WidgetMeta> = {
     category: "life",
     defaultSize: "large",
   },
-  health: {
-    id: "health",
-    label: "Health",
-    description: "몸무게와 컨디션",
+  habitTracker: {
+    id: "habitTracker",
+    label: "Habit Tracker",
+    description: "매일 지키는 습관과 연속 기록",
     category: "life",
-    defaultSize: "small",
+    defaultSize: "medium",
   },
   money: {
     id: "money",

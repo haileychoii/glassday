@@ -247,12 +247,13 @@ const TimerSurface = ({ controller, floating = false }: {
 export const TimerWidget = () => {
   const [floatingOpen, setFloatingOpen] = useState(false);
   const controller = usePomodoroTimer();
+  const TimerHeadingIcon = TimerReset;
 
   return (
     <>
       <GlassCard className="timer-widget" title="Timer"
         subtitle={`${getPomodoroModeLabel(controller.pomodoro.mode)} · ${formatTimerClock(controller.remainingSeconds)}`}
-        icon={<TimerReset size={16} />}
+        icon={<TimerHeadingIcon className="mobile-glass-filled-heading-icon" size={18} />}
         actions={
           <button type="button" className="glass-button timer-widget-open" title="Open timer window"
             aria-label="Open timer window" onClick={() => setFloatingOpen(true)}>

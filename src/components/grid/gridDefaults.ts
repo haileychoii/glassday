@@ -94,7 +94,7 @@ export const wideDefaultLayouts: Layouts = {
     },
 
     {
-      i: "health",
+      i: "habitTracker",
       x: 8,
       y: 54,
       w: 4,
@@ -184,7 +184,7 @@ export const wideDefaultLayouts: Layouts = {
     },
 
     {
-      i: "health",
+      i: "habitTracker",
       x: 8,
       y: 54,
       w: 4,
@@ -275,7 +275,7 @@ export const wideDefaultLayouts: Layouts = {
     },
 
     {
-      i: "health",
+      i: "habitTracker",
       x: 0,
       y: 129,
       w: 16,
@@ -310,7 +310,7 @@ export const laptopDefaultLayouts: Layouts = {
     { i: "study", x: 8, y: 22, w: 8, h: 13 },
     { i: "career", x: 0, y: 32, w: 8, h: 11 },
     { i: "memo", x: 8, y: 35, w: 8, h: 14 },
-    { i: "health", x: 0, y: 43, w: 4, h: 7 },
+    { i: "habitTracker", x: 0, y: 43, w: 4, h: 7 },
     { i: "money", x: 4, y: 43, w: 4, h: 7 },
     { i: "mood", x: 0, y: 50, w: 8, h: 7 },
     { i: "timer", x: 8, y: 49, w: 8, h: 8 },
@@ -323,7 +323,7 @@ export const laptopDefaultLayouts: Layouts = {
     { i: "study", x: 8, y: 22, w: 8, h: 13 },
     { i: "career", x: 0, y: 32, w: 8, h: 11 },
     { i: "memo", x: 8, y: 35, w: 8, h: 14 },
-    { i: "health", x: 0, y: 43, w: 8, h: 7 },
+    { i: "habitTracker", x: 0, y: 43, w: 8, h: 7 },
     { i: "money", x: 8, y: 49, w: 8, h: 7 },
     { i: "mood", x: 0, y: 50, w: 8, h: 7 },
     { i: "timer", x: 8, y: 56, w: 8, h: 8 },
@@ -337,7 +337,7 @@ export const laptopDefaultLayouts: Layouts = {
     { i: "career", x: 0, y: 77, w: 16, h: 11 },
     { i: "memo", x: 0, y: 88, w: 16, h: 15 },
     { i: "timer", x: 0, y: 103, w: 16, h: 10 },
-    { i: "health", x: 0, y: 113, w: 16, h: 8 },
+    { i: "habitTracker", x: 0, y: 113, w: 16, h: 8 },
     { i: "money", x: 0, y: 121, w: 16, h: 8 },
     { i: "mood", x: 0, y: 129, w: 16, h: 8 },
   ],
