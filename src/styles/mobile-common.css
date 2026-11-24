@@ -367,6 +367,18 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo
   padding: 0 !important;
 }
 
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo"]
+  > .widget-instance-root > .memo-widget > .widget-frame__body
+  :is(.memo-title-input, .memo-title-view, .memo-editor) {
+  padding-inline: 0 !important;
+  margin-inline: 0 !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo"]
+  > .widget-instance-root > .memo-widget > .widget-frame__body .memo-editor {
+  scrollbar-gutter: auto !important;
+}
+
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
   .mobile-calendar-card,

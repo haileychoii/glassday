@@ -124,7 +124,7 @@
   max-width: none;
 
   margin: 0;
-  padding: 0 2px;
+  padding: 0;
 
   font-size: 15px;
   line-height: 1.4;
@@ -138,7 +138,9 @@
 .memo-editor {
   min-height: 0;
 
-  padding: 10px 12px;
+  /* The shared widget body already provides the horizontal content inset. */
+  padding: 8px 0;
+  scrollbar-gutter: auto;
 
   border-radius: 12px;
 
