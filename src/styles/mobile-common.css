@@ -720,11 +720,22 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="care
   overflow: visible !important;
 }
 
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  :is(.mobile-career-card__open, .mobile-calendar-card__open, .mobile-study-card__open) {
+  flex: 0 0 auto !important;
+  width: max-content !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
 /* The widget frame supplies the memo's single shared inset. Remove the paper
  * editor's legacy white stroke and highlight in the compact dashboard card;
  * keep its note-specific paper fill and typography intact. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo"]
-  .memo-editor {
+  :is(.memo-workspace, .memo-editor-shell, .memo-editor) {
   border: 0 !important;
   outline: 0 !important;
   box-shadow: none !important;

@@ -103,13 +103,14 @@
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) > .timer-widget-main-card {
     position: relative !important;
-    display: grid !important;
+    display: flex !important;
+    flex-direction: column !important;
     grid-row: 1 !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    grid-template-rows: 40px minmax(0, 1fr) 44px !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
     gap: var(--gd-mobile-space-2) !important;
-    align-content: stretch !important;
-    justify-items: stretch !important;
+    align-content: normal !important;
+    justify-items: normal !important;
     width: 100% !important;
     height: 100% !important;
     min-width: 0 !important;
@@ -134,7 +135,7 @@
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-mode-row {
     display: flex !important;
-    grid-row: 1 !important;
+    flex: 0 0 40px !important;
     align-self: stretch !important;
     width: 100% !important;
     min-width: 0 !important;
@@ -160,7 +161,7 @@
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-time-editor-shell {
     display: grid !important;
-    grid-row: 2 !important;
+    flex: 1 1 0 !important;
     align-self: stretch !important;
     justify-self: stretch !important;
     width: 100% !important;
@@ -232,8 +233,9 @@
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row {
     display: flex !important;
-    grid-row: 3 !important;
+    flex: 0 0 44px !important;
     align-self: stretch !important;
+    margin-top: auto !important;
     width: 100% !important;
     height: 44px !important;
     min-height: 44px !important;
