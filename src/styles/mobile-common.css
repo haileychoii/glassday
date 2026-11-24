@@ -689,10 +689,11 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
   .timer-widget-layout:not(.is-settings-visible) > .timer-widget-main-card {
-  position: absolute !important;
-  inset: 0 !important;
-  width: auto !important;
-  height: auto !important;
+  position: relative !important;
+  grid-row: 1 !important;
+  align-self: stretch !important;
+  width: 100% !important;
+  height: 100% !important;
   min-width: 0 !important;
   min-height: 0 !important;
   background: var(--gd-widget-panel-bg, hsl(var(--card) / 0.48)) !important;
