@@ -48,6 +48,26 @@
     height: var(--gd-mobile-widget-timer-height) !important;
   }
 
+  /* Pass the timer slot's fixed mobile height through its portal host and
+   * shared card. Without this chain, the card stays content-height and leaves
+   * an unused strip at the bottom of the slot. */
+  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
+    > .widget-instance-root {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+
+  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
+    > .widget-instance-root > .glass-card.timer-widget {
+    display: grid !important;
+    grid-template-rows: var(--mobile-widget-header-height) minmax(0, 1fr) !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+  }
+
   body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
     > .widget-instance-root > .glass-card.timer-widget > .widget-frame__body {
     display: grid !important;
@@ -153,8 +173,8 @@
     .mobile-layout [data-widget-id="timer"],
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-focus-stage {
-    /* Leave a clear gap above the action row on short mobile cards. */
-    --timer-stage-size: min(88px, 100cqi, 100cqb) !important;
+    /* Fill the middle track while preserving a gap above the action row. */
+    --timer-stage-size: min(116px, 100cqi, 100cqb) !important;
     --timer-ring-radius: calc(var(--timer-stage-size) * 0.4) !important;
     display: grid !important;
     place-items: center !important;
