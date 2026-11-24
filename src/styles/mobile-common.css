@@ -622,6 +622,17 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   background: transparent !important;
 }
 
+/* Desktop title copies reserve a 32px row and pin text to its top edge. On a
+ * phone that makes the title sit higher than the 22px icon slot. Remove that
+ * desktop minimum and give the title the same vertical box as the icon. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  .widget-frame__header .widget-frame__copy {
+  min-height: 0 !important;
+  height: auto !important;
+  justify-content: center !important;
+  gap: var(--mobile-tight-gap) !important;
+}
+
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__header > .widget-frame__title-group {
   padding-inline: 0 !important;
@@ -655,11 +666,14 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__title {
+  display: flex !important;
+  align-items: center !important;
   min-width: 0 !important;
+  min-height: var(--mobile-widget-icon-size) !important;
   margin: 0 !important;
   font-size: var(--mobile-widget-title-size) !important;
   font-weight: 700 !important;
-  line-height: 1.25 !important;
+  line-height: var(--mobile-widget-icon-size) !important;
   letter-spacing: 0 !important;
 }
 
