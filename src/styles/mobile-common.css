@@ -360,6 +360,13 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   padding: var(--mobile-widget-inset) !important;
 }
 
+/* Memo's paper/workspace fills the already-inset body; a second workspace
+ * padding made its visible content start farther in than every other widget. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo"]
+  > .widget-instance-root > .memo-widget > .widget-frame__body .memo-workspace {
+  padding: 0 !important;
+}
+
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
   .mobile-calendar-card,
