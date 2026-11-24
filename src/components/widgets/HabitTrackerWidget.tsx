@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState, type CSSProperties, type FormEvent } from "react";
 import { Check, Flame, ListChecks, Plus, Trash2 } from "lucide-react";
 import { GlassCard } from "../glass/GlassCard";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
@@ -11,12 +11,24 @@ type Habit = {
 
 const STORAGE_KEY = "glassday.habits.tracker.v1";
 const EMPTY_HABITS: Habit[] = [];
+const HABIT_ACCENTS = ["#8b7df2", "#e6668d", "#43aa91", "#ef9a4d", "#4c94d8"];
 
 const getDateKey = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+};
+
+const getWeekDates = (date: Date) => {
+  const monday = new Date(date);
+  monday.setHours(12, 0, 0, 0);
+  monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+  return Array.from({ length: 7 }, (_, index) => {
+    const day = new Date(monday);
+    day.setDate(monday.getDate() + index);
+    return day;
+  });
 };
 
 const getStreak = (completedDates: string[], today: string) => {
@@ -54,10 +66,22 @@ const normalizeHabits = (value: Habit[]) => {
 
 export const HabitTrackerWidget = () => {
   const [showForm, setShowForm] = useState(false);
+  const [expandedHabitId, setExpandedHabitId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const { value, setValue } = useLocalStorage<Habit[]>(STORAGE_KEY, EMPTY_HABITS);
   const habits = useMemo(() => normalizeHabits(value), [value]);
-  const today = getDateKey(new Date());
+  const now = new Date();
+  const today = getDateKey(now);
+  const weekDates = useMemo(() => getWeekDates(now), [today]);
+  const heatmapDates = useMemo(
+    () => Array.from({ length: 28 }, (_, index) => {
+      const day = new Date(now);
+      day.setHours(12, 0, 0, 0);
+      day.setDate(day.getDate() - (27 - index));
+      return day;
+    }),
+    [today],
+  );
   const completedCount = habits.filter((habit) =>
     habit.completedDates.includes(today)
   ).length;
@@ -78,13 +102,13 @@ export const HabitTrackerWidget = () => {
     setShowForm(false);
   };
 
-  const toggleHabit = (habitId: string) => {
+  const toggleHabitDate = (habitId: string, date: string) => {
     setValue((current) =>
       normalizeHabits(current).map((habit) => {
         if (habit.id !== habitId) return habit;
         const completed = new Set(habit.completedDates);
-        if (completed.has(today)) completed.delete(today);
-        else completed.add(today);
+        if (completed.has(date)) completed.delete(date);
+        else completed.add(date);
         return { ...habit, completedDates: [...completed].sort() };
       })
     );
@@ -139,7 +163,6 @@ export const HabitTrackerWidget = () => {
             </label>
             <input
               id="habit-tracker-new-name"
-              autoFocus
               maxLength={32}
               placeholder="예: 10분 산책하기"
               value={name}
@@ -164,7 +187,7 @@ export const HabitTrackerWidget = () => {
                     className={`habit-tracker__check${isComplete ? " is-complete" : ""}`}
                     aria-label={`${habit.name} ${isComplete ? "완료 취소" : "완료"}`}
                     aria-pressed={isComplete}
-                    onClick={() => toggleHabit(habit.id)}
+                    onClick={() => toggleHabitDate(habit.id, today)}
                   >
                     {isComplete && <Check size={15} aria-hidden="true" />}
                   </button>
@@ -192,6 +215,147 @@ export const HabitTrackerWidget = () => {
             <span>작은 습관부터 꾸준히 쌓아봐요.</span>
             <button type="button" onClick={() => setShowForm(true)}>
               <Plus size={15} aria-hidden="true" /> 첫 습관 추가
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="habit-tracker__mobile" role="region" aria-label="주간 습관 기록">
+        <div className="habit-tracker__mobile-summary">
+          <div>
+            <span>오늘의 달성</span>
+            <strong>{completedCount}<small> / {habits.length}</small></strong>
+          </div>
+          <strong className="habit-tracker__mobile-percent">{progress}%</strong>
+          <div className="habit-tracker__mobile-progress" aria-hidden="true">
+            <span style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+
+        {showForm && (
+          <form className="habit-tracker__form habit-tracker__mobile-form" onSubmit={addHabit}>
+            <label className="sr-only" htmlFor="habit-tracker-mobile-new-name">
+              새 습관 이름
+            </label>
+            <input
+              id="habit-tracker-mobile-new-name"
+              maxLength={32}
+              placeholder="새 습관 이름"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
+            <button type="submit" disabled={!name.trim()}>추가</button>
+          </form>
+        )}
+
+        {habits.length ? (
+          <>
+            <div className="habit-tracker__week-heading">
+              <span>이번 주</span>
+              <span>{weekDates[0].getMonth() + 1}.{weekDates[0].getDate()} – {weekDates[6].getMonth() + 1}.{weekDates[6].getDate()}</span>
+            </div>
+            <div className="habit-tracker__week-labels" aria-hidden="true">
+              {weekDates.map((day) => (
+                <span key={getDateKey(day)}>
+                  {new Intl.DateTimeFormat("ko-KR", { weekday: "short" }).format(day)}
+                </span>
+              ))}
+            </div>
+            <ul className="habit-tracker__mobile-list">
+              {habits.map((habit, index) => {
+                const accent = HABIT_ACCENTS[index % HABIT_ACCENTS.length];
+                const streak = getStreak(habit.completedDates, today);
+                const monthCount = heatmapDates.filter((day) =>
+                  habit.completedDates.includes(getDateKey(day))
+                ).length;
+                const expanded = expandedHabitId === habit.id;
+
+                return (
+                  <li
+                    className="habit-tracker__mobile-card"
+                    key={habit.id}
+                    style={{ "--habit-accent": accent } as CSSProperties}
+                  >
+                    <div className="habit-tracker__mobile-card-head">
+                      <span className="habit-tracker__mobile-mark" aria-hidden="true">
+                        <Check size={15} />
+                      </span>
+                      <strong className="habit-tracker__mobile-name">{habit.name}</strong>
+                      <span className="habit-tracker__mobile-streak">
+                        <Flame size={13} aria-hidden="true" /> {streak}일
+                      </span>
+                      <button
+                        type="button"
+                        className="habit-tracker__history-toggle"
+                        aria-expanded={expanded}
+                        aria-label={`${habit.name} ${expanded ? "28일 기록 접기" : "28일 기록 보기"}`}
+                        onClick={() => setExpandedHabitId(expanded ? null : habit.id)}
+                      >
+                        {expanded ? "주간" : "기록"}
+                      </button>
+                    </div>
+                    <div className="habit-tracker__week-days">
+                      {weekDates.map((day) => {
+                        const date = getDateKey(day);
+                        const complete = habit.completedDates.includes(date);
+                        const future = date > today;
+                        const label = new Intl.DateTimeFormat("ko-KR", {
+                          month: "long", day: "numeric", weekday: "long",
+                        }).format(day);
+                        return (
+                          <button
+                            key={date}
+                            type="button"
+                            className={`habit-tracker__day${complete ? " is-complete" : ""}${date === today ? " is-today" : ""}`}
+                            style={{ "--habit-accent": accent } as CSSProperties}
+                            aria-label={`${habit.name}, ${label}, ${complete ? "완료" : "미완료"}`}
+                            aria-pressed={complete}
+                            disabled={future}
+                            onClick={() => toggleHabitDate(habit.id, date)}
+                          >
+                            <span>{complete ? <Check size={14} aria-hidden="true" /> : day.getDate()}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {expanded && (
+                      <div className="habit-tracker__heatmap-wrap">
+                        <div className="habit-tracker__heatmap-caption">
+                          <span>최근 28일</span>
+                          <span>{monthCount}/28 완료</span>
+                        </div>
+                        <div className="habit-tracker__heatmap">
+                          {heatmapDates.map((day) => {
+                            const date = getDateKey(day);
+                            const complete = habit.completedDates.includes(date);
+                            const label = new Intl.DateTimeFormat("ko-KR", {
+                              month: "long", day: "numeric",
+                            }).format(day);
+                            return (
+                              <button
+                                key={date}
+                                type="button"
+                                className={`habit-tracker__heatmap-cell${complete ? " is-complete" : ""}${date === today ? " is-today" : ""}`}
+                                style={{ "--habit-accent": accent } as CSSProperties}
+                                aria-label={`${habit.name}, ${label}, ${complete ? "완료" : "미완료"}`}
+                                aria-pressed={complete}
+                                onClick={() => toggleHabitDate(habit.id, date)}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        ) : (
+          <div className="habit-tracker__mobile-empty">
+            <span>작은 습관을 하나씩 기록해 보세요.</span>
+            <button type="button" onClick={() => setShowForm(true)}>
+              <Plus size={16} aria-hidden="true" /> 습관 추가
             </button>
           </div>
         )}
