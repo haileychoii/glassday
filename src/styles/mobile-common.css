@@ -301,7 +301,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
 }
 
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core) .mobile-layout {
-  --mobile-widget-header-surface: var(--mac-widget-bg);
+  --mobile-widget-header-surface: var(--mac-widget-header-bg);
 }
 
 :is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout .mobile-main {

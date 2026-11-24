@@ -143,8 +143,6 @@
   ) {
     min-width: 0;
     color: var(--ios-label) !important;
-    background: var(--ios-surface) !important;
-    background-image: none !important;
     border: 1px solid var(--ios-separator) !important;
     border-radius: var(--ios-radius) !important;
     box-shadow: var(--ios-shadow) !important;
