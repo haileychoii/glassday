@@ -702,6 +702,34 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   box-shadow: none !important;
 }
 
+/* Keep the compact Career action fully visible in the shared header row. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="career"]
+  .mobile-career-card__header {
+  overflow: visible !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="career"]
+  .mobile-career-card__open {
+  display: inline-flex !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
+  overflow: visible !important;
+}
+
+/* The widget frame supplies the memo's single shared inset. Remove the paper
+ * editor's legacy white stroke and highlight in the compact dashboard card;
+ * keep its note-specific paper fill and typography intact. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo"]
+  .memo-editor {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
 /* Mobile settings are a focused full-screen surface, not another translucent
  * widget. Keep the dashboard out of the text layer and give controls room to
  * breathe on phone-sized screens. */

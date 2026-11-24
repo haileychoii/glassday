@@ -48,8 +48,17 @@
     height: var(--gd-mobile-widget-timer-height) !important;
   }
 
-  /* The shared host already inherits the slot height in mobile-common.css.
-   * Make the card itself fill that host so its final grid row reaches the base. */
+  /* The widget host is reparented from the desktop grid and keeps its inline
+   * pixel height unless mobile binds it to this fixed mobile slot. */
+  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
+    > .widget-instance-root {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+  }
+
+  /* Fill the timer card and its body so the controls use the full base height. */
   body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
     > .widget-instance-root > .glass-card.timer-widget {
     display: grid !important;
