@@ -5,7 +5,7 @@
  * 화면: 모바일/PC 대시보드의 뽀모도로 타이머와 기존 FloatingWindow.
  * 연결: WidgetRenderer.tsx (id="timer") → WidgetSlot.tsx → 이 컴포넌트.
  * 상태: timer/usePomodoroTimer.ts → glassday.study.pomodoro.v1(localStorage).
- * 서식: styles/widgets/timer.css (PC 공통 + 마지막 모바일 전용 섹션).
+ * 서식: styles/widgets/timer.css (공통), styles/mobile-timer.css (모바일 배치).
  *
  * 원칙: usePomodoroTimer()는 TimerWidget에서 한 번만 호출한다.
  * 위젯과 플로팅 창이 같은 controller를 전달받으므로 타이머가 두 번 돌지 않는다.

@@ -20,6 +20,7 @@
   --mobile-section-gap: var(--mobile-space-4);
   --mobile-content-gap: var(--mobile-space-2);
   --mobile-tight-gap: var(--mobile-space-1);
+  --mobile-control-gap: 6px;
   --mobile-page-gutter: var(--mobile-space-4);
   --mobile-widget-header-surface: var(--gd-surface-bg, hsl(var(--card)));
   --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
@@ -103,6 +104,23 @@ body:has(.mobile-layout) .mobile-layout .mobile-navigation-item {
   margin: 0 !important;
   padding: 0 !important;
   justify-self: stretch !important;
+}
+
+/* Non-fixed widget hosts size to their content; scroll-card hosts inherit
+ * their slot height in the fixed-host rule below. */
+body:has(.mobile-layout) .mobile-layout
+  .mobile-widget-slot:not([data-widget-id="memo"]):not([data-widget-id="timer"]):not([data-widget-id="journal"])
+  > .widget-instance-root {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 /* All mobile widget titles start at the same leading edge; actions stay trailing.
@@ -376,6 +394,23 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   padding: var(--mobile-widget-inset) !important;
 }
 
+/* The shared card owns the only visible surface around widget content. */
+body:has(.mobile-layout) .mobile-layout
+  .mobile-widget-slot .glass-card:not(.daily-journal-widget)
+  > .widget-frame__body {
+  min-width: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+body:has(.mobile-layout) .mobile-layout
+  .mobile-widget-slot .glass-card:not(.daily-journal-widget)
+  > .widget-frame__body > :first-child {
+  min-width: 0;
+}
+
 /* Memo's paper/workspace fills the already-inset body; a second workspace
  * padding made its visible content start farther in than every other widget. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo"]
@@ -404,6 +439,12 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo
   gap: var(--mobile-widget-inset) !important;
   padding: 0 var(--mobile-widget-inset) var(--mobile-widget-inset) !important;
   box-sizing: border-box !important;
+}
+
+body:has(.mobile-layout) .mobile-layout
+  :is(.mobile-career-card__preview, .mobile-calendar-agenda,
+      .mobile-study-card__shortcuts, .mobile-study-card__metrics) {
+  gap: var(--mobile-control-gap) !important;
 }
 
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(

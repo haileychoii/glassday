@@ -98,7 +98,6 @@ const AUTH_UI_SNAPSHOT_KEYS = [
   "glassday.dashboard.activeTab.v1",
   "glassday.dashboard.tabs.v1",
   "glassday.dashboard.storageSchema.v1",
-  "glassday.mobile.widgets.v1",
   "glassday.theme",
   "glassday.ui.font.v1",
 ] as const;

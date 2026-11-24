@@ -36,10 +36,8 @@
  * Keep the semantic theme surfaces: native iOS/Pixel colors come from later CSS. */
 .mobile-career-card,
 .mobile-career-detail {
-  --mc-card-pad: 8px;
   --mc-row-pad: 8px;
   --mc-screen-pad: 8px;
-  --mc-gap: 8px;
   --mc-surface: var(--gd-widget-panel-bg, hsl(var(--card) / 0.87));
   --mc-border: var(--gd-widget-panel-border, hsl(var(--border) / 0.4));
   --mc-control: var(--gd-widget-control-bg, hsl(var(--card) / 0.74));
@@ -64,8 +62,6 @@
   max-width: 100% !important;
   min-width: 0 !important;
   margin: 0 !important;
-  padding: var(--mc-card-pad);
-  gap: var(--mc-gap);
   border: 1px solid var(--mc-border);
   border-radius: var(--gd-radius-widget, 18px);
   background: var(--gd-surface-bg, hsl(var(--card) / 0.87));

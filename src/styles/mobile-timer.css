@@ -48,15 +48,8 @@
     height: var(--gd-mobile-widget-timer-height) !important;
   }
 
-  /* Pass the timer slot's fixed mobile height through its portal host and
-   * shared card. Without this chain, the card stays content-height and leaves
-   * an unused strip at the bottom of the slot. */
-  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
-    > .widget-instance-root {
-    height: 100% !important;
-    min-height: 0 !important;
-  }
-
+  /* The shared host already inherits the slot height in mobile-common.css.
+   * Make the card itself fill that host so its final grid row reaches the base. */
   body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
     > .widget-instance-root > .glass-card.timer-widget {
     display: grid !important;

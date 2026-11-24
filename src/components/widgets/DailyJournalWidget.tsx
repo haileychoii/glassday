@@ -15,8 +15,8 @@
  * - types/journal.ts
  * - widgets/journal/journalUtils.ts
  * - styles/widgets/journal.css
- * - styles/mobile-journal.css
- * - styles/mobile-finish.css
+ * - styles/mobile-journal.css (mobile-only Journal layout)
+ * - styles/mobile-common.css (shared mobile frame and header geometry)
  *
  * [기능]
  * 1. 날짜별 Journal 불러오기 및 저장
@@ -405,7 +405,7 @@ export const DailyJournalWidget = () => {
       actions={
         /*
          * 날짜 탐색은 기존 GlassCard의 actions를 재사용한다.
-         * 모바일 헤더의 크기/배치는 mobile-journal.css에서 담당한다.
+         * 모바일 헤더의 공통 크기는 mobile-common.css, 날짜 배치는 mobile-journal.css가 담당한다.
          */
         <div className="journal-date-nav">
           <button
