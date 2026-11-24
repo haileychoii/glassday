@@ -165,6 +165,21 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
   box-sizing: border-box !important;
 }
 
+/* WidgetSlot reparents the same DOM node used by the desktop grid. That node
+ * keeps React Grid Layout's absolute position, transform and pixel height
+ * unless mobile explicitly resets them. Those desktop coordinates leave
+ * empty grid rows and make cards appear as isolated horizontal rules. */
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root {
+  position: relative !important;
+  inset: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  z-index: auto !important;
+}
+
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
   .mobile-calendar-card,
