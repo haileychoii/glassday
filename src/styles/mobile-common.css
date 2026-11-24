@@ -9,10 +9,18 @@
  */
 
 .mobile-layout {
+  --mobile-space-1: var(--gd-mobile-space-1);
+  --mobile-space-2: var(--gd-mobile-space-2);
+  --mobile-space-3: var(--gd-mobile-space-3);
+  --mobile-space-4: var(--gd-mobile-space-4);
+  --mobile-space-6: var(--gd-mobile-space-6);
   --mobile-widget-gap: var(--gd-mobile-widget-gap);
   --mobile-widget-inset: var(--gd-mobile-widget-inset);
   --mobile-page-gap: var(--gd-mobile-widget-gap);
-  --mobile-section-gap: var(--gd-mobile-widget-gap);
+  --mobile-section-gap: var(--mobile-space-4);
+  --mobile-content-gap: var(--mobile-space-2);
+  --mobile-tight-gap: var(--mobile-space-1);
+  --mobile-page-gutter: var(--mobile-space-4);
   --mobile-widget-header-surface: var(--gd-surface-bg, hsl(var(--card)));
   --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
   --mobile-widget-header-pad-inline: var(--gd-mobile-widget-inset);
@@ -24,6 +32,30 @@
   /* A 40px control stays compact in dense widget headers but is easier to tap.
    * 좁은 헤더를 과하게 키우지 않으면서 손가락으로 누르기 쉽게 맞춥니다. */
   --mobile-widget-action-size: 40px;
+}
+
+/* A compact, shared 4-point rhythm for the mobile shell and navigation. */
+body:has(.mobile-layout) .mobile-layout .mobile-header {
+  gap: var(--gd-mobile-space-2) !important;
+  padding: calc(var(--gd-mobile-space-2) + env(safe-area-inset-top))
+    max(var(--gd-mobile-space-4), env(safe-area-inset-right))
+    var(--gd-mobile-space-2) max(var(--gd-mobile-space-4), env(safe-area-inset-left)) !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-header-actions {
+  gap: var(--gd-mobile-space-1) !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-navigation {
+  gap: var(--gd-mobile-space-1) !important;
+  padding: var(--gd-mobile-space-2) max(var(--gd-mobile-space-2), env(safe-area-inset-right))
+    calc(var(--gd-mobile-space-2) + env(safe-area-inset-bottom))
+    max(var(--gd-mobile-space-2), env(safe-area-inset-left)) !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-navigation-item {
+  gap: var(--gd-mobile-space-1) !important;
+  padding: var(--gd-mobile-space-1) !important;
 }
 
 /* Intentional exceptions belong in the owning theme/widget file: override one
@@ -42,8 +74,8 @@
   gap: var(--mobile-widget-gap) !important;
   /* The same fixed inset owns both outer edges for every theme. Do not let
    * theme/browser safe-area values make one side wider than the other. */
-  padding: 8px var(--mobile-widget-inset)
-    calc(18px + env(safe-area-inset-bottom)) !important;
+  padding: var(--mobile-space-2) var(--mobile-page-gutter)
+    calc(var(--mobile-page-gutter) + env(safe-area-inset-bottom)) !important;
   box-sizing: border-box !important;
   justify-self: stretch !important;
 }
@@ -497,7 +529,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   max-height: var(--mobile-widget-header-height) !important;
   padding-block: var(--mobile-widget-header-pad-block) !important;
   padding-inline: var(--mobile-widget-header-pad-inline) !important;
-  gap: 8px !important;
+  gap: var(--mobile-content-gap) !important;
   box-sizing: border-box !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -529,7 +561,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   height: auto !important;
   margin: 0 !important;
   padding: 0 !important;
-  gap: 8px !important;
+  gap: var(--mobile-content-gap) !important;
   background: transparent !important;
 }
 
@@ -769,16 +801,18 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
 
   body:has(.mobile-layout) .settings-modal-body {
     background: #f4f5f8 !important;
-    padding: 14px max(14px, env(safe-area-inset-right))
-      calc(22px + env(safe-area-inset-bottom))
-      max(14px, env(safe-area-inset-left)) !important;
-    gap: 12px !important;
+    padding: var(--gd-mobile-space-4) max(var(--gd-mobile-space-4), env(safe-area-inset-right))
+      calc(var(--gd-mobile-space-4) + env(safe-area-inset-bottom))
+      max(var(--gd-mobile-space-4), env(safe-area-inset-left)) !important;
+    gap: var(--gd-mobile-space-3) !important;
   }
 
   body:has(.mobile-layout) .settings-section,
   body:has(.mobile-layout) .settings-card {
     color: #20232b !important;
     background: #fff !important;
+    padding: var(--gd-mobile-space-3) !important;
+    gap: var(--gd-mobile-space-3) !important;
     border: 1px solid #e5e7ed !important;
     border-radius: 18px !important;
     box-shadow: 0 2px 8px rgb(25 35 55 / 0.04) !important;
@@ -788,7 +822,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
 
   body:has(.mobile-layout) .settings-section-title,
   body:has(.mobile-layout) .settings-card-title {
-    margin-bottom: 10px !important;
+    margin-bottom: var(--gd-mobile-space-2) !important;
     color: #343945 !important;
     font-size: 13px !important;
     line-height: 1.3 !important;
@@ -796,13 +830,13 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
 
   body:has(.mobile-layout) .settings-theme-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 10px !important;
+    gap: var(--gd-mobile-space-2) !important;
   }
 
   body:has(.mobile-layout) .settings-theme-card {
-    min-height: 118px !important;
-    padding: 9px !important;
-    gap: 6px !important;
+    min-height: 120px !important;
+    padding: var(--gd-mobile-space-2) !important;
+    gap: var(--gd-mobile-space-2) !important;
     color: #252936 !important;
     background: #f7f8fa !important;
     border: 1px solid #e1e4eb !important;
@@ -820,7 +854,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="time
   body:has(.mobile-layout) .settings-theme-preview {
     height: 40px !important;
     min-height: 40px !important;
-    padding-inline: 7px !important;
+    padding-inline: var(--gd-mobile-space-2) !important;
     border-radius: 10px !important;
   }
 

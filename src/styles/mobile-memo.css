@@ -98,7 +98,7 @@
 
   /* The card body already owns the shared mobile widget inset. */
   padding: 0;
-  gap: 6px;
+  gap: var(--mobile-space-2);
 }
 
 
@@ -139,7 +139,7 @@
   min-height: 0;
 
   /* The shared widget body already provides the horizontal content inset. */
-  padding: 8px 0;
+  padding: var(--mobile-space-2) 0;
   scrollbar-gutter: auto;
 
   border-radius: 12px;

@@ -89,11 +89,18 @@
      / 스크롤바가 카드 테두리를 덮어 잘린 것처럼 보이지 않게 하는 여백. */
   --gd-widget-scroll-content-inset: var(--gd-space-xs);
 
-  /* Mobile dashboard geometry is shared across every visual theme. */
-  --gd-mobile-widget-gap: var(--gd-space-sm);
-  --gd-mobile-widget-inset: var(--gd-space-md);
+  /* Mobile rhythm uses a dedicated 4-point scale. The values are deliberately
+   * semantic: page/widget spacing is larger than card inset, and related
+   * controls use the compact steps. / 모바일 간격은 4px 단위의 단계로 관리합니다. */
+  --gd-mobile-space-1: 4px;
+  --gd-mobile-space-2: 8px;
+  --gd-mobile-space-3: 12px;
+  --gd-mobile-space-4: 16px;
+  --gd-mobile-space-6: 24px;
+  --gd-mobile-widget-gap: var(--gd-mobile-space-4);
+  --gd-mobile-widget-inset: var(--gd-mobile-space-3);
   --gd-mobile-widget-header-height: 48px;
-  --gd-mobile-widget-header-pad-y: var(--gd-space-2xs);
+  --gd-mobile-widget-header-pad-y: var(--gd-mobile-space-1);
   --gd-mobile-widget-long-height: clamp(320px, 52svh, 460px);
   --gd-mobile-widget-timer-height: clamp(260px, 38svh, 336px);
 
