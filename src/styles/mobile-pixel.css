@@ -102,9 +102,9 @@
 
     border-radius: 0 !important;
 
-    box-shadow:
-      inset 1px 1px var(--w95-light),
-      inset -1px -1px var(--w95-shadow) !important;
+    /* The light/dark border edges already form the Win95 raised bevel.
+     * Adding inset shadows here draws a second frame around every widget. */
+    box-shadow: none !important;
 
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -275,7 +275,8 @@
     border-radius: 0 !important;
     background: var(--w95-panel) !important;
     color: var(--w95-text) !important;
-    box-shadow: inset 1px 1px var(--w95-light), inset -1px -1px var(--w95-shadow) !important;
+    /* Keep one raised frame; the directional border is the bevel. */
+    box-shadow: none !important;
   }
 
   & .mobile-career-status {
