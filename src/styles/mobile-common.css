@@ -519,8 +519,22 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo
   .mobile-career-card,
   .mobile-calendar-card) {
   gap: var(--mobile-widget-inset) !important;
-  padding: 0 var(--mobile-widget-inset) var(--mobile-widget-inset) !important;
+  padding: 0 !important;
   box-sizing: border-box !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card,
+  .mobile-calendar-card) > :not(.widget-frame__header) {
+  min-width: 0 !important;
+  width: auto !important;
+  margin-inline: var(--mobile-widget-inset) !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card,
+  .mobile-calendar-card) > :last-child:not(.widget-frame__header) {
+  margin-bottom: var(--mobile-widget-inset) !important;
 }
 
 body:has(.mobile-layout) .mobile-layout
@@ -662,13 +676,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > :is(.mobile-career-card, .mobile-calendar-card)
-  > :is(.mobile-career-card__header, .mobile-calendar-card__header) {
-  /* The card itself owns the shared inset. Do not inset this row twice. */
-  padding-inline: 0 !important;
 }
 
 /* Normalize every header inside a mobile widget slot, including headers

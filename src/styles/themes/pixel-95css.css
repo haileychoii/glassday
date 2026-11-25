@@ -141,11 +141,15 @@
   html.theme-pixel-desk, body.theme-pixel-desk,
   html.pixel-desk, body.pixel-desk,
   html.theme-pixel, body.theme-pixel
-) :is(.mobile-layout, .app-shell-surface) .journal-task-item > input {
+) .mobile-layout .mobile-widget-slot .daily-journal-widget .journal-task-item > input {
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
+  min-height: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  padding: 0 4px !important;
 }
 
 :is(
@@ -191,6 +195,26 @@
   border: 0;
   border-radius: 0;
   box-shadow: var(--gd-widget-header-shadow) !important;
+}
+
+/* Header action keys have a gray face: arrows and their labels are black. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface)
+  :is(.widget-frame__header, .mobile-calendar-card__header, .mobile-career-card__header)
+  button,
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface)
+  :is(.widget-frame__header, .mobile-calendar-card__header, .mobile-career-card__header)
+  button svg {
+  color: var(--w95-black) !important;
 }
 
 /* Memo's writing area is the intentional exception to standard white fields:

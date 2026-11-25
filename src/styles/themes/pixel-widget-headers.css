@@ -24,8 +24,7 @@
   .widget-frame__icon,
   .widget-frame__actions,
   h3,
-  p,
-  svg
+  p
 ) {
   color: var(--w95-light, var(--pixel-desktop-light, #fff)) !important;
 }
