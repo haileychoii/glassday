@@ -7,6 +7,7 @@ type Habit = {
   id: string;
   name: string;
   completedDates: string[];
+  color?: string;
 };
 
 const STORAGE_KEY = "glassday.habits.tracker.v1";
@@ -69,6 +70,7 @@ export const HabitTrackerWidget = () => {
   const [expandedHabitId, setExpandedHabitId] = useState<string | null>(null);
   const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
+  const [editColor, setEditColor] = useState(HABIT_ACCENTS[0]);
   const [name, setName] = useState("");
   const { value, setValue } = useLocalStorage<Habit[]>(STORAGE_KEY, EMPTY_HABITS);
   const habits = useMemo(() => normalizeHabits(value), [value]);
@@ -98,7 +100,12 @@ export const HabitTrackerWidget = () => {
 
     setValue((current) => [
       ...normalizeHabits(current),
-      { id: createHabitId(), name: trimmedName, completedDates: [] },
+      {
+        id: createHabitId(),
+        name: trimmedName,
+        completedDates: [],
+        color: HABIT_ACCENTS[normalizeHabits(value).length % HABIT_ACCENTS.length],
+      },
     ]);
     setName("");
     setShowForm(false);
@@ -119,23 +126,29 @@ export const HabitTrackerWidget = () => {
   const startEditingHabit = (habit: Habit) => {
     setEditingHabitId(habit.id);
     setEditName(habit.name);
+    const index = habits.findIndex((item) => item.id === habit.id);
+    setEditColor(habit.color ?? HABIT_ACCENTS[Math.max(index, 0) % HABIT_ACCENTS.length]);
   };
 
-  const saveHabitName = (event: FormEvent<HTMLFormElement>) => {
+  const saveHabit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const trimmedName = editName.trim();
     if (!editingHabitId || !trimmedName) return;
 
     setValue((current) => normalizeHabits(current).map((habit) =>
-      habit.id === editingHabitId ? { ...habit, name: trimmedName } : habit
+      habit.id === editingHabitId
+        ? { ...habit, name: trimmedName, color: editColor }
+        : habit
     ));
     setEditingHabitId(null);
     setEditName("");
+    setEditColor(HABIT_ACCENTS[0]);
   };
 
   const cancelEditingHabit = () => {
     setEditingHabitId(null);
     setEditName("");
+    setEditColor(HABIT_ACCENTS[0]);
   };
 
   const removeHabit = (habitId: string) => {
@@ -187,7 +200,7 @@ export const HabitTrackerWidget = () => {
             </label>
             <input
               id="habit-tracker-new-name"
-              maxLength={32}
+              maxLength={24}
               placeholder="예: 10분 산책하기"
               value={name}
               onChange={(event) => setName(event.target.value)}
@@ -263,7 +276,7 @@ export const HabitTrackerWidget = () => {
             </label>
             <input
               id="habit-tracker-mobile-new-name"
-              maxLength={32}
+              maxLength={24}
               placeholder="새 습관 이름"
               value={name}
               onChange={(event) => setName(event.target.value)}
@@ -287,7 +300,7 @@ export const HabitTrackerWidget = () => {
             </div>
             <ul className="habit-tracker__mobile-list">
               {habits.map((habit, index) => {
-                const accent = HABIT_ACCENTS[index % HABIT_ACCENTS.length];
+                const accent = habit.color ?? HABIT_ACCENTS[index % HABIT_ACCENTS.length];
                 const streak = getStreak(habit.completedDates, today);
                 const monthCount = heatmapDates.filter((day) =>
                   habit.completedDates.includes(getDateKey(day))
@@ -328,17 +341,30 @@ export const HabitTrackerWidget = () => {
                       </button>
                     </div>
                     {editing && (
-                      <form className="habit-tracker__edit-form" onSubmit={saveHabitName}>
+                      <form className="habit-tracker__edit-form" onSubmit={saveHabit}>
                         <label className="sr-only" htmlFor={`habit-tracker-edit-${habit.id}`}>
                           {habit.name} 이름 수정
                         </label>
                         <input
                           id={`habit-tracker-edit-${habit.id}`}
-                          maxLength={32}
+                          maxLength={24}
                           value={editName}
                           onChange={(event) => setEditName(event.target.value)}
                         />
-                        <button type="submit" aria-label="습관 이름 저장" disabled={!editName.trim()}>
+                        <div className="habit-tracker__edit-colors" role="group" aria-label="습관 색상">
+                          {HABIT_ACCENTS.map((color, colorIndex) => (
+                            <button
+                              key={color}
+                              type="button"
+                              className={editColor === color ? "is-selected" : ""}
+                              style={{ "--habit-swatch": color } as CSSProperties}
+                              aria-label={`색상 ${colorIndex + 1}`}
+                              aria-pressed={editColor === color}
+                              onClick={() => setEditColor(color)}
+                            />
+                          ))}
+                        </div>
+                        <button type="submit" aria-label="습관 수정 저장" disabled={!editName.trim()}>
                           <Check size={15} aria-hidden="true" />
                         </button>
                         <button type="button" aria-label="이름 수정 취소" onClick={cancelEditingHabit}>
