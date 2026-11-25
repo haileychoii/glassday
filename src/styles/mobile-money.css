@@ -69,6 +69,37 @@
   padding: 0;
 }
 
+/* On mobile the dashboard scrolls the full stack, so Money grows with its
+ * selected section instead of keeping a desktop 100%-height inner scroller.
+ * Size containment on the desktop root/detail would otherwise collapse their
+ * intrinsic height and draw transactions over the next widget.
+ * 모바일에서는 Money 본문을 자연 높이로 흘려 다음 위젯과 겹치지 않게 합니다. */
+.mobile-layout .mobile-widget-slot[data-widget-id="money"]
+  > .widget-instance-root > .glass-card.money-widget {
+  container-type: inline-size !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="money"]
+  > .widget-instance-root > .glass-card.money-widget > .widget-frame__body {
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id="money"] .money-detail {
+  container-type: inline-size !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
 
 /* ============================================================================
    2. 섹션 탭

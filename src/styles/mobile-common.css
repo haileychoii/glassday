@@ -188,14 +188,18 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="cale
   min-width: 0 !important;
 }
 
-/* Study uses a size query container for its desktop compact planner. Size
- * containment also discards the planner's intrinsic height, so on mobile its
- * content paints through the next dashboard cards. Keep width queries but let
- * the card grow to the planner's full content height.
- * Study의 데스크톱 높이 컨테이너가 모바일 카드의 내용 높이를 잘라내지 않도록 합니다. */
+/* Content-height cards must not use size containment: it suppresses intrinsic
+ * block sizing and lets their contents paint over later dashboard widgets.
+ * Keep width container queries, while the fixed scroll cards keep their own
+ * explicit height contract below.
+ * 자연 높이 위젯은 높이 size containment를 해제해 다음 카드를 덮지 않게 합니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  :is(.glass-card, .career-widget):not(.memo-widget):not(.timer-widget):not(.daily-journal-widget) {
+  container-type: inline-size !important;
+}
+
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="study"]
   > .widget-instance-root > .glass-card.study-widget {
-  container-type: inline-size !important;
   height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
@@ -558,6 +562,40 @@ body:has(.mobile-layout) .mobile-navigation-capture {
   box-shadow: var(--gd-surface-shadow) !important;
   backdrop-filter: var(--gd-surface-filter, blur(20px)) !important;
   -webkit-backdrop-filter: var(--gd-surface-filter, blur(20px)) !important;
+}
+
+/* Money's desktop panels use opaque white gradients of their own. On mobile,
+ * make them consume the same inner-glass material as every other widget, and
+ * leave the sticky tab rail clear so it does not form a bright slab.
+ * Money 안쪽 패널도 공통 유리 토큰을 사용하고 탭 바탕은 투명하게 둡니다. */
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora
+) .mobile-layout .mobile-widget-slot[data-widget-id="money"] :is(
+  .money-summary-panel,
+  .money-budget-panel,
+  .money-visual-panel,
+  .money-recent-panel,
+  .money-detail-card
+) {
+  background: var(--gd-inner-bg) !important;
+  border-color: var(--gd-inner-border) !important;
+  box-shadow: var(--gd-widget-panel-shadow) !important;
+  backdrop-filter: blur(20px) saturate(155%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(155%) !important;
+}
+
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora
+) .mobile-layout .mobile-widget-slot[data-widget-id="money"] .money-section-tabs {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* FINAL MOBILE WIDGET HEADER CONTRACT
