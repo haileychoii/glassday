@@ -2345,17 +2345,9 @@ body.theme-pixel-desk .career-cover-status-select option {
 }
 
 /* Keep the real widget title visible even when the card gets narrow. The
-   subtitle is the first thing we sacrifice; the title should survive longer. */
+   shared theme owns its title and subtitle colors. */
 .calendar-widget-card .glass-card-copy {
   min-width: 0 !important;
-}
-
-.calendar-widget-card .glass-card-title {
-  color: hsl(var(--foreground) / 0.96) !important;
-}
-
-.calendar-widget-card .glass-card-subtitle {
-  color: hsl(var(--muted-foreground) / 0.82) !important;
 }
 
 .calendar-month-board {

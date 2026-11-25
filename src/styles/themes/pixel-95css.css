@@ -57,6 +57,10 @@
     inset 2px 2px 0 var(--w95-gray),
     inset -4px -4px 0 var(--w95-face),
     inset 4px 4px 0 var(--w95-black);
+  /* Shared raised edge on every blue widget title bar. */
+  --w95-shadow-titlebar:
+    inset 2px 2px 0 rgb(255 255 255 / 0.32),
+    inset -2px -2px 0 #000040;
 }
 
 /* The outer widget is the dialog/window surface; the real shared titlebar
@@ -186,7 +190,7 @@
   color: var(--w95-white);
   border: 0;
   border-radius: 0;
-  box-shadow: inset 0 -2px 0 var(--w95-gray);
+  box-shadow: var(--gd-widget-header-shadow) !important;
 }
 
 /* Memo's writing area is the intentional exception to standard white fields:

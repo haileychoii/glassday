@@ -32,7 +32,7 @@
   --gd-widget-header-bg: var(--w95-title, var(--pixel-desktop-title, #000080));
   --gd-widget-header-color: var(--w95-light, var(--pixel-desktop-light, #fff));
   --gd-widget-header-border: 0;
-  --gd-widget-header-shadow: none;
+  --gd-widget-header-shadow: var(--w95-shadow-titlebar, none);
 }
 
 /* Retro is also used by Pink Diary; this palette token controls only header

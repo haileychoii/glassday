@@ -21,7 +21,7 @@
  * - Variants: Theme / Header Actions / Compact container
  * ============================================================
  */
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 /* Shared widget shell.
    When you mirror widgets into Figma, this component is the source of truth for:
@@ -41,8 +41,6 @@ type GlassCardProps = {
   /** Header 우측 button group. */
   actions?: ReactNode;
   className?: string;
-  titleStyle?: CSSProperties;
-  subtitleStyle?: CSSProperties;
 };
 
 /* Figma-facing class aliases intentionally stay duplicated here.
@@ -61,8 +59,6 @@ export const GlassCard = ({
   children,
   actions,
   className = "",
-  titleStyle,
-  subtitleStyle,
 }: GlassCardProps) => {
   return (
     <section className={`glass-card widget-frame h-full ${className}`}>
@@ -79,7 +75,6 @@ export const GlassCard = ({
           <div className="glass-card-copy widget-card-copy widget-frame__copy">
             <h3
               className="glass-card-title widget-card-title widget-frame__title whitespace-nowrap overflow-hidden text-ellipsis"
-              style={titleStyle}
             >
               {title}
             </h3>
@@ -87,7 +82,6 @@ export const GlassCard = ({
             {subtitle && (
               <p
                 className="glass-card-subtitle widget-card-subtitle widget-frame__subtitle whitespace-nowrap overflow-hidden text-ellipsis"
-                style={subtitleStyle}
               >
                 {subtitle}
               </p>
