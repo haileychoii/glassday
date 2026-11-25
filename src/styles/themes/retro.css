@@ -852,35 +852,17 @@ body.theme-retro .calendar-event-time {
 ========================================================= */
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .settings-modal-window {
-  display: grid !important;
-  grid-template-rows: var(--retro-titlebar-height) minmax(0, 1fr) !important;
-  overflow: hidden !important;
   background: var(--retro-panel) !important;
   color: var(--retro-text) !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .settings-modal-header {
-  height: var(--retro-titlebar-height) !important;
-  min-height: var(--retro-titlebar-height) !important;
-  padding: 2px 3px 2px 5px !important;
-  gap: 6px !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .settings-modal-title-wrap {
-  height: 100% !important;
   min-width: 0 !important;
-  gap: 5px !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .settings-modal-icon {
-  width: 18px !important;
-  height: 18px !important;
-  min-width: 18px !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -888,28 +870,8 @@ body.theme-retro .calendar-event-time {
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .settings-modal-title-text {
-  gap: 0 !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .settings-modal-header h2 {
-  font-size: 12px !important;
-  line-height: 12px !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .settings-modal-header p {
-  font-size: 9px !important;
-  line-height: 9px !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .settings-modal-body {
   min-height: 0 !important;
-  margin: var(--retro-window-gap) !important;
-  padding: 8px !important;
-  gap: 8px !important;
   overflow: auto !important;
   background: var(--retro-client) !important;
   color: var(--retro-text) !important;
@@ -920,16 +882,11 @@ body.theme-retro .calendar-event-time {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .settings-section {
-  padding: 10px !important;
-  gap: 10px !important;
   background: var(--retro-cream) !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .settings-theme-card {
-  min-height: 126px !important;
-  padding: 10px !important;
-  gap: 6px !important;
   background: var(--retro-panel) !important;
   color: var(--retro-text) !important;
   opacity: 1 !important;

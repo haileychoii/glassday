@@ -9,7 +9,7 @@
    - Theme Card Grid, Font Form, Sync/Backup/Reset rows
 
    이 파일은 Settings의 size/spacing/layout만 담당한다.
-   surface color/blur는 widgets/settings.css와 themes/*.css에서 보완한다.
+   themes/*.css는 surface 외형만 조정한다. 크기와 배치는 이 공통 규칙을 따른다.
    z-index/portal 기본 구조는 overlays.css와 함께 확인한다.
    ============================================================ */
 

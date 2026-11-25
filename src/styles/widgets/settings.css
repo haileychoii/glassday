@@ -4,7 +4,7 @@
    Structural size/section grid는 layout.css, portal layer는 overlays.css와 연결된다.
    이 파일은 backdrop/window surface, Theme Card, action/sync/auth state를 보완한다.
    Frames: Fixed Title Bar + Scroll Body + repeated Settings Card.
-   Theme별 Settings 가독성은 각 themes/*.css의 settings selector가 마지막으로 조정한다.
+   Theme files may change only visual surfaces (color, border, radius, shadow, blur).
    ============================================================ */
 /* =========================================================
    SETTINGS MODAL
@@ -166,21 +166,6 @@
   .settings-webfont-grid,
   .settings-auth-stack {
     grid-template-columns: 1fr;
-  }
-
-  .settings-modal-header {
-    height: auto;
-    min-height: 72px;
-    padding: 16px 20px;
-  }
-
-  .settings-modal-body {
-    padding: 18px 20px 24px;
-  }
-
-  .settings-modal-window {
-    width: min(720px, calc(100vw - 28px));
-    max-height: calc(100vh - 24px);
   }
 
   .settings-sync-box {
