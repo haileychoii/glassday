@@ -6,13 +6,13 @@
 
 :is(html, body):is([data-theme="glass-light"], .theme-glass-light) .mobile-layout {
   /* Glass material comes from theme-surfaces.css at every viewport size. */
-  /* Desktop's 26/22/18px radii make compact phone widgets look inflated.
-   * Mobile uses a quieter 4px radius scale while preserving the glass material. */
-  --gd-radius-app: 20px;
-  --gd-radius-panel: 16px;
-  --gd-radius-widget: 12px;
-  --gd-radius-card: 8px;
-  --gd-radius-inner: 6px;
+  /* Use the same mobile radius ladder as every other rounded theme. */
+  --gd-radius-app: 24px;
+  --gd-radius-panel: 20px;
+  --gd-radius-widget: 20px;
+  --gd-radius-card: 12px;
+  --gd-radius-inner: 8px;
+  --gd-radius-button: 8px;
   --gd-widget-inner-radius: var(--gd-radius-inner);
   --journal-radius: var(--gd-radius-inner);
   --gd-surface-bg: linear-gradient(145deg, rgb(255 255 255 / 0.42), rgb(255 255 255 / 0.27));
@@ -30,12 +30,13 @@
 
 :is(html, body):is([data-theme="glass-dark"], .theme-glass-dark) .mobile-layout {
   /* Glass material comes from theme-surfaces.css at every viewport size. */
-  /* Match Glass Light's restrained mobile corner scale. */
-  --gd-radius-app: 20px;
-  --gd-radius-panel: 16px;
-  --gd-radius-widget: 12px;
-  --gd-radius-card: 8px;
-  --gd-radius-inner: 6px;
+  /* Match Glass Light's shared mobile radius ladder. */
+  --gd-radius-app: 24px;
+  --gd-radius-panel: 20px;
+  --gd-radius-widget: 20px;
+  --gd-radius-card: 12px;
+  --gd-radius-inner: 8px;
+  --gd-radius-button: 8px;
   --gd-widget-inner-radius: var(--gd-radius-inner);
   --journal-radius: var(--gd-radius-inner);
   --gd-surface-bg: linear-gradient(145deg, rgb(40 47 65 / 0.52), rgb(10 14 25 / 0.42));

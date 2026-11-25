@@ -9,6 +9,16 @@
  */
 
 .mobile-layout {
+  /* Shared mobile radius ladder (outer + padding = inner).
+   * Pixel Desk resets these to zero in mobile-pixel.css. */
+  --gd-radius-app: 24px;
+  --gd-radius-panel: 20px;
+  --gd-radius-widget: 20px;
+  --gd-radius-card: 12px;
+  --gd-radius-inner: 8px;
+  --gd-radius-button: 8px;
+  --gd-widget-inner-radius: var(--gd-radius-inner);
+  --journal-radius: var(--gd-radius-inner);
   --mobile-space-1: var(--gd-mobile-space-1);
   --mobile-space-2: var(--gd-mobile-space-2);
   --mobile-space-4: var(--gd-mobile-space-4);
@@ -29,6 +39,65 @@
   /* A 40px control stays compact in dense widget headers but is easier to tap.
    * 좁은 헤더를 과하게 키우지 않으면서 손가락으로 누르기 쉽게 맞춥니다. */
   --mobile-widget-action-size: 40px;
+}
+
+/* One radius hierarchy for nested mobile surfaces across rounded themes.
+ * Outer widget: 20px; inset surface: 12px; control: 8px. Circular actions
+ * and Pixel Desk are intentionally excluded. */
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora,
+  [data-theme="mac-core"], .theme-mac-core,
+  [data-theme="retro"], .theme-retro
+) .mobile-layout :is(
+  .mobile-widget-slot .glass-card,
+  .mobile-calendar-card,
+  .mobile-career-card
+) {
+  border-radius: var(--gd-radius-widget, 20px) !important;
+}
+
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora,
+  [data-theme="mac-core"], .theme-mac-core,
+  [data-theme="retro"], .theme-retro
+) .mobile-layout :is(
+  .study10-summary-card, .study10-timer, .study10-panel, .study10-task-row,
+  .study10-subject-total, .study10-subject-color-field > div,
+  .study10-empty, .study10-legacy-note,
+  .journal-section, .journal-summary-card, .memo-note-item,
+  .alert-center-item, .mobile-calendar-card__summary,
+  .mobile-career-metrics > div, .mobile-career-next,
+  .money-summary-panel, .money-budget-panel, .money-visual-panel,
+  .money-recent-panel, .money-detail-card,
+  .timer-widget-main-card, .timer-widget-settings-card
+) {
+  border-radius: var(--gd-radius-card, 16px) !important;
+}
+
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora,
+  [data-theme="mac-core"], .theme-mac-core,
+  [data-theme="retro"], .theme-retro
+) .mobile-layout :is(
+  input:not([type="color"]), textarea, select,
+  .study10-icon-button, .study10-today-button, .study10-date-control,
+  .study10-subject-tool, .study10-timer-button, .study10-add-button,
+  .study10-slot, .study10-task-delete, .study10-estimate-input,
+  .journal-date-nav button, .journal-date-nav input,
+  .journal-summary-toggle, .journal-mood-select,
+  .timer-widget-mode-button, .timer-widget-secondary,
+  .mobile-calendar-card__day
+) {
+  border-radius: var(--gd-radius-button, 8px) !important;
 }
 
 /* A compact, shared 4-point rhythm for the mobile shell and navigation. */
