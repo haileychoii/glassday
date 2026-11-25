@@ -251,7 +251,7 @@
   border:
     1px solid transparent;
 
-  border-radius: 16px;
+  border-radius: var(--gd-radius-card, 16px);
 
   background: transparent;
 
@@ -761,7 +761,7 @@
 
   -webkit-overflow-scrolling: touch;
 
-  border-radius: 18px;
+  border-radius: var(--gd-radius-card, 18px);
 
   outline: none;
 
@@ -1662,7 +1662,7 @@ body.theme-glass-dark
 
     padding: 8px 9px;
 
-    border-radius: 13px;
+    border-radius: var(--gd-radius-card, 12px);
   }
 
   .memo-note-title {
@@ -1741,7 +1741,7 @@ body.theme-glass-dark
   [contenteditable="true"].memo-editor {
     padding: 15px 13px;
 
-    border-radius: 15px;
+    border-radius: var(--gd-radius-button, 8px);
 
     font-size: 13px;
 
@@ -2554,7 +2554,7 @@ body.theme-glass-dark
 )
   .memo-widget
   :is(.memo-workspace, .memo-editor, .memo-window-editor) {
-  border-radius: 18px !important;
+  border-radius: var(--gd-radius-card, 18px) !important;
 }
 
 :is(

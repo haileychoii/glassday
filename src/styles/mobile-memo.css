@@ -140,8 +140,6 @@
   padding: var(--mobile-space-2) 0;
   scrollbar-gutter: auto;
 
-  border-radius: 12px;
-
   line-height: 1.6;
   overflow: auto;
 }
@@ -174,7 +172,7 @@
   max-width: none;
   height: 100%;
 
-  border-radius: 12px;
+  border-radius: var(--gd-radius-card, 12px);
   padding: 8px;
 }
 
@@ -404,7 +402,7 @@ body:has(.mobile-layout)
 
   padding: 8px 10px;
 
-  border-radius: 12px;
+  border-radius: var(--gd-radius-card, 12px);
   gap: 8px;
 }
 
@@ -548,7 +546,7 @@ body:has(.mobile-layout)
   min-width: 36px;
   height: 36px;
 
-  border-radius: 10px;
+  border-radius: var(--gd-radius-button, 8px);
 }
 
 
@@ -586,7 +584,7 @@ body:has(.mobile-layout)
 
   gap: 8px;
 
-  border-radius: 12px;
+  border-radius: var(--gd-radius-card, 12px);
 }
 
 body:has(.mobile-layout)
@@ -625,8 +623,6 @@ body:has(.mobile-layout)
   margin: 0;
   padding: 12px;
 
-  border-radius: 12px;
-
   line-height: 1.65;
 
   overflow: auto;
@@ -656,7 +652,7 @@ body:has(.mobile-layout)
 
   padding: 12px;
 
-  border-radius: 16px;
+  border-radius: var(--gd-radius-card, 12px);
 
   overflow-y: auto;
 }

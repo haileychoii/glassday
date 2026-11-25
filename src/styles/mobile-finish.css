@@ -258,7 +258,7 @@
   }
   & .mobile-widget-slot[data-widget-id="memo"] .memo-editor {
     border: 0 !important;
-    border-radius: 8px !important;
+    border-radius: var(--gd-radius-button, 8px) !important;
     background: var(--memo-paper-surface, var(--ios-surface)) !important;
     color: var(--memo-editor-color, var(--ios-label)) !important;
     box-shadow: none !important;

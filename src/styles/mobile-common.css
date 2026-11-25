@@ -80,6 +80,22 @@
   border-radius: var(--gd-radius-card, 16px) !important;
 }
 
+/* In glass themes Memo's workspace is a transparent layout wrapper, not a
+ * second card. Keep its paper editor as the only rounded inset surface. */
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora,
+  [data-theme="retro"], .theme-retro
+) .mobile-layout .mobile-widget-slot[data-widget-id="memo"] {
+  & .memo-workspace,
+  & .memo-list-panel,
+  & .memo-editor-shell { border-radius: 0 !important; }
+
+  & .memo-editor { border-radius: var(--gd-radius-button, 8px) !important; }
+}
+
 :is(html, body):is(
   [data-theme="pastel"], .theme-pastel,
   [data-theme="glass-light"], .theme-glass-light,
