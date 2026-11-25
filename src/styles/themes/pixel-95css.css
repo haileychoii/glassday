@@ -25,6 +25,8 @@
   --w95-gray: #808080;
   --w95-navy: #0f0086;
   --w95-teal: #008080;
+  --w95-inner-face: #dedede;
+  --w95-inner-line: #808080;
   --gd-widget-header-bg: var(--w95-navy);
   --gd-widget-header-color: var(--w95-white);
 
@@ -69,6 +71,40 @@
   box-shadow: var(--w95-shadow-raised-deep);
 }
 
+/* One interior panel rule for every widget. Earlier theme files had separate
+   Journal, Study, Timer, Money, and Career surface treatments; this shared
+   95CSS gray panel removes those mismatched fills and stroke weights. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  .today-focus-main, .today-focus-hero, .today-focus-section,
+  .today-focus-block, .today-focus-task, .today-focus-mini-item,
+  .alert-center-item, .alert-item, .alert-summary-card,
+  .calendar-event-item, .calendar-event-card, .calendar-mini-card,
+  .calendar-month-day-cell, .calendar-event-card,
+  .career-summary-card, .career-card, .career-list-item,
+  .mobile-career-row, .mobile-career-next, .mobile-career-metrics > div,
+  .journal-summary-card, .journal-score-inline, .journal-section,
+  .journal-task-item, .journal-clip-item, .journal-library-item,
+  .money-summary-panel, .money-budget-panel, .money-visual-panel,
+  .money-recent-panel, .money-detail-card, .money-transaction-row,
+  .memo-list-panel, .memo-note-item, .memo-workspace,
+  .mood-row, .study-card, .study-overview-panel, .study-input-panel,
+  .study-goal-panel, .study-week-panel, .study-task-panel,
+  .study-record-list-panel, .study10-summary-card, .study10-timer,
+  .study10-panel, .study10-task-row, .study10-subject-total,
+  .study10-empty, .timer-widget-main-card
+) {
+  border: 1px solid var(--w95-inner-line) !important;
+  border-radius: 0 !important;
+  background: var(--w95-inner-face) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
 /* Every interactive control uses the same raised face. Active state reverses
    that same layered edge to read as physically pressed. */
 :is(
@@ -84,6 +120,20 @@
   border-radius: 0;
   background-color: var(--w95-face);
   box-shadow: var(--w95-shadow-raised);
+}
+
+/* Inline task text is deliberately borderless inside its 95CSS row; treating
+   it like a full input field clips the compact Mona12 glyphs. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) .journal-task-item > input {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 :is(
