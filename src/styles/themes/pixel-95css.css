@@ -27,6 +27,14 @@
   --w95-teal: #008080;
   --w95-inner-face: #dedede;
   --w95-inner-line: #808080;
+  /* Pixel Desk has one radius rule: every widget surface is square. */
+  --gd-radius-app: 0px;
+  --gd-radius-panel: 0px;
+  --gd-radius-widget: 0px;
+  --gd-radius-card: 0px;
+  --gd-radius-inner: 0px;
+  --gd-radius-button: 0px;
+  --gd-widget-inner-radius: 0px;
   --gd-widget-header-bg: var(--w95-navy);
   --gd-widget-header-color: var(--w95-white);
 
@@ -191,4 +199,21 @@
 ) :is(.mobile-layout, .app-shell-surface) .memo-editor {
   background-color: var(--w95-face);
   box-shadow: var(--w95-shadow-input);
+}
+
+/* Radius is a theme-wide rule, not a per-widget preference. Apply it last to
+   every widget implementation (GlassCard, Career's desktop shell, and the
+   standalone mobile Calendar/Career cards), including their inner controls. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  .glass-card, .glass-card *,
+  .career-widget, .career-widget *,
+  .mobile-calendar-card, .mobile-calendar-card *,
+  .mobile-career-card, .mobile-career-card *
+) {
+  border-radius: 0 !important;
 }
