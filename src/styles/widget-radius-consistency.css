@@ -1,0 +1,60 @@
+/*
+ * One radius hierarchy for every widget in every theme.
+ *
+ * Theme files may choose the radius tokens (Pixel Desk sets them to zero),
+ * but individual widgets do not get their own corner rules. This late shared
+ * layer covers both standard GlassCards and the standalone Calendar/Career
+ * cards used by the mobile dashboard.
+ */
+
+:is(
+  html[data-theme], body[data-theme],
+  html[class*="theme-"], body[class*="theme-"],
+  html.pixel-desk, body.pixel-desk
+) :is(
+  .mobile-layout .mobile-widget-slot .glass-card,
+  .app-shell-surface .glass-card,
+  .app-shell-surface .career-widget,
+  .mobile-layout .mobile-calendar-card,
+  .mobile-layout .mobile-career-card
+) {
+  border-radius: var(--gd-radius-widget, 20px) !important;
+}
+
+/* Panels and rows share the same inset radius regardless of which widget
+   renders them. Keep matching class names in this one shared rule instead of
+   re-declaring radius values in each widget stylesheet. */
+:is(
+  html[data-theme], body[data-theme],
+  html[class*="theme-"], body[class*="theme-"],
+  html.pixel-desk, body.pixel-desk
+) :is(
+  .mobile-layout .mobile-widget-slot .glass-card,
+  .app-shell-surface .glass-card,
+  .app-shell-surface .career-widget,
+  .mobile-layout .mobile-calendar-card,
+  .mobile-layout .mobile-career-card
+) :is(
+  [class*="-panel"], [class*="-card"], [class*="-section"],
+  [class*="-item"], [class*="-row"], [class*="-workspace"]
+) {
+  border-radius: var(--gd-radius-card, 12px) !important;
+}
+
+/* Interactive controls use the shared control radius. */
+:is(
+  html[data-theme], body[data-theme],
+  html[class*="theme-"], body[class*="theme-"],
+  html.pixel-desk, body.pixel-desk
+) :is(
+  .mobile-layout .mobile-widget-slot .glass-card,
+  .app-shell-surface .glass-card,
+  .app-shell-surface .career-widget,
+  .mobile-layout .mobile-calendar-card,
+  .mobile-layout .mobile-career-card
+) :is(
+  button, input, textarea, select, [role="button"],
+  .glass-button, .career-icon-button
+) {
+  border-radius: var(--gd-radius-button, 8px) !important;
+}

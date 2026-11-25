@@ -98,3 +98,6 @@
 
 /* Pixel controls and window faces follow the scoped 95CSS shadow language. */
 @import "./themes/pixel-95css.css";
+
+/* All widget shells, inner panels, and controls share one radius hierarchy. */
+@import "./widget-radius-consistency.css";
