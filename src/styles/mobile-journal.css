@@ -51,61 +51,6 @@
   padding: 7px 8px;
 }
 
-/* Pixel Desk keeps only its Win95 colors here; shared responsive dimensions
- * come from mobile-common.css and the theme-neutral rules above.
- * Pixel Desk의 색만 여기서 정하고 크기/여백은 공통 모바일 파일이 담당합니다. */
-:is(html, body):is(
-  [data-theme="pixel-desk"],
-  .theme-pixel-desk
-) .mobile-layout .mobile-widget-slot
-  .glass-card.daily-journal-widget {
-  background: #c0c0c0 !important;
-}
-
-:is(html, body):is(
-  [data-theme="pixel-desk"],
-  .theme-pixel-desk
-) .mobile-layout .mobile-widget-slot
-  .daily-journal-widget > .widget-frame__header {
-  background: #000080 !important;
-  color: #ffffff !important;
-}
-
-:is(html, body):is(
-  [data-theme="pixel-desk"],
-  .theme-pixel-desk
-) .mobile-layout .daily-journal-widget
-  > .widget-frame__header > .widget-frame__title-group {
-  background: transparent !important;
-  color: #ffffff !important;
-}
-
-:is(html, body):is(
-  [data-theme="pixel-desk"],
-  .theme-pixel-desk
-) .mobile-layout .daily-journal-widget
-  .journal-date-nav {
-  color: #000000 !important;
-}
-
-:is(html, body):is(
-  [data-theme="pixel-desk"],
-  .theme-pixel-desk
-) .mobile-layout .daily-journal-widget
-  .journal-date-nav :is(button, input) {
-  color: #000 !important;
-}
-
-/* 10. 기존 테마 장식이 헤더를 덮지 않게 한다. */
-.mobile-layout .mobile-widget-slot
-  .glass-card.daily-journal-widget::before,
-.mobile-layout .mobile-widget-slot
-  .glass-card.daily-journal-widget::after {
-  content: none !important;
-  display: none !important;
-}
-
-
 /* ============================================================================
  * 10. COMPACT MOBILE JOURNAL — final geometry + collapsible Summary
  *

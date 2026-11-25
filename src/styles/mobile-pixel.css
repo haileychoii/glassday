@@ -148,25 +148,8 @@
   /* The final shared Pixel title-bar treatment lives in
    * themes/pixel-widget-headers.css so mobile and desktop use one rule. */
 
-  /* =========================================================
-   * 7. 제목 / 아이콘 위치
-   *
-   * GlassCard.tsx의 기존 title-group, copy를 재사용.
-   * 추가 div나 span을 만들지 않는다.
-   * ========================================================= */
-
-  & .mobile-widget-slot .glass-card :is(
-    .widget-frame__title-group,
-    .widget-frame__copy
-  ) {
-    min-width: 0;
-    min-height: 0 !important;
-
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  /* Icon color and bevel are theme appearance; dimensions live in mobile-common.css. */
+  /* Shared mobile-common.css owns title alignment and icon dimensions.
+   * Pixel only changes icon color and removes decorative icon chrome. */
 
   & :is(
     .widget-frame__icon,
@@ -471,6 +454,28 @@
 
     background: var(--w95-title) !important;
     color: #ffffff !important;
+  }
+
+  /* Pixel PNGs have transparent margins. Render them larger than the 22px
+   * desktop tab slot so the glyph reads clearly in the phone taskbar. */
+  & .mobile-navigation-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 36px !important;
+    height: 36px !important;
+    flex: 0 0 36px !important;
+  }
+
+  & .mobile-navigation-icon .pixel-tab-icon {
+    display: block !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    image-rendering: pixelated !important;
   }
 
   /* =========================================================
