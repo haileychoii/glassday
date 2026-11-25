@@ -13,11 +13,17 @@
   --gd-widget-header-shadow: none;
 }
 
-:is(html[data-theme="pastel"], body[data-theme="pastel"], html.theme-pastel, body.theme-pastel,
-    html[data-theme="glass-light"], body[data-theme="glass-light"], html.theme-glass-light, body.theme-glass-light,
+:is(html[data-theme="pastel"], body[data-theme="pastel"], html.theme-pastel, body.theme-pastel) {
+  --gd-widget-header-bg: var(--gd-inner-bg);
+  --gd-widget-header-color: hsl(var(--foreground));
+}
+
+/* Glass cards already provide the frosted surface. Painting a second surface
+   on the square header leaves a visible rectangle behind every title row. */
+:is(html[data-theme="glass-light"], body[data-theme="glass-light"], html.theme-glass-light, body.theme-glass-light,
     html[data-theme="glass-dark"], body[data-theme="glass-dark"], html.theme-glass-dark, body.theme-glass-dark,
     html[data-theme="aurora"], body[data-theme="aurora"], html.theme-aurora, body.theme-aurora) {
-  --gd-widget-header-bg: var(--gd-inner-bg);
+  --gd-widget-header-bg: transparent;
   --gd-widget-header-color: hsl(var(--foreground));
 }
 
