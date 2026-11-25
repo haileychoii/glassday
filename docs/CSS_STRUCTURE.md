@@ -1,110 +1,79 @@
-# Glassday TSX-CSS 연결 지도
+# Glassday TSX와 CSS 연결 지도
 
-이 문서는 React 컴포넌트(TSX)가 어떤 스타일 파일의 규칙을 사용하는지, 앱 실행 때 CSS가 어떤 순서로 합쳐지는지 보여준다.
+이 문서는 코드에서 화면 모양을 찾는 사람을 위한 짧은 길잡이입니다. 모바일 파일 전체 설명과 새 위젯 추가 절차는 [모바일 UI 파일 지도](mobile-ui-map.md), 앱/위젯/Figma 전체 구조는 [UI Architecture and Figma Guide](UI_ARCHITECTURE_AND_FIGMA_GUIDE.md)에 있습니다.
 
-## 전체 연결 다이어그램
+## 먼저 알아둘 연결
 
 ```mermaid
-flowchart TD
-  Main[main.tsx 앱 시작] --> App[App.tsx 화면 선택]
-  Main --> Tailwind[index.css Tailwind 기본 스타일]
-  Main --> Entry[styles/index.css 앱 CSS 진입점]
-
-  App --> Shell[AppShell / Sidebar / Topbar · 웹]
-  App --> Grid[DashboardGrid · 웹]
-  App --> Render[WidgetRenderer · 웹/모바일 공용]
-  App --> Mobile[MobileLayout / MobileDashboard · 모바일]
-  App --> Overlay[SettingsModal / CommandPalette / QuickCapture · 공용]
-
-  Entry --> Foundation[spacing-tokens / fonts / base · 공용]
-  Entry --> LayoutCSS[layout / layout-modes / controls / dashboard-grid · 웹]
-  Entry --> ThemeCSS[themes/* / theme-surfaces · 공용]
-  Entry --> WidgetCSS[widgets/* · 공용 위젯]
-  Entry --> Responsive[responsive / overrides · 웹/모바일]
-  Entry --> MobileCSS[mobile.css / mobile-*.css · 모바일]
-  Entry --> PixelCSS[pixel-desktop-parity.css · 웹]
-
-  Shell --> LayoutCSS
-  Grid --> LayoutCSS
-  Render --> WidgetCSS
-  Render --> ThemeCSS
-  Mobile --> MobileCSS
-  Mobile --> Render
-  Overlay --> OverlayCSS[overlays.css / widgets/settings.css / themes · 공용]
-
-  ThemeState[constants/themes.ts 테마 상태 설정] -. data-theme 등으로 선택 .-> ThemeCSS
-
-  classDef app fill:#f3f4f6,stroke:#6b7280,color:#111827
-  classDef web fill:#dbeafe,stroke:#2563eb,color:#172554
-  classDef mobile fill:#fce7f3,stroke:#db2777,color:#831843
-  classDef shared fill:#dcfce7,stroke:#16a34a,color:#14532d
-  class Main,App,Entry app
-  class Shell,Grid,LayoutCSS,PixelCSS web
-  class Mobile,MobileCSS mobile
-  class Tailwind,Render,Overlay,OverlayCSS,Foundation,ThemeCSS,WidgetCSS,Responsive,ThemeState shared
+flowchart LR
+  MAIN[src/main.tsx] --> ENTRY[src/styles/index.css]
+  APP[src/App.tsx] --> SHELL[화면 레이아웃 TSX]
+  APP --> RENDER[WidgetRenderer.tsx]
+  RENDER --> WIDGET[위젯 TSX]
+  WIDGET --> FRAME[GlassCard.tsx 공통 바깥 틀]
+  WIDGET --> CLASS[className 이름]
+  CLASS --> WCSS[widgets/name.css]
+  CLASS --> MCSS[mobile-name.css]
+  ENTRY --> WCSS
+  ENTRY --> MCSS
+  THEME[themes + theme-surfaces.css] --> SURFACE[색/투명도/blur token]
+  SURFACE --> FRAME
+  SURFACE --> WIDGET
+  LAYOUT[MobileDashboard / DashboardGrid] --> SLOT[WidgetSlot]
+  SLOT --> WIDGET
 ```
 
-**색상 범례:** 파랑은 웹 전용, 분홍은 모바일 전용, 초록은 양쪽에서 공유, 회색은 앱 진입점이다.
+- `TSX`는 화면 요소와 동작을 만듭니다. 버튼을 누르면 무엇이 바뀌는지, 어떤 데이터를 표시할지를 담당합니다.
+- `className`은 TSX 요소의 이름표입니다. CSS는 이 이름표를 선택해 색, 크기, 간격, 배치를 정합니다.
+- `src/styles/index.css`는 CSS 목차이자 실제 로딩 순서입니다. 개별 TSX가 같은 CSS를 중복 import하지 않습니다.
+- 테마 파일은 공통 surface token의 색/재질 값을 바꾸고, 공통 layout이나 여백은 소유하지 않습니다.
 
-### 이 그림 읽는 법
+## 화면별 찾기
 
-- **화살표는 연결 관계**다. 예를 들어 `CalendarWidget.tsx`가 달력 DOM을 만들고, 그 DOM의 class 이름을 `widgets/calendar.css`가 꾸민다.
-- **CSS 파일은 TSX에서 각각 import하지 않는다.** `main.tsx`가 `styles/index.css`를 한 번 불러오고, 그 파일이 앱 CSS를 순서대로 연결한다.
-- **테마는 별도 흐름**이다. `constants/themes.ts`가 테마 class/data attribute를 설정하고, `themes/*.css`의 선택자들이 해당 화면에 적용된다.
-- **위젯 데이터와 모양은 별개**다. `WidgetRenderer.tsx`가 위젯 컴포넌트를 선택하고, 스타일은 위젯 class 이름에 맞춰 CSS가 적용한다.
+| 바꾸고 싶은 것 | 첫 번째로 열 파일 | 이어서 볼 파일 |
+|---|---|---|
+| 모바일 상단/스크롤/하단 탭 | `src/components/layout/MobileLayout.tsx` | `src/components/layout/MobileNavigation.tsx`, `src/styles/mobile.css` |
+| 모바일 위젯 순서/슬롯 | `src/components/mobile/MobileDashboard.tsx` | `WidgetSlot.tsx`, `mobile-common.css` |
+| 모든 위젯 제목/아이콘/바깥 여백 | `src/components/glass/GlassCard.tsx` | `src/styles/base.css`, `spacing-tokens.css`, `mobile-common.css` |
+| 특정 위젯의 내부 모습 | `src/components/widgets/[Name]Widget.tsx` | `src/styles/widgets/[name].css` |
+| 특정 위젯의 모바일 배치 | 위젯 TSX에서 `className` 찾기 | `src/styles/mobile-[name].css`, `src/styles/index.css` |
+| 테마 색/투명도/blur | `src/styles/theme-surfaces.css` | `src/styles/mobile-glass.css`, `src/styles/themes/[name].css` |
+| Desktop/Laptop 그리드 | `src/components/grid/DashboardGrid.tsx` | `gridDefaults.ts`, `dashboard-grid.css`, `overrides.css` |
+| 새 위젯이 선택 목록에 안 나타남 | `src/constants/widgets.ts` | `WidgetRenderer.tsx`, `DashboardGrid.tsx`, `dashboardTabs.ts` |
 
-## TSX 컴포넌트별 CSS 연결
+## 실제 import 순서
 
-| TSX 컴포넌트 | 연결되는 CSS와 역할 |
-| --- | --- |
-| `src/App.tsx` | 데스크톱/모바일 화면을 선택한다. 전역 CSS는 `main.tsx`에서 로드된다. |
-| `src/components/layout/AppShell.tsx`, `Sidebar.tsx`, `Topbar.tsx` | `layout.css`, `layout-modes.css`, 테마별 스타일, 반응형 규칙 |
-| `src/components/grid/DashboardGrid.tsx` | `dashboard-grid.css`, `layout.css`, `responsive.css`; react-grid-layout 라이브러리 CSS는 이 TSX에서 별도 import |
-| `src/components/widgets/WidgetRenderer.tsx` | 실제 위젯 TSX를 골라 렌더링한다. 위젯 외형은 각 위젯 CSS가 담당 |
-| `CalendarWidget.tsx`, `calendar/MonthCalendar.tsx`, `calendar/WeekTimeline.tsx` | `widgets/calendar.css`; 모바일 조정은 `mobile-calendar.css` |
-| `CareerWidget.tsx` | `widgets/career.css`; 모바일 조정은 `mobile-career.css` |
-| `DailyJournalWidget.tsx` | `widgets/journal.css`; 모바일 조정은 `mobile-journal.css`, 공통 마무리 규칙은 `mobile-finish.css` |
-| `StudyWidget.tsx` | `widgets/study.css`; 모바일 조정은 `mobile-study.css` |
-| `MemoWidget.tsx`, `MoneyWidget.tsx`, `TimerWidget.tsx` | 각 `widgets/memo.css`, `widgets/money.css`, `widgets/timer.css`와 대응되는 `mobile-memo.css`, `mobile-money.css`, `mobile-timer.css` |
-| `TodayFocusWidget.tsx`, `AlertCenterWidget.tsx`, `MoodWidget.tsx` | 각 `widgets/today-focus.css`, `widgets/alert-center.css`, `widgets/mood.css` |
-| `SettingsModal.tsx` | `widgets/settings.css`, `overlays.css`, 테마별 선택자 |
-| `MobileLayout.tsx`, `MobileDashboard.tsx` | `mobile.css`와 `mobile-*.css`; 위젯 내용은 데스크톱과 같은 `WidgetRenderer` 또는 모바일 전용 요약 카드 사용 |
-| `MobileCalendarCard.tsx`, `MobileCareerCard.tsx`, `MobileStudyCard.tsx` | 각 `mobile-calendar.css`, `mobile-career.css`, `mobile-study.css`가 담당. 세 CSS 모두 `styles/index.css`에서 전역으로 로드 |
-
-## 실제 로딩 순서
+화살표 아래 순서대로 `src/styles/index.css`에서 불립니다. 같은 중요도의 규칙이 충돌하면 뒤의 파일이 이길 수 있으므로, 값을 바꾸기 전에는 같은 class를 `rg`로 검색해 중복 정의와 뒤쪽 override를 확인합니다.
 
 ```text
-main.tsx
-├─ index.css                 Tailwind 기본 레이어
-└─ styles/index.css          앱 CSS 진입점, 아래 순서대로 적용
-   ├─ spacing-tokens → fonts → base
-   ├─ layout / controls / grid / overlays / command
-   ├─ themes/* → theme-surfaces
-   ├─ widgets/*
-   ├─ responsive → overrides
-   ├─ mobile.css → mobile 위젯별 CSS → mobile-pixel/journal/finish
-   └─ pixel-desktop-parity
+1. spacing-tokens.css, fonts.css, base.css
+   기본 변수, 폰트, 버튼/GlassCard 공통 구조
+2. layout.css, layout-modes.css, controls.css, dashboard-grid.css, overlays.css, command.css
+   앱 배치, 그리드, 입력 도구, 팝업
+3. themes/*.css, theme-surfaces.css
+   테마 선택 색과 semantic surface 변수
+4. widgets/*.css
+   각 위젯 내부의 기본 구성
+5. responsive.css, overrides.css
+   화면 크기/호환 보정
+6. mobile.css, mobile-calendar/career/memo/money/timer.css
+   모바일 화면과 기능별 모바일 콘텐츠
+7. mobile-pixel.css, mobile-journal.css, mobile-finish.css
+   Pixel Desk, Journal 배치, Mac Core/설정
+8. pixel-desktop-parity.css, pink-diary.css, desktop-window.css
+   테마 parity와 앱 창 표시
+9. responsive-widgets.css, mobile-common.css, mobile-glass.css, pixel-widget-headers.css
+   반응형 위젯, 모바일 공통 프레임, Glass 재질, Pixel 제목바
 ```
 
-CSS는 뒤에서 불러온 같은 우선순위 규칙이 앞 규칙을 덮을 수 있다. 그러므로 전역 진입점과 순서를 하나로 유지해야 결과를 예측하기 쉽다.
+## 새 위젯을 추가할 때
 
-## 합치거나 정리할 기준
+1. Figma에서 카드/제목/본문/반복 행/빈 상태와 편집 상태를 정의합니다.
+2. `src/types/workspace.ts`의 위젯 ID 규약을 확인하고 `src/constants/widgets.ts`에 표시 이름/설명을 등록합니다.
+3. `src/components/widgets/[Name]Widget.tsx`에서 UI와 상호작용을 만들고, 내부 요소에 읽을 수 있는 `className`을 부여합니다.
+4. `src/components/widgets/WidgetRenderer.tsx`와 `src/components/grid/DashboardGrid.tsx`에서 실제 React component 연결을 추가합니다.
+5. `src/components/grid/gridDefaults.ts`와 `src/constants/dashboardTabs.ts`에 기본 크기/표시 탭을 정합니다.
+6. `src/styles/widgets/[name].css`에서 내부 스타일을 만들고, 모바일 조정은 기존 모바일 CSS 책임에 맞춰 넣습니다.
+7. `src/styles/index.css`에 파일을 한 번만 연결하고, Figma/코드 파일 지도를 업데이트합니다.
 
-- **이번에 제거한 중복:** `MobileCalendarCard.tsx`, `MobileCareerCard.tsx`, `MobileStudyCard.tsx`의 CSS import. 해당 CSS는 이미 `styles/index.css`에서 불리므로 컴포넌트에서도 불러올 이유가 없었다.
-- `src/index.css`와 `src/styles/index.css`는 합치지 않는다. 앞 파일은 Tailwind 진입점이고 뒤 파일은 앱 CSS의 순서표라 역할이 다르다.
-- `spacing-tokens.css`와 `base.css`도 분리 유지한다. 변수의 기준값과 실제 공통 프레임 규칙은 서로 다른 책임이다.
-- `layout.css`와 `layout-modes.css`는 합칠 수는 있지만, 현재 하나는 공통 화면 배치, 다른 하나는 wide/laptop 모드라 구분이 유효하다. 파일 수만 줄이려고 합치면 찾기 어려워질 수 있어 유지한다.
-- **가장 먼저 나눠 정리할 후보는 `overrides.css`(약 118 KB)**다. 파일이 너무 커서 모든 예외를 찾기 어렵다. 규칙을 하나씩 소유 영역(layout/theme/widget/mobile)으로 옮기고, cascade 순서를 확인하며 검증해야 한다.
-- `mobile-finish.css`(약 45 KB)는 여러 위젯의 마지막 모바일 보정이 섞여 있다. 한 번에 쪼개지 말고 선택자 중복과 소유 컴포넌트를 확인한 뒤 점진적으로 이동한다.
-- 개별 `widgets/*.css`와 테마 CSS는 각자 다른 컴포넌트/테마를 소유하므로 지금은 합치지 않는 편이 낫다.
-
-## 어디를 수정하면 되나
-
-| 바꾸려는 내용 | 우선 확인할 파일 |
-| --- | --- |
-| 모든 위젯의 공통 간격/크기 | `spacing-tokens.css`, `base.css` |
-| 앱 창·사이드바·레이아웃 모드 | `layout.css`, `layout-modes.css`, `dashboard-grid.css` |
-| 특정 위젯 내부 | `widgets/<widget>.css` |
-| 특정 테마 | `themes/<theme>.css`, `theme-surfaces.css` |
-| 모바일에서만 다른 배치 | `mobile*.css` |
-| 여러 영역에 걸친 예외 | 마지막 수단으로 `overrides.css`; 가능하면 소유 파일로 옮긴다 |
+위젯 ID, 저장 데이터, 모바일 예외까지 포함한 자세한 단계는 [모바일 UI 파일 지도](mobile-ui-map.md)의 “새 위젯을 실제 앱에 추가할 때”를 따릅니다. 사용자가 이미 저장한 ID를 바꾸면 기존 배치와 연결이 끊길 수 있으니 ID 변경에는 migration이 필요합니다.
