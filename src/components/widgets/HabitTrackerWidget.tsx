@@ -130,26 +130,21 @@ export const HabitTrackerWidget = () => {
     setEditColor(habit.color ?? HABIT_ACCENTS[Math.max(index, 0) % HABIT_ACCENTS.length]);
   };
 
-  const saveHabit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const trimmedName = editName.trim();
-    if (!editingHabitId || !trimmedName) return;
-
+  const updateEditingHabit = (changes: Partial<Pick<Habit, "name" | "color">>) => {
+    if (!editingHabitId) return;
     setValue((current) => normalizeHabits(current).map((habit) =>
-      habit.id === editingHabitId
-        ? { ...habit, name: trimmedName, color: editColor }
-        : habit
+      habit.id === editingHabitId ? { ...habit, ...changes } : habit
     ));
+  };
+
+  const closeEditingHabit = () => {
+    const trimmedName = editName.trim();
+    if (trimmedName) updateEditingHabit({ name: trimmedName, color: editColor });
     setEditingHabitId(null);
     setEditName("");
     setEditColor(HABIT_ACCENTS[0]);
   };
 
-  const cancelEditingHabit = () => {
-    setEditingHabitId(null);
-    setEditName("");
-    setEditColor(HABIT_ACCENTS[0]);
-  };
 
   const removeHabit = (habitId: string) => {
     setValue((current) =>
@@ -341,7 +336,7 @@ export const HabitTrackerWidget = () => {
                       </button>
                     </div>
                     {editing && (
-                      <form className="habit-tracker__edit-form" onSubmit={saveHabit}>
+                      <div className="habit-tracker__edit-form">
                         <label className="sr-only" htmlFor={`habit-tracker-edit-${habit.id}`}>
                           {habit.name} 이름 수정
                         </label>
@@ -349,7 +344,11 @@ export const HabitTrackerWidget = () => {
                           id={`habit-tracker-edit-${habit.id}`}
                           maxLength={24}
                           value={editName}
-                          onChange={(event) => setEditName(event.target.value)}
+                          onChange={(event) => {
+                            const nextName = event.target.value;
+                            setEditName(nextName);
+                            if (nextName.trim()) updateEditingHabit({ name: nextName.trim() });
+                          }}
                         />
                         <div className="habit-tracker__edit-color-row">
                           <span className="habit-tracker__edit-color-label">색상</span>
@@ -362,7 +361,10 @@ export const HabitTrackerWidget = () => {
                                 style={{ "--habit-swatch": color } as CSSProperties}
                                 aria-label={`색상 예시 ${colorIndex + 1}`}
                                 aria-pressed={editColor === color}
-                                onClick={() => setEditColor(color)}
+                                onClick={() => {
+                                  setEditColor(color);
+                                  updateEditingHabit({ color });
+                                }}
                               />
                             ))}
                             <label className="habit-tracker__custom-color">
@@ -370,21 +372,24 @@ export const HabitTrackerWidget = () => {
                                 type="color"
                                 value={editColor}
                                 aria-label="직접 색상 선택"
-                                onChange={(event) => setEditColor(event.target.value)}
+                                onChange={(event) => {
+                                  setEditColor(event.target.value);
+                                  updateEditingHabit({ color: event.target.value });
+                                }}
                               />
                               <span>직접</span>
                             </label>
                           </div>
-                        </div>
-                        <div className="habit-tracker__edit-actions">
-                          <button type="submit" aria-label="습관 수정 저장" disabled={!editName.trim()}>
-                            <Check size={15} aria-hidden="true" />
-                          </button>
-                          <button type="button" aria-label="이름 수정 취소" onClick={cancelEditingHabit}>
+                          <button
+                            type="button"
+                            className="habit-tracker__edit-close"
+                            aria-label="편집 닫기"
+                            onClick={closeEditingHabit}
+                          >
                             <X size={15} aria-hidden="true" />
                           </button>
                         </div>
-                      </form>
+                      </div>
                     )}
                     <div className="habit-tracker__week-days">
                       {weekDates.map((day) => {

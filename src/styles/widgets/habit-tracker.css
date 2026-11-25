@@ -444,11 +444,31 @@
 
 .habit-tracker__edit-colors {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 6px;
   min-width: 0;
   padding: 2px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.habit-tracker__edit-colors::-webkit-scrollbar { display: none; }
+
+.habit-tracker__edit-close {
+  display: grid;
+  flex: 0 0 32px;
+  place-items: center;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+  color: hsl(var(--muted-foreground));
+  border: 1px solid var(--gd-widget-control-border, hsl(var(--border) / 0.5));
+  border-radius: 9px;
+  background: var(--gd-widget-control-bg, hsl(var(--background) / 0.4));
+  cursor: pointer;
 }
 
 .habit-tracker__edit-form .habit-tracker__edit-colors button {
@@ -517,18 +537,6 @@
   background: var(--gd-widget-control-bg, hsl(var(--background) / 0.5));
   font-size: 13px;
   line-height: 18px;
-}
-
-.habit-tracker__edit-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-}
-
-.habit-tracker__edit-form button[type="submit"] {
-  color: hsl(var(--primary-foreground));
-  border-color: hsl(var(--primary));
-  background: hsl(var(--primary));
 }
 
 .habit-tracker__edit-form :is(input, button, .habit-tracker__custom-color):focus-visible {
