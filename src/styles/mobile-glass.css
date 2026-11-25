@@ -271,3 +271,17 @@
   fill: currentColor;
   filter: drop-shadow(0 1px 2px rgb(31 42 71 / 0.14));
 }
+
+/* A slightly stronger mobile widget blur separates the shared glass cards
+ * from detailed wallpapers while keeping widget contents crisp. */
+:is(html, body):is(
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark
+) .mobile-layout :is(
+  .mobile-widget-slot .glass-card,
+  .mobile-calendar-card,
+  .mobile-career-card
+) {
+  backdrop-filter: blur(30px) saturate(165%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(165%) !important;
+}
