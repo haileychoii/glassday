@@ -606,7 +606,9 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   > :is(.mobile-career-card__header, .mobile-calendar-card__header)
   > .widget-frame__title-group {
   display: flex !important;
-  align-items: center !important;
+  /* Align the icon with the primary title line, not the combined title and
+   * subtitle block. This keeps two-line headers from making the icon look low. */
+  align-items: flex-start !important;
   justify-content: flex-start !important;
   flex: 1 1 auto !important;
   min-width: 0 !important;
