@@ -478,6 +478,18 @@
     image-rendering: pixelated !important;
   }
 
+  /* The generic flat-row pass keeps 1px borders for most lists. Memo's note
+   * cards are raised Windows panels, so preserve the shared 2px bevel here. */
+  & .mobile-widget-slot .memo-widget .memo-note-item {
+    border: var(--w95-bevel-width) solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+    box-shadow: none !important;
+  }
+
   /* =========================================================
    * 17. 입력창
    *
