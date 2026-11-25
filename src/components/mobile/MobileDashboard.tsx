@@ -57,7 +57,7 @@ export const MobileDashboard = ({
             ) : id === "career" ? (
               <MobileCareerCard />
             ) : (
-              <WidgetSlot widgetId={id} />
+              <WidgetSlot widgetId={id} attachToParent />
             )}
           </div>
         );

@@ -6,15 +6,18 @@
 import { useCallback, useContext } from "react";
 import { WidgetHostContext } from "./widgetHostContext";
 
-export const WidgetSlot = ({ widgetId, editMode = false }: {
+export const WidgetSlot = ({ widgetId, editMode = false, attachToParent = false }: {
   widgetId: string;
   editMode?: boolean;
+  /** Mount the shared widget host in the surrounding mobile slot itself. */
+  attachToParent?: boolean;
 }) => {
   const host = useContext(WidgetHostContext)[widgetId];
   const attach = useCallback((slot: HTMLDivElement | null) => {
     if (!host || !slot) return;
-    return host.attach(slot, editMode);
-  }, [host, editMode]);
+    const target = attachToParent ? slot.parentElement ?? slot : slot;
+    return host.attach(target, editMode);
+  }, [host, editMode, attachToParent]);
 
   return host ? <div ref={attach} style={{ display: "contents" }} /> : (
     <div className="glass-card unknown-widget-card">Unknown widget: {widgetId}</div>
