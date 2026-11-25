@@ -230,21 +230,14 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="cale
   min-height: var(--mobile-widget-min-body-height) !important;
 }
 
-/* Today Focus and Alert Center are content-height cards on mobile. Their desktop
- * roots use `height: 100%`; preserve enough body room after switching to natural
- * height so the title row cannot consume the whole card. / 첫 두 위젯의 본문이
- * 헤더 한 줄 높이로 접히지 않도록 모바일 최소 본문 공간을 확보합니다. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="today"] {
+/* Today Focus and Alert Center must grow to their full content height on mobile.
+ * Fixed/1fr desktop tracks made their content spill over the next widget. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot:is(
+  [data-widget-id="today"], [data-widget-id="alerts"]
+) {
   display: block !important;
   height: auto !important;
-  min-height: 280px !important;
-  overflow: visible !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="alerts"] {
-  display: block !important;
-  height: auto !important;
-  min-height: 176px !important;
+  min-height: 0 !important;
   overflow: visible !important;
 }
 
@@ -252,52 +245,43 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot:is(
   [data-widget-id="today"], [data-widget-id="alerts"]
 ) > .widget-instance-root {
   display: block !important;
+  width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
   overflow: visible !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="today"]
-  > .widget-instance-root > .today-focus-widget {
-  display: grid !important;
-  height: auto !important;
-  min-height: 250px !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
+  > .widget-instance-root > .today-focus-widget,
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="alerts"]
+  > .widget-instance-root > .alert-center-widget {
+  display: flex !important;
   flex-direction: column !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
   overflow: visible !important;
 }
 
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="today"]
-  > .widget-instance-root > .today-focus-widget > .widget-frame__body {
-  display: flex !important;
-  flex: 0 0 auto !important;
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot:is(
+  [data-widget-id="today"], [data-widget-id="alerts"]
+) > .widget-instance-root > :is(.today-focus-widget, .alert-center-widget)
+  > .widget-frame__body {
+  display: block !important;
+  flex: none !important;
+  width: 100% !important;
   height: auto !important;
-  min-height: 190px !important;
+  min-height: 0 !important;
+  max-height: none !important;
   overflow: visible !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="today"] .today-focus {
+  display: grid !important;
+  width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
-  overflow: visible !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="alerts"]
-  > .widget-instance-root > .alert-center-widget {
-  display: grid !important;
-  height: auto !important;
-  min-height: 176px !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
-  flex-direction: column !important;
-  overflow: visible !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="alerts"]
-  > .widget-instance-root > .alert-center-widget > .widget-frame__body {
-  display: flex !important;
-  flex: 0 0 auto !important;
-  height: auto !important;
-  min-height: 100px !important;
   overflow: visible !important;
 }
 

@@ -119,6 +119,8 @@
   background: var(--gd-inner-bg) !important;
   border-color: var(--gd-inner-border) !important;
   box-shadow: var(--gd-widget-panel-shadow) !important;
+  backdrop-filter: blur(20px) saturate(155%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(155%) !important;
 }
 
 /* Timer's compact mobile layout clears its panel background so controls can
