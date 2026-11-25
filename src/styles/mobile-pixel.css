@@ -552,7 +552,7 @@
    * ========================================================= */
 
   & .mobile-widget-slot :is(
-    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
     textarea,
     select
   ) {
@@ -587,7 +587,7 @@
   ),
   & .mobile-widget-slot :is(
     button,
-    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
     textarea,
     select
   ) {
@@ -638,7 +638,7 @@
   }
 
   & .mobile-widget-slot :is(
-    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
     textarea,
     select
   ) {

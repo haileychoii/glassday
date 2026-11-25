@@ -723,7 +723,14 @@
   border: 0;
   background: transparent;
   outline: none;
+  appearance: textfield;
   font-size: 10px;
+}
+
+.study10-estimate-input input::-webkit-inner-spin-button,
+.study10-estimate-input input::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
 }
 
 .study10-estimate-input span {

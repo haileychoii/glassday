@@ -172,7 +172,7 @@
   html.pixel-desk, body.pixel-desk,
   html.theme-pixel, body.theme-pixel
 ) :is(.mobile-layout, .app-shell-surface) :is(
-  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+  input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
   textarea, select, [contenteditable="true"]
 ) {
   border: 0;

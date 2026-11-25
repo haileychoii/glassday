@@ -570,9 +570,11 @@ main {
     border-radius: 0 !important;
   }
 
-  input,
-  select,
-  textarea {
+  /* Compact Study controls already define their own type scale. The mobile
+     16px focus-zoom safeguard must not enlarge those fields and clip them. */
+  input:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *),
+  select:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *),
+  textarea:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *) {
     font-size: var(--gd-mobile-input-font-size) !important;
   }
 
