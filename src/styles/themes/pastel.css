@@ -561,7 +561,6 @@
 /* Inner pastel glass edge
    These panels use one soft reflection recipe instead of a hard colored line.
    / 내부 박스도 선을 그리지 않고 흰 반사광과 약한 색 반사로 구분한다. */
-.theme-pastel .today-focus-main,
 .theme-pastel .today-focus-section,
 .theme-pastel .today-focus-block,
 .theme-pastel .calendar-mini-card,
@@ -578,7 +577,6 @@
 }
 
 /* 내부 요소에 깔린 그라데이션/대각선/과한 광택 제거 */
-.theme-pastel .today-focus-main,
 .theme-pastel .today-focus-section,
 .theme-pastel .today-focus-block,
 .theme-pastel .career-list-item,

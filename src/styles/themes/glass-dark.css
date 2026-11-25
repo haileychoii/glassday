@@ -305,7 +305,6 @@ body.desktop-transparent[data-theme="glass-dark"] .glass-card {
    Tauri에서는 반투명 smoked glass로 낮춘다.
 ============================================================ */
 
-html.desktop-transparent[data-theme="glass-dark"] .today-focus-main,
 html.desktop-transparent[data-theme="glass-dark"] .today-focus-hero,
 html.desktop-transparent[data-theme="glass-dark"] .today-focus-section,
 html.desktop-transparent[data-theme="glass-dark"] .today-focus-block,
@@ -318,7 +317,6 @@ html.desktop-transparent[data-theme="glass-dark"] .alert-item,
 html.desktop-transparent[data-theme="glass-dark"] .journal-section,
 html.desktop-transparent[data-theme="glass-dark"] .study-card,
 
-body.desktop-transparent[data-theme="glass-dark"] .today-focus-main,
 body.desktop-transparent[data-theme="glass-dark"] .today-focus-hero,
 body.desktop-transparent[data-theme="glass-dark"] .today-focus-section,
 body.desktop-transparent[data-theme="glass-dark"] .today-focus-block,

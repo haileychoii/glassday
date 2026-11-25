@@ -619,7 +619,7 @@
     .journal-empty-box, .memo-note-item, .alert-center-item,
     .money-summary-panel, .money-budget-panel, .money-visual-panel,
     .money-recent-panel, .money-detail-card,
-    .today-focus-main, .today-focus-hero, .today-focus-section,
+    .today-focus-hero, .today-focus-section,
     .today-focus-block
   ) {
     border: var(--w95-flat-width) solid var(--w95-shadow) !important;

@@ -56,7 +56,6 @@
   [data-theme="glass-dark"], .theme-glass-dark,
   [data-theme="aurora"], .theme-aurora
 ) .mobile-layout :is(
-  .today-focus-main,
   .today-focus-hero,
   .today-focus-section,
   .today-focus-block,
@@ -124,7 +123,6 @@
   [data-theme="glass-dark"], .theme-glass-dark,
   [data-theme="aurora"], .theme-aurora
 ) .mobile-layout :is(
-  .today-focus-main,
   .today-focus-hero,
   .today-focus-section,
   .today-focus-block,

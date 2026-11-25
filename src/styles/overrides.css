@@ -1175,7 +1175,7 @@ body,
 }
 
 .dashboard-grid-item :is(
-  .today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block,
+  .today-focus-hero, .today-focus-section, .today-focus-block,
   .today-focus-task, .today-focus-mini-item, .calendar-event-item, .calendar-event-card,
   .calendar-mini-card, .career-summary-card, .career-list-item, .career-board-card,
   .memo-note-item, .memo-workspace, .memo-list-panel, .memo-editor,

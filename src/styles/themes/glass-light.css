@@ -177,7 +177,6 @@ body[data-theme="glass-light"] .glass-card {
 }
 
 /* inner panels */
-html[data-theme="glass-light"] .today-focus-main,
 html[data-theme="glass-light"] .today-focus-hero,
 html[data-theme="glass-light"] .today-focus-section,
 html[data-theme="glass-light"] .today-focus-block,
@@ -189,7 +188,6 @@ html[data-theme="glass-light"] .memo-note-item,
 html[data-theme="glass-light"] .alert-item,
 html[data-theme="glass-light"] .journal-section,
 html[data-theme="glass-light"] .study-card,
-body[data-theme="glass-light"] .today-focus-main,
 body[data-theme="glass-light"] .today-focus-hero,
 body[data-theme="glass-light"] .today-focus-section,
 body[data-theme="glass-light"] .today-focus-block,
@@ -542,9 +540,7 @@ body[data-theme="glass-light"] .money-icon-button:hover {
 }
 
 html[data-theme="glass-light"] .today-focus-hero,
-html[data-theme="glass-light"] .today-focus-main,
-body[data-theme="glass-light"] .today-focus-hero,
-body[data-theme="glass-light"] .today-focus-main {
+body[data-theme="glass-light"] .today-focus-hero {
   background: var(--gd-glass-light-holo-soft) !important;
   border-color: rgba(255, 255, 255, 0.56) !important;
   box-shadow:
@@ -937,7 +933,6 @@ body.desktop-transparent[data-theme="glass-light"] .glass-card {
    8. INNER GLASS SURFACES
 ============================================================ */
 
-html.desktop-transparent[data-theme="glass-light"] .today-focus-main,
 html.desktop-transparent[data-theme="glass-light"] .today-focus-hero,
 html.desktop-transparent[data-theme="glass-light"] .today-focus-section,
 html.desktop-transparent[data-theme="glass-light"] .today-focus-block,
@@ -950,7 +945,6 @@ html.desktop-transparent[data-theme="glass-light"] .alert-item,
 html.desktop-transparent[data-theme="glass-light"] .journal-section,
 html.desktop-transparent[data-theme="glass-light"] .study-card,
 
-body.desktop-transparent[data-theme="glass-light"] .today-focus-main,
 body.desktop-transparent[data-theme="glass-light"] .today-focus-hero,
 body.desktop-transparent[data-theme="glass-light"] .today-focus-section,
 body.desktop-transparent[data-theme="glass-light"] .today-focus-block,

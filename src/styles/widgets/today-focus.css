@@ -4,7 +4,7 @@
    Shared selectors: Alert/Calendar/Career/Study/Journal root의 최소 크기와 overflow safety.
    Today Frames: Hero Summary, Top Tasks, linked Calendar/Career grid, Pinned Memo, Alert.
    today-focus 전용 layout과 여러 lightweight Widget의 공통 root guard가 함께 있는 파일이다.
-   Theme material은 이 파일이 아니라 theme-surfaces.css/themes/*.css에서 결정한다.
+   Theme material과 corner radius는 theme-surfaces.css/themes/*.css에서 결정한다.
    ============================================================ */
 /* =========================================================
    TODAY FOCUS / ALERT / BASIC WIDGET CONTENT
@@ -68,7 +68,6 @@
    1. Today hero
 ========================================================= */
 
-.today-focus-main,
 .today-focus-hero {
   width: 100%;
   min-width: 0;
@@ -80,12 +79,9 @@
   align-items: center;
   gap: var(--gd-widget-stack-gap);
 
-  border-radius: var(--gd-radius-card, 24px);
-
   box-sizing: border-box;
 }
 
-.today-focus-main > *,
 .today-focus-hero > * {
   min-width: 0;
 }
@@ -131,7 +127,6 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 999px;
 }
 
 /* =========================================================
@@ -150,8 +145,6 @@
 
   display: grid;
   gap: var(--gd-widget-stack-gap);
-
-  border-radius: var(--gd-radius-inner, 20px);
 
   box-sizing: border-box;
 }
@@ -211,8 +204,6 @@
   align-items: center;
   gap: 10px;
 
-  border-radius: var(--gd-radius-inner, 18px);
-
   box-sizing: border-box;
 }
 
@@ -226,7 +217,6 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 999px;
 }
 
 
@@ -274,8 +264,6 @@
   align-items: center;
   gap: 12px;
 
-  border-radius: var(--gd-radius-inner, 20px);
-
   box-sizing: border-box;
 }
 
@@ -294,7 +282,6 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 999px;
 }
 
 .alert-item-content,
@@ -362,8 +349,6 @@
   display: grid;
   gap: 4px;
 
-  border-radius: var(--gd-radius-inner, 20px);
-
   box-sizing: border-box;
 }
 
@@ -412,8 +397,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-
-  border-radius: var(--gd-radius-inner, 18px);
 
   box-sizing: border-box;
 }
@@ -495,24 +478,4 @@
   .today-focus-hero-value {
     font-size: 19px;
   }
-}
-
-/* =========================================================
-   9. Height restore
-   The focus widgets must remain scrollable instead of stretching the
-   whole dashboard column when content gets longer than the card.
-========================================================= */
-
-.today-focus-card,
-.today-focus-widget {
-  min-height: 0;
-}
-
-.today-focus-card .glass-card-body,
-.today-focus-widget .glass-card-body {
-  flex: 1 1 auto;
-  min-height: 0;
-
-  overflow-y: auto;
-  overflow-x: hidden;
 }

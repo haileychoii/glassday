@@ -597,7 +597,6 @@ body:has(.mobile-layout)
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-hero {
     padding: 10px !important;
     gap: 8px !important;
-    border-radius: 14px !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-kicker {
@@ -606,8 +605,6 @@ body:has(.mobile-layout)
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-main {
-    padding: 0 !important;
-    display: block !important;
     font-size: clamp(17px, 5vw, 22px) !important;
     line-height: 1.15 !important;
     letter-spacing: -0.02em !important;
@@ -623,7 +620,6 @@ body:has(.mobile-layout)
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-section {
     padding: 8px !important;
     gap: 6px !important;
-    border-radius: 12px !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-section-title {
@@ -640,7 +636,6 @@ body:has(.mobile-layout)
     min-height: 36px !important;
     padding: 6px 7px !important;
     gap: 6px !important;
-    border-radius: 9px !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-task-input {
@@ -668,7 +663,6 @@ body:has(.mobile-layout)
     min-height: 34px !important;
     padding: 6px 7px !important;
     gap: 6px !important;
-    border-radius: 9px !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] :is(.today-focus-mini-item strong, .today-focus-career-item strong, .today-focus-memo strong) {
@@ -695,13 +689,11 @@ body:has(.mobile-layout)
     padding: 7px 8px !important;
     grid-template-columns: 28px minmax(0, 1fr) 14px !important;
     gap: 7px !important;
-    border-radius: 11px !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="alerts"] .alert-center-icon {
     width: 28px !important;
     height: 28px !important;
-    border-radius: 9px !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="alerts"] .alert-center-title-row strong {

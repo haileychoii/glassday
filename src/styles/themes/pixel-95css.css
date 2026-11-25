@@ -92,7 +92,7 @@
   html.pixel-desk, body.pixel-desk,
   html.theme-pixel, body.theme-pixel
 ) :is(.mobile-layout, .app-shell-surface) :is(
-  .today-focus-main, .today-focus-hero, .today-focus-section,
+  .today-focus-hero, .today-focus-section,
   .today-focus-block, .today-focus-task, .today-focus-mini-item,
   .alert-center-item, .alert-item, .alert-summary-card,
   .calendar-event-item, .calendar-event-card, .calendar-mini-card,

@@ -273,10 +273,6 @@ body.theme-retro .glass-card {
 }
 
 /* Widget internals */
-html[data-theme="retro"] .today-focus-main,
-body[data-theme="retro"] .today-focus-main,
-html.theme-retro .today-focus-main,
-body.theme-retro .today-focus-main,
 html[data-theme="retro"] .today-focus-section,
 body[data-theme="retro"] .today-focus-section,
 html.theme-retro .today-focus-section,
@@ -942,7 +938,6 @@ body.theme-retro {
     .settings-section,
     .settings-theme-card,
     .today-focus-section,
-    .today-focus-main,
     .study-overview-panel,
     .study-input-panel,
     .study-week-panel,
@@ -1157,7 +1152,6 @@ body.theme-retro {
     .settings-section,
     .settings-theme-card,
     .today-focus-section,
-    .today-focus-main,
     .study-overview-panel,
     .study-input-panel,
     .study-week-panel,
@@ -1475,7 +1469,6 @@ body.theme-retro {
     .settings-section,
     .settings-theme-card,
     .today-focus-section,
-    .today-focus-main,
     .study-overview-panel,
     .study-input-panel,
     .study-week-panel,

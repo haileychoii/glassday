@@ -1047,7 +1047,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo
 /* All mobile widget content surfaces use the same nested radius step. Color,
    fill, shadow and borders still come from their active theme. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot :is(
-  .today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block,
+  .today-focus-hero, .today-focus-section, .today-focus-block,
   .today-focus-task, .today-focus-mini-item, .calendar-event-item, .calendar-event-card,
   .calendar-mini-card, .career-summary-card, .career-list-item, .career-board-card,
   .memo-note-item, .memo-workspace, .memo-list-panel, .memo-editor,
