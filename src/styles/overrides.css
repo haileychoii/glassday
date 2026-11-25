@@ -940,59 +940,9 @@ body,
   min-height: 0;
 }
 
-/* Shared compact widget frame behavior.
-   These rules intentionally target the semantic widget-frame classes instead
-   of positional selectors so the same structure is easier to mirror in Figma. */
-@container gd-widget (max-width: 620px) {
-  .glass-card > .widget-frame__header {
-    padding:
-      var(--gd-widget-header-pad-top)
-      var(--gd-widget-pad-x)
-      var(--gd-widget-header-pad-bottom);
-    gap: var(--gd-widget-stack-gap);
-    align-items: center;
-  }
-
-  .glass-card > .widget-frame__header > .glass-card-actions,
-  .glass-card > .widget-frame__header > .widget-frame__actions {
-    width: auto;
-    min-width: max-content;
-    display: flex;
-    justify-content: flex-end;
-    flex-wrap: nowrap;
-    gap: var(--gd-space-xs);
-  }
-
-  .glass-card > .widget-frame__body {
-    padding:
-      var(--gd-widget-content-gap-top)
-      var(--gd-widget-pad-x)
-      var(--gd-widget-pad-y);
-  }
-
-  .glass-card > .widget-frame__header h3 {
-    color: hsl(var(--foreground) / 0.92);
-    font-size: 13px;
-    line-height: 1.22;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .glass-card > .widget-frame__header p {
-    color: hsl(var(--muted-foreground) / 0.8);
-    font-size: 11px;
-    line-height: 1.25;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Career card rows are owned by widgets/career.css.
-     A generic narrow-widget override previously stacked every metadata badge,
-     making one application consume three extra rows even when 500px was free.
-     Career 메타 배지는 카드 너비 안에서 한 행을 유지하고 자체 컨테이너 규칙만 따릅니다. */
-}
+/* Career card rows are owned by widgets/career.css. A generic narrow-widget
+   override previously stacked every metadata badge and added unnecessary rows.
+   Career metadata remains one row and follows its widget's own container rules. */
 
 @container gd-widget (max-width: 440px) {
   .glass-card > .widget-frame__header {
@@ -1039,6 +989,8 @@ body,
 ========================================================= */
 
 @container gd-widget (max-width: 620px) {
+  /* Keep compact header and body geometry in one shared rule. Theme files
+     should override tokens or add a narrowly scoped visual difference. */
   .glass-card > .widget-frame__header {
     align-items: center;
     gap: var(--gd-widget-header-gap);
@@ -1060,8 +1012,18 @@ body,
   .glass-card > .widget-frame__header > .glass-card-actions {
     width: auto;
     min-width: max-content;
+    display: flex;
+    justify-content: flex-end;
     align-self: center;
     flex-wrap: nowrap;
+    gap: var(--gd-space-xs);
+  }
+
+  .glass-card > .widget-frame__body {
+    padding:
+      var(--gd-widget-content-gap-top)
+      var(--gd-widget-pad-x)
+      var(--gd-widget-pad-y);
   }
 
   .glass-card > .widget-frame__header h3 {
@@ -1075,6 +1037,11 @@ body,
 
   .glass-card > .widget-frame__header p {
     color: hsl(var(--muted-foreground) / 0.8);
+    font-size: 11px;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

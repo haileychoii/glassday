@@ -203,21 +203,6 @@ body:has(.mobile-layout) .mobile-layout
   box-shadow: none !important;
 }
 
-/* All mobile widget titles start at the same leading edge; actions stay trailing.
- * 전용 카드와 공통 카드의 제목 시작선을 왼쪽으로 통일하고 동작 버튼은 오른쪽에 둡니다. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
-  > .glass-card > .widget-frame__header > .widget-frame__title-group {
-  justify-content: flex-start !important;
-  text-align: left !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
-  > .glass-card > .widget-frame__header > .widget-frame__title-group
-  > .widget-frame__copy {
-  align-items: flex-start !important;
-  text-align: left !important;
-}
-
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="career"]
   .mobile-career-card__heading,
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
@@ -763,11 +748,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   justify-content: center !important;
   gap: var(--mobile-tight-gap) !important;
   text-align: left !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  .widget-frame__header > .widget-frame__title-group {
-  padding-inline: 0 !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
