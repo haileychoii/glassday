@@ -272,66 +272,6 @@ body.theme-retro .glass-card {
   backdrop-filter: none !important;
 }
 
-html[data-theme="retro"] .glass-card::before,
-body[data-theme="retro"] .glass-card::before,
-html.theme-retro .glass-card::before,
-body.theme-retro .glass-card::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  height: 26px !important;
-  background: linear-gradient(90deg, var(--retro-title), var(--retro-title-2)) !important;
-  border-bottom: 2px solid var(--retro-panel-darker) !important;
-  z-index: 0 !important;
-}
-
-html[data-theme="retro"] .glass-card::after,
-body[data-theme="retro"] .glass-card::after,
-html.theme-retro .glass-card::after,
-body.theme-retro .glass-card::after {
-  content: "−  □  ×" !important;
-  position: absolute !important;
-  top: 4px !important;
-  right: 7px !important;
-  height: 18px !important;
-  min-width: 58px !important;
-  padding: 0 4px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  color: #000 !important;
-  background: var(--retro-panel) !important;
-  border-top: 1px solid var(--retro-white) !important;
-  border-left: 1px solid var(--retro-white) !important;
-  border-right: 1px solid var(--retro-panel-darker) !important;
-  border-bottom: 1px solid var(--retro-panel-darker) !important;
-  font-size: 11px !important;
-  line-height: 1 !important;
-  z-index: 2 !important;
-}
-
-html[data-theme="retro"] .glass-card > *,
-body[data-theme="retro"] .glass-card > *,
-html.theme-retro .glass-card > *,
-body.theme-retro .glass-card > * {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-html[data-theme="retro"] .glass-card h3,
-body[data-theme="retro"] .glass-card h3,
-html.theme-retro .glass-card h3,
-body.theme-retro .glass-card h3,
-html[data-theme="retro"] .glass-card-title,
-body[data-theme="retro"] .glass-card-title,
-html.theme-retro .glass-card-title,
-body.theme-retro .glass-card-title {
-  color: var(--retro-text) !important;
-  font-weight: 900 !important;
-}
-
 /* Widget internals */
 html[data-theme="retro"] .today-focus-main,
 body[data-theme="retro"] .today-focus-main,
@@ -558,12 +498,7 @@ body.theme-retro .calendar-event-time {
     min-height: auto !important;
   }
 
-  html[data-theme="retro"] .glass-card::before,
-  body[data-theme="retro"] .glass-card::before,
-  html.theme-retro .glass-card::before,
-  body.theme-retro .glass-card::before {
-    height: 24px !important;
-  }
+
 
 }
 
@@ -604,39 +539,6 @@ body.theme-retro .calendar-event-time {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   opacity: 1 !important;
-}
-
-/* Widget window geometry
-   GlassCard always has exactly two layers: titlebar and client area.
-   위젯마다 다른 여백을 더하지 않고 Win98 창의 두 행만 사용합니다. */
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .glass-card.widget-frame {
-  display: grid !important;
-  grid-template-rows: var(--retro-titlebar-height) minmax(0, 1fr) !important;
-  overflow: hidden !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .glass-card::before {
-  content: none !important;
-  display: none !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .glass-card::after {
-  content: none !important;
-  display: none !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.glass-card-header, .widget-card-header, .widget-frame__header) {
-  color: var(--retro-white) !important;
-  background: linear-gradient(90deg, var(--retro-title), var(--retro-title-2)) !important;
-  border-bottom: 2px solid var(--retro-panel-darker) !important;
-  box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.16) !important;
-  position: relative !important;
-  z-index: 3 !important;
-  box-sizing: border-box !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
@@ -984,7 +886,7 @@ body.theme-retro {
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.glass-card-header, .widget-card-header, .widget-frame__header, .floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
+  :is(.floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
   color: #ffffff !important;
   background:
     linear-gradient(180deg, #ffbee0 0%, #ff88bf 48%, #e84f9a 100%) !important;
@@ -1225,7 +1127,7 @@ body.theme-retro {
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.glass-card-header, .widget-card-header, .widget-frame__header, .floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
+  :is(.floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
   background: #f49ac9 !important;
   border-bottom-color: var(--retro-panel-darker) !important;
   box-shadow:
@@ -1457,15 +1359,9 @@ body.theme-retro {
   -webkit-backdrop-filter: none !important;
 }
 
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .glass-card.widget-frame {
-  display: grid !important;
-  grid-template-rows: var(--retro-titlebar-height) minmax(0, 1fr) !important;
-  overflow: hidden !important;
-}
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.glass-card-header, .widget-card-header, .widget-frame__header, .floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
+  :is(.floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
   color: var(--retro-white) !important;
   background: var(--retro-title) !important;
   border-bottom: 2px solid var(--retro-panel-darker) !important;
@@ -1920,14 +1816,9 @@ body.theme-retro {
   backdrop-filter: none !important;
 }
 
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.glass-card::before, .glass-card::after, .widget-frame::before, .widget-frame::after) {
-  content: none !important;
-  display: none !important;
-}
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.glass-card-header, .widget-card-header, .widget-frame__header, .floating-window-titlebar, .settings-modal-header) {
+  :is(.floating-window-titlebar, .settings-modal-header) {
   min-height: 48px !important;
   height: auto !important;
   padding: 9px 12px !important;

@@ -8,6 +8,7 @@
   /* Glass material comes from theme-surfaces.css at every viewport size. */
   --gd-surface-bg: linear-gradient(145deg, rgb(255 255 255 / 0.42), rgb(255 255 255 / 0.27));
   --gd-inner-bg: linear-gradient(145deg, rgb(255 255 255 / 0.3), rgb(235 243 255 / 0.2));
+  --gd-widget-header-bg: var(--gd-inner-bg);
   --gd-surface-filter: blur(44px) saturate(165%);
   --mobile-glass-control-bg: var(--gd-control-bg);
   --mobile-glass-control-border: var(--gd-control-border);
@@ -15,7 +16,6 @@
   --mobile-glass-nav-icon-border: var(--gd-control-border);
   --mobile-glass-nav-icon-active-bg: var(--gd-control-active-bg);
   --mobile-glass-nav-icon-active-border: var(--gd-control-border);
-  --mobile-widget-header-surface: var(--gd-inner-bg);
   background: url("/glass-background/mobile-glass-light.jpg") center / cover no-repeat !important;
 }
 
@@ -23,6 +23,7 @@
   /* Glass material comes from theme-surfaces.css at every viewport size. */
   --gd-surface-bg: linear-gradient(145deg, rgb(40 47 65 / 0.52), rgb(10 14 25 / 0.42));
   --gd-inner-bg: linear-gradient(145deg, rgb(255 255 255 / 0.2), rgb(10 15 30 / 0.3));
+  --gd-widget-header-bg: var(--gd-inner-bg);
   --gd-surface-filter: blur(44px) saturate(165%);
   --mobile-glass-control-bg: var(--gd-control-bg);
   --mobile-glass-control-border: var(--gd-control-border);
@@ -30,7 +31,6 @@
   --mobile-glass-nav-icon-border: var(--gd-control-border);
   --mobile-glass-nav-icon-active-bg: var(--gd-control-active-bg);
   --mobile-glass-nav-icon-active-border: var(--gd-control-border);
-  --mobile-widget-header-surface: var(--gd-inner-bg);
   background:
     url("/glass-background/darkbackground1.jpg") center / cover no-repeat !important;
 }
@@ -39,6 +39,7 @@
 :is(html, body):is([data-theme="aurora"], .theme-aurora) .mobile-layout {
   --gd-surface-bg: linear-gradient(145deg, rgb(45 57 88 / 0.56), rgb(12 16 30 / 0.44));
   --gd-inner-bg: linear-gradient(145deg, rgb(46 57 88 / 0.42), rgb(12 17 32 / 0.32));
+  --gd-widget-header-bg: var(--gd-inner-bg);
   --gd-surface-filter: blur(44px) saturate(165%);
   --mobile-glass-control-bg: var(--aurora-control-bg);
   --mobile-glass-control-border: var(--aurora-control-border);
@@ -46,7 +47,6 @@
   --mobile-glass-nav-icon-border: var(--aurora-control-border);
   --mobile-glass-nav-icon-active-bg: var(--aurora-active-bg);
   --mobile-glass-nav-icon-active-border: var(--aurora-control-border);
-  --mobile-widget-header-surface: var(--gd-inner-bg);
 }
 
 /* Give nested panels and controls a clear, smaller radius step than the widget.

@@ -19,7 +19,6 @@
   --mobile-tight-gap: var(--mobile-space-1);
   --mobile-control-gap: 6px;
   --mobile-page-gutter: var(--mobile-space-4);
-  --mobile-widget-header-surface: var(--gd-widget-panel-bg, var(--gd-surface-bg, hsl(var(--card))));
   --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
   --mobile-widget-header-pad-inline: var(--gd-mobile-widget-inset);
   --mobile-widget-header-pad-block: var(--gd-mobile-widget-header-pad-y);
@@ -372,11 +371,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
   --pd-mobile-surface: #fffafd;
   --pd-mobile-panel: #fff4f8;
   --pd-mobile-line: #ead7e0;
-  --mobile-widget-header-surface: var(--pd-mobile-surface);
-}
-
-:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .mobile-layout {
-  --mobile-widget-header-surface: var(--mac-widget-header-bg);
+  --gd-widget-header-bg: var(--pd-mobile-surface);
 }
 
 :is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout .mobile-main {
@@ -546,36 +541,7 @@ body:has(.mobile-layout) .mobile-layout
   justify-self: stretch !important;
   align-self: stretch !important;
   box-sizing: border-box !important;
-  background: transparent !important;
   overflow: visible !important;
-}
-
-/* Paint the purpose-built card title surfaces independently from the heading
- * width. The background layer crosses the card's shared inner padding while
- * text and controls stay on the normal content line.
- * 전용 카드의 제목 배경만 좌우 내부 여백을 넘어 칠하고 글자와 버튼 위치는 유지합니다. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
-  .mobile-career-card, .mobile-calendar-card) > :is(.mobile-career-card__header, .mobile-calendar-card__header)::before {
-  content: "" !important;
-  position: absolute !important;
-  z-index: 0 !important;
-  inset: 0 calc(-1 * var(--mobile-widget-inset)) !important;
-  background: var(--mobile-widget-header-surface) !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  pointer-events: none !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
-  .mobile-career-card, .mobile-calendar-card) > :is(.mobile-career-card__header, .mobile-calendar-card__header) > * {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
-    html.theme-pixel-desk, body.theme-pixel-desk, html.pixel-desk, body.pixel-desk,
-    html.theme-pixel, body.theme-pixel) .mobile-layout {
-  --mobile-widget-header-surface: var(--w95-title, #000080);
 }
 
 :is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
@@ -694,7 +660,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  background: var(--mobile-widget-header-surface) !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
@@ -702,7 +667,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   > :is(.mobile-career-card__header, .mobile-calendar-card__header) {
   /* The card itself owns the shared inset. Do not inset this row twice. */
   padding-inline: 0 !important;
-  background: transparent !important;
 }
 
 /* Normalize every header inside a mobile widget slot, including headers

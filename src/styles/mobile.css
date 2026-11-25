@@ -307,17 +307,6 @@ body:has(.mobile-layout)
 }
 
 :is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout .glass-card::before {
-  content: none;
-}
-
-:is([data-theme="mac-core"], .theme-mac-core)
-  .mobile-layout .widget-frame__header {
-  background: var(--mac-widget-header-bg);
-  border-bottom: 1px solid rgb(60 60 67 / 0.12);
-}
-
-:is([data-theme="mac-core"], .theme-mac-core)
   .mobile-layout .widget-frame__header h3 {
   margin: 0;
   font-size: 13px;

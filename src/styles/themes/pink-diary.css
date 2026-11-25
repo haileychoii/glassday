@@ -95,16 +95,6 @@
   -webkit-backdrop-filter: none !important;
 }
 
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.glass-card-header, .widget-card-header, .widget-frame__header) {
-  color: var(--pd-ink) !important;
-  background: var(--pd-rose-soft) !important;
-  border: 0 !important;
-  border-bottom: 1px solid var(--pd-border) !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
 /* Widget glyphs remain plain icons: no tile, outline, or shadow around them. */
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.widget-frame__icon, .glass-card-icon, .widget-card-icon, .sidebar-tab-icon) {

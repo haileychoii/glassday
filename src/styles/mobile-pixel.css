@@ -59,6 +59,8 @@
   --w95-panel: #dfdfdf;
   --w95-title: #000080;
   --w95-light: #ffffff;
+  --gd-widget-header-bg: var(--w95-title);
+  --gd-widget-header-color: var(--w95-light);
   --w95-shadow: #808080;
   --w95-dark: #404040;
   --w95-text: #000000;
@@ -125,11 +127,7 @@
    * 실제 헤더가 있으므로 두 가짜 요소는 모바일에서 제거.
    * ========================================================= */
 
-  & .mobile-widget-slot .glass-card::before,
-  & .mobile-widget-slot .glass-card::after {
-    content: none !important;
-    display: none !important;
-  }
+
 
   /* =========================================================
    * 5. Study / Calendar / Career 자체 카드
@@ -146,8 +144,8 @@
     overflow: hidden;
   }
 
-  /* The final shared Pixel title-bar treatment lives in
-   * themes/pixel-widget-headers.css so mobile and desktop use one rule. */
+  /* widget-frame-theme.css supplies the common title surface; this file only
+   * provides Pixel's navy and white theme tokens. */
 
   /* Shared mobile-common.css owns title alignment and icon dimensions.
    * Pixel only changes icon color and removes decorative icon chrome. */

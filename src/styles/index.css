@@ -92,3 +92,6 @@
 
 /* Keep Pixel's square corners and raised controls after shared mobile geometry. */
 @import "./mobile-pixel.css";
+
+/* Widget title background is one shared frame; themes provide its surface token. */
+@import "./widget-frame-theme.css";

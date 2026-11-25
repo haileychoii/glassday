@@ -381,23 +381,6 @@
   -webkit-backdrop-filter: blur(26px) saturate(168%) !important;
 }
 
-/* Small toolbar strip inside every widget; keeps the title zone readable. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .glass-card::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 38px;
-  z-index: 0;
-  pointer-events: none;
-  background: var(--mac-widget-header-bg);
-  border-bottom: 1px solid rgb(60 60 67 / 0.12);
-}
-
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .glass-card > * {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
   :where(.glass-card-header, .widget-card-header, .widget-frame__header) {
   color: var(--mac-title-text) !important;

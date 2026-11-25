@@ -76,6 +76,8 @@
   color-scheme: light;
   --ios-background: #f2f2f7;
   --ios-surface: #ffffff;
+  --gd-widget-header-bg: var(--ios-surface);
+  --gd-widget-header-color: var(--ios-label);
   --ios-secondary-surface: #f7f7fa;
   --ios-separator: rgb(60 60 67 / 0.13);
   --ios-label: #1c1c1e;
@@ -146,27 +148,8 @@
     overflow: hidden !important;
     box-sizing: border-box !important;
   }
-  /* Mac 데스크톱의 창처럼 보이게 하던 가짜 상단 막대는 모바일에서 제거. */
-  & .mobile-widget-slot .glass-card::before,
-  & .mobile-widget-slot .glass-card::after {
-    content: none !important;
-    display: none !important;
-  }
-  /* 4. iOS WIDGET HEADERS — 공통 아이콘/타이틀/액션 일렬 정렬.
-   * Journal도 같은 제목줄을 쓰고 날짜 조작부만 별도 행으로 둔다. */
-  & .mobile-widget-slot .glass-card > .widget-frame__header,
-  & :is(
-    .mobile-calendar-card__header,
-    .mobile-career-card__header
-  ) {
-    color: var(--ios-label) !important;
-    background: var(--ios-surface) !important;
-    background-image: none !important;
-    border: 0 !important;
-    border-bottom: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
+  /* Shared title background and frame color are owned by
+     widget-frame-theme.css; this layer only styles Mac-specific icons. */
   /* Widget geometry and type scale are owned by mobile-common.css. */
   & .widget-frame__icon {
     color: var(--ios-tint) !important;
