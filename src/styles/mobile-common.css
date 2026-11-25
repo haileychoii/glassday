@@ -576,8 +576,8 @@ body:has(.mobile-layout) .mobile-navigation-capture {
   background: var(--gd-inner-bg) !important;
   border-color: var(--gd-inner-border) !important;
   box-shadow: var(--gd-widget-panel-shadow) !important;
-  backdrop-filter: blur(20px) saturate(155%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(155%) !important;
+  backdrop-filter: var(--gd-surface-filter, blur(20px)) !important;
+  -webkit-backdrop-filter: var(--gd-surface-filter, blur(20px)) !important;
 }
 
 :is(html, body):is(
