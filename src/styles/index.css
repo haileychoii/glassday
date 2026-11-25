@@ -91,5 +91,8 @@
 @import "./mobile-common.css";
 @import "./mobile-glass.css";
 
+/* One final geometry rule for nested widget surfaces across themes. */
+@import "./radius-system.css";
+
 /* Pixel Desk title bars are shared by every desktop and mobile widget. */
 @import "./themes/pixel-widget-headers.css";
