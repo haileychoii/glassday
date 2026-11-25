@@ -599,6 +599,22 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   background: transparent !important;
 }
 
+/* Normalize every header inside a mobile widget slot, including headers
+ * rendered one wrapper deeper by feature widgets. The direct-child rule above
+ * remains the frame contract; this descendant rule closes wrapper-specific
+ * gaps so each title row gets the same vertical padding and center line.
+ * 모바일 위젯 안에서 한 단계 더 감싸진 헤더도 같은 높이와 세로 기준선을 씁니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  :is(.widget-frame__header, .mobile-career-card__header, .mobile-calendar-card__header) {
+  display: flex !important;
+  align-items: center !important;
+  height: var(--mobile-widget-header-height) !important;
+  min-height: var(--mobile-widget-header-height) !important;
+  max-height: var(--mobile-widget-header-height) !important;
+  padding-block: var(--mobile-widget-header-pad-block) !important;
+  box-sizing: border-box !important;
+}
+
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__header > .widget-frame__title-group,
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
@@ -606,9 +622,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   > :is(.mobile-career-card__header, .mobile-calendar-card__header)
   > .widget-frame__title-group {
   display: flex !important;
-  /* Align the icon with the primary title line, not the combined title and
-   * subtitle block. This keeps two-line headers from making the icon look low. */
-  align-items: flex-start !important;
+  /* Mobile subtitles are hidden, so icon and title share one centered line. */
+  align-items: center !important;
   justify-content: flex-start !important;
   flex: 1 1 auto !important;
   min-width: 0 !important;
