@@ -148,7 +148,7 @@
    * provides Pixel's navy and white theme tokens. */
 
   /* Shared mobile-common.css owns title alignment and icon dimensions.
-   * Pixel only changes icon color and removes decorative icon chrome. */
+   * Pixel uses the exact same 26px artwork and no SVG glyph as laptop. */
 
   & :is(
     .widget-frame__icon,
@@ -161,6 +161,60 @@
 
     color: #ffffff !important;
     box-shadow: none !important;
+  }
+
+  /* Laptop Pixel headers use the bundled Win95 artwork at 26px. Use that same
+     asset in every mobile widget title, including standalone cards. */
+  & :is(
+    .today-focus-widget, .today-widget, .alert-center-widget,
+    .calendar-widget-card, .career-widget, .daily-journal-widget,
+    .memo-widget, .study-widget, .timer-widget, .money-widget,
+    .habit-tracker-widget, .mood-widget, .mobile-calendar-card,
+    .mobile-career-card
+  ) .widget-frame__icon {
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 26px 26px !important;
+  }
+
+  & :is(.today-focus-widget, .today-widget) .widget-frame__icon {
+    background-image: url("/pixel-icons/today.png") !important;
+  }
+  & .alert-center-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/alerts.png") !important;
+  }
+  & :is(.calendar-widget-card, .mobile-calendar-card) .widget-frame__icon {
+    background-image: url("/pixel-icons/calendar.png") !important;
+  }
+  & :is(.career-widget, .mobile-career-card) .widget-frame__icon {
+    background-image: url("/pixel-icons/career.png") !important;
+  }
+  & :is(.daily-journal-widget, .memo-widget) .widget-frame__icon {
+    background-image: url("/pixel-icons/diary.png") !important;
+  }
+  & .study-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/study.png") !important;
+  }
+  & .timer-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/timer.png") !important;
+  }
+  & .money-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/money.png") !important;
+  }
+  & .habit-tracker-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/life.png") !important;
+  }
+  & .mood-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/mood.png") !important;
+  }
+  & :is(
+    .today-focus-widget, .today-widget, .alert-center-widget,
+    .calendar-widget-card, .career-widget, .daily-journal-widget,
+    .memo-widget, .study-widget, .timer-widget, .money-widget,
+    .habit-tracker-widget, .mood-widget, .mobile-calendar-card,
+    .mobile-career-card
+  ) .widget-frame__icon > svg {
+    display: none !important;
   }
 
   /* 모든 제목 글씨 12px, 흰색 */

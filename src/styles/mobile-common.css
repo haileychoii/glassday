@@ -25,7 +25,9 @@
   --mobile-widget-title-size: 14px;
   --mobile-widget-subtitle-size: 11px;
   --mobile-widget-min-body-height: 120px;
-  --mobile-widget-icon-size: 22px;
+  /* Match base.css desktop widget icon slot and glyph dimensions. */
+  --mobile-widget-icon-size: var(--gd-widget-desktop-icon-size, 26px);
+  --mobile-widget-icon-glyph-size: 15px;
   /* A 40px control stays compact in dense widget headers but is easier to tap.
    * 좁은 헤더를 과하게 키우지 않으면서 손가락으로 누르기 쉽게 맞춥니다. */
   --mobile-widget-action-size: 40px;
@@ -743,8 +745,23 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__icon svg {
   display: block !important;
   flex: none !important;
-  width: 18px !important;
-  height: 18px !important;
+  width: var(--mobile-widget-icon-glyph-size) !important;
+  height: var(--mobile-widget-icon-glyph-size) !important;
+}
+
+/* All bottom-tab glyphs share a fixed square icon box. This removes baseline
+   shifts between SVGs, emoji, and transparent PNG artwork. */
+body:has(.mobile-layout) .mobile-layout .mobile-navigation
+  .mobile-navigation-item .mobile-navigation-icon {
+  display: grid !important;
+  flex: 0 0 32px !important;
+  place-items: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+  vertical-align: middle !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
