@@ -688,6 +688,23 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   letter-spacing: 0 !important;
 }
 
+/* Keep Daily Journal on the same left title edge as every shared widget
+ * frame. Theme title treatments must not center its copy independently.
+ * Daily Journal 제목도 공통 위젯과 같은 왼쪽 시작선에 고정합니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
+  .daily-journal-widget > .widget-frame__header > .widget-frame__title-group,
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
+  .daily-journal-widget > .widget-frame__header > .widget-frame__title-group > .widget-frame__copy {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
+  .daily-journal-widget .widget-frame__title {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__header > .widget-frame__actions {
   flex: 0 0 auto !important;
