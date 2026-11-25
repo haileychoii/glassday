@@ -466,7 +466,6 @@ export const DailyJournalWidget = () => {
               {summaryOpen ? "접기 −" : "펼치기 +"}
             </span>
           </button>
-        </div>
 
         {/* ==================================================
             07. SUMMARY CONTENT
@@ -553,6 +552,7 @@ export const DailyJournalWidget = () => {
               ))}
             </div>
           </div>
+        </div>
         </div>
 
         {/* ==================================================

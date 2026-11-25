@@ -179,25 +179,21 @@
   overflow: hidden !important;
 }
 .mobile-layout .daily-journal-widget .journal-content {
-  display: block !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  gap: 0 !important;
   width: 100% !important;
   height: 100% !important;
   min-width: 0 !important;
   min-height: 0 !important;
-  padding-bottom: 12px !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: auto;
+  overflow: hidden !important;
 }
 .daily-journal-widget .journal-pinned-top {
   display: contents;
 }
 .mobile-layout .daily-journal-widget .journal-pinned-top {
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 10 !important;
+  position: relative !important;
+  z-index: 1 !important;
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) !important;
   gap: 7px !important;
@@ -213,9 +209,12 @@
   min-width: 0 !important;
   min-height: 0 !important;
   height: auto !important;
-  padding: 0 !important;
+  padding: 0 0 12px !important;
   gap: 7px !important;
-  overflow: visible !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* D. Summary toggle: visible only in the mobile widget. */
