@@ -354,6 +354,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const handleThemeChange = (nextTheme: ThemeId) => {
     setTheme(nextTheme);
     applyTheme(nextTheme);
+    setAppFont(getSavedAppFont());
 
     const label =
       themeOptions.find((item) => item.id === nextTheme)?.label ?? nextTheme;
@@ -362,6 +363,12 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   };
 
   const handleAppFontChange = (nextFont: string) => {
+    if (theme === "pixel-desk") {
+      setAppFont(getSavedAppFont());
+      setStatus("Pixel Desk uses Mona12. Memo fonts can still be changed separately.");
+      return;
+    }
+
     setAppFont(nextFont);
     applyAppFont(nextFont);
     setStatus("Interface font updated.");
@@ -657,6 +664,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                   value={appFont}
                   onChange={(event) => handleAppFontChange(event.target.value)}
                   className="settings-input"
+                  disabled={theme === "pixel-desk"}
                 >
                   {appFontOptions.map((option) => (
                     <option
@@ -667,6 +675,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                     </option>
                   ))}
                 </select>
+                {theme === "pixel-desk" && (
+                  <small>Pixel Desk uses Mona12. Memo fonts are set separately.</small>
+                )}
               </label>
 
               <label className="settings-field">
