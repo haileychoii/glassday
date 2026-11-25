@@ -439,32 +439,34 @@ export const DailyJournalWidget = () => {
       actions={renderDateNavigation("header")}
     >
       <div className="journal-content">
-        {renderDateNavigation("body")}
+        <div className="journal-pinned-top">
+          {renderDateNavigation("body")}
 
-        {/* ==================================================
-            06. SUMMARY TOGGLE
-            모바일에서만 표시되는 접기/펼치기 버튼.
-            PC에서는 CSS로 숨긴다.
-           ================================================== */}
+          {/* ==================================================
+              06. SUMMARY TOGGLE
+              모바일에서만 표시되는 접기/펼치기 버튼.
+              PC에서는 CSS로 숨긴다.
+             ================================================== */}
 
-        <button
-          type="button"
-          className="journal-summary-toggle"
-          aria-expanded={summaryOpen}
-          aria-controls={summaryPanelId}
-          onClick={() =>
-            setSummaryOpen((prev) => !prev)
-          }
-        >
-          <span>Summary</span>
+          <button
+            type="button"
+            className="journal-summary-toggle"
+            aria-expanded={summaryOpen}
+            aria-controls={summaryPanelId}
+            onClick={() =>
+              setSummaryOpen((prev) => !prev)
+            }
+          >
+            <span>Summary</span>
 
-          <span>
-            {progress}% · Tasks{" "}
-            {doneTaskCount}/{entry.todayTasks.length}
-            {" · "}
-            {summaryOpen ? "접기 −" : "펼치기 +"}
-          </span>
-        </button>
+            <span>
+              {progress}% · Tasks{" "}
+              {doneTaskCount}/{entry.todayTasks.length}
+              {" · "}
+              {summaryOpen ? "접기 −" : "펼치기 +"}
+            </span>
+          </button>
+        </div>
 
         {/* ==================================================
             07. SUMMARY CONTENT
