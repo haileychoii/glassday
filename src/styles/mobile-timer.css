@@ -105,7 +105,7 @@
     position: relative !important;
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) !important;
-    grid-template-rows: 40px minmax(72px, 1fr) 44px auto !important;
+    grid-template-rows: 40px minmax(0, 1fr) !important;
     grid-row: 1 !important;
     align-items: stretch !important;
     justify-items: stretch !important;
@@ -115,7 +115,7 @@
     height: 100% !important;
     min-width: 0 !important;
     min-height: 0 !important;
-    padding: 0 !important;
+    padding: 0 0 calc(44px + var(--gd-mobile-space-2)) !important;
     background: transparent !important;
     background-image: none !important;
     border: 0 !important;
@@ -235,7 +235,10 @@
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row {
     display: flex !important;
-    grid-row: 3 !important;
+    position: absolute !important;
+    inset-inline: 0 !important;
+    bottom: 0 !important;
+    grid-row: auto !important;
     flex: none !important;
     align-self: stretch !important;
     margin-top: 0 !important;
@@ -249,7 +252,11 @@
     .mobile-layout [data-widget-id="timer"],
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt {
-    grid-row: 4 !important;
+    position: absolute !important;
+    inset-inline: 6px !important;
+    bottom: 52px !important;
+    z-index: 2 !important;
+    grid-row: auto !important;
     min-height: 0 !important;
     margin: 0 !important;
   }
@@ -376,7 +383,7 @@
   .timer-widget-prompt {
   left: 6px;
   right: 6px;
-  bottom: 5px;
+  bottom: 52px;
 
   padding: 10px;
   gap: 8px;
