@@ -507,15 +507,3 @@
   --journal-muted: var(--mac-secondary-text, #6e6e73);
   --journal-accent: var(--mac-blue, #0a84ff);
 }
-
-/* 16. 모바일 공통: 글씨 입력 시 iOS Safari 자동 줌 방지.
- * 화면 폭을 바꾸는 것이 아니라 실제 모바일 셸이 있을 때만 적용. */
-.mobile-layout .daily-journal-widget :is(
-  .journal-date-nav input,
-  .journal-add-row input,
-  .journal-clip-row input,
-  .journal-mood-select,
-  .journal-section textarea
-) {
-  font-size: 16px;
-}

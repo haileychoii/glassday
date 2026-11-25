@@ -465,7 +465,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
 
 /* The shared card owns the only visible surface around widget content. */
 body:has(.mobile-layout) .mobile-layout
-  .mobile-widget-slot .glass-card:not(.daily-journal-widget)
+  .mobile-widget-slot .glass-card
   > .widget-frame__body {
   min-width: 0 !important;
   border: 0 !important;
@@ -477,9 +477,10 @@ body:has(.mobile-layout) .mobile-layout
 /* The GlassCard is the single outer surface for every standard widget. Its
  * first child is a layout wrapper (planner, list, calendar frame, etc.), so
  * theme fills belong on the actual sections inside that wrapper instead.
- * Memo and Journal deliberately keep their paper/scroll surfaces. */
+ * Memo deliberately keeps its paper surface; Journal's content wrapper is
+ * transparent like the other widgets, while its inner sections still scroll. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > .widget-instance-root > .glass-card:not(.memo-widget):not(.daily-journal-widget)
+  > .widget-instance-root > .glass-card:not(.memo-widget)
   > .widget-frame__body > :first-child {
   background: transparent;
   background-image: none;
@@ -491,7 +492,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
 }
 
 body:has(.mobile-layout) .mobile-layout
-  .mobile-widget-slot .glass-card:not(.daily-journal-widget)
+  .mobile-widget-slot .glass-card
   > .widget-frame__body > :first-child {
   min-width: 0;
 }

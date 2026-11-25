@@ -108,7 +108,7 @@
 }
 .mobile-layout .daily-journal-widget .journal-date-nav input {
   padding-inline: 3px !important;
-  font-size: 16px !important; /* iOS Safari: avoid focus zoom */
+  font-size: 14px;
   text-align: center !important;
 }
 
@@ -272,14 +272,14 @@
 .mobile-layout .daily-journal-widget .journal-section textarea {
   min-height: 76px !important;
   padding: 9px !important;
-  font-size: 16px !important;
+  font-size: 13px;
   line-height: 1.5 !important;
 }
 .mobile-layout .daily-journal-widget :is(
   .journal-add-row input, .journal-clip-row input, .journal-mood-select
 ) {
   min-height: 40px !important;
-  font-size: 16px !important;
+  font-size: 13px;
 }
 
 /* F. Keep the date readable on narrow phones without moving it into the title. */

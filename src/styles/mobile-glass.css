@@ -92,19 +92,6 @@
   border-radius: var(--gd-radius-inner) !important;
 }
 
-/* Journal's pinned date and summary sit on the widget surface itself.
- * Keep its body transparent so a legacy opaque body fill cannot form a white
- * slab over the wallpaper; controls still use the theme's translucent glass. */
-:is(html, body):is(
-  [data-theme="glass-light"], .theme-glass-light,
-  [data-theme="glass-dark"], .theme-glass-dark,
-  [data-theme="aurora"], .theme-aurora
-) .mobile-layout .daily-journal-widget > .widget-frame__body {
-  background: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-}
-
 :is(html, body):is(
   [data-theme="glass-light"], .theme-glass-light,
   [data-theme="glass-dark"], .theme-glass-dark,

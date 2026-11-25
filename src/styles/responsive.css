@@ -572,9 +572,9 @@ main {
 
   /* Compact Study controls already define their own type scale. The mobile
      16px focus-zoom safeguard must not enlarge those fields and clip them. */
-  input:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *),
-  select:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *),
-  textarea:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *) {
+  input:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *):not(.mobile-widget-slot[data-widget-id="journal"] .daily-journal-widget *),
+  select:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *):not(.mobile-widget-slot[data-widget-id="journal"] .daily-journal-widget *),
+  textarea:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *):not(.mobile-widget-slot[data-widget-id="journal"] .daily-journal-widget *) {
     font-size: var(--gd-mobile-input-font-size) !important;
   }
 
