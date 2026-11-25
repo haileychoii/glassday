@@ -33,16 +33,6 @@
   --muted-foreground: 240 4% 45%;
   --border: 220 13% 84%;
 
-  /* macOS geometry
-     Native utility windows use restrained corners and compact controls.
-     / 웹 카드처럼 과하게 둥글지 않도록 이 토큰 묶음에서만 조절한다. */
-  --gd-radius-app: 14px;
-  --gd-radius-panel: 12px;
-  --gd-radius-widget: 12px;
-  --gd-radius-card: 9px;
-  --gd-radius-inner: 8px;
-  --gd-radius-button: 8px;
-
   --mac-font-stack:
     "Apple SD Gothic Neo",
     AppleGothic,

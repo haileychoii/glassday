@@ -82,16 +82,9 @@
   --ios-secondary-label: #6e6e73;
   --ios-tint: #007aff;
   --ios-tint-soft: rgb(0 122 255 / 0.09);
-  --ios-radius: 20px;
-  --ios-inner-radius: 12px;
+  --ios-radius: var(--gd-radius-widget);
+  --ios-inner-radius: var(--gd-radius-card);
   --ios-shadow: 0 2px 12px rgb(22 24 32 / 0.035);
-  --gd-radius-app: 24px;
-  --gd-radius-panel: 20px;
-  --gd-radius-widget: var(--ios-radius);
-  --gd-radius-card: var(--ios-inner-radius);
-  --gd-radius-inner: 8px;
-  --gd-radius-button: 8px;
-  --gd-widget-inner-radius: var(--gd-radius-inner);
   --gd-widget-panel-bg: var(--ios-secondary-surface);
   --gd-widget-panel-border: var(--ios-separator);
   --gd-widget-panel-shadow: none;

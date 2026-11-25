@@ -33,12 +33,14 @@
   --input: 250 35% 88%;
   --ring: 268 78% 66%;
 
-  --gd-radius-app: 34px;
-  --gd-radius-panel: 30px;
-  --gd-radius-widget: 28px;
-  --gd-radius-card: 24px;
-  --gd-radius-inner: 20px;
-  --gd-radius-button: 999px;
+  /* One cross-theme widget radius ladder. Pixel Desk is the sole zero-radius
+     exception; themes may recolor these surfaces but do not reshape them. */
+  --gd-radius-app: 24px;
+  --gd-radius-panel: 20px;
+  --gd-radius-widget: 20px;
+  --gd-radius-card: 12px;
+  --gd-radius-inner: 8px;
+  --gd-radius-button: 8px;
   --glassday-app-font:
     Pretendard,
     "Apple SD Gothic Neo",

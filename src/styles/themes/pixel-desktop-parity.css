@@ -164,28 +164,6 @@
  * The real `.widget-frame__header` is now the only title bar, so that extra
  * space must be removed or every widget gets a different-looking top inset.
  */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface {
-  --pixel-widget-gap: var(--gd-widget-stack-gap, 8px);
-  --pixel-widget-header-height: var(--gd-widget-header-row-min-height, 30px);
-  --pixel-widget-header-padding:
-    var(--gd-widget-header-pad-top, 7px)
-    var(--gd-widget-pad-x, 6px)
-    var(--gd-widget-header-pad-bottom, 5px);
-  --pixel-widget-body-padding:
-    var(--gd-widget-content-gap-top, 5px)
-    var(--gd-widget-pad-x, 6px)
-    var(--gd-widget-pad-y, 6px);
-}
-
 /* Keep the desktop grid's existing sizing, but use one desktop widget gap. */
 :is(
   html[data-theme="pixel-desk"],
@@ -197,7 +175,7 @@
   html.theme-pixel,
   body.theme-pixel
 ) .app-shell-surface .dashboard-grid {
-  gap: var(--pixel-widget-gap) !important;
+  gap: var(--gd-widget-stack-gap) !important;
 }
 
 /* Every GlassCard widget uses one real title row and one padded body row. */
@@ -212,7 +190,7 @@
   body.theme-pixel
 ) .app-shell-surface :is(.glass-card, .career-widget) {
   display: grid !important;
-  grid-template-rows: var(--pixel-widget-header-height) minmax(0, 1fr) !important;
+  grid-template-rows: var(--gd-widget-header-row-min-height) minmax(0, 1fr) !important;
   height: 100% !important;
   min-height: 0 !important;
   padding: 0 !important;
@@ -240,10 +218,10 @@
   align-items: center !important;
   justify-content: space-between !important;
   flex-wrap: nowrap !important;
-  height: var(--pixel-widget-header-height) !important;
-  min-height: var(--pixel-widget-header-height) !important;
-  padding: var(--pixel-widget-header-padding) !important;
-  gap: 6px !important;
+  height: var(--gd-widget-header-row-min-height) !important;
+  min-height: var(--gd-widget-header-row-min-height) !important;
+  padding: var(--gd-widget-header-pad-top) var(--gd-widget-pad-x) var(--gd-widget-header-pad-bottom) !important;
+  gap: var(--gd-widget-header-gap) !important;
 }
 
 /* Keep title groups, icons, and actions aligned to one desktop baseline. */
@@ -266,7 +244,7 @@
   min-width: 0;
   min-height: 32px !important;
   align-items: center !important;
-  gap: var(--gd-widget-title-gap, 4px) !important;
+  gap: var(--gd-widget-title-gap) !important;
 }
 
 :is(
@@ -283,10 +261,6 @@
   .mobile-calendar-card__label > svg,
   .mobile-career-card__heading > svg
 ) {
-  flex: 0 0 28px !important;
-  width: 28px !important;
-  min-width: 28px !important;
-  height: 28px !important;
   padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -310,7 +284,7 @@
   .mobile-career-card__heading strong
 ) {
   margin: 0 !important;
-  font-size: var(--gd-tauri-type-widget-title, 12px) !important;
+  font-size: var(--gd-widget-desktop-title-size) !important;
   font-weight: 800 !important;
   line-height: 1.2 !important;
   letter-spacing: 0 !important;
@@ -348,7 +322,7 @@
   min-width: 0;
   min-height: 0 !important;
   height: auto !important;
-  padding: var(--pixel-widget-body-padding) !important;
+  padding: var(--gd-widget-content-gap-top) var(--gd-widget-pad-x) var(--gd-widget-pad-y) !important;
   overflow: auto;
 }
 

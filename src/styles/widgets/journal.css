@@ -34,7 +34,7 @@
 /* 01. Journal 전용 설정값. Figma에서도 같은 토큰으로 매핑 가능. */
 .daily-journal-widget {
   --journal-gap: 8px;
-  --journal-radius: var(--gd-widget-inner-radius, var(--gd-radius-inner, 12px));
+  --journal-radius: var(--gd-radius-card, 12px);
   --journal-panel: var(--gd-widget-panel-bg, hsl(var(--card)));
   --journal-panel-border: var(--gd-widget-panel-border, hsl(var(--border)));
   --journal-panel-shadow: var(--gd-widget-panel-shadow, none);
@@ -498,7 +498,6 @@
  * 전체 Mac 앱의 디자인을 여기서 재정의하지 않는다.
  * 연결: themes/mac-core.css의 --mac-inner-bg/--mac-control-bg. */
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .daily-journal-widget {
-  --journal-radius: var(--gd-radius-inner, 9px);
   --journal-panel: var(--mac-inner-bg, #f7f8fa);
   --journal-panel-border: var(--mac-inner-border, #dedee2);
   --journal-panel-shadow: var(--mac-inner-shadow, none);
@@ -507,13 +506,6 @@
   --journal-text: var(--mac-text, #1d1d1f);
   --journal-muted: var(--mac-secondary-text, #6e6e73);
   --journal-accent: var(--mac-blue, #0a84ff);
-}
-
-/* 15. Pixel Desk/Retro: 각진 형태는 테마가 가진 radius 토큰을 사용.
- * PC의 윈도우 창 장식(가짜 ::before)은 이 파일이 생성하지 않는다.
- * 모바일 Pixel 타이틀/색은 mobile-pixel.css가 최종 담당한다. */
-:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"], html.theme-pixel-desk, body.theme-pixel-desk, html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) .daily-journal-widget {
-  --journal-radius: 0px;
 }
 
 /* 16. 모바일 공통: 글씨 입력 시 iOS Safari 자동 줌 방지.

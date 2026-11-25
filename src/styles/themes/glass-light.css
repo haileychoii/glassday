@@ -50,13 +50,6 @@ body.theme-glass-light {
       rgba(231, 250, 245, 0.28)
     );
 
-  --gd-radius-app: 32px;
-  --gd-radius-panel: 28px;
-  --gd-radius-widget: 26px;
-  --gd-radius-card: 22px;
-  --gd-radius-inner: 18px;
-  --gd-radius-button: 999px;
-
   color: hsl(var(--foreground) / 0.94);
 }
 

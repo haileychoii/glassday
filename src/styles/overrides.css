@@ -1150,34 +1150,45 @@ body,
   -webkit-overflow-scrolling: touch !important;
 }
 
-/* Daily Journal body inset
-   Override only the shared horizontal padding while leaving header alignment,
-   vertical spacing, and every other widget unchanged. */
-.dashboard-grid-item
-  > .glass-card.daily-journal-widget
-  > .widget-frame__body {
-  padding-inline: var(--journal-body-pad-x) !important;
+/* One dashboard frame geometry for every theme and widget. Theme CSS owns
+   colors, surfaces, blur, and borders; Pixel changes only the radius tokens. */
+.dashboard-grid-item > :is(.glass-card, .career-widget) {
+  border-radius: var(--gd-radius-widget) !important;
 }
 
-/* Study header-to-content rhythm
-   The planner starts after one shared widget gap instead of inheriting the
-   compact 5px body offset. 제목과 첫 요약 카드 사이 간격은 이 토큰 하나로 조절한다. */
-.dashboard-grid-item > .glass-card.study-widget > .widget-frame__body {
-  padding-top: var(--gd-widget-gap) !important;
+.dashboard-grid-item > .glass-card {
+  display: grid !important;
+  grid-template-rows: var(--gd-widget-header-row-min-height) minmax(0, 1fr) !important;
+  padding: 0 !important;
 }
 
-/* Pixel Desk previously forced every widget body to 2px. Study needs the same
-   readable title gap as other themes while retaining its square pixel frame. */
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk
-  )
-  .dashboard-grid-item
-  > .glass-card.study-widget
-  > .widget-frame__body {
-  padding-top: var(--gd-widget-gap) !important;
+.dashboard-grid-item > :is(.glass-card, .career-widget) > .widget-frame__header {
+  height: var(--gd-widget-header-row-min-height) !important;
+  min-height: var(--gd-widget-header-row-min-height) !important;
+  padding: var(--gd-widget-header-pad-top) var(--gd-widget-pad-x) var(--gd-widget-header-pad-bottom) !important;
+  gap: var(--gd-widget-header-gap) !important;
+}
+
+.dashboard-grid-item > :is(.glass-card, .career-widget) > .widget-frame__body {
+  margin: 0 !important;
+  padding: var(--gd-widget-content-gap-top) var(--gd-widget-pad-x) var(--gd-widget-pad-y) !important;
+}
+
+.dashboard-grid-item :is(
+  .today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block,
+  .today-focus-task, .today-focus-mini-item, .calendar-event-item, .calendar-event-card,
+  .calendar-mini-card, .career-summary-card, .career-list-item, .career-board-card,
+  .memo-note-item, .memo-workspace, .memo-list-panel, .memo-editor,
+  .alert-item, .alert-center-item, .journal-summary-card, .journal-section,
+  .journal-score-inline, .journal-task-item, .journal-clip-item,
+  .study-card, .study-overview-panel, .study-input-panel, .study-goal-panel,
+  .study-week-panel, .study-task-panel, .study-record-list-panel,
+  .timer-widget-main-card, .timer-widget-settings-card,
+  .money-summary-panel, .money-budget-panel, .money-visual-panel,
+  .money-recent-panel, .money-detail-card,
+  .habit-tracker-panel, .habit-tracker-row, .mood-row
+) {
+  border-radius: var(--gd-radius-card) !important;
 }
 
 /* Nested widget scrollers
@@ -3721,20 +3732,10 @@ body,
   font-size: var(--gd-tauri-type-root);
 }
 
-/* Exception only: the installed Tauri window uses a denser widget frame. */
-body:not(:has(.mobile-layout)) .tauri-app-window {
-  --gd-widget-header-row-min-height: 28px;
-  --gd-widget-pad-x: 10px;
-  --gd-widget-pad-y: 10px;
-}
-
 .tauri-app-window > .app-shell-surface {
-  /* Tauri density tokens
-     English: Reduce chrome height only in the desktop shell; the web laptop
-     preview keeps its larger design-review scale.
-     Korean: 실제 데스크톱 앱에서만 헤더/컨트롤 높이를 살짝 낮춘다. */
+  /* Tauri topbar sizing is host-specific. Widget geometry stays shared with
+     the web app so the same dashboard looks and behaves consistently. */
   --gd-topbar-min-height: 46px;
-  --gd-widget-header-row-min-height: 28px;
   --gd-control-height-md: 28px;
 }
 
