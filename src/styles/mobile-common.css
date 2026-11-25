@@ -486,6 +486,14 @@ body:has(.mobile-layout) .mobile-layout
   box-shadow: none !important;
 }
 
+/* Study's planner is content inside the shared GlassCard, not a second card.
+ * Keep the outer GlassCard as its only enclosing surface in every theme. */
+.mobile-layout .mobile-widget-slot[data-widget-id="study"] .study10-planner--widget {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
 body:has(.mobile-layout) .mobile-layout
   .mobile-widget-slot .glass-card:not(.daily-journal-widget)
   > .widget-frame__body > :first-child {
