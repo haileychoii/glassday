@@ -62,6 +62,9 @@
   --w95-shadow: #808080;
   --w95-dark: #404040;
   --w95-text: #000000;
+  /* Every Pixel frame uses one measurable stroke vocabulary. */
+  --w95-bevel-width: 2px;
+  --w95-flat-width: 1px;
   /* The shared mobile frame runs later in index.css; zero radius tokens keep
    * its geometry rule aligned with this theme instead of reintroducing pills. */
   --gd-radius-app: 0px;
@@ -93,7 +96,7 @@
     background: var(--w95-bg) !important;
     background-image: none !important;
 
-    border: 2px solid !important;
+    border: var(--w95-bevel-width) solid !important;
     border-color:
       var(--w95-light)
       var(--w95-dark)
@@ -213,7 +216,7 @@
     .mobile-calendar-card__open,
     .mobile-career-card__open
   ) {
-    border: 2px solid !important;
+    border: var(--w95-bevel-width) solid !important;
     border-color:
       var(--w95-light)
       var(--w95-dark)
@@ -263,24 +266,17 @@
     box-shadow: none !important;
   }
 
-  /* Career rows are a mobile-only component and do not use .career-list-item.
-   * Give those preview/list buttons the same Windows 95 raised-surface rule. */
+  /* Career rows sit inside the widget frame, so keep them as flat content rows. */
   & .mobile-career-row {
-    border: 2px solid !important;
-    border-color:
-      var(--w95-light)
-      var(--w95-dark)
-      var(--w95-dark)
-      var(--w95-light) !important;
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
     border-radius: 0 !important;
     background: var(--w95-panel) !important;
     color: var(--w95-text) !important;
-    /* Keep one raised frame; the directional border is the bevel. */
     box-shadow: none !important;
   }
 
   & .mobile-career-status {
-    border: 1px solid var(--w95-shadow) !important;
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
     border-radius: 0 !important;
     background: var(--w95-panel) !important;
     color: var(--w95-text) !important;
@@ -301,7 +297,7 @@
     .journal-library-item,
     .journal-empty-box
   ) {
-    border: 1px solid var(--w95-shadow) !important;
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
     border-radius: 0 !important;
 
     background: var(--w95-panel) !important;
@@ -320,7 +316,7 @@
    * ========================================================= */
 
   & .alert-center-item {
-    border: 1px solid var(--w95-shadow) !important;
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
     border-radius: 0 !important;
 
     background: var(--w95-panel) !important;
@@ -330,19 +326,25 @@
   }
 
   & .alert-center-item.tone-danger {
-    border-left: 3px solid #ad3030 !important;
+    --w95-status-accent: #ad3030;
   }
 
   & .alert-center-item.tone-warning {
-    border-left: 3px solid #916700 !important;
+    --w95-status-accent: #916700;
   }
 
   & .alert-center-item.tone-info {
-    border-left: 3px solid var(--w95-title) !important;
+    --w95-status-accent: var(--w95-title);
   }
 
   & .alert-center-item.tone-success {
-    border-left: 3px solid #176b49 !important;
+    --w95-status-accent: #176b49;
+  }
+
+  & .alert-center-item {
+    border-left-width: var(--w95-flat-width) !important;
+    background:
+      linear-gradient(90deg, var(--w95-status-accent, var(--w95-panel)) 0 4px, var(--w95-panel) 4px) !important;
   }
 
   & :is(
@@ -387,7 +389,7 @@
     .journal-add-row button,
     .journal-score-stepper button
   ) {
-    border: 2px solid !important;
+    border: var(--w95-bevel-width) solid !important;
 
     border-color:
       var(--w95-light)
@@ -446,7 +448,7 @@
     .mobile-navigation-item,
     .mobile-navigation-capture
   ) {
-    border: 2px solid !important;
+    border: var(--w95-bevel-width) solid !important;
 
     border-color:
       var(--w95-light)
@@ -488,7 +490,7 @@
 
     background: #ffffff !important;
 
-    border: 2px solid !important;
+    border: var(--w95-bevel-width) solid !important;
     border-color:
       var(--w95-shadow)
       var(--w95-light)
@@ -520,6 +522,84 @@
     select
   ) {
     border-radius: 0 !important;
+  }
+
+  /* =========================================================
+   * 18. Windows 95 border grammar
+   *
+   * Window / actionable button = one 2px raised bevel.
+   * Inset information surfaces = one 1px flat outline.
+   * Form fields = one 2px recessed border.
+   * This final pass removes old per-widget inset shadows that doubled frames.
+   * ========================================================= */
+
+  & .mobile-widget-slot :is(button, [role="button"], .glass-button) {
+    border: var(--w95-bevel-width) solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-widget-slot :is(
+    .study10-summary-card, .study10-timer, .study10-panel,
+    .study10-task-row, .study10-slot, .study10-empty,
+    .mobile-calendar-card__summary, .mobile-career-metrics > div,
+    .mobile-career-next, .mobile-career-row, .mobile-career-status,
+    .journal-summary-card, .journal-score-inline, .journal-section,
+    .journal-task-item, .journal-clip-item, .journal-library-item,
+    .journal-empty-box, .memo-note-item, .alert-center-item,
+    .money-summary-panel, .money-budget-panel, .money-visual-panel,
+    .money-recent-panel, .money-detail-card,
+    .today-focus-main, .today-focus-hero, .today-focus-section,
+    .today-focus-block
+  ) {
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  & :is(
+    .mobile-widget-slot .glass-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    border: var(--w95-bevel-width) solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-widget-slot :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    textarea,
+    select
+  ) {
+    border: var(--w95-bevel-width) solid !important;
+    border-color:
+      var(--w95-shadow)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-shadow) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-widget-slot :is(button, [role="button"], .glass-button):is(
+    .is-active, [aria-pressed="true"], :active
+  ) {
+    border-color:
+      var(--w95-dark)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-dark) !important;
   }
 }
 

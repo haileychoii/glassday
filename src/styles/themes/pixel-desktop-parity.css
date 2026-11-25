@@ -26,6 +26,8 @@
   html.theme-pixel,
   body.theme-pixel
 ) .app-shell-surface {
+  --pixel-desktop-bevel-width: 2px;
+  --pixel-desktop-flat-width: 1px;
   --pixel-desktop-bg: #c0c0c0;
   --pixel-desktop-panel: #dfdfdf;
   --pixel-desktop-title: #000080;
@@ -37,15 +39,13 @@
   background: var(--pixel-desktop-bg) !important;
   background-image: none !important;
   border-radius: 0 !important;
-  border: 2px solid !important;
+  border: var(--pixel-desktop-bevel-width) solid !important;
   border-color:
     var(--pixel-desktop-light)
     var(--pixel-desktop-dark)
     var(--pixel-desktop-dark)
     var(--pixel-desktop-light) !important;
-  box-shadow:
-    inset 1px 1px var(--pixel-desktop-light),
-    inset -1px -1px var(--pixel-desktop-shadow) !important;
+  box-shadow: none !important;
   color: var(--pixel-desktop-text);
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -102,15 +102,13 @@
   background: var(--pixel-desktop-bg) !important;
   background-image: none !important;
   border-radius: 0 !important;
-  border: 2px solid !important;
+  border: var(--pixel-desktop-bevel-width) solid !important;
   border-color:
     var(--pixel-desktop-light)
     var(--pixel-desktop-dark)
     var(--pixel-desktop-dark)
     var(--pixel-desktop-light) !important;
-  box-shadow:
-    inset 1px 1px var(--pixel-desktop-light),
-    inset -1px -1px var(--pixel-desktop-shadow) !important;
+  box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
@@ -397,9 +395,9 @@
 ) {
   background: var(--pixel-desktop-panel) !important;
   background-image: none !important;
-  border: 1px solid var(--pixel-desktop-shadow) !important;
+  border: var(--pixel-desktop-flat-width) solid var(--pixel-desktop-shadow) !important;
   border-radius: 0 !important;
-  box-shadow: inset 1px 1px var(--pixel-desktop-light) !important;
+  box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
@@ -418,7 +416,7 @@
   background: var(--pixel-desktop-bg) !important;
   background-image: none !important;
   color: var(--pixel-desktop-text) !important;
-  border: 2px solid !important;
+  border: var(--pixel-desktop-bevel-width) solid !important;
   border-color:
     var(--pixel-desktop-light)
     var(--pixel-desktop-dark)
@@ -491,7 +489,7 @@
   background: #ffffff !important;
   background-image: none !important;
   color: var(--pixel-desktop-text) !important;
-  border: 2px solid !important;
+  border: var(--pixel-desktop-bevel-width) solid !important;
   border-color:
     var(--pixel-desktop-shadow)
     var(--pixel-desktop-light)
@@ -873,4 +871,63 @@
 ) .app-shell-surface .career-widget-actions > .career-icon-button svg {
   width: 14px !important;
   height: 14px !important;
+}
+
+/* Final Windows 95 frame rule for desktop widget contents.
+ * Outer windows and real controls keep a 2px bevel; inset content rows keep
+ * one 1px outline. This removes legacy per-widget inset shadows and widths. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) .app-shell-surface :is(
+  .journal-summary-card, .journal-section, .journal-task-item,
+  .journal-score-inline, .alert-item, .alert-summary-card,
+  .today-focus-hero, .today-focus-section, .today-focus-task,
+  .today-focus-mini-item, .calendar-event-item, .calendar-mini-card,
+  .calendar-month-day-cell, .career-card, .career-list-item,
+  .career-summary-card, .money-summary-panel, .money-budget-panel,
+  .money-visual-panel, .money-recent-panel, .money-detail-card,
+  .money-transaction-row, .memo-list-panel, .memo-note-item,
+  .mood-row, .study-subject-card, .study-task, .study-record-item,
+  .timer-widget-main-card
+) {
+  border-width: var(--pixel-desktop-flat-width, 1px) !important;
+  border-style: solid !important;
+  border-color: var(--pixel-desktop-shadow) !important;
+  box-shadow: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) .app-shell-surface :is(button, .glass-button, [role="button"]):not(
+  [class*="row"], [class*="item"], [class*="card"], [class*="task"]
+) {
+  border: var(--pixel-desktop-bevel-width, 2px) solid !important;
+  border-color:
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-light) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) .app-shell-surface :is(button, .glass-button, [role="button"]):is(
+  .is-active, [aria-pressed="true"], :active
+) {
+  border-color:
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-dark) !important;
 }
