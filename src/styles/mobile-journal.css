@@ -199,7 +199,9 @@
   gap: 7px !important;
   padding: 4px 0 7px !important;
   margin: 0 !important;
-  background: hsl(var(--card)) !important;
+  /* Let the shared widget surface show through; a solid card here creates a
+   * second, theme-blind panel behind the pinned date and Summary row. */
+  background: transparent !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }

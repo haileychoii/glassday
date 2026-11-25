@@ -637,6 +637,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   :is(.widget-frame__header, .mobile-career-card__header, .mobile-calendar-card__header) {
   display: flex !important;
   align-items: center !important;
+  justify-content: space-between !important;
   height: var(--mobile-widget-header-height) !important;
   min-height: var(--mobile-widget-header-height) !important;
   max-height: var(--mobile-widget-header-height) !important;
@@ -662,6 +663,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   padding: 0 !important;
   gap: var(--mobile-content-gap) !important;
   background: transparent !important;
+  text-align: left !important;
 }
 
 /* Desktop title copies reserve a 32px row and pin text to its top edge. On a
@@ -671,8 +673,10 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__header .widget-frame__copy {
   min-height: 0 !important;
   height: auto !important;
+  align-items: flex-start !important;
   justify-content: center !important;
   gap: var(--mobile-tight-gap) !important;
+  text-align: left !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
@@ -710,6 +714,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__title {
   display: flex !important;
   align-items: center !important;
+  justify-content: flex-start !important;
   min-width: 0 !important;
   min-height: var(--mobile-widget-icon-size) !important;
   margin: 0 !important;
@@ -717,22 +722,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   font-weight: 700 !important;
   line-height: var(--mobile-widget-icon-size) !important;
   letter-spacing: 0 !important;
-}
-
-/* Keep Daily Journal on the same left title edge as every shared widget
- * frame. Theme title treatments must not center its copy independently.
- * Daily Journal 제목도 공통 위젯과 같은 왼쪽 시작선에 고정합니다. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-  .daily-journal-widget > .widget-frame__header > .widget-frame__title-group,
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-  .daily-journal-widget > .widget-frame__header > .widget-frame__title-group > .widget-frame__copy {
-  justify-content: flex-start !important;
-  text-align: left !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-  .daily-journal-widget .widget-frame__title {
-  justify-content: flex-start !important;
   text-align: left !important;
 }
 
