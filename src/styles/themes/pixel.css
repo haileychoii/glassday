@@ -270,23 +270,19 @@ html[data-theme="pixel-desk"] .app-shell-main {
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) button,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) input,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) textarea,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) select,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-editor,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-title-input {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) select {
   font-family: var(--glassday-app-font) !important;
   letter-spacing: 0 !important;
   text-shadow: none !important;
 }
 
-/* Memo typography exception
-   Pixel Desk keeps its bitmap font for interface chrome, while the memo title,
-   rich text, list preview, and font options use the font saved on each note.
-   / 테마는 기본 UI 폰트만 정하고 메모별 서체를 덮어쓰지 않습니다. */
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :where(.memo-title-input, .memo-title-view, .memo-editor, .memo-editor *) {
+/* Mona12 is the Pixel Desk UI font. Memo text is the one intentional
+   exception: use the font saved for that note in its title and editor. */
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :is(.memo-title-input, .memo-title-view, .memo-editor, .memo-editor *) {
   font-family: var(--memo-title-font, var(--memo-font-family, inherit)) !important;
 }
 
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :where(.memo-note-title, .memo-note-preview) {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :is(.memo-note-title, .memo-note-preview) {
   font-family: var(--memo-note-font, inherit) !important;
 }
 
