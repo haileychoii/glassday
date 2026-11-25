@@ -188,6 +188,20 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="cale
   min-width: 0 !important;
 }
 
+/* Study uses a size query container for its desktop compact planner. Size
+ * containment also discards the planner's intrinsic height, so on mobile its
+ * content paints through the next dashboard cards. Keep width queries but let
+ * the card grow to the planner's full content height.
+ * Study의 데스크톱 높이 컨테이너가 모바일 카드의 내용 높이를 잘라내지 않도록 합니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="study"]
+  > .widget-instance-root > .glass-card.study-widget {
+  container-type: inline-size !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
 /* Memo and Journal use a 100%-height GlassCard with an internal scroll region.
  * Their slot already has a mobile height, so preserve that definite height on
  * the portal host; auto-height hosts collapse the card's 1fr content row.
