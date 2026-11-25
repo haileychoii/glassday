@@ -308,6 +308,25 @@
   & .mobile-navigation-item[aria-current="page"] :is(span, svg) {
     color: var(--ios-tint) !important;
   }
+  /* Keep Mac Core's workspace glyphs as full-size native iOS emoji.
+   * The general tab-label span rule must not shrink the icon to caption size. */
+  & .mobile-navigation-icon {
+    display: grid !important;
+    flex: 0 0 28px !important;
+    place-items: center !important;
+    width: 28px !important;
+    height: 28px !important;
+  }
+  & .mobile-navigation-icon .workspace-theme-icon-ios-emoji {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 26px !important;
+    height: 26px !important;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+  }
   & .mobile-navigation-capture {
     background: var(--ios-tint) !important;
     color: #ffffff !important;

@@ -44,6 +44,14 @@ const macEmoji: Record<string, string> = {
   life: "🌿",
 };
 
+const macMobileEmoji: Record<string, string> = {
+  home: "🏠",
+  career: "💼",
+  study: "📚",
+  memo: "📝",
+  life: "❤️",
+};
+
 const pinkDiaryIcons: Record<string, string> = {
   home: "/pink-icons/isolated/home.png",
   career: "/pink-icons/isolated/career.png",
@@ -71,7 +79,15 @@ export const WorkspaceTabIcon = ({ tabId, theme, mobile = false }: WorkspaceTabI
   }
 
   if (theme === "mac-core") {
-    return <span className={className} aria-hidden="true">{macEmoji[tabId] ?? "✨"}</span>;
+    const emoji = mobile ? macMobileEmoji[tabId] : macEmoji[tabId];
+    return (
+      <span
+        className={`${className}${mobile ? " workspace-theme-icon-ios-emoji" : ""}`}
+        aria-hidden="true"
+      >
+        {emoji ?? "✨"}
+      </span>
+    );
   }
 
   if (theme === "retro") {
