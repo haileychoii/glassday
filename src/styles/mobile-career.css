@@ -226,26 +226,79 @@
 
 .mobile-career-row {
   display: grid;
-  grid-template-columns: 4px minmax(0, 1fr) 16px;
+  grid-template-columns: 4px minmax(0, 1fr);
+  grid-template-rows: minmax(0, auto) auto;
   align-items: center;
   width: 100%;
   min-width: 0;
   min-height: 55px;
   padding: 7px var(--mc-row-pad);
-  gap: 7px;
+  gap: 2px 7px;
   border: 1px solid var(--mc-border);
   border-radius: 10px;
   background: var(--mc-surface);
   color: inherit;
   text-align: left;
-  cursor: pointer;
 }
 
 .mobile-career-row__accent {
+  grid-column: 1;
+  grid-row: 1 / -1;
   width: 4px;
-  height: 33px;
+  min-height: 33px;
+  align-self: stretch;
   border-radius: 99px;
   background: var(--mc-company-color, #c6def1);
+}
+
+.mobile-career-row__main {
+  display: grid;
+  grid-column: 2;
+  grid-row: 1;
+  grid-template-columns: minmax(0, 1fr) 16px;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 0;
+  gap: 7px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.mobile-career-row__posting-link {
+  display: inline-flex;
+  grid-column: 2;
+  grid-row: 2;
+  align-items: center;
+  justify-self: start;
+  min-height: 30px;
+  padding: 2px 0;
+  gap: 4px;
+  color: hsl(var(--primary));
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+.mobile-career-row__posting-link.is-missing {
+  border: 0;
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+}
+.mobile-career-row__posting-link:focus-visible,
+.mobile-career-row__main:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.mobile-career-row--compact .mobile-career-row__accent {
+  grid-row: 1;
 }
 
 .mobile-career-row__content {
@@ -421,9 +474,13 @@
 /* 09. Status filters scroll horizontally; the full list scrolls vertically. */
 .mobile-career-status-rail {
   display: flex;
+  align-items: center;
+  flex: none;
   width: 100%;
   min-width: 0;
-  padding-block: 1px 4px;
+  height: 42px;
+  min-height: 42px;
+  padding: 0 0 2px;
   gap: 6px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -585,7 +642,6 @@ body:has(.mobile-layout) .career-floating-body :is(
 body:has(.mobile-layout) .career-window-resize-handle { display: none !important; }
 
 /* 14. Keyboard focus and reduced motion. */
-.mobile-career-row:focus-visible,
 .mobile-career-card__open:focus-visible,
 .mobile-career-card__add:focus-visible,
 .mobile-career-status-rail button:focus-visible,

@@ -129,6 +129,15 @@ const formatShortDate = (date: string) => {
   return `${parsed.getMonth() + 1}/${parsed.getDate()}`;
 };
 
+const postingHref = (value: string) => {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.href : null;
+  } catch {
+    return null;
+  }
+};
+
 /**
  * Card와 상세 목록에서 동일하게 사용하는 한 기업 행.
  * row 자체를 버튼으로 만들었기 때문에 별도 클릭 핸들러를 자식에 중첩하지 않습니다.
@@ -144,37 +153,58 @@ const CareerRow = ({
   onOpen: (id: string) => void;
   compact?: boolean;
 }) => (
-  <button
-    type="button"
-    className={`mobile-career-row${compact ? " mobile-career-row--compact" : ""}`}
-    onClick={() => onOpen(item.id)}
-    aria-label={`${item.company || "회사 미입력"}, ${item.role || "직무 미입력"}, ${statusLabel(item.status)}, 상세 편집 열기`}
-  >
+  <article className={`mobile-career-row${compact ? " mobile-career-row--compact" : ""}`}>
     <span
       className="mobile-career-row__accent"
       aria-hidden="true"
       style={{ "--mc-company-color": item.calendarColor || "#C6DEF1" } as CSSProperties}
     />
-    <span className="mobile-career-row__content">
-      <span className="mobile-career-row__top">
-        <strong>{item.company || "회사 미입력"}</strong>
-        <span className={`mobile-career-status mobile-career-status--${item.status.toLowerCase()}`}>
-          {statusLabel(item.status)}
+    <button
+      type="button"
+      className="mobile-career-row__main"
+      onClick={() => onOpen(item.id)}
+      aria-label={`${item.company || "회사 미입력"}, ${item.role || "직무 미입력"}, ${statusLabel(item.status)}, 상세 편집 열기`}
+    >
+      <span className="mobile-career-row__content">
+        <span className="mobile-career-row__top">
+          <strong>{item.company || "회사 미입력"}</strong>
+          <span className={`mobile-career-status mobile-career-status--${item.status.toLowerCase()}`}>
+            {statusLabel(item.status)}
+          </span>
         </span>
+        <span className="mobile-career-row__role">{item.role || "직무 미입력"}</span>
+        {schedule && (
+          <span className="mobile-career-row__schedule">
+            <CalendarClock size={12} aria-hidden="true" />
+            {schedule.label} · {formatShortDate(schedule.date)}
+            <b className={schedule.dday <= 3 ? "is-urgent" : ""}>
+              {ddayText(schedule.dday)}
+            </b>
+          </span>
+        )}
       </span>
-      <span className="mobile-career-row__role">{item.role || "직무 미입력"}</span>
-      {schedule && (
-        <span className="mobile-career-row__schedule">
-          <CalendarClock size={12} aria-hidden="true" />
-          {schedule.label} · {formatShortDate(schedule.date)}
-          <b className={schedule.dday <= 3 ? "is-urgent" : ""}>
-            {ddayText(schedule.dday)}
-          </b>
-        </span>
-      )}
-    </span>
-    <ChevronRight size={17} aria-hidden="true" className="mobile-career-row__chevron" />
-  </button>
+      <ChevronRight size={17} aria-hidden="true" className="mobile-career-row__chevron" />
+    </button>
+    {!compact && (postingHref(item.postingUrl) ? (
+      <a
+        className="mobile-career-row__posting-link"
+        href={postingHref(item.postingUrl) ?? undefined}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${item.company || "회사"} 공고 페이지 새 탭에서 열기`}
+      >
+        공고 페이지 열기 <ArrowUpRight size={14} aria-hidden="true" />
+      </a>
+    ) : (
+      <button
+        type="button"
+        className="mobile-career-row__posting-link is-missing"
+        onClick={() => onOpen(item.id)}
+      >
+        공고 URL 추가 <Plus size={14} aria-hidden="true" />
+      </button>
+    ))}
+  </article>
 );
 
 export const MobileCareerCard = () => {
