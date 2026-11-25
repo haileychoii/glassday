@@ -2430,18 +2430,8 @@ body.theme-glass-dark
 }
 
 @container memo-widget (max-width: 430px) {
-  .memo-widget .widget-frame__actions {
-    gap: 4px;
-  }
-
   .memo-widget .memo-edit-label {
     display: none;
-  }
-
-  .memo-widget .widget-frame__actions > div > button:last-child {
-    width: 32px;
-    padding-inline: 0;
-    justify-content: center;
   }
 }
 
