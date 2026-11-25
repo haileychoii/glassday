@@ -2659,7 +2659,7 @@ body,
     body.theme-pixel
   )
   :is(
-    button,
+    button:not(.mobile-career-row__main),
     .glass-button,
     .calendar-nav-button,
     .calendar-view-button,
@@ -3035,7 +3035,7 @@ body,
     body.theme-pixel
   )
   :is(
-    button,
+    button:not(.mobile-career-row__main),
     .glass-button,
     .calendar-nav-button,
     .calendar-view-button,

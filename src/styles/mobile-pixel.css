@@ -603,7 +603,7 @@
    * This final pass removes old per-widget inset shadows that doubled frames.
    * ========================================================= */
 
-  & .mobile-widget-slot :is(button, [role="button"], .glass-button) {
+  & .mobile-widget-slot :is(button, [role="button"], .glass-button):not(.mobile-career-row__main) {
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: var(--w95-shadow-raised) !important;
@@ -647,7 +647,7 @@
     box-shadow: var(--w95-shadow-input) !important;
   }
 
-  & .mobile-widget-slot :is(button, [role="button"], .glass-button):is(
+  & .mobile-widget-slot :is(button, [role="button"], .glass-button):not(.mobile-career-row__main):is(
     .is-active, [aria-pressed="true"], :active
   ) {
     box-shadow: var(--w95-shadow-pressed) !important;
