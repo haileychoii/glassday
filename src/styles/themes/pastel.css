@@ -182,7 +182,6 @@
 /* 카드 헤더 아이콘 박스 */
 .theme-pastel .glass-card-icon,
 .theme-pastel .today-focus-ring,
-.theme-pastel .today-task-check,
 .theme-pastel .alert-icon,
 .theme-pastel .settings-modal-icon {
   background:
@@ -276,7 +275,7 @@
 }
 
 /* progress bar: mint → pink */
-.theme-pastel .today-tasks-progress-fill,
+
 .theme-pastel .progress-fill,
 .theme-pastel .money-progress-fill {
   background:
@@ -538,7 +537,7 @@
 }
 
 /* progress만 민트 → 핑크 */
-.theme-pastel .today-tasks-progress-fill,
+
 .theme-pastel .progress-fill,
 .theme-pastel .money-progress-fill {
   background:
@@ -555,7 +554,6 @@
 
 .theme-pastel .today-focus-card,
 .theme-pastel .today-focus-widget,
-.theme-pastel .today-mini-card,
 .theme-pastel .glass-card {
   color: hsl(250 30% 20%) !important;
 }
@@ -566,9 +564,6 @@
 .theme-pastel .today-focus-main,
 .theme-pastel .today-focus-section,
 .theme-pastel .today-focus-block,
-.theme-pastel .today-mini-main,
-.theme-pastel .today-mini-next,
-.theme-pastel .today-tasks-progress,
 .theme-pastel .calendar-mini-card,
 .theme-pastel .career-summary-card,
 .theme-pastel .career-list-item,
@@ -586,12 +581,6 @@
 .theme-pastel .today-focus-main,
 .theme-pastel .today-focus-section,
 .theme-pastel .today-focus-block,
-.theme-pastel .today-mini-main,
-.theme-pastel .today-mini-weather,
-.theme-pastel .today-mini-stat,
-.theme-pastel .today-mini-next,
-.theme-pastel .today-tasks-progress,
-.theme-pastel .today-task-item,
 .theme-pastel .career-list-item,
 .theme-pastel .calendar-event-chip {
   background-image: none !important;
@@ -605,7 +594,6 @@
 .theme-pastel .glass-card strong,
 .theme-pastel .today-focus-title,
 .theme-pastel .today-focus-main-title,
-.theme-pastel .today-task-title,
 .theme-pastel .calendar-event-title,
 .theme-pastel .career-list-title strong {
   color: hsl(250 30% 20% / 0.88) !important;
@@ -615,7 +603,6 @@
 .theme-pastel .glass-card span,
 .theme-pastel .today-focus-subtitle,
 .theme-pastel .today-focus-label,
-.theme-pastel .today-task-meta,
 .theme-pastel .calendar-event-time,
 .theme-pastel .career-list-title span {
   color: hsl(248 22% 30% / 0.74) !important;
@@ -623,8 +610,7 @@
 
 /* Pastel에서는 더 연하게 */
 .theme-pastel .today-focus .top-three-item,
-.theme-pastel .today-focus .today-focus-task,
-.theme-pastel .today-mini .top-three-item {
+.theme-pastel .today-focus .today-focus-task {
   background: transparent !important;
   border: 1px solid hsl(0 0% 100% / 0.38) !important;
   box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.46) !important;

@@ -34,7 +34,6 @@
 /* 01. Journal 전용 설정값. Figma에서도 같은 토큰으로 매핑 가능. */
 .daily-journal-widget {
   --journal-gap: 8px;
-  --journal-pad: 8px;
   --journal-radius: var(--gd-widget-inner-radius, var(--gd-radius-inner, 12px));
   --journal-panel: var(--gd-widget-panel-bg, hsl(var(--card)));
   --journal-panel-border: var(--gd-widget-panel-border, hsl(var(--border)));

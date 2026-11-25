@@ -387,8 +387,7 @@
   color: hsl(var(--foreground) / 0.46);
 }
 
-.career-list-star,
-.career-star-button {
+.career-list-star {
   width: 30px;
   height: 30px;
   border-radius: 999px;
@@ -402,8 +401,7 @@
   font-size: 16px;
 }
 
-.career-list-star.is-active,
-.career-star-button.is-active {
+.career-list-star.is-active {
   color: hsl(42 90% 48%);
   background: hsl(42 100% 92% / 0.72);
   border-color: hsl(42 90% 76% / 0.58);
@@ -456,22 +454,19 @@
   text-transform: capitalize;
 }
 
-.career-priority-tag.is-high,
-.career-priority-button.is-high.is-active {
+.career-priority-tag.is-high {
   color: hsl(350 70% 44%);
   background: hsl(350 100% 96% / 0.72);
   border-color: hsl(350 80% 78% / 0.52);
 }
 
-.career-priority-tag.is-medium,
-.career-priority-button.is-medium.is-active {
+.career-priority-tag.is-medium {
   color: hsl(36 70% 38%);
   background: hsl(42 100% 94% / 0.72);
   border-color: hsl(42 90% 78% / 0.52);
 }
 
-.career-priority-tag.is-low,
-.career-priority-button.is-low.is-active {
+.career-priority-tag.is-low {
   color: hsl(155 46% 32%);
   background: hsl(155 78% 92% / 0.72);
   border-color: hsl(155 70% 80% / 0.52);
@@ -602,25 +597,11 @@
   padding: var(--gd-space-xl);
 }
 
-.career-section-title-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gd-widget-stack-gap);
-}
-
 .career-section-title {
   font-size: 12px;
   font-weight: 850;
   color: hsl(var(--foreground) / 0.7);
   margin-bottom: var(--gd-widget-section-title-bottom);
-}
-
-.career-section-sub {
-  margin-top: -7px;
-  font-size: 11px;
-  line-height: 1.4;
-  color: hsl(var(--foreground) / 0.46);
 }
 
 .career-detail-grid {
@@ -635,9 +616,7 @@
   gap: var(--gd-widget-inline-gap);
 }
 
-.career-field span,
-.interview-review-field span,
-.interview-review-textarea-field span {
+.career-field span {
   font-size: 11px;
   color: hsl(var(--foreground) / 0.48);
   font-weight: 800;
@@ -648,21 +627,7 @@
 .career-field textarea,
 .career-stage-title-input,
 .career-stage-status,
-.career-stage-date,
-.career-stage-memo,
-.cover-letter-status,
-.cover-letter-question,
-.cover-letter-answer,
-.cover-letter-memo,
-.career-attachment-label,
-.career-attachment-type,
-.career-attachment-url,
-.career-attachment-memo,
-.interview-review-stage,
-.interview-review-date,
-.interview-review-field input,
-.interview-review-textarea-field textarea,
-.career-final-result-select {
+.career-stage-memo {
   width: 100%;
   min-width: 0;
   border-radius: 16px;
@@ -677,26 +642,12 @@
 .career-field select,
 .career-stage-title-input,
 .career-stage-status,
-.career-stage-date,
-.career-stage-memo,
-.cover-letter-status,
-.cover-letter-memo,
-.career-attachment-label,
-.career-attachment-type,
-.career-attachment-url,
-.career-attachment-memo,
-.interview-review-stage,
-.interview-review-date,
-.interview-review-field input,
-.career-final-result-select {
+.career-stage-memo {
   height: 36px;
   font-size: 12px;
 }
 
-.career-textarea,
-.cover-letter-question,
-.cover-letter-answer,
-.interview-review-textarea-field textarea {
+.career-textarea {
   min-height: 110px;
   padding: 12px;
   resize: vertical;
@@ -717,27 +668,7 @@
   font-weight: 800;
 }
 
-.career-priority-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gd-widget-section-gap);
-}
-
-.career-priority-button {
-  height: 32px;
-  padding: 0 12px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 850;
-  background: hsl(0 0% 100% / 0.28);
-  border: 1px solid hsl(0 0% 100% / 0.42);
-  color: hsl(var(--foreground) / 0.56);
-}
-
-.career-stage-list,
-.cover-letter-list,
-.career-attachment-list,
-.interview-review-list {
+.career-stage-list {
   display: grid;
   gap: var(--gd-widget-stack-gap);
   margin-top: var(--gd-widget-stack-gap);
@@ -809,10 +740,7 @@
   gap: 8px;
 }
 
-.career-stage-delete,
-.cover-letter-delete,
-.career-attachment-delete,
-.interview-review-delete {
+.career-stage-delete {
   width: 32px;
   height: 32px;
   border-radius: 999px;
@@ -822,156 +750,6 @@
   color: hsl(350 70% 44% / 0.72);
   background: hsl(350 100% 96% / 0.42);
   border: 1px solid hsl(350 80% 82% / 0.42);
-}
-
-.cover-letter-progress {
-  min-width: 100px;
-  display: grid;
-  gap: 5px;
-}
-
-.cover-letter-progress span {
-  font-size: 11px;
-  font-weight: 900;
-  text-align: right;
-  color: hsl(var(--foreground) / 0.56);
-}
-
-.cover-letter-progress div {
-  height: 7px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: hsl(0 0% 100% / 0.34);
-  border: 1px solid hsl(0 0% 100% / 0.44);
-}
-
-.cover-letter-progress i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background:
-    linear-gradient(
-      90deg,
-      hsl(var(--primary) / 0.72),
-      hsl(270 80% 82% / 0.72)
-    );
-}
-
-.cover-letter-item,
-.career-attachment-item,
-.interview-review-item,
-.career-final-result-box {
-  border-radius: 22px;
-  padding: 14px;
-  display: grid;
-  gap: 10px;
-  background: hsl(0 0% 100% / 0.24);
-  border: 1px solid hsl(0 0% 100% / 0.38);
-}
-
-.cover-letter-item-header {
-  display: grid;
-  grid-template-columns: 42px 140px 32px;
-  gap: 8px;
-  align-items: center;
-}
-
-.cover-letter-number,
-.interview-review-number {
-  height: 30px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 900;
-  color: hsl(var(--primary));
-  background: hsl(var(--primary) / 0.11);
-  border: 1px solid hsl(var(--primary) / 0.18);
-}
-
-.cover-letter-question {
-  min-height: 64px;
-}
-
-.cover-letter-answer {
-  min-height: 140px;
-}
-
-.career-attachment-quick-row {
-  display: grid;
-  gap: 10px;
-}
-
-.career-attachment-quick-link {
-  min-height: 42px;
-  border-radius: 18px;
-  padding: 0 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  justify-self: start;
-  font-size: 12px;
-  font-weight: 800;
-  color: hsl(var(--primary));
-  background: hsl(var(--primary) / 0.11);
-  border: 1px solid hsl(var(--primary) / 0.2);
-}
-
-.career-attachment-top {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) 138px 34px 34px;
-  gap: 8px;
-  align-items: center;
-}
-
-.career-attachment-icon,
-.career-attachment-open {
-  width: 34px;
-  height: 34px;
-  border-radius: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: hsl(var(--primary));
-  background: hsl(var(--primary) / 0.1);
-  border: 1px solid hsl(var(--primary) / 0.16);
-}
-
-.career-attachment-open.is-disabled {
-  opacity: 0.38;
-  pointer-events: none;
-}
-
-.interview-review-header {
-  display: grid;
-  grid-template-columns: 96px minmax(0, 1fr) 150px 34px;
-  gap: 8px;
-  align-items: center;
-}
-
-.interview-review-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.interview-review-field,
-.interview-review-textarea-field {
-  display: grid;
-  gap: 6px;
-}
-
-.career-final-result-box {
-  grid-template-columns: minmax(0, 1fr) 180px;
-  align-items: center;
-}
-
-.career-final-result-box span {
-  font-size: 12px;
-  font-weight: 850;
-  color: hsl(var(--foreground) / 0.62);
 }
 
 .career-empty-box {
@@ -986,12 +764,7 @@
 @media (max-width: 900px) {
   .career-detail-grid,
   .career-stage-top,
-  .career-stage-bottom,
-  .cover-letter-item-header,
-  .career-attachment-top,
-  .interview-review-header,
-  .interview-review-grid,
-  .career-final-result-box {
+  .career-stage-bottom {
     grid-template-columns: 1fr;
   }
 
@@ -1745,7 +1518,6 @@
 .career-stage-kind,
 .career-stage-title-input,
 .career-stage-status,
-.career-stage-date,
 .career-stage-memo,
 .career-stage-card .career-field input {
   width: 100%;

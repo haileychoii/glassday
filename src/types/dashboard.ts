@@ -6,7 +6,7 @@
  * Consumers:
  * - src/context/DashboardDataContext.tsx
  * - CalendarWidget 및 calendar/* subcomponents
- * - CareerWidget 및 career/* subcomponents
+ * - CareerWidget
  * - TodayFocusWidget
  *
  * Source of Truth / Persistence:

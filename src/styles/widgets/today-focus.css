@@ -18,7 +18,6 @@
 
 .today-focus-card,
 .today-focus-widget,
-.today-mini-card,
 .alert-center-widget,
 .calendar-widget,
 .career-widget,
@@ -38,15 +37,13 @@
 }
 
 .today-focus-card,
-.today-focus-widget,
-.today-mini-card {
+.today-focus-widget {
   container-type: size;
   container-name: today-focus-widget;
 }
 
 .today-focus-card .glass-card-body,
 .today-focus-widget .glass-card-body,
-.today-mini-card .glass-card-body,
 .alert-center-widget .glass-card-body,
 .calendar-widget .glass-card-body,
 .career-widget .glass-card-body,
@@ -143,9 +140,6 @@
 
 .today-focus-section,
 .today-focus-block,
-.today-mini-main,
-.today-mini-next,
-.today-tasks-progress,
 .study-card,
 .study-task,
 .study-record-item {
@@ -191,7 +185,7 @@
    3. Task list
 ========================================================= */
 
-.today-task-list,
+
 .today-focus-list,
 .today-focus-task-list,
 .study-list {
@@ -206,7 +200,7 @@
   overflow-x: hidden;
 }
 
-.today-task-item,
+
 .today-focus-task {
   width: 100%;
   min-width: 0;
@@ -222,7 +216,7 @@
   box-sizing: border-box;
 }
 
-.today-task-check,
+
 .today-focus-task-check {
   width: 20px;
   height: 20px;
@@ -235,7 +229,7 @@
   border-radius: 999px;
 }
 
-.today-task-item span,
+
 .today-focus-task span,
 .today-task-text,
 .today-focus-task-text {
@@ -250,7 +244,7 @@
   white-space: nowrap;
 }
 
-.today-task-item.is-done .today-task-text,
+
 .today-focus-task.is-done .today-focus-task-text {
   text-decoration: line-through;
   opacity: 0.55;
@@ -487,9 +481,6 @@
 
   .today-focus-section,
   .today-focus-block,
-  .today-mini-main,
-  .today-mini-next,
-  .today-tasks-progress,
   .calendar-event-item,
   .calendar-event-card,
   .career-list-item,
@@ -513,14 +504,12 @@
 ========================================================= */
 
 .today-focus-card,
-.today-focus-widget,
-.today-mini-card {
+.today-focus-widget {
   min-height: 0;
 }
 
 .today-focus-card .glass-card-body,
-.today-focus-widget .glass-card-body,
-.today-mini-card .glass-card-body {
+.today-focus-widget .glass-card-body {
   flex: 1 1 auto;
   min-height: 0;
 

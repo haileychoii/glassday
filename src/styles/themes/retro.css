@@ -56,9 +56,7 @@ body.theme-retro {
   --retro-field: #fffdfb;
   --retro-client: #fff5f1;
   --retro-yellow: #fff0c9;
-  --retro-mint: #e3f0df;
   --retro-blue: #e9e6f8;
-  --retro-pink: #ffd6e4;
   --retro-raised-border:
     inset 1px 1px 0 var(--retro-white),
     inset -1px -1px 0 var(--retro-panel-dark);
@@ -953,7 +951,6 @@ body.theme-retro .calendar-event-time {
   --retro-window: #fff7fb;
   --retro-title: #ff8fc5;
   --retro-title-2: #f55aa4;
-  --retro-title-3: #7fa0f5;
   --retro-text: #253348;
   --retro-muted: #6b5a73;
   --retro-white: #ffffff;
@@ -961,9 +958,7 @@ body.theme-retro .calendar-event-time {
   --retro-field: #ffffff;
   --retro-client: #ffeaf5;
   --retro-yellow: #ffe5a7;
-  --retro-mint: #d9fff5;
   --retro-blue: #dce8ff;
-  --retro-pink: #ffd1e8;
   --retro-raised-border:
     inset 1px 1px 0 #ffffff,
     inset -1px -1px 0 #d870a9;
@@ -1214,14 +1209,12 @@ body.theme-retro {
   --retro-window: #d7d7d7;
   --retro-title: #f59bc5;
   --retro-title-2: #f7b4d4;
-  --retro-title-3: #d9578d;
   --retro-text: #202833;
   --retro-muted: #5e6470;
   --retro-cream: #ffffff;
   --retro-field: #ffffff;
   --retro-client: #f8f8f8;
   --retro-pink-soft: #ffd8ea;
-  --retro-mint: #c9eadc;
   --retro-raised-border:
     inset 1px 1px 0 #ffffff,
     inset -1px -1px 0 #8d8d8d;
@@ -1393,7 +1386,6 @@ body.theme-retro {
   --retro-window: #fbd0e3;
   --retro-title: #e85f9f;
   --retro-title-2: #b64f82;
-  --retro-title-3: #f4a3c9;
   --retro-text: #4f2940;
   --retro-muted: #8b5d75;
   --retro-white: #ffffff;
@@ -1401,7 +1393,6 @@ body.theme-retro {
   --retro-client: #fff0f8;
   --retro-cream: #fff7fb;
   --retro-pink-soft: #ffd1e8;
-  --retro-mint: #ffd4e8;
   --retro-blue: #f0d8ff;
   --retro-menu: #ffd1e6;
   --retro-menu-border: #c56b99;

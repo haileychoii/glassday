@@ -603,21 +603,10 @@ body:has(.mobile-layout) .career-floating-body > .career-detail-section {
 body:has(.mobile-layout) .career-floating-body :is(
   .career-detail-grid,
   .career-stage-top,
-  .career-stage-bottom,
-  .career-attachment-top,
-  .interview-review-header,
-  .interview-review-grid,
-  .cover-letter-item-header,
-  .career-final-result-box
-) {
+  .career-stage-bottom) {
   grid-template-columns: minmax(0, 1fr) !important;
 }
-body:has(.mobile-layout) .career-floating-body :is(
-  .cover-letter-item,
-  .career-attachment-item,
-  .interview-review-item,
-  .career-final-result-box
-) {
+body:has(.mobile-layout) .career-floating-body  {
   padding: 8px;
   border-radius: 12px;
 }

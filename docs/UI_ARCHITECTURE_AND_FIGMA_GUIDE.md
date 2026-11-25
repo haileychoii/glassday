@@ -152,7 +152,6 @@ WidgetId
 - Components: Application Card, Status Chip, D-Day Badge, Board Column
 - Variants: List, Board, Empty, Detail Open, detailOnly
 - Floating: Career 전용 portal; Title Bar fixed, detail body scroll
-- 주의: `components/widgets/career/*`의 분리형 component는 현재 unmounted prototype이다.
 
 ### Study Planner
 
@@ -272,8 +271,7 @@ flowchart LR
 | `pixel-desk` | `styles/themes/pixel.css` | `[data-theme="pixel-desk"]`, `.theme-pixel-desk` | Pixel Desk |
 | `retro` | `styles/themes/retro.css` | `[data-theme="retro"]`, `.theme-retro` | Retro 98 |
 
-`src/styles/themes/glass.css`는 `index.css`에서 import되지 않는 legacy 파일이다. 저장된 과거
-`glass` 값은 `constants/themes.ts`에서 `glass-light`로 migration된다.
+저장된 과거 `glass` 테마 값은 `constants/themes.ts`에서 `glass-light`로 migration된다.
 
 ### Theme 적용 경로
 
@@ -450,18 +448,7 @@ Wide/Laptop mode, active tab, Grid layout, theme은 cloud restore 대상에서 �
 3. Sidebar/Topbar/WorkspaceTabsNav DOM 구조
 4. Widget 내부 변화는 해당 container query에서 처리한다.
 
-## 9. 현재 코드에서 구분해야 할 Legacy / Inactive 파일
-
-- `src/components/layout/AppleDesktopDecor.tsx`: 전체 구현이 주석 처리되어 현재 미렌더링
-- `src/components/widgets/JournalWidget.tsx`: DailyJournalWidget export alias
-- `src/components/widgets/TodayTasksWidget.tsx`: 구현은 있으나 현재 widgetMap 미등록
-- `src/components/widgets/career/*`의 분리형 component/type/helper: 현재 CareerWidget 미사용 prototype
-- `src/components/widgets/alerts/alertUtils.ts`: 현재 AlertCenterWidget에서 미사용
-- `src/hooks/useDashboardLayout.ts`: 현재 Grid가 사용하지 않는 옛 단일 layout Hook
-- `src/types/journals.ts`: 현재 Daily Journal이 사용하지 않는 이전 model
-- `src/styles/themes/glass.css`: index 미import, registry 미등록 legacy Theme
-
-## 10. Figma 파일 구성 제안
+## 9. Figma 파일 구성 제안
 
 무료 페이지 수를 아끼면서 현재 구조를 이해하기 쉬운 구성은 다음과 같다.
 

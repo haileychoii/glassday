@@ -111,7 +111,6 @@ body,
 .journal-main-scroll,
 .memo-note-list,
 .memo-floating-body,
-.today-task-list,
 .career-list,
 .study-list {
   min-height: 0;
@@ -486,21 +485,18 @@ body,
 /* Keep Today Focus stable inside laptop preview even when the outer browser
    viewport crosses responsive breakpoints. In laptop mode this widget should
    react only to its own container size. */
-.app-mode-stage.is-laptop-mode .today-focus,
-.app-mode-stage.is-laptop-mode .today-mini {
+.app-mode-stage.is-laptop-mode .today-focus {
   gap: 10px !important;
 }
 
 .app-mode-stage.is-laptop-mode .today-focus-card,
-.app-mode-stage.is-laptop-mode .today-focus-widget,
-.app-mode-stage.is-laptop-mode .today-mini-card {
+.app-mode-stage.is-laptop-mode .today-focus-widget {
   padding: 0 !important;
   min-height: 0 !important;
 }
 
 .app-mode-stage.is-laptop-mode .today-focus-card .glass-card-body,
-.app-mode-stage.is-laptop-mode .today-focus-widget .glass-card-body,
-.app-mode-stage.is-laptop-mode .today-mini-card .glass-card-body {
+.app-mode-stage.is-laptop-mode .today-focus-widget .glass-card-body {
   height: 100% !important;
   min-height: 0 !important;
   overflow-y: auto !important;
@@ -539,10 +535,7 @@ body,
 }
 
 .app-mode-stage.is-laptop-mode .today-focus-section,
-.app-mode-stage.is-laptop-mode .today-focus-block,
-.app-mode-stage.is-laptop-mode .today-mini-main,
-.app-mode-stage.is-laptop-mode .today-mini-next,
-.app-mode-stage.is-laptop-mode .today-tasks-progress {
+.app-mode-stage.is-laptop-mode .today-focus-block {
   padding: 12px !important;
   border-radius: 16px !important;
 }
@@ -1643,7 +1636,6 @@ body,
     .career-board-card,
     .career-detail-section,
     .career-empty-box,
-    .career-attachment-item,
     .money-overview-hero,
     .money-summary-panel,
     .money-budget-panel,
@@ -1714,7 +1706,6 @@ body,
     .career-board-column,
     .career-detail-section,
     .career-empty-box,
-    .career-attachment-item,
     .money-overview-hero,
     .money-summary-panel,
     .money-budget-panel,
@@ -2121,7 +2112,6 @@ body,
 ) {
   --mac-app-surface: rgb(255 255 255 / 0.78);
   --mac-app-surface-strong: rgb(255 255 255 / 0.9);
-  --mac-app-grouped: rgb(246 247 250 / 0.74);
   --mac-app-grouped-border: rgb(60 60 67 / 0.1);
   --mac-app-separator: rgb(60 60 67 / 0.12);
   --mac-app-shadow:
@@ -2131,10 +2121,6 @@ body,
     linear-gradient(180deg, rgb(255 255 255 / 0.96), rgb(241 242 246 / 0.9));
   --mac-app-control-hover:
     linear-gradient(180deg, rgb(255 255 255 / 1), rgb(248 249 252 / 0.96));
-  --mac-app-blue: #0a84ff;
-  --mac-app-blue-soft: rgb(10 132 255 / 0.14);
-  --mac-app-green: #34c759;
-  --mac-app-red: #ff3b30;
 }
 
 :where(
@@ -2186,7 +2172,6 @@ body,
     .career-board-card,
     .career-detail-section,
     .career-empty-box,
-    .career-attachment-item,
     .money-overview-hero,
     .money-summary-panel,
     .money-budget-panel,
@@ -3906,7 +3891,6 @@ body:not(:has(.mobile-layout)) .tauri-app-window {
      Korean: 실제 데스크톱 앱에서만 헤더/컨트롤 높이를 살짝 낮춘다. */
   --gd-topbar-min-height: 46px;
   --gd-widget-header-row-min-height: 28px;
-  --gd-control-height-sm: 26px;
   --gd-control-height-md: 28px;
 }
 

@@ -32,8 +32,6 @@
 .mood-row {
   --mood-accent: hsl(var(--primary));
   --mood-surface: hsl(0 0% 100% / 0.18);
-  --mood-surface-active:
-    color-mix(in srgb, var(--mood-accent) 18%, white 82%);
   min-width: 0;
   min-height: 34px;
   padding: 6px 8px;

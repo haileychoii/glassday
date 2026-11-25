@@ -11,13 +11,9 @@
 .mobile-layout {
   --mobile-space-1: var(--gd-mobile-space-1);
   --mobile-space-2: var(--gd-mobile-space-2);
-  --mobile-space-3: var(--gd-mobile-space-3);
   --mobile-space-4: var(--gd-mobile-space-4);
-  --mobile-space-6: var(--gd-mobile-space-6);
   --mobile-widget-gap: var(--gd-mobile-widget-gap);
   --mobile-widget-inset: var(--gd-mobile-widget-inset);
-  --mobile-page-gap: var(--gd-mobile-widget-gap);
-  --mobile-section-gap: var(--mobile-space-4);
   --mobile-content-gap: var(--mobile-space-2);
   --mobile-tight-gap: var(--mobile-space-1);
   --mobile-control-gap: 6px;
@@ -28,7 +24,6 @@
   --mobile-widget-header-pad-block: var(--gd-mobile-widget-header-pad-y);
   --mobile-widget-title-size: 14px;
   --mobile-widget-subtitle-size: 11px;
-  --mobile-widget-header-min-height: var(--gd-mobile-widget-header-height);
   --mobile-widget-min-body-height: 120px;
   --mobile-widget-icon-size: 22px;
   /* A 40px control stays compact in dense widget headers but is easier to tap.
@@ -449,7 +444,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
   .mobile-calendar-card) {
-  --mobile-card-inset: var(--mobile-widget-inset);
   gap: var(--mobile-widget-inset) !important;
   padding: 0 var(--mobile-widget-inset) var(--mobile-widget-inset) !important;
   box-sizing: border-box !important;

@@ -591,7 +591,7 @@ body:has(.mobile-layout) .calendar-floating-window button:focus-visible {
    ===========================================================================
    연결 / Connected files:
    - MobileCalendarCard.tsx: summary, week strip, agenda rows, detail portal
-   - mobile-common.css: shared --mobile-widget-inset / --mobile-section-gap
+   - mobile-common.css: shared --mobile-widget-inset
 
    Calendar는 바깥 카드 1개와 실제 조작 요소만 남겨야 합니다.
    날짜 요약과 일정 행은 의미가 있는 콘텐츠이므로 유지하되,

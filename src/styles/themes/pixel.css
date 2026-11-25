@@ -83,13 +83,6 @@
   --gd-radius-inner: 0px;
   --gd-radius-button: 0px;
 
-  --app-radius-shell: 0px;
-  --app-radius-panel: 0px;
-  --app-radius-card: 0px;
-  --app-radius-inner: 0px;
-  --app-radius-button: 0px;
-  --app-radius-chip: 0px;
-
   font-family: var(--glassday-app-font) !important;
 }
 

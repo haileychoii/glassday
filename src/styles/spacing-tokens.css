@@ -30,8 +30,6 @@
   --gd-widget-gap-tight: var(--gd-space-sm);
   --gd-widget-gap: var(--gd-space-md);
   /* Shared desktop frame scale; special widgets override only their exception. */
-  --gd-widget-desktop-pad-x: 12px;
-  --gd-widget-desktop-pad-y: 12px;
   --gd-widget-desktop-header-top: 10px;
   --gd-widget-desktop-header-bottom: 5px;
   --gd-widget-desktop-content-top: 4px;
@@ -44,7 +42,6 @@
   --gd-widget-frame-pad-bottom: var(--gd-space-lg);
   --gd-widget-frame-header-y: var(--gd-widget-desktop-header-top);
   --gd-widget-frame-content-gap-top: var(--gd-widget-desktop-content-top);
-  --gd-widget-frame-panel-pad: var(--gd-space-lg);
   --gd-widget-shell-pad-x: var(--gd-widget-frame-pad-x);
   --gd-widget-shell-pad-bottom: var(--gd-widget-frame-pad-bottom);
   --gd-widget-header-anchor-y: var(--gd-widget-frame-header-y);
@@ -73,7 +70,6 @@
      This aliases the active theme radius, so Pixel Desk and Retro remain
      square while glass themes share one rounded panel shape. */
   --gd-widget-inner-radius: var(--gd-radius-inner);
-  --gd-widget-section-title-gap: 7px;
   --gd-widget-section-title-bottom: var(--gd-space-sm);
 
   /* 2c. Scrollbar skin
@@ -84,10 +80,6 @@
   --gd-scrollbar-thumb: hsl(var(--foreground) / 0.24);
   --gd-scrollbar-thumb-hover: hsl(var(--foreground) / 0.34);
   --gd-scrollbar-border: hsl(0 0% 100% / 0.18);
-  /* Scroll content edge
-     Reserves breathing room between a widget's cards and its vertical rail.
-     / 스크롤바가 카드 테두리를 덮어 잘린 것처럼 보이지 않게 하는 여백. */
-  --gd-widget-scroll-content-inset: var(--gd-space-xs);
 
   /* Mobile rhythm uses a dedicated 4-point scale. The values are deliberately
    * semantic: page/widget spacing is larger than card inset, and related
@@ -96,7 +88,6 @@
   --gd-mobile-space-2: 8px;
   --gd-mobile-space-3: 12px;
   --gd-mobile-space-4: 16px;
-  --gd-mobile-space-6: 24px;
   --gd-mobile-widget-gap: var(--gd-mobile-space-4);
   --gd-mobile-widget-inset: var(--gd-mobile-space-3);
   --gd-mobile-widget-header-height: 48px;
@@ -128,6 +119,5 @@
   --gd-sidebar-section-gap: 8px;
 
   /* 3. Shared control sizing */
-  --gd-control-height-sm: 30px;
   --gd-control-height-md: 32px;
 }
