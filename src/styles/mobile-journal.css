@@ -203,9 +203,9 @@
   gap: 7px !important;
   padding: 4px 0 7px !important;
   margin: 0 !important;
-  background: var(--gd-surface-bg, hsl(var(--card) / 0.92)) !important;
-  backdrop-filter: var(--gd-surface-filter, blur(16px)) !important;
-  -webkit-backdrop-filter: var(--gd-surface-filter, blur(16px)) !important;
+  background: hsl(var(--card)) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 .mobile-layout .daily-journal-widget .journal-main-scroll {
   display: grid !important;
