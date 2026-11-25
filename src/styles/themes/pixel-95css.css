@@ -59,7 +59,7 @@
     inset 4px 4px 0 var(--w95-black);
   /* Shared raised edge on every blue widget title bar. */
   --w95-shadow-titlebar:
-    inset 2px 2px 0 rgb(255 255 255 / 0.32),
+    inset 2px 2px 0 rgb(255 255 255 / 0.62),
     inset -2px -2px 0 #000040;
 }
 

@@ -675,7 +675,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   box-sizing: border-box !important;
   border: 0 !important;
   border-radius: 0 !important;
-  box-shadow: none !important;
 }
 
 /* Normalize every header inside a mobile widget slot, including headers
