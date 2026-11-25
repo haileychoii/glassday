@@ -86,16 +86,15 @@ body:has(.mobile-layout) .mobile-layout .mobile-navigation-item {
  * may add a second offset around a widget. / 바깥 위치와 간격은 대시보드만 소유합니다. */
 .mobile-layout .mobile-main {
   padding: 0 !important;
-  /* Theme scrollbar skins (Mac Core uses a 10px scrollbar) must not reserve
-   * extra horizontal space beside the mobile dashboard. Touch scrolling stays
-   * available; only the visual gutter is removed. */
-  scrollbar-width: none !important;
+  /* Keep a slim rail when Display > Scrollbars is set to Show. The global
+   * preference class can still hide it without changing scroll behavior. */
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--gd-scrollbar-thumb) transparent !important;
 }
 
 .mobile-layout .mobile-main::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
+  width: 4px !important;
+  height: 4px !important;
 }
 
 .mobile-layout .mobile-widget-slot {

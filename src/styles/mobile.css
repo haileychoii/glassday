@@ -128,6 +128,19 @@
   text-overflow: ellipsis;
 }
 
+/* The compact default is icon-only. Display settings can show the label spans
+ * without rebuilding the navigation or changing workspace selection behavior. */
+.mobile-navigation-item .mobile-navigation-label {
+  display: none !important;
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+}
+
+:is(html, body).glassday-mobile-tab-labels-visible
+  .mobile-layout .mobile-navigation-item .mobile-navigation-label {
+  display: block !important;
+}
+
 .mobile-navigation-item[aria-current="page"] {
   background: hsl(var(--primary) / 0.18);
 }

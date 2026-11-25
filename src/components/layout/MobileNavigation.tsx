@@ -55,7 +55,7 @@ export const MobileNavigation = ({ tabs, activeTabId, onSelectTab, onOpenQuickCa
           <span className="mobile-navigation-icon">
             <WorkspaceTabIcon tabId={tab.id} theme={theme} mobile />
           </span>
-          <span>{tab.label}</span>
+          <span className="mobile-navigation-label">{tab.label}</span>
         </button>
       ))}
     </nav>

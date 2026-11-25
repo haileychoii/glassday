@@ -54,6 +54,8 @@ import {
 } from "./constants/fonts";
 import { applyTheme, getCurrentTheme } from "./constants/themes";
 import {
+  applyMobileTabLabelsVisibility,
+  getSavedMobileTabLabelsVisibility,
   applyScrollbarVisibility,
   getSavedScrollbarVisibility,
 } from "./constants/uiPreferences";
@@ -132,6 +134,7 @@ function App() {
     });
     applyTheme(getCurrentTheme());
     applyScrollbarVisibility(getSavedScrollbarVisibility());
+    applyMobileTabLabelsVisibility(getSavedMobileTabLabelsVisibility());
   }, []);
 
   useEffect(() => {

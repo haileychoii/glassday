@@ -4,7 +4,7 @@
  * ============================================================
  *
  * 화면 역할:
- * - Theme, interface/memo font, scrollbar, backup/reset, Supabase auth/sync를 설정한다.
+ * - Theme, interface/memo font, scrollbar, mobile tab labels, backup/reset, Supabase auth/sync를 설정한다.
  * - Dashboard 위에 portal로 열리는 movable window이며 닫기 전까지 설정 interaction을 담당한다.
  *
  * 연결:
@@ -12,6 +12,7 @@
  * - Theme: src/constants/themes.ts + src/styles/themes/*.css
  * - Fonts: src/constants/fonts.ts + src/styles/fonts.css
  * - Scrollbar: src/constants/uiPreferences.ts
+ * - Mobile tab labels: src/constants/uiPreferences.ts → mobile-navigation-label CSS
  * - Backup/Reset: src/utils/backup.ts
  * - Auth/Cloud: src/context/CloudSyncContext.tsx
  * - Style: src/styles/widgets/settings.css, overlays.css, theme overrides
@@ -69,7 +70,9 @@ import {
   type ThemeId,
 } from "../../constants/themes";
 import {
+  getSavedMobileTabLabelsVisibility,
   getSavedScrollbarVisibility,
+  saveMobileTabLabelsVisibility,
   saveScrollbarVisibility,
 } from "../../constants/uiPreferences";
 import {
@@ -182,6 +185,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const [scrollbarsVisible, setScrollbarsVisible] = useState(() =>
     getSavedScrollbarVisibility()
   );
+  const [mobileTabLabelsVisible, setMobileTabLabelsVisible] = useState(() =>
+    getSavedMobileTabLabelsVisibility()
+  );
   const [customFonts, setCustomFonts] = useState(() => getSavedCustomFonts());
   const [customFontLabel, setCustomFontLabel] = useState("");
   const [customFontFamily, setCustomFontFamily] = useState("");
@@ -229,6 +235,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       setAppFont(getSavedAppFont());
       setDefaultMemoFont(getSavedDefaultMemoFont());
       setScrollbarsVisible(getSavedScrollbarVisibility());
+      setMobileTabLabelsVisible(getSavedMobileTabLabelsVisibility());
       setCustomFonts(getSavedCustomFonts());
     }, 0);
 
@@ -370,6 +377,12 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     setScrollbarsVisible(visible);
     saveScrollbarVisibility(visible);
     setStatus(visible ? "Scrollbars are visible." : "Scrollbars are hidden.");
+  };
+
+  const handleMobileTabLabelsVisibilityChange = (visible: boolean) => {
+    setMobileTabLabelsVisible(visible);
+    saveMobileTabLabelsVisibility(visible);
+    setStatus(visible ? "Workspace names are visible." : "Workspace names are hidden.");
   };
 
   const handleAddCustomFont = async () => {
@@ -811,6 +824,41 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                     !scrollbarsVisible && "is-active"
                   )}
                   aria-pressed={!scrollbarsVisible}
+                >
+                  Hide
+                </button>
+              </div>
+            </div>
+
+            <div className="settings-toggle-row">
+              <div>
+                <strong>Mobile tab labels</strong>
+                <span>
+                  Show workspace names below the icons in the mobile bottom bar.
+                </span>
+              </div>
+
+              <div className="settings-toggle-group" role="group" aria-label="Mobile tab labels">
+                <button
+                  type="button"
+                  onClick={() => handleMobileTabLabelsVisibilityChange(true)}
+                  className={cn(
+                    "settings-toggle-button",
+                    mobileTabLabelsVisible && "is-active"
+                  )}
+                  aria-pressed={mobileTabLabelsVisible}
+                >
+                  Show
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleMobileTabLabelsVisibilityChange(false)}
+                  className={cn(
+                    "settings-toggle-button",
+                    !mobileTabLabelsVisible && "is-active"
+                  )}
+                  aria-pressed={!mobileTabLabelsVisible}
                 >
                   Hide
                 </button>

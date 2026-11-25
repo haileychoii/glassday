@@ -84,7 +84,7 @@ mobile-common.css        모든 위젯에 공통인 외부 카드와 제목줄
 | `src/App.tsx` | 앱이 모바일 화면인지 큰 화면인지 선택하고, 데이터 제공자와 위젯을 조립 | `useResponsiveLayout.ts`, `MobileLayout.tsx`, `AppShell.tsx` |
 | `src/hooks/useResponsiveLayout.ts` | 모바일 브라우저 판정 | `App.tsx` |
 | `src/components/layout/MobileLayout.tsx` | 모바일 화면의 위/가운데/아래 뼈대, 상단 버튼, 스크롤, 하단 탭 배치 | `mobile.css`, `MobileNavigation.tsx` |
-| `src/components/layout/MobileNavigation.tsx` | 홈/커리어/스터디/일기/생활 등의 아래쪽 탭과 빠른 추가 버튼 | `WorkspaceTabIcon.tsx`, `mobile.css` |
+| `src/components/layout/MobileNavigation.tsx` | 아이콘 중심 하단 탭과 빠른 추가 버튼. 탭 이름 표시 여부는 Display 환경설정에서 제어 | `WorkspaceTabIcon.tsx`, `mobile.css`, `SettingsModal.tsx`, `uiPreferences.ts` |
 | `src/components/mobile/MobileDashboard.tsx` | 활성 탭의 `widgetIds` 순서를 슬롯으로 만들고 Calendar/Career의 모바일 요약 카드를 선택 | `WidgetSlot.tsx`, 두 요약 카드 |
 | `src/components/mobile/MobileCalendarCard.tsx` | 모바일 달력 요약/전체 화면 | `mobile-calendar.css`, 기존 Calendar 기능 |
 | `src/components/mobile/MobileCareerCard.tsx` | 모바일 지원 현황 요약/목록 | `mobile-career.css`, 기존 Career 기능 |

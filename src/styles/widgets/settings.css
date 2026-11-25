@@ -772,6 +772,10 @@
   border: 1px solid hsl(0 0% 100% / 0.5);
 }
 
+.settings-toggle-row + .settings-toggle-row {
+  margin-top: 10px;
+}
+
 .settings-toggle-row strong,
 .settings-toggle-row span {
   display: block;
