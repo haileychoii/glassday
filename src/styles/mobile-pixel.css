@@ -670,4 +670,94 @@
   ) {
     color: #ffffff !important;
   }
+
+  /* Career detail is a portal outside .mobile-layout. Keep one Windows
+     frame around each company row; inner controls stay flat so nested bevels
+     do not look like buttons trapped inside the card. */
+  & .mobile-career-detail__header > div:first-child > span,
+  & .mobile-career-detail__header h2 small {
+    color: #dfdfdf !important;
+  }
+
+  & .mobile-career-search {
+    min-width: 0;
+    border: 1px solid #808080 !important;
+    border-radius: 0 !important;
+    background: #dfdfdf !important;
+    box-shadow: inset 1px 1px 0 #808080 !important;
+  }
+
+  & .mobile-career-search input {
+    min-width: 0;
+    border: 0 !important;
+    outline: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-career-status-rail {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    height: auto;
+    min-height: 0;
+    padding: 0;
+    gap: 6px;
+    overflow: visible;
+  }
+
+  & .mobile-career-status-rail button {
+    width: 100%;
+    min-width: 0;
+    min-height: 38px;
+    padding: 4px 6px;
+    border: 2px solid !important;
+    border-color: #ffffff #404040 #404040 #ffffff !important;
+    border-radius: 0 !important;
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080 !important;
+    white-space: normal;
+    line-height: 1.15;
+  }
+
+  & .mobile-career-status-rail button.is-active {
+    border-color: #404040 #ffffff #ffffff #404040 !important;
+    background: #000080 !important;
+    color: #ffffff !important;
+    box-shadow: inset 1px 1px 0 #000040 !important;
+  }
+
+  & .mobile-career-detail__list { gap: 8px; }
+
+  & .mobile-career-detail .mobile-career-row {
+    border: 1px solid #808080 !important;
+    border-radius: 0 !important;
+    background: #dfdfdf !important;
+    box-shadow: inset 1px 1px 0 #ffffff !important;
+  }
+
+  & .mobile-career-detail .mobile-career-row__main {
+    min-height: 42px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-career-detail .mobile-career-row__posting-link {
+    min-height: 30px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-career-detail .mobile-career-status {
+    padding: 2px 5px;
+    border: 1px solid #808080 !important;
+    border-radius: 0 !important;
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+  }
 }
