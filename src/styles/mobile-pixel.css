@@ -62,6 +62,14 @@
   --w95-shadow: #808080;
   --w95-dark: #404040;
   --w95-text: #000000;
+  /* The shared mobile frame runs later in index.css; zero radius tokens keep
+   * its geometry rule aligned with this theme instead of reintroducing pills. */
+  --gd-radius-app: 0px;
+  --gd-radius-panel: 0px;
+  --gd-radius-widget: 0px;
+  --gd-radius-card: 0px;
+  --gd-radius-inner: 0px;
+  --gd-widget-inner-radius: 0px;
 
   background: #008080;
   color: var(--w95-text);
@@ -253,6 +261,28 @@
     background-image: none !important;
 
     box-shadow: none !important;
+  }
+
+  /* Career rows are a mobile-only component and do not use .career-list-item.
+   * Give those preview/list buttons the same Windows 95 raised-surface rule. */
+  & .mobile-career-row {
+    border: 2px solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+    border-radius: 0 !important;
+    background: var(--w95-panel) !important;
+    color: var(--w95-text) !important;
+    box-shadow: inset 1px 1px var(--w95-light), inset -1px -1px var(--w95-shadow) !important;
+  }
+
+  & .mobile-career-status {
+    border: 1px solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+    background: var(--w95-panel) !important;
+    color: var(--w95-text) !important;
   }
 
   /* =========================================================

@@ -65,9 +65,6 @@
 
 
 
-/* 모바일 Pixel Desk 디자인 */
-@import "./mobile-pixel.css";
-
 /* Journal composition follows the Pixel surface rules. */
 @import "./mobile-journal.css";
 
@@ -92,3 +89,6 @@
 
 /* Pixel Desk title bars are shared by every desktop and mobile widget. */
 @import "./themes/pixel-widget-headers.css";
+
+/* Keep Pixel's square corners and raised controls after shared mobile geometry. */
+@import "./mobile-pixel.css";
