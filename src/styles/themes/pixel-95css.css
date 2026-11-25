@@ -1,0 +1,144 @@
+/*
+ * Pixel Desk component surfaces, adapted from the 95CSS framework:
+ * https://yoshimannaert.github.io/95CSS/
+ *
+ * This is deliberately scoped to Pixel Desk. We reuse its gray palette and
+ * layered inset shadows without importing its global reset or global element
+ * selectors, which would affect every other Glassday theme.
+ *
+ * 95CSS shadow roles:
+ * - raised: normal buttons and windows
+ * - pressed: active buttons and selected controls
+ * - input: white, recessed form fields
+ */
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) {
+  --w95-face: #c3c3c3;
+  --w95-face-light: #dedede;
+  --w95-white: #fff;
+  --w95-black: #000;
+  --w95-gray: #808080;
+  --w95-navy: #0f0086;
+  --w95-teal: #008080;
+  --gd-widget-header-bg: var(--w95-navy);
+  --gd-widget-header-color: var(--w95-white);
+
+  --w95-shadow-raised:
+    inset -2px -2px 0 var(--w95-black),
+    inset 2px 2px 0 var(--w95-white),
+    inset -4px -4px 0 var(--w95-gray),
+    inset 4px 4px 0 var(--w95-face-light);
+  --w95-shadow-raised-deep:
+    inset -2px -2px 0 var(--w95-black),
+    inset 2px 2px 0 var(--w95-white),
+    inset -4px -4px 0 var(--w95-gray);
+  --w95-shadow-pressed:
+    inset -2px -2px 0 var(--w95-white),
+    inset 2px 2px 0 var(--w95-black),
+    inset -4px -4px 0 var(--w95-face-light),
+    inset 4px 4px 0 var(--w95-gray);
+  --w95-shadow-input:
+    inset -2px -2px 0 var(--w95-white),
+    inset 2px 2px 0 var(--w95-gray),
+    inset -4px -4px 0 var(--w95-face),
+    inset 4px 4px 0 var(--w95-black);
+}
+
+/* The outer widget is the dialog/window surface; the real shared titlebar
+   remains owned by widget-frame-theme.css. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  .mobile-widget-slot .glass-card,
+  .glass-card,
+  .mobile-calendar-card,
+  .mobile-career-card
+) {
+  background-color: var(--w95-face);
+  background-image: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: var(--w95-shadow-raised-deep);
+}
+
+/* Every interactive control uses the same raised face. Active state reverses
+   that same layered edge to read as physically pressed. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  button, [role="button"], .glass-button, .career-icon-button,
+  .settings-theme-card, .mobile-career-status-rail button
+) {
+  border: 0;
+  border-radius: 0;
+  background-color: var(--w95-face);
+  box-shadow: var(--w95-shadow-raised);
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  button, [role="button"], .glass-button, .career-icon-button,
+  .settings-theme-card, .mobile-career-status-rail button
+):is(:active, .is-active, [aria-pressed="true"], [aria-selected="true"]) {
+  box-shadow: var(--w95-shadow-pressed);
+}
+
+/* Text fields use the 95CSS recessed white surface. Widget panels themselves
+   keep the standard gray face; only actual editable controls are white. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+  textarea, select, [contenteditable="true"]
+) {
+  border: 0;
+  border-radius: 0;
+  background-color: var(--w95-white);
+  box-shadow: var(--w95-shadow-input);
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  .widget-frame__header, .mobile-calendar-card__header,
+  .mobile-career-card__header
+) {
+  background: var(--w95-navy);
+  color: var(--w95-white);
+  border: 0;
+  border-radius: 0;
+  box-shadow: inset 0 -2px 0 var(--w95-gray);
+}
+
+/* Memo's writing area is the intentional exception to standard white fields:
+   it inherits the common gray window face and its own chosen font. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) .memo-editor {
+  background-color: var(--w95-face);
+  box-shadow: var(--w95-shadow-input);
+}

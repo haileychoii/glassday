@@ -95,3 +95,6 @@
 
 /* Widget title background is one shared frame; themes provide its surface token. */
 @import "./widget-frame-theme.css";
+
+/* Pixel controls and window faces follow the scoped 95CSS shadow language. */
+@import "./themes/pixel-95css.css";

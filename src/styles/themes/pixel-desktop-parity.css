@@ -28,9 +28,9 @@
 ) .app-shell-surface {
   --pixel-desktop-bevel-width: 2px;
   --pixel-desktop-flat-width: 1px;
-  --pixel-desktop-bg: #c0c0c0;
-  --pixel-desktop-panel: #dfdfdf;
-  --pixel-desktop-title: #000080;
+  --pixel-desktop-bg: #c3c3c3;
+  --pixel-desktop-panel: #dedede;
+  --pixel-desktop-title: #0f0086;
   --pixel-desktop-light: #ffffff;
   --pixel-desktop-shadow: #808080;
   --pixel-desktop-dark: #404040;
@@ -101,14 +101,9 @@
 ) .app-shell-surface .glass-card {
   background: var(--pixel-desktop-bg) !important;
   background-image: none !important;
+  border: 0 !important;
   border-radius: 0 !important;
-  border: var(--pixel-desktop-bevel-width) solid !important;
-  border-color:
-    var(--pixel-desktop-light)
-    var(--pixel-desktop-dark)
-    var(--pixel-desktop-dark)
-    var(--pixel-desktop-light) !important;
-  box-shadow: none !important;
+  box-shadow: var(--w95-shadow-raised-deep) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
@@ -440,14 +435,9 @@
   background: #ffffff !important;
   background-image: none !important;
   color: var(--pixel-desktop-text) !important;
-  border: var(--pixel-desktop-bevel-width) solid !important;
-  border-color:
-    var(--pixel-desktop-shadow)
-    var(--pixel-desktop-light)
-    var(--pixel-desktop-light)
-    var(--pixel-desktop-shadow) !important;
+  border: 0 !important;
   border-radius: 0 !important;
-  box-shadow: none !important;
+  box-shadow: var(--w95-shadow-input) !important;
 }
 
 /*
@@ -858,14 +848,9 @@
 ) .app-shell-surface :is(button, .glass-button, [role="button"]):not(
   [class*="row"], [class*="item"], [class*="card"], [class*="task"]
 ) {
-  border: var(--pixel-desktop-bevel-width, 2px) solid !important;
-  border-color:
-    var(--pixel-desktop-light)
-    var(--pixel-desktop-dark)
-    var(--pixel-desktop-dark)
-    var(--pixel-desktop-light) !important;
+  border: 0 !important;
   border-radius: 0 !important;
-  box-shadow: none !important;
+  box-shadow: var(--w95-shadow-raised) !important;
 }
 
 :is(
@@ -876,9 +861,5 @@
 ) .app-shell-surface :is(button, .glass-button, [role="button"]):is(
   .is-active, [aria-pressed="true"], :active
 ) {
-  border-color:
-    var(--pixel-desktop-dark)
-    var(--pixel-desktop-light)
-    var(--pixel-desktop-light)
-    var(--pixel-desktop-dark) !important;
+  box-shadow: var(--w95-shadow-pressed) !important;
 }

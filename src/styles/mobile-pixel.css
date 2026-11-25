@@ -55,9 +55,9 @@
    * Figma 디자인 시스템에서도 같은 이름 사용 가능.
    * ========================================================= */
 
-  --w95-bg: #c0c0c0;
-  --w95-panel: #dfdfdf;
-  --w95-title: #000080;
+  --w95-bg: #c3c3c3;
+  --w95-panel: #dedede;
+  --w95-title: #0f0086;
   --w95-light: #ffffff;
   --gd-widget-header-bg: var(--w95-title);
   --gd-widget-header-color: var(--w95-light);
@@ -550,14 +550,9 @@
    * ========================================================= */
 
   & .mobile-widget-slot :is(button, [role="button"], .glass-button) {
-    border: var(--w95-bevel-width) solid !important;
-    border-color:
-      var(--w95-light)
-      var(--w95-dark)
-      var(--w95-dark)
-      var(--w95-light) !important;
+    border: 0 !important;
     border-radius: 0 !important;
-    box-shadow: none !important;
+    box-shadow: var(--w95-shadow-raised) !important;
   }
 
   & .mobile-widget-slot :is(
@@ -583,14 +578,9 @@
     .mobile-calendar-card,
     .mobile-career-card
   ) {
-    border: var(--w95-bevel-width) solid !important;
-    border-color:
-      var(--w95-light)
-      var(--w95-dark)
-      var(--w95-dark)
-      var(--w95-light) !important;
+    border: 0 !important;
     border-radius: 0 !important;
-    box-shadow: none !important;
+    box-shadow: var(--w95-shadow-raised-deep) !important;
   }
 
   & .mobile-widget-slot :is(
@@ -598,24 +588,15 @@
     textarea,
     select
   ) {
-    border: var(--w95-bevel-width) solid !important;
-    border-color:
-      var(--w95-shadow)
-      var(--w95-light)
-      var(--w95-light)
-      var(--w95-shadow) !important;
+    border: 0 !important;
     border-radius: 0 !important;
-    box-shadow: none !important;
+    box-shadow: var(--w95-shadow-input) !important;
   }
 
   & .mobile-widget-slot :is(button, [role="button"], .glass-button):is(
     .is-active, [aria-pressed="true"], :active
   ) {
-    border-color:
-      var(--w95-dark)
-      var(--w95-light)
-      var(--w95-light)
-      var(--w95-dark) !important;
+    box-shadow: var(--w95-shadow-pressed) !important;
   }
 }
 
