@@ -2518,95 +2518,33 @@ body,
     0 3px 8px -6px currentColor !important;
 }
 
-/* Pixel Desk final polish
-   This file loads after widget CSS, so Pixel-only corrections live here when
-   widget-level rules flatten the retro desktop material. / 위젯 CSS가 나중에
-   테두리만 남기는 경우, Pixel 테마에서만 마지막에 입체감을 되살린다. */
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .dashboard-grid-item
-  > .glass-card
-  > .widget-frame__header {
-  justify-content: flex-start !important;
-  text-align: left !important;
-}
-
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .dashboard-grid-item
-  > .glass-card
-  > .widget-frame__header
-  > .widget-frame__title-group {
-  flex: 1 1 auto !important;
-  justify-content: flex-start !important;
+/* All dashboard widget titles use the same left anchored icon/title cluster.
+   Theme styles can recolor the bar and text, but cannot recenter one widget. */
+.dashboard-grid-item > .glass-card > .widget-frame__header {
+  display: flex !important;
   align-items: center !important;
-  margin-right: auto !important;
+  justify-content: space-between !important;
   text-align: left !important;
 }
 
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .dashboard-grid-item
-  > .glass-card
-  > .widget-frame__header
-  :is(.widget-frame__copy, .glass-card-copy, .widget-card-copy) {
+.dashboard-grid-item > .glass-card > .widget-frame__header > .widget-frame__title-group {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  min-width: 0 !important;
+  margin: 0 auto 0 0 !important;
+  text-align: left !important;
+}
+
+.dashboard-grid-item > .glass-card > .widget-frame__header .widget-frame__copy {
   align-items: flex-start !important;
   justify-content: center !important;
   text-align: left !important;
 }
 
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .dashboard-grid-item
-  > .glass-card
-  > .widget-frame__header
-  :is(.widget-frame__title, .glass-card-title, .widget-card-title),
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .dashboard-grid-item
-  > .glass-card
-  > .widget-frame__header
-  :is(.widget-frame__subtitle, .glass-card-subtitle, .widget-card-subtitle) {
+.dashboard-grid-item > .glass-card > .widget-frame__header .widget-frame__title,
+.dashboard-grid-item > .glass-card > .widget-frame__header .widget-frame__subtitle {
   width: 100% !important;
   text-align: left !important;
 }
