@@ -721,10 +721,11 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   > :is(.mobile-career-card__header, .mobile-calendar-card__header)
   > .widget-frame__title-group {
   display: flex !important;
-  /* Mobile subtitles are hidden, so icon and title share one centered line. */
+  /* Align the icon and title on one vertical center line, left to right. */
   align-items: center !important;
   justify-content: flex-start !important;
-  flex: 1 1 auto !important;
+  flex: 0 1 auto !important;
+  margin-right: auto !important;
   min-width: 0 !important;
   min-height: 0 !important;
   height: auto !important;
