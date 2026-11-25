@@ -422,27 +422,41 @@
 
 .habit-tracker__edit-form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 32px 32px;
-  gap: 6px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
   min-width: 0;
   margin: 0;
 }
 
-.habit-tracker__edit-colors {
+.habit-tracker__edit-color-row {
   display: flex;
-  grid-column: 1 / -1;
   align-items: center;
   gap: 8px;
+  min-width: 0;
+}
+
+.habit-tracker__edit-color-label {
+  flex: none;
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.habit-tracker__edit-colors {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
   min-width: 0;
   padding: 2px 0;
 }
 
 .habit-tracker__edit-form .habit-tracker__edit-colors button {
-  flex: 0 0 28px;
-  width: 28px;
-  min-width: 28px;
-  height: 28px;
-  min-height: 28px;
+  flex: 0 0 24px;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
   border: 2px solid transparent;
   border-radius: 50%;
   background: var(--habit-swatch);
@@ -453,7 +467,45 @@
   box-shadow: inset 0 0 0 2px var(--gd-widget-control-bg, white);
 }
 
-.habit-tracker__edit-form input {
+.habit-tracker__custom-color {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 2px 7px 2px 2px;
+  border: 1px solid var(--gd-widget-control-border, hsl(var(--border) / 0.5));
+  border-radius: 999px;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.habit-tracker__custom-color input[type="color"] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 24px;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+  padding: 2px;
+  border: 1px solid var(--gd-widget-control-border, hsl(var(--border) / 0.55));
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.habit-tracker__custom-color input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.habit-tracker__custom-color input[type="color"]::-webkit-color-swatch {
+  border: 0;
+  border-radius: 50%;
+}
+
+.habit-tracker__edit-form > input {
   width: 100%;
   min-width: 0;
   height: 36px;
@@ -467,13 +519,19 @@
   line-height: 18px;
 }
 
+.habit-tracker__edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
 .habit-tracker__edit-form button[type="submit"] {
   color: hsl(var(--primary-foreground));
   border-color: hsl(var(--primary));
   background: hsl(var(--primary));
 }
 
-.habit-tracker__edit-form :is(input, button):focus-visible {
+.habit-tracker__edit-form :is(input, button, .habit-tracker__custom-color):focus-visible {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
 }

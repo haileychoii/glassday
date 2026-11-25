@@ -12,7 +12,7 @@ type Habit = {
 
 const STORAGE_KEY = "glassday.habits.tracker.v1";
 const EMPTY_HABITS: Habit[] = [];
-const HABIT_ACCENTS = ["#8b7df2", "#e6668d", "#43aa91", "#ef9a4d", "#4c94d8"];
+const HABIT_ACCENTS = ["#8b7df2", "#e6668d", "#43aa91", "#ef9a4d", "#4c94d8", "#32aeb0"];
 
 const getDateKey = (date: Date) => {
   const year = date.getFullYear();
@@ -351,25 +351,39 @@ export const HabitTrackerWidget = () => {
                           value={editName}
                           onChange={(event) => setEditName(event.target.value)}
                         />
-                        <div className="habit-tracker__edit-colors" role="group" aria-label="습관 색상">
-                          {HABIT_ACCENTS.map((color, colorIndex) => (
-                            <button
-                              key={color}
-                              type="button"
-                              className={editColor === color ? "is-selected" : ""}
-                              style={{ "--habit-swatch": color } as CSSProperties}
-                              aria-label={`색상 ${colorIndex + 1}`}
-                              aria-pressed={editColor === color}
-                              onClick={() => setEditColor(color)}
-                            />
-                          ))}
+                        <div className="habit-tracker__edit-color-row">
+                          <span className="habit-tracker__edit-color-label">색상</span>
+                          <div className="habit-tracker__edit-colors" role="group" aria-label="습관 색상 예시">
+                            {HABIT_ACCENTS.map((color, colorIndex) => (
+                              <button
+                                key={color}
+                                type="button"
+                                className={editColor === color ? "is-selected" : ""}
+                                style={{ "--habit-swatch": color } as CSSProperties}
+                                aria-label={`색상 예시 ${colorIndex + 1}`}
+                                aria-pressed={editColor === color}
+                                onClick={() => setEditColor(color)}
+                              />
+                            ))}
+                            <label className="habit-tracker__custom-color">
+                              <input
+                                type="color"
+                                value={editColor}
+                                aria-label="직접 색상 선택"
+                                onChange={(event) => setEditColor(event.target.value)}
+                              />
+                              <span>직접</span>
+                            </label>
+                          </div>
                         </div>
-                        <button type="submit" aria-label="습관 수정 저장" disabled={!editName.trim()}>
-                          <Check size={15} aria-hidden="true" />
-                        </button>
-                        <button type="button" aria-label="이름 수정 취소" onClick={cancelEditingHabit}>
-                          <X size={15} aria-hidden="true" />
-                        </button>
+                        <div className="habit-tracker__edit-actions">
+                          <button type="submit" aria-label="습관 수정 저장" disabled={!editName.trim()}>
+                            <Check size={15} aria-hidden="true" />
+                          </button>
+                          <button type="button" aria-label="이름 수정 취소" onClick={cancelEditingHabit}>
+                            <X size={15} aria-hidden="true" />
+                          </button>
+                        </div>
                       </form>
                     )}
                     <div className="habit-tracker__week-days">
