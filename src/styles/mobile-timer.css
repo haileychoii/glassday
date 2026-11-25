@@ -103,14 +103,14 @@
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) > .timer-widget-main-card {
     position: relative !important;
-    display: flex !important;
-    flex-direction: column !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: 40px minmax(72px, 1fr) 44px auto !important;
     grid-row: 1 !important;
     align-items: stretch !important;
-    justify-content: flex-start !important;
+    justify-items: stretch !important;
     gap: var(--gd-mobile-space-2) !important;
-    align-content: normal !important;
-    justify-items: normal !important;
+    align-content: stretch !important;
     width: 100% !important;
     height: 100% !important;
     min-width: 0 !important;
@@ -135,7 +135,8 @@
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-mode-row {
     display: flex !important;
-    flex: 0 0 40px !important;
+    grid-row: 1 !important;
+    flex: none !important;
     align-self: stretch !important;
     width: 100% !important;
     min-width: 0 !important;
@@ -161,11 +162,12 @@
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-time-editor-shell {
     display: grid !important;
-    flex: 1 1 0 !important;
+    grid-row: 2 !important;
+    flex: none !important;
     align-self: stretch !important;
     justify-self: stretch !important;
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
     min-width: 0 !important;
     min-height: 0 !important;
     container-type: size !important;
@@ -233,13 +235,23 @@
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row {
     display: flex !important;
-    flex: 0 0 44px !important;
+    grid-row: 3 !important;
+    flex: none !important;
     align-self: stretch !important;
-    margin-top: auto !important;
+    margin-top: 0 !important;
     width: 100% !important;
     height: 44px !important;
     min-height: 44px !important;
     gap: var(--gd-mobile-space-2) !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt {
+    grid-row: 4 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
   }
 
   :is(
