@@ -1102,8 +1102,10 @@ body[data-theme="retro"] .career-floating-window,
 html.theme-retro .career-floating-window,
 body.theme-retro .career-floating-window {
   border-radius: 0 !important;
-  background: var(--pixel-desk-card-bg) !important;
-  
+  /* Pixel and Retro use their shared solid card token; this surface must not
+     inherit the glass gradient used by the lighter material themes. */
+  background: hsl(var(--card)) !important;
+  background-image: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
