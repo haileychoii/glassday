@@ -41,6 +41,7 @@ import { useLocalStorage } from "./useLocalStorage";
 import {
   DASHBOARD_STORAGE_SCHEMA_KEY,
   DASHBOARD_STORAGE_SCHEMA_VERSION,
+  SHARED_WORKSPACE_TABS_KEY,
 } from "../constants/dashboardStorage";
 
 import { defaultDashboardTabs } from "../constants/dashboardTabs";
@@ -63,6 +64,15 @@ import type {
 
 const TABS_KEY = "glassday.dashboard.tabs.v1";
 const ACTIVE_TAB_KEY = "glassday.dashboard.activeTab.v1";
+
+type SharedWorkspaceTab = {
+  id: string;
+  label: string;
+  icon: string;
+  background?: string;
+  iconSource?: string;
+  widgetIds: WidgetId[];
+};
 
 const GRID_COLUMNS = 16;
 
@@ -598,7 +608,7 @@ const normalizeTabs = (
    Wide / Laptop은 생성 이후 독립적으로 관리한다.
    ============================================================ */
 
-const createNewTab = (): DashboardTab => {
+const createNewTab = (shared?: SharedWorkspaceTab): DashboardTab => {
 
   const newLayouts: Layouts = {
     lg: [
@@ -618,16 +628,18 @@ const createNewTab = (): DashboardTab => {
   };
 
   return {
-    id: createId(),
+    id: shared?.id ?? createId(),
 
-    label: "New Tab",
-    icon: "✨",
+    label: shared?.label ?? "New Tab",
+    icon: shared?.icon ?? "✨",
 
-    widgetIds: ["memo", "calendar"],
+    widgetIds: shared?.widgetIds ?? ["memo", "calendar"],
 
     layouts: createModeLayouts(newLayouts),
 
     locked: false,
+    background: shared?.background,
+    iconSource: shared?.iconSource,
   };
 };
 
@@ -696,6 +708,19 @@ export const useDashboardTabs = () => {
     "home"
   );
 
+  /*
+   * CloudSyncContext places a sanitized workspace manifest here while it
+   * applies another device's snapshot. This bridge merges tab metadata only;
+   * each device keeps its own saved grid coordinates and active workspace.
+   */
+  const {
+    value: incomingSharedTabs,
+    removeValue: clearIncomingSharedTabs,
+  } = useLocalStorage<SharedWorkspaceTab[]>(
+    SHARED_WORKSPACE_TABS_KEY,
+    []
+  );
+
 
   /* ----------------------------------------------------------
      B. STORAGE SCHEMA MIGRATION
@@ -719,6 +744,54 @@ export const useDashboardTabs = () => {
     storedTabs,
     shouldUpgradeDashboardStorage,
   ]);
+
+  useEffect(() => {
+    if (incomingSharedTabs.length === 0) return;
+
+    setTabs((previousTabs) => {
+      const mergedTabs = normalizeTabs(previousTabs);
+      let changed = false;
+
+      incomingSharedTabs.forEach((sharedTab) => {
+        if (!sharedTab || typeof sharedTab.id !== "string") return;
+
+        const existingIndex = mergedTabs.findIndex((tab) => tab.id === sharedTab.id);
+        if (existingIndex < 0) {
+          mergedTabs.push(createNewTab(sharedTab));
+          changed = true;
+          return;
+        }
+
+        const localTab = mergedTabs[existingIndex];
+        const nextTab: DashboardTab = {
+          ...localTab,
+          label: sharedTab.label || localTab.label,
+          icon: sharedTab.icon || localTab.icon,
+          background: sharedTab.background ?? localTab.background,
+          iconSource: sharedTab.iconSource ?? localTab.iconSource,
+          widgetIds: Array.isArray(sharedTab.widgetIds)
+            ? [...new Set(sharedTab.widgetIds.filter((id) => typeof id === "string"))]
+            : localTab.widgetIds,
+        };
+
+        if (
+          nextTab.label !== localTab.label ||
+          nextTab.icon !== localTab.icon ||
+          nextTab.background !== localTab.background ||
+          nextTab.iconSource !== localTab.iconSource ||
+          JSON.stringify(nextTab.widgetIds) !== JSON.stringify(localTab.widgetIds)
+        ) {
+          mergedTabs[existingIndex] = nextTab;
+          changed = true;
+        }
+      });
+
+      return changed ? mergedTabs : previousTabs;
+    });
+
+    /* The manifest is a one-shot import envelope, not a second local source. */
+    clearIncomingSharedTabs();
+  }, [incomingSharedTabs, setTabs, clearIncomingSharedTabs]);
 
 
   useEffect(() => {

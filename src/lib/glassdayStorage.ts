@@ -23,6 +23,7 @@
 import {
   DASHBOARD_STORAGE_SCHEMA_KEY,
   DASHBOARD_STORAGE_SCHEMA_VERSION,
+  SHARED_WORKSPACE_TABS_KEY,
 } from "../constants/dashboardStorage";
 
 export const GLASSDAY_STORAGE_PREFIX = "glassday.";
@@ -46,9 +47,10 @@ export type GlassdayStorageChangeDetail = {
 
 const isBrowser = () => typeof window !== "undefined";
 
-/* Cloud Sync Scope: durable user content.
-   Wide/Laptop mode, active tab, Grid layout, theme은 이 브라우저의 view shell이므로
-   오래된 cloud snapshot이 로그인 직후 화면을 되돌리지 않도록 제외한다. */
+/* Cloud Sync Scope: durable content plus a sanitized workspace manifest.
+   Active tab, Wide/Laptop mode, theme, and grid coordinates remain device-local;
+   `createGlassdayStorageSnapshot` exports only the workspace metadata needed to
+   show the same tabs and icons across signed-in devices. */
 const CLOUD_SYNC_ALLOWED_PREFIXES = [
   "glassday.calendar.",
   "glassday.career.",
@@ -65,6 +67,7 @@ const CLOUD_SYNC_ALLOWED_PREFIXES = [
   "glassday.today.",
   "glassday.todayFocus.",
   "glassday.ui.font.",
+  "glassday.workspace.sharedTabs.",
 ] as const;
 
 const CLOUD_SYNC_DASHBOARD_STATE_PREFIXES = [
@@ -215,6 +218,38 @@ export const createGlassdayStorageSnapshot = (): GlassdayStorageSnapshot => {
       data[key] = value;
     }
   });
+
+  /*
+   * Workspace metadata is shared across devices, but grid coordinates are
+   * deliberately omitted. Laptop and mobile can use the same tab IDs, labels,
+   * icons, backgrounds, and widget membership while keeping their own layouts.
+   */
+  try {
+    const rawTabs = window.localStorage.getItem("glassday.dashboard.tabs.v1");
+    const tabs = rawTabs ? JSON.parse(rawTabs) as unknown : null;
+
+    if (Array.isArray(tabs)) {
+      const sharedTabs = tabs
+        .filter((tab): tab is Record<string, unknown> =>
+          Boolean(tab && typeof tab === "object" && !Array.isArray(tab))
+        )
+        .filter((tab) => typeof tab.id === "string" && typeof tab.label === "string")
+        .map((tab) => ({
+          id: tab.id,
+          label: tab.label,
+          icon: typeof tab.icon === "string" ? tab.icon : "✨",
+          background: typeof tab.background === "string" ? tab.background : "",
+          iconSource: typeof tab.iconSource === "string" ? tab.iconSource : "",
+          widgetIds: Array.isArray(tab.widgetIds)
+            ? tab.widgetIds.filter((id): id is string => typeof id === "string")
+            : [],
+        }));
+
+      data[SHARED_WORKSPACE_TABS_KEY] = JSON.stringify(sharedTabs);
+    }
+  } catch {
+    /* A damaged local workspace record must not block durable data sync. */
+  }
 
   data[DASHBOARD_STORAGE_SCHEMA_KEY] = String(DASHBOARD_STORAGE_SCHEMA_VERSION);
 

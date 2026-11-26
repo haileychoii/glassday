@@ -16,9 +16,9 @@
  * - Supabase table: user_storage_snapshots (user_id당 한 row)
  *
  * 저장 원칙:
- * - Memo, Study, Money, Calendar, Career 등 durable user content만 cloud에 저장한다.
- * - Wide/Laptop mode, active tab, Grid layout, theme 같은 현재 브라우저의 UI shell은
- *   cloud 복원에서 제외해 로그인 후 예전 화면으로 되돌아가는 것을 방지한다.
+ * - Memo, Study, Money, Calendar, Career 등 durable user content를 cloud에 저장한다.
+ * - Workspace 탭은 ID/이름/아이콘/배경/위젯 목록만 별도 projection으로 공유한다.
+ * - Wide/Laptop mode, active tab, Grid 좌표, theme은 각 기기의 UI shell로 유지한다.
  * - 원격 snapshot 적용 후 GLASSDAY_STORAGE_EVENT를 보내 각 useLocalStorage consumer를
  *   같은 탭 안에서도 다시 렌더링한다.
  *
@@ -89,7 +89,8 @@ type CloudSyncContextValue = {
 };
 
 const STORAGE_TABLE = "user_storage_snapshots";
-const REMOTE_REFRESH_INTERVAL_MS = 30_000;
+/* Visible signed-in clients pick up another device's workspace edits promptly. */
+const REMOTE_REFRESH_INTERVAL_MS = 5_000;
 const AUTH_UI_SNAPSHOT_KEY = "glassday.auth.uiSnapshot.v1";
 const DESKTOP_AUTH_CALLBACK = "glassday://auth/callback";
 const AUTH_UI_SNAPSHOT_KEYS = [
