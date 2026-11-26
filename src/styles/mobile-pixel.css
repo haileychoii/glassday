@@ -559,6 +559,19 @@
     background: #ffcf52 !important;
   }
 
+  /* The selected icon scope is a pressed Win95 button, not just bold text. */
+  & .mobile-tab-icon-picker .workspace-icon-scope-control button[aria-pressed="true"] {
+    justify-content: center !important;
+    color: #ffffff !important;
+    background: var(--w95-title) !important;
+    border-color:
+      var(--w95-dark)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-dark) !important;
+    box-shadow: var(--w95-shadow-pressed) !important;
+  }
+
   & .mobile-navigation-item > .pixel-tab-icon {
     display: block !important;
     width: 32px !important;

@@ -162,14 +162,16 @@ export const WorkspaceIconPicker = ({
             aria-pressed={!applyToAllThemes}
             onClick={() => chooseScope(false)}
           >
-            현재 테마만 · {themeLabel(theme)}
+            {!applyToAllThemes && <Check size={14} strokeWidth={3} aria-hidden="true" />}
+            <span>현재 테마만 · {themeLabel(theme)}</span>
           </button>
           <button
             type="button"
             aria-pressed={applyToAllThemes}
             onClick={() => chooseScope(true)}
           >
-            모든 테마
+            {applyToAllThemes && <Check size={14} strokeWidth={3} aria-hidden="true" />}
+            <span>모든 테마</span>
           </button>
         </div>
       )}
