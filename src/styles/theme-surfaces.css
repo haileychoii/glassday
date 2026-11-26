@@ -166,20 +166,15 @@ body.theme-glass-dark {
       rgb(214 225 246 / 0.09)
     );
   --gd-inner-border: rgb(225 234 255 / 0.2);
-  --gd-widget-inner-filter: blur(24px) saturate(150%);
   --gd-control-bg: rgb(255 255 255 / 0.13);
   --gd-control-border: rgb(225 234 255 / 0.2);
   --gd-control-active-bg: rgb(255 255 255 / 0.24);
 
-  /* Complex widgets consume the same neutral reflected-glass recipe. */
-  --gd-widget-panel-bg: var(--gd-inner-bg);
-  --gd-widget-panel-border: var(--gd-inner-border);
+  /* Panel/control color aliases above already follow Glass Dark's inner and
+     control tokens. Only its deeper interior shadow needs a theme override. */
   --gd-widget-panel-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.14),
     0 14px 34px -28px rgb(0 0 0 / 0.44);
-  --gd-widget-control-bg: var(--gd-control-bg);
-  --gd-widget-control-border: var(--gd-control-border);
-  --gd-widget-control-active-bg: var(--gd-control-active-bg);
 }
 
 /* Aurora keeps its deeper tint while preserving the same semantic structure.
