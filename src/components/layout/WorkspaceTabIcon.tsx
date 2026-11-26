@@ -64,6 +64,19 @@ const pinkDiaryIcons: Record<string, string> = {
   calendar: "/pink-icons/isolated/calendar.png",
 };
 
+/**
+ * Pixel Desk keeps the five built-in workspaces on their matching Win95-style
+ * PNGs. These image files are normalized to one transparent canvas so the
+ * visible drawing stays centered even when the source art had uneven margins.
+ */
+const pixelTabIcons: Record<string, string> = {
+  home: "/pixel-icons/home.png",
+  career: "/pixel-icons/career.png",
+  study: "/pixel-icons/study.png",
+  memo: "/pixel-icons/diary.png",
+  life: "/pixel-icons/life.png",
+};
+
 const glassMobileIcons = {
   home: TbHomeFilled,
   career: TbBriefcaseFilled,
@@ -140,7 +153,7 @@ export const WorkspaceTabIcon = ({
   if (theme === "pixel-desk") {
     return (
       <img
-        src={`/pixel-icons/${resolvedTabId === "memo" ? "diary" : resolvedTabId}.png`}
+        src={pixelTabIcons[resolvedTabId] ?? pixelTabIcons.home}
         className={`${className} pixel-tab-icon`}
         alt=""
         aria-hidden="true"
