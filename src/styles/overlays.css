@@ -51,7 +51,7 @@
   overflow: hidden;
   resize: both;
 
-  border-radius: var(--gd-radius-panel, 30px);
+  border-radius: var(--gd-radius-panel);
 
   color: hsl(var(--foreground) / 0.88);
 
@@ -65,11 +65,6 @@
   isolation: isolate;
   container-type: size;
   container-name: floating-window;
-}
-
-.floating-window,
-.floating-window * {
-  box-sizing: border-box;
 }
 
 /* =========================================================
@@ -96,8 +91,6 @@
 }
 
 .floating-window-titlebar button,
-.floating-window-titlebar input,
-.floating-window-titlebar select,
 .floating-window-actions,
 .floating-window-actions * {
   cursor: pointer;
