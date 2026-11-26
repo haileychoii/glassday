@@ -50,15 +50,8 @@ textarea {
   gap: 4px;
 
   color: hsl(var(--foreground) / 0.72);
-  background: hsl(0 0% 100% / 0.34);
-  border: 1px solid hsl(0 0% 100% / 0.48);
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.58),
-    0 12px 30px -24px hsl(245 35% 32% / 0.22);
-
-  backdrop-filter: blur(16px) saturate(145%);
-  -webkit-backdrop-filter: blur(16px) saturate(145%);
+  background: var(--gd-control-bg);
+  border: 1px solid var(--gd-control-border);
 
   transition:
     background 160ms ease,
@@ -73,7 +66,7 @@ textarea {
 .icon-button:hover,
 .control-button:hover {
   color: hsl(var(--foreground) / 0.9);
-  background: hsl(0 0% 100% / 0.5);
+  background: var(--gd-control-active-bg);
 }
 
 .glass-button:active,
@@ -88,11 +81,8 @@ textarea {
 .icon-button.is-active,
 .control-button.is-active {
   color: hsl(var(--foreground) / 0.94);
-  background: hsl(0 0% 100% / 0.72);
-  border-color: hsl(0 0% 100% / 0.68);
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.78),
-    0 12px 28px -22px hsl(var(--primary) / 0.3);
+  background: var(--gd-control-active-bg);
+  border-color: var(--gd-control-border);
 }
 
 /* =========================================================
@@ -119,15 +109,11 @@ textarea {
   white-space: nowrap;
   scrollbar-width: none;
 
-  background: hsl(0 0% 100% / 0.42);
-  border: 1px solid hsl(0 0% 100% / 0.58);
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.82),
-    0 18px 42px -34px hsl(260 34% 34% / 0.28);
-
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  background: var(--gd-widget-panel-bg);
+  border: 1px solid var(--gd-widget-panel-border);
+  box-shadow: var(--gd-widget-panel-shadow);
+  backdrop-filter: var(--gd-widget-inner-filter);
+  -webkit-backdrop-filter: var(--gd-widget-inner-filter);
 }
 
 .theme-segmented-control::-webkit-scrollbar,
@@ -165,7 +151,7 @@ textarea {
 
 .theme-segment-button:hover {
   color: hsl(var(--foreground) / 0.78);
-  background: hsl(0 0% 100% / 0.28);
+  background: var(--gd-control-bg);
 }
 
 .theme-segment-button:active {
@@ -174,11 +160,7 @@ textarea {
 
 .theme-segment-button.is-active {
   color: hsl(var(--foreground) / 0.9);
-  background: hsl(0 0% 100% / 0.78);
-
-  box-shadow:
-    0 10px 24px -18px hsl(260 32% 36% / 0.34),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9);
+  background: var(--gd-control-active-bg);
 }
 
 /* Keyboard Focus
@@ -219,12 +201,8 @@ textarea {
   letter-spacing: -0.015em;
 
   color: hsl(var(--foreground) / 0.78);
-  background: hsl(0 0% 100% / 0.48);
-  border: 1px solid hsl(0 0% 100% / 0.58);
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.78),
-    0 12px 28px -24px hsl(245 35% 32% / 0.2);
+  background: var(--gd-control-bg);
+  border: 1px solid var(--gd-control-border);
 
   outline: none;
   appearance: none;
@@ -245,10 +223,7 @@ textarea {
 .theme-select-mobile:focus,
 .theme-mobile-select:focus,
 .theme-select:focus {
-  border-color: hsl(var(--primary) / 0.42);
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.8),
-    0 0 0 3px hsl(var(--primary) / 0.12);
+  border-color: var(--gd-control-border);
 }
 
 /* =========================================================
@@ -297,12 +272,8 @@ textarea {
   justify-content: center;
 
   color: hsl(var(--foreground) / 0.72);
-  background: hsl(0 0% 100% / 0.34);
-  border: 1px solid hsl(0 0% 100% / 0.48);
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.58),
-    0 10px 24px -20px hsl(245 35% 32% / 0.18);
+  background: var(--gd-control-bg);
+  border: 1px solid var(--gd-control-border);
 
   transition:
     background 160ms ease,
@@ -315,7 +286,7 @@ textarea {
 .calendar-nav-button:hover,
 .widget-icon-button:hover {
   color: hsl(var(--foreground) / 0.9);
-  background: hsl(0 0% 100% / 0.52);
+  background: var(--gd-control-active-bg);
 }
 
 .career-icon-button:active,
@@ -342,8 +313,8 @@ textarea::placeholder {
 }
 
 select option {
-  color: #242234;
-  background: #ffffff;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
 }
 
 /* =========================================================
@@ -364,15 +335,11 @@ select option {
   flex: 0 0 auto;
   white-space: nowrap;
 
-  background: hsl(0 0% 100% / 0.36);
-  border: 1px solid hsl(0 0% 100% / 0.52);
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.7),
-    0 10px 24px -22px hsl(245 35% 32% / 0.18);
-
-  backdrop-filter: blur(16px) saturate(145%);
-  -webkit-backdrop-filter: blur(16px) saturate(145%);
+  background: var(--gd-widget-panel-bg);
+  border: 1px solid var(--gd-widget-panel-border);
+  box-shadow: var(--gd-widget-panel-shadow);
+  backdrop-filter: var(--gd-widget-inner-filter);
+  -webkit-backdrop-filter: var(--gd-widget-inner-filter);
 }
 
 .calendar-view-button {
@@ -398,77 +365,16 @@ select option {
 
 .calendar-view-button:hover {
   color: hsl(var(--foreground) / 0.82);
-  background: hsl(0 0% 100% / 0.28);
+  background: var(--gd-control-bg);
 }
 
 .calendar-view-button.is-active {
   color: hsl(var(--foreground) / 0.92);
-  background: hsl(0 0% 100% / 0.82);
-  box-shadow:
-    0 8px 18px -14px hsl(245 35% 32% / 0.24),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9);
+  background: var(--gd-control-active-bg);
 }
 
 /* =========================================================
-   9. Theme-specific guardrails
-   Pixel and Retro strip glass effects from shared controls
-========================================================= */
-
-html[data-theme="pixel-desk"] .theme-segmented-control,
-body[data-theme="pixel-desk"] .theme-segmented-control,
-html.theme-pixel-desk .theme-segmented-control,
-body.theme-pixel-desk .theme-segmented-control,
-html[data-theme="pixel-desk"] .theme-button-group,
-body[data-theme="pixel-desk"] .theme-button-group,
-html.theme-pixel-desk .theme-button-group,
-body.theme-pixel-desk .theme-button-group,
-html[data-theme="pixel-desk"] .theme-segment-button,
-body[data-theme="pixel-desk"] .theme-segment-button,
-html.theme-pixel-desk .theme-segment-button,
-body.theme-pixel-desk .theme-segment-button,
-html[data-theme="pixel-desk"] .theme-select-mobile,
-body[data-theme="pixel-desk"] .theme-select-mobile,
-html.theme-pixel-desk .theme-select-mobile,
-body.theme-pixel-desk .theme-select-mobile,
-html[data-theme="pixel-desk"] .calendar-view-toggle,
-body[data-theme="pixel-desk"] .calendar-view-toggle,
-html.theme-pixel-desk .calendar-view-toggle,
-body.theme-pixel-desk .calendar-view-toggle,
-html[data-theme="pixel-desk"] .calendar-view-button,
-body[data-theme="pixel-desk"] .calendar-view-button,
-html.theme-pixel-desk .calendar-view-button,
-body.theme-pixel-desk .calendar-view-button,
-html[data-theme="retro"] .theme-segmented-control,
-body[data-theme="retro"] .theme-segmented-control,
-html.theme-retro .theme-segmented-control,
-body.theme-retro .theme-segmented-control,
-html[data-theme="retro"] .theme-button-group,
-body[data-theme="retro"] .theme-button-group,
-html.theme-retro .theme-button-group,
-body.theme-retro .theme-button-group,
-html[data-theme="retro"] .theme-segment-button,
-body[data-theme="retro"] .theme-segment-button,
-html.theme-retro .theme-segment-button,
-body.theme-retro .theme-segment-button,
-html[data-theme="retro"] .theme-select-mobile,
-body[data-theme="retro"] .theme-select-mobile,
-html.theme-retro .theme-select-mobile,
-body.theme-retro .theme-select-mobile,
-html[data-theme="retro"] .calendar-view-toggle,
-body[data-theme="retro"] .calendar-view-toggle,
-html.theme-retro .calendar-view-toggle,
-body.theme-retro .calendar-view-toggle,
-html[data-theme="retro"] .calendar-view-button,
-body[data-theme="retro"] .calendar-view-button,
-html.theme-retro .calendar-view-button,
-body.theme-retro .calendar-view-button {
-  border-radius: 0;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-/* =========================================================
-   10. Responsive controls
+   9. Responsive controls
 ========================================================= */
 
 @media (max-width: 980px) {
