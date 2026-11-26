@@ -141,7 +141,7 @@ const emojiSheet = (
       label: extraLabels[number] ?? `${label} ${number}`,
     }));
 
-const expressionEmojis = emojiSheet("emoji-expressions", "표정·손", 150, {
+const expressionEmojis = emojiSheet("emoji-expressions", "표정·손", 146, {
   141: "점선 얼굴",
   142: "싸움 구름",
   143: "하트 장식 열나는 얼굴",
@@ -149,10 +149,6 @@ const expressionEmojis = emojiSheet("emoji-expressions", "표정·손", 150, {
   144: "혀 내민 장난 표정",
   145: "빙글빙글 어지러운 얼굴",
   146: "왜곡된 얼굴",
-  147: "파티 얼굴",
-  148: "애원하는 얼굴",
-  149: "추워서 떠는 얼굴",
-  150: "하트와 함께 웃는 얼굴",
 });
 
 /**
@@ -161,13 +157,9 @@ const expressionEmojis = emojiSheet("emoji-expressions", "표정·손", 150, {
  * hiding every recent face at the end of the numbered source sheet.
  */
 const expressionFaceInsertions: Readonly<Record<number, readonly number[]>> = {
-  17: [150], // Put the smiling face surrounded by hearts beside other affectionate faces.
   26: [144], // Put the tongue-out, zany face beside its playful lookalikes.
-  32: [147], // Keep the party face with celebratory expressions.
-  45: [148], // Keep the pleading face with the sad, teary expressions.
   48: [142], // The comic fight cloud belongs beside the angry face.
   53: [146], // Put the wide-eyed distorted face beside surprised faces.
-  55: [149], // Keep the chattering cold face with other cold expressions.
   63: [141], // Put the dotted outline face beside thinking and quiet faces.
   84: [145], // Keep the dizzy face near the unwell expressions.
   87: [143], // Put the feverish, heart-decorated face with the sick faces.
