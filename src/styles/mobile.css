@@ -328,7 +328,7 @@
 }
 
 /* A large image library needs a scrollable picker above the bottom navigation;
-   the image buttons themselves stay visually frameless. */
+   only the currently selected image gets a clear selection marker. */
 .mobile-tab-icon-picker {
   position: absolute;
   z-index: 25;
@@ -356,6 +356,56 @@
   flex: 0 0 auto;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
+}
+
+/* A persistent preview echoes the draft on the actual navigation icon and
+   names it, so a tap never feels like an invisible or final change. */
+.workspace-icon-picker-preview {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  min-height: 58px;
+  gap: 10px;
+  padding: 6px 10px;
+  background: var(--gd-widget-panel-bg, hsl(var(--card)));
+  border: 1px solid var(--gd-widget-panel-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-card, 12px);
+}
+
+.workspace-icon-picker-preview-art {
+  display: grid;
+  flex: 0 0 44px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.workspace-icon-picker-preview-art img {
+  display: block;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.workspace-icon-picker-preview-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.workspace-icon-picker-preview-copy small {
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+}
+
+.workspace-icon-picker-preview-copy strong {
+  overflow: hidden;
+  color: hsl(var(--foreground));
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .mobile-tab-icon-collection {
@@ -388,6 +438,7 @@
 }
 
 .mobile-tab-icon-choice {
+  position: relative;
   display: grid;
   flex: 0 0 44px;
   place-items: center;
@@ -399,6 +450,21 @@
   border: 0;
   border-radius: 0;
   box-shadow: none;
+}
+
+.mobile-tab-icon-choice-check {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  color: hsl(var(--primary-foreground, 0 0% 100%));
+  background: hsl(var(--primary));
+  border: 1px solid hsl(var(--card));
+  border-radius: var(--gd-radius-button, 999px);
+  box-shadow: 0 1px 3px hsl(0 0% 0% / 0.24);
 }
 
 .mobile-tab-icon-choice > :is(svg, img, .workspace-theme-icon) {
@@ -463,6 +529,16 @@
 .sidebar-tab-icon-editor {
   position: relative;
   z-index: 30;
+}
+
+.mobile-navigation-preview-icon {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  object-fit: contain;
+  font-size: 23px;
+  line-height: 1;
 }
 
 .mobile-layout button:focus-visible {

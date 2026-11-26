@@ -63,6 +63,26 @@ export const WorkspaceTabsNav = ({
 }: WorkspaceTabsNavProps) => {
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
   const [editingIconTabId, setEditingIconTabId] = useState<string | null>(null);
+  const [iconPreviewByTabId, setIconPreviewByTabId] = useState<Record<string, string>>({});
+
+  const clearIconPreview = (tabId: string) => {
+    setIconPreviewByTabId((current) => {
+      const remaining = { ...current };
+      delete remaining[tabId];
+      return remaining;
+    });
+  };
+
+  const toggleIconPicker = (tabId: string) => {
+    if (editingIconTabId === tabId) {
+      clearIconPreview(tabId);
+      setEditingIconTabId(null);
+      return;
+    }
+
+    if (editingIconTabId) clearIconPreview(editingIconTabId);
+    setEditingIconTabId(tabId);
+  };
 
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
@@ -79,6 +99,14 @@ export const WorkspaceTabsNav = ({
       window.removeEventListener("glassday-theme-change", handleThemeChange);
     };
   }, []);
+
+  useEffect(() => {
+    // Closing edit mode also closes the icon editor and discards its preview.
+    if (!editMode) {
+      setEditingIconTabId(null);
+      setIconPreviewByTabId({});
+    }
+  }, [editMode]);
 
   return (
     <>
@@ -109,7 +137,11 @@ export const WorkspaceTabsNav = ({
               aria-label={collapsed ? tab.label : undefined}
             >
               <span className="sidebar-tab-icon">
-                <WorkspaceTabIcon tabId={tab.id} icon={tab.icon} theme={theme} />
+                <WorkspaceTabIcon
+                  tabId={tab.id}
+                  icon={iconPreviewByTabId[tab.id] ?? tab.icon}
+                  theme={theme}
+                />
               </span>
 
               {!collapsed && editMode && !tab.locked ? (
@@ -144,11 +176,7 @@ export const WorkspaceTabsNav = ({
               <div className="sidebar-tab-icon-editor" onClick={(event) => event.stopPropagation()}>
                 <button
                   type="button"
-                  onClick={() =>
-                    setEditingIconTabId((current) =>
-                      current === tab.id ? null : tab.id
-                    )
-                  }
+                  onClick={() => toggleIconPicker(tab.id)}
                   className="sidebar-tab-icon-edit"
                   title={`${tab.label} 아이콘 변경`}
                   aria-label={`${tab.label} 아이콘 변경`}
@@ -161,9 +189,16 @@ export const WorkspaceTabsNav = ({
                     value={tab.icon}
                     theme={theme}
                     className="workspace-icon-picker-desktop"
-                    onCancel={() => setEditingIconTabId(null)}
+                    onPreview={(icon) =>
+                      setIconPreviewByTabId((current) => ({ ...current, [tab.id]: icon }))
+                    }
+                    onCancel={() => {
+                      clearIconPreview(tab.id);
+                      setEditingIconTabId(null);
+                    }}
                     onSave={(icon) => {
                       onChangeTabIcon(tab.id, icon);
+                      clearIconPreview(tab.id);
                       setEditingIconTabId(null);
                     }}
                   />

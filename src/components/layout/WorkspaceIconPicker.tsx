@@ -1,10 +1,11 @@
 /**
  * Workspace icon editor shared by desktop navigation and mobile navigation.
  *
- * The picker keeps a draft while the user browses. Only Save calls the tab
- * persistence callback, Undo restores the icon that was present when editing
- * began, and Cancel closes without changing saved data.
+ * The picker keeps a draft while the user browses and previews that draft on
+ * the tab. Only Save persists it; Undo restores the starting icon and Cancel
+ * removes the preview without changing saved data.
  */
+import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import {
@@ -31,10 +32,36 @@ const collections: Array<{
   { id: "emoji-objects", label: "생활·기호" },
 ];
 
+// Search all categories so the preview keeps the right name after browsing to
+// a different category from the one that contains the selected icon.
+const iconChoicesBySource = new Map(
+  Object.values(workspaceIconCollections)
+    .flat()
+    .map((choice) => [choice.src, choice] as const)
+);
+
+const defaultIconLabels: Record<string, string> = {
+  home: "홈 기본 아이콘",
+  career: "커리어 기본 아이콘",
+  study: "스터디 기본 아이콘",
+  memo: "메모 기본 아이콘",
+  life: "라이프 기본 아이콘",
+};
+
+const defaultIconGlyphs: Record<string, string> = {
+  home: "🏠",
+  career: "💼",
+  study: "📚",
+  memo: "📝",
+  life: "🌿",
+};
+
 type WorkspaceIconPickerProps = {
   value: string;
   theme: ThemeId;
   onSave: (icon: string) => void;
+  /** Show a temporary icon on the tab while the picker is still a draft. */
+  onPreview?: (icon: string) => void;
   onCancel: () => void;
   className?: string;
   saveLabel?: string;
@@ -44,6 +71,7 @@ export const WorkspaceIconPicker = ({
   value,
   theme,
   onSave,
+  onPreview,
   onCancel,
   className,
   saveLabel = "저장",
@@ -62,6 +90,15 @@ export const WorkspaceIconPicker = ({
   }, [theme]);
 
   const choices = workspaceIconCollections[collection];
+  const selectedChoice = iconChoicesBySource.get(draftIcon);
+  const selectedLabel =
+    selectedChoice?.label ?? defaultIconLabels[draftIcon] ?? "선택한 아이콘";
+  const selectedGlyph = defaultIconGlyphs[draftIcon] ?? draftIcon;
+
+  const chooseIcon = (icon: string) => {
+    setDraftIcon(icon);
+    onPreview?.(icon);
+  };
 
   return (
     <section
@@ -83,6 +120,22 @@ export const WorkspaceIconPicker = ({
         ))}
       </div>
 
+      {/* A visible draft preview makes the selected artwork easy to recognize
+          and mirrors it on the tab before the user commits the change. */}
+      <div className="workspace-icon-picker-preview" role="status" aria-live="polite">
+        <span className="workspace-icon-picker-preview-art" aria-hidden="true">
+          {draftIcon.startsWith("/workspace-icons/") ? (
+            <img src={draftIcon} alt="" draggable={false} />
+          ) : (
+            selectedGlyph
+          )}
+        </span>
+        <span className="workspace-icon-picker-preview-copy">
+          <small>선택한 아이콘</small>
+          <strong>{selectedLabel}</strong>
+        </span>
+      </div>
+
       <div
         className="mobile-tab-icon-grid"
         role="group"
@@ -93,10 +146,10 @@ export const WorkspaceIconPicker = ({
             key={choice.id}
             type="button"
             className="mobile-tab-icon-choice"
-            aria-label={choice.label}
+            aria-label={`${choice.label} 선택`}
             aria-pressed={draftIcon === choice.src}
             title={choice.label}
-            onClick={() => setDraftIcon(choice.src)}
+            onClick={() => chooseIcon(choice.src)}
           >
             <img
               src={choice.src}
@@ -106,6 +159,11 @@ export const WorkspaceIconPicker = ({
               loading="lazy"
               decoding="async"
             />
+            {draftIcon === choice.src && (
+              <span className="mobile-tab-icon-choice-check" aria-hidden="true">
+                <Check size={11} strokeWidth={3} />
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -113,7 +171,7 @@ export const WorkspaceIconPicker = ({
       <div className="workspace-icon-picker-actions">
         <button
           type="button"
-          onClick={() => setDraftIcon(value)}
+          onClick={() => chooseIcon(value)}
           disabled={draftIcon === value}
         >
           되돌리기

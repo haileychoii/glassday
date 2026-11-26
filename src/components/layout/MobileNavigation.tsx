@@ -35,7 +35,18 @@ export const MobileNavigation = ({
 }) => {
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
   const [pickerTarget, setPickerTarget] = useState<IconPickerTarget>(null);
+  const [previewIcon, setPreviewIcon] = useState<{ tabId: string | null; icon: string } | null>(null);
   const navigationRef = useRef<HTMLElement>(null);
+
+  const closePicker = () => {
+    setPreviewIcon(null);
+    setPickerTarget(null);
+  };
+
+  const openPicker = (target: IconPickerTarget) => {
+    setPreviewIcon(null);
+    setPickerTarget(target);
+  };
 
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
@@ -46,6 +57,14 @@ export const MobileNavigation = ({
     window.addEventListener("glassday-theme-change", handleThemeChange);
     return () => window.removeEventListener("glassday-theme-change", handleThemeChange);
   }, []);
+
+  useEffect(() => {
+    // If edit mode is closed while changing an existing tab, discard its draft.
+    if (!editMode && pickerTarget?.type === "existing") {
+      setPreviewIcon(null);
+      setPickerTarget(null);
+    }
+  }, [editMode, pickerTarget]);
 
   useEffect(() => {
     navigationRef.current
@@ -68,6 +87,7 @@ export const MobileNavigation = ({
     } else if (pickerTarget?.type === "new") {
       onAddTab(icon);
     }
+    setPreviewIcon(null);
     setPickerTarget(null);
   };
 
@@ -87,6 +107,8 @@ export const MobileNavigation = ({
         {tabs.map((tab) => {
           const isEditingIcon =
             pickerTarget?.type === "existing" && pickerTarget.tabId === tab.id;
+          const displayedIcon =
+            previewIcon?.tabId === tab.id ? previewIcon.icon : tab.icon;
 
           return (
             <button
@@ -98,18 +120,19 @@ export const MobileNavigation = ({
               aria-pressed={isEditingIcon}
               onClick={() => {
                 if (editMode) {
-                  setPickerTarget(isEditingIcon ? null : { type: "existing", tabId: tab.id });
+                  if (isEditingIcon) closePicker();
+                  else openPicker({ type: "existing", tabId: tab.id });
                   return;
                 }
 
                 onSelectTab(tab.id);
-                setPickerTarget(null);
+                closePicker();
               }}
               title={editMode ? `${tab.label} 아이콘 변경` : tab.label}
             >
               <WorkspaceTabIcon
                 tabId={tab.id}
-                icon={tab.icon}
+                icon={displayedIcon}
                 theme={theme}
                 mobile
               />
@@ -132,13 +155,28 @@ export const MobileNavigation = ({
           aria-label={pickerTarget?.type === "new" ? "아이콘 선택 닫기" : "새 탭 추가"}
           title="새 탭 추가"
           aria-expanded={pickerTarget?.type === "new"}
-          onClick={() =>
-            setPickerTarget((current) =>
-              current?.type === "new" ? null : { type: "new" }
-            )
-          }
+          onClick={() => {
+            if (pickerTarget?.type === "new") closePicker();
+            else openPicker({ type: "new" });
+          }}
         >
-          <Plus size={22} strokeWidth={2} aria-hidden="true" />
+          {pickerTarget?.type === "new" && previewIcon?.tabId === null ? (
+            previewIcon.icon.startsWith("/workspace-icons/") ? (
+              <img
+                className="mobile-navigation-preview-icon"
+                src={previewIcon.icon}
+                alt=""
+                aria-hidden="true"
+                draggable={false}
+              />
+            ) : (
+              <span className="mobile-navigation-preview-icon" aria-hidden="true">
+                {previewIcon.icon}
+              </span>
+            )
+          ) : (
+            <Plus size={22} strokeWidth={2} aria-hidden="true" />
+          )}
         </button>
       </nav>
 
@@ -148,7 +186,13 @@ export const MobileNavigation = ({
           theme={theme}
           saveLabel={pickerTarget.type === "new" ? "새 탭 만들기" : "저장"}
           onSave={saveIcon}
-          onCancel={() => setPickerTarget(null)}
+          onPreview={(icon) =>
+            setPreviewIcon({
+              tabId: pickerTarget.type === "existing" ? pickerTarget.tabId : null,
+              icon,
+            })
+          }
+          onCancel={closePicker}
         />
       )}
     </div>
