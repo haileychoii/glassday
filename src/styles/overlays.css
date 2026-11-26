@@ -185,42 +185,9 @@
     gap: 5px;
     overflow-x: auto;
     overflow-y: hidden;
-    scrollbar-width: none;
-  }
-
-  .floating-window-actions::-webkit-scrollbar {
-    display: none;
   }
 
   .floating-window-actions > * {
     flex: 0 0 auto;
-  }
-}
-
-/* =========================================================
-   4. Mobile
-========================================================= */
-
-@media (max-width: 768px) {
-  .floating-window {
-    left: 12px !important;
-    right: auto !important;
-
-    width: calc(100vw - 24px) !important;
-    max-width: calc(100vw - 24px) !important;
-
-    min-width: 0;
-    resize: vertical;
-  }
-}
-
-@media (max-width: 480px) {
-  .floating-window {
-    top: 10px !important;
-    left: 10px !important;
-
-    width: calc(100vw - 20px) !important;
-    height: calc(100vh - 20px) !important;
-    max-height: calc(100vh - 20px) !important;
   }
 }
