@@ -20,7 +20,7 @@
  * 1. 이 파일은 Pixel 색, 비트맵 폰트, Win95 바깥 프레임을 담당한다.
  * 2. 실제 제목줄은 GlassCard의 .widget-frame__header 하나만 사용한다.
  * 3. 제목줄 배경은 widget-frame-theme.css의 공통 토큰에서 지정한다.
- * 4. Pixel만 공통 반경 토큰을 0으로 설정한다.
+ * 4. 공통 반경 토큰의 Pixel 값은 pixel-95css.css 한 곳에서 설정한다.
  *
  * [주의]
  * 기존 버튼 이벤트 / 위젯 저장 데이터 / 데스크톱 Grid 배치는 건드리지 않음.
@@ -75,13 +75,6 @@
     "Arial",
     sans-serif;
   --glassday-app-font: var(--pixel-font-stack);
-
-  --gd-radius-app: 0px;
-  --gd-radius-panel: 0px;
-  --gd-radius-widget: 0px;
-  --gd-radius-card: 0px;
-  --gd-radius-inner: 0px;
-  --gd-radius-button: 0px;
 
   font-family: var(--glassday-app-font) !important;
 }
