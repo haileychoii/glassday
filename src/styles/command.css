@@ -351,6 +351,47 @@
   animation: gd-toast-rise 2.8s ease both;
 }
 
+/* Tab creation/deletion stays reversible long enough for a deliberate undo. */
+.tab-action-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  z-index: 2147483100;
+  transform: translateX(-50%);
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 4px 8px 4px 14px;
+  border: 1px solid var(--gd-control-border);
+  border-radius: 999px;
+  color: hsl(var(--foreground) / 0.88);
+  background: var(--gd-control-bg);
+  box-shadow: var(--gd-widget-panel-shadow);
+  backdrop-filter: var(--gd-widget-inner-filter);
+  -webkit-backdrop-filter: var(--gd-widget-inner-filter);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.tab-action-toast button {
+  min-height: 32px;
+  padding: 0 10px;
+  color: hsl(var(--primary));
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.tab-action-toast button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
 @keyframes gd-sync-spin {
   to {
     transform: rotate(360deg);

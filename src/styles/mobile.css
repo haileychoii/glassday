@@ -522,8 +522,15 @@ body:has(.mobile-layout) .quick-capture-submit {
 }
 
 body:has(.mobile-layout)
-  :is(.global-sync-indicator, .quick-capture-toast) {
+  :is(.global-sync-indicator, .quick-capture-toast, .tab-action-toast) {
   bottom: calc(80px + env(safe-area-inset-bottom));
+}
+
+/* Keep the undo action away from the right-aligned cloud-save indicator. */
+body:has(.mobile-layout) .tab-action-toast {
+  left: 12px;
+  max-width: calc(100vw - 24px);
+  transform: none;
 }
 
 /* ============================================================================
