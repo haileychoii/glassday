@@ -6,8 +6,8 @@
  * sets contain the earlier artwork; the named entries below document the new
  * Drive additions so people can identify them with a screen reader or tooltip.
  *
- * Artwork groups describe what people will browse for: pink sticker art,
- * retro pixel art, and folder designs. All files use transparent 160 × 160
+ * Artwork groups describe what people will browse for: pink icons, pixel icons,
+ * and folder icons. All files use transparent 160 × 160
  * WebP canvases and the same centered 136px artwork area.
  */
 export type WorkspaceIconCollectionId = "pink-iphone" | "retro-pixel" | "folder-art";
@@ -105,7 +105,7 @@ const folderDesignAdditions = namedIcons("folder-art", [
 
 export const workspaceIconCollections: Record<WorkspaceIconCollectionId, WorkspaceIconChoice[]> = {
   "pink-iphone": [
-    ...numberedIcons("pink-iphone", 598, "핑크 스티커"),
+    ...numberedIcons("pink-iphone", 598, "핑크 아이콘"),
     ...pinkStickerAdditions,
   ],
   "retro-pixel": [
