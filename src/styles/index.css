@@ -62,6 +62,8 @@
 @import "./themes/settings-surfaces.css";
 /* Study subject colors and panel materials are owned by the theme layer. */
 @import "./themes/study-surfaces.css";
+/* Timer colors, control faces, and progress-ring paint belong to theme styles. */
+@import "./themes/timer-surfaces.css";
 
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";
