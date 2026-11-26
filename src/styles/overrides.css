@@ -455,103 +455,6 @@
   height: 11px !important;
 }
 
-/* Keep Today Focus stable inside laptop preview even when the outer browser
-   viewport crosses responsive breakpoints. In laptop mode this widget should
-   react only to its own container size. */
-.app-mode-stage.is-laptop-mode .today-focus {
-  gap: var(--gd-widget-stack-gap) !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-card,
-.app-mode-stage.is-laptop-mode .today-focus-widget {
-  padding: 0 !important;
-  min-height: 0 !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-card .glass-card-body,
-.app-mode-stage.is-laptop-mode .today-focus-widget .glass-card-body {
-  height: 100% !important;
-  min-height: 0 !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-hero {
-  padding: 12px !important;
-  grid-template-columns: minmax(0, 1fr) auto !important;
-  align-items: center !important;
-  gap: var(--gd-widget-stack-gap) !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-main {
-  font-size: 14px !important;
-  line-height: 1.2 !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-kicker {
-  font-size: 10px !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-ring {
-  width: 64px !important;
-  height: 64px !important;
-  min-width: 64px !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-ring span {
-  font-size: 15px !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: var(--gd-widget-section-gap) !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-section,
-.app-mode-stage.is-laptop-mode .today-focus-block {
-  padding: var(--gd-widget-panel-pad) !important;
-  border-radius: 16px !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-section-title {
-  font-size: 12px !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-task {
-  min-height: 34px !important;
-  padding: 8px 10px !important;
-  border-radius: 14px !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-task-input {
-  font-size: 11px !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-mini-item,
-.app-mode-stage.is-laptop-mode .today-focus-career-item,
-.app-mode-stage.is-laptop-mode .today-focus-memo {
-  min-height: 40px !important;
-  padding: var(--gd-space-sm) !important;
-  border-radius: 14px !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-mini-item strong,
-.app-mode-stage.is-laptop-mode .today-focus-career-item strong,
-.app-mode-stage.is-laptop-mode .today-focus-memo strong {
-  font-size: 11px !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-mini-item span,
-.app-mode-stage.is-laptop-mode .today-focus-career-item span,
-.app-mode-stage.is-laptop-mode .today-focus-memo span {
-  font-size: 10px !important;
-}
-
-.app-mode-stage.is-laptop-mode .today-focus-empty,
-.app-mode-stage.is-laptop-mode .today-focus-alert {
-  font-size: 10.5px !important;
-}
-
 @media (min-width: 921px) {
   .topbar {
     border-top-left-radius: 0 !important;
@@ -857,14 +760,8 @@
     font-size: 11px !important;
   }
 
-  .today-focus-ring {
-    width: 54px !important;
-    height: 54px !important;
-  }
-
   .calendar-event-item,
-  .career-list-item,
-  .today-focus-section {
+  .career-list-item {
     border-radius: 16px !important;
     padding: var(--gd-widget-panel-pad) !important;
   }
@@ -1192,6 +1089,7 @@
 :is(
     .today-focus-hero,
     .today-focus-section,
+    .today-focus-ring,
     .career-summary-card,
     .career-list-item:not(.is-urgent):not(.is-soon),
     .study10-summary-card,
@@ -1989,6 +1887,7 @@
     .memo-note-item,
     .today-focus-hero,
     .today-focus-section,
+    .today-focus-ring,
     .today-focus-task,
     .today-focus-mini-item,
     .alert-item,
@@ -2522,8 +2421,7 @@
     .calendar-view-toggle,
     .money-budget-track,
     .money-store-track,
-    .study10-timeline-grid,
-    .today-focus-ring
+    .study10-timeline-grid
   ) {
   border-radius: 0 !important;
   background: #ffffff !important;
@@ -3023,8 +2921,7 @@
     .memo-editor,
     .money-budget-track,
     .money-store-track,
-    .study10-timeline-grid,
-    .today-focus-ring
+    .study10-timeline-grid
   ) {
   border-radius: 0 !important;
   background: #fffef4 !important;

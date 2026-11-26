@@ -53,6 +53,8 @@
 }
 
 .today-focus-ring {
+  /* The widget surface layer supplies its theme material; this rule only
+     reserves a stable square for the progress value. */
   width: 48px;
   height: 48px;
   flex: 0 0 48px;
@@ -215,6 +217,8 @@
 }
 
 @container today-focus-widget (max-width: 560px) {
+  /* Compact layouts follow the card's own width in every display mode, so
+     laptop previews do not need a separate Today Focus override block. */
   .today-focus-grid {
     grid-template-columns: minmax(0, 1fr);
   }

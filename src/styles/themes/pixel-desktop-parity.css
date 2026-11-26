@@ -315,6 +315,7 @@
   .alert-summary-card,
   .today-focus-hero,
   .today-focus-section,
+  .today-focus-ring,
   .today-focus-task,
   .today-focus-mini-item,
   .today-focus-career-item,
@@ -826,7 +827,7 @@
 ) .app-shell-surface :is(
   .journal-summary-card, .journal-section, .journal-task-item,
   .journal-score-inline, .alert-item, .alert-summary-card,
-  .today-focus-hero, .today-focus-section, .today-focus-task,
+  .today-focus-hero, .today-focus-section, .today-focus-ring, .today-focus-task,
   .today-focus-mini-item, .today-focus-career-item, .today-focus-memo,
   .today-focus-alert, .calendar-event-item, .calendar-mini-card,
   .calendar-month-day-cell, .career-card, .career-list-item,

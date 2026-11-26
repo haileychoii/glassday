@@ -682,21 +682,6 @@ html[data-theme="pixel-desk"] .app-shell-main {
   border-radius: 0 !important;
 }
 
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-ring {
-  border-radius: 0 !important;
-  background: #c0c0c0 !important;
-  border-top: 2px solid #404040 !important;
-  border-left: 2px solid #404040 !important;
-  border-right: 2px solid #ffffff !important;
-  border-bottom: 2px solid #ffffff !important;
-  box-shadow: none !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-ring span {
-  border-radius: 0 !important;
-  background: #ffffff !important;
-}
-
 /* settings preview */
 .settings-theme-preview.theme-pixel,
 .settings-theme-preview.theme-pixel-desk {
