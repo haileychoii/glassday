@@ -3,7 +3,7 @@
  * App owns actions/providers; this shell only arranges their entry points.
  * Styles: styles/mobile.css. / 모바일 웹 전용이며 Tauri에는 렌더링하지 않습니다.
  */
-import { Check, Pencil, Plus, Search, Settings } from "lucide-react";
+import { Check, Pencil, Plus, Search, Settings, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { DashboardTab } from "../../types/workspace";
 import { MobileNavigation } from "./MobileNavigation";
@@ -17,6 +17,7 @@ export const MobileLayout = ({
   onOpenSettings,
   onAddTab,
   onRenameTab,
+  onRemoveTab,
   editMode,
   onToggleEditMode,
   children,
@@ -29,6 +30,7 @@ export const MobileLayout = ({
   onOpenSettings: () => void;
   onAddTab: (icon: string) => void;
   onRenameTab: (tabId: string, label: string) => void;
+  onRemoveTab: (tabId: string) => void;
   editMode: boolean;
   onToggleEditMode: () => void;
   children: ReactNode;
@@ -69,23 +71,34 @@ export const MobileLayout = ({
         <div className="mobile-heading">
           <span>Glassday</span>
           {editMode && activeTab && !activeTab.locked ? (
-            <input
-              className="mobile-heading-name-input"
-              value={draftLabel}
-              aria-label="워크스페이스 이름 수정"
-              onChange={(event) => setDraftLabel(event.target.value)}
-              onBlur={saveTabLabel}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  event.currentTarget.blur();
-                } else if (event.key === "Escape") {
-                  cancelLabelCommit.current = true;
-                  setDraftLabel(label);
-                  event.currentTarget.blur();
-                }
-              }}
-            />
+            <div className="mobile-heading-edit-row">
+              <input
+                className="mobile-heading-name-input"
+                value={draftLabel}
+                aria-label="워크스페이스 이름 수정"
+                onChange={(event) => setDraftLabel(event.target.value)}
+                onBlur={saveTabLabel}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    event.currentTarget.blur();
+                  } else if (event.key === "Escape") {
+                    cancelLabelCommit.current = true;
+                    setDraftLabel(label);
+                    event.currentTarget.blur();
+                  }
+                }}
+              />
+              <button
+                type="button"
+                className="mobile-heading-delete"
+                title="탭 삭제"
+                aria-label={`${label} 탭 삭제`}
+                onClick={() => onRemoveTab(activeTab.id)}
+              >
+                <Trash2 size={16} aria-hidden="true" />
+              </button>
+            </div>
           ) : (
             <h1>{label}</h1>
           )}
