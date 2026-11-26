@@ -1,11 +1,10 @@
 /* ============================================================
    [Figma Mapping] Shared Control Components
 
-   연결: Topbar, Settings, Calendar, Widget header action 및 form control.
+   연결: Topbar, 위젯 공통 action, form control.
    Figma Component Set:
-   - Button / Default · Hover · Active · Disabled
-   - Segmented Control / Default · Selected
-   - Input, Select, Icon Button
+   - Shared Button / Default · Hover · Active
+   - Input / Select / Keyboard Focus
 
    이 파일은 control의 size, alignment, interaction 구조만 담당한다.
    색상/blur/border surface는 theme-surfaces.css와 themes/*.css가 결정한다.
@@ -13,35 +12,17 @@
    ============================================================ */
 
 /* =========================================================
-   1. Base button reset
+   1. Shared control focus behavior
 ========================================================= */
-
-button {
-  font: inherit;
-}
-
-button:disabled {
-  opacity: 0.48;
-}
-
-button,
-input,
-select,
-textarea {
-  font-family: inherit;
-}
 
 /* =========================================================
    2. Glass button base
    Shared pill-button shell used across widgets and app chrome
 ========================================================= */
 
-.glass-button,
-.topbar-action-button,
-.icon-button,
-.control-button {
+.glass-button {
   height: 32px;
-  border-radius: 20px;
+  border-radius: var(--gd-radius-button);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -59,106 +40,19 @@ textarea {
     transform 160ms ease;
 }
 
-.glass-button:hover,
-.topbar-action-button:hover,
-.icon-button:hover,
-.control-button:hover {
+.glass-button:hover {
   color: hsl(var(--foreground) / 0.9);
   background: var(--gd-control-active-bg);
 }
 
-.glass-button:active,
-.topbar-action-button:active,
-.icon-button:active,
-.control-button:active {
+.glass-button:active {
   transform: translateY(1px);
 }
 
-.glass-button.is-active,
-.topbar-action-button.is-active,
-.icon-button.is-active,
-.control-button.is-active {
+.glass-button.is-active {
   color: hsl(var(--foreground) / 0.94);
   background: var(--gd-control-active-bg);
   border-color: var(--gd-control-border);
-}
-
-/* =========================================================
-   3. Theme segmented control
-   Desktop theme picker pills
-========================================================= */
-
-.theme-segmented-control,
-.theme-button-group {
-  height: 38px;
-  padding: 4px;
-  border-radius: 999px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-
-  flex: 0 0 auto;
-  min-width: max-content;
-  max-width: none;
-
-  overflow: visible;
-  white-space: nowrap;
-  scrollbar-width: none;
-
-  background: var(--gd-widget-panel-bg);
-  border: 1px solid var(--gd-widget-panel-border);
-  box-shadow: var(--gd-widget-panel-shadow);
-  backdrop-filter: var(--gd-widget-inner-filter);
-  -webkit-backdrop-filter: var(--gd-widget-inner-filter);
-}
-
-.theme-segmented-control::-webkit-scrollbar,
-.theme-button-group::-webkit-scrollbar {
-  display: none;
-}
-
-.theme-segment-button {
-  height: 30px;
-  min-width: 68px;
-  padding: 0 14px;
-  border-radius: 999px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  flex: 0 0 auto;
-
-  font-size: 12px;
-  font-weight: 750;
-  letter-spacing: -0.015em;
-
-  color: hsl(var(--foreground) / 0.52);
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-
-  transition:
-    background 160ms ease,
-    color 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
-}
-
-.theme-segment-button:hover {
-  color: hsl(var(--foreground) / 0.78);
-  background: var(--gd-control-bg);
-}
-
-.theme-segment-button:active {
-  transform: translateY(1px);
-}
-
-.theme-segment-button.is-active {
-  color: hsl(var(--foreground) / 0.9);
-  background: var(--gd-control-active-bg);
 }
 
 /* Keyboard Focus
@@ -172,60 +66,13 @@ textarea {
 
 /* Widget header의 icon action은 glyph가 작더라도 안정적인 touch target을 가진다.
    Pixel/Retro 테마의 사각형 표현은 각 theme override가 그대로 결정한다. */
-.widget-frame__actions > :where(button, .glass-button, .icon-button) {
+.widget-frame__actions > :where(button, .glass-button) {
   min-width: 34px;
   min-height: 34px;
 }
 
 /* =========================================================
-   4. Mobile theme select
-   Hidden on desktop and revealed by responsive rules
-========================================================= */
-
-.theme-select-mobile,
-.theme-mobile-select,
-.theme-select {
-  height: 36px;
-  min-width: 118px;
-  max-width: 150px;
-  padding: 0 34px 0 12px;
-  border-radius: 999px;
-
-  display: none;
-  align-items: center;
-
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: -0.015em;
-
-  color: hsl(var(--foreground) / 0.78);
-  background: var(--gd-control-bg);
-  border: 1px solid var(--gd-control-border);
-
-  outline: none;
-  appearance: none;
-  -webkit-appearance: none;
-
-  background-image:
-    linear-gradient(45deg, transparent 50%, currentColor 50%),
-    linear-gradient(135deg, currentColor 50%, transparent 50%);
-  background-position:
-    calc(100% - 18px) 50%,
-    calc(100% - 13px) 50%;
-  background-size:
-    5px 5px,
-    5px 5px;
-  background-repeat: no-repeat;
-}
-
-.theme-select-mobile:focus,
-.theme-mobile-select:focus,
-.theme-select:focus {
-  border-color: var(--gd-control-border);
-}
-
-/* =========================================================
-   5. Topbar action button sizing
+   3. Topbar action button sizing
    Layout position is handled in layout.css / overrides.css
 ========================================================= */
 
@@ -252,50 +99,7 @@ textarea {
 }
 
 /* =========================================================
-   6. Small icon buttons
-========================================================= */
-
-.career-icon-button,
-.memo-mini-button,
-.calendar-nav-button,
-.widget-icon-button {
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  padding: 0;
-  border-radius: 999px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  color: hsl(var(--foreground) / 0.72);
-  background: var(--gd-control-bg);
-  border: 1px solid var(--gd-control-border);
-
-  transition:
-    background 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
-}
-
-.career-icon-button:hover,
-.memo-mini-button:hover,
-.calendar-nav-button:hover,
-.widget-icon-button:hover {
-  color: hsl(var(--foreground) / 0.9);
-  background: var(--gd-control-active-bg);
-}
-
-.career-icon-button:active,
-.memo-mini-button:active,
-.calendar-nav-button:active,
-.widget-icon-button:active {
-  transform: translateY(1px);
-}
-
-/* =========================================================
-   7. Inputs / selects base
+   4. Inputs / selects base
    Shared text color and placeholder treatment
 ========================================================= */
 
@@ -315,77 +119,6 @@ select option {
   background: hsl(var(--background));
 }
 
-/* =========================================================
-   8. Calendar view toggle
-   Shared pill control for day / week / month mode
-========================================================= */
-
-.calendar-view-toggle {
-  height: 36px;
-  padding: 4px;
-  border-radius: 999px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-
-  flex: 0 0 auto;
-  white-space: nowrap;
-
-  background: var(--gd-widget-panel-bg);
-  border: 1px solid var(--gd-widget-panel-border);
-  box-shadow: var(--gd-widget-panel-shadow);
-  backdrop-filter: var(--gd-widget-inner-filter);
-  -webkit-backdrop-filter: var(--gd-widget-inner-filter);
-}
-
-.calendar-view-button {
-  height: 28px;
-  min-width: 58px;
-  padding: 0 13px;
-  border-radius: 999px;
-
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-
-  color: hsl(var(--foreground) / 0.55);
-  font-size: 11px;
-  font-weight: 850;
-  letter-spacing: -0.02em;
-
-  transition:
-    background 160ms ease,
-    color 160ms ease,
-    box-shadow 160ms ease;
-}
-
-.calendar-view-button:hover {
-  color: hsl(var(--foreground) / 0.82);
-  background: var(--gd-control-bg);
-}
-
-.calendar-view-button.is-active {
-  color: hsl(var(--foreground) / 0.92);
-  background: var(--gd-control-active-bg);
-}
-
-/* =========================================================
-   9. Responsive controls
-========================================================= */
-
-@media (max-width: 980px) {
-  .theme-segmented-control,
-  .theme-button-group {
-    display: none;
-  }
-
-  .theme-select-mobile {
-    display: inline-flex;
-  }
-}
-
 @media (max-width: 640px) {
   .topbar-action-button span {
     display: none;
@@ -395,11 +128,5 @@ select option {
     width: 38px;
     min-width: 38px;
     padding: 0;
-  }
-
-  .theme-select-mobile {
-    min-width: 112px;
-    max-width: 132px;
-    height: 36px;
   }
 }
