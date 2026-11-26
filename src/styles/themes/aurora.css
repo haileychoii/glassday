@@ -62,16 +62,9 @@
   --gd-surface-filter: blur(22px) saturate(152%);
   --gd-inner-bg: var(--aurora-panel-bg);
   --gd-inner-border: var(--aurora-panel-border);
-  --gd-widget-inner-filter: blur(24px) saturate(150%);
-  --gd-widget-panel-bg: var(--aurora-panel-bg);
-  --gd-widget-panel-border: var(--aurora-panel-border);
-  --gd-widget-panel-shadow: var(--aurora-panel-shadow);
   --gd-control-bg: var(--aurora-control-bg);
   --gd-control-border: var(--aurora-control-border);
   --gd-control-active-bg: var(--aurora-active-bg);
-  --gd-widget-control-bg: var(--aurora-control-bg);
-  --gd-widget-control-border: var(--aurora-control-border);
-  --gd-widget-control-active-bg: var(--aurora-active-bg);
   /* Aurora wallpaper hook:
      Replace this custom property when the user picks a personal photo.
      Korean: 직접 넣을 사진은 여기 변수만 바꾸면 배경 레이어 전체에 반영된다. */
@@ -87,12 +80,12 @@ body:is([data-theme="aurora"], .theme-aurora) {
     radial-gradient(circle at 14% 16%, rgba(64, 154, 255, 0.22), transparent 28%),
     radial-gradient(circle at 82% 18%, rgba(175, 92, 255, 0.16), transparent 24%),
     radial-gradient(circle at 70% 84%, rgba(68, 236, 214, 0.12), transparent 28%),
-    linear-gradient(135deg, #090d1a, #11162a 46%, #0d1220) !important;
+    linear-gradient(135deg, #090d1a, #11162a 46%, #0d1220);
 }
 :is(html, body):is([data-theme="aurora"], .theme-aurora) .bg-glass-gradient{
   background:
     var(--aurora-wallpaper-overlay),
-    var(--aurora-wallpaper-image) center / cover no-repeat !important;
+    var(--aurora-wallpaper-image) center / cover no-repeat;
 }
 :is(html, body):is([data-theme="aurora"], .theme-aurora) .bg-glass-gradient::after{
   content: "";
@@ -107,27 +100,27 @@ body:is([data-theme="aurora"], .theme-aurora) {
 
 /* Generic floating dialogs use their own shared role, separate from widgets. */
 :is(html, body):is([data-theme="aurora"], .theme-aurora) .floating-window {
-  color: hsl(var(--foreground) / 0.94) !important;
+  color: hsl(var(--foreground) / 0.94);
   background:
-    linear-gradient(145deg, rgba(18, 20, 34, 0.44), rgba(255, 255, 255, 0.04)) !important;
-  border: 1px solid rgba(186, 205, 248, 0.16) !important;
+    linear-gradient(145deg, rgba(18, 20, 34, 0.44), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(186, 205, 248, 0.16);
   box-shadow:
     0 36px 110px -48px rgba(0, 0, 0, 0.58),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 :is(html, body):is([data-theme="aurora"], .theme-aurora) .floating-window-titlebar {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)) !important;
-  border-bottom: 1px solid rgba(191, 206, 244, 0.08) !important;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border-bottom: 1px solid rgba(191, 206, 244, 0.08);
 }
 
 :is(html, body):is([data-theme="aurora"], .theme-aurora) {
   scrollbar-color: rgba(132, 153, 206, 0.56) rgba(8, 12, 24, 0.16);
 }
 :is(html, body):is([data-theme="aurora"], .theme-aurora) ::-webkit-scrollbar{
-  width: 10px;
-  height: 10px;
+  width: var(--gd-scrollbar-size);
+  height: var(--gd-scrollbar-size);
 }
 :is(html, body):is([data-theme="aurora"], .theme-aurora) ::-webkit-scrollbar-track{
   background: rgba(7, 11, 22, 0.18);
