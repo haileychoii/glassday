@@ -85,6 +85,8 @@ const pinkStickerAdditions = namedIcons("pink-iphone", [
   { number: 610, label: "화난 표정 구름" },
   { number: 611, label: "왕관 쓴 악마 표정" },
   { number: 612, label: "피아노 건반" },
+  // 최근 Drive 추가분 중 핑크 일러스트 분류와 어울리는 단독 하트 아이콘.
+  { number: 613, label: "사탕 핑크 하트" },
 ]);
 
 const pixelArtAdditions = namedIcons("retro-pixel", [
@@ -139,10 +141,14 @@ const emojiSheet = (
       label: extraLabels[number] ?? `${label} ${number}`,
     }));
 
-const expressionEmojis = emojiSheet("emoji-expressions", "표정·손", 143, {
+const expressionEmojis = emojiSheet("emoji-expressions", "표정·손", 146, {
   141: "점선 얼굴",
   142: "싸움 구름",
   143: "하트 장식 열나는 얼굴",
+  // 144–146은 새 Drive 이미지에서 배경을 정리해 추가한 개별 표정입니다.
+  144: "혀 내민 장난 표정",
+  145: "어지러운 표정",
+  146: "깜짝 놀란 표정",
 });
 const natureEmojis = emojiSheet("emoji-nature", "자연·음식", 141, {
   141: "해파리",
