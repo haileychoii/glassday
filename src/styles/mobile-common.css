@@ -212,8 +212,20 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="cale
   min-width: 0 !important;
   margin: 0 !important;
   box-sizing: border-box !important;
-  /* One outer stroke for every mobile widget; each theme owns its color. */
+}
+
+/* Only the visible card draws the window frame. The portal host is a layout
+ * wrapper, so a stroke there creates a second outline around scroll widgets. */
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card,
+.mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card,
+  .mobile-calendar-card
+) {
   border: 1px solid var(--gd-surface-border);
+  border-radius: var(--gd-radius-widget);
+  background: var(--gd-surface-bg);
+  box-shadow: var(--gd-surface-shadow);
+  overflow: hidden;
 }
 
 /* WidgetSlot reparents the same DOM node used by the desktop grid. That node
@@ -258,7 +270,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
   height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 /* Memo and Journal use a 100%-height GlassCard with an internal scroll region.
@@ -284,7 +296,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
   min-height: var(--mobile-widget-min-body-height) !important;
   max-height: none !important;
   padding: 0 !important;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 .mobile-layout .mobile-widget-slot[data-widget-id]:not([data-widget-id="memo"]):not([data-widget-id="timer"]):not([data-widget-id="journal"])
@@ -334,7 +346,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
   height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot:is(

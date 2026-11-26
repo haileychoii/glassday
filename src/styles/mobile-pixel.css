@@ -293,27 +293,18 @@
     .mobile-career-metrics > div,
     .mobile-career-next
   ) {
-    border: 1px solid var(--w95-shadow) !important;
-    border-radius: 0 !important;
-
     background: var(--w95-panel) !important;
     background-image: none !important;
-
-    box-shadow: none !important;
   }
 
-  /* Career rows sit inside the widget frame, so keep them as flat content rows. */
+  /* Career rows retain their content color; the shared inner-panel rule below
+     owns their border and corners. */
   & .mobile-career-row {
-    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
-    border-radius: 0 !important;
     background: var(--w95-panel) !important;
     color: var(--w95-text) !important;
-    box-shadow: none !important;
   }
 
   & .mobile-career-status {
-    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
-    border-radius: 0 !important;
     background: var(--w95-panel) !important;
     color: var(--w95-text) !important;
   }
