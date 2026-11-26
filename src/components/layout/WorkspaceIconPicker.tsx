@@ -182,14 +182,27 @@ export const WorkspaceIconPicker = ({
       </div>
 
       {showThemeScope && (
-        <label className="workspace-icon-scope-control">
-          <input
-            type="checkbox"
-            checked={applyToAllThemes}
-            onChange={(event) => setApplyToAllThemes(event.target.checked)}
-          />
-          <span>{applyToAllThemes ? "모든 테마에 적용" : `${themeLabel(theme)} 테마에만 적용`}</span>
-        </label>
+        <div
+          className="workspace-icon-scope-control"
+          role="group"
+          aria-label="아이콘 적용 범위"
+        >
+          <span className="workspace-icon-scope-heading">적용 범위</span>
+          <button
+            type="button"
+            aria-pressed={!applyToAllThemes}
+            onClick={() => setApplyToAllThemes(false)}
+          >
+            현재 테마만 · {themeLabel(theme)}
+          </button>
+          <button
+            type="button"
+            aria-pressed={applyToAllThemes}
+            onClick={() => setApplyToAllThemes(true)}
+          >
+            모든 테마
+          </button>
+        </div>
       )}
       <div className="workspace-icon-picker-actions">
         <button
