@@ -1,36 +1,85 @@
-# Glassday
+# Glassday · Laptop UI
 
-Glassday는 대시보드 위젯으로 일정, 학습, 메모, 습관, 소비, 기분 기록을 관리하는 React + TypeScript 앱입니다. 같은 위젯 인스턴스를 큰 화면과 모바일 웹에서 재사용하며, 화면 스타일은 `src/styles/index.css` 한곳에서 연결합니다.
+**`laptop-ui`** is Glassday's desktop dashboard for laptop, Tauri, and the Windows WebView2 shell. It
+keeps the same personal widgets and saved data as the mobile experience, with a resizable desktop
+canvas, shared widget frames, and theme-specific surfaces.
 
-## 처음 코드를 보는 경우
+> On GitHub, switch the branch selector to **`laptop-ui`** to view this branch's overview and visual
+> handoff. The root `README.md` is intentionally written for this branch.
 
-화면에서 파일을 찾거나 Figma 시안을 구현하려면 이 순서로 읽어보세요.
+## Laptop dashboard wireframe
 
-1. [모바일 화면과 코드 지도](docs/mobile-ui-map.md): 화면 구조 그림, 각 TSX/CSS 파일의 역할, 위젯 추가 절차
-2. [UI Architecture and Figma Guide](docs/UI_ARCHITECTURE_AND_FIGMA_GUIDE.md): 앱/위젯/데이터 구조와 Figma Component·Variant 연결
-3. [TSX와 CSS 연결 지도](docs/CSS_STRUCTURE.md): CSS 적용 순서와 무엇을 바꿀 때 어느 파일을 열지 정리
+The frame below shows the intended hierarchy: app shell, workspace navigation, top bar, and a grid of
+widgets. Each widget shares one header and body frame; only the content inside the body varies.
 
-코드 검색 시 화면 이름이나 버튼에 표시되는 문구를 먼저 `src/components`에서 찾고, 해당 요소의 `className`을 `src/styles`에서 찾으면 됩니다. 공통 제목/아이콘/간격은 개별 위젯 스타일보다 `GlassCard.tsx`와 `mobile-common.css`를 먼저 확인합니다.
+![Glassday laptop dashboard wireframe](docs/assets/laptop-ui-wireframe.svg)
 
-## 로컬에서 실행
+## Figma design system
+
+The Figma handoff keeps common spacing, typography, and widget structure together. Theme modes change
+surface color/material, border, shadow, and the intentional square corners in Pixel/Retro themes.
+
+- **Figma design system, token mapping, and component specification:** [Figma Widget Handoff](docs/FIGMA_WIDGET_HANDOFF.md)
+- **UI, TSX and CSS map:** [UI Architecture and Figma Guide](docs/UI_ARCHITECTURE_AND_FIGMA_GUIDE.md)
+
+### Shared widget tokens
+
+| Token group | Laptop baseline | Responsibility |
+|---|---:|---|
+| Card-to-card gap | 12px | Space outside each grid widget |
+| Frame inset | 12–16px responsive | Shared header/body padding |
+| Title / subtitle | 12–14px / 10–12px responsive | Same frame typography for every widget |
+| Widget / inner card / control radius | 20px / 12px / 8px | Shared shape ladder; Pixel Desk and Retro use square corners |
+| Theme surface | Per theme | Color, translucency/blur, border, and shadow |
+
+Figma token names map to CSS variables in `src/styles/spacing-tokens.css`, `src/styles/base.css`,
+and `src/styles/theme-surfaces.css`. The handoff guide includes the full variable table, frame
+construction, component variants, and review checklist.
+
+![Glassday widget design system map](docs/assets/laptop-ui-system-map.svg)
+
+## Theme preview board
+
+The same widget frame is reused in each theme. Glass themes use a visible backdrop and translucent,
+blurred widget surfaces. Pixel Desk keeps Windows 95 square corners; Retro keeps its pink palette and
+square frame. Theme styling does not change the shared widget spacing or type scale.
+
+![Glassday laptop theme preview board](docs/assets/laptop-ui-theme-board.svg)
+
+## What is in this branch
+
+- React + TypeScript desktop dashboard, shared by the Tauri shell and WinUI WebView2 shell.
+- Draggable and resizable workspace grid with separate saved layouts for Wide and Laptop modes.
+- Shared widget frame and typography tokens, with theme-controlled visual surfaces.
+- Widgets for today focus, alerts, calendar, career, study, timer, memo, journal, habit tracking,
+  money, and mood.
+- Mobile-facing improvements that also apply to shared widgets, including the Habit Tracker editing
+  flow and shared widget title surfaces.
+
+## Run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-프로덕션 번들을 만들려면 `npm run build`, 코드 스타일 검사를 실행하려면 `npm run lint`를 사용합니다.
+Useful project checks:
 
-## 주요 폴더
+```bash
+npm run lint
+npm run build
+```
 
-| 폴더 | 역할 |
+## Where to make changes
+
+| Change | Start here |
 |---|---|
-| `src/components/layout` | 앱 화면 껍데기, 사이드바, 모바일 헤더/하단 탭 |
-| `src/components/mobile` | 모바일 대시보드 슬롯과 Calendar/Career 요약 카드 |
-| `src/components/widgets` | 실제 위젯 화면과 각 기능별 하위 컴포넌트 |
-| `src/components/glass` | 위젯들이 공유하는 카드 프레임 |
-| `src/components/grid` | 큰 화면의 드래그/크기 변경 그리드 |
-| `src/constants` | 위젯 이름, 테마, 기본 배치 등 앱 공통 목록 |
-| `src/context`, `src/hooks` | 화면 사이에 공유하는 데이터와 저장/반응형 동작 |
-| `src/styles` | 공통, 위젯별, 테마별, 모바일 전용 스타일 |
-| `docs` | 화면 구조, 파일 연결, Figma 구현 안내 |
+| Common widget spacing and typography | `src/styles/spacing-tokens.css` → `src/styles/base.css` → `src/styles/widget-system.css` |
+| Desktop grid and the gap between widgets | `src/components/grid/DashboardGrid.tsx` (`--gd-widget-outer-gap`) |
+| Shared widget frame markup | `src/components/glass/GlassCard.tsx` |
+| One widget's inner content | `src/components/widgets/` and `src/styles/widgets/` |
+| Theme colors, surfaces, borders, shadows | `src/styles/theme-surfaces.css`, `src/styles/themes/` |
+| Mobile frame and responsive behavior | `src/styles/mobile-common.css`, `src/styles/mobile-*.css` |
+| CSS import order | `src/styles/index.css` |
+
+See [docs](docs/) for component maps, token mappings, and design handoff notes.

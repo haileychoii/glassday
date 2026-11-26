@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="910" viewBox="0 0 1440 910" role="img" aria-labelledby="title desc">
+  <title id="title">Glassday Laptop UI wireframe</title>
+  <desc id="desc">Laptop dashboard with a sidebar, toolbar, and six widgets using one shared header and content frame.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4f4fb"/><stop offset="1" stop-color="#e9edf7"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8377ee"/><stop offset="1" stop-color="#63a9e8"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#333b63" flood-opacity=".10"/></filter>
+    <style>
+      .label{font-family:Inter,Arial,sans-serif;fill:#22233a}.muted{font-family:Inter,Arial,sans-serif;fill:#74758d}.tiny{font-family:Inter,Arial,sans-serif;fill:#8c8da3;font-size:13px;letter-spacing:.08em}.widget{fill:#fff;stroke:#dfe1ee;stroke-width:1.5}.header{fill:#f7f7fc;stroke:#e5e6f0;stroke-width:1}.placeholder{fill:#eff0f8}.line{stroke:#d7d9e7;stroke-width:2;stroke-linecap:round}
+    </style>
+  </defs>
+  <rect width="1440" height="910" rx="28" fill="url(#bg)"/>
+  <text x="58" y="58" class="tiny">GLASSDAY  /  LAPTOP DASHBOARD</text>
+  <text x="58" y="96" class="label" font-size="28" font-weight="700">Shared frame. Flexible content.</text>
+  <text x="58" y="122" class="muted" font-size="16">One spacing and type scale across every widget and theme.</text>
+
+  <!-- App canvas -->
+  <rect x="48" y="154" width="1344" height="700" rx="24" fill="#fff" stroke="#d8dbea" stroke-width="2" filter="url(#shadow)"/>
+  <!-- Sidebar -->
+  <rect x="48" y="154" width="224" height="700" rx="24" fill="#f7f7fc"/>
+  <path d="M272 154v700" stroke="#e6e7f0" stroke-width="2"/>
+  <circle cx="82" cy="194" r="17" fill="url(#accent)"/>
+  <text x="110" y="201" class="label" font-size="18" font-weight="700">Glassday</text>
+  <text x="77" y="253" class="tiny">WORKSPACES</text>
+  <rect x="66" y="270" width="188" height="44" rx="12" fill="#eceaff"/>
+  <circle cx="88" cy="292" r="6" fill="#7c70e9"/><text x="106" y="298" class="label" font-size="15" font-weight="600">Daily</text>
+  <circle cx="88" cy="341" r="6" fill="#c4c5d3"/><text x="106" y="347" class="muted" font-size="15">Planning</text>
+  <circle cx="88" cy="390" r="6" fill="#c4c5d3"/><text x="106" y="396" class="muted" font-size="15">Personal</text>
+  <rect x="66" y="784" width="188" height="42" rx="12" fill="#fff" stroke="#e4e5ef"/>
+  <circle cx="89" cy="805" r="10" fill="#eeeff6"/><text x="109" y="811" class="muted" font-size="14">Settings</text>
+
+  <!-- Top bar -->
+  <text x="306" y="197" class="label" font-size="20" font-weight="700">Daily</text>
+  <text x="306" y="222" class="muted" font-size="14">Your day, in one calm view</text>
+  <rect x="1126" y="177" width="112" height="38" rx="11" fill="#f7f7fc" stroke="#e3e4ef"/>
+  <text x="1151" y="201" class="muted" font-size="13">Theme</text>
+  <rect x="1248" y="177" width="112" height="38" rx="11" fill="url(#accent)"/>
+  <text x="1271" y="201" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="600">Edit layout</text>
+
+  <!-- Widget cards -->
+  <g transform="translate(304 250)">
+    <rect class="widget" width="328" height="260" rx="18"/>
+    <path class="header" d="M18 0h292a18 18 0 0 1 18 18v48H0V18A18 18 0 0 1 18 0Z"/>
+    <circle cx="30" cy="33" r="13" fill="#eeecff"/><text x="53" y="38" class="label" font-size="15" font-weight="650">Today Focus</text><circle cx="300" cy="33" r="3" fill="#9c9db0"/><circle cx="311" cy="33" r="3" fill="#9c9db0"/>
+    <rect class="placeholder" x="20" y="88" width="288" height="66" rx="12"/><rect x="36" y="105" width="126" height="10" rx="5" fill="#d4d5e5"/><rect x="36" y="126" width="215" height="8" rx="4" fill="#e0e1ec"/>
+    <rect class="placeholder" x="20" y="172" width="288" height="16" rx="8"/><rect class="placeholder" x="20" y="199" width="248" height="16" rx="8"/><rect class="placeholder" x="20" y="226" width="270" height="16" rx="8"/>
+  </g>
+  <g transform="translate(656 250)">
+    <rect class="widget" width="328" height="260" rx="18"/>
+    <path class="header" d="M18 0h292a18 18 0 0 1 18 18v48H0V18A18 18 0 0 1 18 0Z"/>
+    <circle cx="30" cy="33" r="13" fill="#e8f6f2"/><text x="53" y="38" class="label" font-size="15" font-weight="650">Calendar</text><circle cx="300" cy="33" r="3" fill="#9c9db0"/><circle cx="311" cy="33" r="3" fill="#9c9db0"/>
+    <text x="21" y="96" class="muted" font-size="13">MON</text><text x="83" y="96" class="muted" font-size="13">TUE</text><text x="145" y="96" class="muted" font-size="13">WED</text><text x="207" y="96" class="muted" font-size="13">THU</text><text x="269" y="96" class="muted" font-size="13">FRI</text>
+    <g fill="#eff0f8"><rect x="18" y="108" width="45" height="42" rx="9"/><rect x="76" y="108" width="45" height="42" rx="9"/><rect x="134" y="108" width="45" height="42" rx="9"/><rect x="192" y="108" width="45" height="42" rx="9"/><rect x="250" y="108" width="45" height="42" rx="9"/></g>
+    <g fill="#c9cad8"><circle cx="40" cy="128" r="4"/><circle cx="98" cy="128" r="4"/><circle cx="156" cy="128" r="4"/><circle cx="214" cy="128" r="4"/><circle cx="272" cy="128" r="4"/></g>
+    <rect x="18" y="169" width="292" height="64" rx="12" fill="#f5f4ff"/><rect x="31" y="183" width="5" height="36" rx="2" fill="#8175ed"/><text x="48" y="192" class="label" font-size="13" font-weight="600">Design review</text><text x="48" y="212" class="muted" font-size="12">14:00 · Project Glassday</text>
+  </g>
+  <g transform="translate(1008 250)">
+    <rect class="widget" width="328" height="260" rx="18"/>
+    <path class="header" d="M18 0h292a18 18 0 0 1 18 18v48H0V18A18 18 0 0 1 18 0Z"/>
+    <circle cx="30" cy="33" r="13" fill="#fff2e9"/><text x="53" y="38" class="label" font-size="15" font-weight="650">Habit Tracker</text><circle cx="300" cy="33" r="3" fill="#9c9db0"/><circle cx="311" cy="33" r="3" fill="#9c9db0"/>
+    <text x="21" y="97" class="muted" font-size="13">TODAY</text><text x="277" y="98" class="label" font-size="16" font-weight="700">2 / 4</text>
+    <rect x="20" y="110" width="288" height="7" rx="4" fill="#eeeef6"/><rect x="20" y="110" width="144" height="7" rx="4" fill="url(#accent)"/>
+    <g font-family="Inter,Arial,sans-serif" font-size="14" fill="#55566f"><circle cx="34" cy="151" r="10" fill="#e9e6ff"/><path d="m30 151 3 3 6-7" fill="none" stroke="#766ae6" stroke-width="2"/><text x="56" y="156">Morning walk</text><circle cx="34" cy="188" r="10" fill="#e9e6ff"/><path d="m30 188 3 3 6-7" fill="none" stroke="#766ae6" stroke-width="2"/><text x="56" y="193">Read 10 pages</text><circle cx="34" cy="225" r="10" fill="#fff" stroke="#d8d9e6"/><text x="56" y="230">Stretch</text></g>
+  </g>
+  <g transform="translate(304 534)">
+    <rect class="widget" width="328" height="260" rx="18"/>
+    <path class="header" d="M18 0h292a18 18 0 0 1 18 18v48H0V18A18 18 0 0 1 18 0Z"/>
+    <circle cx="30" cy="33" r="13" fill="#fff0f4"/><text x="53" y="38" class="label" font-size="15" font-weight="650">Career</text><circle cx="300" cy="33" r="3" fill="#9c9db0"/><circle cx="311" cy="33" r="3" fill="#9c9db0"/>
+    <rect class="placeholder" x="20" y="87" width="288" height="56" rx="12"/><rect x="36" y="101" width="130" height="9" rx="4" fill="#d4d5e5"/><rect x="36" y="119" width="98" height="7" rx="4" fill="#e0e1ec"/><rect x="222" y="103" width="68" height="25" rx="12" fill="#eceaff"/>
+    <rect class="placeholder" x="20" y="158" width="288" height="56" rx="12"/><rect x="36" y="172" width="108" height="9" rx="4" fill="#d4d5e5"/><rect x="36" y="190" width="126" height="7" rx="4" fill="#e0e1ec"/><rect x="222" y="174" width="68" height="25" rx="12" fill="#e9f6f2"/>
+    <text x="22" y="239" class="muted" font-size="12">Application rows stay inside the shared body.</text>
+  </g>
+  <g transform="translate(656 534)">
+    <rect class="widget" width="328" height="260" rx="18"/>
+    <path class="header" d="M18 0h292a18 18 0 0 1 18 18v48H0V18A18 18 0 0 1 18 0Z"/>
+    <circle cx="30" cy="33" r="13" fill="#e9f4ff"/><text x="53" y="38" class="label" font-size="15" font-weight="650">Daily Journal</text><circle cx="300" cy="33" r="3" fill="#9c9db0"/><circle cx="311" cy="33" r="3" fill="#9c9db0"/>
+    <rect class="placeholder" x="20" y="88" width="288" height="58" rx="12"/><text x="35" y="111" class="muted" font-size="12">TODAY'S NOTE</text><rect x="35" y="122" width="226" height="8" rx="4" fill="#d8d9e7"/>
+    <rect class="placeholder" x="20" y="162" width="288" height="15" rx="7"/><rect class="placeholder" x="20" y="190" width="264" height="15" rx="7"/><rect class="placeholder" x="20" y="218" width="276" height="15" rx="7"/>
+  </g>
+  <g transform="translate(1008 534)">
+    <rect class="widget" width="328" height="260" rx="18"/>
+    <path class="header" d="M18 0h292a18 18 0 0 1 18 18v48H0V18A18 18 0 0 1 18 0Z"/>
+    <circle cx="30" cy="33" r="13" fill="#eff8f5"/><text x="53" y="38" class="label" font-size="15" font-weight="650">Money</text><circle cx="300" cy="33" r="3" fill="#9c9db0"/><circle cx="311" cy="33" r="3" fill="#9c9db0"/>
+    <text x="22" y="99" class="muted" font-size="13">THIS MONTH</text><text x="22" y="132" class="label" font-size="25" font-weight="700">₩ 1,240,000</text>
+    <rect x="20" y="152" width="288" height="1" fill="#e8e9f1"/>
+    <circle cx="42" cy="190" r="13" fill="#f0eeff"/><rect x="67" y="182" width="140" height="8" rx="4" fill="#d4d5e5"/><rect x="67" y="198" width="92" height="7" rx="4" fill="#e6e7ef"/><text x="247" y="194" class="muted" font-size="12">− 8,500</text>
+    <circle cx="42" cy="229" r="13" fill="#eaf6f1"/><rect x="67" y="221" width="122" height="8" rx="4" fill="#d4d5e5"/><rect x="67" y="237" width="81" height="7" rx="4" fill="#e6e7ef"/>
+  </g>
+  <text x="304" y="830" class="tiny">12 PX OUTER GAP  ·  ONE SHARED FRAME  ·  CONTENT VARIES BY WIDGET</text>
+</svg>

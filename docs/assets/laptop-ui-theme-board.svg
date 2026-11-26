@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="590" viewBox="0 0 1440 590" role="img" aria-labelledby="title desc">
+  <title id="title">Glassday theme surface previews</title>
+  <desc id="desc">Seven theme samples share one widget frame geometry while changing background material, palette, border and shadow.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f6f5ff"/><stop offset="1" stop-color="#edf2fa"/></linearGradient>
+    <linearGradient id="aurora" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7c6ce3"/><stop offset=".5" stop-color="#76b7db"/><stop offset="1" stop-color="#efb0d2"/></linearGradient>
+    <linearGradient id="darkGlass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#293449"/><stop offset="1" stop-color="#101522"/></linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="18"/></filter>
+    <style>.title{font-family:Inter,Arial,sans-serif;fill:#22233a;font-size:27px;font-weight:700}.label{font-family:Inter,Arial,sans-serif;fill:#303149;font-size:15px;font-weight:650}.note{font-family:Inter,Arial,sans-serif;fill:#777890;font-size:13px}.mini{font-family:Inter,Arial,sans-serif;font-size:11px;letter-spacing:.08em}</style>
+  </defs>
+  <rect width="1440" height="590" rx="26" fill="#f6f6fb"/>
+  <text x="54" y="62" class="mini" fill="#898aa0">GLASSDAY  /  THEME SURFACES</text>
+  <text x="54" y="104" class="title">One geometry. Seven visual materials.</text>
+  <text x="54" y="132" class="note">The title row and body inset stay aligned when the theme changes.</text>
+  <g transform="translate(54 178)">
+    <rect width="182" height="300" rx="22" fill="#ece8fa" stroke="#ddd8ef"/>
+    <rect x="15" y="21" width="152" height="245" rx="17" fill="#fff9" stroke="#fff"/>
+    <rect x="15" y="21" width="152" height="49" rx="17" fill="#f4efff" stroke="#e7e0f8"/>
+    <circle cx="37" cy="45" r="8" fill="#cdbdf5"/><rect x="52" y="40" width="76" height="9" rx="4" fill="#c2bfd2"/>
+    <rect x="29" y="91" width="123" height="10" rx="5" fill="#e6e3ee"/><rect x="29" y="114" width="104" height="10" rx="5" fill="#eceaf2"/><rect x="29" y="149" width="123" height="60" rx="11" fill="#f5f2fb"/>
+    <text x="0" y="291" class="label">Pastel</text><text x="0" y="319" class="note">soft tinted glass</text>
+  </g>
+  <g transform="translate(250 178)">
+    <rect width="182" height="300" rx="22" fill="url(#paper)" stroke="#e1e4ee"/>
+    <circle cx="129" cy="54" r="48" fill="#bfe4ee" opacity=".65" filter="url(#blur)"/>
+    <rect x="15" y="21" width="152" height="245" rx="17" fill="#ffffffa6" stroke="#ffffff"/>
+    <rect x="15" y="21" width="152" height="49" rx="17" fill="#ffffff67" stroke="#ffffff"/>
+    <circle cx="37" cy="45" r="8" fill="#b6daeb"/><rect x="52" y="40" width="76" height="9" rx="4" fill="#9eabb8"/>
+    <rect x="29" y="91" width="123" height="10" rx="5" fill="#c9d4df"/><rect x="29" y="114" width="104" height="10" rx="5" fill="#dbe2e9"/><rect x="29" y="149" width="123" height="60" rx="11" fill="#ffffff77"/>
+    <text x="0" y="291" class="label">Glass Light</text><text x="0" y="319" class="note">bright frosted glass</text>
+  </g>
+  <g transform="translate(446 178)">
+    <rect width="182" height="300" rx="22" fill="url(#darkGlass)" stroke="#30394e"/>
+    <circle cx="48" cy="70" r="50" fill="#567cbd" opacity=".55" filter="url(#blur)"/>
+    <rect x="15" y="21" width="152" height="245" rx="17" fill="#ffffff18" stroke="#ffffff32"/>
+    <rect x="15" y="21" width="152" height="49" rx="17" fill="#ffffff13" stroke="#ffffff26"/>
+    <circle cx="37" cy="45" r="8" fill="#809ec8"/><rect x="52" y="40" width="76" height="9" rx="4" fill="#d9e1ed"/>
+    <rect x="29" y="91" width="123" height="10" rx="5" fill="#8090a8"/><rect x="29" y="114" width="104" height="10" rx="5" fill="#59677c"/><rect x="29" y="149" width="123" height="60" rx="11" fill="#ffffff12"/>
+    <text x="0" y="291" fill="#fff" class="label">Glass Dark</text><text x="0" y="319" fill="#b2bdcf" class="note">dark frosted glass</text>
+  </g>
+  <g transform="translate(642 178)">
+    <rect width="182" height="300" rx="22" fill="url(#aurora)"/>
+    <circle cx="45" cy="86" r="56" fill="#c99ce9" opacity=".75" filter="url(#blur)"/>
+    <rect x="15" y="21" width="152" height="245" rx="17" fill="#ffffffa1" stroke="#ffffffc9"/>
+    <rect x="15" y="21" width="152" height="49" rx="17" fill="#ffffff56" stroke="#ffffffa9"/>
+    <circle cx="37" cy="45" r="8" fill="#b99fe8"/><rect x="52" y="40" width="76" height="9" rx="4" fill="#746b91"/>
+    <rect x="29" y="91" width="123" height="10" rx="5" fill="#d1ccdf"/><rect x="29" y="114" width="104" height="10" rx="5" fill="#e3deeb"/><rect x="29" y="149" width="123" height="60" rx="11" fill="#ffffff79"/>
+    <text x="0" y="291" class="label">Aurora</text><text x="0" y="319" class="note">color-washed glass</text>
+  </g>
+  <g transform="translate(838 178)">
+    <rect width="182" height="300" rx="22" fill="#efeee9" stroke="#dddcd5"/>
+    <rect x="15" y="21" width="152" height="245" rx="17" fill="#ffffff" stroke="#e3e2dd"/>
+    <rect x="15" y="21" width="152" height="49" rx="17" fill="#f6f5f1" stroke="#e4e2dc"/>
+    <circle cx="37" cy="45" r="8" fill="#c7d2c5"/><rect x="52" y="40" width="76" height="9" rx="4" fill="#74796c"/>
+    <rect x="29" y="91" width="123" height="10" rx="5" fill="#dcded8"/><rect x="29" y="114" width="104" height="10" rx="5" fill="#e9eae5"/><rect x="29" y="149" width="123" height="60" rx="11" fill="#f5f5f1"/>
+    <text x="0" y="291" class="label">Mac Core</text><text x="0" y="319" class="note">quiet native surfaces</text>
+  </g>
+  <g transform="translate(1034 178)">
+    <rect width="182" height="300" rx="0" fill="#c6c6b9" stroke="#77776c" stroke-width="3"/>
+    <rect x="8" y="10" width="166" height="34" fill="#000080"/>
+    <text x="18" y="32" fill="#fff" font-family="Arial,sans-serif" font-size="13" font-weight="700">Widget title</text>
+    <rect x="8" y="44" width="166" height="246" fill="#d8d8cc" stroke="#fff" stroke-width="2"/>
+    <rect x="19" y="62" width="144" height="48" fill="#e9e9df" stroke="#8c8c80"/>
+    <rect x="19" y="124" width="144" height="12" fill="#c5c5b7"/><rect x="19" y="150" width="129" height="12" fill="#c5c5b7"/>
+    <text x="0" y="319" class="label">Pixel Desk</text><text x="0" y="347" class="note">square 95CSS bevel</text>
+  </g>
+  <g transform="translate(1230 178)">
+    <rect width="182" height="300" rx="0" fill="#f5e3eb" stroke="#d7b8c5" stroke-width="2"/>
+    <rect x="0" y="0" width="182" height="39" fill="#e59fc0"/>
+    <text x="15" y="25" fill="#593b4a" font-family="Arial,sans-serif" font-size="13" font-weight="700">Widget title</text>
+    <rect x="12" y="53" width="158" height="234" fill="#fff9fb" stroke="#e5cbd6" stroke-width="2"/>
+    <rect x="24" y="72" width="134" height="12" fill="#f0d8e2"/><rect x="24" y="98" width="115" height="12" fill="#f4e4ea"/>
+    <rect x="24" y="132" width="134" height="66" fill="#f8eaf0" stroke="#e5cbd6"/>
+    <text x="0" y="319" class="label">Retro Pink</text><text x="0" y="347" class="note">pink square window</text>
+  </g>
+  <text x="55" y="558" class="mini" fill="#87889c">SHARED: FRAME DIMENSIONS · SPACING · TYPE SCALE     /     THEME: SURFACE · COLOR · BORDER · SHADOW · CORNER SHAPE</text>
+</svg>
