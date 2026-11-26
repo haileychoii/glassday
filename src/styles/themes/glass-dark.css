@@ -17,7 +17,7 @@
   --gd-scrollbar-thumb: rgb(190 200 216 / 0.38);
   --gd-scrollbar-thumb-hover: rgb(221 229 241 / 0.56);
   --gd-scrollbar-border: rgb(12 14 18 / 0.32);
-  scrollbar-color: rgb(190 200 216 / 0.42) rgb(15 17 22 / 0.18);
+  scrollbar-color: var(--gd-scrollbar-thumb) var(--gd-scrollbar-track);
 }
 
 /* Use the same semantic tokens in desktop transparency mode. The selector is
@@ -66,8 +66,8 @@ html[data-theme="glass-dark"] ::-webkit-scrollbar,
 body[data-theme="glass-dark"] ::-webkit-scrollbar,
 html.theme-glass-dark ::-webkit-scrollbar,
 body.theme-glass-dark ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: var(--gd-scrollbar-size);
+  height: var(--gd-scrollbar-size);
 }
 
 html[data-theme="glass-dark"] ::-webkit-scrollbar-track,
