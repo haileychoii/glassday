@@ -22,8 +22,8 @@ const collections: Array<{
   id: WorkspaceIconCollectionId;
   label: string;
 }> = [
-  { id: "pink-iphone", label: "일러스트 아이콘" },
-  { id: "retro-pixel", label: "픽셀 아이콘" },
+  { id: "pink-iphone", label: "일러스트" },
+  { id: "retro-pixel", label: "픽셀" },
   { id: "folder-art", label: "폴더·패턴" },
   { id: "emoji-expressions", label: "표정·손" },
   { id: "emoji-people", label: "사람·동물" },
