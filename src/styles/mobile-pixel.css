@@ -532,13 +532,32 @@
 
   /* Pixel PNGs have transparent margins. Render them larger than the 22px
    * desktop tab slot so the glyph reads clearly in the phone taskbar. */
-  & .mobile-navigation-item > :is(svg, img, .workspace-theme-icon) {
+  & .mobile-navigation-item > :is(svg:not(.mobile-navigation-edit-mark), img, .workspace-theme-icon) {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     width: 36px !important;
     height: 36px !important;
     flex: 0 0 36px !important;
+  }
+
+  /* The pencil is a small edit badge, never a second full-size tab icon. */
+  & .mobile-navigation-item > .mobile-navigation-edit-mark {
+    display: block !important;
+    position: absolute !important;
+    inset-block-start: 1px !important;
+    inset-inline-end: 1px !important;
+    z-index: 2 !important;
+    width: 10px !important;
+    height: 10px !important;
+    flex: 0 0 10px !important;
+    padding: 1px !important;
+    color: #ffffff !important;
+    background: var(--w95-title) !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    box-shadow: none !important;
+    pointer-events: none !important;
   }
 
   & .mobile-navigation-item > .pixel-tab-icon {

@@ -785,7 +785,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
 
 /* Align the glyph itself, without adding a decorative box around the icon. */
 body:has(.mobile-layout) .mobile-layout .mobile-navigation
-  .mobile-navigation-item > :is(svg, img, .workspace-theme-icon) {
+  .mobile-navigation-item > :is(svg:not(.mobile-navigation-edit-mark), img, .workspace-theme-icon) {
   display: block !important;
   flex: 0 0 28px !important;
   width: 28px !important;
