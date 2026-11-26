@@ -591,7 +591,7 @@ body:has(.mobile-layout)
 @media (max-width: 767px) {
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus {
     display: grid;
-    gap: var(--gd-widget-stack-gap);
+    gap: var(--gd-mobile-widget-gap);
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-hero {
@@ -618,8 +618,8 @@ body:has(.mobile-layout)
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-section {
-    padding: var(--gd-widget-panel-pad) !important;
-    gap: var(--gd-widget-section-gap-tight) !important;
+    padding: var(--gd-mobile-widget-inset) !important;
+    gap: var(--gd-mobile-tight-gap) !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-section-title {
@@ -629,7 +629,7 @@ body:has(.mobile-layout)
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-task-list,
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-mini-list,
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-memo-list {
-    gap: var(--gd-widget-section-gap-tight) !important;
+    gap: var(--gd-mobile-tight-gap) !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-task {
@@ -652,7 +652,7 @@ body:has(.mobile-layout)
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-grid {
-    gap: var(--gd-widget-section-gap) !important;
+    gap: var(--gd-mobile-section-gap) !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-grid > .today-focus-section {
@@ -661,8 +661,8 @@ body:has(.mobile-layout)
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] :is(.today-focus-mini-item, .today-focus-career-item, .today-focus-memo) {
     min-height: 34px !important;
-    padding: var(--gd-space-xs) var(--gd-space-sm) !important;
-    gap: var(--gd-widget-inline-gap) !important;
+    padding: var(--gd-mobile-row-pad-y) var(--gd-mobile-row-pad-x) !important;
+    gap: var(--gd-mobile-control-gap) !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] :is(.today-focus-mini-item strong, .today-focus-career-item strong, .today-focus-memo strong) {

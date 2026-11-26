@@ -36,8 +36,8 @@
  * Keep the semantic theme surfaces: native iOS/Pixel colors come from later CSS. */
 .mobile-career-card,
 .mobile-career-detail {
-  --mc-row-pad: 8px;
-  --mc-screen-pad: 8px;
+  /* Career shares the same mobile row rhythm and page gutter as other widgets.
+     Career도 다른 위젯과 공통 행 간격·화면 여백을 공유합니다. */
   --mc-surface: var(--gd-widget-panel-bg, hsl(var(--card) / 0.87));
   --mc-border: var(--gd-widget-panel-border, hsl(var(--border) / 0.4));
   --mc-control: var(--gd-widget-control-bg, hsl(var(--card) / 0.74));
@@ -232,7 +232,7 @@
   width: 100%;
   min-width: 0;
   min-height: 55px;
-  padding: 7px var(--mc-row-pad);
+  padding: var(--gd-mobile-row-pad-y) var(--gd-mobile-row-pad-x);
   gap: 2px 7px;
   border: 1px solid var(--mc-border);
   border-radius: 10px;
@@ -384,7 +384,7 @@
   justify-content: space-between;
   min-width: 0;
   min-height: 62px;
-  padding: 9px var(--mc-screen-pad);
+  padding: var(--gd-mobile-row-pad-y) var(--gd-mobile-page-gutter);
   gap: 8px;
   border-bottom: 1px solid var(--mc-border);
 }
@@ -431,7 +431,8 @@
   display: grid;
   align-content: start;
   min-height: 0;
-  padding: 10px var(--mc-screen-pad) calc(16px + env(safe-area-inset-bottom));
+  padding: var(--gd-mobile-row-pad-y) var(--gd-mobile-page-gutter)
+    calc(var(--gd-mobile-page-gutter) + env(safe-area-inset-bottom));
   gap: 10px;
   overflow: hidden auto;
   overscroll-behavior-y: contain;

@@ -6,8 +6,10 @@
    2) Widget Frame header/body/icon/title spacing
    3) Shared control size
 
-   여러 Widget의 여백을 통일할 때 개별 margin을 늘리기보다 이 token과
-   base.css의 Widget Frame 연결을 먼저 확인한다. theme 색상/반응형 breakpoint와는 분리한다.
+   여러 Widget의 여백과 크기를 통일할 때 개별 margin/padding/height를 새로 만들기보다
+   이 token을 먼저 사용한다. widget/theme CSS에는 색·재질과 내용에 꼭 필요한 예외만 둔다.
+   New shared spacing or mobile geometry belongs here; widget styles should consume
+   these tokens rather than invent another spacing scale.
    ============================================================ */
 
 :root {
@@ -88,10 +90,28 @@
   --gd-mobile-space-2: 8px;
   --gd-mobile-space-3: 12px;
   --gd-mobile-space-4: 16px;
+  /* Mobile spacing hierarchy / 모바일 여백 단계: page > widget > panel > content. */
+  --gd-mobile-page-gutter: var(--gd-mobile-space-4);
   --gd-mobile-widget-gap: var(--gd-mobile-space-4);
   --gd-mobile-widget-inset: var(--gd-mobile-space-3);
+  --gd-mobile-section-gap: var(--gd-mobile-space-2);
+  --gd-mobile-content-gap: var(--gd-space-xs);
+  --gd-mobile-tight-gap: var(--gd-mobile-space-1);
+  --gd-mobile-control-gap: var(--gd-space-xs);
+  --gd-mobile-row-pad-y: var(--gd-mobile-space-2);
+  --gd-mobile-row-pad-x: var(--gd-mobile-space-2);
+
+  /* Shared mobile frame and typography sizes / 모바일 공통 프레임·글자 크기. */
   --gd-mobile-widget-header-height: 48px;
   --gd-mobile-widget-header-pad-y: var(--gd-mobile-space-1);
+  --gd-mobile-widget-title-size: 14px;
+  --gd-mobile-widget-subtitle-size: 11px;
+  --gd-mobile-widget-min-body-height: 120px;
+  --gd-mobile-widget-icon-size: 26px;
+  --gd-mobile-widget-icon-glyph-size: 15px;
+  --gd-mobile-action-size: 40px;
+
+  /* These are content-specific height constraints, not shared spacing. */
   --gd-mobile-widget-long-height: clamp(320px, 52svh, 460px);
   --gd-mobile-widget-timer-height: clamp(260px, 38svh, 336px);
 

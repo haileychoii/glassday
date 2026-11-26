@@ -15,22 +15,19 @@
   --mobile-space-4: var(--gd-mobile-space-4);
   --mobile-widget-gap: var(--gd-mobile-widget-gap);
   --mobile-widget-inset: var(--gd-mobile-widget-inset);
-  --mobile-content-gap: var(--mobile-space-2);
-  --mobile-tight-gap: var(--mobile-space-1);
-  --mobile-control-gap: 6px;
-  --mobile-page-gutter: var(--mobile-space-4);
+  --mobile-content-gap: var(--gd-mobile-content-gap);
+  --mobile-tight-gap: var(--gd-mobile-tight-gap);
+  --mobile-control-gap: var(--gd-mobile-control-gap);
+  --mobile-page-gutter: var(--gd-mobile-page-gutter);
   --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
   --mobile-widget-header-pad-inline: var(--gd-mobile-widget-inset);
   --mobile-widget-header-pad-block: var(--gd-mobile-widget-header-pad-y);
-  --mobile-widget-title-size: 14px;
-  --mobile-widget-subtitle-size: 11px;
-  --mobile-widget-min-body-height: 120px;
-  /* Match base.css desktop widget icon slot and glyph dimensions. */
-  --mobile-widget-icon-size: var(--gd-widget-desktop-icon-size, 26px);
-  --mobile-widget-icon-glyph-size: 15px;
-  /* A 40px control stays compact in dense widget headers but is easier to tap.
-   * 좁은 헤더를 과하게 키우지 않으면서 손가락으로 누르기 쉽게 맞춥니다. */
-  --mobile-widget-action-size: 40px;
+  --mobile-widget-title-size: var(--gd-mobile-widget-title-size);
+  --mobile-widget-subtitle-size: var(--gd-mobile-widget-subtitle-size);
+  --mobile-widget-min-body-height: var(--gd-mobile-widget-min-body-height);
+  --mobile-widget-icon-size: var(--gd-mobile-widget-icon-size);
+  --mobile-widget-icon-glyph-size: var(--gd-mobile-widget-icon-glyph-size);
+  --mobile-widget-action-size: var(--gd-mobile-action-size);
 }
 
 /* One radius hierarchy for nested mobile surfaces across rounded themes.
