@@ -214,17 +214,14 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="cale
   box-sizing: border-box !important;
 }
 
-/* Only the visible card draws the window frame. The portal host is a layout
- * wrapper, so a stroke there creates a second outline around scroll widgets. */
+/* Only define shared card geometry here. Themes own whether a stroke is
+ * visible and which material is used. */
 .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card,
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
   .mobile-calendar-card
 ) {
-  border: 1px solid var(--gd-surface-border);
   border-radius: var(--gd-radius-widget);
-  background: var(--gd-surface-bg);
-  box-shadow: var(--gd-surface-shadow);
   overflow: hidden;
 }
 

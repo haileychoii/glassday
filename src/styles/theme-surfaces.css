@@ -77,8 +77,7 @@ body.theme-pastel {
     radial-gradient(circle at 10% 0%, hsl(324 88% 88% / 0.3), transparent 44%),
     radial-gradient(circle at 96% 4%, hsl(190 86% 82% / 0.26), transparent 48%),
     linear-gradient(145deg, hsl(0 0% 100% / 0.5), hsl(282 72% 94% / 0.26));
-  /* A low-contrast lavender stroke stays visible over light wallpaper. */
-  --gd-surface-border: hsl(265 35% 44% / 0.28);
+  --gd-surface-border: rgb(255 255 255 / 0.34);
   --gd-surface-shadow:
     0 28px 72px -52px hsl(278 38% 36% / 0.3),
     0 12px 30px -26px hsl(188 46% 38% / 0.22),
@@ -124,7 +123,7 @@ body.theme-glass-light {
     inset 0 1px 0 rgb(255 255 255 / 0.46);
 
   --gd-surface-bg: linear-gradient(145deg, rgb(255 255 255 / 0.24), rgb(255 255 255 / 0.09));
-  --gd-surface-border: rgb(64 56 100 / 0.32);
+  --gd-surface-border: rgb(255 255 255 / 0.34);
   --gd-surface-shadow:
     0 18px 48px rgb(20 24 40 / 0.14),
     inset 0 1px 0 rgb(255 255 255 / 0.48);
@@ -152,7 +151,7 @@ body.theme-glass-dark {
     inset 0 1px 0 rgb(255 255 255 / 0.18);
 
   --gd-surface-bg: linear-gradient(145deg, rgb(255 255 255 / 0.13), rgb(8 12 20 / 0.18));
-  --gd-surface-border: rgb(255 255 255 / 0.32);
+  --gd-surface-border: rgb(255 255 255 / 0.18);
   --gd-surface-shadow:
     0 24px 68px rgb(0 0 0 / 0.36),
     inset 0 1px 0 rgb(255 255 255 / 0.18);
