@@ -326,3 +326,16 @@
   :is(strong, span, .calendar-event-title, .calendar-event-time, .calendar-event-location) {
   color: #111111 !important;
 }
+
+/* Pixel Desk keeps the cover-letter question field tall enough for editing. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk
+) .career-cover-question-input {
+  height: 128px !important;
+  min-height: 128px !important;
+  max-height: 128px !important;
+  overflow-y: auto !important;
+}
