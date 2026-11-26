@@ -35,11 +35,11 @@
   --gd-widget-desktop-header-top: 10px;
   --gd-widget-desktop-header-bottom: 5px;
   --gd-widget-desktop-content-top: 4px;
-  --gd-widget-desktop-header-height: 34px;
+  --gd-widget-header-row-min-height: 34px;
   --gd-widget-desktop-title-size: 12px;
   --gd-widget-desktop-subtitle-size: 10px;
   --gd-widget-desktop-icon-size: 26px;
-  --gd-widget-desktop-panel-pad: 10px;
+  /* Frame aliases are the responsive override points in responsive.css. */
   --gd-widget-frame-pad-x: var(--gd-space-lg);
   --gd-widget-frame-pad-bottom: var(--gd-space-lg);
   --gd-widget-frame-header-y: var(--gd-widget-desktop-header-top);
@@ -48,7 +48,6 @@
   --gd-widget-shell-pad-bottom: var(--gd-widget-frame-pad-bottom);
   --gd-widget-header-anchor-y: var(--gd-widget-frame-header-y);
   --gd-widget-content-gap-top: var(--gd-widget-frame-content-gap-top);
-  --gd-widget-header-row-min-height: var(--gd-widget-desktop-header-height);
   --gd-widget-pad-x: var(--gd-widget-shell-pad-x);
   --gd-widget-pad-y: var(--gd-widget-shell-pad-bottom);
   --gd-widget-header-pad-top: var(--gd-widget-header-anchor-y);
@@ -57,7 +56,7 @@
   --gd-widget-title-gap: var(--gd-space-xs);
   --gd-widget-copy-gap: 3px;
   --gd-widget-stack-gap: var(--gd-space-md);
-  --gd-widget-panel-pad: var(--gd-widget-desktop-panel-pad);
+  --gd-widget-panel-pad: 10px;
   --gd-widget-inline-gap: var(--gd-space-xs);
   --gd-widget-section-gap-tight: var(--gd-space-xs);
   --gd-widget-section-gap: var(--gd-space-sm);
