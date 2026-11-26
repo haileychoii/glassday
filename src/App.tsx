@@ -261,7 +261,13 @@ function App() {
               onOpenSearch={() => setCommandPaletteOpen(true)}
               onOpenQuickCapture={() => setQuickCaptureOpen(true)}
               onOpenSettings={() => setSettingsOpen(true)}
-              onAddTab={addTab}
+              onAddTab={(icon) => {
+                addTab(icon);
+                // New tabs open in edit mode so they remain blank until the
+                // user names the workspace and chooses its first widget.
+                setEditMode(true);
+              }}
+              onRenameTab={renameTab}
               editMode={editMode}
               onToggleEditMode={() => setEditMode((prev) => !prev)}
             >
@@ -269,6 +275,7 @@ function App() {
                 activeTab={activeTab}
                 editMode={editMode}
                 onSetWidgetHeight={setActiveTabMobileWidgetHeight}
+                onAddWidget={addWidgetToActiveTab}
               />
             </MobileLayout>
           ) : (
