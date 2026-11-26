@@ -19,10 +19,13 @@ export type WorkspaceIconChoice = {
 };
 
 /* Keep the original numeric paths stable for tabs that already saved an icon.
-   These are repaired full illustrations whose matching complete version also
-   appears elsewhere, so only the duplicate picker slots stay hidden. */
+   Repaired paths stay available to existing saved tabs; when a clean duplicate
+   exists, hide only that duplicate slot from new selections.
+   Asset audit 2026-11 removed detached crop fragments from 108, 140, 165, 281,
+   282, 289, 408, 515, 517, 519, 520, and 578. Slot 168 keeps its old URL but
+   now contains the clean target from 211, so hide that duplicate from the list. */
 const repairedDuplicateSlots: Partial<Record<WorkspaceIconCollectionId, ReadonlySet<number>>> = {
-  "pink-iphone": new Set([92, 99, 102, 177, 179, 355, 357, 398]),
+  "pink-iphone": new Set([92, 99, 102, 168, 177, 179, 355, 357, 398]),
   "retro-pixel": new Set([61, 62, 63, 69, 71, 109, 137, 139]),
 };
 
