@@ -1,16 +1,17 @@
 /* ============================================================
-   [Figma Mapping] Settings Window Layout
+   [Figma Mapping] Settings Window and Application Layout
 
-   연결 컴포넌트: src/components/settings/SettingsModal.tsx
+   연결 컴포넌트: SettingsModal, AppSidebar, Topbar, AppShell
    Figma 구조:
    - Window Root / Vertical layout
    - Fixed Draggable Title Bar
    - Scroll Body / Settings Card sections
    - Theme Card Grid, Font Form, Sync/Backup/Reset rows
 
-   이 파일은 Settings의 size/spacing/layout만 담당한다.
-   themes/*.css는 surface 외형만 조정한다. 크기와 배치는 이 공통 규칙을 따른다.
-   z-index/portal 기본 구조는 overlays.css와 함께 확인한다.
+   이 파일에는 설정창 배치와 앱 사이드바/창 드래그 영역의 구조가 함께 있다.
+   설정창 일부 규칙은 widgets/settings.css 및 모바일 레이어와 중복되어 있어
+   후속 정리 대상이다. 이 파일에서는 색·표면 재질을 지정하지 않는다.
+   Tauri 투명 호스트와 테마별 표면은 desktop-window.css 및 themes/*.css가 맡는다.
    ============================================================ */
 
 .settings-modal-window,
@@ -910,118 +911,11 @@ aside .sidebar-workspace-list {
 
   align-self: stretch;
 
-  min-width: 20px;
+  min-width: 32px;
 
   user-select: none;
 
   app-region: drag;
-}
-
-
-/* ============================================================
-   WINDOW CONTROL GROUP
-   ============================================================ */
-
-.tauri-window-controls {
-  display: flex;
-  align-items: center;
-
-  flex: 0 0 auto;
-
-  height: 32px;
-
-  margin-left: 2px;
-
-  overflow: hidden;
-
-  border-radius: 12px;
-
-  background:
-    rgba(255, 255, 255, 0.12);
-
-  border:
-    1px solid rgba(255, 255, 255, 0.18);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
-
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-
-/* ============================================================
-   INDIVIDUAL WINDOW BUTTON
-   ============================================================ */
-
-.tauri-window-control {
-  width: 34px;
-  height: 30px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  flex: 0 0 34px;
-
-  margin: 0;
-  padding: 0;
-
-  border: 0;
-  border-radius: 0;
-
-  outline: none;
-
-  background: transparent;
-
-  color:
-    var(
-      --gd-text-secondary,
-      rgba(42, 40, 62, 0.68)
-    );
-
-  cursor: default;
-
-  transition:
-    background-color 120ms ease,
-    color 120ms ease;
-}
-
-
-/*
- * Minimize / maximize hover
- */
-.tauri-window-control:hover {
-  background:
-    rgba(255, 255, 255, 0.24);
-
-  color:
-    var(
-      --gd-text-primary,
-      rgba(30, 28, 45, 0.94)
-    );
-}
-
-
-/*
- * Close는 Windows UX처럼
- * hover에서만 danger state.
- */
-.tauri-window-control-close:hover {
-  background: #c42b1c;
-
-  color: #ffffff;
-}
-
-
-/*
- * keyboard focus
- */
-.tauri-window-control:focus-visible {
-  outline:
-    2px solid rgba(130, 110, 255, 0.4);
-
-  outline-offset: -2px;
 }
 
 
@@ -1108,11 +1002,6 @@ body {
 
   margin: 0;
 
-  /*
-   * 기존 Glassday shape 그대로 유지.
-   */
-  border-radius: 2.2rem;
-
   overflow: hidden;
 }
 
@@ -1132,32 +1021,10 @@ body {
    ============================================================ */
 
 /*
- * Tauri owns the native transparent window, while this layer owns the visible
- * widget shell. / Tauri 네이티브 창은 투명 호스트이고, 실제 위젯 패널은
- * AppShell surface 하나만 담당한다.
- */
-.tauri-app-window > .app-shell-surface {
-  border-radius: 22px;
-  border: 1px solid hsl(0 0% 100% / 0.34);
-
-  background:
-    linear-gradient(
-      135deg,
-      hsl(0 0% 100% / 0.32),
-      hsl(225 42% 92% / 0.16)
-    );
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.52),
-    0 10px 34px -28px hsl(240 30% 18% / 0.32);
-}
-
-/*
  * Invisible drag rail between the greeting and action buttons.
  * 제목과 Settings/Edit 사이의 빈 공간만 창 이동 영역으로 사용한다.
  */
 .tauri-topbar-drag-region {
-  min-width: 32px;
   cursor: grab;
 }
 
@@ -1169,12 +1036,6 @@ body {
  * Tauri has no visible minimize/maximize/close buttons now.
  * Tauri 위젯 모드에서는 앱 기능 버튼만 남기고 창 제어 UI는 만들지 않는다.
  */
-.tauri-app-window .tauri-window-controls,
-.tauri-app-window .tauri-window-control,
-.tauri-app-window .tauri-drag-region {
-  display: none !important;
-}
-
 /*
  * Compact widget chrome.
  * 위젯으로 오래 띄워두기 좋게 Tauri 상단 영역을 낮고 조용하게 만든다.
