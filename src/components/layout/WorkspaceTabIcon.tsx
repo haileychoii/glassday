@@ -108,9 +108,14 @@ export const WorkspaceTabIcon = ({
   // A selected sticker is stored as its stable public asset path. Keep that
   // exact artwork on every theme instead of converting it back to a glyph.
   if (icon?.startsWith("/workspace-icons/")) {
+    // Rewrite icons saved before the optical-size correction so existing tabs
+    // also receive the new image URL and bypass stale browser/CDN cache.
+    const artwork = icon.endsWith("/emoji-expressions/146.webp")
+      ? "/workspace-icons/emoji-expressions/146-balanced.webp"
+      : icon;
     return (
       <img
-        src={icon}
+        src={artwork}
         className="workspace-theme-icon workspace-custom-icon"
         alt=""
         aria-hidden="true"

@@ -137,7 +137,12 @@ const emojiSheet = (
     .filter((number) => !(collection === "emoji-objects" && number === 140))
     .map((number) => ({
       id: `${collection}-${String(number).padStart(3, "0")}`,
-      src: `/workspace-icons/${collection}/${String(number).padStart(3, "0")}.webp`,
+      // The source distorted face has oversized eyes that make its round head
+      // look larger than neighboring faces. Use its optically scaled artwork.
+      src:
+        collection === "emoji-expressions" && number === 146
+          ? "/workspace-icons/emoji-expressions/146-balanced.webp"
+          : `/workspace-icons/${collection}/${String(number).padStart(3, "0")}.webp`,
       label: extraLabels[number] ?? `${label} ${number}`,
     }));
 
