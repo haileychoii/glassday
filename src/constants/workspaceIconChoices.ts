@@ -154,6 +154,45 @@ const expressionEmojis = emojiSheet("emoji-expressions", "표정·손", 150, {
   149: "추워서 떠는 얼굴",
   150: "하트와 함께 웃는 얼굴",
 });
+
+/**
+ * Keep each stored icon URL stable while showing newer faces beside similar
+ * expressions. This makes the picker browse by facial expression rather than
+ * hiding every recent face at the end of the numbered source sheet.
+ */
+const expressionFaceInsertions: Readonly<Record<number, readonly number[]>> = {
+  17: [150], // Put the smiling face surrounded by hearts beside other affectionate faces.
+  26: [144], // Put the tongue-out, zany face beside its playful lookalikes.
+  32: [147], // Keep the party face with celebratory expressions.
+  45: [148], // Keep the pleading face with the sad, teary expressions.
+  48: [142], // The comic fight cloud belongs beside the angry face.
+  53: [146], // Put the wide-eyed distorted face beside surprised faces.
+  55: [149], // Keep the chattering cold face with other cold expressions.
+  63: [141], // Put the dotted outline face beside thinking and quiet faces.
+  84: [145], // Keep the dizzy face near the unwell expressions.
+  87: [143], // Put the feverish, heart-decorated face with the sick faces.
+};
+
+const orderedExpressionEmojis: WorkspaceIconChoice[] = (() => {
+  const emojiByNumber = new Map(
+    expressionEmojis.map((choice) => [Number(choice.id.slice(-3)), choice] as const)
+  );
+  const insertedNumbers = new Set(Object.values(expressionFaceInsertions).flat());
+  const ordered: WorkspaceIconChoice[] = [];
+
+  for (const choice of expressionEmojis) {
+    const number = Number(choice.id.slice(-3));
+    if (insertedNumbers.has(number)) continue;
+
+    ordered.push(choice);
+    for (const nearbyNumber of expressionFaceInsertions[number] ?? []) {
+      const nearbyChoice = emojiByNumber.get(nearbyNumber);
+      if (nearbyChoice) ordered.push(nearbyChoice);
+    }
+  }
+
+  return ordered;
+})();
 const natureEmojis = emojiSheet("emoji-nature", "자연·음식", 141, {
   141: "해파리",
 });
@@ -168,7 +207,7 @@ export const workspaceIconCollections: Record<WorkspaceIconCollectionId, Workspa
     ...pixelArtAdditions,
   ],
   "folder-art": folderDesignAdditions,
-  "emoji-expressions": expressionEmojis,
+  "emoji-expressions": orderedExpressionEmojis,
   "emoji-people": emojiSheet("emoji-people", "사람·동물", 140),
   "emoji-nature": natureEmojis,
   "emoji-food-travel": emojiSheet("emoji-food-travel", "음식·이동", 140),
