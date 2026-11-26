@@ -168,5 +168,9 @@ export const workspaceIconCollections: Record<WorkspaceIconCollectionId, Workspa
   "emoji-people": emojiSheet("emoji-people", "사람·동물", 140),
   "emoji-nature": natureEmojis,
   "emoji-food-travel": emojiSheet("emoji-food-travel", "음식·이동", 140),
+  // Basic Emoticon 05 uses two centered rows of nine icons after item 90.
+  // The old uniform ten-column crops split the hearts and red symbols across
+  // neighboring cells. Slots 091–108 keep their saved URLs, with each image
+  // recropped around the complete original artwork.
   "emoji-objects": emojiSheet("emoji-objects", "생활·기호", 140),
 };
