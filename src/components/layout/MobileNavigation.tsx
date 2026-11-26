@@ -4,7 +4,7 @@
  * In edit mode, stage icon changes across tabs and persist them together with Apply.
  */
 import { useEffect, useRef, useState } from "react";
-import { Pencil, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import { cn } from "../../lib/utils";
@@ -156,9 +156,7 @@ export const MobileNavigation = ({
               type="button"
               className={cn(
                 "mobile-navigation-item",
-                activeTabId === tab.id && "is-active",
-                pendingIcon && "has-icon-draft",
-                isEditingIcon && "is-editing-icon"
+                activeTabId === tab.id && "is-active"
               )}
               aria-label={editMode ? `${tab.label}${isEditingIcon ? ", 아이콘 선택 중" : " 아이콘 편집"}` : tab.label}
               aria-current={activeTabId === tab.id ? "page" : undefined}
@@ -181,14 +179,6 @@ export const MobileNavigation = ({
                 mobile
               />
               <span className="mobile-navigation-label">{tab.label}</span>
-              {editMode && (
-                <Pencil
-                  className="mobile-navigation-edit-mark"
-                  size={11}
-                  strokeWidth={2.4}
-                  aria-hidden="true"
-                />
-              )}
             </button>
           );
         })}
