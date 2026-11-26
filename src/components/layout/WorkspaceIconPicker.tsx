@@ -65,6 +65,8 @@ type WorkspaceIconPickerProps = {
   onCancel: () => void;
   className?: string;
   saveLabel?: string;
+  /** Names the tab that will receive the icon, especially on the mobile picker. */
+  contextLabel?: string;
 };
 
 export const WorkspaceIconPicker = ({
@@ -75,6 +77,7 @@ export const WorkspaceIconPicker = ({
   onCancel,
   className,
   saveLabel = "저장",
+  contextLabel,
 }: WorkspaceIconPickerProps) => {
   const [draftIcon, setDraftIcon] = useState(value);
   const [collection, setCollection] = useState<WorkspaceIconCollectionId>(
@@ -104,8 +107,14 @@ export const WorkspaceIconPicker = ({
     <section
       className={cn("mobile-tab-icon-picker workspace-icon-picker", className)}
       role="dialog"
-      aria-label="워크스페이스 아이콘 선택"
+      aria-label={contextLabel ?? "워크스페이스 아이콘 선택"}
     >
+      {contextLabel && (
+        <div className="workspace-icon-picker-context" aria-live="polite">
+          <strong>{contextLabel}</strong>
+          <span>아이콘을 누르면 탭에서 미리 볼 수 있어요.</span>
+        </div>
+      )}
       <div className="mobile-tab-icon-collections" role="group" aria-label="아이콘 분류">
         {collections.map((option) => (
           <button

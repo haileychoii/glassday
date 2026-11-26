@@ -188,6 +188,7 @@ export const WorkspaceTabsNav = ({
                   <WorkspaceIconPicker
                     value={tab.icon}
                     theme={theme}
+                    contextLabel={`${tab.label} 탭 아이콘 변경`}
                     className="workspace-icon-picker-desktop"
                     onPreview={(icon) =>
                       setIconPreviewByTabId((current) => ({ ...current, [tab.id]: icon }))

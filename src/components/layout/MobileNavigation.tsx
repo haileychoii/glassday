@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { Pencil, Plus } from "lucide-react";
 
 import { getCurrentTheme, type ThemeId } from "../../constants/themes";
+import { cn } from "../../lib/utils";
 import type { DashboardTab } from "../../types/workspace";
 import { WorkspaceTabIcon } from "./WorkspaceTabIcon";
 import { WorkspaceIconPicker } from "./WorkspaceIconPicker";
@@ -114,9 +115,13 @@ export const MobileNavigation = ({
             <button
               key={tab.id}
               type="button"
-              className="mobile-navigation-item"
-              aria-label={editMode ? `${tab.label} 아이콘 편집` : tab.label}
-              aria-current={!editMode && activeTabId === tab.id ? "page" : undefined}
+              className={cn(
+                "mobile-navigation-item",
+                activeTabId === tab.id && "is-active",
+                isEditingIcon && "is-editing-icon"
+              )}
+              aria-label={editMode ? `${tab.label}${isEditingIcon ? ", 아이콘 선택 중" : " 아이콘 편집"}` : tab.label}
+              aria-current={activeTabId === tab.id ? "page" : undefined}
               aria-pressed={isEditingIcon}
               onClick={() => {
                 if (editMode) {
@@ -152,7 +157,9 @@ export const MobileNavigation = ({
         <button
           type="button"
           className="mobile-navigation-add-tab"
-          aria-label={pickerTarget?.type === "new" ? "아이콘 선택 닫기" : "새 탭 추가"}
+          aria-label={pickerTarget?.type === "new"
+            ? previewIcon?.tabId === null ? "새 탭 아이콘 미리보기, 선택창 닫기" : "아이콘 선택 닫기"
+            : "새 탭 추가"}
           title="새 탭 추가"
           aria-expanded={pickerTarget?.type === "new"}
           onClick={() => {
@@ -184,6 +191,7 @@ export const MobileNavigation = ({
         <WorkspaceIconPicker
           value={targetTab?.icon ?? "✨"}
           theme={theme}
+          contextLabel={pickerTarget.type === "new" ? "새 탭 아이콘 선택" : `${targetTab?.label ?? "탭"} 아이콘 변경`}
           saveLabel={pickerTarget.type === "new" ? "새 탭 만들기" : "저장"}
           onSave={saveIcon}
           onPreview={(icon) =>
