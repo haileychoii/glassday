@@ -339,3 +339,15 @@
   max-height: 128px !important;
   overflow-y: auto !important;
 }
+
+/* Compact Pixel Desk metric rows to fit the raised panel frame. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .mood-row {
+  padding: 5px 7px;
+}

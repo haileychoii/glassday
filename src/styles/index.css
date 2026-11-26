@@ -56,6 +56,8 @@
 @import "./themes/memo-surfaces.css";
 /* Money surfaces use shared theme tokens; the widget stylesheet keeps layout. */
 @import "./themes/money-surfaces.css";
+/* Mood metric materials and theme variants belong to the theme layer. */
+@import "./themes/mood-surfaces.css";
 
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";
