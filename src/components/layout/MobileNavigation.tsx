@@ -20,9 +20,9 @@ const iconCollectionOptions: Array<{
   id: WorkspaceIconCollectionId;
   label: string;
 }> = [
-  { id: "pink-iphone", label: "핑크 스티커" },
-  { id: "retro-pixel", label: "픽셀 아트" },
-  { id: "folder-art", label: "폴더 디자인" },
+  { id: "pink-iphone", label: "핑크 아이콘" },
+  { id: "retro-pixel", label: "픽셀 아이콘" },
+  { id: "folder-art", label: "폴더 아이콘" },
 ];
 
 export const MobileNavigation = ({
