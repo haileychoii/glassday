@@ -1,14 +1,16 @@
 /* ============================================================
    [Theme Tokens] Cross-theme Semantic Surface Map
 
-   연결: GlassPanel, GlassCard, Widget inner card, shared control, Floating Window.
-   Figma Variables:
-   - App Surface, Widget Surface, Inner Surface, Control Surface
-   - Border, Shadow, Backdrop Filter
+   적용 범위: 앱 창(.glass-panel/.liquid-shell), 기본 위젯 카드(.glass-card),
+   공통 입력 컨트롤, Today Focus와 Alert Center의 공용 내부 행.
+   이 파일은 테마별 재질 토큰을 정의하고 위 공통 프레임에 연결한다.
+   각 토큰의 실제 사용처는 모바일/위젯 CSS의 var(--gd-...) 참조를 검색하면 된다.
 
-   layout/Grid/Widget 구조는 다른 CSS에 두고 이 파일은 semantic surface token만 제공한다.
-   Study와 Daily Journal 같은 여러 Widget이 같은 inner token을 사용해 theme 내 명암을 맞춘다.
-   개별 Theme selector의 원색/texture는 src/styles/themes/*.css와 함께 확인한다.
+   주의: 파일 전체를 제거하면 공통 프레임이 참조하는 토큰이 사라진다.
+   위젯별 예외 표면은 themes/*-surfaces.css가 소유한다.
+   따라서 공통 토큰과 개별 위젯 표면 규칙을 함께 확인한 뒤 중복만 제거한다.
+
+   Figma variables: App, Widget, Inner, Control Surface + Border, Shadow, Blur.
    ============================================================ */
 
 :root {
@@ -390,19 +392,6 @@ body[data-theme="aurora"] :is(.today-focus-hero, .today-focus-section, .today-fo
   -webkit-backdrop-filter: var(--gd-widget-inner-filter) !important;
 }
 
-/*
- * Study Planner has its own compact panel classes rather than the shared
- * `.study-card` name. Connect them to the same glass token so its nested
- * surfaces blur consistently with the rest of the dashboard.
- * Study Planner 내부 패널도 다른 위젯과 동일한 공통 blur 값을 사용합니다.
- */
-:is(html[data-theme="pastel"], html[data-theme="glass-light"], html[data-theme="glass-dark"], html[data-theme="aurora"],
-    body[data-theme="pastel"], body[data-theme="glass-light"], body[data-theme="glass-dark"], body[data-theme="aurora"])
-  :is(.study10-summary-card, .study10-timer, .study10-panel, .study10-minute-head) {
-  backdrop-filter: var(--gd-widget-inner-filter) !important;
-  -webkit-backdrop-filter: var(--gd-widget-inner-filter) !important;
-}
-
 /* Clip the goal card's blurred backdrop to its rounded frame, not a square box.
    목표 카드 안쪽 blur를 카드의 둥근 테두리 안에서 잘라 사각 면처럼 보이지 않게 합니다. */
 :is(html[data-theme="pastel"], html[data-theme="glass-light"], html[data-theme="glass-dark"], html[data-theme="aurora"],
@@ -411,13 +400,6 @@ body[data-theme="aurora"] :is(.today-focus-hero, .today-focus-section, .today-fo
   overflow: hidden;
   border-radius: var(--study10-radius, var(--gd-radius-card, 14px));
   background-clip: padding-box;
-}
-
-/* Hard pixel/retro materials remain opaque and do not inherit glass blur. */
-:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"], html[data-theme="retro"], body[data-theme="retro"])
-  :is(.study10-summary-card, .study10-timer, .study10-panel, .study10-minute-head) {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 html[data-theme="pastel"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select),
