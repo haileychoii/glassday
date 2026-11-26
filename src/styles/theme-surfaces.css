@@ -26,6 +26,8 @@
 
   --gd-inner-bg: hsl(0 0% 100% / 0.3);
   --gd-inner-border: hsl(0 0% 100% / 0.42);
+  /* Shared glass interior blur / 공통 글래스 내부 패널 blur. Pixel/Retro는 none으로 덮어씁니다. */
+  --gd-widget-inner-filter: blur(24px) saturate(150%);
   --gd-control-bg: hsl(0 0% 100% / 0.42);
   --gd-control-border: hsl(0 0% 100% / 0.54);
   --gd-control-active-bg: hsl(0 0% 100% / 0.72);
@@ -165,6 +167,7 @@ body.theme-glass-dark {
       rgb(214 225 246 / 0.09)
     );
   --gd-inner-border: rgb(225 234 255 / 0.2);
+  --gd-widget-inner-filter: blur(24px) saturate(150%);
   --gd-control-bg: rgb(255 255 255 / 0.13);
   --gd-control-border: rgb(225 234 255 / 0.2);
   --gd-control-active-bg: rgb(255 255 255 / 0.24);
@@ -186,6 +189,7 @@ html[data-theme="aurora"],
 body[data-theme="aurora"],
 html.theme-aurora,
 body.theme-aurora {
+  --gd-widget-inner-filter: blur(24px) saturate(150%);
   --gd-widget-panel-bg: var(--aurora-panel-bg);
   --gd-widget-panel-border: var(--aurora-panel-border);
   --gd-widget-panel-shadow:
@@ -212,6 +216,7 @@ body.theme-retro {
   --gd-widget-control-bg: hsl(var(--secondary));
   --gd-widget-control-border: hsl(var(--border));
   --gd-widget-control-active-bg: hsl(var(--accent));
+  --gd-widget-inner-filter: none;
 }
 
 /* Widget CSS owns layout only. Every theme supplies the same panel and
@@ -370,15 +375,37 @@ body[data-theme="glass-dark"] :is(.topbar, aside) {
 html[data-theme="pastel"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
 html[data-theme="glass-light"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
 html[data-theme="glass-dark"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+html[data-theme="aurora"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
 body[data-theme="pastel"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
 body[data-theme="glass-light"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-body[data-theme="glass-dark"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card) {
+body[data-theme="glass-dark"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+body[data-theme="aurora"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card) {
   color: hsl(var(--foreground) / 0.9) !important;
   background: var(--gd-inner-bg) !important;
   border-color: var(--gd-inner-border) !important;
   box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.28) !important;
-  backdrop-filter: blur(14px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(150%) !important;
+  backdrop-filter: var(--gd-widget-inner-filter) !important;
+  -webkit-backdrop-filter: var(--gd-widget-inner-filter) !important;
+}
+
+/*
+ * Study Planner has its own compact panel classes rather than the shared
+ * `.study-card` name. Connect them to the same glass token so its nested
+ * surfaces blur consistently with the rest of the dashboard.
+ * Study Planner 내부 패널도 다른 위젯과 동일한 공통 blur 값을 사용합니다.
+ */
+:is(html[data-theme="pastel"], html[data-theme="glass-light"], html[data-theme="glass-dark"], html[data-theme="aurora"],
+    body[data-theme="pastel"], body[data-theme="glass-light"], body[data-theme="glass-dark"], body[data-theme="aurora"])
+  :is(.study10-summary-card, .study10-timer, .study10-panel, .study10-minute-head) {
+  backdrop-filter: var(--gd-widget-inner-filter) !important;
+  -webkit-backdrop-filter: var(--gd-widget-inner-filter) !important;
+}
+
+/* Hard pixel/retro materials remain opaque and do not inherit glass blur. */
+:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"], html[data-theme="retro"], body[data-theme="retro"])
+  :is(.study10-summary-card, .study10-timer, .study10-panel, .study10-minute-head) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 html[data-theme="pastel"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select),
