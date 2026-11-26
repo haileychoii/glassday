@@ -1,363 +1,14 @@
 /* ============================================================
-   [Theme Variant] Pastel
-   Registry ID: pastel / Applied selector: .theme-pastel
-   Switcher: src/constants/themes.ts + SettingsModal.tsx
-   Figma variables: soft pink/lavender/sky surfaces, translucent borders, gentle shadow.
-   영향: AppShell, Sidebar, Topbar, Widget/Floating surfaces와 selected controls.
-   구조/spacing은 바꾸지 않고 base/layout/widget selector의 material을 덮어쓴다.
+   Pastel Theme: decorative background and color accents
+
+   Shared app, widget, header, control, spacing, and radius rules live in
+   theme-surfaces.css and the shared component styles. This file only adds
+   the pastel background artwork and a few semantic color accents.
+   / 앱·위젯의 공통 표면과 크기는 공용 CSS가 담당하고,
+   이 파일에는 파스텔 배경과 의미가 있는 색상 강조만 둡니다.
    ============================================================ */
-/* Pastel / Glass / Pixel에서는 큰 Workspace Home 헤더 숨김 */
-:not(.theme-ios) .dashboard-tab-header,
-.theme-pastel .dashboard-tab-header,
-.theme-glass .dashboard-tab-header,
-.theme-pixel .dashboard-tab-header {
-  display: none !important;
-} 
 
-/* =========================================================
-   THEME: PASTEL DREAM
-   soft pink / lavender / sky glass mood
-   ========================================================= */
-
-.theme-pastel {
-  --background: 318 72% 96%;
-  --foreground: 246 34% 18%;
-  --card: 0 0% 100%;
-  --card-foreground: 246 34% 18%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 246 34% 18%;
-  --primary: 318 58% 70%;
-  --primary-foreground: 246 34% 18%;
-  --secondary: 210 80% 92%;
-  --secondary-foreground: 246 34% 18%;
-  --muted: 275 54% 94%;
-  --muted-foreground: 246 18% 48%;
-  --accent: 190 72% 82%;
-  --accent-foreground: 246 34% 18%;
-  --border: 270 32% 86%;
-  --input: 0 0% 100%;
-  --ring: 318 58% 70%;
-
-  color: hsl(246 34% 18%);
-}
-
-/* 배경: 참고 이미지처럼 핑크/블루/라벤더 오로라 */
-.theme-pastel .bg-glass-gradient {
-  background:
-    radial-gradient(circle at 16% 8%, hsl(315 100% 90% / 0.9), transparent 34%),
-    radial-gradient(circle at 86% 12%, hsl(202 100% 88% / 0.95), transparent 36%),
-    radial-gradient(circle at 20% 78%, hsl(265 100% 91% / 0.85), transparent 38%),
-    radial-gradient(circle at 88% 84%, hsl(184 100% 86% / 0.78), transparent 36%),
-    linear-gradient(
-      135deg,
-      hsl(318 100% 96%) 0%,
-      hsl(280 100% 96%) 36%,
-      hsl(207 100% 95%) 68%,
-      hsl(185 100% 94%) 100%
-    ) !important;
-}
-
-.theme-pastel .bg-glass-gradient::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(120deg, hsl(0 0% 100% / 0.42), transparent 38%, hsl(0 0% 100% / 0.28)),
-    radial-gradient(circle at 50% 18%, hsl(0 0% 100% / 0.42), transparent 48%);
-  filter: blur(22px);
-  opacity: 0.95;
-}
-
-.theme-pastel .bg-glass-gradient::after {
-  display: none !important;
-  content: none !important;
-}
-
-/* 전체 앱 껍데기 */
-.theme-pastel .liquid-shell,
-.theme-pastel .glass-panel {
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.46),
-      hsl(315 100% 98% / 0.26)
-    ) !important;
-  border: 1px solid hsl(0 0% 100% / 0.72) !important;
-  box-shadow:
-    0 44px 140px -62px hsl(276 42% 42% / 0.42),
-    inset 0 1px 0 hsl(0 0% 100% / 0.92) !important;
-  backdrop-filter: blur(32px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(160%) !important;
-}
-
-/* 사이드바 */
-.theme-pastel aside {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(318 100% 98% / 0.48),
-      hsl(255 100% 98% / 0.34)
-    ) !important;
-  border-right: 1px solid hsl(0 0% 100% / 0.56) !important;
-  box-shadow: inset -1px 0 0 hsl(270 36% 86% / 0.28) !important;
-  backdrop-filter: blur(28px) saturate(155%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(155%) !important;
-}
-
-/* topbar */
-.theme-pastel .topbar {
-  background:
-    linear-gradient(
-      90deg,
-      hsl(318 100% 98% / 0.5),
-      hsl(205 100% 98% / 0.34)
-    ) !important;
-  border-bottom: 1px solid hsl(0 0% 100% / 0.52) !important;
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.76) !important;
-  backdrop-filter: blur(26px) saturate(155%) !important;
-  -webkit-backdrop-filter: blur(26px) saturate(155%) !important;
-}
-
-/* 글씨 색감 */
-.theme-pastel h1,
-.theme-pastel h2,
-.theme-pastel h3,
-.theme-pastel strong,
-.theme-pastel .font-semibold,
-.theme-pastel .font-bold {
-  color: hsl(246 36% 18% / 0.94) !important;
-  font-weight: 700 !important;
-  letter-spacing: 0 !important;
-}
-
-.theme-pastel p,
-.theme-pastel span,
-.theme-pastel small,
-.theme-pastel .text-muted-foreground {
-  color: hsl(246 18% 46% / 0.72) !important;
-}
-
-/* 카드: 참고 이미지처럼 큼직하고 뽀얀 glass */
-.theme-pastel .glass-card,
-.theme-pastel .today-focus-hero,
-.theme-pastel .today-focus-section,
-.theme-pastel .today-focus-task,
-.theme-pastel .today-focus-mini-item,
-.theme-pastel .today-focus-career-item,
-.theme-pastel .today-focus-memo,
-.theme-pastel .alert-item,
-.theme-pastel .alert-summary-card,
-.theme-pastel .journal-section,
-.theme-pastel .calendar-month-day-cell,
-.theme-pastel .calendar-week-timeline,
-.theme-pastel .calendar-event-item,
-.theme-pastel .memo-list-panel,
-.theme-pastel .memo-workspace,
-.theme-pastel .settings-section,
-.theme-pastel .career-detail-section,
-.theme-pastel .study-input-panel,
-.theme-pastel .study-week-panel,
-.theme-pastel .study-goal-panel,
-.theme-pastel .study-task-panel,
-.theme-pastel .study-record-list-panel {
-
-  background:
-    radial-gradient(circle at 12% 0%, hsl(318 100% 96% / 0.42), transparent 42%),
-    radial-gradient(circle at 100% 0%, hsl(192 100% 93% / 0.42), transparent 46%),
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.68),
-      hsl(280 100% 98% / 0.36)
-    ) !important;
-  border: 1px solid hsl(0 0% 100% / 0.76) !important;
-  box-shadow:
-    0 28px 90px -62px hsl(275 36% 42% / 0.38),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9),
-    inset 0 -1px 0 hsl(260 60% 88% / 0.18) !important;
-  backdrop-filter: blur(28px) saturate(165%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(165%) !important;
-}
-
-/* 카드 헤더 아이콘 박스 */
-.theme-pastel .glass-card-icon,
-.theme-pastel .today-focus-ring,
-.theme-pastel .alert-icon,
-.theme-pastel .settings-modal-icon {
-  background:
-    linear-gradient(
-      145deg,
-      hsl(190 100% 87% / 0.7),
-      hsl(318 100% 91% / 0.5)
-    ) !important;
-  border: 1px solid hsl(0 0% 100% / 0.78) !important;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.9),
-    0 14px 34px -26px hsl(300 40% 48% / 0.38) !important;
-}
-
-/* 버튼 / select */
-.theme-pastel .glass-button,
-.theme-pastel .theme-select,
-.theme-pastel .calendar-nav-button,
-.theme-pastel .calendar-view-toggle,
-.theme-pastel .widget-picker-button,
-.theme-pastel .settings-reset-button {
-
-  color: hsl(246 28% 24% / 0.82) !important;
-  background:
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.82),
-      hsl(318 100% 98% / 0.5)
-    ) !important;
-  border: 1px solid hsl(0 0% 100% / 0.72) !important;
-  box-shadow:
-    0 16px 36px -28px hsl(275 36% 40% / 0.32),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
-}
-
-.theme-pastel .glass-button:hover,
-.theme-pastel .calendar-nav-button:hover,
-.theme-pastel .widget-picker-button:hover {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.92),
-      hsl(200 100% 97% / 0.6)
-    ) !important;
-  transform: translateY(-1px);
-}
-
-/* view toggle */
-.theme-pastel .calendar-view-toggle {
-  padding: 4px !important;
-  background: hsl(0 0% 100% / 0.62) !important;
-}
-
-.theme-pastel .calendar-view-button {
-
-  color: hsl(246 18% 44% / 0.72) !important;
-}
-
-.theme-pastel .calendar-view-button.is-active {
-  color: hsl(246 30% 20% / 0.92) !important;
-  background:
-    linear-gradient(
-      135deg,
-      hsl(318 100% 92% / 0.78),
-      hsl(200 100% 91% / 0.72)
-    ) !important;
-  box-shadow:
-    0 10px 22px -16px hsl(300 42% 48% / 0.34),
-    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
-}
-
-/* input / textarea */
-.theme-pastel input,
-.theme-pastel textarea,
-.theme-pastel select,
-.theme-pastel .memo-editor,
-.theme-pastel .memo-title-input,
-.theme-pastel .calendar-date-input {
-  color: hsl(246 30% 20% / 0.86) !important;
-  background: hsl(0 0% 100% / 0.58) !important;
-  border: 1px solid hsl(0 0% 100% / 0.72) !important;
-  border-radius: 18px !important;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.88),
-    0 12px 30px -28px hsl(275 36% 40% / 0.28) !important;
-}
-
-.theme-pastel input::placeholder,
-.theme-pastel textarea::placeholder {
-  color: hsl(246 16% 56% / 0.58) !important;
-}
-
-/* progress bar: mint → pink */
-
-.theme-pastel .progress-fill,
-.theme-pastel .money-progress-fill {
-  background:
-    linear-gradient(
-      90deg,
-      hsl(166 70% 78%),
-      hsl(318 78% 78%)
-    ) !important;
-}
-
-/* alert severity 색도 부드럽게 */
-.theme-pastel .alert-severity-pill.is-danger,
-.theme-pastel .today-focus-dday.is-danger,
-.theme-pastel .today-focus-alert {
-  color: hsl(350 58% 42%) !important;
-  background: hsl(350 100% 96% / 0.74) !important;
-  border-color: hsl(350 82% 84% / 0.58) !important;
-}
-
-.theme-pastel .alert-severity-pill.is-warning {
-  color: hsl(36 70% 40%) !important;
-  background: hsl(42 100% 94% / 0.76) !important;
-  border-color: hsl(42 90% 82% / 0.58) !important;
-}
-
-/* Memo 종이도 파스텔에서는 부드러운 연핑크 */
-.theme-pastel .memo-editor {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(332 100% 96% / 0.78),
-      hsl(284 100% 98% / 0.58)
-    ) !important;
-  border: 1px solid hsl(332 68% 88% / 0.45) !important;
-}
-
-/* Calendar 보라 덩어리 줄이고 맑게 */
-.theme-pastel .calendar-week-day-column {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(240 100% 97% / 0.4),
-      hsl(200 100% 97% / 0.22)
-    ) !important;
-}
-
-.theme-pastel .calendar-week-event,
-.theme-pastel .calendar-range-chip,
-.theme-pastel .calendar-week-range-bar,
-.theme-pastel .calendar-month-single-chip {
-  color: hsl(246 30% 20% / 0.74) !important;
-  border: 1px solid hsl(0 0% 100% / 0.72) !important;
-  box-shadow:
-    0 10px 24px -18px hsl(275 32% 40% / 0.24),
-    inset 0 1px 0 hsl(0 0% 100% / 0.82) !important;
-}
-
-/* =========================================================
-   THEME: PASTEL COLOR ONLY
-   참고 이미지 색감/배경/유리감만 적용
-   카드 크기/레이아웃/radius 건드리지 않음
-   ========================================================= */
-
-.theme-pastel {
-  --background: 315 88% 97%;
-  --foreground: 246 34% 18%;
-  --card: 0 0% 100%;
-  --card-foreground: 246 34% 18%;
-  --primary: 318 58% 72%;
-  --primary-foreground: 246 34% 18%;
-  --secondary: 200 88% 92%;
-  --secondary-foreground: 246 34% 18%;
-  --muted: 275 48% 94%;
-  --muted-foreground: 246 16% 48%;
-  --accent: 185 72% 84%;
-  --accent-foreground: 246 34% 18%;
-  --border: 275 32% 86%;
-  --input: 0 0% 100%;
-  --ring: 318 58% 72%;
-}
-
-/* 배경만 참고 이미지처럼 */
+/* The background artwork belongs to the theme, not to individual widgets. */
 .theme-pastel .bg-glass-gradient {
   background:
     radial-gradient(circle at 12% 8%, hsl(318 100% 90% / 0.82), transparent 34%),
@@ -370,7 +21,7 @@
       hsl(285 100% 97%) 38%,
       hsl(208 100% 96%) 70%,
       hsl(184 100% 95%) 100%
-    ) !important;
+    );
 }
 
 .theme-pastel .bg-glass-gradient::before {
@@ -390,343 +41,90 @@
   opacity: 0.92;
 }
 
-/* 앱 전체 껍데기 색감만 */
-.theme-pastel .liquid-shell,
-.theme-pastel .glass-panel {
-  background:
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.46),
-      hsl(318 100% 98% / 0.22)
-    ) !important;
-  border-color: hsl(0 0% 100% / 0.54) !important;
-  box-shadow:
-    0 44px 140px -68px hsl(276 42% 42% / 0.38),
-    inset 0 1px 0 hsl(0 0% 100% / 0.9) !important;
-  backdrop-filter: blur(32px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(160%) !important;
+/* Keep danger and warning meaning clear while using the pastel palette. */
+.theme-pastel :is(.alert-severity-pill.is-danger, .today-focus-dday.is-danger) {
+  color: hsl(350 58% 42%);
+  background: hsl(350 100% 96% / 0.74);
+  border-color: hsl(350 82% 84% / 0.58);
 }
 
-/* topbar/side 색감 */
-.theme-pastel .topbar {
-  background:
-    linear-gradient(
-      90deg,
-      hsl(318 100% 98% / 0.5),
-      hsl(205 100% 98% / 0.32)
-    ) !important;
-  border-bottom-color: hsl(0 0% 100% / 0.5) !important;
+.theme-pastel .alert-severity-pill.is-warning {
+  color: hsl(36 70% 40%);
+  background: hsl(42 100% 94% / 0.76);
+  border-color: hsl(42 90% 82% / 0.58);
 }
 
-.theme-pastel aside {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(318 100% 98% / 0.46),
-      hsl(255 100% 98% / 0.3)
-    ) !important;
-  border-right-color: hsl(0 0% 100% / 0.55) !important;
+/* Progress uses the theme's mint-to-pink accent, without changing its shape. */
+.theme-pastel :is(.progress-fill, .money-progress-fill) {
+  background: linear-gradient(90deg, hsl(166 70% 78%), hsl(318 78% 78%));
 }
 
-/* 카드 색감만. radius/크기 안 건드림 */
-.theme-pastel .glass-card,
-.theme-pastel .today-focus-hero,
-.theme-pastel .today-focus-section,
-.theme-pastel .today-focus-task,
-.theme-pastel .today-focus-mini-item,
-.theme-pastel .today-focus-career-item,
-.theme-pastel .today-focus-memo,
-.theme-pastel .alert-item,
-.theme-pastel .alert-summary-card,
-.theme-pastel .journal-section,
-.theme-pastel .calendar-month-day-cell,
-.theme-pastel .calendar-week-timeline,
-.theme-pastel .calendar-event-item,
-.theme-pastel .memo-list-panel,
-.theme-pastel .memo-workspace,
-.theme-pastel .settings-section,
-.theme-pastel .career-detail-section,
-.theme-pastel .study-input-panel,
-.theme-pastel .study-week-panel,
-.theme-pastel .study-goal-panel,
-.theme-pastel .study-task-panel,
-.theme-pastel .study-record-list-panel {
-  background:
-    radial-gradient(circle at 12% 0%, hsl(318 100% 96% / 0.38), transparent 42%),
-    radial-gradient(circle at 100% 0%, hsl(190 100% 93% / 0.36), transparent 46%),
-    linear-gradient(
-      145deg,
-      hsl(0 0% 100% / 0.68),
-      hsl(280 100% 98% / 0.32)
-    ) !important;
-  border-color: hsl(0 0% 100% / 0.48) !important;
-  box-shadow:
-    0 26px 80px -62px hsl(275 36% 42% / 0.32),
-    inset 0 1px 0 hsl(0 0% 100% / 0.76),
-    inset 1px 0 0 hsl(324 82% 86% / 0.1),
-    inset -1px 0 0 hsl(190 82% 82% / 0.08) !important;
-  backdrop-filter: blur(26px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(26px) saturate(160%) !important;
-}
-
-/* 글씨 색감 */
-.theme-pastel h1,
-.theme-pastel h2,
-.theme-pastel h3,
-.theme-pastel strong,
-.theme-pastel .font-semibold,
-.theme-pastel .font-bold {
-  color: hsl(246 34% 18% / 0.94) !important;
-}
-
-.theme-pastel p,
-.theme-pastel span,
-.theme-pastel small,
-.theme-pastel .text-muted-foreground {
-  color: hsl(246 18% 46% / 0.72) !important;
-}
-
-/* 버튼 색감 */
-.theme-pastel .glass-button,
-.theme-pastel .calendar-nav-button,
-.theme-pastel .widget-picker-button,
-.theme-pastel .settings-reset-button {
-  color: hsl(246 28% 24% / 0.82) !important;
-  background:
-    linear-gradient(
-      180deg,
-      hsl(0 0% 100% / 0.82),
-      hsl(318 100% 98% / 0.48)
-    ) !important;
-  border-color: hsl(0 0% 100% / 0.7) !important;
-  box-shadow:
-    0 14px 32px -28px hsl(275 36% 40% / 0.3),
-    inset 0 1px 0 hsl(0 0% 100% / 0.88) !important;
-}
-
-/* Pastel에서 테마 선택 버튼을 참고처럼 더 뽀얗게 */
-.theme-pastel .theme-segmented-control {
-  background: hsl(0 0% 100% / 0.58) !important;
-  border-color: hsl(0 0% 100% / 0.54) !important;
-}
-
-.theme-pastel .theme-segment-button {
-  color: hsl(246 18% 44% / 0.7) !important;
-}
-
-.theme-pastel .theme-segment-button.is-active {
-  color: hsl(246 32% 20% / 0.92) !important;
-  background:
-    linear-gradient(
-      135deg,
-      hsl(318 100% 92% / 0.78),
-      hsl(200 100% 91% / 0.7)
-    ) !important;
-}
-
-/* input 색감 */
-.theme-pastel input,
-.theme-pastel textarea,
-.theme-pastel select,
-.theme-pastel .memo-editor,
-.theme-pastel .memo-title-input,
-.theme-pastel .calendar-date-input {
-  color: hsl(246 30% 20% / 0.86) !important;
-  background: hsl(0 0% 100% / 0.56) !important;
-  border-color: hsl(0 0% 100% / 0.52) !important;
-}
-
-/* progress만 민트 → 핑크 */
-
-.theme-pastel .progress-fill,
-.theme-pastel .money-progress-fill {
-  background:
-    linear-gradient(
-      90deg,
-      hsl(166 70% 78%),
-      hsl(318 78% 78%)
-    ) !important;
-}
-
-/* ================================
-   FIX: Pastel readability / remove noisy inner fills
-   ================================ */
-
-.theme-pastel .today-focus-card,
-.theme-pastel .today-focus-widget,
-.theme-pastel .glass-card {
-  color: hsl(250 30% 20%) !important;
-}
-
-/* Inner pastel glass edge
-   These panels use one soft reflection recipe instead of a hard colored line.
-   / 내부 박스도 선을 그리지 않고 흰 반사광과 약한 색 반사로 구분한다. */
-.theme-pastel .today-focus-section,
-.theme-pastel .today-focus-block,
-.theme-pastel .calendar-mini-card,
-.theme-pastel .career-summary-card,
-.theme-pastel .career-list-item,
-.theme-pastel .memo-card,
-.theme-pastel .study-card {
-  background: hsl(0 0% 100% / 0.32) !important;
-  border: 1px solid hsl(0 0% 100% / 0.42) !important;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.62),
-    inset 1px 0 0 hsl(324 82% 86% / 0.08),
-    inset -1px 0 0 hsl(190 82% 82% / 0.07) !important;
-}
-
-/* 내부 요소에 깔린 그라데이션/대각선/과한 광택 제거 */
-.theme-pastel .today-focus-section,
-.theme-pastel .today-focus-block,
-.theme-pastel .career-list-item,
-.theme-pastel .calendar-event-chip {
-  background-image: none !important;
-}
-
-/* Pastel에서 카드 안쪽 글씨는 어둡게 */
-.theme-pastel .glass-card h1,
-.theme-pastel .glass-card h2,
-.theme-pastel .glass-card h3,
-.theme-pastel .glass-card h4,
-.theme-pastel .glass-card strong,
-.theme-pastel .today-focus-title,
-.theme-pastel .today-focus-main-title,
-.theme-pastel .calendar-event-title,
-.theme-pastel .career-list-title strong {
-  color: hsl(250 30% 20% / 0.88) !important;
-}
-
-.theme-pastel .glass-card p,
-.theme-pastel .glass-card span,
-.theme-pastel .today-focus-subtitle,
-.theme-pastel .today-focus-label,
-.theme-pastel .calendar-event-time,
-.theme-pastel .career-list-title span {
-  color: hsl(248 22% 30% / 0.74) !important;
-}
-
-/* Pastel에서는 더 연하게 */
-.theme-pastel .today-focus .top-three-item,
-.theme-pastel .today-focus .today-focus-task {
-  background: transparent !important;
-  border: 1px solid hsl(0 0% 100% / 0.38) !important;
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.46) !important;
-}
-
-/* final theme overrides: active sidebar + journal accents */
-.theme-pastel .sidebar-tab-item.is-active .sidebar-tab-main {
-  color: hsl(248 34% 22%) !important;
-  background:
-    linear-gradient(
-      135deg,
-      hsl(318 100% 93% / 0.92),
-      hsl(199 100% 92% / 0.82)
-    ) !important;
-  border-color: hsl(292 50% 78% / 0.7) !important;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.7),
-    0 10px 24px hsl(296 52% 76% / 0.22) !important;
-}
-
-.theme-pastel .sidebar-tab-item.is-active .sidebar-tab-icon,
-.theme-pastel .sidebar-tab-item.is-active .sidebar-tab-label,
-.theme-pastel .sidebar-tab-item.is-active .sidebar-tab-main span:last-child {
-  color: hsl(248 34% 22%) !important;
-}
-
+/* Journal score categories carry different meanings, so retain their colors. */
 .theme-pastel .journal-score-grid label {
-  border-color: hsl(0 0% 100% / 0.48) !important;
-  background: hsl(0 0% 100% / 0.24) !important;
+  border-color: hsl(0 0% 100% / 0.48);
+  background: hsl(0 0% 100% / 0.24);
   box-shadow:
     inset 0 1px 0 hsl(0 0% 100% / 0.7),
-    0 10px 20px hsl(286 54% 80% / 0.1) !important;
+    0 10px 20px hsl(286 54% 80% / 0.1);
 }
 
 .theme-pastel .journal-score-grid label:nth-child(1) {
-  background: linear-gradient(135deg, hsl(332 82% 96% / 0.72), hsl(286 52% 93% / 0.42)) !important;
+  background: linear-gradient(135deg, hsl(332 82% 96% / 0.72), hsl(286 52% 93% / 0.42));
 }
 
 .theme-pastel .journal-score-grid label:nth-child(2) {
-  background: linear-gradient(135deg, hsl(196 88% 96% / 0.72), hsl(252 46% 93% / 0.4)) !important;
+  background: linear-gradient(135deg, hsl(196 88% 96% / 0.72), hsl(252 46% 93% / 0.4));
 }
 
 .theme-pastel .journal-score-grid label:nth-child(3) {
-  background: linear-gradient(135deg, hsl(44 88% 95% / 0.68), hsl(334 72% 95% / 0.34)) !important;
+  background: linear-gradient(135deg, hsl(44 88% 95% / 0.68), hsl(334 72% 95% / 0.34));
 }
 
 .theme-pastel .journal-score-grid label:nth-child(4) {
-  background: linear-gradient(135deg, hsl(155 60% 95% / 0.68), hsl(202 76% 94% / 0.36)) !important;
+  background: linear-gradient(135deg, hsl(155 60% 95% / 0.68), hsl(202 76% 94% / 0.36));
 }
 
 .theme-pastel .journal-score-grid label:nth-child(1) input {
-  accent-color: hsl(318 28% 66%) !important;
+  accent-color: hsl(318 28% 66%);
 }
 
 .theme-pastel .journal-score-grid label:nth-child(2) input {
-  accent-color: hsl(212 30% 69%) !important;
+  accent-color: hsl(212 30% 69%);
 }
 
 .theme-pastel .journal-score-grid label:nth-child(3) input {
-  accent-color: hsl(24 34% 71%) !important;
+  accent-color: hsl(24 34% 71%);
 }
 
 .theme-pastel .journal-score-grid label:nth-child(4) input {
-  accent-color: hsl(164 24% 58%) !important;
+  accent-color: hsl(164 24% 58%);
 }
 
 .theme-pastel .journal-score-grid label:nth-child(1) b {
-  color: hsl(316 24% 48%) !important;
+  color: hsl(316 24% 48%);
 }
 
 .theme-pastel .journal-score-grid label:nth-child(2) b {
-  color: hsl(219 24% 50%) !important;
+  color: hsl(219 24% 50%);
 }
 
 .theme-pastel .journal-score-grid label:nth-child(3) b {
-  color: hsl(20 26% 52%) !important;
+  color: hsl(20 26% 52%);
 }
 
 .theme-pastel .journal-score-grid label:nth-child(4) b {
-  color: hsl(165 20% 42%) !important;
+  color: hsl(165 20% 42%);
 }
 
+/* The browser keeps its default scrollbar size; only its pastel colors change. */
 .theme-pastel {
   scrollbar-color: hsl(300 24% 74% / 0.88) hsl(0 0% 100% / 0.22);
 }
 
-.theme-pastel ::-webkit-scrollbar {
-  width: 11px;
-  height: 11px;
-}
-
-.theme-pastel ::-webkit-scrollbar-track {
-  background: hsl(0 0% 100% / 0.18);
-  border-radius: 999px;
-}
-
 .theme-pastel ::-webkit-scrollbar-thumb {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(319 46% 80% / 0.9),
-      hsl(212 46% 80% / 0.82)
-    );
-  border: 2px solid transparent;
-  border-radius: 999px;
-  background-clip: padding-box;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.72),
-    0 4px 14px hsl(286 30% 68% / 0.16);
+  background: linear-gradient(180deg, hsl(319 46% 80% / 0.9), hsl(212 46% 80% / 0.82));
 }
 
 .theme-pastel ::-webkit-scrollbar-thumb:hover {
-  background:
-    linear-gradient(
-      180deg,
-      hsl(319 50% 76% / 0.94),
-      hsl(212 50% 76% / 0.88)
-    );
-  border: 2px solid transparent;
-  background-clip: padding-box;
+  background: linear-gradient(180deg, hsl(319 50% 76% / 0.94), hsl(212 50% 76% / 0.88));
 }

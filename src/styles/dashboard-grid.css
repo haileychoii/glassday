@@ -42,7 +42,7 @@
 
 /* Keep enough canvas height visible to show the 16-row edit grid. */
 .dashboard-edit-canvas.is-editing {
-  min-height: calc(16 * 52px + 15 * 14px);
+  min-height: var(--gd-grid-min-height, calc(16 * 52px + 15 * 14px));
 }
 
 /* =========================================================
@@ -61,7 +61,7 @@
 
   pointer-events: none;
 
-  border-radius: 20px;
+  border-radius: var(--gd-radius-widget, 20px);
 
   background-image:
     linear-gradient(
@@ -77,7 +77,7 @@
 
   background-size:
     6.25% 100%,
-    100% 66px;
+    100% calc(var(--gd-grid-row-height, 52px) + var(--gd-grid-gap, 14px));
 
   background-position: 0 0;
 }
@@ -111,8 +111,8 @@
 }
 
 /* =========================================================
-   4. Widget wrapper only
-   This layer only owns outer widget placement and clipping.
+   4. Widget placement wrapper
+   Keep overflow visible so resize handles can extend past the card edge.
 ========================================================= */
 
 .dashboard-grid-item {
@@ -126,7 +126,7 @@
 
   padding: 0;
 
-  overflow: hidden;
+  overflow: visible;
 
   box-sizing: border-box;
 
@@ -173,11 +173,12 @@
 
   z-index: 80;
 
-  border: 2px solid hsl(var(--primary) / 0.72);
+  border: 2px solid hsl(var(--primary) / 0.9);
   border-radius: var(--gd-radius-widget, 20px);
 
   box-shadow:
-    0 0 0 4px hsl(var(--primary) / 0.1);
+    0 0 0 4px hsl(var(--primary) / 0.14),
+    0 18px 42px -30px hsl(var(--primary) / 0.7);
 
   pointer-events: none;
 }
@@ -241,7 +242,7 @@
 
   padding: 5px 9px;
 
-  border-radius: 999px;
+  border-radius: var(--gd-radius-button, 8px);
 
   pointer-events: none;
 
@@ -254,15 +255,10 @@
   text-overflow: ellipsis;
 
   color: hsl(var(--foreground) / 0.82);
-
-  background: hsl(var(--background) / 0.76);
-
-  border:
-    1px solid
-    hsl(var(--foreground) / 0.12);
-
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--gd-control-bg);
+  border: 1px solid var(--gd-control-border);
+  backdrop-filter: var(--gd-widget-inner-filter);
+  -webkit-backdrop-filter: var(--gd-widget-inner-filter);
 }
 
 /* =========================================================
@@ -287,103 +283,16 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 999px;
+  border-radius: var(--gd-radius-button, 8px);
 }
 
 /* =========================================================
-   9. Dragging / resizing layer
+   9. Resize handles
 ========================================================= */
-
-.react-grid-item.react-draggable-dragging,
-.react-grid-item.react-resizable-resizing {
-  z-index: 100 !important;
-}
 
 /* =========================================================
-   10. Placeholder
-
-   Shows the target slot while moving or resizing.
-   Real collision handling still belongs to React Grid Layout.
+   10. Top edge
 ========================================================= */
-
-.react-grid-item.react-grid-placeholder {
-  z-index: 2 !important;
-
-  opacity: 1 !important;
-
-  border:
-    1px solid
-    hsl(var(--primary) / 0.42);
-
-  border-radius:
-    var(--gd-radius-widget, 20px);
-
-  background:
-    hsl(var(--primary) / 0.12);
-}
-
-/* =========================================================
-   11. Resize handles
-========================================================= */
-
-.dashboard-tab-space.is-editing
-.react-resizable-handle {
-  position: absolute !important;
-
-  z-index: 70 !important;
-
-  display: block !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  transform: none !important;
-
-  background-image: none !important;
-  background-color: transparent !important;
-
-  opacity: 0;
-
-  transition: opacity 120ms ease;
-}
-
-/* Show edge handles only when the card is interactive enough to use them. */
-.dashboard-tab-space.is-editing
-.react-grid-item:hover
-.react-resizable-handle,
-.dashboard-tab-space.is-editing
-.react-grid-item:has(.dashboard-grid-item.is-selected)
-.react-resizable-handle,
-.dashboard-tab-space.is-editing
-.react-grid-item.react-resizable-resizing
-.react-resizable-handle {
-  opacity: 1;
-}
-
-/* Remove the library's default corner triangle art. */
-.dashboard-tab-space.is-editing
-.react-resizable-handle::after {
-  content: "";
-
-  position: absolute;
-
-  border: 0 !important;
-}
-
-/* =========================================================
-   12. Top edge
-========================================================= */
-
-.react-resizable-handle-n {
-  top: -6px !important;
-  left: 18px !important;
-  right: 18px !important;
-
-  width: auto !important;
-  height: 14px !important;
-
-  cursor: ns-resize;
-}
 
 .react-resizable-handle-n::after {
   left: 0;
@@ -399,19 +308,8 @@
 }
 
 /* =========================================================
-   13. Bottom edge
+   11. Bottom edge
 ========================================================= */
-
-.react-resizable-handle-s {
-  bottom: -6px !important;
-  left: 18px !important;
-  right: 18px !important;
-
-  width: auto !important;
-  height: 14px !important;
-
-  cursor: ns-resize;
-}
 
 .react-resizable-handle-s::after {
   left: 0;
@@ -427,19 +325,8 @@
 }
 
 /* =========================================================
-   14. Left edge
+   12. Left edge
 ========================================================= */
-
-.react-resizable-handle-w {
-  left: -6px !important;
-  top: 18px !important;
-  bottom: 18px !important;
-
-  width: 14px !important;
-  height: auto !important;
-
-  cursor: ew-resize;
-}
 
 .react-resizable-handle-w::after {
   top: 0;
@@ -455,19 +342,8 @@
 }
 
 /* =========================================================
-   15. Right edge
+   13. Right edge
 ========================================================= */
-
-.react-resizable-handle-e {
-  right: -6px !important;
-  top: 18px !important;
-  bottom: 18px !important;
-
-  width: 14px !important;
-  height: auto !important;
-
-  cursor: ew-resize;
-}
 
 .react-resizable-handle-e::after {
   top: 0;
@@ -483,44 +359,8 @@
 }
 
 /* =========================================================
-   16. Corner handles
+   14. Corner handles
 ========================================================= */
-
-.react-resizable-handle-nw,
-.react-resizable-handle-ne,
-.react-resizable-handle-sw,
-.react-resizable-handle-se {
-  width: 20px !important;
-  height: 20px !important;
-}
-
-.react-resizable-handle-nw {
-  top: -7px !important;
-  left: -7px !important;
-
-  cursor: nwse-resize;
-}
-
-.react-resizable-handle-ne {
-  top: -7px !important;
-  right: -7px !important;
-
-  cursor: nesw-resize;
-}
-
-.react-resizable-handle-sw {
-  bottom: -7px !important;
-  left: -7px !important;
-
-  cursor: nesw-resize;
-}
-
-.react-resizable-handle-se {
-  right: -7px !important;
-  bottom: -7px !important;
-
-  cursor: nwse-resize;
-}
 
 .react-resizable-handle-nw::after,
 .react-resizable-handle-ne::after,
@@ -528,14 +368,14 @@
 .react-resizable-handle-se::after {
   inset: 5px;
 
-  border-radius: 4px;
+  border-radius: var(--gd-radius-inner, 8px);
 
   background:
     hsl(var(--primary) / 0.78);
 }
 
 /* =========================================================
-   17. Reflow animation
+   15. Reflow animation
 ========================================================= */
 
 /* Only non-active widgets should animate when reflowing around changes. */
@@ -553,11 +393,8 @@
    Resize affordances only. Widget visuals stay in widget CSS.
 ========================================================= */
 
-.dashboard-tab-space.is-editing .react-grid-item {
-  overflow: visible !important;
-}
-
-/* Compatibility pass: some handle rules need higher priority after RGL injects them. */
+/* React Grid Layout supplies its own handle geometry. These edit-mode rules
+   intentionally take precedence so every handle stays reachable and clickable. */
 .dashboard-tab-space.is-editing .react-resizable-handle {
   position: absolute !important;
 
@@ -574,11 +411,22 @@
   background-image: none !important;
 
   pointer-events: auto !important;
+  transform: none !important;
+  transition: opacity 120ms ease;
+}
+
+.dashboard-tab-space.is-editing .react-resizable-handle::after {
+  content: "";
+  position: absolute;
+  border: 0 !important;
 }
 
 /* Reveal handles on hover or while a resize is already in progress. */
 .dashboard-tab-space.is-editing
   .react-grid-item:hover
+  .react-resizable-handle,
+.dashboard-tab-space.is-editing
+  .react-grid-item:has(.dashboard-grid-item.is-selected)
   .react-resizable-handle,
 .dashboard-tab-space.is-editing
   .react-grid-item.react-resizable-resizing
@@ -687,10 +535,6 @@
     var(--gd-radius-widget, 20px);
 }
 
-/* =========================================================
-   Final edit interaction overrides
-========================================================= */
-
 .dashboard-tab-space.is-editing .dashboard-grid-item {
   cursor: grab;
 }
@@ -703,27 +547,4 @@
 
 .dashboard-tab-space.is-editing .dashboard-grid-item :is(button, input, textarea, select, a) {
   cursor: auto;
-}
-
-.dashboard-tab-space.is-editing .dashboard-grid-item.is-selected::after {
-  border-color: hsl(var(--primary) / 0.9);
-  box-shadow:
-    0 0 0 4px hsl(var(--primary) / 0.14),
-    0 18px 42px -30px hsl(var(--primary) / 0.7);
-}
-
-.dashboard-tab-space.is-editing .react-resizable-handle {
-  pointer-events: auto !important;
-}
-
-.dashboard-tab-space.is-editing
-  .react-grid-item:has(.dashboard-grid-item.is-selected)
-  .react-resizable-handle {
-  opacity: 1;
-}
-
-.dashboard-tab-space.is-editing
-  .react-grid-item.dashboard-grid-item.is-selected
-  .react-resizable-handle {
-  opacity: 1;
 }

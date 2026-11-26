@@ -24,6 +24,8 @@ import type { ThemeId } from "../../constants/themes";
 
 type WorkspaceTabIconProps = {
   tabId: string;
+  /** Emoji stored on a custom workspace; known emoji reuse the themed built-in glyph. */
+  icon?: string;
   theme: ThemeId;
   mobile?: boolean;
 };
@@ -62,6 +64,19 @@ const pinkDiaryIcons: Record<string, string> = {
   calendar: "/pink-icons/isolated/calendar.png",
 };
 
+/**
+ * Pixel Desk keeps the five built-in workspaces on their matching Win95-style
+ * PNGs. These image files are normalized to one transparent canvas so the
+ * visible drawing stays centered even when the source art had uneven margins.
+ */
+const pixelTabIcons: Record<string, string> = {
+  home: "/pixel-icons/home.png",
+  career: "/pixel-icons/career.png",
+  study: "/pixel-icons/study.png",
+  memo: "/pixel-icons/diary.png",
+  life: "/pixel-icons/life.png",
+};
+
 const glassMobileIcons = {
   home: TbHomeFilled,
   career: TbBriefcaseFilled,
@@ -70,16 +85,49 @@ const glassMobileIcons = {
   life: TbHeartFilled,
 };
 
-export const WorkspaceTabIcon = ({ tabId, theme, mobile = false }: WorkspaceTabIconProps) => {
+const iconTabIds: Record<string, string> = {
+  "🏠": "home",
+  "💼": "career",
+  "📚": "study",
+  "📔": "memo",
+  "🌿": "life",
+};
+
+export const WorkspaceTabIcon = ({
+  tabId,
+  icon,
+  theme,
+  mobile = false,
+}: WorkspaceTabIconProps) => {
   const className = `workspace-theme-icon workspace-theme-icon-${theme}`;
+  // Custom tabs select one of the same five icon identities used by built-in tabs.
+  const resolvedTabId = lucideIcons[tabId]
+    ? tabId
+    : iconTabIds[icon ?? ""] ?? tabId;
+
+  // A selected sticker is stored as its stable public asset path. Keep that
+  // exact artwork on every theme instead of converting it back to a glyph.
+  if (icon?.startsWith("/workspace-icons/")) {
+    return (
+      <img
+        src={icon}
+        className="workspace-theme-icon workspace-custom-icon"
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+      />
+    );
+  }
 
   if (mobile && (theme === "glass-light" || theme === "glass-dark")) {
-    const Icon = glassMobileIcons[tabId as keyof typeof glassMobileIcons] ?? TbHomeFilled;
+    const Icon =
+      glassMobileIcons[resolvedTabId as keyof typeof glassMobileIcons] ??
+      TbHomeFilled;
     return <Icon className={`${className} workspace-theme-icon-filled`} aria-hidden="true" />;
   }
 
   if (theme === "mac-core") {
-    const emoji = mobile ? macMobileEmoji[tabId] : macEmoji[tabId];
+    const emoji = mobile ? macMobileEmoji[resolvedTabId] : macEmoji[resolvedTabId];
     return (
       <span
         className={`${className}${mobile ? " workspace-theme-icon-ios-emoji" : ""}`}
@@ -93,8 +141,8 @@ export const WorkspaceTabIcon = ({ tabId, theme, mobile = false }: WorkspaceTabI
   if (theme === "retro") {
     return (
       <img
-        src={pinkDiaryIcons[tabId] ?? pinkDiaryIcons.diary}
-        className={`${className} pink-diary-tab-icon pink-diary-tab-icon-${tabId}`}
+        src={pinkDiaryIcons[resolvedTabId] ?? pinkDiaryIcons.diary}
+        className={`${className} pink-diary-tab-icon pink-diary-tab-icon-${resolvedTabId}`}
         alt=""
         aria-hidden="true"
         draggable={false}
@@ -105,7 +153,7 @@ export const WorkspaceTabIcon = ({ tabId, theme, mobile = false }: WorkspaceTabI
   if (theme === "pixel-desk") {
     return (
       <img
-        src={`/pixel-icons/${tabId === "memo" ? "diary" : tabId}.png`}
+        src={pixelTabIcons[resolvedTabId] ?? pixelTabIcons.home}
         className={`${className} pixel-tab-icon`}
         alt=""
         aria-hidden="true"
@@ -114,6 +162,6 @@ export const WorkspaceTabIcon = ({ tabId, theme, mobile = false }: WorkspaceTabI
     );
   }
 
-  const Icon = lucideIcons[tabId] ?? FolderOpen;
+  const Icon = lucideIcons[resolvedTabId] ?? FolderOpen;
   return <Icon className={className} aria-hidden="true" />;
 };

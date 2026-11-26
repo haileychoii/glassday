@@ -7,14 +7,14 @@
  * 좌표와 크기 조절은 기존 react-grid-layout이 담당한다.
  *
  * Data owners remain DailyJournalWidget.tsx and MemoWidget.tsx. This file
- * only styles the canvas, note blocks, and edit affordances.
+ * controls canvas and note-block layout; colors and materials live in
+ * themes/diary-workspace-surfaces.css.
  */
 .diary-workspace {
   width: 100%;
   min-width: 0;
   min-height: 0;
   padding: 16px;
-  color: hsl(var(--foreground));
 }
 
 .diary-workspace__header {
@@ -33,7 +33,6 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: hsl(var(--muted-foreground) / 0.82);
   font-size: 11px;
   font-weight: 750;
   letter-spacing: 0.04em;
@@ -54,7 +53,6 @@
 
 .diary-workspace__heading p {
   margin: 0;
-  color: hsl(var(--muted-foreground) / 0.78);
   font-size: 13px;
 }
 
@@ -71,10 +69,6 @@
   gap: 6px;
   min-height: 32px;
   padding: 7px 10px;
-  border: 1px solid hsl(var(--border) / 0.72);
-  border-radius: var(--gd-radius-button, 999px);
-  background: hsl(var(--card) / 0.62);
-  color: hsl(var(--foreground) / 0.86);
   font-size: 12px;
   font-weight: 750;
   cursor: pointer;
@@ -85,29 +79,11 @@
   height: 14px;
 }
 
-.diary-workspace__action:hover,
-.diary-workspace__action.is-active {
-  background: hsl(var(--primary) / 0.16);
-  border-color: hsl(var(--primary) / 0.52);
-}
-
 .diary-workspace__canvas {
   width: 100%;
   min-height: 620px;
   padding: 10px;
-  border: 1px solid hsl(var(--border) / 0.62);
-  border-radius: var(--gd-radius-panel, 18px);
-  background:
-    linear-gradient(hsl(var(--foreground) / 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, hsl(var(--foreground) / 0.035) 1px, transparent 1px),
-    hsl(var(--card) / 0.26);
-  background-size: 24px 24px;
   overflow: hidden;
-}
-
-.diary-workspace__canvas.is-editing {
-  border-color: hsl(var(--primary) / 0.62);
-  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
 }
 
 .diary-canvas-grid {
@@ -127,10 +103,6 @@
   min-height: 0;
 }
 
-.diary-workspace__canvas:not(.is-editing) .diary-canvas-item > .widget-instance-root > .glass-card {
-  box-shadow: none;
-}
-
 .diary-note-block {
   display: flex;
   height: 100%;
@@ -138,18 +110,12 @@
   flex-direction: column;
   gap: 8px;
   padding: 12px;
-  border: 1px solid hsl(42 58% 55% / 0.64);
-  border-radius: 12px;
-  background: hsl(48 92% 88% / 0.9);
-  color: hsl(38 35% 20%);
-  box-shadow: 0 8px 20px hsl(38 40% 24% / 0.12);
 }
 
 .diary-note-block__toolbar {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: hsl(38 35% 28% / 0.7);
   font-size: 11px;
   font-weight: 800;
 }
@@ -166,9 +132,6 @@
 .diary-note-block__toolbar button {
   display: inline-flex;
   padding: 3px;
-  border: 0;
-  background: transparent;
-  color: inherit;
   cursor: pointer;
 }
 
@@ -182,10 +145,6 @@
   min-height: 0;
   flex: 1;
   resize: none;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: inherit;
   font: inherit;
   line-height: 1.5;
 }
@@ -204,7 +163,6 @@
   flex-wrap: wrap;
   gap: 8px;
   padding: 9px 2px 0;
-  color: hsl(var(--muted-foreground) / 0.72);
   font-size: 11px;
 }
 
@@ -238,4 +196,3 @@
     padding: 6px;
   }
 }
-

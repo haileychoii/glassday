@@ -1,49 +1,19 @@
 /* ============================================================
-   [Figma Mapping] Today Focus + Lightweight Widget Guardrails
-   Primary TSX: src/components/widgets/TodayFocusWidget.tsx
-   Shared selectors: Alert/Calendar/Career/Study/Journal root의 최소 크기와 overflow safety.
-   Today Frames: Hero Summary, Top Tasks, linked Calendar/Career grid, Pinned Memo, Alert.
-   today-focus 전용 layout과 여러 lightweight Widget의 공통 root guard가 함께 있는 파일이다.
-   Theme material과 corner radius는 theme-surfaces.css/themes/*.css에서 결정한다.
+   Today Focus content layout
+
+   The shared GlassCard owns the outer frame and title bar. Theme files own
+   colors, surfaces, shadows, and corner radius. This file only arranges the
+   Today Focus content rendered by TodayFocusWidget.tsx.
    ============================================================ */
-/* =========================================================
-   TODAY FOCUS / ALERT / BASIC WIDGET CONTENT
-   Shared structural guardrails for a few lightweight widgets.
-   Theme color, blur, and material still belong in theme files.
-========================================================= */
 
-/* =========================================================
-   0. Widget roots
-========================================================= */
-
-.today-focus-card,
-.today-focus-widget,
-.alert-center-widget,
-.calendar-widget,
-.career-widget,
-.study-widget {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  overflow: hidden;
-
-  box-sizing: border-box;
-}
-
-.today-focus-card,
 .today-focus-widget {
-  container-type: size;
+  container-type: inline-size;
   container-name: today-focus-widget;
+  min-width: 0;
 }
 
-/* One spacing source for every Today Focus section and its nested lists.
-   Today Focus의 상위 섹션과 내부 목록은 공통 위젯 간격 토큰을 함께 사용합니다. */
 .today-focus {
+  min-width: 0;
   display: grid;
   gap: var(--gd-widget-stack-gap);
 }
@@ -55,6 +25,68 @@
   gap: var(--gd-widget-section-gap);
 }
 
+.today-focus-hero {
+  min-width: 0;
+  padding: var(--gd-widget-panel-pad);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gd-widget-stack-gap);
+}
+
+.today-focus-kicker {
+  margin-bottom: 4px;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.today-focus-main {
+  min-width: 0;
+  font-size: clamp(16px, 2.4cqi, 22px);
+  line-height: 1.2;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.today-focus-ring {
+  /* The widget surface layer supplies its theme material; this rule only
+     reserves a stable square for the progress value. */
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.today-focus-section {
+  min-width: 0;
+  padding: var(--gd-widget-panel-pad);
+  display: grid;
+  align-content: start;
+  gap: var(--gd-widget-section-gap-tight);
+}
+
+.today-focus-section-title {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+.today-focus-section-title svg {
+  flex: 0 0 auto;
+}
+
+.today-focus-task-list,
 .today-focus-mini-list,
 .today-focus-memo-list {
   min-width: 0;
@@ -62,439 +94,142 @@
   gap: var(--gd-widget-section-gap-tight);
 }
 
-.today-focus-card .glass-card-body,
-.today-focus-widget .glass-card-body,
-.alert-center-widget .glass-card-body,
-.calendar-widget .glass-card-body,
-.career-widget .glass-card-body,
-.study-widget .glass-card-body {
-  flex: 1 1 auto;
-
-  min-width: 0;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: var(--gd-widget-stack-gap);
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  box-sizing: border-box;
+.today-focus-task-list {
+  max-height: 220px;
+  overflow: auto;
 }
-
-/* =========================================================
-   1. Today hero
-========================================================= */
-
-.today-focus-hero {
-  width: 100%;
-  min-width: 0;
-
-  padding: var(--gd-widget-panel-pad);
-
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--gd-widget-stack-gap);
-
-  box-sizing: border-box;
-}
-
-.today-focus-hero > * {
-  min-width: 0;
-}
-
-.today-focus-main-header,
-.today-focus-hero-header {
-  min-width: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gd-widget-stack-gap);
-}
-
-.today-focus-main-title,
-.today-focus-hero-title {
-  min-width: 0;
-
-  font-size: 11px;
-  line-height: 1.1;
-  font-weight: 850;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.today-focus-main-value,
-.today-focus-hero-value {
-  min-width: 0;
-
-  font-size: 15px;
-  line-height: 1.15;
-  font-weight: 750;
-  letter-spacing: -0.045em;
-}
-
-.today-focus-progress-ring,
-.today-progress-ring {
-  width: 54px;
-  height: 54px;
-  min-width: 54px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-}
-
-/* =========================================================
-   2. Sections
-========================================================= */
-
-.today-focus-section,
-.today-focus-block,
-.study-card,
-.study-task,
-.study-record-item {
-  width: 100%;
-  min-width: 0;
-
-  padding: var(--gd-widget-panel-pad);
-
-  display: grid;
-  gap: var(--gd-widget-stack-gap);
-
-  box-sizing: border-box;
-}
-
-.today-focus-section-header,
-.today-focus-block-header,
-.today-section-header {
-  min-width: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.today-focus-section-title,
-.today-focus-block-title,
-.today-section-title {
-  min-width: 0;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-
-  font-size: 10px;
-  line-height: 1.2;
-  font-weight: 850;
-}
-
-/* =========================================================
-   3. Task list
-========================================================= */
-
-
-.today-focus-list,
-.today-focus-task-list,
-.study-list {
-  width: 100%;
-  min-width: 0;
-  min-height: 0;
-
-  display: grid;
-  gap: var(--gd-widget-section-gap-tight);
-
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
 
 .today-focus-task {
-  width: 100%;
   min-width: 0;
-
-  padding: 10px 12px;
-
+  min-height: 38px;
+  padding: var(--gd-today-focus-task-pad-y, 7px)
+    var(--gd-today-focus-task-pad-x, 8px);
   display: flex;
   align-items: center;
-  gap: 10px;
-
-  box-sizing: border-box;
+  gap: var(--gd-today-focus-task-gap, 7px);
 }
 
-
-.today-focus-task-check {
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
+.today-focus-check,
+.today-focus-delete {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  display: inline-grid;
+  place-items: center;
 }
 
-
-.today-focus-task span,
-.today-task-text,
-.today-focus-task-text {
+.today-focus-task-input {
+  width: 100%;
   min-width: 0;
-
-  font-size: 12px;
-  line-height: 1.35;
-  font-weight: 700;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--gd-today-focus-task-font-size, 12px);
+  line-height: 1.3;
 }
 
-
-.today-focus-task.is-done .today-focus-task-text {
+.today-focus-task.is-done .today-focus-task-input {
   text-decoration: line-through;
-  opacity: 0.55;
+  opacity: 0.58;
 }
 
-/* =========================================================
-   4. Alert Center
-========================================================= */
-
-.alert-center-list,
-.alert-list {
-  width: 100%;
+.today-focus-mini-item,
+.today-focus-career-item,
+.today-focus-memo {
   min-width: 0;
-
-  display: grid;
-  gap: 10px;
-}
-
-.alert-item,
-.alert-summary-card {
-  width: 100%;
-  min-width: 0;
-
-  padding: 12px 14px;
-
+  min-height: 38px;
+  padding: var(--gd-widget-control-pad-y, 8px)
+    var(--gd-widget-control-pad-x, 10px);
   display: flex;
   align-items: center;
-  gap: 12px;
-
-  box-sizing: border-box;
+  gap: var(--gd-widget-section-gap-tight);
+  text-align: left;
+  color: inherit;
+  font: inherit;
 }
 
-.alert-item > *,
-.alert-summary-card > * {
+.today-focus-mini-item > div,
+.today-focus-career-item > div:first-child,
+.today-focus-memo > div {
   min-width: 0;
-}
-
-.alert-item-icon,
-.alert-icon {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-}
-
-.alert-item-content,
-.alert-content {
-  min-width: 0;
-
   display: grid;
   gap: 3px;
 }
 
-.alert-item-title,
-.alert-title {
+.today-focus-mini-item strong,
+.today-focus-career-item strong,
+.today-focus-memo strong {
   min-width: 0;
-
+  overflow: hidden;
   font-size: 12px;
   line-height: 1.25;
-  font-weight: 850;
-
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.alert-item-desc,
-.alert-desc,
-.alert-item p {
+.today-focus-mini-item span,
+.today-focus-career-item span,
+.today-focus-memo span {
   min-width: 0;
-  margin: 0;
+  overflow: hidden;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
+.today-focus-color {
+  width: 4px;
+  min-width: 4px;
+  align-self: stretch;
+  border-radius: 99px;
+}
+
+.today-focus-dday {
+  flex: 0 0 auto;
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.today-focus-empty {
+  min-width: 0;
+  padding: 8px 0;
+  color: hsl(var(--muted-foreground));
   font-size: 11px;
   line-height: 1.35;
-  font-weight: 600;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-/* =========================================================
-   5. Calendar / Career compact backup
-========================================================= */
-
-.calendar-event-list,
-.career-list {
-  width: 100%;
+.today-focus-alert {
   min-width: 0;
-  min-height: 0;
-
-  display: grid;
-  gap: 8px;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.calendar-event-item,
-.calendar-event-card,
-.calendar-mini-card,
-.career-list-item {
-  width: 100%;
-  min-width: 0;
-
-  padding: 12px 14px;
-
-  display: grid;
-  gap: 4px;
-
-  box-sizing: border-box;
-}
-
-.calendar-event-title,
-.career-list-item strong,
-.career-company,
-.career-title {
-  min-width: 0;
-
-  font-size: 12px;
-  line-height: 1.25;
-  font-weight: 850;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.calendar-event-meta,
-.career-meta,
-.career-list-item span,
-.calendar-event-item span {
-  min-width: 0;
-
-  font-size: 11px;
-  line-height: 1.35;
-  font-weight: 600;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* =========================================================
-   6. Generic widget rows
-========================================================= */
-
-.widget-row,
-.widget-list-row,
-.widget-mini-card {
-  width: 100%;
-  min-width: 0;
-
-  padding: 10px 12px;
-
+  padding: var(--gd-widget-control-pad-y, 8px)
+    var(--gd-widget-control-pad-x, 10px);
   display: flex;
   align-items: center;
-  gap: 10px;
-
-  box-sizing: border-box;
-}
-
-.widget-row-main,
-.widget-list-row-main {
-  min-width: 0;
-
-  display: grid;
-  gap: 3px;
-}
-
-.widget-row-title,
-.widget-list-row-title {
-  min-width: 0;
-
-  font-size: 12px;
-  line-height: 1.25;
-  font-weight: 850;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.widget-row-subtitle,
-.widget-list-row-subtitle {
-  min-width: 0;
-
+  gap: var(--gd-widget-section-gap-tight);
   font-size: 11px;
   line-height: 1.35;
-  font-weight: 600;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-/* =========================================================
-   7. Compact container behavior
-========================================================= */
-
-@container today-focus-widget (max-width: 620px) {
-  .today-focus-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: var(--gd-widget-stack-gap);
-  }
-
+@container today-focus-widget (max-width: 560px) {
+  /* Compact layouts follow the card's own width in every display mode, so
+     laptop previews do not need a separate Today Focus override block. */
   .today-focus-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* =========================================================
-   8. Mobile
-========================================================= */
-
-@container today-focus-widget (max-width: 768px) {
-  .today-focus-main,
-  .today-focus-hero {
-    padding: 14px;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .today-focus-section,
-  .today-focus-block,
-  .calendar-event-item,
-  .calendar-event-card,
-  .career-list-item,
-  .alert-item,
-  .study-card,
-  .study-task,
-  .study-record-item {
-    padding: 10px 12px;
+  .today-focus-main {
+    font-size: 17px;
   }
 
-  .today-focus-main-value,
-  .today-focus-hero-value {
-    font-size: 19px;
+  .today-focus-ring {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
   }
 }

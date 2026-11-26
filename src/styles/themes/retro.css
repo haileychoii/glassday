@@ -988,7 +988,6 @@ body.theme-retro {
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(input, textarea, select, .memo-editor, .memo-window-editor, [contenteditable="true"].memo-editor) {
   background: #ffffff !important;
-  color: var(--retro-text) !important;
   border-top: 2px solid #8f6485 !important;
   border-left: 2px solid #8f6485 !important;
   border-right: 2px solid #ffffff !important;
@@ -1044,7 +1043,6 @@ body.theme-retro {
   --retro-text: #202833;
   --retro-muted: #5e6470;
   --retro-cream: #ffffff;
-  --retro-field: #ffffff;
   --retro-client: #f8f8f8;
   --retro-pink-soft: #ffd8ea;
   --retro-raised-border:
@@ -1066,12 +1064,6 @@ body.theme-retro {
     linear-gradient(rgb(235 123 179 / 0.2) 2px, transparent 2px),
     linear-gradient(90deg, rgb(235 123 179 / 0.2) 2px, transparent 2px),
     #ffe7f2 !important;
-  background-size:
-    auto,
-    auto,
-    34px 34px,
-    34px 34px,
-    auto !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
@@ -1183,7 +1175,6 @@ body.theme-retro {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(input, textarea, select, .memo-editor, .memo-window-editor, [contenteditable="true"].memo-editor) {
-  background: #ffffff !important;
   border-top-color: #6e6e6e !important;
   border-left-color: #6e6e6e !important;
   border-right-color: #ffffff !important;
@@ -1219,10 +1210,8 @@ body.theme-retro {
   --retro-title-2: #b64f82;
   --retro-text: #4f2940;
   --retro-muted: #8b5d75;
-  --retro-white: #ffffff;
   --retro-field: #fffafd;
   --retro-client: #fff0f8;
-  --retro-cream: #fff7fb;
   --retro-pink-soft: #ffd1e8;
   --retro-blue: #f0d8ff;
   --retro-menu: #ffd1e6;
@@ -1230,7 +1219,6 @@ body.theme-retro {
   --retro-control-height: 25px;
   --retro-titlebar-height: 29px;
   --retro-titlebar-control-height: 21px;
-  --retro-window-gap: 4px;
   --retro-font-stack:
     "Mona12",
     "MonaS12",
@@ -1246,8 +1234,6 @@ body.theme-retro {
   --retro-sunken-border:
     inset 1px 1px 0 #6f7480,
     inset -1px -1px 0 var(--retro-white);
-
-  color: var(--retro-text) !important;
   font-family: var(--glassday-app-font, var(--retro-font-stack)) !important;
   letter-spacing: 0 !important;
 }
@@ -1271,7 +1257,6 @@ body.theme-retro {
     auto,
     auto,
     auto !important;
-  color: var(--retro-text) !important;
   font-family: var(--glassday-app-font, var(--retro-font-stack)) !important;
 }
 
@@ -1290,7 +1275,6 @@ body.theme-retro {
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.app-shell-surface, .glass-panel, .liquid-shell, .app-shell, .dashboard-shell, .dashboard-layout, .app-layout) {
   border-radius: 0 !important;
-  background: var(--retro-panel) !important;
   border-top: 2px solid var(--retro-white) !important;
   border-left: 2px solid var(--retro-white) !important;
   border-right: 2px solid var(--retro-panel-darker) !important;
@@ -1299,8 +1283,6 @@ body.theme-retro {
     inset 1px 1px 0 var(--retro-panel-mid),
     inset -1px -1px 0 var(--retro-panel-dark),
     6px 6px 0 rgb(55 64 82 / 0.26) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 /* Main topbar is a menu strip, not another glossy titlebar. */
@@ -1323,42 +1305,25 @@ body.theme-retro {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.topbar h1, .topbar-title h1) {
-  color: var(--retro-text) !important;
   font-size: 18px !important;
   line-height: 1.15 !important;
   text-shadow: 1px 1px 0 var(--retro-white) !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.topbar p, .topbar-title p, .text-muted-foreground) {
-  color: var(--retro-muted) !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card, .floating-window, .settings-modal-window, .memo-window, .memo-floating-window) {
-  border-radius: 0 !important;
-  background: var(--retro-window) !important;
-  color: var(--retro-text) !important;
   font-family: var(--glassday-app-font, var(--retro-font-stack)) !important;
   font-size: 11px !important;
   line-height: 1.25 !important;
-  border-top: 2px solid var(--retro-white) !important;
-  border-left: 2px solid var(--retro-white) !important;
-  border-right: 2px solid var(--retro-panel-darker) !important;
-  border-bottom: 2px solid var(--retro-panel-darker) !important;
   box-shadow:
     var(--retro-raised-border),
     4px 4px 0 rgb(55 64 82 / 0.34) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
-  color: var(--retro-white) !important;
   background: var(--retro-title) !important;
-  border-bottom: 2px solid var(--retro-panel-darker) !important;
   box-shadow:
     inset 1px 1px 0 rgb(255 255 255 / 0.34),
     inset -1px -1px 0 rgb(141 55 98 / 0.54) !important;
@@ -1403,7 +1368,6 @@ body.theme-retro {
   :is(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle, .widget-frame__header p, .floating-window-subtitle, .settings-modal-header p) {
   max-width: 100% !important;
   margin: 0 !important;
-  color: rgb(255 255 255 / 0.86) !important;
   font-size: 8px !important;
   font-weight: 700 !important;
   line-height: 9px !important;
@@ -1436,22 +1400,15 @@ body.theme-retro {
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-actions, .widget-frame__actions) {
   min-width: 0 !important;
-  height: var(--retro-titlebar-control-height) !important;
   align-items: center !important;
-  gap: 3px !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-body, .widget-frame__body, .floating-window-body, .settings-modal-body) {
   min-height: 0 !important;
   overflow: auto !important;
-  background: var(--retro-client) !important;
-  color: var(--retro-text) !important;
   border-top: 2px solid #727884 !important;
   border-left: 2px solid #727884 !important;
-  border-right: 2px solid var(--retro-white) !important;
-  border-bottom: 2px solid var(--retro-white) !important;
-  box-shadow: var(--retro-sunken-border) !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
@@ -1687,7 +1644,6 @@ body.theme-retro {
   border-left: 2px solid var(--retro-panel-darker) !important;
   border-right: 2px solid var(--retro-white) !important;
   border-bottom: 2px solid var(--retro-white) !important;
-  box-shadow: var(--retro-sunken-border) !important;
   text-shadow: 1px 1px 0 rgb(98 43 74 / 0.8) !important;
 }
 

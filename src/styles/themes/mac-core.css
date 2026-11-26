@@ -18,7 +18,7 @@
    These are the few knobs to tune when the Mac theme needs visual changes.
 ========================================================= */
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) {
   color-scheme: light !important;
   accent-color: #0a84ff;
   text-rendering: optimizeLegibility;
@@ -113,6 +113,29 @@
   --mac-segment-active-bg:
     linear-gradient(180deg, rgb(255 255 255 / 0.98), rgb(250 251 254 / 0.84));
 
+  /* Shared semantic surfaces consumed by widgets and mobile panels.
+     Keep per-widget CSS on layout; this theme supplies only appearance tokens. */
+  --gd-app-bg: var(--mac-window-bg);
+  --gd-app-border: var(--mac-window-border);
+  --gd-app-shadow: var(--mac-window-shadow);
+  --gd-app-filter: blur(34px) saturate(178%);
+  --gd-surface-bg: var(--mac-widget-bg);
+  --gd-surface-border: var(--mac-widget-border);
+  --gd-surface-shadow: var(--mac-widget-shadow);
+  --gd-surface-filter: blur(26px) saturate(168%);
+  --gd-inner-bg: var(--mac-inner-bg);
+  --gd-inner-border: var(--mac-inner-border);
+  --gd-widget-inner-filter: blur(14px) saturate(148%);
+  --gd-control-bg: var(--mac-control-bg);
+  --gd-control-border: var(--mac-control-border);
+  --gd-control-active-bg: var(--mac-segment-active-bg);
+  --gd-widget-panel-bg: var(--mac-inner-bg);
+  --gd-widget-panel-border: var(--mac-inner-border);
+  --gd-widget-panel-shadow: var(--mac-inner-shadow);
+  --gd-widget-control-bg: var(--mac-control-bg);
+  --gd-widget-control-border: var(--mac-control-border);
+  --gd-widget-control-active-bg: var(--mac-segment-active-bg);
+
   --gd-scrollbar-track: transparent;
   --gd-scrollbar-thumb: rgb(60 60 67 / 0.24);
   --gd-scrollbar-thumb-hover: rgb(60 60 67 / 0.36);
@@ -122,12 +145,12 @@
   font-family: var(--glassday-app-font) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) * {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) * {
   font-family: var(--glassday-app-font) !important;
 }
 
 /* Memo content uses the selected memo font, not the interface font. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.memo-title-input, .memo-title-view, .memo-editor, .memo-editor *) {
   font-family: var(--memo-title-font, var(--memo-font-family, inherit)) !important;
 }
@@ -136,12 +159,12 @@
    Mac Core owns interface typography only. Saved memo fonts remain visible in
    list previews and each option previews its real face. / 메모 콘텐츠는 앱의
    Apple font stack과 독립적으로 렌더링됩니다. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.memo-note-title, .memo-note-preview) {
   font-family: var(--memo-note-font, inherit) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .memo-font-select option {
   font-family: var(--memo-option-font, inherit) !important;
 }
@@ -151,17 +174,17 @@
    The shell acts like a single macOS utility window with a titlebar layer.
 ========================================================= */
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core),
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) body {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core),
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) body {
   background: var(--mac-desktop-bg) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .bg-glass-gradient {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .bg-glass-gradient {
   background: var(--mac-desktop-bg) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .liquid-shell,
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .glass-panel {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .liquid-shell,
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .glass-panel {
   position: relative !important;
   isolation: isolate !important;
   overflow: hidden !important;
@@ -170,12 +193,12 @@
   background: var(--mac-window-bg) !important;
   border: 1px solid var(--mac-window-border) !important;
   box-shadow: var(--mac-window-shadow) !important;
-  backdrop-filter: blur(34px) saturate(178%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(178%) !important;
+  backdrop-filter: var(--gd-app-filter) !important;
+  -webkit-backdrop-filter: var(--gd-app-filter) !important;
 }
 
 /* Native titlebar strip across the full window. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .liquid-shell::before {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .liquid-shell::before {
   content: "";
   position: absolute;
   inset: 0 0 auto;
@@ -187,7 +210,7 @@
 }
 
 /* Window traffic lights. They shrink and move with the collapsed sidebar. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .liquid-shell::after {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .liquid-shell::after {
   content: "";
   position: absolute;
   top: 18px;
@@ -204,20 +227,20 @@
   pointer-events: none;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .liquid-shell[data-sidebar-collapsed="true"]::after {
   left: 13px;
   transform: scale(0.82);
   transform-origin: left center;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .liquid-shell > * {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .liquid-shell > * {
   position: relative;
   z-index: 1;
 }
 
 /* Laptop preview chrome should look like the same app family. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .laptop-preview-frame {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-frame {
   border-radius: var(--gd-radius-app) !important;
   border: 1px solid rgb(60 60 67 / 0.2) !important;
   box-shadow:
@@ -226,23 +249,47 @@
     inset 0 1px 0 rgb(255 255 255 / 0.82) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .laptop-preview-chrome {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-chrome {
   background: var(--mac-titlebar-bg) !important;
   border-bottom: 1px solid var(--mac-window-separator) !important;
+}
+
+/* The window traffic lights are part of Mac Core's window chrome, not the
+   shared laptop layout. Other themes keep the same chrome spacing without
+   inheriting Mac-specific colors. */
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-traffic {
+  visibility: visible;
+}
+
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-traffic > span {
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.38);
+}
+
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-traffic > .is-close {
+  background: #ff5f57;
+}
+
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-traffic > .is-minimize {
+  background: #ffbd2f;
+}
+
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-traffic > .is-expand {
+  background: #28c840;
 }
 
 /* Laptop preview owns the native window chrome
    Do not render a second app-window border or traffic-light set inside it.
    Wide mode has no preview chrome, so its liquid-shell decorations remain.
    / Laptop에서는 바깥 preview만 실제 창이고 내부 shell은 콘텐츠 영역이다. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .app-mode-stage.is-laptop-mode .laptop-preview-frame .liquid-shell {
   border: 0 !important;
   border-radius: 0 0 calc(var(--gd-radius-app) - 1px) calc(var(--gd-radius-app) - 1px) !important;
   box-shadow: none !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .app-mode-stage.is-laptop-mode .laptop-preview-frame .liquid-shell::after {
   display: none !important;
 }
@@ -252,7 +299,7 @@
    Source-list material: quieter than widgets, but visibly separate.
 ========================================================= */
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) aside {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) aside {
   padding-top: 52px !important;
   color: var(--mac-secondary-text) !important;
   background: var(--mac-sidebar-bg) !important;
@@ -264,34 +311,34 @@
   -webkit-backdrop-filter: blur(28px) saturate(170%) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.sidebar-brand-title, .sidebar-tab-label, .sidebar-tab-main) {
   color: var(--mac-secondary-text) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.sidebar-brand-subtitle, .sidebar-section-title) {
   color: var(--mac-tertiary-text) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .sidebar-tab-item {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .sidebar-tab-item {
   border-radius: 8px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   box-shadow: none !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .sidebar-tab-main {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .sidebar-tab-main {
   border-radius: 8px !important;
   color: inherit !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .sidebar-tab-item:hover .sidebar-tab-main {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .sidebar-tab-item:hover .sidebar-tab-main {
   color: var(--mac-text) !important;
   background: rgb(255 255 255 / 0.42) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .sidebar-tab-item.is-active .sidebar-tab-main {
   color: #ffffff !important;
   background: linear-gradient(180deg, #419cff, #087cf0) !important;
@@ -301,7 +348,7 @@
     inset 0 1px 0 rgb(255 255 255 / 0.38) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .sidebar-tab-item.is-active :where(.sidebar-tab-label, .sidebar-tab-main, svg) {
   color: #ffffff !important;
 }
@@ -311,7 +358,7 @@
    A native titlebar/toolbar strip, not a floating rounded card.
 ========================================================= */
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .topbar {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .topbar {
   min-height: 52px !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -322,21 +369,21 @@
   -webkit-backdrop-filter: blur(22px) saturate(170%) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .topbar::before {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .topbar::before {
   display: none !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .topbar-inner {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .topbar-inner {
   min-height: 52px !important;
   padding: 8px 16px 8px 18px !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .liquid-shell[data-sidebar-collapsed="true"] .topbar-inner {
   padding-left: 12px !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .topbar-title h1 {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .topbar-title h1 {
   color: var(--mac-title-text) !important;
   font-size: 14px !important;
   line-height: 1.15 !important;
@@ -344,12 +391,12 @@
   letter-spacing: 0 !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .topbar-title p {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .topbar-title p {
   color: var(--mac-secondary-text) !important;
   font-size: 11px !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.topbar-actions, .theme-segmented-control) {
   position: static !important;
   transform: none !important;
@@ -358,8 +405,8 @@
 }
 
 /* Main content layer stays matte so widgets can sit above it. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) main,
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .app-shell-main {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) main,
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .app-shell-main {
   background: var(--mac-content-bg) !important;
 }
 
@@ -368,7 +415,7 @@
    Widgets are content windows: stronger than main content, softer than modals.
 ========================================================= */
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .glass-card {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .glass-card {
   position: relative !important;
   isolation: isolate !important;
   overflow: hidden !important;
@@ -377,34 +424,34 @@
   background: var(--mac-widget-bg) !important;
   border: 1px solid var(--mac-widget-border) !important;
   box-shadow: var(--mac-widget-shadow) !important;
-  backdrop-filter: blur(26px) saturate(168%) !important;
-  -webkit-backdrop-filter: blur(26px) saturate(168%) !important;
+  backdrop-filter: var(--gd-surface-filter) !important;
+  -webkit-backdrop-filter: var(--gd-surface-filter) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.glass-card-header, .widget-card-header, .widget-frame__header) {
   color: var(--mac-title-text) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3) {
   color: var(--mac-title-text) !important;
   font-weight: 700 !important;
   letter-spacing: 0 !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle, .widget-frame__header p) {
   color: var(--mac-secondary-text) !important;
   font-weight: 500 !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .glass-card :where(h1, h2, h3, h4, strong, .text-white, [class*="text-white"]) {
   color: var(--mac-title-text) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .glass-card :where(p, span, small, .text-muted-foreground) {
   color: var(--mac-secondary-text) !important;
 }
@@ -414,7 +461,7 @@
    Grouped-table style cells, matching Settings and Finder-like lists.
 ========================================================= */
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(
     .inner-card,
     .soft-card,
@@ -449,12 +496,12 @@
   background: var(--mac-inner-bg) !important;
   border: 1px solid var(--mac-inner-border) !important;
   box-shadow: var(--mac-inner-shadow) !important;
-  backdrop-filter: blur(14px) saturate(148%) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(148%) !important;
+  backdrop-filter: var(--gd-widget-inner-filter) !important;
+  -webkit-backdrop-filter: var(--gd-widget-inner-filter) !important;
 }
 
 /* Icon wells should feel like system sidebar/list glyph containers. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.glass-icon-box, .alert-icon, .timer-mode-icon) {
   color: var(--mac-blue) !important;
   background: var(--mac-blue-soft) !important;
@@ -467,7 +514,7 @@
    macOS-style pills, segmented controls, and inset fields.
 ========================================================= */
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(
     .glass-button,
     .topbar-action-button,
@@ -488,7 +535,7 @@
 
 /* Icon-only controls stay circular while labeled controls use the compact
    macOS button radius. / 제목 옆 +, 화살표 같은 아이콘 버튼만 원형이다. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(
     .icon-button,
     .calendar-nav-button,
@@ -498,7 +545,7 @@
   border-radius: 999px !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(
     .glass-button,
     .topbar-action-button,
@@ -511,7 +558,7 @@
   background: var(--mac-control-hover-bg) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.glass-button.is-active, .topbar-action-button.is-active, .calendar-view-button.is-active, .theme-segment-button.is-active) {
   color: #ffffff !important;
   background: linear-gradient(180deg, #2997ff, #007aff) !important;
@@ -521,7 +568,7 @@
     inset 0 1px 0 rgb(255 255 255 / 0.32) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.theme-segmented-control, .theme-button-group, .calendar-view-toggle) {
   background: var(--mac-segment-bg) !important;
   border: 1px solid var(--mac-control-border) !important;
@@ -531,7 +578,7 @@
     0 1px 0 rgb(255 255 255 / 0.66) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.theme-segment-button.is-active, .calendar-view-button.is-active) {
   color: var(--mac-title-text) !important;
   background: var(--mac-segment-active-bg) !important;
@@ -541,7 +588,7 @@
     inset 0 1px 0 rgb(255 255 255 / 0.84) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(input, textarea, select, .memo-editor) {
   color: var(--mac-text) !important;
   background:
@@ -553,7 +600,7 @@
     0 1px 0 rgb(255 255 255 / 0.72) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(input, textarea, select):focus {
   outline: none !important;
   border-color: rgb(10 132 255 / 0.46) !important;
@@ -562,7 +609,7 @@
     inset 0 1px 2px rgb(22 24 32 / 0.05) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(input, textarea, select)::placeholder {
   color: var(--mac-quaternary-text) !important;
 }
@@ -575,10 +622,10 @@
 /* Native modal shells
    Settings and reusable floating windows share one titlebar and content
    hierarchy. / 설정창과 세부창을 같은 macOS 창 재질로 관리한다. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-modal-window,
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-window,
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-panel,
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .floating-window {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-modal-window,
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-window,
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-panel,
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .floating-window {
   color: var(--mac-text) !important;
   background: var(--mac-window-bg) !important;
   border: 1px solid var(--mac-window-border) !important;
@@ -590,13 +637,13 @@
   -webkit-backdrop-filter: blur(30px) saturate(154%) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.settings-modal-header, .settings-header, .settings-titlebar, .floating-window-titlebar) {
   background: var(--mac-titlebar-bg) !important;
   border-bottom: 1px solid var(--mac-window-separator) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.settings-section, .settings-card, .settings-theme-card, .settings-action-card, .settings-reset-button) {
   color: var(--mac-text) !important;
   background: var(--mac-inner-bg) !important;
@@ -604,7 +651,7 @@
   box-shadow: var(--mac-inner-shadow) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-theme-card.is-active {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-theme-card.is-active {
   border-color: rgb(10 132 255 / 0.42) !important;
   box-shadow:
     0 0 0 3px rgb(10 132 255 / 0.14),
@@ -615,11 +662,11 @@
    Traffic lights remain decorative while the real close command stays visible
    at the right edge of the titlebar. / 창 장식과 실제 X 버튼을 분리해
    사용자가 닫기 동작을 바로 찾고 키보드 focus도 확인할 수 있게 한다. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-modal-window {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-modal-window {
   border-radius: var(--gd-radius-app) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-close-button {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-close-button {
   display: inline-flex !important;
   visibility: visible !important;
   z-index: 3 !important;
@@ -630,33 +677,33 @@
   box-shadow: var(--mac-control-shadow) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-close-button:hover {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-close-button:hover {
   background: var(--mac-control-hover-bg) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .settings-modal-body {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-modal-body {
   background: var(--mac-content-bg) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.settings-section, .settings-theme-card, .settings-action-card) {
   border-radius: var(--gd-radius-card) !important;
 }
 
 /* Floating windows get traffic-light dots in their own titlebar. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .floating-window {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .floating-window {
   grid-template-rows: 54px minmax(0, 1fr);
   border-radius: var(--gd-radius-app) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .floating-window-titlebar {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .floating-window-titlebar {
   position: relative;
   height: 54px;
   min-height: 54px;
   padding-left: 68px !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .floating-window-titlebar::before {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .floating-window-titlebar::before {
   content: "";
   position: absolute;
   top: 22px;
@@ -676,7 +723,7 @@
    at the top-right like the rest of Glassday, so users do not have to hunt for
    a hidden red-dot hit target. / traffic-light는 장식이고 실제 닫기 버튼은
    모든 플로팅 창에서 오른쪽 위에 보이도록 둔다. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .floating-window-actions > .glass-button[title="Close"] {
   position: absolute !important;
   top: 12px !important;
@@ -700,7 +747,7 @@
 
 /* Career owns a legacy custom portal, so it receives the same native window
    recipe explicitly. / 공통 FloatingWindow를 쓰지 않는 Career도 동일하게 맞춘다. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .career-floating-window {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .career-floating-window {
   color: var(--mac-text) !important;
   background: var(--mac-window-bg) !important;
   border: 1px solid var(--mac-window-border) !important;
@@ -713,7 +760,7 @@
   -webkit-backdrop-filter: blur(30px) saturate(154%) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .career-floating-titlebar {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .career-floating-titlebar {
   position: relative !important;
   min-height: 66px !important;
   padding: 10px 16px 10px 70px !important;
@@ -721,7 +768,7 @@
   border-bottom: 1px solid var(--mac-window-separator) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .career-floating-titlebar::before {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .career-floating-titlebar::before {
   content: "";
   position: absolute;
   top: 28px;
@@ -754,11 +801,11 @@ body:is([data-theme="mac-core"], .theme-mac-core):has(.mobile-layout)
   left: 18px;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .career-floating-title > svg {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .career-floating-title > svg {
   display: none !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .career-modal-actions > .career-icon-button:last-child {
   position: absolute !important;
   top: 14px !important;
@@ -783,32 +830,32 @@ body:is([data-theme="mac-core"], .theme-mac-core):has(.mobile-layout)
 /* Native close affordance
    The traffic lights remain visual language only. The real close button is
    right-aligned to match the rest of Glassday. / 실제 닫기 버튼은 오른쪽 위다. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   .career-modal-actions > .career-icon-button:last-child svg {
   width: 13px !important;
   height: 13px !important;
   stroke-width: 2 !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .career-floating-body {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .career-floating-body {
   padding: 14px !important;
   gap: 12px !important;
   background: var(--mac-content-bg) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.career-detail-section, .career-small-button, .career-icon-button) {
   border-radius: var(--gd-radius-card) !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.floating-window-title, .settings-modal-header h2, .settings-header h2, .settings-titlebar h2) {
   color: var(--mac-title-text) !important;
   font-weight: 650 !important;
   letter-spacing: 0 !important;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
   :where(.floating-window-subtitle, .settings-modal-header p, .settings-header p, .settings-titlebar p) {
   color: var(--mac-secondary-text) !important;
 }
@@ -818,23 +865,23 @@ body:is([data-theme="mac-core"], .theme-mac-core):has(.mobile-layout)
    macOS scrollbars are quiet and rounded.
 ========================================================= */
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) ::-webkit-scrollbar {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) ::-webkit-scrollbar-track {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) ::-webkit-scrollbar-thumb {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) ::-webkit-scrollbar-thumb {
   background: var(--gd-scrollbar-thumb);
   border: 3px solid transparent;
   border-radius: 999px;
   background-clip: content-box;
 }
 
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) ::-webkit-scrollbar-thumb:hover {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) ::-webkit-scrollbar-thumb:hover {
   background: var(--gd-scrollbar-thumb-hover);
   border: 3px solid transparent;
   background-clip: content-box;
@@ -846,16 +893,16 @@ body:is([data-theme="mac-core"], .theme-mac-core):has(.mobile-layout)
 ========================================================= */
 
 @media (max-width: 768px) {
-  :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .liquid-shell::before,
-  :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .liquid-shell::after {
+  :is(html, body):is([data-theme="mac-core"], .theme-mac-core) .liquid-shell::before,
+  :is(html, body):is([data-theme="mac-core"], .theme-mac-core) .liquid-shell::after {
     display: none !important;
   }
 
-  :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) aside {
+  :is(html, body):is([data-theme="mac-core"], .theme-mac-core) aside {
     padding-top: 0 !important;
   }
 
-  :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .topbar-inner {
+  :is(html, body):is([data-theme="mac-core"], .theme-mac-core) .topbar-inner {
     padding: 10px 12px !important;
   }
 }

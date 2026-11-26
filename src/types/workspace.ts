@@ -70,8 +70,14 @@ export type DashboardTab = {
   id: WorkspaceId;
   label: string;
   icon: string;
+  /** Shared workspace appearance; grid layouts remain stored per device. */
+  background?: string;
+  /** Optional ID of the selected icon collection entry. */
+  iconSource?: string;
   widgetIds: WidgetId[];
   /** Wide Web 편집이 Laptop App 배치를 덮어쓰지 않도록 mode별로 분리된 layout. */
   layouts: DashboardModeLayouts;
+  /** 모바일에서 직접 조정한 위젯 높이(px). Wide/Laptop 배치와 독립적으로 보관한다. */
+  mobileWidgetHeights?: Record<WidgetId, number>;
   locked?: boolean;
 };

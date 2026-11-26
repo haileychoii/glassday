@@ -129,6 +129,16 @@ body:has(.mobile-layout) .mobile-layout .mobile-navigation-item {
   padding: var(--gd-mobile-space-1) !important;
 }
 
+/* Touch drag must stay attached to the handle instead of becoming page scroll. */
+.mobile-layout .mobile-widget-size-handle {
+  touch-action: none;
+  cursor: ns-resize;
+}
+
+.mobile-layout .mobile-widget-size-reset {
+  cursor: pointer;
+}
+
 /* Intentional exceptions belong in the owning theme/widget file: override one
  * `--mobile-widget-*` alias on its themed layout or target slot/card. Shared
  * geometry consumes these aliases, so scoped token overrides stay effective. */
@@ -214,6 +224,27 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="cale
   box-sizing: border-box !important;
 }
 
+/* The host only moves a widget between desktop and mobile. It must never draw
+ * a second frame behind the real GlassCard, including fixed-height Journal
+ * and Memo hosts. The card itself remains the sole owner of theme borders. */
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Only define shared card geometry here. Themes own whether a stroke is
+ * visible and which material is used. */
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card,
+.mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card,
+  .mobile-calendar-card
+) {
+  border-radius: var(--gd-radius-widget);
+  overflow: hidden;
+}
+
 /* WidgetSlot reparents the same DOM node used by the desktop grid. That node
  * keeps React Grid Layout's absolute position, transform and pixel height
  * unless mobile explicitly resets them. Those desktop coordinates leave
@@ -256,7 +287,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
   height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 /* Memo and Journal use a 100%-height GlassCard with an internal scroll region.
@@ -282,7 +313,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
   min-height: var(--mobile-widget-min-body-height) !important;
   max-height: none !important;
   padding: 0 !important;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 .mobile-layout .mobile-widget-slot[data-widget-id]:not([data-widget-id="memo"]):not([data-widget-id="timer"]):not([data-widget-id="journal"])
@@ -332,7 +363,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
   height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot:is(
@@ -605,7 +636,6 @@ body:has(.mobile-layout) .mobile-navigation-capture {
   .mobile-career-card
 ) {
   color: hsl(var(--foreground) / 0.92) !important;
-  border: 1px solid var(--gd-surface-border) !important;
   border-radius: var(--gd-radius-widget, 18px) !important;
   background: var(--gd-surface-bg) !important;
   background-clip: padding-box !important;
@@ -753,18 +783,20 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   height: var(--mobile-widget-icon-glyph-size) !important;
 }
 
-/* All bottom-tab glyphs share a fixed square icon box. This removes baseline
-   shifts between SVGs, emoji, and transparent PNG artwork. */
+/* Align the glyph itself, without adding a decorative box around the icon. */
 body:has(.mobile-layout) .mobile-layout .mobile-navigation
-  .mobile-navigation-item .mobile-navigation-icon {
-  display: grid !important;
-  flex: 0 0 32px !important;
-  place-items: center !important;
-  width: 32px !important;
-  height: 32px !important;
+  .mobile-navigation-item > :is(svg, img, .workspace-theme-icon) {
+  display: block !important;
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  height: 28px !important;
   margin: 0 !important;
   padding: 0 !important;
-  line-height: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  line-height: 1 !important;
   vertical-align: middle !important;
 }
 
@@ -1045,7 +1077,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo
    fill, shadow and borders still come from their active theme. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot :is(
   .today-focus-hero, .today-focus-section, .today-focus-block,
-  .today-focus-task, .today-focus-mini-item, .calendar-event-item, .calendar-event-card,
+  .today-focus-task, .today-focus-mini-item, .today-focus-career-item,
+  .today-focus-memo, .today-focus-alert, .calendar-event-item, .calendar-event-card,
   .calendar-mini-card, .career-summary-card, .career-list-item, .career-board-card,
   .memo-note-item, .memo-workspace, .memo-list-panel, .memo-editor,
   .alert-item, .alert-center-item, .journal-summary-card, .journal-section,
@@ -1069,34 +1102,16 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot :is(
 .settings-modal-window,
 .settings-window,
 .settings-panel {
-  width: min(860px, calc(100vw - 40px)) !important;
-  max-width: 860px !important;
   height: min(760px, calc(100dvh - 48px)) !important;
   max-height: calc(100dvh - 48px) !important;
-  display: grid !important;
   grid-template-rows: 78px auto minmax(0, 1fr) !important;
-  overflow: hidden !important;
-  box-sizing: border-box !important;
 }
 
 .settings-modal-header,
 .settings-header,
 .settings-titlebar {
   height: 78px !important;
-  min-height: 78px !important;
-  padding: 16px 22px !important;
-  gap: 16px !important;
-  box-sizing: border-box !important;
 }
-
-.settings-modal-icon,
-.settings-icon {
-  width: 38px !important;
-  min-width: 38px !important;
-  height: 38px !important;
-}
-
-.settings-modal-title-wrap { gap: 12px !important; }
 .settings-modal-title-text { gap: 4px !important; }
 .settings-modal-header h2 { font-size: 16px !important; line-height: 1.1 !important; }
 .settings-modal-header p { font-size: 13px !important; line-height: 1.2 !important; }
@@ -1104,27 +1119,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot :is(
 .settings-modal-body,
 .settings-body,
 .settings-content {
-  min-height: 0 !important;
   margin: 0 !important;
-  padding: 18px 22px 24px !important;
-  gap: 18px !important;
   overflow: auto !important;
-  box-sizing: border-box !important;
-}
-
-.settings-section,
-.settings-card {
-  width: 100% !important;
-  min-width: 0 !important;
-  padding: 18px !important;
-  gap: 18px !important;
-  box-sizing: border-box !important;
-}
-
-.settings-theme-card {
-  min-height: 136px !important;
-  padding: 14px !important;
-  gap: 8px !important;
 }
 
 .settings-theme-preview { height: 68px !important; min-height: 68px !important; }
@@ -1156,8 +1152,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot :is(
     min-width: 30px !important;
     height: 30px !important;
   }
-
-  body:has(.mobile-layout) .settings-modal-title-wrap { gap: 8px !important; }
   body:has(.mobile-layout) .settings-modal-header h2 { font-size: 14px !important; line-height: 1.15 !important; }
   body:has(.mobile-layout) .settings-modal-header p { display: none !important; }
 
@@ -1177,9 +1171,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot :is(
     gap: 14px !important;
   }
 
-  body:has(.mobile-layout) .settings-theme-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
-  body:has(.mobile-layout) .settings-theme-card { min-height: 120px !important; padding: 8px !important; gap: 8px !important; grid-template-rows: 40px auto minmax(24px, auto) !important; }
-  body:has(.mobile-layout) .settings-theme-preview { height: 40px !important; min-height: 40px !important; }
+  body:has(.mobile-layout) .settings-theme-grid { gap: 8px !important; }
+  body:has(.mobile-layout) .settings-theme-card { padding: 8px !important; gap: 8px !important; }
 }
 
 /* Theme selectors are intentionally more specific in their visual layer.

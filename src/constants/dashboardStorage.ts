@@ -19,6 +19,9 @@ export const DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY =
   "glassday.dashboard.pendingAuthLayoutMode.v1";
 export const DASHBOARD_STORAGE_SCHEMA_KEY =
   "glassday.dashboard.storageSchema.v1";
+/** Cloud-synced workspace metadata; per-device dashboard layouts stay local. */
+export const SHARED_WORKSPACE_TABS_KEY =
+  "glassday.workspace.sharedTabs.v1";
 
 /* 저장된 Dashboard 구조가 달라져 오래된 cloud UI state를 적용하면 안 될 때만 올린다. */
 export const DASHBOARD_STORAGE_SCHEMA_VERSION = 4;

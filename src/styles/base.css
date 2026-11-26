@@ -1,5 +1,5 @@
 /* ============================================================
-   [Figma Mapping] Global Tokens + Widget Frame Primitive
+   [Figma Mapping] Global Defaults + Widget Frame Primitive
 
    연결 컴포넌트:
    - src/components/glass/GlassCard.tsx, GlassPanel.tsx
@@ -14,6 +14,13 @@
    Theme Connection:
    - 이 파일은 fallback token과 구조를 선언한다.
    - src/styles/themes/*.css와 theme-surfaces.css가 theme별 값을 덮어쓴다.
+
+   이 파일이 맡는 일:
+   - 테마가 바꾸기 전의 기본 색·모서리·글꼴 값과 html/body 초기 크기
+   - GlassCard의 공통 제목줄/아이콘/본문 배치
+   - 별도 테마가 지정되지 않은 경우 사용할 기본 스크롤바
+
+   Tauri 전용 창 배치와 투명 배경은 layout.css / desktop-window.css에서 관리한다.
    ============================================================ */
 
 :root {
@@ -59,6 +66,7 @@ html,
 body,
 #root {
   width: 100%;
+  height: 100%;
   min-width: 0;
   min-height: 100%;
   margin: 0;
@@ -282,8 +290,8 @@ main {
   color: hsl(var(--foreground) / 0.72);
 }
 
-.glass-card-icon{
-  border-radius: 8px;
+.glass-card-icon {
+  border-radius: var(--gd-radius-inner);
 }
 
 .glass-icon-box svg,
@@ -326,7 +334,6 @@ main {
 
 .app-mode-stage,
 .settings-modal-window,
-.memo-window,
 .floating-window {
   scrollbar-width: thin;
   scrollbar-color: var(--gd-scrollbar-thumb) var(--gd-scrollbar-track);
@@ -334,7 +341,6 @@ main {
 
 .app-mode-stage *::-webkit-scrollbar,
 .settings-modal-window *::-webkit-scrollbar,
-.memo-window *::-webkit-scrollbar,
 .floating-window *::-webkit-scrollbar {
   width: var(--gd-scrollbar-size);
   height: var(--gd-scrollbar-size);
@@ -342,7 +348,6 @@ main {
 
 .app-mode-stage *::-webkit-scrollbar-track,
 .settings-modal-window *::-webkit-scrollbar-track,
-.memo-window *::-webkit-scrollbar-track,
 .floating-window *::-webkit-scrollbar-track {
   background: var(--gd-scrollbar-track);
   border-radius: 999px;
@@ -350,7 +355,6 @@ main {
 
 .app-mode-stage *::-webkit-scrollbar-thumb,
 .settings-modal-window *::-webkit-scrollbar-thumb,
-.memo-window *::-webkit-scrollbar-thumb,
 .floating-window *::-webkit-scrollbar-thumb {
   background: var(--gd-scrollbar-thumb);
   border: 2px solid var(--gd-scrollbar-border);
@@ -360,14 +364,12 @@ main {
 
 .app-mode-stage *::-webkit-scrollbar-thumb:hover,
 .settings-modal-window *::-webkit-scrollbar-thumb:hover,
-.memo-window *::-webkit-scrollbar-thumb:hover,
 .floating-window *::-webkit-scrollbar-thumb:hover {
   background: var(--gd-scrollbar-thumb-hover);
 }
 
 .app-mode-stage *::-webkit-scrollbar-corner,
 .settings-modal-window *::-webkit-scrollbar-corner,
-.memo-window *::-webkit-scrollbar-corner,
 .floating-window *::-webkit-scrollbar-corner {
   background: transparent;
 }
@@ -387,108 +389,4 @@ body.glassday-scrollbars-hidden *::-webkit-scrollbar {
   width: 0 !important;
   height: 0 !important;
   display: none !important;
-}
-
-/* =========================================================
-   TAURI DESKTOP WINDOW
-========================================================= */
-
-html,
-body,
-#root {
-  width: 100%;
-  height: 100%;
-}
-
-body {
-  margin: 0;
-}
-
-/*
- * Tauri 창에서 실제 Glassday가 viewport 전체를 차지한다.
- * 별도의 titlebar 높이를 만들지 않는다.
- */
-.tauri-app-root {
-  position: relative;
-
-  width: 100vw;
-  height: 100vh;
-
-  margin: 0;
-  padding: 0;
-
-  overflow: hidden;
-}
-
-/*
- * 기존 Glassday header 위의 비어 있는 영역을
- * window drag 영역으로 사용.
- *
- * 오른쪽은 window control 버튼을 위해 비워둔다.
- */
-.tauri-drag-region {
-  position: fixed;
-
-  top: 0;
-  left: 215px;
-  right: 150px;
-
-  height: 30px;
-
-  z-index: 9998;
-
-  user-select: none;
-
-  app-region: drag;
-}
-
-/* Windows control buttons */
-.tauri-window-controls {
-  position: fixed;
-
-  top: 0;
-  right: 0;
-
-  height: 32px;
-
-  display: flex;
-  align-items: stretch;
-
-  z-index: 10000;
-
-  user-select: none;
-}
-
-.tauri-window-control {
-  width: 44px;
-  height: 32px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin: 0;
-  padding: 0;
-
-  border: 0;
-  border-radius: 0;
-
-  color: var(--gd-text-secondary, rgba(35, 35, 55, 0.72));
-  background: transparent;
-
-  cursor: default;
-
-  transition:
-    background-color 120ms ease,
-    color 120ms ease;
-}
-
-.tauri-window-control:hover {
-  background: rgba(80, 75, 105, 0.08);
-  color: var(--gd-text-primary, rgba(30, 28, 45, 0.95));
-}
-
-.tauri-window-control-close:hover {
-  color: #ffffff;
-  background: #c42b1c;
 }

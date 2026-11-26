@@ -1,14 +1,16 @@
 /* ============================================================
    [Theme Tokens] Cross-theme Semantic Surface Map
 
-   연결: GlassPanel, GlassCard, Widget inner card, shared control, Floating Window.
-   Figma Variables:
-   - App Surface, Widget Surface, Inner Surface, Control Surface
-   - Border, Shadow, Backdrop Filter
+   적용 범위: 앱 창(.glass-panel/.liquid-shell), 기본 위젯 카드(.glass-card),
+   공통 입력 컨트롤, Today Focus와 Alert Center의 공용 내부 행.
+   이 파일은 테마별 재질 토큰을 정의하고 위 공통 프레임에 연결한다.
+   각 토큰의 실제 사용처는 모바일/위젯 CSS의 var(--gd-...) 참조를 검색하면 된다.
 
-   layout/Grid/Widget 구조는 다른 CSS에 두고 이 파일은 semantic surface token만 제공한다.
-   Study와 Daily Journal 같은 여러 Widget이 같은 inner token을 사용해 theme 내 명암을 맞춘다.
-   개별 Theme selector의 원색/texture는 src/styles/themes/*.css와 함께 확인한다.
+   주의: 파일 전체를 제거하면 공통 프레임이 참조하는 토큰이 사라진다.
+   위젯별 예외 표면은 themes/*-surfaces.css가 소유한다.
+   따라서 공통 토큰과 개별 위젯 표면 규칙을 함께 확인한 뒤 중복만 제거한다.
+
+   Figma variables: App, Widget, Inner, Control Surface + Border, Shadow, Blur.
    ============================================================ */
 
 :root {
@@ -77,7 +79,7 @@ body.theme-pastel {
     radial-gradient(circle at 10% 0%, hsl(324 88% 88% / 0.3), transparent 44%),
     radial-gradient(circle at 96% 4%, hsl(190 86% 82% / 0.26), transparent 48%),
     linear-gradient(145deg, hsl(0 0% 100% / 0.5), hsl(282 72% 94% / 0.26));
-  --gd-surface-border: hsl(0 0% 100% / 0.5);
+  --gd-surface-border: rgb(255 255 255 / 0.34);
   --gd-surface-shadow:
     0 28px 72px -52px hsl(278 38% 36% / 0.3),
     0 12px 30px -26px hsl(188 46% 38% / 0.22),
@@ -111,10 +113,7 @@ html[data-theme="glass-light"],
 body[data-theme="glass-light"],
 html.theme-glass-light,
 body.theme-glass-light {
-  --background: 220 30% 98%;
-  --foreground: 238 26% 18%;
   --primary: 258 88% 66%;
-  --muted-foreground: 236 12% 48%;
 
   --gd-app-bg: rgb(255 255 255 / 0.15);
   --gd-app-border: rgb(255 255 255 / 0.32);
@@ -167,20 +166,15 @@ body.theme-glass-dark {
       rgb(214 225 246 / 0.09)
     );
   --gd-inner-border: rgb(225 234 255 / 0.2);
-  --gd-widget-inner-filter: blur(24px) saturate(150%);
   --gd-control-bg: rgb(255 255 255 / 0.13);
   --gd-control-border: rgb(225 234 255 / 0.2);
   --gd-control-active-bg: rgb(255 255 255 / 0.24);
 
-  /* Complex widgets consume the same neutral reflected-glass recipe. */
-  --gd-widget-panel-bg: var(--gd-inner-bg);
-  --gd-widget-panel-border: var(--gd-inner-border);
+  /* Panel/control color aliases above already follow Glass Dark's inner and
+     control tokens. Only its deeper interior shadow needs a theme override. */
   --gd-widget-panel-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.14),
     0 14px 34px -28px rgb(0 0 0 / 0.44);
-  --gd-widget-control-bg: var(--gd-control-bg);
-  --gd-widget-control-border: var(--gd-control-border);
-  --gd-widget-control-active-bg: var(--gd-control-active-bg);
 }
 
 /* Aurora keeps its deeper tint while preserving the same semantic structure.
@@ -222,8 +216,10 @@ body.theme-retro {
 /* Widget CSS owns layout only. Every theme supplies the same panel and
    control roles through the tokens above; Alert severity does not repaint
    whole rows with a separate palette. */
-:is(.today-focus-hero, .today-focus-section,
-    .today-focus-block, .today-focus-task, .alert-center-item) {
+:is(.today-focus-hero, .today-focus-section, .today-focus-ring,
+    .today-focus-block, .today-focus-task, .today-focus-mini-item,
+    .today-focus-career-item, .today-focus-memo, .today-focus-alert,
+    .alert-center-item) {
   color: hsl(var(--foreground));
   background: var(--gd-widget-panel-bg);
   border: 1px solid var(--gd-widget-panel-border);
@@ -331,12 +327,16 @@ html[data-theme="glass-light"] .glass-panel,
 html[data-theme="glass-light"] .liquid-shell,
 html[data-theme="glass-dark"] .glass-panel,
 html[data-theme="glass-dark"] .liquid-shell,
+html[data-theme="aurora"] .glass-panel,
+html[data-theme="aurora"] .liquid-shell,
 body[data-theme="pastel"] .glass-panel,
 body[data-theme="pastel"] .liquid-shell,
 body[data-theme="glass-light"] .glass-panel,
 body[data-theme="glass-light"] .liquid-shell,
 body[data-theme="glass-dark"] .glass-panel,
-body[data-theme="glass-dark"] .liquid-shell {
+body[data-theme="glass-dark"] .liquid-shell,
+body[data-theme="aurora"] .glass-panel,
+body[data-theme="aurora"] .liquid-shell {
   background: var(--gd-app-bg) !important;
   border-color: var(--gd-app-border) !important;
   box-shadow: var(--gd-app-shadow) !important;
@@ -347,9 +347,13 @@ body[data-theme="glass-dark"] .liquid-shell {
 html[data-theme="pastel"] .glass-card,
 html[data-theme="glass-light"] .glass-card,
 html[data-theme="glass-dark"] .glass-card,
+html[data-theme="aurora"] .glass-card,
 body[data-theme="pastel"] .glass-card,
 body[data-theme="glass-light"] .glass-card,
-body[data-theme="glass-dark"] .glass-card {
+body[data-theme="glass-dark"] .glass-card,
+body[data-theme="aurora"] .glass-card,
+html[data-theme="aurora"] .settings-modal-window,
+body[data-theme="aurora"] .settings-modal-window {
   color: hsl(var(--foreground) / 0.92) !important;
   background: var(--gd-surface-bg) !important;
   border-color: var(--gd-surface-border) !important;
@@ -361,9 +365,11 @@ body[data-theme="glass-dark"] .glass-card {
 html[data-theme="pastel"] :is(.topbar, aside),
 html[data-theme="glass-light"] :is(.topbar, aside),
 html[data-theme="glass-dark"] :is(.topbar, aside),
+html[data-theme="aurora"] :is(.topbar, aside),
 body[data-theme="pastel"] :is(.topbar, aside),
 body[data-theme="glass-light"] :is(.topbar, aside),
-body[data-theme="glass-dark"] :is(.topbar, aside) {
+body[data-theme="glass-dark"] :is(.topbar, aside),
+body[data-theme="aurora"] :is(.topbar, aside) {
   color: hsl(var(--foreground) / 0.9) !important;
   background: var(--gd-surface-bg) !important;
   border-color: var(--gd-surface-border) !important;
@@ -372,31 +378,18 @@ body[data-theme="glass-dark"] :is(.topbar, aside) {
   -webkit-backdrop-filter: var(--gd-surface-filter) !important;
 }
 
-html[data-theme="pastel"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-html[data-theme="glass-light"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-html[data-theme="glass-dark"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-html[data-theme="aurora"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-body[data-theme="pastel"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-body[data-theme="glass-light"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-body[data-theme="glass-dark"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-body[data-theme="aurora"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card) {
+html[data-theme="pastel"] :is(.today-focus-hero, .today-focus-section, .today-focus-ring, .today-focus-block, .today-focus-task, .today-focus-mini-item, .today-focus-career-item, .today-focus-memo, .today-focus-alert, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+html[data-theme="glass-light"] :is(.today-focus-hero, .today-focus-section, .today-focus-ring, .today-focus-block, .today-focus-task, .today-focus-mini-item, .today-focus-career-item, .today-focus-memo, .today-focus-alert, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+html[data-theme="glass-dark"] :is(.today-focus-hero, .today-focus-section, .today-focus-ring, .today-focus-block, .today-focus-task, .today-focus-mini-item, .today-focus-career-item, .today-focus-memo, .today-focus-alert, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+html[data-theme="aurora"] :is(.today-focus-hero, .today-focus-section, .today-focus-ring, .today-focus-block, .today-focus-task, .today-focus-mini-item, .today-focus-career-item, .today-focus-memo, .today-focus-alert, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+body[data-theme="pastel"] :is(.today-focus-hero, .today-focus-section, .today-focus-ring, .today-focus-block, .today-focus-task, .today-focus-mini-item, .today-focus-career-item, .today-focus-memo, .today-focus-alert, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+body[data-theme="glass-light"] :is(.today-focus-hero, .today-focus-section, .today-focus-ring, .today-focus-block, .today-focus-task, .today-focus-mini-item, .today-focus-career-item, .today-focus-memo, .today-focus-alert, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+body[data-theme="glass-dark"] :is(.today-focus-hero, .today-focus-section, .today-focus-ring, .today-focus-block, .today-focus-task, .today-focus-mini-item, .today-focus-career-item, .today-focus-memo, .today-focus-alert, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+body[data-theme="aurora"] :is(.today-focus-hero, .today-focus-section, .today-focus-ring, .today-focus-block, .today-focus-task, .today-focus-mini-item, .today-focus-career-item, .today-focus-memo, .today-focus-alert, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card) {
   color: hsl(var(--foreground) / 0.9) !important;
-  background: var(--gd-inner-bg) !important;
-  border-color: var(--gd-inner-border) !important;
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.28) !important;
-  backdrop-filter: var(--gd-widget-inner-filter) !important;
-  -webkit-backdrop-filter: var(--gd-widget-inner-filter) !important;
-}
-
-/*
- * Study Planner has its own compact panel classes rather than the shared
- * `.study-card` name. Connect them to the same glass token so its nested
- * surfaces blur consistently with the rest of the dashboard.
- * Study Planner 내부 패널도 다른 위젯과 동일한 공통 blur 값을 사용합니다.
- */
-:is(html[data-theme="pastel"], html[data-theme="glass-light"], html[data-theme="glass-dark"], html[data-theme="aurora"],
-    body[data-theme="pastel"], body[data-theme="glass-light"], body[data-theme="glass-dark"], body[data-theme="aurora"])
-  :is(.study10-summary-card, .study10-timer, .study10-panel, .study10-minute-head) {
+  background: var(--gd-widget-panel-bg) !important;
+  border-color: var(--gd-widget-panel-border) !important;
+  box-shadow: var(--gd-widget-panel-shadow) !important;
   backdrop-filter: var(--gd-widget-inner-filter) !important;
   -webkit-backdrop-filter: var(--gd-widget-inner-filter) !important;
 }
@@ -411,19 +404,14 @@ body[data-theme="aurora"] :is(.today-focus-hero, .today-focus-section, .today-fo
   background-clip: padding-box;
 }
 
-/* Hard pixel/retro materials remain opaque and do not inherit glass blur. */
-:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"], html[data-theme="retro"], body[data-theme="retro"])
-  :is(.study10-summary-card, .study10-timer, .study10-panel, .study10-minute-head) {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
 html[data-theme="pastel"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select),
 html[data-theme="glass-light"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select),
 html[data-theme="glass-dark"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select),
+html[data-theme="aurora"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select),
 body[data-theme="pastel"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select),
 body[data-theme="glass-light"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select),
-body[data-theme="glass-dark"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select) {
+body[data-theme="glass-dark"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select),
+body[data-theme="aurora"] :is(.glass-button, .theme-segmented-control, .theme-select-mobile, .calendar-view-toggle, .calendar-nav-button, input, textarea, select) {
   color: hsl(var(--foreground) / 0.86) !important;
   background: var(--gd-control-bg) !important;
   border-color: var(--gd-control-border) !important;
@@ -432,18 +420,24 @@ body[data-theme="glass-dark"] :is(.glass-button, .theme-segmented-control, .them
 html[data-theme="pastel"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active),
 html[data-theme="glass-light"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active),
 html[data-theme="glass-dark"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active),
+html[data-theme="aurora"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active, .sidebar-tab-item.is-active .sidebar-tab-main),
 body[data-theme="pastel"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active),
 body[data-theme="glass-light"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active),
-body[data-theme="glass-dark"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active) {
+body[data-theme="glass-dark"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active),
+body[data-theme="aurora"] :is(.glass-button.is-active, .theme-segment-button.is-active, .calendar-view-button.is-active, .sidebar-tab-item.is-active .sidebar-tab-main) {
   background: var(--gd-control-active-bg) !important;
 }
 
 html[data-theme="glass-dark"] :is(h1, h2, h3, h4, strong, .font-semibold, .font-bold),
-body[data-theme="glass-dark"] :is(h1, h2, h3, h4, strong, .font-semibold, .font-bold) {
+body[data-theme="glass-dark"] :is(h1, h2, h3, h4, strong, .font-semibold, .font-bold),
+html[data-theme="aurora"] :is(h1, h2, h3, h4, strong, .font-semibold, .font-bold),
+body[data-theme="aurora"] :is(h1, h2, h3, h4, strong, .font-semibold, .font-bold) {
   color: hsl(var(--foreground) / 0.96) !important;
 }
 
 html[data-theme="glass-dark"] :is(p, span, small, .text-muted-foreground),
-body[data-theme="glass-dark"] :is(p, span, small, .text-muted-foreground) {
+body[data-theme="glass-dark"] :is(p, span, small, .text-muted-foreground),
+html[data-theme="aurora"] :is(p, span, small, .text-muted-foreground),
+body[data-theme="aurora"] :is(p, span, small, .text-muted-foreground) {
   color: hsl(var(--muted-foreground) / 0.78) !important;
 }

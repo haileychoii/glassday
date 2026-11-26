@@ -89,11 +89,6 @@
   min-height: 0;
 
   padding: var(--gd-widget-panel-pad, 14px);
-
-  border-radius: var(--gd-radius-card, 22px);
-  border: 1px solid hsl(var(--border) / 0.34);
-
-  background: hsl(var(--card) / 0.48);
 }
 
 .timer-widget-main-card {
@@ -106,26 +101,6 @@
   gap: var(--gd-widget-section-gap, 10px);
 
   overflow: hidden;
-
-  color: hsl(var(--foreground) / 0.92);
-
-  background:
-    radial-gradient(
-      circle at 50% 18%,
-      hsl(var(--primary) / 0.18),
-      transparent 38%
-    ),
-    linear-gradient(
-      145deg,
-      hsl(var(--card) / 0.68),
-      hsl(var(--accent) / 0.16)
-    );
-
-  border-color: hsl(var(--border) / 0.42);
-
-  box-shadow:
-    0 24px 58px hsl(var(--foreground) / 0.08),
-    inset 0 1px 0 hsl(var(--background) / 0.32);
 }
 
 .timer-widget-settings-card {
@@ -206,22 +181,10 @@
 .timer-widget-time-button {
   padding: 0;
 
-  border: 0;
-
   font: inherit;
-  color: inherit;
-
-  background: transparent;
 
   cursor: pointer;
   appearance: none;
-}
-
-.timer-widget-time-button:focus-visible {
-  outline: 2px solid hsl(var(--primary) / 0.58);
-  outline-offset: 5px;
-
-  border-radius: 999px;
 }
 
 /* =========================================================
@@ -240,16 +203,10 @@
 
 .timer-widget-progress-track,
 .timer-widget-progress-value {
-  fill: none;
   stroke-width: 9;
 }
 
-.timer-widget-progress-track {
-  stroke: hsl(var(--foreground) / 0.12);
-}
-
 .timer-widget-progress-value {
-  stroke: hsl(var(--primary) / 0.9);
   stroke-linecap: round;
 
   transition: stroke-dashoffset 220ms ease;
@@ -264,13 +221,6 @@
 
   width: 11px;
   height: 11px;
-
-  border-radius: 999px;
-
-  background: hsl(var(--primary));
-
-  box-shadow:
-    0 0 14px hsl(var(--primary) / 0.42);
 
   transform:
     translate(-50%, -50%)
@@ -301,8 +251,6 @@
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.045em;
-
-  color: hsl(var(--foreground) / 0.94);
 }
 
 .timer-widget-duration-label,
@@ -314,8 +262,6 @@
   white-space: nowrap;
 
   line-height: 1.15;
-
-  color: hsl(var(--muted-foreground) / 0.86);
 }
 
 .timer-widget-duration-label {
@@ -333,8 +279,6 @@
   font-size: 11px;
   font-weight: 650;
   line-height: 1.45;
-
-  color: hsl(var(--muted-foreground) / 0.72);
 }
 
 /* =========================================================
@@ -354,25 +298,8 @@
 
   gap: 6px;
 
-  border-radius: 999px;
-  border: 1px solid hsl(0 0% 100% / 0.34);
-
   font-size: 11px;
   font-weight: 800;
-}
-
-.timer-widget-mode-button,
-.timer-widget-secondary {
-  color: hsl(var(--foreground) / 0.68);
-  background: hsl(var(--card) / 0.42);
-}
-
-.timer-widget-mode-button.is-active,
-.timer-widget-primary {
-  color: hsl(var(--primary));
-
-  background: hsl(var(--primary) / 0.2);
-  border-color: hsl(var(--primary) / 0.28);
 }
 
 /* =========================================================
@@ -384,8 +311,6 @@
   font-weight: 850;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-
-  color: hsl(var(--foreground) / 0.48);
 }
 
 .timer-widget-stepper-grid {
@@ -401,8 +326,6 @@
 .timer-widget-stepper-grid span {
   font-size: 10px;
   font-weight: 800;
-
-  color: hsl(var(--foreground) / 0.44);
 }
 
 .timer-widget-stepper {
@@ -424,12 +347,6 @@
 
   display: grid;
   place-items: center;
-
-  border-radius: 999px;
-  border: 1px solid hsl(var(--border) / 0.34);
-
-  color: hsl(var(--foreground) / 0.62);
-  background: hsl(var(--card) / 0.48);
 }
 
 .timer-widget-stepper strong {
@@ -437,8 +354,6 @@
 
   font-size: 13px;
   font-weight: 850;
-
-  color: hsl(var(--foreground) / 0.78);
 }
 
 /* =========================================================
@@ -460,25 +375,6 @@
   display: grid;
   gap: 8px;
 
-  border-radius: 16px;
-  border: 1px solid hsl(var(--border) / 0.52);
-
-  color: hsl(var(--foreground) / 0.9);
-
-  background:
-    linear-gradient(
-      145deg,
-      hsl(var(--card) / 0.9),
-      hsl(var(--accent) / 0.34)
-    );
-
-  box-shadow:
-    0 16px 38px hsl(var(--foreground) / 0.13),
-    inset 0 1px 0 hsl(var(--background) / 0.3);
-
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-
   transform: translate(-50%, -50%);
 }
 
@@ -488,8 +384,6 @@
   line-height: 1;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-
-  color: hsl(var(--muted-foreground) / 0.78);
 }
 
 .timer-widget-time-edit-row {
@@ -512,14 +406,8 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 999px;
-  border: 1px solid hsl(var(--border) / 0.42);
-
   font-size: 11px;
   font-weight: 850;
-
-  color: hsl(var(--foreground) / 0.8);
-  background: hsl(var(--card) / 0.55);
 }
 
 .timer-widget-time-edit-row input {
@@ -528,23 +416,10 @@
   height: 40px;
   min-height: 40px;
 
-  border-radius: 999px;
-  border: 1px solid hsl(var(--primary) / 0.28);
-
   text-align: center;
 
   font-size: 12px;
   font-weight: 850;
-
-  color: hsl(var(--foreground) / 0.9);
-  background: hsl(var(--background) / 0.42);
-}
-
-.timer-widget-time-apply {
-  color: hsl(var(--primary));
-
-  background: hsl(var(--primary) / 0.18);
-  border-color: hsl(var(--primary) / 0.3);
 }
 
 /* =========================================================
@@ -556,11 +431,6 @@
 
   display: grid;
   gap: 10px;
-
-  border-radius: 18px;
-  border: 1px solid hsl(var(--primary) / 0.16);
-
-  background: hsl(var(--primary) / 0.08);
 }
 
 /* =========================================================

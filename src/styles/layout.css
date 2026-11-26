@@ -1,16 +1,16 @@
 /* ============================================================
-   [Figma Mapping] Settings Window Layout
+   [Figma Mapping] Settings Window and Application Layout
 
-   연결 컴포넌트: src/components/settings/SettingsModal.tsx
+   연결 컴포넌트: SettingsModal, AppSidebar, Topbar, AppShell
    Figma 구조:
    - Window Root / Vertical layout
    - Fixed Draggable Title Bar
    - Scroll Body / Settings Card sections
    - Theme Card Grid, Font Form, Sync/Backup/Reset rows
 
-   이 파일은 Settings의 size/spacing/layout만 담당한다.
-   themes/*.css는 surface 외형만 조정한다. 크기와 배치는 이 공통 규칙을 따른다.
-   z-index/portal 기본 구조는 overlays.css와 함께 확인한다.
+   이 파일에는 설정창 배치, 앱 사이드바, 창 드래그 영역의 구조가 함께 있다.
+   활성 탭 같은 공통 상태는 의미 토큰을 쓰며, 테마 표면과 호스트 투명도는
+   각각 themes/*.css와 desktop-window.css가 맡는다.
    ============================================================ */
 
 .settings-modal-window,
@@ -76,7 +76,7 @@
   justify-content: center;
   gap: 7px;
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: var(--gd-radius-button);
   background: transparent;
   color: hsl(var(--muted-foreground));
   font-size: 12px;
@@ -233,7 +233,7 @@
 
   text-align: left !important;
 
-  border-radius: 24px !important;
+  border-radius: var(--gd-radius-card) !important;
   overflow: hidden !important;
   box-sizing: border-box !important;
 }
@@ -250,7 +250,7 @@
 
   padding: 0 10px !important;
 
-  border-radius: 18px !important;
+  border-radius: var(--gd-radius-inner) !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
 }
@@ -316,7 +316,7 @@
   gap: 12px !important;
 
   text-align: left !important;
-  border-radius: 22px !important;
+  border-radius: var(--gd-radius-button) !important;
   box-sizing: border-box !important;
 }
 
@@ -348,7 +348,7 @@
   width: 100% !important;
   min-width: 0 !important;
   padding: 16px !important;
-  border-radius: 22px !important;
+  border-radius: var(--gd-radius-card) !important;
   box-sizing: border-box !important;
 }
 
@@ -356,53 +356,9 @@
   width: 100% !important;
   min-width: 0 !important;
   padding: 12px 14px !important;
-  border-radius: 18px !important;
+  border-radius: var(--gd-radius-inner) !important;
   font-size: 12px !important;
   font-weight: 750 !important;
-}
-
-/* Pixel / Retro에서는 각진 설정창 유지 */
-html[data-theme="pixel-desk"] .settings-theme-card,
-body[data-theme="pixel-desk"] .settings-theme-card,
-html.theme-pixel-desk .settings-theme-card,
-body.theme-pixel-desk .settings-theme-card,
-html[data-theme="pixel-desk"] .settings-theme-preview,
-body[data-theme="pixel-desk"] .settings-theme-preview,
-html.theme-pixel-desk .settings-theme-preview,
-body.theme-pixel-desk .settings-theme-preview,
-html[data-theme="pixel-desk"] .settings-action-card,
-body[data-theme="pixel-desk"] .settings-action-card,
-html.theme-pixel-desk .settings-action-card,
-body.theme-pixel-desk .settings-action-card,
-html[data-theme="pixel-desk"] .settings-backup-button,
-body[data-theme="pixel-desk"] .settings-backup-button,
-html.theme-pixel-desk .settings-backup-button,
-body.theme-pixel-desk .settings-backup-button,
-html[data-theme="pixel-desk"] .settings-reset-button,
-body[data-theme="pixel-desk"] .settings-reset-button,
-html.theme-pixel-desk .settings-reset-button,
-body.theme-pixel-desk .settings-reset-button,
-html[data-theme="retro"] .settings-theme-card,
-body[data-theme="retro"] .settings-theme-card,
-html.theme-retro .settings-theme-card,
-body.theme-retro .settings-theme-card,
-html[data-theme="retro"] .settings-theme-preview,
-body[data-theme="retro"] .settings-theme-preview,
-html.theme-retro .settings-theme-preview,
-body.theme-retro .settings-theme-preview,
-html[data-theme="retro"] .settings-action-card,
-body[data-theme="retro"] .settings-action-card,
-html.theme-retro .settings-action-card,
-body.theme-retro .settings-action-card,
-html[data-theme="retro"] .settings-backup-button,
-body[data-theme="retro"] .settings-backup-button,
-html.theme-retro .settings-backup-button,
-body.theme-retro .settings-backup-button,
-html[data-theme="retro"] .settings-reset-button,
-body[data-theme="retro"] .settings-reset-button,
-html.theme-retro .settings-reset-button,
-body.theme-retro .settings-reset-button {
-  border-radius: 0 !important;
 }
 
 /* Small-screen modal layout */
@@ -694,15 +650,11 @@ aside .sidebar-workspace-list {
 }
 
 .sidebar-tab-item {
-  width: 100%;
-  min-width: 0;
   min-height: 42px;
 
   display: flex;
   align-items: center;
   gap: 6px;
-
-  flex: 0 0 auto;
 }
 
 .sidebar-tab-item.is-collapsed {
@@ -710,8 +662,6 @@ aside .sidebar-workspace-list {
 }
 
 .sidebar-tab-main {
-  flex: 1 1 auto;
-  min-width: 0;
 
   height: 42px;
   padding: 0 12px;
@@ -873,6 +823,29 @@ aside .sidebar-workspace-list {
   flex-shrink: 0;
 }
 
+/* Tab icons can be changed independently from the tab's locked built-in data. */
+.sidebar-tab-icon-editor {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-tab-icon-edit {
+  display: inline-grid;
+  flex: 0 0 30px;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: var(--gd-radius-control, 8px);
+  cursor: pointer;
+}
+
 /* On tablet/mobile, the dedicated sidebar is replaced by the top workspace bar. */
 @media (max-width: 920px) {
   .app-sidebar,
@@ -910,118 +883,11 @@ aside .sidebar-workspace-list {
 
   align-self: stretch;
 
-  min-width: 20px;
+  min-width: 32px;
 
   user-select: none;
 
   app-region: drag;
-}
-
-
-/* ============================================================
-   WINDOW CONTROL GROUP
-   ============================================================ */
-
-.tauri-window-controls {
-  display: flex;
-  align-items: center;
-
-  flex: 0 0 auto;
-
-  height: 32px;
-
-  margin-left: 2px;
-
-  overflow: hidden;
-
-  border-radius: 12px;
-
-  background:
-    rgba(255, 255, 255, 0.12);
-
-  border:
-    1px solid rgba(255, 255, 255, 0.18);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
-
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-
-/* ============================================================
-   INDIVIDUAL WINDOW BUTTON
-   ============================================================ */
-
-.tauri-window-control {
-  width: 34px;
-  height: 30px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  flex: 0 0 34px;
-
-  margin: 0;
-  padding: 0;
-
-  border: 0;
-  border-radius: 0;
-
-  outline: none;
-
-  background: transparent;
-
-  color:
-    var(
-      --gd-text-secondary,
-      rgba(42, 40, 62, 0.68)
-    );
-
-  cursor: default;
-
-  transition:
-    background-color 120ms ease,
-    color 120ms ease;
-}
-
-
-/*
- * Minimize / maximize hover
- */
-.tauri-window-control:hover {
-  background:
-    rgba(255, 255, 255, 0.24);
-
-  color:
-    var(
-      --gd-text-primary,
-      rgba(30, 28, 45, 0.94)
-    );
-}
-
-
-/*
- * Close는 Windows UX처럼
- * hover에서만 danger state.
- */
-.tauri-window-control-close:hover {
-  background: #c42b1c;
-
-  color: #ffffff;
-}
-
-
-/*
- * keyboard focus
- */
-.tauri-window-control:focus-visible {
-  outline:
-    2px solid rgba(130, 110, 255, 0.4);
-
-  outline-offset: -2px;
 }
 
 
@@ -1052,20 +918,13 @@ aside .sidebar-workspace-list {
    ========================================================= */
 
 /*
- * Tauri WebView 자체는 아무것도 그리지 않는다.
- * 실제 눈에 보이는 window surface는
- * .app-shell-surface 하나뿐이다.
+ * Tauri WebView 투명 배경은 desktop-window.css에서 호스트에 한정해 처리한다.
+ * 여기서는 Tauri 앱 창의 크기와 내부 배치만 정한다.
  */
 html,
 body,
 #root {
-  width: 100%;
-  height: 100%;
-
-  margin: 0;
   padding: 0;
-
-  background: transparent !important;
 }
 
 body {
@@ -1087,8 +946,6 @@ body {
   position: relative;
 
   overflow: hidden;
-
-  background: transparent !important;
 }
 
 
@@ -1107,11 +964,6 @@ body {
   height: 100%;
 
   margin: 0;
-
-  /*
-   * 기존 Glassday shape 그대로 유지.
-   */
-  border-radius: 2.2rem;
 
   overflow: hidden;
 }
@@ -1132,32 +984,10 @@ body {
    ============================================================ */
 
 /*
- * Tauri owns the native transparent window, while this layer owns the visible
- * widget shell. / Tauri 네이티브 창은 투명 호스트이고, 실제 위젯 패널은
- * AppShell surface 하나만 담당한다.
- */
-.tauri-app-window > .app-shell-surface {
-  border-radius: 22px;
-  border: 1px solid hsl(0 0% 100% / 0.34);
-
-  background:
-    linear-gradient(
-      135deg,
-      hsl(0 0% 100% / 0.32),
-      hsl(225 42% 92% / 0.16)
-    );
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.52),
-    0 10px 34px -28px hsl(240 30% 18% / 0.32);
-}
-
-/*
  * Invisible drag rail between the greeting and action buttons.
  * 제목과 Settings/Edit 사이의 빈 공간만 창 이동 영역으로 사용한다.
  */
 .tauri-topbar-drag-region {
-  min-width: 32px;
   cursor: grab;
 }
 
@@ -1169,21 +999,6 @@ body {
  * Tauri has no visible minimize/maximize/close buttons now.
  * Tauri 위젯 모드에서는 앱 기능 버튼만 남기고 창 제어 UI는 만들지 않는다.
  */
-.tauri-app-window .tauri-window-controls,
-.tauri-app-window .tauri-window-control,
-.tauri-app-window .tauri-drag-region {
-  display: none !important;
-}
-
-/*
- * Compact widget chrome.
- * 위젯으로 오래 띄워두기 좋게 Tauri 상단 영역을 낮고 조용하게 만든다.
- */
-.tauri-app-window .topbar,
-.tauri-app-window .topbar-inner {
-  min-height: 48px !important;
-}
-
 .tauri-app-window .topbar-inner {
   padding: 0 12px !important;
 }
@@ -1195,7 +1010,6 @@ body {
 .tauri-app-window .topbar-title h1 {
   max-width: 260px;
 
-  font-size: 16px !important;
   line-height: 1.1;
 
   overflow: hidden;
@@ -1208,7 +1022,6 @@ body {
 }
 
 .tauri-app-window .topbar-action-button {
-  height: 28px !important;
   padding-inline: 9px !important;
 }
 

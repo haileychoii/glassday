@@ -78,9 +78,7 @@
 ) {
   background-color: var(--w95-face);
   background-image: none;
-  border: 0;
   border-radius: 0;
-  box-shadow: var(--w95-shadow-raised-deep);
 }
 
 /* One interior panel rule for every widget. Earlier theme files had separate
@@ -94,6 +92,7 @@
 ) :is(.mobile-layout, .app-shell-surface) :is(
   .today-focus-hero, .today-focus-section,
   .today-focus-block, .today-focus-task, .today-focus-mini-item,
+  .today-focus-career-item, .today-focus-memo, .today-focus-alert,
   .alert-center-item, .alert-item, .alert-summary-card,
   .calendar-event-item, .calendar-event-card, .calendar-mini-card,
   .calendar-month-day-cell, .calendar-event-card,
@@ -117,15 +116,17 @@
   box-shadow: none !important;
 }
 
-/* Every interactive control uses the same raised face. Active state reverses
-   that same layered edge to read as physically pressed. */
+/* Actual controls share the same raised face and pressed state. Today Focus's
+   pinned memo is a linked summary row, so it stays in the flat inner-panel
+   group above instead of looking like a separate raised button. */
 :is(
   html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
   html.theme-pixel-desk, body.theme-pixel-desk,
   html.pixel-desk, body.pixel-desk,
   html.theme-pixel, body.theme-pixel
 ) :is(.mobile-layout, .app-shell-surface) :is(
-  button:not(.mobile-career-row__main), [role="button"]:not(.mobile-career-row__main), .glass-button, .career-icon-button,
+  button:not(.mobile-career-row__main):not(.today-focus-memo),
+  [role="button"]:not(.mobile-career-row__main):not(.today-focus-memo), .glass-button, .career-icon-button,
   .settings-theme-card, .mobile-career-status-rail button
 ) {
   border: 0;
@@ -244,4 +245,112 @@
   .mobile-career-card, .mobile-career-card *
 ) {
   border-radius: 0 !important;
+}
+
+/* =========================================================
+   Pixel Desk final event color bridge
+   Calendar has several late responsive rules and the Pixel theme has hard
+   Win98 panel backgrounds. Keep event surfaces data-colored in every view.
+   / Month, Week, Day 모두 일정별 --event-color가 마지막에 보이도록 한다.
+========================================================= */
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(
+    .calendar-event-item,
+    .calendar-week-event,
+    .calendar-week-range-bar,
+    .calendar-range-chip,
+    .calendar-month-single-chip
+  ) {
+  background:
+    color-mix(in srgb, var(--event-color, #fff3b0) 86%, #ffffff 14%) !important;
+  color: #111111 !important;
+  border-radius: 0 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #606060 !important;
+  border-bottom: 1px solid #606060 !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--event-color, #fff3b0) 28%, #ffffff 72%) !important;
+  filter: saturate(1.05) brightness(1.02) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .calendar-range-chip {
+  opacity: 0.72 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(.calendar-event-item:hover, .calendar-week-event:hover, .calendar-week-range-bar:hover, .calendar-month-single-chip:hover, .calendar-range-chip:hover) {
+  background:
+    color-mix(in srgb, var(--event-color, #fff3b0) 96%, #ffffff 4%) !important;
+  opacity: 0.96 !important;
+  filter: saturate(1.18) brightness(1.03) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(.calendar-event-item, .calendar-week-event, .calendar-week-range-bar, .calendar-month-single-chip)
+  :is(strong, span, .calendar-event-title, .calendar-event-time, .calendar-event-location) {
+  color: #111111 !important;
+}
+
+/* Pixel Desk keeps the cover-letter question field tall enough for editing. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk
+) .career-cover-question-input {
+  height: 128px !important;
+  min-height: 128px !important;
+  max-height: 128px !important;
+  overflow-y: auto !important;
+}
+
+/* Compact Pixel Desk metric rows to fit the raised panel frame. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .mood-row {
+  padding: 5px 7px;
 }

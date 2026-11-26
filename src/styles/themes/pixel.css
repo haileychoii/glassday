@@ -544,13 +544,6 @@ html[data-theme="pixel-desk"] .app-shell-main {
 
   min-height: 52px !important;
   padding: 8px !important;
-  border-radius: 0 !important;
-
-  background: #e8e8dc !important;
-  border-top: 1px solid #ffffff !important;
-  border-left: 1px solid #ffffff !important;
-  border-right: 1px solid #606060 !important;
-  border-bottom: 1px solid #606060 !important;
 
   overflow: hidden !important;
 }
@@ -593,64 +586,8 @@ html[data-theme="pixel-desk"] .app-shell-main {
   justify-self: end !important;
 }
 
-/* varied chip colors */
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-note-color,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-note-accent {
-  background: #f7a8c9 !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 2) .memo-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 2) .memo-note-color,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel
-) .memo-note-item:nth-child(6n + 2) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 2) .memo-note-accent {
-  background: #fff1a8 !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 3) .memo-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel
-) .memo-note-item:nth-child(6n + 3) .memo-note-color,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 3) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 3) .memo-note-accent {
-  background: #a9e9ff !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-note-color,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-note-accent {
-  background: #c8f7b7 !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-note-color,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-note-accent {
-  background: #cbb8ff !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-note-color,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-note-accent {
-  background: #ffbf91 !important;
-}
+/* Memo color dots use the palette chosen for each saved note in MemoWidget.tsx.
+   Do not derive their color from list position; that would hide the user's choice. */
 
 /* Memo editor */
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-workspace {
@@ -717,40 +654,13 @@ html[data-theme="pixel-desk"] .app-shell-main {
   scrollbar-color: #c0c0c0 var(--w95-bg, #d4d0c8) !important;
 }
 
-/* =========================================================
-   Calendar / progress / chips
-========================================================= */
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-range-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-week-event {
-  border-radius: 0 !important;
-  background: #ffffcc !important;
-  color: #000000 !important;
-  border-top: 1px solid #ffffff !important;
-  border-left: 1px solid #ffffff !important;
-  border-right: 1px solid #808080 !important;
-  border-bottom: 1px solid #808080 !important;
-  box-shadow: none !important;
-}
+/* Pixel Calendar surfaces are owned by pixel-95css.css. Keep only the
+   standalone color-chip radius fallback here; shared widget radius rules
+   cover chips inside GlassCard, while this also covers floating Memo windows. */
 
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .event-color-chip,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-color-chip {
   border-radius: 0 !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-ring {
-  border-radius: 0 !important;
-  background: #c0c0c0 !important;
-  border-top: 2px solid #404040 !important;
-  border-left: 2px solid #404040 !important;
-  border-right: 2px solid #ffffff !important;
-  border-bottom: 2px solid #ffffff !important;
-  box-shadow: none !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-ring span {
-  border-radius: 0 !important;
-  background: #ffffff !important;
 }
 
 /* settings preview */

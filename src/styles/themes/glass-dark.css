@@ -1,627 +1,65 @@
-
 /* ============================================================
-   TAURI ONLY — NEUTRAL GLASS DARK
-   ------------------------------------------------------------
-   WEB / Vercel
-   - 기존 Glass Dark 배경과 디자인 그대로 유지
+   Glass Dark theme tokens
 
-   TAURI
-   - 검은색/차콜 기반의 투명 glass material
-   - 실제 Windows Desktop이 뒤로 보이되 텍스트는 blur로 흐려짐
-   - Aurora처럼 남색/보라색 tint를 넣지 않음
+   theme-surfaces.css owns the regular web colors and shared surface rules.
+   This file adds only text helpers, Tauri's transparent-window material
+   overrides, and the dark scrollbar palette. Keep widget class names out of
+   this file so every widget follows the same shared surface rules.
+   / 웹의 기본 색과 공통 표면 규칙은 theme-surfaces.css가 맡습니다.
+   이 파일에는 보조 글자색, Tauri 투명창 재질, 어두운 스크롤바만 둡니다.
    ============================================================ */
 
+:is(html, body):is([data-theme="glass-dark"], .theme-glass-dark) {
+  --gd-dark-text: rgb(238 240 244 / 0.92);
 
-/* ============================================================
-   1. TAURI DARK MATERIAL TOKENS
+  --gd-scrollbar-size: 10px;
+  --gd-scrollbar-track: rgb(15 17 22 / 0.2);
+  --gd-scrollbar-thumb: rgb(190 200 216 / 0.38);
+  --gd-scrollbar-thumb-hover: rgb(221 229 241 / 0.56);
+  --gd-scrollbar-border: rgb(12 14 18 / 0.32);
+  scrollbar-color: rgb(190 200 216 / 0.42) rgb(15 17 22 / 0.18);
+}
 
-   기존 Glass Dark는 내부 panel/control이 상당히 불투명하다.
-   Tauri에서는 색을 검정 계열로 제한하고 opacity/blur로만 깊이를 만든다.
-============================================================ */
-
+/* Use the same semantic tokens in desktop transparency mode. The selector is
+   more specific than the regular theme token block, so this one material
+   recipe is limited to Tauri's transparent window without per-widget overrides.
+   / 투명 데스크톱 창에서는 같은 공통 표면 토큰에 조금 더 깊은 blur를 씁니다. */
 html.desktop-transparent[data-theme="glass-dark"],
 body.desktop-transparent[data-theme="glass-dark"] {
-  --gd-dark-shell-bg:
-    linear-gradient(
-      180deg,
-      rgba(22, 22, 24, 0.36),
-      rgba(0, 0, 0, 0.22)
-    );
+  --gd-app-bg:
+    linear-gradient(180deg, rgb(22 22 24 / 0.36), rgb(0 0 0 / 0.22));
+  --gd-app-border: rgb(255 255 255 / 0.13);
+  --gd-app-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.16),
+    inset 0 0 0 1px rgb(255 255 255 / 0.04),
+    0 28px 80px rgb(0 0 0 / 0.24);
+  --gd-app-filter: blur(46px) saturate(168%) brightness(0.98);
 
-  --gd-dark-shell-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 28px 80px rgba(0, 0, 0, 0.24);
+  --gd-surface-bg:
+    linear-gradient(145deg, rgb(36 36 38 / 0.42), rgb(0 0 0 / 0.24));
+  --gd-surface-border: rgb(255 255 255 / 0.14);
+  --gd-surface-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.075),
+    0 16px 38px rgb(0 0 0 / 0.14);
+  --gd-surface-filter: blur(44px) saturate(166%);
 
-
-  /* Widget */
-
-
-  /* Inner Panel */
-  --gd-dark-panel-bg:
-    linear-gradient(
-      145deg,
-      rgba(48, 48, 50, 0.32),
-      rgba(0, 0, 0, 0.18)
-    );
-
-  --gd-dark-panel-border:
-    rgba(255, 255, 255, 0.16);
-
-  --gd-dark-panel-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 12px 32px rgba(0, 0, 0, 0.16);
-
-
-  /* Buttons / Controls */
-  --gd-dark-control-bg:
-    linear-gradient(
-      145deg,
-      rgba(58, 58, 60, 0.34),
-      rgba(0, 0, 0, 0.20)
-    );
-
-  --gd-dark-control-border:
-    rgba(255, 255, 255, 0.17);
-
-
-  /* Shared widget aliases가 존재하는 경우에도 Tauri Glass로 통일 */
-  --gd-widget-panel-bg:
-    linear-gradient(
-      145deg,
-      rgba(48, 48, 50, 0.32),
-      rgba(0, 0, 0, 0.18)
-    );
-
-  --gd-widget-panel-border:
-    rgba(255, 255, 255, 0.16);
-
+  --gd-inner-bg:
+    linear-gradient(145deg, rgb(48 48 50 / 0.32), rgb(0 0 0 / 0.18));
+  --gd-inner-border: rgb(255 255 255 / 0.16);
+  --gd-widget-inner-filter: blur(38px) saturate(160%);
+  /* Legacy memo surface tokens still read these aliases until that stylesheet
+     is reviewed; keep their values identical to the shared inner-panel role. */
+  --gd-dark-panel-bg: var(--gd-inner-bg);
+  --gd-dark-panel-border: var(--gd-inner-border);
+  --gd-dark-panel-shadow: var(--gd-widget-panel-shadow);
+  --gd-widget-panel-border: var(--gd-inner-border);
   --gd-widget-panel-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 12px 32px rgba(0, 0, 0, 0.16);
-}
-
-
-/* ============================================================
-   2. ROOT / BODY / APP STAGE
-
-   기존 Glass Dark의 남색 wallpaper/gradient를
-   Tauri에서만 완전히 제거한다.
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"],
-html.desktop-transparent[data-theme="glass-dark"] body,
-body.desktop-transparent[data-theme="glass-dark"],
-html.desktop-transparent[data-theme="glass-dark"] #root,
-body.desktop-transparent[data-theme="glass-dark"] #root,
-
-html.desktop-transparent[data-theme="glass-dark"] .app-mode-stage,
-body.desktop-transparent[data-theme="glass-dark"] .app-mode-stage,
-
-html.desktop-transparent[data-theme="glass-dark"] .tauri-app-window,
-body.desktop-transparent[data-theme="glass-dark"] .tauri-app-window,
-
-html.desktop-transparent[data-theme="glass-dark"] .tauri-glassday-root,
-body.desktop-transparent[data-theme="glass-dark"] .tauri-glassday-root {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-}
-
-
-/* ============================================================
-   3. 기존 Web Preview용 Background 제거
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient,
-body.desktop-transparent[data-theme="glass-dark"] .bg-glass-gradient {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-
-  box-shadow: none !important;
-}
-
-
-/* ============================================================
-   4. APP SHELL
-
-   Glassday 전체를 받치는 큰 남색 판을 제거한다.
-
-   IMPORTANT:
-   Sidebar / Topbar / Widgets까지 제거하는 게 아니다.
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"] .app-shell-surface,
-body.desktop-transparent[data-theme="glass-dark"] .app-shell-surface,
-
-html.desktop-transparent[data-theme="glass-dark"]
-  .app-shell-surface.glass-panel,
-
-body.desktop-transparent[data-theme="glass-dark"]
-  .app-shell-surface.glass-panel,
-
-html.desktop-transparent[data-theme="glass-dark"]
-  .app-shell-surface.liquid-shell,
-
-body.desktop-transparent[data-theme="glass-dark"]
-  .app-shell-surface.liquid-shell {
-  /* Tauri glass backplate
-     Keep the desktop visible and use blur, not opaque navy/black paint, as the
-     main material. / 검은 판이 아니라 투명도와 blur가 주인공인 dark glass다. */
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%),
-    var(--gd-dark-shell-bg) !important;
-  background-color: rgba(0, 0, 0, 0.18) !important;
-  background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%),
-    var(--gd-dark-shell-bg) !important;
-
-  /*
-   * The shell owns one neutral black blur layer.
-   * Korean: 남색/보라 tint 없이 검정 유리 막만 만들어 뒤 배경 텍스트를 흐린다.
-   */
-  backdrop-filter:
-    blur(46px)
-    saturate(168%)
-    brightness(0.98) !important;
-
-  -webkit-backdrop-filter:
-    blur(46px)
-    saturate(168%)
-    brightness(0.98) !important;
-
-  border-color:
-    rgba(255, 255, 255, 0.13) !important;
-
-  box-shadow:
-    var(--gd-dark-shell-shadow) !important;
-}
-
-
-/* ============================================================
-   5. SHELL 내부 구조 Layer
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"] .app-shell-columns,
-html.desktop-transparent[data-theme="glass-dark"] .app-shell-main-column,
-html.desktop-transparent[data-theme="glass-dark"] .app-shell-main,
-
-body.desktop-transparent[data-theme="glass-dark"] .app-shell-columns,
-body.desktop-transparent[data-theme="glass-dark"] .app-shell-main-column,
-body.desktop-transparent[data-theme="glass-dark"] .app-shell-main {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-}
-
-
-/* ============================================================
-   6. SIDEBAR
-   Smoked Glass
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"] .app-sidebar,
-html.desktop-transparent[data-theme="glass-dark"] .sidebar,
-
-body.desktop-transparent[data-theme="glass-dark"] .app-sidebar,
-body.desktop-transparent[data-theme="glass-dark"] .sidebar {
-  color: var(--gd-dark-text) !important;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(32, 32, 34, 0.42),
-      rgba(0, 0, 0, 0.24)
-    ) !important;
-
-  border-right:
-    1px solid rgba(255, 255, 255, 0.12) !important;
-
-  box-shadow:
-    inset -1px 0 0 rgba(255, 255, 255, 0.025) !important;
-
-  backdrop-filter:
-    blur(42px)
-    saturate(164%) !important;
-
-  -webkit-backdrop-filter:
-    blur(42px)
-    saturate(164%) !important;
-}
-
-
-/* ============================================================
-   7. TOPBAR
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"] .topbar,
-body.desktop-transparent[data-theme="glass-dark"] .topbar {
-  color: var(--gd-dark-text) !important;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(34, 34, 36, 0.42),
-      rgba(0, 0, 0, 0.22)
-    ) !important;
-
-  border:
-    1px solid rgba(255, 255, 255, 0.12) !important;
-
-  border-radius:
-    20px 20px 0 0 !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 12px 32px rgba(0, 0, 0, 0.11) !important;
-
-  backdrop-filter:
-    blur(42px)
-    saturate(166%) !important;
-
-  -webkit-backdrop-filter:
-    blur(42px)
-    saturate(166%) !important;
-}
-
-
-/* ============================================================
-   8. MAIN WIDGETS
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"] .glass-card,
-body.desktop-transparent[data-theme="glass-dark"] .glass-card {
-  color: var(--gd-dark-text) !important;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(36, 36, 38, 0.42),
-      rgba(0, 0, 0, 0.24)
-    ) !important;
-
-  border:
-    1px solid rgba(255, 255, 255, 0.14) !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.075),
-    0 16px 38px rgba(0, 0, 0, 0.14) !important;
-
-  backdrop-filter:
-    blur(44px)
-    saturate(166%) !important;
-
-  -webkit-backdrop-filter:
-    blur(44px)
-    saturate(166%) !important;
-}
-
-
-/* ============================================================
-   9. INNER PANELS
-
-   기존 Dark에서는 이 부분이 상당히 불투명했음.
-   Tauri에서는 반투명 smoked glass로 낮춘다.
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"] .today-focus-hero,
-html.desktop-transparent[data-theme="glass-dark"] .today-focus-section,
-html.desktop-transparent[data-theme="glass-dark"] .today-focus-block,
-html.desktop-transparent[data-theme="glass-dark"] .calendar-event-item,
-html.desktop-transparent[data-theme="glass-dark"] .calendar-event-card,
-html.desktop-transparent[data-theme="glass-dark"] .calendar-mini-card,
-html.desktop-transparent[data-theme="glass-dark"] .career-list-item,
-html.desktop-transparent[data-theme="glass-dark"] .memo-note-item,
-html.desktop-transparent[data-theme="glass-dark"] .alert-item,
-html.desktop-transparent[data-theme="glass-dark"] .journal-section,
-html.desktop-transparent[data-theme="glass-dark"] .study-card,
-
-body.desktop-transparent[data-theme="glass-dark"] .today-focus-hero,
-body.desktop-transparent[data-theme="glass-dark"] .today-focus-section,
-body.desktop-transparent[data-theme="glass-dark"] .today-focus-block,
-body.desktop-transparent[data-theme="glass-dark"] .calendar-event-item,
-body.desktop-transparent[data-theme="glass-dark"] .calendar-event-card,
-body.desktop-transparent[data-theme="glass-dark"] .calendar-mini-card,
-body.desktop-transparent[data-theme="glass-dark"] .career-list-item,
-body.desktop-transparent[data-theme="glass-dark"] .memo-note-item,
-body.desktop-transparent[data-theme="glass-dark"] .alert-item,
-body.desktop-transparent[data-theme="glass-dark"] .journal-section,
-body.desktop-transparent[data-theme="glass-dark"] .study-card {
-  background:
-    linear-gradient(
-      145deg,
-      rgba(48, 48, 50, 0.32),
-      rgba(0, 0, 0, 0.18)
-    ) !important;
-
-  border-color:
-    rgba(255, 255, 255, 0.13) !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 9px 22px rgba(0, 0, 0, 0.11) !important;
-
-  backdrop-filter:
-    blur(38px)
-    saturate(160%) !important;
-
-  -webkit-backdrop-filter:
-    blur(38px)
-    saturate(160%) !important;
-}
-
-
-/* ============================================================
-   10. COMMON DASHBOARD PANELS
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"] :is(
-  .career-summary-card,
-  .money-summary-panel,
-  .money-budget-panel,
-  .money-visual-panel,
-  .money-recent-panel,
-  .money-detail-card
-),
-
-body.desktop-transparent[data-theme="glass-dark"] :is(
-  .career-summary-card,
-  .money-summary-panel,
-  .money-budget-panel,
-  .money-visual-panel,
-  .money-recent-panel,
-  .money-detail-card
-) {
-  background:
-    var(--gd-dark-panel-bg) !important;
-
-  border-color:
-    var(--gd-dark-panel-border) !important;
-
-  box-shadow:
-    var(--gd-dark-panel-shadow) !important;
-
-  backdrop-filter:
-    blur(38px)
-    saturate(160%) !important;
-
-  -webkit-backdrop-filter:
-    blur(38px)
-    saturate(160%) !important;
-}
-
-/* Career list controls stay as one continuous glass pill in Glass Dark.
-   The shared transparent-control layer can otherwise paint the native select
-   as a square rectangle behind its rounded Career metadata surface. */
-html[data-theme="glass-dark"] .career-list-meta :is(.career-status-pill, select),
-body[data-theme="glass-dark"] .career-list-meta :is(.career-status-pill, select),
-html.theme-glass-dark .career-list-meta :is(.career-status-pill, select),
-body.theme-glass-dark .career-list-meta :is(.career-status-pill, select) {
-  display: inline-flex;
-  align-items: center;
-  min-height: 22px;
-  border-radius: 999px !important;
-  background-clip: padding-box;
-  overflow: hidden;
-}
-
-html[data-theme="glass-dark"] .career-list-meta select,
-body[data-theme="glass-dark"] .career-list-meta select,
-html.theme-glass-dark .career-list-meta select,
-body.theme-glass-dark .career-list-meta select {
-  appearance: none !important;
-  -webkit-appearance: none !important;
-}
-
-/* Career card typography is intentionally a little quieter than widget titles. */
-html[data-theme="glass-dark"] .career-list-title strong,
-body[data-theme="glass-dark"] .career-list-title strong,
-html.theme-glass-dark .career-list-title strong,
-body.theme-glass-dark .career-list-title strong {
-  font-size: 12px !important;
-}
-
-html[data-theme="glass-dark"] .career-list-title span,
-body[data-theme="glass-dark"] .career-list-title span,
-html.theme-glass-dark .career-list-title span,
-body.theme-glass-dark .career-list-title span {
-  font-size: 10px !important;
-}
-
-
-/* ============================================================
-   11. CONTROLS
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"] :is(
-  .glass-button,
-  .career-icon-button,
-  .career-filter-pill:not(.is-active),
-  .career-status-pill,
-  .career-dday-pill.none,
-  .career-delete-button,
-  .today-focus-mini-item,
-  .today-focus-career-item,
-  .today-focus-memo,
-  .alert-center-icon,
-  .calendar-sync-button,
-  .timer-widget-mode-button:not(.is-active),
-  .timer-widget-secondary,
-  .money-budget-mini,
-  .money-donut-center,
-  .money-transaction-row
-),
-
-body.desktop-transparent[data-theme="glass-dark"] :is(
-  .glass-button,
-  .career-icon-button,
-  .career-filter-pill:not(.is-active),
-  .career-status-pill,
-  .career-dday-pill.none,
-  .career-delete-button,
-  .today-focus-mini-item,
-  .today-focus-career-item,
-  .today-focus-memo,
-  .alert-center-icon,
-  .calendar-sync-button,
-  .timer-widget-mode-button:not(.is-active),
-  .timer-widget-secondary,
-  .money-budget-mini,
-  .money-donut-center,
-  .money-transaction-row
-) {
-  background:
-    var(--gd-dark-control-bg) !important;
-
-  border-color:
-    var(--gd-dark-control-border) !important;
-
-  backdrop-filter:
-    blur(32px)
-    saturate(156%) !important;
-
-  -webkit-backdrop-filter:
-    blur(32px)
-    saturate(156%) !important;
-}
-
-
-/* ============================================================
-   12. INPUTS
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"] input,
-html.desktop-transparent[data-theme="glass-dark"] textarea,
-html.desktop-transparent[data-theme="glass-dark"] select,
-
-body.desktop-transparent[data-theme="glass-dark"] input,
-body.desktop-transparent[data-theme="glass-dark"] textarea,
-body.desktop-transparent[data-theme="glass-dark"] select {
-  color:
-    var(--gd-dark-text) !important;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(52, 52, 54, 0.34),
-      rgba(0, 0, 0, 0.20)
-    ) !important;
-
-  border-color:
-    rgba(255, 255, 255, 0.16) !important;
-
-  backdrop-filter:
-    blur(32px)
-    saturate(156%) !important;
-
-  -webkit-backdrop-filter:
-    blur(32px)
-    saturate(156%) !important;
-}
-
-
-/* ============================================================
-   13. ACTIVE STATE
-
-   Dark Theme identity는 유지하되 너무 불투명하지 않게.
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"]
-  .sidebar-tab-item.is-active
-  .sidebar-tab-main,
-
-body.desktop-transparent[data-theme="glass-dark"]
-  .sidebar-tab-item.is-active
-  .sidebar-tab-main {
-  color:
-    var(--gd-dark-text-strong) !important;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.18),
-      rgba(74, 74, 76, 0.18) 42%,
-      rgba(0, 0, 0, 0.20)
-    ) !important;
-
-  border-color:
-    rgba(255, 255, 255, 0.2) !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 12px 28px rgba(0, 0, 0, 0.18) !important;
-}
-
-
-/* ============================================================
-   14. SETTINGS
-
-   Settings는 내용이 많으므로 dashboard보다 조금 더 진하게 유지.
-   그래도 Tauri에서는 solid dark panel이 아니라 glass.
-============================================================ */
-
-html.desktop-transparent[data-theme="glass-dark"] .settings-modal-window,
-body.desktop-transparent[data-theme="glass-dark"] .settings-modal-window {
-  background:
-    linear-gradient(
-      145deg,
-      rgba(28, 28, 30, 0.46),
-      rgba(0, 0, 0, 0.28)
-    ) !important;
-
-  border-color:
-    rgba(255, 255, 255, 0.17) !important;
-
-  backdrop-filter:
-    blur(40px)
-    saturate(158%) !important;
-
-  -webkit-backdrop-filter:
-    blur(40px)
-    saturate(158%) !important;
-}
-
-
-html.desktop-transparent[data-theme="glass-dark"] .settings-section,
-html.desktop-transparent[data-theme="glass-dark"] .settings-theme-card,
-
-body.desktop-transparent[data-theme="glass-dark"] .settings-section,
-body.desktop-transparent[data-theme="glass-dark"] .settings-theme-card {
-  background:
-    linear-gradient(
-      145deg,
-      rgba(46, 46, 48, 0.30),
-      rgba(0, 0, 0, 0.18)
-    ) !important;
-
-  border-color:
-    rgba(255, 255, 255, 0.15) !important;
-
-  backdrop-filter:
-    blur(32px)
-    saturate(150%) !important;
-
-  -webkit-backdrop-filter:
-    blur(32px)
-    saturate(150%) !important;
-}
-
-/* ============================================================
-   GLASS DARK SCROLLBAR MATERIAL
-   Keep the native scroll behavior, but replace the shared light scrollbar
-   palette with a subdued charcoal track and frosted-silver thumb.
-   스크롤 동작은 유지하고 공통 밝은 색 대신 차콜 트랙과 실버 유리 손잡이를 쓴다.
-============================================================ */
-
-:is(html, body):is([data-theme="glass-dark"], .theme-glass-dark) {
-  --gd-scrollbar-size: 10px;
-  --gd-scrollbar-track: rgba(15, 17, 22, 0.2);
-  --gd-scrollbar-thumb: rgba(190, 200, 216, 0.38);
-  --gd-scrollbar-thumb-hover: rgba(221, 229, 241, 0.56);
-  --gd-scrollbar-border: rgba(12, 14, 18, 0.32);
-
-  scrollbar-color: rgba(190, 200, 216, 0.42) rgba(15, 17, 22, 0.18);
+    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    0 12px 32px rgb(0 0 0 / 0.16);
+
+  --gd-control-bg:
+    linear-gradient(145deg, rgb(58 58 60 / 0.34), rgb(0 0 0 / 0.2));
+  --gd-control-border: rgb(255 255 255 / 0.17);
 }
 
 html[data-theme="glass-dark"] ::-webkit-scrollbar,
@@ -636,8 +74,8 @@ html[data-theme="glass-dark"] ::-webkit-scrollbar-track,
 body[data-theme="glass-dark"] ::-webkit-scrollbar-track,
 html.theme-glass-dark ::-webkit-scrollbar-track,
 body.theme-glass-dark ::-webkit-scrollbar-track {
-  background: rgba(15, 17, 22, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.035);
+  background: rgb(15 17 22 / 0.2);
+  border: 1px solid rgb(255 255 255 / 0.035);
   border-radius: 999px;
 }
 
@@ -647,13 +85,13 @@ html.theme-glass-dark ::-webkit-scrollbar-thumb,
 body.theme-glass-dark ::-webkit-scrollbar-thumb {
   background: linear-gradient(
     180deg,
-    rgba(210, 219, 233, 0.42),
-    rgba(139, 151, 171, 0.3)
+    rgb(210 219 233 / 0.42),
+    rgb(139 151 171 / 0.3)
   );
   border: 2px solid transparent;
   border-radius: 999px;
   background-clip: padding-box;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.24);
 }
 
 html[data-theme="glass-dark"] ::-webkit-scrollbar-thumb:hover,
@@ -662,8 +100,8 @@ html.theme-glass-dark ::-webkit-scrollbar-thumb:hover,
 body.theme-glass-dark ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(
     180deg,
-    rgba(229, 236, 246, 0.6),
-    rgba(165, 177, 197, 0.46)
+    rgb(229 236 246 / 0.6),
+    rgb(165 177 197 / 0.46)
   );
   border: 2px solid transparent;
   background-clip: padding-box;

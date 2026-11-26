@@ -10,6 +10,9 @@
    CDN과 public/fonts fallback을 정의하며 layout/size token은 선언하지 않는다.
    font-family 이름은 constants/fonts.ts의 value 및 저장된 Memo fontFamily와 일치해야 한다.
    ============================================================ */
+/* Mona12/MonaS12 system fonts: Pixel Desk and Retro pick these in
+   themes/pixel.css, themes/retro.css, and constants/fonts.ts. Keep the
+   theme's choice there; this import only registers the font files. */
 @import url("https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/mona.css");
 
 @font-face {
@@ -250,13 +253,6 @@
 @font-face {
   font-family: "EFDiary";
   src: url("/fonts/EF_Diary.ttf") format("truetype");
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "GriunCherry1Spoon";
-  src: url("/fonts/Griun_Cherry1Spoon-Rg.ttf") format("truetype");
   font-weight: 400;
   font-display: swap;
 }

@@ -1,0 +1,72 @@
+/* Diary canvas materials and note colors. Layout lives in widgets/diary-workspace.css. */
+
+.diary-workspace {
+  color: hsl(var(--foreground));
+}
+
+.diary-workspace__eyebrow {
+  color: hsl(var(--muted-foreground) / 0.82);
+}
+
+.diary-workspace__heading p {
+  color: hsl(var(--muted-foreground) / 0.78);
+}
+
+/* Canvas controls use the active theme's normal control and accent colors. */
+.diary-workspace__action {
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--gd-radius-button, 999px);
+  background: hsl(var(--card) / 0.62);
+  color: hsl(var(--foreground) / 0.86);
+}
+
+.diary-workspace__action:hover,
+.diary-workspace__action.is-active {
+  background: hsl(var(--primary) / 0.16);
+  border-color: hsl(var(--primary) / 0.52);
+}
+
+.diary-workspace__canvas {
+  border: 1px solid hsl(var(--border) / 0.62);
+  border-radius: var(--gd-radius-panel, 18px);
+  background:
+    linear-gradient(hsl(var(--foreground) / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--foreground) / 0.035) 1px, transparent 1px),
+    hsl(var(--card) / 0.26);
+  background-size: 24px 24px;
+}
+
+.diary-workspace__canvas.is-editing {
+  border-color: hsl(var(--primary) / 0.62);
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+/* Diary's freeform note uses the same theme-owned panel roles as its widgets. */
+.diary-note-block {
+  border: 1px solid var(--gd-widget-panel-border);
+  border-radius: var(--gd-radius-card, 12px);
+  background: var(--gd-widget-panel-bg);
+  color: hsl(var(--foreground));
+  box-shadow: var(--gd-widget-panel-shadow);
+}
+
+.diary-note-block__toolbar {
+  color: hsl(var(--muted-foreground));
+}
+
+.diary-note-block__toolbar button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.diary-note-block textarea {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.diary-workspace__footer {
+  color: hsl(var(--muted-foreground) / 0.72);
+}

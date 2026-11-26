@@ -14,7 +14,7 @@
    ============================================================ */
 
 /* 1. Global tokens and primitives */
-@import "./spacing-tokens.css";
+@import "./layout-tokens.css";
 @import "./fonts.css";
 @import "./base.css";
 
@@ -35,6 +35,16 @@
 @import "./themes/pixel.css";
 @import "./themes/retro.css";
 @import "./theme-surfaces.css";
+
+/* Component surfaces follow theme tokens; widget files below own layout only. */
+@import "./themes/career-surfaces.css";
+@import "./themes/diary-workspace-surfaces.css";
+@import "./themes/memo-surfaces.css";
+@import "./themes/money-surfaces.css";
+@import "./themes/mood-surfaces.css";
+@import "./themes/settings-surfaces.css";
+@import "./themes/study-surfaces.css";
+@import "./themes/timer-surfaces.css";
 
 /* 4. Widget-level styles */
 @import "./widgets/today-focus.css";

@@ -219,12 +219,12 @@
 }
 
 .mobile-layout .habit-tracker__content {
-  display: none !important;
+  display: none;
 }
 
 .mobile-layout .habit-tracker-widget > .widget-frame__body {
-  padding: 8px 12px 12px !important;
-  overflow: visible !important;
+  /* Keep the weekly tracker visible while the shared mobile frame owns its inset. */
+  overflow: visible;
 }
 
 .mobile-layout .habit-tracker__mobile {

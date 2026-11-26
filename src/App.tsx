@@ -28,7 +28,7 @@
  * - layoutMode 저장 키는 OAuth 복귀와 연결되므로 임의 변경하지 않는다.
  * ============================================================
  */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { AppShell } from "./components/layout/AppShell";
 import { MobileLayout } from "./components/layout/MobileLayout";
@@ -90,6 +90,13 @@ function App() {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [quickCaptureOpen, setQuickCaptureOpen] = useState(false);
   const [captureStatus, setCaptureStatus] = useState("");
+  const [tabActionNotice, setTabActionNotice] = useState<{
+    message: string;
+    canUndo: boolean;
+  } | null>(null);
+  const tabActionNoticeTimer = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
   const [layoutMode, setLayoutMode] = useState<DashboardLayoutMode>(() => {
     if (typeof window === "undefined") return "wide";
 
@@ -116,9 +123,67 @@ function App() {
     addWidgetToActiveTab,
     removeWidgetFromActiveTab,
     addTab,
+    setActiveTabMobileWidgetHeight,
     renameTab,
+    updateTabIcon,
     removeTab,
+    undoLastTabAction,
   } = useDashboardTabs();
+
+  const showTabActionNotice = (message: string) => {
+    if (tabActionNoticeTimer.current) {
+      clearTimeout(tabActionNoticeTimer.current);
+    }
+
+    setTabActionNotice({ message, canUndo: true });
+    tabActionNoticeTimer.current = setTimeout(() => {
+      setTabActionNotice(null);
+      tabActionNoticeTimer.current = null;
+    }, 8000);
+  };
+
+  const handleAddTab = (icon?: string) => {
+    addTab(icon);
+    showTabActionNotice("새 탭을 만들었습니다.");
+  };
+
+  const handleRemoveTab = (tabId: string) => {
+    const target = tabs.find((tab) => tab.id === tabId);
+    if (!target || target.locked) return;
+
+    removeTab(tabId);
+    showTabActionNotice("탭을 삭제했습니다.");
+  };
+
+  const handleChangeTabIcon = (tabId: string, icon: string) => {
+    if (!updateTabIcon(tabId, icon)) return;
+    showTabActionNotice("탭 아이콘을 저장했습니다.");
+  };
+
+  const handleUndoTabAction = () => {
+    if (!undoLastTabAction()) return;
+
+    if (tabActionNoticeTimer.current) {
+      clearTimeout(tabActionNoticeTimer.current);
+      tabActionNoticeTimer.current = null;
+    }
+    setTabActionNotice({
+      message: "탭 작업을 되돌렸습니다.",
+      canUndo: false,
+    });
+    tabActionNoticeTimer.current = setTimeout(() => {
+      setTabActionNotice(null);
+      tabActionNoticeTimer.current = null;
+    }, 2200);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (tabActionNoticeTimer.current) {
+        clearTimeout(tabActionNoticeTimer.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     void loadSavedCustomFonts();
@@ -260,8 +325,24 @@ function App() {
               onOpenSearch={() => setCommandPaletteOpen(true)}
               onOpenQuickCapture={() => setQuickCaptureOpen(true)}
               onOpenSettings={() => setSettingsOpen(true)}
+              onAddTab={(icon) => {
+                handleAddTab(icon);
+                // New tabs open in edit mode so they remain blank until the
+                // user names the workspace and chooses its first widget.
+                setEditMode(true);
+              }}
+              onRenameTab={renameTab}
+              onChangeTabIcon={handleChangeTabIcon}
+              onRemoveTab={handleRemoveTab}
+              editMode={editMode}
+              onToggleEditMode={() => setEditMode((prev) => !prev)}
             >
-              <MobileDashboard activeTab={activeTab} />
+              <MobileDashboard
+                activeTab={activeTab}
+                editMode={editMode}
+                onSetWidgetHeight={setActiveTabMobileWidgetHeight}
+                onAddWidget={addWidgetToActiveTab}
+              />
             </MobileLayout>
           ) : (
             <AppShell
@@ -273,9 +354,10 @@ function App() {
               onToggleEditMode={() => setEditMode((prev) => !prev)}
               onOpenSettings={() => setSettingsOpen(true)}
               onSelectTab={setActiveTabId}
-              onAddTab={addTab}
+              onAddTab={handleAddTab}
               onRenameTab={renameTab}
-              onRemoveTab={removeTab}
+              onChangeTabIcon={handleChangeTabIcon}
+              onRemoveTab={handleRemoveTab}
             >
               <DashboardGrid
                 editMode={editMode}
@@ -324,6 +406,17 @@ function App() {
             onAnimationEnd={() => setCaptureStatus("")}
           >
             {captureStatus}
+          </div>
+        )}
+
+        {tabActionNotice && (
+          <div className="tab-action-toast" role="status" aria-live="polite">
+            <span>{tabActionNotice.message}</span>
+            {tabActionNotice.canUndo && (
+              <button type="button" onClick={handleUndoTabAction}>
+                되돌리기
+              </button>
+            )}
           </div>
         )}
       </DashboardDataProvider>

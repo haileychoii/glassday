@@ -51,6 +51,7 @@ type AppShellProps = {
   onSelectTab: (tabId: string) => void;
   onAddTab: () => void;
   onRenameTab: (tabId: string, label: string) => void;
+  onChangeTabIcon: (tabId: string, icon: string) => void;
   onRemoveTab: (tabId: string) => void;
 };
 
@@ -66,6 +67,7 @@ export const AppShell = ({
   onSelectTab,
   onAddTab,
   onRenameTab,
+  onChangeTabIcon,
   onRemoveTab,
 }: AppShellProps) => {
   /*
@@ -308,6 +310,7 @@ const shellContent = (
         onSelectTab={onSelectTab}
         onAddTab={onAddTab}
         onRenameTab={onRenameTab}
+        onChangeTabIcon={onChangeTabIcon}
         onRemoveTab={onRemoveTab}
       />
 
@@ -330,6 +333,7 @@ const shellContent = (
           onSelectTab={onSelectTab}
           onAddTab={onAddTab}
           onRenameTab={onRenameTab}
+          onChangeTabIcon={onChangeTabIcon}
           onRemoveTab={onRemoveTab}
         />
 

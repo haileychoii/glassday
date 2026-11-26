@@ -10,8 +10,7 @@
    MOOD
    Widget-local styles for:
    - metric row spacing
-   - theme-aware active dot colors
-   - consistent label/value contrast across themes
+   - metric row and score-dot layout
 ========================================================= */
 
 .mood-widget .glass-card-body {
@@ -30,43 +29,13 @@
 }
 
 .mood-row {
-  --mood-accent: hsl(var(--primary));
-  --mood-surface: hsl(0 0% 100% / 0.18);
   min-width: 0;
   min-height: 34px;
   padding: 6px 8px;
-  border-radius: 14px;
   display: grid;
   grid-template-columns: minmax(58px, 0.62fr) minmax(60px, 1fr) auto;
   align-items: center;
   gap: 8px;
-  background: var(--mood-surface);
-  border: 1px solid hsl(0 0% 100% / 0.34);
-}
-
-.mood-row[data-metric="energy"] {
-  --mood-accent: #b37cff;
-}
-
-.mood-row[data-metric="focus"] {
-  --mood-accent: #7aaeff;
-}
-
-.mood-row[data-metric="sleepiness"] {
-  --mood-accent: #f0bf74;
-}
-
-.mood-row[data-metric="stress"] {
-  --mood-accent: #79d0a5;
-}
-
-.mood-row[data-metric="appetite"] {
-  --mood-accent: #f295b3;
-}
-
-.mood-label,
-.mood-value {
-  color: hsl(var(--foreground) / 0.78);
 }
 
 .mood-label {
@@ -99,8 +68,6 @@
 .mood-dot {
   width: 9px;
   height: 9px;
-  border-radius: 999px;
-  background: hsl(0 0% 100% / 0.34);
   transition:
     transform 140ms ease,
     background 140ms ease,
@@ -108,11 +75,7 @@
 }
 
 .mood-dot-active {
-  background: var(--mood-accent);
   transform: scale(1.08);
-  box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--mood-accent) 18%, transparent),
-    0 6px 16px -10px color-mix(in srgb, var(--mood-accent) 62%, transparent);
 }
 
 .mood-reset-button {
@@ -123,135 +86,7 @@
   gap: 7px;
   font-size: 11px;
   font-weight: 750;
-  color: hsl(var(--muted-foreground) / 0.78);
   transition: color 140ms ease;
-}
-
-.mood-reset-button:hover {
-  color: hsl(var(--foreground) / 0.9);
-}
-
-html[data-theme="glass-dark"] .mood-row,
-body[data-theme="glass-dark"] .mood-row,
-html.theme-glass-dark .mood-row,
-body.theme-glass-dark .mood-row,
-html[data-theme="aurora"] .mood-row,
-body[data-theme="aurora"] .mood-row,
-html.theme-aurora .mood-row,
-body.theme-aurora .mood-row {
-  background: rgba(34, 40, 61, 0.24);
-  border-color: rgba(166, 181, 225, 0.16);
-}
-
-html[data-theme="glass-dark"] .mood-label,
-body[data-theme="glass-dark"] .mood-label,
-html.theme-glass-dark .mood-label,
-body.theme-glass-dark .mood-label,
-html[data-theme="glass-dark"] .mood-value,
-body[data-theme="glass-dark"] .mood-value,
-html.theme-glass-dark .mood-value,
-body.theme-glass-dark .mood-value,
-html[data-theme="aurora"] .mood-label,
-body[data-theme="aurora"] .mood-label,
-html.theme-aurora .mood-label,
-body.theme-aurora .mood-label,
-html[data-theme="aurora"] .mood-value,
-body[data-theme="aurora"] .mood-value,
-html.theme-aurora .mood-value,
-body.theme-aurora .mood-value {
-  color: rgba(236, 240, 255, 0.84);
-}
-
-html[data-theme="pixel-desk"] .mood-row,
-body[data-theme="pixel-desk"] .mood-row,
-html.theme-pixel-desk .mood-row,
-body.theme-pixel-desk .mood-row,
-html.theme-pixel .mood-row,
-body.theme-pixel .mood-row {
-  padding: 5px 7px;
-  border-radius: 0;
-  /* Pixel Desk mood rows use Win98 raised panels while keeping the metric
-     color visible. / 회색 평면 패널이 아니라 지표색이 보이는 입체 패널로 둔다. */
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--mood-accent) 32%, #f4f4ec 68%),
-      color-mix(in srgb, var(--mood-accent) 22%, #d4d0c8 78%)
-    ) !important;
-  border-top: 2px solid #ffffff !important;
-  border-left: 2px solid #ffffff !important;
-  border-right: 2px solid #404040 !important;
-  border-bottom: 2px solid #404040 !important;
-  box-shadow:
-    inset 1px 1px 0 #f7f7f7,
-    inset -1px -1px 0 #808080 !important;
-}
-
-html[data-theme="pixel-desk"] .mood-dot,
-body[data-theme="pixel-desk"] .mood-dot,
-html.theme-pixel-desk .mood-dot,
-body.theme-pixel-desk .mood-dot,
-html.theme-pixel .mood-dot,
-body.theme-pixel .mood-dot {
-  background: color-mix(in srgb, var(--mood-accent) 16%, #b8b8b0 84%);
-  border-radius: 0;
-  border-top: 1px solid #808080;
-  border-left: 1px solid #808080;
-  border-right: 1px solid #ffffff;
-  border-bottom: 1px solid #ffffff;
-}
-
-html[data-theme="pixel-desk"] .mood-dot-active,
-body[data-theme="pixel-desk"] .mood-dot-active,
-html.theme-pixel-desk .mood-dot-active,
-body.theme-pixel-desk .mood-dot-active,
-html.theme-pixel .mood-dot-active,
-body.theme-pixel .mood-dot-active {
-  background: var(--mood-accent) !important;
-  border-top-color: #ffffff !important;
-  border-left-color: #ffffff !important;
-  border-right-color: #404040 !important;
-  border-bottom-color: #404040 !important;
-  box-shadow:
-    inset 1px 1px 0 color-mix(in srgb, var(--mood-accent) 50%, #ffffff 50%),
-    inset -1px -1px 0 color-mix(in srgb, var(--mood-accent) 72%, #404040 28%) !important;
-}
-
-html[data-theme="mac-core"] .mood-row,
-body[data-theme="mac-core"] .mood-row,
-html.theme-mac-core .mood-row,
-body.theme-mac-core .mood-row {
-  /* Preserve per-metric color inside Mac Core.
-     mac-core.css gives inner rows a system material with !important, so this
-     later widget rule deliberately restores the Mood accent layer. /
-     mac-core의 공통 row 재질보다 Mood 지표 색상이 우선 보이도록 한다. */
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--mood-accent) 14%, white 86%),
-      color-mix(in srgb, var(--mood-accent) 7%, white 93%)
-    ) !important;
-  border-color: color-mix(in srgb, var(--mood-accent) 32%, white 68%) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.88),
-    0 10px 22px -20px color-mix(in srgb, var(--mood-accent) 34%, transparent) !important;
-}
-
-html[data-theme="mac-core"] .mood-dot,
-body[data-theme="mac-core"] .mood-dot,
-html.theme-mac-core .mood-dot,
-body.theme-mac-core .mood-dot {
-  background: color-mix(in srgb, var(--mood-accent) 18%, #d7dbe3 82%);
-}
-
-html[data-theme="mac-core"] .mood-dot-active,
-body[data-theme="mac-core"] .mood-dot-active,
-html.theme-mac-core .mood-dot-active,
-body.theme-mac-core .mood-dot-active {
-  background: var(--mood-accent) !important;
-  box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--mood-accent) 22%, transparent),
-    0 8px 18px -12px color-mix(in srgb, var(--mood-accent) 72%, transparent) !important;
 }
 
 @container mood-widget (max-width: 360px) {

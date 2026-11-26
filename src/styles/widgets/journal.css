@@ -377,7 +377,6 @@
   min-width: 0;
   width: 100%;
   padding: 0;
-  border: 0;
   outline: none;
   background: transparent;
   color: var(--journal-text);
@@ -462,9 +461,9 @@
 /* 11. 넓은 창보다 작은 위젯: 카운터 3개 + Condition 전체 폭.
  * 여기서만 4열 → 3열 구조 전환. 기존의 중복된 860/760/680/600/560을 제거. */
 @container journal-widget (max-width: 760px) {
-  .journal-summary-row { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+  .journal-summary-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .journal-score-strip-card {
-    grid-column: 1 / -1 !important;
+    grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
   }
@@ -492,18 +491,4 @@
   .journal-summary-card { min-height: 36px; padding-block: 4px; }
   .journal-score-inline { min-height: 38px; padding-block: 3px; }
   .journal-section { padding: 8px; }
-}
-
-/* 14. Mac Core: Journal 전용 토큰만 변경한다.
- * 전체 Mac 앱의 디자인을 여기서 재정의하지 않는다.
- * 연결: themes/mac-core.css의 --mac-inner-bg/--mac-control-bg. */
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .daily-journal-widget {
-  --journal-panel: var(--mac-inner-bg, #f7f8fa);
-  --journal-panel-border: var(--mac-inner-border, #dedee2);
-  --journal-panel-shadow: var(--mac-inner-shadow, none);
-  --journal-control: var(--mac-control-bg, #f5f5f7);
-  --journal-control-border: var(--mac-control-border, #d1d1d6);
-  --journal-text: var(--mac-text, #1d1d1f);
-  --journal-muted: var(--mac-secondary-text, #6e6e73);
-  --journal-accent: var(--mac-blue, #0a84ff);
 }

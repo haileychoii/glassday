@@ -89,7 +89,8 @@ type CloudSyncContextValue = {
 };
 
 const STORAGE_TABLE = "user_storage_snapshots";
-const REMOTE_REFRESH_INTERVAL_MS = 30_000;
+/* Visible signed-in clients pick up another device's workspace edits promptly. */
+const REMOTE_REFRESH_INTERVAL_MS = 5_000;
 const AUTH_UI_SNAPSHOT_KEY = "glassday.auth.uiSnapshot.v1";
 const DESKTOP_AUTH_CALLBACK = "glassday://auth/callback";
 const AUTH_UI_SNAPSHOT_KEYS = [

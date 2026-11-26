@@ -37,7 +37,6 @@ body:has(.mobile-layout) .mobile-calendar-detail {
   --mc-surface: var(--gd-widget-panel-bg, hsl(var(--card) / 0.82));
   --mc-border: var(--gd-widget-panel-border, hsl(var(--border) / 0.38));
   --mc-control: var(--gd-widget-control-bg, hsl(var(--card) / 0.55));
-  --mc-radius: var(--gd-radius-widget, 20px);
   color: hsl(var(--foreground));
   box-sizing: border-box;
 }
@@ -57,10 +56,6 @@ body:has(.mobile-layout) .mobile-calendar-detail * {
   width: 100%;
   min-width: 0;
   display: grid;
-  border: 1px solid var(--mc-border);
-  border-radius: var(--mc-radius);
-  background: var(--gd-surface-bg, hsl(var(--card) / 0.86));
-  box-shadow: var(--gd-surface-shadow, 0 12px 32px -24px hsl(var(--foreground) / 0.24));
 }
 .mobile-layout .mobile-calendar-card__header,
 .mobile-layout .mobile-calendar-card__summary,

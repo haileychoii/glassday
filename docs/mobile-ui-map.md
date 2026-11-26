@@ -119,7 +119,7 @@ mobile-common.css        모든 위젯에 공통인 외부 카드와 제목줄
 실제 연결 순서는 `src/styles/index.css`에 있습니다. 아래 순서와 앞 문서의 간단한 요약이 다르면 `index.css`가 기준입니다.
 
 ```text
-1. spacing-tokens.css / fonts.css / base.css
+1. layout-tokens.css / fonts.css / base.css
    공통 숫자(간격/크기), 글꼴, 앱과 GlassCard 기본 구조
 2. layout / controls / dashboard-grid / overlays
    큰 화면 배치, 버튼, 그리드, 팝업
@@ -143,7 +143,7 @@ mobile-common.css        모든 위젯에 공통인 외부 카드와 제목줄
 
 | 바꾸려는 부분 | 우선 수정할 파일 | 다른 파일에 복사하지 않을 것 |
 |---|---|---|
-| 모든 모바일 위젯의 바깥 여백, 카드 사이 거리, 제목/아이콘 위치와 높이 | `mobile-common.css`, 값은 `spacing-tokens.css` | 특정 위젯 CSS 또는 테마 파일에 공통 치수 복제 |
+| 모든 모바일 위젯의 바깥 여백, 카드 사이 거리, 제목/아이콘 위치와 높이 | `mobile-common.css`, 값은 `layout-tokens.css` | 특정 위젯 CSS 또는 테마 파일에 공통 치수 복제 |
 | 위젯 본문 안의 버튼/표/행/입력 배치 | 해당 위젯 `widgets/<name>.css`, 필요 시 `mobile-<name>.css` | 다른 위젯까지 포함하는 일반 클래스 덮어쓰기 |
 | 배경색, 투명도, blur, 테두리색, 그림자 | `theme-surfaces.css`, `mobile-glass.css`, 테마 전용 파일 | 테마 CSS에 카드 폭/제목 크기 정의 |
 | Pixel Desk의 각진 테두리/파란 제목바 | `mobile-pixel.css`, `pixel-widget-headers.css` | Glass 공통 파일에서 Pixel을 위한 중복 규칙 |

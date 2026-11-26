@@ -1,0 +1,201 @@
+/* Timer color and surface treatments. Layout lives in widgets/timer.css. */
+
+/* Main and settings panels use the same shared card material. */
+.timer-widget-main-card,
+.timer-widget-settings-card {
+
+  border-radius: var(--gd-radius-card, 22px);
+  border: 1px solid hsl(var(--border) / 0.34);
+
+  background: hsl(var(--card) / 0.48);
+}
+
+.timer-widget-main-card {
+
+  color: hsl(var(--foreground) / 0.92);
+
+  background:
+    radial-gradient(
+      circle at 50% 18%,
+      hsl(var(--primary) / 0.18),
+      transparent 38%
+    ),
+    linear-gradient(
+      145deg,
+      hsl(var(--card) / 0.68),
+      hsl(var(--accent) / 0.16)
+    );
+
+  border-color: hsl(var(--border) / 0.42);
+
+  box-shadow:
+    0 24px 58px hsl(var(--foreground) / 0.08),
+    inset 0 1px 0 hsl(var(--background) / 0.32);
+}
+
+/* The time face itself stays transparent so the clock text sits over the ring. */
+.timer-widget-time-button {
+
+  border: 0;
+  color: inherit;
+
+  background: transparent;
+}
+
+.timer-widget-time-button:focus-visible {
+  outline: 2px solid hsl(var(--primary) / 0.58);
+  outline-offset: 5px;
+
+  border-radius: 999px;
+}
+
+/* The ring track uses muted text color; progress and marker use the theme accent. */
+.timer-widget-progress-track,
+.timer-widget-progress-value {
+  fill: none;
+}
+
+.timer-widget-progress-track {
+  stroke: hsl(var(--foreground) / 0.12);
+}
+
+.timer-widget-progress-value {
+  stroke: hsl(var(--primary) / 0.9);
+}
+
+.timer-widget-progress-dot {
+
+  border-radius: 999px;
+
+  background: hsl(var(--primary));
+
+  box-shadow:
+    0 0 14px hsl(var(--primary) / 0.42);
+}
+
+.timer-widget-clock {
+
+  color: hsl(var(--foreground) / 0.94);
+}
+
+.timer-widget-duration-label,
+.timer-widget-remaining-label {
+
+  color: hsl(var(--muted-foreground) / 0.86);
+}
+
+.timer-widget-meta,
+.timer-widget-prompt-copy {
+
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+/* Mode buttons distinguish the selected mode with the active theme color. */
+.timer-widget-mode-button,
+.timer-widget-primary,
+.timer-widget-secondary {
+
+  border-radius: 999px;
+  border: 1px solid hsl(0 0% 100% / 0.34);
+}
+
+.timer-widget-mode-button,
+.timer-widget-secondary {
+  color: hsl(var(--foreground) / 0.68);
+  background: hsl(var(--card) / 0.42);
+}
+
+.timer-widget-mode-button.is-active,
+.timer-widget-primary {
+  color: hsl(var(--primary));
+
+  background: hsl(var(--primary) / 0.2);
+  border-color: hsl(var(--primary) / 0.28);
+}
+
+.timer-widget-settings-title {
+
+  color: hsl(var(--foreground) / 0.48);
+}
+
+.timer-widget-stepper-grid span {
+
+  color: hsl(var(--foreground) / 0.44);
+}
+
+.timer-widget-stepper button {
+
+  border-radius: 999px;
+  border: 1px solid hsl(var(--border) / 0.34);
+
+  color: hsl(var(--foreground) / 0.62);
+  background: hsl(var(--card) / 0.48);
+}
+
+.timer-widget-stepper strong {
+
+  color: hsl(var(--foreground) / 0.78);
+}
+
+/* Time editing popover and controls reuse the shared theme surface tokens. */
+.timer-widget-time-popover {
+
+  border-radius: 16px;
+  border: 1px solid hsl(var(--border) / 0.52);
+
+  color: hsl(var(--foreground) / 0.9);
+
+  background:
+    linear-gradient(
+      145deg,
+      hsl(var(--card) / 0.9),
+      hsl(var(--accent) / 0.34)
+    );
+
+  box-shadow:
+    0 16px 38px hsl(var(--foreground) / 0.13),
+    inset 0 1px 0 hsl(var(--background) / 0.3);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.timer-widget-time-popover-title {
+
+  color: hsl(var(--muted-foreground) / 0.78);
+}
+
+.timer-widget-time-edit-row button,
+.timer-widget-time-apply {
+
+  border-radius: 999px;
+  border: 1px solid hsl(var(--border) / 0.42);
+
+  color: hsl(var(--foreground) / 0.8);
+  background: hsl(var(--card) / 0.55);
+}
+
+.timer-widget-time-edit-row input {
+
+  border-radius: 999px;
+  border: 1px solid hsl(var(--primary) / 0.28);
+
+  color: hsl(var(--foreground) / 0.9);
+  background: hsl(var(--background) / 0.42);
+}
+
+.timer-widget-time-apply {
+  color: hsl(var(--primary));
+
+  background: hsl(var(--primary) / 0.18);
+  border-color: hsl(var(--primary) / 0.3);
+}
+
+/* Completion prompt uses a light tint of the primary theme color. */
+.timer-widget-prompt {
+
+  border-radius: 18px;
+  border: 1px solid hsl(var(--primary) / 0.16);
+
+  background: hsl(var(--primary) / 0.08);
+}
