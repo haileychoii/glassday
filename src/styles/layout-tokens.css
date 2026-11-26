@@ -1,7 +1,7 @@
 /* ============================================================
-   [Figma Variables] Shared Spacing + Widget Geometry Tokens
+   [Figma Variables] Shared Layout and Sizing Tokens
 
-   이 파일은 Figma Variables와 가장 직접적으로 대응하는 spacing Source of Truth다.
+   이 파일은 앱과 위젯의 간격·크기 값을 한곳에서 관리하는 Figma Variables 기준이다.
    1) Primitive spacing scale
    2) Widget Frame header/body/icon/title spacing
    3) Shared control size

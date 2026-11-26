@@ -100,7 +100,7 @@ WidgetId
 | Workspace Tabs | `components/layout/WorkspaceTabsNav.tsx` | `responsive.css`, Theme CSS | useDashboardTabs | DashboardTab | icon/theme event | - | Workspace Tab Item |
 | Dashboard Grid | `components/grid/DashboardGrid.tsx` | `dashboard-grid.css`, `overrides.css` | useDashboardTabs | GridLayoutItem, WidgetId | 공통 surface token | Renderer | Dashboard Canvas / Edit Variant |
 | Floating Window | `components/common/FloatingWindow.tsx` | `overlays.css` | rect localStorage | FloatingWindowProps | Theme/Widget overrides | - | Floating Window |
-| Glass Card | `components/glass/GlassCard.tsx` | `base.css`, `spacing-tokens.css` | props | GlassCardProps | theme-surfaces.css | 모든 Widget | Widget Frame |
+| Glass Card | `components/glass/GlassCard.tsx` | `base.css`, `layout-tokens.css` | props | GlassCardProps | theme-surfaces.css | 모든 Widget | Widget Frame |
 | Settings | `components/settings/SettingsModal.tsx` | `layout.css`, `widgets/settings.css` | CloudSyncContext, backup/fonts/themes | ThemeId | 모든 Theme preview/override | - | Settings Window |
 | Today Focus | `components/widgets/TodayFocusWidget.tsx` | `widgets/today-focus.css` | DashboardDataContext, local tasks, Memo preview | local types | Theme surface | `today` | Widget / Today Focus |
 | Alert Center | `components/widgets/AlertCenterWidget.tsx` | `widgets/alert-center.css` | localStorage readers, studyUtils | local AlertItem | tone + Theme | `alerts` | Widget / Alert Center |
@@ -239,7 +239,7 @@ flowchart LR
 
 1. Figma의 카드 바깥/제목줄을 기존 `Widget Frame`과 맞춘다. TSX에서는 `GlassCard`를 재사용하고 내부 본문만 새로 구성한다.
 2. Figma Layer/Component 이름은 읽기 쉬운 화면 언어로 짓는다. 그 이름을 TSX `className`과 CSS 선택자에 그대로 연결한다. 예: `Habit Row` → `habit-tracker__item`.
-3. 공통 간격은 `spacing-tokens.css` 토큰을 우선 쓴다. 위젯 전용 반복 간격이 필요하면 CSS custom property 한 곳에서 정의하고 child들이 그 값을 쓴다.
+3. 공통 간격은 `layout-tokens.css` 토큰을 우선 쓴다. 위젯 전용 반복 간격이 필요하면 CSS custom property 한 곳에서 정의하고 child들이 그 값을 쓴다.
 4. 색상 모드는 Figma Variable Mode와 `theme-surfaces.css`의 semantic token을 대응시킨다. 직접 고른 사용자 데이터 색은 theme surface token과 구별한다.
 5. Variant마다 보이는 요소와 동작을 먼저 표로 정한다. Disabled/Empty/Editing 같은 상태를 CSS만으로 흉내 내지 말고 TSX 상태와 연결한다.
 6. Figma에서 확정한 바깥 여백, 카드 제목 위치, body 시작선은 공통 frame 책임이다. 특정 widget CSS에 복제하지 않는다.
@@ -295,7 +295,7 @@ selector를 재사용한 뒤 `aurora.css`에서 surface를 재정의한다.
 - App surface: `--gd-app-bg`, `--gd-app-border`, `--gd-app-shadow`, `--gd-app-filter`
 - Widget surface: `--gd-surface-bg`, `--gd-surface-border`, `--gd-surface-shadow`, `--gd-surface-filter`
 - Inner/control surface: `--gd-inner-bg`, `--gd-inner-border`, `--gd-control-*`
-- Spacing: `--gd-space-*`, Widget Frame aliases in `spacing-tokens.css`
+- Spacing: `--gd-space-*`, Widget Frame aliases in `layout-tokens.css`
 
 Theme 색을 바꿀 때 layout CSS의 `padding`, `gap`, Grid 좌표를 함께 수정하지 않는다.
 
@@ -373,7 +373,7 @@ Wide/Laptop mode, active tab, Grid layout, theme은 cloud restore 대상에서 �
 
 `src/styles/index.css`의 import 순서는 다음과 같다.
 
-1. `spacing-tokens.css`, `fonts.css`, `base.css`
+1. `layout-tokens.css`, `fonts.css`, `base.css`
 2. `layout.css`, `layout-modes.css`, `controls.css`, `dashboard-grid.css`, `overlays.css`
 3. 활성 Theme CSS + `theme-surfaces.css`
 4. Widget CSS
@@ -381,7 +381,7 @@ Wide/Laptop mode, active tab, Grid layout, theme은 cloud restore 대상에서 �
 
 ### CSS 책임 경계
 
-- `spacing-tokens.css`: Figma Variables와 대응하는 공통 spacing/geometry
+- `layout-tokens.css`: Figma Variables와 대응하는 공통 spacing/geometry
 - `base.css`: Widget Frame/Glass primitive
 - `layout-modes.css`: Wide/Laptop shell density
 - `dashboard-grid.css`: drag/resize/edit state

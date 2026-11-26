@@ -34,7 +34,7 @@ flowchart LR
 |---|---|---|
 | 모바일 상단/스크롤/하단 탭 | `src/components/layout/MobileLayout.tsx` | `src/components/layout/MobileNavigation.tsx`, `src/styles/mobile.css` |
 | 모바일 위젯 순서/슬롯 | `src/components/mobile/MobileDashboard.tsx` | `WidgetSlot.tsx`, `mobile-common.css` |
-| 모든 위젯 제목/아이콘/바깥 여백 | `src/components/glass/GlassCard.tsx` | `src/styles/base.css`, `spacing-tokens.css`, `mobile-common.css` |
+| 모든 위젯 제목/아이콘/바깥 여백 | `src/components/glass/GlassCard.tsx` | `src/styles/base.css`, `layout-tokens.css`, `mobile-common.css` |
 | 특정 위젯의 내부 모습 | `src/components/widgets/[Name]Widget.tsx` | `src/styles/widgets/[name].css` |
 | 특정 위젯의 모바일 배치 | 위젯 TSX에서 `className` 찾기 | `src/styles/mobile-[name].css`, `src/styles/index.css` |
 | 테마 색/투명도/blur | `src/styles/theme-surfaces.css` | `src/styles/mobile-glass.css`, `src/styles/themes/[name].css` |
@@ -46,7 +46,7 @@ flowchart LR
 화살표 아래 순서대로 `src/styles/index.css`에서 불립니다. 같은 중요도의 규칙이 충돌하면 뒤의 파일이 이길 수 있으므로, 값을 바꾸기 전에는 같은 class를 `rg`로 검색해 중복 정의와 뒤쪽 override를 확인합니다.
 
 ```text
-1. spacing-tokens.css, fonts.css, base.css
+1. layout-tokens.css, fonts.css, base.css
    기본 변수, 폰트, 버튼/GlassCard 공통 구조
 2. layout.css, layout-modes.css, controls.css, dashboard-grid.css, overlays.css, command.css
    앱 배치, 그리드, 입력 도구, 팝업

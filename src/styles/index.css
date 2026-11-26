@@ -14,7 +14,7 @@
    ============================================================ */
 
 /* 1. Global tokens and primitives */
-@import "./spacing-tokens.css";
+@import "./layout-tokens.css";
 @import "./fonts.css";
 @import "./base.css";
 

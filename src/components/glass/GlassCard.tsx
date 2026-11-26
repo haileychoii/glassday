@@ -9,7 +9,7 @@
  *
  * 스타일 연결:
  * - Base structure: `src/styles/base.css`
- * - Spacing tokens: `src/styles/spacing-tokens.css`
+ * - Layout and size tokens: `src/styles/layout-tokens.css`
  * - Theme surface: `src/styles/theme-surfaces.css`, `src/styles/themes/*.css`
  * - Grid shell: `src/styles/dashboard-grid.css`
  *
