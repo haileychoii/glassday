@@ -158,7 +158,6 @@
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3) {
   color: #583b4b !important;
-  font-weight: 780 !important;
   text-shadow: none !important;
 }
 
@@ -350,10 +349,7 @@
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.widget-frame__title-group, .glass-card-title-group, .widget-card-title-group)::after {
   content: "✦";
-  flex: 0 0 auto;
-  margin-left: 3px;
   color: #e978aa !important;
-  font-size: 11px;
   text-shadow: 0 1px 0 #fff;
 }
 
@@ -468,27 +464,26 @@
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.widget-frame__icon, .glass-card-icon, .widget-card-icon) {
-  display: grid !important;
-  width: 28px !important;
-  min-width: 28px !important;
-  height: 28px !important;
-  flex: 0 0 28px !important;
-  place-items: center !important;
-  padding: 0 !important;
   color: inherit !important;
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  line-height: 1 !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .widget-frame__icon svg {
-  display: block !important;
-  width: 17px !important;
-  height: 17px !important;
   visibility: visible !important;
+}
+
+/* Retro's CSS pixel sprites are the icon artwork; hide the generic SVG glyph. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
+  :is(.today-focus-widget, .career-widget, .study-widget,
+      .daily-journal-widget, .memo-widget,
+      .habit-tracker-widget, .mood-widget,
+      .calendar-widget, .today-tasks-widget)
+  .widget-frame__icon svg {
+  display: none !important;
 }
 
 /*
@@ -508,15 +503,6 @@
   background-repeat: no-repeat !important;
   background-position: center !important;
   background-size: contain !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.today-focus-widget, .career-widget, .study-widget,
-      .daily-journal-widget, .memo-widget,
-      .habit-tracker-widget, .mood-widget,
-      .calendar-widget, .today-tasks-widget)
-  .widget-frame__icon svg {
-  display: none !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)

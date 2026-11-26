@@ -7,6 +7,19 @@
 
    전체 CSS의 적용 순서를 관리한다.
    실제 스타일은 각 담당 CSS 파일에서 정의한다.
+
+   위젯 간격을 수정할 때의 파일 길잡이:
+   - 카드와 카드 사이: src/components/grid/DashboardGrid.tsx / GRID_SETTINGS.gap
+   - 공통 header/body 안쪽 여백·제목: spacing-tokens.css -> base.css -> widget-system.css
+   - Career 본문 내부 섹션 간격: widgets/career.css의 --career-layout-gap
+   - 위젯 내부 카드/목록/차트: 해당 widgets/<name>.css
+   - 모바일 프레임 예외: mobile*.css
+   - 테마는 프레임의 색·재질·테두리·그림자·모양만 담당한다.
+     모든 데스크톱 위젯 프레임 크기와 글자는 마지막 widget-system.css에서 통일한다.
+
+   아래 import 순서는 CSS cascade에 영향을 준다. 특히 widget-system.css가
+   widget CSS 뒤에 와서 데스크톱 공통 geometry를 적용하고, mobile-common.css는
+   모바일 전용 공통값을 마지막에 적용한다. 순서를 바꾸면 우선순위가 달라질 수 있다.
    ============================================================ */
 
 

@@ -11,21 +11,39 @@
 ========================================================= */
 
 .career-widget {
-  /* Figma mapping: one token owns the vertical distance between header,
-     summary, filters, and the application list.
-     피그마에서는 이 값을 Career 섹션 사이의 공통 Auto Layout gap으로 사용합니다. */
+  /*
+   * DOM mapping: `.career-widget` is the root <section> in CareerWidget.tsx.
+   * Its direct children are `.career-widget-header` and `.career-widget__body`.
+   * The root intentionally has no padding: outer card spacing is zero, while
+   * header/body insets come from the shared Widget Frame rules in base.css and
+   * widget-system.css. This token is only the vertical gap among Career's
+   * summary, filter rail, and list/board inside `.career-widget__body`.
+   */
   --career-layout-gap: 4px;
   height: 100%;
   min-height: 0;
   /* This widget's default density is intentionally driven by the shared
      spacing tokens so you can tighten or loosen it without hunting through
      dozens of one-off numbers later. */
-  padding: var(--gd-widget-pad-y);
   display: grid;
-  grid-template-rows: auto auto auto minmax(0, 1fr);
-  gap: var(--career-layout-gap);
+  grid-template-rows: auto minmax(0, 1fr);
   container-type: inline-size;
   container-name: career-widget;
+}
+
+/*
+ * DOM mapping: this class is on CareerWidget.tsx's body wrapper, immediately
+ * after `.career-widget-header`; its children are summary grid, filter row,
+ * application list, and the optional board view. The `widget-frame__body` alias
+ * applies the same shared padding as every GlassCard body. These declarations
+ * control only the arrangement of Career's inner regions: the list or board
+ * gets the remaining height, and scroll behavior stays with those regions.
+ */
+.career-widget__body {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: var(--career-layout-gap);
+  overflow: hidden;
 }
 
 /* =========================================================
@@ -59,36 +77,6 @@
   background: hsl(0 0% 100% / 0.34);
   border: 1px solid hsl(0 0% 100% / 0.48);
   color: hsl(var(--foreground) / 0.66);
-}
-
-.career-widget-actions {
-  /* Header Action Slot
-     English: Keep the add button in the same semantic action area used by
-     other widgets so every theme can align it without one-off header hacks.
-     Korean: 위젯별 헤더 구조를 맞춰 Pixel Desk처럼 장식이 강한 테마에서도
-     버튼이 오른쪽에서 잘리지 않도록 한다. */
-  flex: 0 0 auto;
-  min-width: max-content;
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.career-widget-actions > .career-icon-button,
-.career-widget-header > .career-icon-button {
-  flex: 0 0 30px;
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
-  margin-left: 0;
-  align-self: center;
-}
-
-.career-widget-actions > .career-icon-button svg,
-.career-widget-header > .career-icon-button svg {
-  width: 14px;
-  height: 14px;
 }
 
 .career-summary-grid {
@@ -828,8 +816,7 @@
 
 @container career-widget (max-width: 860px) {
   .career-widget {
-    padding: var(--gd-widget-pad-y) !important;
-    gap: var(--career-layout-gap) !important;
+    padding: 0 !important;
   }
 
   .career-summary-grid {
@@ -870,13 +857,6 @@
 }
 
 @container career-widget (max-width: 680px) {
-  .career-widget-header {
-    align-items: center !important;
-    gap: 10px !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
-  }
-
   .career-summary-card {
     min-height: 54px !important;
     padding: 7px 8px !important;
@@ -957,24 +937,6 @@
     font-size: 9px !important;
     min-height: 20px !important;
     padding: 0 6px !important;
-  }
-}
-
-@container career-widget (max-width: 600px) {
-  .career-widget-header {
-    align-items: center !important;
-    flex-direction: row !important;
-    gap: 8px !important;
-    justify-content: space-between !important;
-  }
-
-  .career-widget-actions > .career-icon-button,
-  .career-widget-header > .career-icon-button {
-    width: 30px !important;
-    height: 30px !important;
-    min-width: 30px !important;
-    flex: 0 0 30px !important;
-    align-self: center !important;
   }
 }
 
@@ -1999,26 +1961,6 @@ body.theme-pixel-desk .career-cover-question-input {
      2. HEADER
      container query의 column 강제 취소
   ======================================================= */
-
-  .career-widget-header {
-    width: 100% !important;
-  }
-
-  .career-widget-actions > .career-icon-button,
-  .career-widget-header > .career-icon-button {
-    width: 30px !important;
-    height: 30px !important;
-
-    min-width: 30px !important;
-
-    flex: 0 0 30px !important;
-  }
-
-  .career-widget-actions > .career-icon-button svg,
-  .career-widget-header > .career-icon-button svg {
-    width: 14px !important;
-    height: 14px !important;
-  }
 
   /* =======================================================
      3. SUMMARY

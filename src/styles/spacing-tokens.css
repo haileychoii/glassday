@@ -1,10 +1,11 @@
 /* ============================================================
    [Figma Variables] Shared Spacing + Widget Geometry Tokens
 
-   이 파일은 Figma Variables와 가장 직접적으로 대응하는 spacing Source of Truth다.
-   1) Primitive spacing scale
-   2) Widget Frame header/body/icon/title spacing
-   3) Shared control size
+   이 파일이 Figma Variables와 공통 위젯 frame spacing의 단일 원본이다.
+   1) --gd-widget-outer-gap: DashboardGrid 카드 바깥 간격
+   2) 4px ratio scale: 모바일/데스크톱 공통 간격 단위
+   3) Widget Frame header/body/icon/title spacing
+   4) Shared control size
 
    여러 Widget의 여백을 통일할 때 개별 margin을 늘리기보다 이 token과
    base.css의 Widget Frame 연결을 먼저 확인한다. theme 색상/반응형 breakpoint와는 분리한다.
@@ -20,6 +21,16 @@
   --gd-space-xl: 16px;
   --gd-space-2xl: 20px;
 
+  /* Figma's shared 4px rhythm. DashboardGrid reads the outer gap below from
+     this stylesheet because React Grid Layout requires a numeric margin. */
+  --gd-ratio-unit: 4px;
+  --gd-ratio-1: calc(var(--gd-ratio-unit) * 1);
+  --gd-ratio-2: calc(var(--gd-ratio-unit) * 2);
+  --gd-ratio-3: calc(var(--gd-ratio-unit) * 3);
+  --gd-ratio-4: calc(var(--gd-ratio-unit) * 4);
+  --gd-ratio-6: calc(var(--gd-ratio-unit) * 6);
+  --gd-widget-outer-gap: 12px;
+
   /* 2. Widget shell spacing
      Change these first to tighten or loosen most widgets at once.
      These are the main Figma-facing widget spacing knobs.
@@ -29,31 +40,32 @@
      2) gd-widget-*     = compatibility aliases used by existing component CSS */
   --gd-widget-gap-tight: var(--gd-space-sm);
   --gd-widget-gap: var(--gd-space-md);
-  /* Shared desktop frame scale; special widgets override only their exception. */
-  --gd-widget-desktop-header-top: 10px;
-  --gd-widget-desktop-header-bottom: 5px;
-  --gd-widget-desktop-content-top: 4px;
-  --gd-widget-desktop-header-height: 34px;
-  --gd-widget-desktop-title-size: 12px;
-  --gd-widget-desktop-subtitle-size: 10px;
-  --gd-widget-desktop-icon-size: 26px;
-  --gd-widget-desktop-panel-pad: 10px;
-  --gd-widget-frame-pad-x: var(--gd-space-lg);
-  --gd-widget-frame-pad-bottom: var(--gd-space-lg);
+  /* One responsive desktop widget frame scale for every dashboard theme. */
+  --gd-widget-desktop-pad-x: clamp(12px, 0.85vw, 16px);
+  --gd-widget-desktop-pad-y: var(--gd-widget-desktop-pad-x);
+  --gd-widget-desktop-header-top: clamp(8px, 0.55vw, 12px);
+  --gd-widget-desktop-header-bottom: var(--gd-widget-desktop-header-top);
+  --gd-widget-desktop-content-top: var(--gd-ratio-1);
+  --gd-widget-desktop-title-size: clamp(12px, 0.78vw, 14px);
+  --gd-widget-desktop-subtitle-size: clamp(10px, 0.58vw, 12px);
+  --gd-widget-desktop-icon-size: clamp(24px, 1.4vw, 28px);
+  --gd-widget-desktop-panel-pad: var(--gd-ratio-2);
+  --gd-widget-frame-pad-x: var(--gd-widget-desktop-pad-x);
+  --gd-widget-frame-pad-bottom: var(--gd-widget-desktop-pad-y);
   --gd-widget-frame-header-y: var(--gd-widget-desktop-header-top);
   --gd-widget-frame-content-gap-top: var(--gd-widget-desktop-content-top);
   --gd-widget-shell-pad-x: var(--gd-widget-frame-pad-x);
   --gd-widget-shell-pad-bottom: var(--gd-widget-frame-pad-bottom);
   --gd-widget-header-anchor-y: var(--gd-widget-frame-header-y);
   --gd-widget-content-gap-top: var(--gd-widget-frame-content-gap-top);
-  --gd-widget-header-row-min-height: var(--gd-widget-desktop-header-height);
+  --gd-widget-header-row-min-height: var(--gd-widget-header-min-height);
   --gd-widget-pad-x: var(--gd-widget-shell-pad-x);
   --gd-widget-pad-y: var(--gd-widget-shell-pad-bottom);
   --gd-widget-header-pad-top: var(--gd-widget-header-anchor-y);
   --gd-widget-header-pad-bottom: var(--gd-widget-desktop-header-bottom);
-  --gd-widget-header-gap: var(--gd-space-md);
-  --gd-widget-title-gap: var(--gd-space-xs);
-  --gd-widget-copy-gap: 3px;
+  --gd-widget-header-gap: var(--gd-ratio-2);
+  --gd-widget-title-gap: var(--gd-ratio-1);
+  --gd-widget-copy-gap: var(--gd-ratio-1);
   --gd-widget-stack-gap: var(--gd-space-md);
   --gd-widget-panel-pad: var(--gd-widget-desktop-panel-pad);
   --gd-widget-inline-gap: var(--gd-space-xs);
@@ -64,11 +76,11 @@
    * Widget Frame contract / 위젯 프레임 계약
    *
    * EN: These values are the single geometry source for ordinary widget
-   * headers. Theme files may change color/material, and a genuinely dense
-   * view may opt into an explicit exception class, but a widget should not
-   * invent a different title size or header padding by default.
-   * KO: 일반 위젯 제목과 header의 기준값은 여기서만 정한다. 테마는 색과
-   * 재질만 바꾸고, 정말 좁은 특수 화면만 예외 클래스로 별도 선언한다.
+   * headers. Theme files may change color/material, while every widget uses
+   * the same title size and header padding. Widget-specific frame exceptions
+   * belong here only if the product requirements explicitly change.
+   * KO: 모든 위젯 제목과 header의 기준값은 여기서만 정한다. 테마는 색과
+   * 재질을 담당하며, 위젯 파일에서는 공통 frame 크기나 간격을 바꾸지 않는다.
    */
   --gd-widget-title-size: var(--gd-widget-desktop-title-size);
   --gd-widget-title-weight: 800;
@@ -79,10 +91,14 @@
   --gd-widget-title-line-height: 1.2;
   --gd-widget-subtitle-line-height: 1.25;
   --gd-widget-header-icon-size: var(--gd-widget-desktop-icon-size);
-  --gd-widget-header-gap: var(--gd-space-md);
-  --gd-widget-title-group-gap: var(--gd-space-xs);
-  --gd-widget-copy-gap: 3px;
-  --gd-widget-header-min-height: var(--gd-widget-desktop-header-height);
+  --gd-widget-header-gap: var(--gd-ratio-2);
+  --gd-widget-title-group-gap: var(--gd-ratio-1);
+  --gd-widget-copy-gap: var(--gd-ratio-1);
+  --gd-widget-header-min-height: calc(
+    var(--gd-widget-header-icon-size) +
+    var(--gd-widget-header-pad-top) +
+    var(--gd-widget-header-pad-bottom)
+  );
   /* Shared vertical rhythm
      Use this as the margin between sibling content sections. Horizontal item
      groups may keep their local `gap`, but top-level panels should not invent

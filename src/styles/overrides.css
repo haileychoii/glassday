@@ -1133,24 +1133,6 @@
   border-radius: var(--gd-radius-widget) !important;
 }
 
-.dashboard-grid-item > .glass-card {
-  display: grid !important;
-  grid-template-rows: var(--gd-widget-header-row-min-height) minmax(0, 1fr) !important;
-  padding: 0 !important;
-}
-
-.dashboard-grid-item > :is(.glass-card, .career-widget) > .widget-frame__header {
-  height: var(--gd-widget-header-row-min-height) !important;
-  min-height: var(--gd-widget-header-row-min-height) !important;
-  padding: var(--gd-widget-header-pad-top) var(--gd-widget-pad-x) var(--gd-widget-header-pad-bottom) !important;
-  gap: var(--gd-widget-header-gap) !important;
-}
-
-.dashboard-grid-item > :is(.glass-card, .career-widget) > .widget-frame__body {
-  margin: 0 !important;
-  padding: var(--gd-widget-content-gap-top) var(--gd-widget-pad-x) var(--gd-widget-pad-y) !important;
-}
-
 .dashboard-grid-item :is(
   .today-focus-hero, .today-focus-section, .today-focus-block,
   .today-focus-task, .today-focus-mini-item, .calendar-event-item, .calendar-event-card,

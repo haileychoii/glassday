@@ -230,25 +230,14 @@
  */
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
   .glass-card-icon {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  flex-basis: 28px !important;
   border-radius: 8px !important;
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important;
-  font-size: 18px !important;
-  line-height: 1 !important;
-  text-align: center;
 }
 
+/* Mac Core replaces the shared icon glyph with the theme's color emoji. */
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
   .glass-card-icon > svg {
   display: none !important;
-}
-
-:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
-  .glass-card-icon::before {
-  display: block;
 }
 
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
@@ -436,9 +425,7 @@
 ========================================================= */
 
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) .glass-card {
-  position: relative !important;
   isolation: isolate !important;
-  overflow: hidden !important;
   border-radius: var(--gd-radius-widget) !important;
   color: var(--mac-text) !important;
   background: var(--mac-widget-bg) !important;
@@ -456,14 +443,11 @@
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
   :where(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3) {
   color: var(--mac-title-text) !important;
-  font-weight: 700 !important;
-  letter-spacing: 0 !important;
 }
 
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
   :where(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle, .widget-frame__header p) {
   color: var(--mac-secondary-text) !important;
-  font-weight: 500 !important;
 }
 
 :is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)

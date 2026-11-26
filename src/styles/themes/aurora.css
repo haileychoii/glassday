@@ -42,6 +42,7 @@ body.theme-aurora {
 
   --aurora-card-bg:
     linear-gradient(145deg, rgba(29, 34, 57, 0.40), rgba(12, 16, 31, 0.24));
+  --gd-widget-frame-bg: var(--aurora-card-bg);
   --aurora-card-border: rgba(174, 187, 226, 0.16);
   --aurora-card-shadow:
     0 20px 56px rgba(2, 4, 12, 0.26),
@@ -202,10 +203,10 @@ body.theme-aurora :is(.topbar, aside) {
   -webkit-backdrop-filter: blur(24px) saturate(154%) !important;
 }
 
-html[data-theme="aurora"] .glass-card,
-body[data-theme="aurora"] .glass-card,
-html.theme-aurora .glass-card,
-body.theme-aurora .glass-card {
+html[data-theme="aurora"] :is(.glass-card, .career-widget),
+body[data-theme="aurora"] :is(.glass-card, .career-widget),
+html.theme-aurora :is(.glass-card, .career-widget),
+body.theme-aurora :is(.glass-card, .career-widget) {
   color: hsl(var(--foreground) / 0.94) !important;
   background: var(--aurora-card-bg) !important;
   border-color: var(--aurora-card-border) !important;

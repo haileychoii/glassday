@@ -141,6 +141,17 @@ main {
 .glass-card,
 .widget-frame {
   position: relative;
+  /*
+   * Outer spacing / 위젯 바깥 간격:
+   * These are the root elements rendered by GlassCard.tsx and CareerWidget.tsx.
+   * `margin: 0` prevents an individual widget stylesheet from adding distance
+   * outside its card. The distance between sibling cards is owned by
+   * `GRID_SETTINGS.gap` in src/components/grid/DashboardGrid.tsx (applied as
+   * React Grid Layout's `margin` prop), not by a widget stylesheet.
+   * 이 margin은 카드 바깥 여백만 초기화합니다. 카드 안쪽 header/body padding은
+   * 아래의 공통 child rules와 widget-system.css가 관리합니다.
+   */
+  margin: 0;
   min-width: 0;
   min-height: 0;
   border-radius: var(--gd-radius-widget);
@@ -181,10 +192,16 @@ main {
 .widget-frame__header {
   min-width: 0;
   min-height: var(--gd-widget-header-row-min-height);
-  /* Header geometry contract
-     Grid widgets may become very short, but the title row must never shrink
-     before the scrollable content. / Study처럼 내용이 긴 위젯에서도 제목
-     기준선은 다른 위젯과 같은 위치를 유지합니다. */
+  /*
+   * Shared header geometry / 공통 헤더 영역:
+   * GlassCard.tsx emits these classes on its direct header child; CareerWidget
+   * emits the same aliases on `.career-widget-header`. Padding values resolve
+   * through spacing-tokens.css (`--gd-widget-header-*`, `--gd-widget-pad-x`).
+   * widget-system.css reapplies the desktop frame values to direct header
+   * children inside `.app-mode-stage`; theme CSS may change the header's
+   * appearance but the shared spacing stays here. Keep this row from shrinking
+   * so a short widget retains the same title anchor as a tall one.
+   */
   flex: 0 0 auto;
   padding:
     var(--gd-widget-header-pad-top)
@@ -227,6 +244,15 @@ main {
 .glass-card-body,
 .widget-frame__body {
   min-height: 0;
+  /*
+   * Shared body inset / 공통 본문 안쪽 여백:
+   * This targets the body child emitted by GlassCard.tsx and the matching
+   * Career body wrapper in CareerWidget.tsx. Horizontal inset and bottom
+   * inset come from spacing-tokens.css; the small header-to-content start
+   * offset is `--gd-widget-content-gap-top`. widget-system.css locks these
+   * values for desktop frames. Do not add another root padding in widget CSS;
+   * use a child content panel's own padding only when that panel needs it.
+   */
   padding:
     var(--gd-widget-content-gap-top)
     var(--gd-widget-pad-x)
@@ -292,8 +318,8 @@ main {
 .glass-card-icon svg,
 .widget-card-icon svg,
 .widget-frame__icon svg {
-  width: 15px;
-  height: 15px;
+  width: clamp(14px, 0.75vw, 16px);
+  height: clamp(14px, 0.75vw, 16px);
 }
 
 .widget-card-copy h3,

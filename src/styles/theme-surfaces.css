@@ -24,6 +24,10 @@
     inset 0 1px 0 hsl(0 0% 100% / 0.72);
   --gd-surface-filter: blur(24px) saturate(165%);
 
+  /* Every widget root in a theme uses this one frame fill. Theme selectors
+     may point it at their own material, but individual widget CSS does not. */
+  --gd-widget-frame-bg: var(--gd-surface-bg);
+
   --gd-inner-bg: hsl(0 0% 100% / 0.3);
   --gd-inner-border: hsl(0 0% 100% / 0.42);
   --gd-control-bg: hsl(0 0% 100% / 0.42);
@@ -178,6 +182,19 @@ body.theme-glass-dark {
   --gd-widget-control-bg: var(--gd-control-bg);
   --gd-widget-control-border: var(--gd-control-border);
   --gd-widget-control-active-bg: var(--gd-control-active-bg);
+}
+
+/* Bind the common widget fill at the active theme root. This local binding is
+   important: the :root fallback has already resolved its own surface value. */
+:is(
+  html[data-theme="pastel"], body[data-theme="pastel"],
+  html.theme-pastel, body.theme-pastel,
+  html[data-theme="glass-light"], body[data-theme="glass-light"],
+  html.theme-glass-light, body.theme-glass-light,
+  html[data-theme="glass-dark"], body[data-theme="glass-dark"],
+  html.theme-glass-dark, body.theme-glass-dark
+) {
+  --gd-widget-frame-bg: var(--gd-surface-bg);
 }
 
 /* Aurora keeps its deeper tint while preserving the same semantic structure.
@@ -339,12 +356,12 @@ body[data-theme="glass-dark"] .liquid-shell {
   -webkit-backdrop-filter: var(--gd-app-filter) !important;
 }
 
-html[data-theme="pastel"] .glass-card,
-html[data-theme="glass-light"] .glass-card,
-html[data-theme="glass-dark"] .glass-card,
-body[data-theme="pastel"] .glass-card,
-body[data-theme="glass-light"] .glass-card,
-body[data-theme="glass-dark"] .glass-card {
+html[data-theme="pastel"] :is(.glass-card, .career-widget),
+html[data-theme="glass-light"] :is(.glass-card, .career-widget),
+html[data-theme="glass-dark"] :is(.glass-card, .career-widget),
+body[data-theme="pastel"] :is(.glass-card, .career-widget),
+body[data-theme="glass-light"] :is(.glass-card, .career-widget),
+body[data-theme="glass-dark"] :is(.glass-card, .career-widget) {
   color: hsl(var(--foreground) / 0.92) !important;
   background: var(--gd-surface-bg) !important;
   border-color: var(--gd-surface-border) !important;

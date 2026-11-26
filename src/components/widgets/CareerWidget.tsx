@@ -1132,6 +1132,16 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
           </div>
         </div>
 
+        {/*
+         * Shared Widget Frame body / 공통 위젯 본문:
+         * This wrapper fills the space below Career's header. The two shared
+         * classes connect it to base.css and widget-system.css, which provide
+         * the same inner inset used by GlassCard.tsx widgets. The Career-only
+         * class connects to widgets/career.css for the summary/filter/list
+         * grid inside this inset. Keep per-section spacing inside that grid;
+         * do not put outer card padding on `.career-widget`.
+         */}
+        <div className="glass-card-body widget-frame__body career-widget__body">
         {/* Figma Frame: Pipeline Summary / Three-column responsive grid */}
         <div className="career-summary-grid">
           <div className="career-summary-card">
@@ -1216,6 +1226,9 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
             ))}
           </div>
         )}
+        {/* End of `.career-widget__body`: all following children belong to the
+            root section or the separate Career detail portal, not this body. */}
+        </div>
       </section>
       )}
 

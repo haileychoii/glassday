@@ -116,15 +116,38 @@ const BREAKPOINTS = {
   sm: 0,
 };
 
+/*
+ * React Grid Layout geometry / Grid 라이브러리에 필요한 수치 설정:
+ * - rowHeight: layout mode별 세로 셀 높이. 저장된 y/h 좌표의 실제 픽셀 크기를 정한다.
+ * - `--gd-widget-outer-gap` in spacing-tokens.css: shared card-to-card gap.
+ *
+ * React Grid Layout은 margin을 숫자 prop으로 요구한다. CSS의 공통 spacing token을
+ * 읽어 숫자로 넘기므로 간격의 원본은 spacing-tokens.css 한 곳에 둔다.
+ */
+const readDashboardWidgetGap = (): number => {
+  const token = getComputedStyle(document.documentElement)
+    .getPropertyValue("--gd-widget-outer-gap")
+    .trim();
+  const value = Number.parseFloat(token);
+
+  return Number.isFinite(value) ? value : 12;
+};
+
 const GRID_SETTINGS = {
+  /*
+   * Card-to-card outer spacing / 대시보드 위젯 바깥 간격:
+   * The CSS token is passed below as React Grid Layout's two-axis `margin` prop.
+   * This distance is outside each `.glass-card`; do not change a widget's
+   * body padding to move cards farther apart. Change `--gd-widget-outer-gap`
+   * in spacing-tokens.css to update the shared card gap; `rowHeight` remains
+   * a layout engine measurement, not visual widget padding.
+   */
   wide: {
     rowHeight: 52,
-    gap: 14,
   },
 
   laptop: {
     rowHeight: 46,
-    gap: 10,
   },
 };
 
@@ -190,7 +213,7 @@ const FOCUSED_WIDGETS_BY_TAB: Record<
   memo: ["memo", "journal"],
 
   life: [
-    "health",
+    "habit-tracker",
     "mood",
     "money",
     "calendar",
@@ -1109,7 +1132,7 @@ const DashboardCanvas = ({
     GRID_SETTINGS[layoutMode].rowHeight;
 
   const preferredGap =
-    GRID_SETTINGS[layoutMode].gap;
+    readDashboardWidgetGap();
 
   // 극단적으로 좁은 화면에서도 Gap의 합이
   // 사용 가능한 전체 너비를 초과하지 않도록 제한한다.
@@ -2030,8 +2053,9 @@ const DashboardCanvas = ({
         }
       >
 
+        {/* `margin` below is the outer gap between grid items, separate from
+            each widget's shared header/body padding. */}
         {width >= GRID_COLUMNS && (
-
           <GridLayout
 
             className="layout dashboard-rgl"

@@ -2493,20 +2493,11 @@ body.theme-pixel-desk .career-cover-status-select option {
 }
 
 @container gd-widget (max-width: 560px) {
-  .calendar-widget-card .glass-card-subtitle {
-    display: none !important;
-  }
-
-  .calendar-widget-card .glass-card-header > .glass-card-actions {
-    width: auto !important;
-    display: flex !important;
-    justify-content: flex-end !important;
-  }
-
   .calendar-widget-frame {
-    /* Narrow calendars use the same first-content line as the other widgets. */
+    /* Body start spacing belongs to the shared frame; only the calendar's
+       internal section rhythm remains widget-specific. */
     padding-top: 0 !important;
-    gap: 10px !important;
+    gap: var(--gd-widget-section-gap) !important;
   }
 
   .calendar-month-weekdays,

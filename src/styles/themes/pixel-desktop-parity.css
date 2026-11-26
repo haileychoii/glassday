@@ -167,146 +167,6 @@
   color: var(--pixel-desktop-text);
 }
 
-/*
- * EN: Use a desktop-sized rhythm while keeping the mobile Pixel visual language.
- * KO: 모바일의 색상/테두리 문법만 가져오고, 간격과 크기는 데스크톱 기준을 사용한다.
- *
- * Desktop references:
- * - src/styles/layout-modes.css: desktop widget row and spacing tokens
- * - src/styles/base.css: shared widget icon and title primitives
- *
- * The old desktop Pixel theme reserved 30px for a decorative fake title bar.
- * The real `.widget-frame__header` is now the only title bar, so that extra
- * space must be removed or every widget gets a different-looking top inset.
- */
-/* Keep the desktop grid's existing sizing, but use one desktop widget gap. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface .dashboard-grid {
-  gap: var(--gd-widget-stack-gap) !important;
-}
-
-/* Every GlassCard widget uses one real title row and one padded body row. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface :is(.glass-card, .career-widget) {
-  display: grid !important;
-  grid-template-rows: var(--gd-widget-header-row-min-height) minmax(0, 1fr) !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-}
-
-/*
- * Career renders four direct grid regions (header, summary, filters, list),
- * unlike GlassCard widgets that render a header and one body. Restore those
- * four rows so Pixel's shared two-row rule cannot stack the controls on top of
- * the application list. The filter pills wrap instead of being clipped by a
- * hidden horizontal rail. / Career는 자식 구조가 다른 예외이므로 실제 4개
- * 영역을 각각 배치하고, 필터가 목록 위에 포개지지 않도록 여러 줄로 접는다.
- */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface .career-widget {
-  grid-template-rows:
-    var(--pixel-widget-header-height)
-    auto
-    auto
-    minmax(0, 1fr) !important;
-}
-
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface .career-widget > .career-filter-row {
-  min-width: 0 !important;
-  min-height: var(--gd-control-height-sm, 28px) !important;
-  height: auto !important;
-  flex-wrap: wrap !important;
-  align-content: flex-start !important;
-  overflow: visible !important;
-  white-space: normal !important;
-  row-gap: 5px !important;
-}
-
-/* Study/Calendar/Career use the same desktop title geometry as GlassCard widgets. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface :is(
-  .glass-card > .widget-frame__header,
-  .career-widget > .widget-frame__header,
-  .mobile-calendar-card__header,
-  .mobile-career-card__header
-) {
-  box-sizing: border-box;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  flex-wrap: nowrap !important;
-  height: var(--gd-widget-header-row-min-height) !important;
-  min-height: var(--gd-widget-header-row-min-height) !important;
-  padding: var(--gd-widget-header-pad-top) var(--gd-widget-pad-x) var(--gd-widget-header-pad-bottom) !important;
-  gap: var(--gd-widget-header-gap) !important;
-}
-
-/* Keep title groups, icons, and actions aligned to one desktop baseline. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface :is(
-  .widget-frame__title-group,
-  .widget-frame__copy,
-  .career-widget-title-wrap,
-  .mobile-calendar-card__label,
-  .mobile-career-card__heading
-) {
-  min-width: 0;
-  min-height: 32px !important;
-  align-items: center !important;
-  gap: var(--gd-widget-title-gap) !important;
-}
-
 :is(
   html[data-theme="pixel-desk"],
   body[data-theme="pixel-desk"],
@@ -321,13 +181,13 @@
   .mobile-calendar-card__label > svg,
   .mobile-career-card__heading > svg
 ) {
-  padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
 
+/* Pixel Desk uses its sprite artwork in the shared icon slot. */
 :is(
   html[data-theme="pixel-desk"],
   body[data-theme="pixel-desk"],
@@ -338,52 +198,20 @@
   html.theme-pixel,
   body.theme-pixel
 ) .app-shell-surface :is(
-  .widget-frame__title,
-  .mobile-calendar-card__label,
-  .mobile-career-card__heading,
-  .mobile-career-card__heading strong
-) {
-  margin: 0 !important;
-  font-size: var(--gd-widget-desktop-title-size) !important;
-  font-weight: 800 !important;
-  line-height: 1.2 !important;
-  letter-spacing: 0 !important;
-}
-
-/* Pixel Desk keeps the compact desktop title row without a second subtitle line. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface .widget-frame__subtitle {
+  .today-focus-widget,
+  .today-widget,
+  .alert-center-widget,
+  .calendar-widget-card,
+  .career-widget,
+  .daily-journal-widget,
+  .memo-widget,
+  .study-widget,
+  .timer-widget,
+  .money-widget,
+  .habit-tracker-widget,
+  .mood-widget
+) .widget-frame__icon > svg {
   display: none !important;
-}
-
-/* All desktop widget bodies start at the same inset, regardless of widget type. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface :is(
-  .glass-card > .widget-frame__body,
-  .career-widget > .widget-frame__body
-) {
-  box-sizing: border-box;
-  min-width: 0;
-  min-height: 0 !important;
-  height: auto !important;
-  padding: var(--gd-widget-content-gap-top) var(--gd-widget-pad-x) var(--gd-widget-pad-y) !important;
-  overflow: auto;
 }
 
 /* Shared inner panels: same light gray surface, no glossy gradients. */
@@ -830,32 +658,6 @@
   background-image: url("/pixel-icons/life.png") !important;
 }
 
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface :is(
-  .today-focus-widget,
-  .today-widget,
-  .alert-center-widget,
-  .calendar-widget-card,
-  .career-widget,
-  .daily-journal-widget,
-  .memo-widget,
-  .study-widget,
-  .timer-widget,
-  .money-widget,
-  .habit-tracker-widget,
-  .mood-widget
-) .widget-frame__icon > svg {
-  display: none !important;
-}
-
 /* Career's add button matches the compact Pixel Desk title action. */
 :is(
   html[data-theme="pixel-desk"],
@@ -867,27 +669,7 @@
   html.theme-pixel,
   body.theme-pixel
 ) .app-shell-surface .career-widget-actions > .career-icon-button {
-  flex: 0 0 28px !important;
-  width: 28px !important;
-  min-width: 28px !important;
-  height: 28px !important;
-  min-height: 28px !important;
-  padding: 0 !important;
   border-radius: 0 !important;
-}
-
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface .career-widget-actions > .career-icon-button svg {
-  width: 14px !important;
-  height: 14px !important;
 }
 
 /* Final Windows 95 frame rule for desktop widget contents.

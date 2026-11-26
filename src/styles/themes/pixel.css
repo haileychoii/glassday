@@ -277,7 +277,6 @@ html[data-theme="pixel-desk"] .app-shell-main {
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) textarea,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) select {
   font-family: var(--glassday-app-font) !important;
-  letter-spacing: 0 !important;
   text-shadow: none !important;
 }
 
@@ -489,14 +488,8 @@ html[data-theme="pixel-desk"] .app-shell-main {
 ========================================================= */
 
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card:where(:not(body:has(.mobile-layout) *)) {
-  position: relative !important;
-  height: 100% !important;
-  min-height: 0 !important;
-
-  padding: 0 !important;
 
   border-radius: 0 !important;
-  overflow: hidden !important;
   clip-path: none !important;
 
   background: #d8d8cc !important;

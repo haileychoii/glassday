@@ -2,6 +2,11 @@
 
 This Windows App SDK shell hosts the existing Glassday React/Vite dashboard in WebView2.
 
+The native window opens at **972 × 648 px**, which is 90% of the Laptop
+reference frame (**1080 × 720 px**) in `src/styles/layout-modes.css`. The window
+remains resizable after launch. Change `initialWindowScale` in
+`MainWindow.xaml.cs` to adjust the startup scale.
+
 ## Run
 
 Start Vite from the repository root:

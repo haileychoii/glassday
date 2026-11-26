@@ -270,8 +270,6 @@ html[data-theme="retro"] .glass-card,
 body[data-theme="retro"] .glass-card,
 html.theme-retro .glass-card,
 body.theme-retro .glass-card {
-  position: relative !important;
-  overflow: hidden !important;
   border-radius: 0 !important;
   background: var(--retro-window) !important;
   color: var(--retro-text) !important;
@@ -286,61 +284,6 @@ body.theme-retro .glass-card {
   backdrop-filter: none !important;
 }
 
-html[data-theme="retro"] .glass-card::before,
-body[data-theme="retro"] .glass-card::before,
-html.theme-retro .glass-card::before,
-body.theme-retro .glass-card::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  height: 26px !important;
-  background: linear-gradient(90deg, var(--retro-title), var(--retro-title-2)) !important;
-  border-bottom: 2px solid var(--retro-panel-darker) !important;
-  z-index: 0 !important;
-}
-
-html[data-theme="retro"] .glass-card::after,
-body[data-theme="retro"] .glass-card::after,
-html.theme-retro .glass-card::after,
-body.theme-retro .glass-card::after {
-  content: "−  □  ×" !important;
-  position: absolute !important;
-  top: 4px !important;
-  right: 7px !important;
-  height: 18px !important;
-  min-width: 58px !important;
-  padding: 0 4px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  color: #000 !important;
-  background: var(--retro-panel) !important;
-  border-top: 1px solid var(--retro-white) !important;
-  border-left: 1px solid var(--retro-white) !important;
-  border-right: 1px solid var(--retro-panel-darker) !important;
-  border-bottom: 1px solid var(--retro-panel-darker) !important;
-  font-size: 11px !important;
-  line-height: 1 !important;
-  z-index: 2 !important;
-}
-
-html[data-theme="retro"] .glass-card > *,
-body[data-theme="retro"] .glass-card > *,
-html.theme-retro .glass-card > *,
-body.theme-retro .glass-card > * {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-html[data-theme="retro"] .glass-card-header,
-body[data-theme="retro"] .glass-card-header,
-html.theme-retro .glass-card-header,
-body.theme-retro .glass-card-header {
-  padding-top: 38px !important;
-}
-
 html[data-theme="retro"] .glass-card h3,
 body[data-theme="retro"] .glass-card h3,
 html.theme-retro .glass-card h3,
@@ -350,7 +293,6 @@ body[data-theme="retro"] .glass-card-title,
 html.theme-retro .glass-card-title,
 body.theme-retro .glass-card-title {
   color: var(--retro-text) !important;
-  font-weight: 900 !important;
 }
 
 /* Widget internals */
@@ -578,20 +520,6 @@ body.theme-retro .calendar-event-time {
   body.theme-retro .topbar {
     min-height: auto !important;
   }
-
-  html[data-theme="retro"] .glass-card::before,
-  body[data-theme="retro"] .glass-card::before,
-  html.theme-retro .glass-card::before,
-  body.theme-retro .glass-card::before {
-    height: 24px !important;
-  }
-
-  html[data-theme="retro"] .glass-card-header,
-  body[data-theme="retro"] .glass-card-header,
-  html.theme-retro .glass-card-header,
-  body.theme-retro .glass-card-header {
-    padding-top: 34px !important;
-  }
 }
 
 /* ============================================================
@@ -633,79 +561,31 @@ body.theme-retro .calendar-event-time {
   opacity: 1 !important;
 }
 
-/* Widget window geometry
-   GlassCard always has exactly two layers: titlebar and client area.
-   위젯마다 다른 여백을 더하지 않고 Win98 창의 두 행만 사용합니다. */
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .glass-card.widget-frame {
-  display: grid !important;
-  grid-template-rows: var(--retro-titlebar-height) minmax(0, 1fr) !important;
-  overflow: hidden !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .glass-card::before {
-  content: none !important;
-  display: none !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .glass-card::after {
-  content: none !important;
-  display: none !important;
-}
-
+/* The real shared Widget Frame header is the Retro titlebar. Its row height,
+   inset, and typography come from widget-system.css, so this file only skins
+   its color, bevel, and shadow. */
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-header, .widget-card-header, .widget-frame__header) {
-  height: var(--retro-titlebar-height) !important;
-  min-height: var(--retro-titlebar-height) !important;
-  padding: 2px 3px 2px 5px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 6px !important;
   color: var(--retro-white) !important;
   background: linear-gradient(90deg, var(--retro-title), var(--retro-title-2)) !important;
   border-bottom: 2px solid var(--retro-panel-darker) !important;
   box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.16) !important;
-  position: relative !important;
-  z-index: 3 !important;
-  box-sizing: border-box !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.widget-frame__title-group, .widget-frame__copy) {
-  min-width: 0 !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .widget-frame__copy {
-  gap: 0 !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3) {
   color: var(--retro-white) !important;
   font-family: "MS Sans Serif", Tahoma, sans-serif !important;
-  font-size: 11px !important;
-  font-weight: 800 !important;
-  line-height: 11px !important;
   text-shadow: none !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle, .widget-frame__header p) {
   color: rgb(255 255 255 / 0.78) !important;
-  font-size: 8px !important;
-  line-height: 9px !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-icon, .widget-card-icon, .widget-frame__icon) {
-  width: 18px !important;
-  height: 18px !important;
-  min-width: 18px !important;
-  flex-basis: 18px !important;
   color: var(--retro-white) !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -713,32 +593,12 @@ body.theme-retro .calendar-event-time {
   box-shadow: none !important;
 }
 
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.glass-card-actions, .widget-frame__actions) {
-  height: var(--retro-titlebar-control-height) !important;
-  margin-left: auto !important;
-  align-self: center !important;
-  gap: 3px !important;
-}
-
 /* Real widget commands occupy the native titlebar slot. The previous fake
    minimize/close decoration was removed because it collided with Add/Refresh.
    실제 기능 버튼만 같은 높이로 정렬합니다. */
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .widget-frame__actions > :is(button, .glass-button, .career-icon-button) {
-  width: auto !important;
-  min-width: var(--retro-titlebar-control-height) !important;
-  height: var(--retro-titlebar-control-height) !important;
-  min-height: var(--retro-titlebar-control-height) !important;
-  padding: 0 6px !important;
-  margin: 0 !important;
-  line-height: 1 !important;
-}
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-body, .widget-frame__body, .floating-window-body, .settings-modal-body) {
-  margin: var(--retro-window-gap) !important;
-  padding: 6px !important;
   background: var(--retro-client) !important;
   color: var(--retro-text) !important;
   border-top: 2px solid var(--retro-panel-darker) !important;
@@ -751,7 +611,6 @@ body.theme-retro .calendar-event-time {
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   .glass-card-body::after {
   content: none !important;
-  display: none !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
@@ -1086,7 +945,6 @@ body.theme-retro {
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3, .floating-window-title, .settings-modal-header h2) {
   color: #ffffff !important;
-  font-weight: 900 !important;
   text-shadow: 1px 1px 0 #7a2f5f !important;
 }
 
@@ -1537,8 +1395,6 @@ body.theme-retro {
   background: var(--retro-window) !important;
   color: var(--retro-text) !important;
   font-family: var(--glassday-app-font, var(--retro-font-stack)) !important;
-  font-size: 11px !important;
-  line-height: 1.25 !important;
   border-top: 2px solid var(--retro-white) !important;
   border-left: 2px solid var(--retro-white) !important;
   border-right: 2px solid var(--retro-panel-darker) !important;
@@ -1551,22 +1407,7 @@ body.theme-retro {
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .glass-card.widget-frame {
-  display: grid !important;
-  grid-template-rows: var(--retro-titlebar-height) minmax(0, 1fr) !important;
-  overflow: hidden !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-header, .widget-card-header, .widget-frame__header, .floating-window-titlebar, .settings-modal-header, .memo-floating-window-titlebar) {
-  height: var(--retro-titlebar-height) !important;
-  min-height: var(--retro-titlebar-height) !important;
-  padding: 3px 5px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 6px !important;
-  overflow: hidden !important;
   color: var(--retro-white) !important;
   background: var(--retro-title) !important;
   border-bottom: 2px solid var(--retro-panel-darker) !important;
@@ -1576,61 +1417,22 @@ body.theme-retro {
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.widget-frame__title-group, .glass-card-title-group, .widget-card-title-group) {
-  min-width: 0 !important;
-  min-height: 0 !important;
-  height: 100% !important;
-  align-items: center !important;
-  gap: 5px !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.widget-frame__copy, .glass-card-copy, .widget-card-copy) {
-  min-width: 0 !important;
-  min-height: 0 !important;
-  height: 100% !important;
-  justify-content: center !important;
-  gap: 0 !important;
-  overflow: hidden !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3, .floating-window-title, .settings-modal-header h2) {
-  max-width: 100% !important;
-  margin: 0 !important;
   color: var(--retro-white) !important;
   font-family: var(--glassday-app-font, var(--retro-font-stack)) !important;
-  font-size: 11px !important;
-  font-weight: 800 !important;
-  line-height: 12px !important;
-  letter-spacing: 0 !important;
   text-shadow: 1px 1px 0 var(--retro-title-2) !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle, .widget-frame__header p, .floating-window-subtitle, .settings-modal-header p) {
-  max-width: 100% !important;
-  margin: 0 !important;
   color: rgb(255 255 255 / 0.86) !important;
-  font-size: 8px !important;
-  font-weight: 700 !important;
-  line-height: 9px !important;
-  letter-spacing: 0 !important;
   text-shadow: 1px 1px 0 var(--retro-title-2) !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-icon, .widget-card-icon, .widget-frame__icon, .settings-modal-icon) {
-  width: 18px !important;
-  height: 18px !important;
-  min-width: 18px !important;
-  flex: 0 0 18px !important;
   color: var(--retro-white) !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -1639,25 +1441,7 @@ body.theme-retro {
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.glass-card-icon svg, .widget-card-icon svg, .widget-frame__icon svg) {
-  width: 14px !important;
-  height: 14px !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.glass-card-actions, .widget-frame__actions) {
-  min-width: 0 !important;
-  height: var(--retro-titlebar-control-height) !important;
-  align-items: center !important;
-  gap: 3px !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-body, .widget-frame__body, .floating-window-body, .settings-modal-body) {
-  min-height: 0 !important;
-  margin: var(--retro-window-gap) !important;
-  padding: 7px !important;
-  overflow: auto !important;
   background: var(--retro-client) !important;
   color: var(--retro-text) !important;
   border-top: 2px solid #727884 !important;
@@ -1727,91 +1511,6 @@ body.theme-retro {
   background: var(--memo-note-surface-active, var(--retro-pink-soft)) !important;
 }
 
-/* Career list density
-   Retro's compact bitmap type should not collapse Career rows into thin strips.
-   These rows stay chunky enough to read company, role, metadata, and D-day at a
-   glance while preserving the raised Win95 panel shape. / Career 목록은 매일
-   보는 핵심 정보라서 레트로 폰트가 작아져도 카드 두께와 패딩을 유지한다. */
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .career-widget
-  .career-summary-grid {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  align-items: start !important;
-  gap: 8px !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .career-widget
-  .career-summary-card {
-  min-height: 64px !important;
-  padding: 10px 12px !important;
-  display: grid !important;
-  align-content: center !important;
-  gap: 4px !important;
-  background: #ffe4f1 !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .career-widget
-  .career-summary-card
-  strong {
-  font-size: 17px !important;
-  line-height: 1.05 !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .career-widget
-  .career-summary-card
-  span {
-  font-size: 10px !important;
-  line-height: 1.2 !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .career-widget
-  .career-list {
-  gap: 8px !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .career-widget
-  .career-list-item {
-  min-height: 78px !important;
-  padding: 12px 13px !important;
-  gap: 9px !important;
-  align-content: center !important;
-  background: var(--retro-cream) !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .career-widget
-  .career-list-title {
-  gap: 3px !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .career-widget
-  .career-list-title
-  strong {
-  font-size: 13px !important;
-  line-height: 1.18 !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .career-widget
-  .career-list-title
-  span {
-  font-size: 10.5px !important;
-  line-height: 1.2 !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  .career-widget
-  .career-list-meta {
-  gap: 5px !important;
-}
-
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.memo-color-chip, .memo-note-color, .memo-note-color-chip, .memo-note-accent, .memo-note-color-dot) {
   border-radius: 0 !important;
@@ -1879,18 +1578,6 @@ body.theme-retro {
   font-size: 11px !important;
   line-height: 1 !important;
   letter-spacing: 0 !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.widget-frame__actions > button, .widget-frame__actions > .glass-button, .floating-window-actions .glass-button, .settings-close-button) {
-  width: var(--retro-titlebar-control-height) !important;
-  min-width: var(--retro-titlebar-control-height) !important;
-  height: var(--retro-titlebar-control-height) !important;
-  min-height: var(--retro-titlebar-control-height) !important;
-  padding: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
@@ -1974,12 +1661,17 @@ body.theme-retro {
   box-shadow: 0 4px 10px rgb(132 64 91 / 0.16) !important;
 }
 
-/* Pink Diary refresh / Pink Diary visual rules are the final overrides for
-   this theme. They deliberately undo the earlier Windows bevel/titlebar rules
-   while leaving widget structure and shared component behavior untouched.
-   연결: GlassCard.tsx가 만든 .widget-frame, .widget-frame__header/body를
-   대상으로 하며, 개별 위젯 CSS의 레이아웃/동작은 변경하지 않습니다.
-   These final rules replace only the visual layer; widget logic stays shared. */
+/*
+ * Pink Diary refresh / 이 파일의 마지막 Retro/Pink Diary layer:
+ * `index.css` imports this file before `pink-diary.css`, so rules here replace
+ * earlier Windows bevel/titlebar styling; pink-diary.css may then refine it.
+ * Selectors target the shared frame classes emitted by GlassCard.tsx and
+ * CareerWidget.tsx. This layer intentionally changes some frame geometry too
+ * (header/body padding, min-height, icon/title sizing), as part of the Retro
+ * theme's denser titlebar. To change the common glass-theme baseline, edit
+ * spacing-tokens.css/base.css/widget-system.css; to preserve Retro, edit this
+ * theme exception and its later pink-diary.css override together.
+ */
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
   --retro-bg: #f4e9ed;
   --retro-panel: #fbf6f7;
@@ -2019,22 +1711,11 @@ body.theme-retro {
   border: 1px solid #e5ced8 !important;
   border-radius: 16px !important;
   box-shadow: 0 5px 16px rgb(89 54 70 / 0.08) !important;
-  overflow: hidden !important;
   backdrop-filter: none !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
-  :is(.glass-card::before, .glass-card::after, .widget-frame::before, .widget-frame::after) {
-  content: none !important;
-  display: none !important;
-}
-
-:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-header, .widget-card-header, .widget-frame__header, .floating-window-titlebar, .settings-modal-header) {
-  min-height: 48px !important;
-  height: auto !important;
-  padding: 9px 12px !important;
-  gap: 9px !important;
   color: #493740 !important;
   background: #f8eaf0 !important;
   border: 0 !important;
@@ -2046,24 +1727,17 @@ body.theme-retro {
   :is(.glass-card-title, .widget-card-title, .widget-frame__title, .widget-frame__header h3, .floating-window-title, .settings-modal-header h2) {
   color: #493740 !important;
   font-family: var(--glassday-app-font, "Pretendard", "Malgun Gothic", sans-serif) !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  line-height: 1.25 !important;
   text-shadow: none !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-subtitle, .widget-card-subtitle, .widget-frame__subtitle, .widget-frame__header p, .floating-window-subtitle, .settings-modal-header p) {
   color: #806c77 !important;
-  font-size: 10px !important;
-  line-height: 1.3 !important;
   text-shadow: none !important;
 }
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.glass-card-body, .widget-frame__body, .floating-window-body, .settings-modal-body) {
-  margin: 0 !important;
-  padding: 12px !important;
   background: #fffafb !important;
   color: #493740 !important;
   border: 0 !important;
@@ -2072,11 +1746,6 @@ body.theme-retro {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.widget-frame__icon, .glass-card-icon, .widget-card-icon) {
-  width: 24px !important;
-  height: 24px !important;
-  min-width: 24px !important;
-  flex: 0 0 24px !important;
-  padding: 0 !important;
   color: #b65d80 !important;
   background: transparent !important;
   border: 0 !important;
@@ -2087,8 +1756,6 @@ body.theme-retro {
 
 :is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro)
   :is(.widget-frame__icon, .glass-card-icon, .widget-card-icon) svg {
-  width: 17px !important;
-  height: 17px !important;
   visibility: visible !important;
 }
 

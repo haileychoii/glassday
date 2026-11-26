@@ -13,24 +13,30 @@
   --mobile-space-1: var(--gd-mobile-space-1);
   --mobile-space-2: var(--gd-mobile-space-2);
   --mobile-space-4: var(--gd-mobile-space-4);
-  --mobile-widget-gap: var(--gd-mobile-widget-gap);
-  --mobile-widget-inset: var(--gd-mobile-widget-inset);
+  --mobile-widget-gap: var(--gd-ratio-2);
+  --mobile-widget-inset: clamp(12px, 3vw, 16px);
+  --mobile-widget-header-pad-y: clamp(8px, 2.1vw, 10px);
+  --mobile-widget-header-gap: var(--gd-ratio-2);
+  --mobile-widget-copy-gap: var(--gd-ratio-1);
   --mobile-content-gap: var(--mobile-space-2);
   --mobile-tight-gap: var(--mobile-space-1);
   --mobile-control-gap: 6px;
   --mobile-page-gutter: var(--mobile-space-4);
-  --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
+  --mobile-widget-header-height: calc(
+    max(var(--mobile-widget-icon-size), var(--mobile-widget-action-size)) +
+    var(--mobile-widget-header-pad-y) +
+    var(--mobile-widget-header-pad-y)
+  );
   --mobile-widget-header-pad-inline: var(--gd-mobile-widget-inset);
   --mobile-widget-header-pad-block: var(--gd-mobile-widget-header-pad-y);
-  --mobile-widget-title-size: 14px;
-  --mobile-widget-subtitle-size: 11px;
+  --mobile-widget-title-size: clamp(14px, 3.7vw, 16px);
+  --mobile-widget-subtitle-size: clamp(11px, 3vw, 12px);
   --mobile-widget-min-body-height: 120px;
   /* Match base.css desktop widget icon slot and glyph dimensions. */
-  --mobile-widget-icon-size: var(--gd-widget-desktop-icon-size, 26px);
-  --mobile-widget-icon-glyph-size: 15px;
-  /* A 40px control stays compact in dense widget headers but is easier to tap.
-   * 좁은 헤더를 과하게 키우지 않으면서 손가락으로 누르기 쉽게 맞춥니다. */
-  --mobile-widget-action-size: 40px;
+  --mobile-widget-icon-size: clamp(22px, 6vw, 26px);
+  --mobile-widget-icon-glyph-size: clamp(16px, 4.5vw, 18px);
+  /* Keep header actions comfortably tappable on every phone width. */
+  --mobile-widget-action-size: clamp(44px, 11vw, 48px);
 }
 
 /* One radius hierarchy for nested mobile surfaces across rounded themes.
@@ -423,7 +429,7 @@ body:has(.mobile-layout) .settings-section-tab {
 }
 
 .mobile-layout .mobile-widget-slot[data-widget-id] .widget-frame__subtitle {
-  display: none !important;
+  display: block !important;
   font-size: var(--mobile-widget-subtitle-size) !important;
   line-height: 1.3 !important;
 }
