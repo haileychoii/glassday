@@ -76,7 +76,7 @@
   justify-content: center;
   gap: 7px;
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: var(--gd-radius-button);
   background: transparent;
   color: hsl(var(--muted-foreground));
   font-size: 12px;
@@ -233,7 +233,7 @@
 
   text-align: left !important;
 
-  border-radius: 24px !important;
+  border-radius: var(--gd-radius-card) !important;
   overflow: hidden !important;
   box-sizing: border-box !important;
 }
@@ -250,7 +250,7 @@
 
   padding: 0 10px !important;
 
-  border-radius: 18px !important;
+  border-radius: var(--gd-radius-inner) !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
 }
@@ -316,7 +316,7 @@
   gap: 12px !important;
 
   text-align: left !important;
-  border-radius: 22px !important;
+  border-radius: var(--gd-radius-button) !important;
   box-sizing: border-box !important;
 }
 
@@ -348,7 +348,7 @@
   width: 100% !important;
   min-width: 0 !important;
   padding: 16px !important;
-  border-radius: 22px !important;
+  border-radius: var(--gd-radius-card) !important;
   box-sizing: border-box !important;
 }
 
@@ -356,53 +356,9 @@
   width: 100% !important;
   min-width: 0 !important;
   padding: 12px 14px !important;
-  border-radius: 18px !important;
+  border-radius: var(--gd-radius-inner) !important;
   font-size: 12px !important;
   font-weight: 750 !important;
-}
-
-/* Pixel / Retro에서는 각진 설정창 유지 */
-html[data-theme="pixel-desk"] .settings-theme-card,
-body[data-theme="pixel-desk"] .settings-theme-card,
-html.theme-pixel-desk .settings-theme-card,
-body.theme-pixel-desk .settings-theme-card,
-html[data-theme="pixel-desk"] .settings-theme-preview,
-body[data-theme="pixel-desk"] .settings-theme-preview,
-html.theme-pixel-desk .settings-theme-preview,
-body.theme-pixel-desk .settings-theme-preview,
-html[data-theme="pixel-desk"] .settings-action-card,
-body[data-theme="pixel-desk"] .settings-action-card,
-html.theme-pixel-desk .settings-action-card,
-body.theme-pixel-desk .settings-action-card,
-html[data-theme="pixel-desk"] .settings-backup-button,
-body[data-theme="pixel-desk"] .settings-backup-button,
-html.theme-pixel-desk .settings-backup-button,
-body.theme-pixel-desk .settings-backup-button,
-html[data-theme="pixel-desk"] .settings-reset-button,
-body[data-theme="pixel-desk"] .settings-reset-button,
-html.theme-pixel-desk .settings-reset-button,
-body.theme-pixel-desk .settings-reset-button,
-html[data-theme="retro"] .settings-theme-card,
-body[data-theme="retro"] .settings-theme-card,
-html.theme-retro .settings-theme-card,
-body.theme-retro .settings-theme-card,
-html[data-theme="retro"] .settings-theme-preview,
-body[data-theme="retro"] .settings-theme-preview,
-html.theme-retro .settings-theme-preview,
-body.theme-retro .settings-theme-preview,
-html[data-theme="retro"] .settings-action-card,
-body[data-theme="retro"] .settings-action-card,
-html.theme-retro .settings-action-card,
-body.theme-retro .settings-action-card,
-html[data-theme="retro"] .settings-backup-button,
-body[data-theme="retro"] .settings-backup-button,
-html.theme-retro .settings-backup-button,
-body.theme-retro .settings-backup-button,
-html[data-theme="retro"] .settings-reset-button,
-body[data-theme="retro"] .settings-reset-button,
-html.theme-retro .settings-reset-button,
-body.theme-retro .settings-reset-button {
-  border-radius: 0 !important;
 }
 
 /* Small-screen modal layout */
