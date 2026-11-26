@@ -115,14 +115,7 @@ main {
 
 /* app shell */
 .glass-panel,
-.liquid-shell,
-.app-shell,
-.dashboard-shell,
-.workspace-shell,
-.desktop-shell,
-.main-shell,
-.dashboard-layout,
-.app-layout {
+.liquid-shell {
   border-radius: var(--gd-radius-app);
   background: hsl(0 0% 100% / 0.19);
   border: 1px solid hsl(0 0% 100% / 0.32);
