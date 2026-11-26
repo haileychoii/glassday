@@ -111,8 +111,6 @@ export const WorkspaceTabIcon = ({
     // Rewrite icons saved before the optical-size correction so existing tabs
     // also receive the new image URL and bypass stale browser/CDN cache.
     const balancedArtwork: Record<string, string> = {
-      "/workspace-icons/emoji-expressions/143.webp":
-        "/workspace-icons/emoji-expressions/143-balanced.webp",
       "/workspace-icons/emoji-expressions/146.webp":
         "/workspace-icons/emoji-expressions/146-balanced.webp",
     };

@@ -137,14 +137,12 @@ const emojiSheet = (
     .filter((number) => !(collection === "emoji-objects" && number === 140))
     .map((number) => ({
       id: `${collection}-${String(number).padStart(3, "0")}`,
-      // A few expression stickers have decoration that makes their face look
-      // larger beside plain round faces. Use their optically balanced artwork.
+      // The distorted face artwork alone needs a smaller drawing so its round
+      // face matches neighboring expressions. Heart decorations keep source size.
       src:
-        collection === "emoji-expressions" && number === 143
-          ? "/workspace-icons/emoji-expressions/143-balanced.webp"
-          : collection === "emoji-expressions" && number === 146
-            ? "/workspace-icons/emoji-expressions/146-balanced.webp"
-            : `/workspace-icons/${collection}/${String(number).padStart(3, "0")}.webp`,
+        collection === "emoji-expressions" && number === 146
+          ? "/workspace-icons/emoji-expressions/146-balanced.webp"
+          : `/workspace-icons/${collection}/${String(number).padStart(3, "0")}.webp`,
       label: extraLabels[number] ?? `${label} ${number}`,
     }));
 
