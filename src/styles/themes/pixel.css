@@ -593,64 +593,8 @@ html[data-theme="pixel-desk"] .app-shell-main {
   justify-self: end !important;
 }
 
-/* varied chip colors */
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-note-color,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 1) .memo-note-accent {
-  background: #f7a8c9 !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 2) .memo-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 2) .memo-note-color,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel
-) .memo-note-item:nth-child(6n + 2) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 2) .memo-note-accent {
-  background: #fff1a8 !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 3) .memo-color-chip,
-:where(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel
-) .memo-note-item:nth-child(6n + 3) .memo-note-color,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 3) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 3) .memo-note-accent {
-  background: #a9e9ff !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-note-color,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 4) .memo-note-accent {
-  background: #c8f7b7 !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-note-color,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 5) .memo-note-accent {
-  background: #cbb8ff !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-note-color,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-note-color-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item:nth-child(6n + 6) .memo-note-accent {
-  background: #ffbf91 !important;
-}
+/* Memo color dots use the palette chosen for each saved note in MemoWidget.tsx.
+   Do not derive their color from list position; that would hide the user's choice. */
 
 /* Memo editor */
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-workspace {
