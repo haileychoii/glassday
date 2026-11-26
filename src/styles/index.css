@@ -36,6 +36,16 @@
 @import "./themes/retro.css";
 @import "./theme-surfaces.css";
 
+/* Component surfaces follow theme tokens; widget files below own layout only. */
+@import "./themes/career-surfaces.css";
+@import "./themes/diary-workspace-surfaces.css";
+@import "./themes/memo-surfaces.css";
+@import "./themes/money-surfaces.css";
+@import "./themes/mood-surfaces.css";
+@import "./themes/settings-surfaces.css";
+@import "./themes/study-surfaces.css";
+@import "./themes/timer-surfaces.css";
+
 /* 4. Widget-level styles */
 @import "./widgets/today-focus.css";
 @import "./widgets/alert-center.css";
@@ -50,22 +60,6 @@
 @import "./widgets/study.css";
 @import "./widgets/timer.css";
 @import "./widgets/diary-workspace.css";
-/* Career material and colors live in the theme layer; widget CSS owns layout. */
-@import "./themes/career-surfaces.css";
-/* Memo paper and panel materials live in the theme layer as well. */
-@import "./themes/memo-surfaces.css";
-/* Money surfaces use shared theme tokens; the widget stylesheet keeps layout. */
-@import "./themes/money-surfaces.css";
-/* Mood metric materials and theme variants belong to the theme layer. */
-@import "./themes/mood-surfaces.css";
-/* Settings dialog materials and its theme preview artwork are surface styles. */
-@import "./themes/settings-surfaces.css";
-/* Study subject colors and panel materials are owned by the theme layer. */
-@import "./themes/study-surfaces.css";
-/* Timer colors, control faces, and progress-ring paint belong to theme styles. */
-@import "./themes/timer-surfaces.css";
-/* Diary canvas and note materials are kept with the other theme surfaces. */
-@import "./themes/diary-workspace-surfaces.css";
 
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";
