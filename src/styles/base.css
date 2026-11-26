@@ -290,8 +290,8 @@ main {
   color: hsl(var(--foreground) / 0.72);
 }
 
-.glass-card-icon{
-  border-radius: 8px;
+.glass-card-icon {
+  border-radius: var(--gd-radius-inner);
 }
 
 .glass-icon-box svg,
@@ -334,7 +334,6 @@ main {
 
 .app-mode-stage,
 .settings-modal-window,
-.memo-window,
 .floating-window {
   scrollbar-width: thin;
   scrollbar-color: var(--gd-scrollbar-thumb) var(--gd-scrollbar-track);
@@ -342,7 +341,6 @@ main {
 
 .app-mode-stage *::-webkit-scrollbar,
 .settings-modal-window *::-webkit-scrollbar,
-.memo-window *::-webkit-scrollbar,
 .floating-window *::-webkit-scrollbar {
   width: var(--gd-scrollbar-size);
   height: var(--gd-scrollbar-size);
@@ -350,7 +348,6 @@ main {
 
 .app-mode-stage *::-webkit-scrollbar-track,
 .settings-modal-window *::-webkit-scrollbar-track,
-.memo-window *::-webkit-scrollbar-track,
 .floating-window *::-webkit-scrollbar-track {
   background: var(--gd-scrollbar-track);
   border-radius: 999px;
@@ -358,7 +355,6 @@ main {
 
 .app-mode-stage *::-webkit-scrollbar-thumb,
 .settings-modal-window *::-webkit-scrollbar-thumb,
-.memo-window *::-webkit-scrollbar-thumb,
 .floating-window *::-webkit-scrollbar-thumb {
   background: var(--gd-scrollbar-thumb);
   border: 2px solid var(--gd-scrollbar-border);
@@ -368,14 +364,12 @@ main {
 
 .app-mode-stage *::-webkit-scrollbar-thumb:hover,
 .settings-modal-window *::-webkit-scrollbar-thumb:hover,
-.memo-window *::-webkit-scrollbar-thumb:hover,
 .floating-window *::-webkit-scrollbar-thumb:hover {
   background: var(--gd-scrollbar-thumb-hover);
 }
 
 .app-mode-stage *::-webkit-scrollbar-corner,
 .settings-modal-window *::-webkit-scrollbar-corner,
-.memo-window *::-webkit-scrollbar-corner,
 .floating-window *::-webkit-scrollbar-corner {
   background: transparent;
 }
