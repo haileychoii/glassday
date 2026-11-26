@@ -132,9 +132,13 @@
   html.theme-mac-core, body.theme-mac-core
 ) .mobile-layout {
   color-scheme: light;
-  --ios-background: #f2f2f7;
-  --ios-surface: #ffffff;
-  --ios-secondary-surface: #f7f7fa;
+  /* Mobile shares Mac Core's Figma material ladder while keeping iOS grouping:
+   * wallpaper/canvas → grouped surfaces → readable card → native controls. */
+  --ios-background: #eef0f5;
+  --ios-surface: var(--mac-material-thick, rgb(255 255 255 / 0.88));
+  --ios-secondary-surface: var(--mac-material-medium, rgb(248 249 252 / 0.76));
+  --ios-bar-surface: var(--mac-material-ultra-thin, rgb(250 251 255 / 0.48));
+  --ios-material-blur: var(--mac-material-blur, 24px);
   --ios-separator: rgb(60 60 67 / 0.13);
   --ios-separator-strong: rgb(60 60 67 / 0.18);
   --ios-label: #1c1c1e;
@@ -143,7 +147,7 @@
   --ios-tint-soft: rgb(0 122 255 / 0.09);
   --ios-radius: 18px;
   --ios-inner-radius: 12px;
-  --ios-shadow: 0 2px 12px rgb(22 24 32 / 0.035);
+  --ios-shadow: 0 5px 18px -12px rgb(22 24 32 / 0.16), inset 0 1px 0 var(--mac-material-highlight, rgb(255 255 255 / 0.72));
   --gd-radius-widget: var(--ios-radius);
   --gd-radius-card: var(--ios-inner-radius);
   --gd-radius-inner: var(--ios-inner-radius);
@@ -163,13 +167,13 @@
     min-height: 52px;
     padding-inline: max(14px, env(safe-area-inset-left))
       max(14px, env(safe-area-inset-right));
-    background: rgb(249 249 251 / 0.88) !important;
+    background: var(--ios-bar-surface) !important;
     border: 0 !important;
     border-bottom: 0.5px solid var(--ios-separator) !important;
     border-radius: 0 !important;
     box-shadow: none !important;
-    backdrop-filter: saturate(180%) blur(18px) !important;
-    -webkit-backdrop-filter: saturate(180%) blur(18px) !important;
+    backdrop-filter: saturate(var(--mac-material-saturation, 180%)) blur(var(--ios-material-blur)) !important;
+    -webkit-backdrop-filter: saturate(var(--mac-material-saturation, 180%)) blur(var(--ios-material-blur)) !important;
   }
   & .mobile-heading h1 {
     color: var(--ios-label) !important;
@@ -206,8 +210,8 @@
     border: 1px solid var(--ios-separator) !important;
     border-radius: var(--ios-radius) !important;
     box-shadow: var(--ios-shadow) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+    backdrop-filter: saturate(var(--mac-material-saturation, 180%)) blur(var(--ios-material-blur)) !important;
+    -webkit-backdrop-filter: saturate(var(--mac-material-saturation, 180%)) blur(var(--ios-material-blur)) !important;
     clip-path: none !important;
     overflow: hidden !important;
     box-sizing: border-box !important;
@@ -360,10 +364,10 @@
     border: 0 !important;
     border-top: 0.5px solid var(--ios-separator) !important;
     border-radius: 0 !important;
-    background: rgb(249 249 251 / 0.88) !important;
+    background: var(--ios-bar-surface) !important;
     box-shadow: none !important;
-    backdrop-filter: saturate(180%) blur(24px) !important;
-    -webkit-backdrop-filter: saturate(180%) blur(24px) !important;
+    backdrop-filter: saturate(var(--mac-material-saturation, 180%)) blur(var(--ios-material-blur)) !important;
+    -webkit-backdrop-filter: saturate(var(--mac-material-saturation, 180%)) blur(var(--ios-material-blur)) !important;
   }
   & :is(.mobile-navigation-item, .mobile-navigation-capture) {
     border: 0 !important;

@@ -1986,17 +1986,15 @@
   html.theme-mac-core,
   body.theme-mac-core
 ) {
-  --mac-app-surface: rgb(255 255 255 / 0.78);
-  --mac-app-surface-strong: rgb(255 255 255 / 0.9);
-  --mac-app-grouped-border: rgb(60 60 67 / 0.1);
-  --mac-app-separator: rgb(60 60 67 / 0.12);
-  --mac-app-shadow:
-    0 10px 24px -22px rgb(22 24 32 / 0.24),
-    inset 0 1px 0 rgb(255 255 255 / 0.86);
-  --mac-app-control:
-    linear-gradient(180deg, rgb(255 255 255 / 0.96), rgb(241 242 246 / 0.9));
-  --mac-app-control-hover:
-    linear-gradient(180deg, rgb(255 255 255 / 1), rgb(248 249 252 / 0.96));
+  /* Late widget selectors consume the theme's one material palette instead of
+     restating separate colors/shadows here. Keep per-widget geometry elsewhere. */
+  --mac-app-surface: var(--mac-material-medium);
+  --mac-app-surface-strong: var(--mac-material-thick);
+  --mac-app-grouped-border: var(--mac-material-edge);
+  --mac-app-separator: var(--mac-window-separator);
+  --mac-app-shadow: var(--mac-inner-shadow);
+  --mac-app-control: var(--mac-control-bg);
+  --mac-app-control-hover: var(--mac-control-hover-bg);
 }
 
 :where(
@@ -2007,15 +2005,11 @@
 )
   :is(.glass-card, .widget-frame, .widget-card) {
   border-radius: 14px !important;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.9), rgb(247 248 252 / 0.78)) !important;
-  border: 1px solid rgb(60 60 67 / 0.12) !important;
-  box-shadow:
-    0 16px 38px -30px rgb(22 24 32 / 0.28),
-    0 1px 2px rgb(22 24 32 / 0.06),
-    inset 0 1px 0 rgb(255 255 255 / 0.92) !important;
-  backdrop-filter: blur(28px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
+  background: var(--mac-widget-bg) !important;
+  border: 1px solid var(--mac-widget-border) !important;
+  box-shadow: var(--mac-widget-shadow) !important;
+  backdrop-filter: blur(var(--mac-material-blur)) saturate(var(--mac-material-saturation)) !important;
+  -webkit-backdrop-filter: blur(var(--mac-material-blur)) saturate(var(--mac-material-saturation)) !important;
 }
 
 
@@ -2078,8 +2072,8 @@
   background: var(--mac-app-surface) !important;
   border: 1px solid var(--mac-app-grouped-border) !important;
   box-shadow: var(--mac-app-shadow) !important;
-  backdrop-filter: blur(16px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
+  backdrop-filter: blur(var(--mac-material-blur)) saturate(var(--mac-material-saturation)) !important;
+  -webkit-backdrop-filter: blur(var(--mac-material-blur)) saturate(var(--mac-material-saturation)) !important;
 }
 
 :where(
