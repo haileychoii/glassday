@@ -16,6 +16,15 @@ import { WorkspaceTabIcon } from "./WorkspaceTabIcon";
 const iconCollectionForTheme = (theme: ThemeId): WorkspaceIconCollectionId =>
   theme === "pixel-desk" || theme === "retro" ? "retro-pixel" : "pink-iphone";
 
+const iconCollectionOptions: Array<{
+  id: WorkspaceIconCollectionId;
+  label: string;
+}> = [
+  { id: "pink-iphone", label: "핑크 스티커" },
+  { id: "retro-pixel", label: "픽셀 아트" },
+  { id: "folder-art", label: "폴더 디자인" },
+];
+
 export const MobileNavigation = ({
   tabs,
   activeTabId,
@@ -117,27 +126,25 @@ export const MobileNavigation = ({
           role="group"
           aria-label="Choose a workspace icon"
         >
-          {/* Keep the two artwork families separate so pixel and iPhone-style
-              icons can both be found without mixing their visual language. */}
+          {/* Browse by clear artwork families; folder skins stay easy to find. */}
           <div className="mobile-tab-icon-collections" role="group" aria-label="Icon style">
-            <button
-              type="button"
-              className="mobile-tab-icon-collection"
-              aria-pressed={iconCollection === "pink-iphone"}
-              onClick={() => setIconCollection("pink-iphone")}
-            >
-              핑크 iPhone
-            </button>
-            <button
-              type="button"
-              className="mobile-tab-icon-collection"
-              aria-pressed={iconCollection === "retro-pixel"}
-              onClick={() => setIconCollection("retro-pixel")}
-            >
-              레트로 픽셀
-            </button>
+            {iconCollectionOptions.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                className="mobile-tab-icon-collection"
+                aria-pressed={iconCollection === option.id}
+                onClick={() => setIconCollection(option.id)}
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
-          <div className="mobile-tab-icon-grid" role="group" aria-label={`${iconCollection} icons`}>
+          <div
+            className="mobile-tab-icon-grid"
+            role="group"
+            aria-label={`${iconCollectionOptions.find((option) => option.id === iconCollection)?.label} 아이콘`}
+          >
             {iconChoices.map((choice) => (
               <button
                 key={choice.id}
