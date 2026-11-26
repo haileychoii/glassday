@@ -420,86 +420,6 @@
 }
 
 /* =========================================================
-   SIDEBAR SAFETY LAYER
-   Stabilizes base sidebar sizing before the app-level sidebar
-   styles and breakpoints refine the final layout.
-========================================================= */
-
-aside {
-  --sidebar-width: clamp(198px, 17vw, 200px);
-
-  flex: 0 0 var(--sidebar-width);
-  width: var(--sidebar-width);
-  min-width: 180px;
-  max-width: 200px;
-
-  min-height: 100%;
-  overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-}
-
-aside > div:first-child {
-  flex-shrink: 0;
-}
-
-aside nav,
-aside .sidebar-workspace-list {
-  min-width: 0;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.sidebar-tab-item {
-  width: 100%;
-  min-width: 0;
-  flex: 0 0 auto;
-}
-
-.sidebar-tab-main {
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.sidebar-tab-main span,
-.sidebar-tab-main strong,
-.sidebar-tab-input {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (max-width: 920px) {
-  aside {
-    flex: 0 0 auto;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    min-height: auto;
-  }
-
-  aside nav,
-  aside .sidebar-workspace-list {
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-  .sidebar-tab-item {
-    width: auto;
-    min-width: 112px;
-  }
-}
-
-/* =========================================================
    SIDEBAR APP LAYOUT
    Core desktop sidebar structure. Theme palette, blur, and
    surface styling still belong in the theme files.
@@ -650,9 +570,12 @@ aside .sidebar-workspace-list {
 }
 
 .sidebar-tab-item {
+  width: 100%;
+  min-width: 0;
   min-height: 42px;
 
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: 6px;
 }
@@ -662,7 +585,8 @@ aside .sidebar-workspace-list {
 }
 
 .sidebar-tab-main {
-
+  min-width: 0;
+  flex: 1 1 auto;
   height: 42px;
   padding: 0 12px;
 
@@ -720,9 +644,8 @@ aside .sidebar-workspace-list {
 }
 
 .sidebar-tab-label,
-.sidebar-tab-main span:last-child {
+.sidebar-tab-input {
   min-width: 0;
-
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
