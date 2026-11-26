@@ -544,13 +544,6 @@ html[data-theme="pixel-desk"] .app-shell-main {
 
   min-height: 52px !important;
   padding: 8px !important;
-  border-radius: 0 !important;
-
-  background: #e8e8dc !important;
-  border-top: 1px solid #ffffff !important;
-  border-left: 1px solid #ffffff !important;
-  border-right: 1px solid #606060 !important;
-  border-bottom: 1px solid #606060 !important;
 
   overflow: hidden !important;
 }
@@ -661,21 +654,9 @@ html[data-theme="pixel-desk"] .app-shell-main {
   scrollbar-color: #c0c0c0 var(--w95-bg, #d4d0c8) !important;
 }
 
-/* =========================================================
-   Calendar / progress / chips
-========================================================= */
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-range-chip,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-week-event {
-  border-radius: 0 !important;
-  background: #ffffcc !important;
-  color: #000000 !important;
-  border-top: 1px solid #ffffff !important;
-  border-left: 1px solid #ffffff !important;
-  border-right: 1px solid #808080 !important;
-  border-bottom: 1px solid #808080 !important;
-  box-shadow: none !important;
-}
+/* Pixel Calendar surfaces are owned by pixel-95css.css. Keep only the
+   standalone color-chip radius fallback here; shared widget radius rules
+   cover chips inside GlassCard, while this also covers floating Memo windows. */
 
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .event-color-chip,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-color-chip {
