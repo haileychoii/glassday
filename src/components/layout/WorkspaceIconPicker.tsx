@@ -24,6 +24,11 @@ const collections: Array<{
   { id: "pink-iphone", label: "일러스트 아이콘" },
   { id: "retro-pixel", label: "픽셀 아이콘" },
   { id: "folder-art", label: "폴더·패턴" },
+  { id: "emoji-expressions", label: "표정·손" },
+  { id: "emoji-people", label: "사람·동물" },
+  { id: "emoji-nature", label: "자연·음식" },
+  { id: "emoji-food-travel", label: "음식·이동" },
+  { id: "emoji-objects", label: "생활·기호" },
 ];
 
 type WorkspaceIconPickerProps = {

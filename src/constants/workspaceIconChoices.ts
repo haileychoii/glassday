@@ -1,16 +1,23 @@
 /**
  * Workspace icon catalog.
  *
- * This is the single index used by the mobile icon picker. Keep the file paths
- * stable because tabs save those paths as their icon value. The numbered image
- * sets contain the earlier artwork; the named entries below document the new
- * Drive additions so people can identify them with a screen reader or tooltip.
- *
- * Artwork groups describe what people will browse for: illustrations, pixel
- * icons, and folder or pattern art. All files use transparent 160 × 160
- * WebP canvases and the same centered 136px artwork area.
+ * This is the one catalog used by the tab-icon picker. Tabs save an icon's URL,
+ * so existing URLs and their numbered files must stay in place when artwork is
+ * updated. The collection IDs below correspond to the visible category buttons
+ * in WorkspaceIconPicker.tsx. Emoji sheet numbers refer to cells in the uploaded
+ * source sheets; named additions use a descriptive label for screen readers.
+ * Every new image is a transparent 160 × 160 WebP with artwork centered in the
+ * same 136px area, so icons from different sources appear at a consistent size.
  */
-export type WorkspaceIconCollectionId = "pink-iphone" | "retro-pixel" | "folder-art";
+export type WorkspaceIconCollectionId =
+  | "pink-iphone"
+  | "retro-pixel"
+  | "folder-art"
+  | "emoji-expressions"
+  | "emoji-people"
+  | "emoji-nature"
+  | "emoji-food-travel"
+  | "emoji-objects";
 
 export type WorkspaceIconChoice = {
   id: string;
@@ -30,7 +37,7 @@ const repairedDuplicateSlots: Partial<Record<WorkspaceIconCollectionId, Readonly
 };
 
 const numberedIcons = (
-  collection: Exclude<WorkspaceIconCollectionId, "folder-art">,
+  collection: Exclude<WorkspaceIconCollectionId, "folder-art" | `emoji-${string}`>,
   lastStableNumber: number,
   label: string
 ): WorkspaceIconChoice[] =>
@@ -106,6 +113,41 @@ const folderDesignAdditions = namedIcons("folder-art", [
   { number: 13, label: "리본 퍼 폴더" },
 ]);
 
+/**
+ * Build one browseable category from one emoji sheet. Keeping the original cell
+ * number in the URL makes replacements easy to track back to the source sheet.
+ * A few slots are deliberately omitted: they are duplicates, an empty cell, or
+ * a stray pixel rather than a usable icon. The generated image files use the
+ * shared transparent 160px canvas described at the top of this catalog.
+ */
+const emojiSheet = (
+  collection: Extract<WorkspaceIconCollectionId, `emoji-${string}`>,
+  label: string,
+  lastStableNumber: number,
+  extraLabels: Record<number, string> = {}
+): WorkspaceIconChoice[] =>
+  Array.from({ length: lastStableNumber }, (_, index) => index + 1)
+    // These two repeated drawings are visually identical to earlier cells.
+    .filter((number) => !(collection === "emoji-people" && number === 138))
+    .filter((number) => !(collection === "emoji-nature" && number === 56))
+    // These last slots are a stray transparent pixel and an empty grid cell.
+    .filter((number) => !(collection === "emoji-objects" && number === 72))
+    .filter((number) => !(collection === "emoji-objects" && number === 140))
+    .map((number) => ({
+      id: `${collection}-${String(number).padStart(3, "0")}`,
+      src: `/workspace-icons/${collection}/${String(number).padStart(3, "0")}.webp`,
+      label: extraLabels[number] ?? `${label} ${number}`,
+    }));
+
+const expressionEmojis = emojiSheet("emoji-expressions", "표정·손", 143, {
+  141: "점선 얼굴",
+  142: "싸움 구름",
+  143: "하트 장식 열나는 얼굴",
+});
+const natureEmojis = emojiSheet("emoji-nature", "자연·음식", 141, {
+  141: "해파리",
+});
+
 export const workspaceIconCollections: Record<WorkspaceIconCollectionId, WorkspaceIconChoice[]> = {
   "pink-iphone": [
     ...numberedIcons("pink-iphone", 598, "일러스트 아이콘"),
@@ -116,4 +158,9 @@ export const workspaceIconCollections: Record<WorkspaceIconCollectionId, Workspa
     ...pixelArtAdditions,
   ],
   "folder-art": folderDesignAdditions,
+  "emoji-expressions": expressionEmojis,
+  "emoji-people": emojiSheet("emoji-people", "사람·동물", 140),
+  "emoji-nature": natureEmojis,
+  "emoji-food-travel": emojiSheet("emoji-food-travel", "음식·이동", 140),
+  "emoji-objects": emojiSheet("emoji-objects", "생활·기호", 140),
 };
