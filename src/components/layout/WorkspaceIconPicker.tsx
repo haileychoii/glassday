@@ -32,30 +32,6 @@ const collections: Array<{
   { id: "emoji-objects", label: "생활·기호" },
 ];
 
-// Search all categories so the preview keeps the right name after browsing to
-// a different category from the one that contains the selected icon.
-const iconChoicesBySource = new Map(
-  Object.values(workspaceIconCollections)
-    .flat()
-    .map((choice) => [choice.src, choice] as const)
-);
-
-const defaultIconLabels: Record<string, string> = {
-  home: "홈 기본 아이콘",
-  career: "커리어 기본 아이콘",
-  study: "스터디 기본 아이콘",
-  memo: "메모 기본 아이콘",
-  life: "라이프 기본 아이콘",
-};
-
-const defaultIconGlyphs: Record<string, string> = {
-  home: "🏠",
-  career: "💼",
-  study: "📚",
-  memo: "📝",
-  life: "🌿",
-};
-
 type WorkspaceIconPickerProps = {
   value: string;
   theme: ThemeId;
@@ -97,10 +73,6 @@ export const WorkspaceIconPicker = ({
   }, [theme]);
 
   const choices = workspaceIconCollections[collection];
-  const selectedChoice = iconChoicesBySource.get(draftIcon);
-  const selectedLabel =
-    selectedChoice?.label ?? defaultIconLabels[draftIcon] ?? "선택한 아이콘";
-  const selectedGlyph = defaultIconGlyphs[draftIcon] ?? draftIcon;
 
   const chooseIcon = (icon: string) => {
     setDraftIcon(icon);
@@ -131,22 +103,6 @@ export const WorkspaceIconPicker = ({
             {option.label}
           </button>
         ))}
-      </div>
-
-      {/* A visible draft preview makes the selected artwork easy to recognize
-          and mirrors it on the tab before the user commits the change. */}
-      <div className="workspace-icon-picker-preview" role="status" aria-live="polite">
-        <span className="workspace-icon-picker-preview-art" aria-hidden="true">
-          {draftIcon.startsWith("/workspace-icons/") ? (
-            <img src={draftIcon} alt="" draggable={false} />
-          ) : (
-            selectedGlyph
-          )}
-        </span>
-        <span className="workspace-icon-picker-preview-copy">
-          <small>선택한 아이콘</small>
-          <strong>{selectedLabel}</strong>
-        </span>
       </div>
 
       <div
