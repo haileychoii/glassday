@@ -859,3 +859,16 @@ body:is([data-theme="mac-core"], .theme-mac-core):has(.mobile-layout)
     padding: 10px 12px !important;
   }
 }
+
+/* Daily Journal uses Mac Core's shared inner and control surfaces. */
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core)
+  .daily-journal-widget {
+  --journal-panel: var(--mac-inner-bg, #f7f8fa);
+  --journal-panel-border: var(--mac-inner-border, #dedee2);
+  --journal-panel-shadow: var(--mac-inner-shadow, none);
+  --journal-control: var(--mac-control-bg, #f5f5f7);
+  --journal-control-border: var(--mac-control-border, #d1d1d6);
+  --journal-text: var(--mac-text, #1d1d1f);
+  --journal-muted: var(--mac-secondary-text, #6e6e73);
+  --journal-accent: var(--mac-blue, #0a84ff);
+}
