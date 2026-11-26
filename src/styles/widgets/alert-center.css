@@ -7,11 +7,10 @@
    행의 표면과 글자색은 theme-surfaces.css가 결정한다.
    ============================================================ */
 /* =========================================================
-   ALERT CENTER
-   Widget-local styles for:
-   - alert list flow
-   - compact and wide layout
-====== =================================================== */
+   ALERT CENTER LAYOUT
+   This file only controls list flow and responsive row geometry.
+   Alert surfaces, borders, and severity colors live in theme-surfaces.css.
+========================================================= */
 
 /* =========================================================
    1. Alert list and card rows
