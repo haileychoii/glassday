@@ -572,6 +572,12 @@
     box-shadow: var(--w95-shadow-pressed) !important;
   }
 
+  /* Keep the label and check mark white even if a nested theme rule colors
+   * button contents independently from the selected button itself. */
+  & .mobile-tab-icon-picker .workspace-icon-scope-control button[aria-pressed="true"] > :is(span, svg) {
+    color: #ffffff !important;
+  }
+
   & .mobile-navigation-item > .pixel-tab-icon {
     display: block !important;
     width: 32px !important;
