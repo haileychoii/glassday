@@ -23,6 +23,7 @@
 import {
   DASHBOARD_STORAGE_SCHEMA_KEY,
   DASHBOARD_STORAGE_SCHEMA_VERSION,
+  SHARED_WORKSPACE_TABS_KEY,
 } from "../constants/dashboardStorage";
 
 export const GLASSDAY_STORAGE_PREFIX = "glassday.";
@@ -65,6 +66,7 @@ const CLOUD_SYNC_ALLOWED_PREFIXES = [
   "glassday.today.",
   "glassday.todayFocus.",
   "glassday.ui.font.",
+  "glassday.workspace.sharedTabs.",
 ] as const;
 
 const CLOUD_SYNC_DASHBOARD_STATE_PREFIXES = [
@@ -215,6 +217,34 @@ export const createGlassdayStorageSnapshot = (): GlassdayStorageSnapshot => {
       data[key] = value;
     }
   });
+
+  /* Share workspace identity and appearance without device-specific layouts. */
+  try {
+    const rawTabs = window.localStorage.getItem("glassday.dashboard.tabs.v1");
+    const tabs = rawTabs ? JSON.parse(rawTabs) as unknown : null;
+
+    if (Array.isArray(tabs)) {
+      const sharedTabs = tabs
+        .filter((tab): tab is Record<string, unknown> =>
+          Boolean(tab && typeof tab === "object" && !Array.isArray(tab))
+        )
+        .filter((tab) => typeof tab.id === "string" && typeof tab.label === "string")
+        .map((tab) => ({
+          id: tab.id,
+          label: tab.label,
+          icon: typeof tab.icon === "string" ? tab.icon : "✨",
+          background: typeof tab.background === "string" ? tab.background : "",
+          iconSource: typeof tab.iconSource === "string" ? tab.iconSource : "",
+          widgetIds: Array.isArray(tab.widgetIds)
+            ? tab.widgetIds.filter((id): id is string => typeof id === "string")
+            : [],
+        }));
+
+      data[SHARED_WORKSPACE_TABS_KEY] = JSON.stringify(sharedTabs);
+    }
+  } catch {
+    /* A damaged local workspace record must not block durable data sync. */
+  }
 
   data[DASHBOARD_STORAGE_SCHEMA_KEY] = String(DASHBOARD_STORAGE_SCHEMA_VERSION);
 

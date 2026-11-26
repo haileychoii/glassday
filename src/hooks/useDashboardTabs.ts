@@ -515,7 +515,7 @@ export const useDashboardTabs = () => {
     });
   };
 
-  /** Save one icon change and keep its previous value for the global undo toast. */
+  /** Save a tab icon and retain its previous value for the undo notice. */
   const updateTabIcon = (tabId: string, icon: string) => {
     const target = tabs.find((tab) => tab.id === tabId);
     if (!target || target.icon === icon) return false;
