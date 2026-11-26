@@ -18,11 +18,9 @@
 
 button {
   font: inherit;
-  cursor: pointer;
 }
 
 button:disabled {
-  cursor: not-allowed;
   opacity: 0.48;
 }
 

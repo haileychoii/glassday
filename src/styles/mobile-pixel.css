@@ -655,7 +655,6 @@
     select
   ) {
     border: 0 !important;
-    border-radius: 0 !important;
     box-shadow: var(--w95-shadow-input) !important;
   }
 

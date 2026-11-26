@@ -113,10 +113,7 @@ html[data-theme="glass-light"],
 body[data-theme="glass-light"],
 html.theme-glass-light,
 body.theme-glass-light {
-  --background: 220 30% 98%;
-  --foreground: 238 26% 18%;
   --primary: 258 88% 66%;
-  --muted-foreground: 236 12% 48%;
 
   --gd-app-bg: rgb(255 255 255 / 0.15);
   --gd-app-border: rgb(255 255 255 / 0.32);

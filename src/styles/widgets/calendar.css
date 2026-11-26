@@ -102,7 +102,6 @@
 
 .calendar-view-toggle {
   height: 32px;
-  border-radius: 999px;
   background: hsl(0 0% 100% / 0.3);
   border: 1px solid hsl(0 0% 100% / 0.42);
   padding: 3px;
@@ -113,8 +112,6 @@
 .calendar-view-button {
   height: 24px;
   padding: 0 var(--gd-widget-gap);
-  border-radius: 999px;
-  font-size: 11px;
   color: hsl(var(--foreground) / 0.52);
   text-transform: capitalize;
 }
@@ -916,7 +913,6 @@
 
 .calendar-week-timeline {
   display: grid !important;
-  grid-template-rows: auto auto minmax(0, 1fr) !important;
   overflow: hidden !important;
 }
 
@@ -986,12 +982,8 @@
    ========================================================= */
 
 .calendar-month-board {
-  flex: 1;
-  min-height: 0;
-  display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
   gap: 8px;
-  overflow: hidden;
 }
 
 .calendar-month-title-row {
@@ -1004,36 +996,25 @@
 }
 
 .calendar-month-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 6px;
 }
 
 .calendar-month-weeks {
-  min-height: 0;
-  overflow: auto;
-  display: grid;
   grid-template-rows: repeat(6, minmax(88px, 1fr));
   gap: 6px;
 }
 
 .calendar-month-week-row {
   position: relative;
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 6px;
   min-height: 88px;
 }
 
 .calendar-month-day-cell {
-  position: relative;
   z-index: 1;
-  min-width: 0;
   min-height: 88px;
-  border-radius: 18px;
   padding: 7px;
   text-align: left;
-  overflow: hidden;
   background:
     linear-gradient(
       180deg,
@@ -1069,25 +1050,11 @@
 .calendar-month-day-top {
   position: relative;
   z-index: 5;
-  height: 18px;
   padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 11px;
-  font-weight: 800;
   color: hsl(var(--foreground) / 0.62);
 }
 
 .calendar-month-count {
-  min-width: 16px;
-  height: 16px;
-  border-radius: 999px;
-  padding: 0 5px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
   background: hsl(0 0% 100% / 0.56);
   border: 1px solid hsl(220 18% 82% / 0.44);
   color: hsl(var(--foreground) / 0.5);
@@ -1470,10 +1437,7 @@
   height: 36px !important;
   padding: 4px !important;
   display: inline-flex !important;
-  align-items: center !important;
   gap: 4px !important;
-
-  border-radius: 999px !important;
   background:
     linear-gradient(
       145deg,
@@ -1490,17 +1454,13 @@
 
 /* Day / Week / Month 버튼 기본 */
 .calendar-view-button {
-  height: 28px !important;
   min-width: 58px !important;
   padding: 0 13px !important;
-  border-radius: 999px !important;
 
   border: 0 !important;
-  background: transparent !important;
   box-shadow: none !important;
 
   color: hsl(246 22% 28% / 0.68) !important;
-  font-size: 11px !important;
   font-weight: 850 !important;
   letter-spacing: -0.02em !important;
 }
@@ -1606,7 +1566,6 @@
 
 /* 단일/당일 일정은 range bar보다 위 */
 .calendar-month-single-events {
-  position: relative !important;
   z-index: 8 !important;
   margin-top: calc((var(--range-lanes, 0) * 12px) + 8px) !important;
 }
@@ -1616,8 +1575,6 @@
   top: 33px !important;
   z-index: 3 !important;
   grid-auto-rows: 9px !important;
-  gap: 3px 8px !important;
-  pointer-events: none !important;
 }
 
 /* 연속 일정 막대 자체를 훨씬 얇게 */
@@ -1671,10 +1628,6 @@
 .calendar-month-single-chip {
   position: relative !important;
   z-index: 12 !important;
-
-  height: 18px !important;
-  min-height: 18px !important;
-  line-height: 18px !important;
 
   opacity: 0.96 !important;
   box-shadow:
@@ -1776,10 +1729,8 @@
 /* Range bars stay inside the cell instead of bleeding into the next row. */
 .calendar-month-range-layer {
   top: 24px !important;
-  z-index: 3 !important;
   grid-auto-rows: var(--gd-calendar-range-lane-size, 9px) !important;
   gap: 2px 8px !important;
-  pointer-events: none !important;
 }
 
 /* 연속 일정 막대: 얇게, 부드럽게, 반투명 */
@@ -1791,24 +1742,18 @@
 
   font-size: 0 !important;
   line-height: 8px !important;
-
-  color: transparent !important;
   opacity: 0.38 !important;
 
   background: var(--event-color, hsl(248 100% 94% / 0.72)) !important;
-  border: 0 !important;
 
   filter: saturate(0.86) brightness(1.06) !important;
   box-shadow:
     inset 0 1px 0 hsl(0 0% 100% / 0.38),
     0 2px 6px hsl(250 34% 34% / 0.035) !important;
-
-  pointer-events: auto !important;
 }
 
 /* 단일/당일 일정은 연속 일정 위에 올라오게 */
 .calendar-month-single-events {
-  position: relative !important;
   z-index: 10 !important;
   margin-top: calc(
     (var(--range-lanes, 0) * (var(--gd-calendar-range-lane-size, 9px) + 1px)) +
@@ -1818,44 +1763,20 @@
 
 /* 단일 일정 chip 색상도 CSS 변수로 강제 */
 .calendar-month-single-chip {
-  position: relative !important;
-  z-index: 12 !important;
 
   background: var(--event-color, hsl(210 100% 94% / 0.82)) !important;
-
-  height: 18px !important;
-  min-height: 18px !important;
-  line-height: 18px !important;
-
-  opacity: 0.96 !important;
   color: hsl(246 28% 20% / 0.82) !important;
-
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.52),
-    0 5px 12px hsl(250 34% 34% / 0.075) !important;
 }
 
 /* 연속 일정 hover하면 제목만 잠깐 보이게 */
 .calendar-range-chip:hover {
-  height: 15px !important;
-  min-height: 15px !important;
-  max-height: 15px !important;
 
   z-index: 30 !important;
-  opacity: 0.9 !important;
-
-  font-size: 9px !important;
-  line-height: 15px !important;
-  color: hsl(246 30% 22% / 0.84) !important;
-
-  filter: saturate(1.04) brightness(1.02) !important;
 }
 
 /* 단일 일정 hover는 더 위로 */
 .calendar-month-single-chip:hover {
   z-index: 40 !important;
-  transform: translateY(-1px) !important;
-  filter: saturate(1.06) brightness(1.02) !important;
 }
 
 /* 단일 일정과 겹치는 연속 일정은 더 뒤로 물러남 */
@@ -1864,16 +1785,7 @@
   filter: saturate(0.72) brightness(1.08) !important;
 }
 
-.calendar-range-chip.has-single-overlap:hover {
-  opacity: 0.9 !important;
-  filter: saturate(1.04) brightness(1.02) !important;
-}
-
 /* 날짜/카운트는 항상 위 */
-.calendar-month-day-top {
-  position: relative !important;
-  z-index: 14 !important;
-}
 
 /* 모바일에서는 더 얇게 */
 @media (max-width: 900px) {
@@ -1883,12 +1795,6 @@
 
   .calendar-month-week-row > .calendar-month-day-cell {
     min-height: calc(92px + (var(--range-lanes, 0) * 10px)) !important;
-  }
-
-  .calendar-month-range-layer {
-    top: 31px !important;
-    grid-auto-rows: 7px !important;
-    gap: 2px 6px !important;
   }
 
   .calendar-range-chip {
@@ -1958,9 +1864,7 @@
 
 .calendar-month-board {
   box-sizing: border-box !important;
-  width: 100% !important;
   max-width: 100% !important;
-  min-width: 0 !important;
   grid-template-rows: auto minmax(0, 1fr) !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
@@ -1988,7 +1892,6 @@
 }
 
 .calendar-month-weekdays {
-  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
   gap: clamp(3px, 0.7vw, 7px) !important;
   margin-bottom: 6px !important;
 }
@@ -2003,13 +1906,11 @@
 }
 
 .calendar-month-week-row {
-  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
   gap: clamp(4px, 0.8vw, 7px) !important;
   min-height: calc(
     var(--gd-calendar-month-row-min) +
       (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
   ) !important;
-  height: auto !important;
   overflow: hidden !important;
 }
 
@@ -2020,7 +1921,6 @@
     var(--gd-calendar-month-row-min) +
       (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
   ) !important;
-  height: auto !important;
   padding: 8px clamp(4px, 0.8vw, 8px) 7px !important;
 }
 
@@ -2037,9 +1937,6 @@
 }
 
 .calendar-month-range-layer {
-  left: 0 !important;
-  right: 0 !important;
-  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
   gap: 3px clamp(4px, 0.8vw, 7px) !important;
   overflow: hidden !important;
 }
@@ -2247,7 +2144,6 @@
 
 .calendar-view-body.is-month-view .calendar-month-board {
   height: 100% !important;
-  min-height: 0 !important;
 }
 
 .calendar-month-weekdays {
@@ -2257,7 +2153,6 @@
 
 .calendar-month-weeks {
   min-height: 0 !important;
-  height: 100% !important;
   /* Six rows stay in normal document flow. A CSS Grid track could not account
      for each week's independent range-lane count, which let tall children
      overlap the next track in short widgets. / 각 주의 일정 lane 수가 달라도
@@ -2277,20 +2172,10 @@
     var(--gd-calendar-month-row-min) +
       (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
   ) !important;
-  min-height: calc(
-    var(--gd-calendar-month-row-min) +
-      (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
-  ) !important;
-  height: auto !important;
   gap: var(--gd-calendar-month-gap) !important;
-  overflow: hidden !important;
 }
 
 .calendar-month-week-row > .calendar-month-day-cell {
-  min-height: calc(
-    var(--gd-calendar-month-row-min) +
-      (var(--range-lanes, 0) * var(--gd-calendar-range-lane-size))
-  ) !important;
   height: 100% !important;
   padding: clamp(4px, 1cqw, 7px) clamp(3px, 0.9cqw, 6px) !important;
   border-radius: clamp(10px, 2.3cqw, 15px) !important;

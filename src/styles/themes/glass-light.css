@@ -704,7 +704,6 @@ body.desktop-transparent[data-theme="glass-light"] .tauri-glassday-root {
 
 html.desktop-transparent[data-theme="glass-light"] .bg-glass-gradient,
 body.desktop-transparent[data-theme="glass-light"] .bg-glass-gradient {
-  background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
 

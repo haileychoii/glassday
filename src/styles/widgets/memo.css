@@ -773,7 +773,6 @@
 .memo-app > .memo-workspace,
 .memo-layout > .memo-workspace {
   grid-column: 1;
-  grid-row: 1;
 }
 
 
@@ -1620,7 +1619,6 @@
 }
 
 .memo-widget .memo-editor-shell {
-  min-height: 0;
   overflow: hidden;
 }
 

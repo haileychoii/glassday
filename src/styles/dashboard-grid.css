@@ -602,10 +602,6 @@
     0 18px 42px -30px hsl(var(--primary) / 0.7);
 }
 
-.dashboard-tab-space.is-editing .react-resizable-handle {
-  pointer-events: auto !important;
-}
-
 .dashboard-tab-space.is-editing
   .react-grid-item:has(.dashboard-grid-item.is-selected)
   .react-resizable-handle {
