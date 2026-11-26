@@ -377,7 +377,12 @@
 .money-donut-center {
   position: absolute;
   inset: 30px;
-  border-radius: 999px;
+  /* Clip both the translucent fill and any theme backdrop blur to the chart's
+     circular center; border-radius alone can leave a square compositor layer. */
+  overflow: hidden;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+  background-clip: padding-box;
   display: grid;
   place-items: center;
   align-content: center;
