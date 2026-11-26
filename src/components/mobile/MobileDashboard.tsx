@@ -9,7 +9,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { GripHorizontal, RotateCcw } from "lucide-react";
-import type { DashboardTab } from "../../types/workspace";
+import type { DashboardTab, WidgetId } from "../../types/workspace";
 
 import { widgetRegistry } from "../../constants/widgets";
 
@@ -22,10 +22,12 @@ export const MobileDashboard = ({
   activeTab,
   editMode,
   onSetWidgetHeight,
+  onAddWidget,
 }: {
   activeTab: DashboardTab;
   editMode: boolean;
   onSetWidgetHeight: (widgetId: string, height: number | null) => void;
+  onAddWidget: (widgetId: WidgetId) => void;
 }) => {
   // A mobile size edit is only the card height. The card keeps its phone width,
   // and the desktop Wide/Laptop layouts remain completely untouched.
@@ -42,6 +44,12 @@ export const MobileDashboard = ({
 
   const clampHeight = (height: number) =>
     Math.max(160, Math.min(1200, Math.floor(window.innerHeight * 0.82), height));
+
+  // The catalog is shared with desktop. Hide widgets already on this tab so a
+  // tap can only add something new and never creates a duplicate card.
+  const availableWidgetIds = (Object.keys(widgetRegistry) as WidgetId[]).filter(
+    (widgetId) => !activeTab.widgetIds.includes(widgetId)
+  );
 
   const beginResize = (widgetId: string, event: ReactPointerEvent<HTMLButtonElement>) => {
     const slot = event.currentTarget.closest<HTMLElement>(".mobile-widget-slot");
@@ -86,6 +94,28 @@ export const MobileDashboard = ({
 
   return (
     <div className="mobile-dashboard">
+      {editMode && availableWidgetIds.length > 0 && (
+        <section className="mobile-widget-picker" aria-label="위젯 추가">
+          <h2>위젯 추가</h2>
+          <p>원하는 위젯을 선택하면 이 화면에 추가돼요.</p>
+          <div className="mobile-widget-picker-list">
+            {availableWidgetIds.map((widgetId) => {
+              const widget = widgetRegistry[widgetId];
+              return (
+                <button
+                  key={widgetId}
+                  type="button"
+                  className="mobile-widget-picker-option"
+                  onClick={() => onAddWidget(widgetId)}
+                >
+                  <strong>{widget.label}</strong>
+                  <span>{widget.description}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
       {/*
        * 현재 워크스페이스에 등록된 위젯을
        * 순서대로 렌더링합니다.
@@ -192,9 +222,9 @@ export const MobileDashboard = ({
         );
       })}
 
-      {activeTab.widgetIds.length === 0 && (
+      {activeTab.widgetIds.length === 0 && !editMode && (
         <p className="mobile-empty">
-          이 워크스페이스에는 아직 위젯이 없어.
+          위젯을 추가하려면 위쪽의 편집 버튼을 눌러 주세요.
         </p>
       )}
     </div>

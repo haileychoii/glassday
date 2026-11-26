@@ -51,6 +51,22 @@
   overflow-wrap: anywhere;
 }
 
+.mobile-heading-name-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 0 0 2px;
+  color: inherit;
+  font: inherit;
+  font-size: 18px;
+  line-height: 1.4;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--gd-surface-border, hsl(var(--border)));
+  border-radius: 0;
+  outline-offset: 2px;
+}
+
 .mobile-header-actions {
   display: flex;
   flex: none;
@@ -87,6 +103,63 @@
 .mobile-widget-slot {
   position: relative;
   min-width: 0;
+}
+
+/* Empty/new workspaces expose the same registry widgets used by desktop. */
+.mobile-widget-picker {
+  display: grid;
+  gap: 8px;
+  margin: 12px;
+  padding: 12px;
+  border: 1px solid var(--gd-surface-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-widget, 12px);
+  background: var(--gd-surface-bg, hsl(var(--card)));
+}
+
+.mobile-widget-picker h2,
+.mobile-widget-picker p {
+  margin: 0;
+}
+
+.mobile-widget-picker h2 {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.mobile-widget-picker > p,
+.mobile-widget-picker-option span {
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.mobile-widget-picker-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.mobile-widget-picker-option {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 8px;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--gd-surface-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-control, 8px);
+}
+
+.mobile-widget-picker-option strong,
+.mobile-widget-picker-option span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-widget-picker-option strong {
+  font-size: 13px;
 }
 
 .mobile-widget-slot.has-mobile-widget-height {
@@ -339,8 +412,9 @@
       max(8px, env(safe-area-inset-right));
   }
 
-  .mobile-heading h1 {
+  .mobile-heading :is(h1, .mobile-heading-name-input) {
     font-size: 16px;
+    line-height: 1.25;
   }
 
   .mobile-header-actions button {
@@ -590,7 +664,7 @@ body:has(.mobile-layout)
     padding-block: calc(6px + env(safe-area-inset-top)) 6px;
   }
 
-  .mobile-heading h1 {
+  .mobile-heading :is(h1, .mobile-heading-name-input) {
     font-size: 16px;
     line-height: 1.25;
   }

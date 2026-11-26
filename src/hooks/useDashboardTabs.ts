@@ -333,36 +333,12 @@ const createNewTab = (icon = "✨"): DashboardTab => {
     id: createId(),
     label: "New Tab",
     icon,
-    widgetIds: ["memo", "calendar"],
+    // A new workspace starts as a blank canvas. The user chooses its widgets
+    // after it is created instead of inheriting an unexpected default pair.
+    widgetIds: [],
     layouts: {
-      wide: {
-        lg: [
-          { i: "memo", x: 0, y: 0, w: 5, h: 4 },
-          { i: "calendar", x: 5, y: 0, w: 7, h: 5 },
-        ],
-        md: [
-          { i: "memo", x: 0, y: 0, w: 8, h: 4 },
-          { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
-        ],
-        sm: [
-          { i: "memo", x: 0, y: 0, w: 16, h: 4 },
-          { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
-        ],
-      },
-      laptop: {
-        lg: [
-          { i: "memo", x: 0, y: 0, w: 5, h: 4 },
-          { i: "calendar", x: 5, y: 0, w: 7, h: 5 },
-        ],
-        md: [
-          { i: "memo", x: 0, y: 0, w: 8, h: 4 },
-          { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
-        ],
-        sm: [
-          { i: "memo", x: 0, y: 0, w: 16, h: 4 },
-          { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
-        ],
-      },
+      wide: emptyLayouts(),
+      laptop: emptyLayouts(),
     },
     locked: false,
   };
