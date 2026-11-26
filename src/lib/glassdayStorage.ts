@@ -235,6 +235,15 @@ export const createGlassdayStorageSnapshot = (): GlassdayStorageSnapshot => {
           icon: typeof tab.icon === "string" ? tab.icon : "✨",
           background: typeof tab.background === "string" ? tab.background : "",
           iconSource: typeof tab.iconSource === "string" ? tab.iconSource : "",
+          iconByTheme: tab.iconByTheme && typeof tab.iconByTheme === "object"
+            ? Object.fromEntries(
+                Object.entries(tab.iconByTheme as Record<string, unknown>).filter(
+                  ([theme, icon]) =>
+                    ["pastel", "glass-light", "glass-dark", "aurora", "mac-core", "pixel-desk", "retro"].includes(theme) &&
+                    typeof icon === "string"
+                )
+              )
+            : {},
           widgetIds: Array.isArray(tab.widgetIds)
             ? tab.widgetIds.filter((id): id is string => typeof id === "string")
             : [],

@@ -54,7 +54,7 @@ type TopbarProps = {
   onSelectTab: (tabId: string) => void;
   onAddTab: () => void;
   onRenameTab: (tabId: string, label: string) => void;
-  onChangeTabIcon: (tabId: string, icon: string) => void;
+  onChangeTabIcon: (tabId: string, icon: string, applyToAllThemes: boolean) => void;
   onRemoveTab: (tabId: string) => void;
 };
 

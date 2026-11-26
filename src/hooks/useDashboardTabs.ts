@@ -61,7 +61,7 @@ type TabActionUndo =
       type: "icon-changed";
       tabId: string;
       previousIcon: string;
-      nextIcon: string;
+      previousIconByTheme?: DashboardTab["iconByTheme"];
     }
   | {
       type: "removed";
@@ -516,17 +516,34 @@ export const useDashboardTabs = () => {
   };
 
   /** Save a tab icon and retain its previous value for the undo notice. */
-  const updateTabIcon = (tabId: string, icon: string) => {
+  const updateTabIcon = (
+    tabId: string,
+    icon: string,
+    theme: import("../constants/themes").ThemeId,
+    applyToAllThemes = false
+  ) => {
     const target = tabs.find((tab) => tab.id === tabId);
-    if (!target || target.icon === icon) return false;
+    if (!target) return false;
+
+    const nextIconByTheme = { ...(target.iconByTheme ?? {}) };
+    if (applyToAllThemes) {
+      if (target.icon === icon && Object.keys(nextIconByTheme).length === 0) return false;
+    } else if (target.iconByTheme?.[theme] === icon || (!target.iconByTheme?.[theme] && target.icon === icon)) {
+      return false;
+    }
 
     lastTabAction.current = {
       type: "icon-changed",
       tabId,
       previousIcon: target.icon,
-      nextIcon: icon,
+      previousIconByTheme: target.iconByTheme,
     };
-    updateTab(tabId, { icon });
+    if (applyToAllThemes) {
+      updateTab(tabId, { icon, iconByTheme: {} });
+    } else {
+      nextIconByTheme[theme] = icon;
+      updateTab(tabId, { iconByTheme: nextIconByTheme });
+    }
     return true;
   };
 
@@ -576,7 +593,11 @@ export const useDashboardTabs = () => {
       setTabs((prev) =>
         normalizeTabs(prev).map((tab) =>
           tab.id === action.tabId
-            ? normalizeTab({ ...tab, icon: action.previousIcon })
+            ? normalizeTab({
+                ...tab,
+                icon: action.previousIcon,
+                iconByTheme: action.previousIconByTheme,
+              })
             : tab
         )
       );

@@ -537,6 +537,25 @@
   flex: 1 1 auto;
 }
 
+.workspace-icon-scope-control {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding-inline: 4px;
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.workspace-icon-scope-control input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: hsl(var(--primary));
+}
+
 .workspace-icon-picker-actions .workspace-icon-picker-save {
   color: hsl(var(--primary-foreground, 0 0% 100%));
   background: hsl(var(--primary));

@@ -72,6 +72,8 @@ export type DashboardTab = {
   icon: string;
   /** Shared workspace appearance; grid layouts remain stored per device. */
   background?: string;
+  /** Per-theme tab icon overrides; unset themes use the shared icon above. */
+  iconByTheme?: Partial<Record<"pastel" | "glass-light" | "glass-dark" | "aurora" | "mac-core" | "pixel-desk" | "retro", string>>;
   /** Optional ID of the selected icon collection entry. */
   iconSource?: string;
   widgetIds: WidgetId[];

@@ -31,7 +31,7 @@ export const MobileLayout = ({
   onOpenSettings: () => void;
   onAddTab: (icon: string) => void;
   onRenameTab: (tabId: string, label: string) => void;
-  onChangeTabIcon: (tabId: string, icon: string) => void;
+  onChangeTabIcon: (tabId: string, icon: string, applyToAllThemes: boolean) => void;
   onRemoveTab: (tabId: string) => void;
   editMode: boolean;
   onToggleEditMode: () => void;

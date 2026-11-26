@@ -34,7 +34,7 @@ type WorkspaceTabsNavProps = {
   onSelectTab: (tabId: string) => void;
   onAddTab?: () => void;
   onRenameTab: (tabId: string, label: string) => void;
-  onChangeTabIcon: (tabId: string, icon: string) => void;
+  onChangeTabIcon: (tabId: string, icon: string, applyToAllThemes: boolean) => void;
   onRemoveTab: (tabId: string) => void;
   className?: string;
   addButtonClassName?: string;
@@ -139,7 +139,7 @@ export const WorkspaceTabsNav = ({
               <span className="sidebar-tab-icon">
                 <WorkspaceTabIcon
                   tabId={tab.id}
-                  icon={iconPreviewByTabId[tab.id] ?? tab.icon}
+                  icon={iconPreviewByTabId[tab.id] ?? tab.iconByTheme?.[theme] ?? tab.icon}
                   theme={theme}
                 />
               </span>
@@ -186,9 +186,10 @@ export const WorkspaceTabsNav = ({
                 </button>
                 {editingIconTabId === tab.id && (
                   <WorkspaceIconPicker
-                    value={tab.icon}
+                    value={tab.iconByTheme?.[theme] ?? tab.icon}
                     theme={theme}
                     contextLabel={`${tab.label} 탭 아이콘 변경`}
+                    showThemeScope
                     className="workspace-icon-picker-desktop"
                     onPreview={(icon) =>
                       setIconPreviewByTabId((current) => ({ ...current, [tab.id]: icon }))
@@ -197,8 +198,8 @@ export const WorkspaceTabsNav = ({
                       clearIconPreview(tab.id);
                       setEditingIconTabId(null);
                     }}
-                    onSave={(icon) => {
-                      onChangeTabIcon(tab.id, icon);
+                    onSave={(icon, applyToAllThemes) => {
+                      onChangeTabIcon(tab.id, icon, applyToAllThemes);
                       clearIconPreview(tab.id);
                       setEditingIconTabId(null);
                     }}

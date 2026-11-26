@@ -59,7 +59,7 @@ const defaultIconGlyphs: Record<string, string> = {
 type WorkspaceIconPickerProps = {
   value: string;
   theme: ThemeId;
-  onSave: (icon: string) => void;
+  onSave: (icon: string, applyToAllThemes: boolean) => void;
   /** Show a temporary icon on the tab while the picker is still a draft. */
   onPreview?: (icon: string) => void;
   onCancel: () => void;
@@ -67,6 +67,7 @@ type WorkspaceIconPickerProps = {
   saveLabel?: string;
   /** Names the tab that will receive the icon, especially on the mobile picker. */
   contextLabel?: string;
+  showThemeScope?: boolean;
 };
 
 export const WorkspaceIconPicker = ({
@@ -78,15 +79,18 @@ export const WorkspaceIconPicker = ({
   className,
   saveLabel = "저장",
   contextLabel,
+  showThemeScope = false,
 }: WorkspaceIconPickerProps) => {
   const [draftIcon, setDraftIcon] = useState(value);
+  const [applyToAllThemes, setApplyToAllThemes] = useState(false);
   const [collection, setCollection] = useState<WorkspaceIconCollectionId>(
     () => iconCollectionForTheme(theme)
   );
 
   useEffect(() => {
     setDraftIcon(value);
-  }, [value]);
+    setApplyToAllThemes(false);
+  }, [contextLabel, value]);
 
   useEffect(() => {
     setCollection(iconCollectionForTheme(theme));
@@ -177,11 +181,21 @@ export const WorkspaceIconPicker = ({
         ))}
       </div>
 
+      {showThemeScope && (
+        <label className="workspace-icon-scope-control">
+          <input
+            type="checkbox"
+            checked={applyToAllThemes}
+            onChange={(event) => setApplyToAllThemes(event.target.checked)}
+          />
+          <span>{applyToAllThemes ? "모든 테마에 적용" : `${themeLabel(theme)} 테마에만 적용`}</span>
+        </label>
+      )}
       <div className="workspace-icon-picker-actions">
         <button
           type="button"
           onClick={() => chooseIcon(value)}
-          disabled={draftIcon === value}
+          disabled={draftIcon === value && !applyToAllThemes}
         >
           되돌리기
         </button>
@@ -192,8 +206,8 @@ export const WorkspaceIconPicker = ({
         <button
           type="button"
           className="workspace-icon-picker-save"
-          disabled={draftIcon === value}
-          onClick={() => onSave(draftIcon)}
+          disabled={draftIcon === value && !applyToAllThemes}
+          onClick={() => onSave(draftIcon, applyToAllThemes)}
         >
           {saveLabel}
         </button>
@@ -201,3 +215,13 @@ export const WorkspaceIconPicker = ({
     </section>
   );
 };
+
+const themeLabel = (theme: ThemeId) => ({
+  pastel: "Pastel",
+  "glass-light": "Glass Light",
+  "glass-dark": "Glass Dark",
+  aurora: "Aurora",
+  "mac-core": "Mac Core",
+  "pixel-desk": "Pixel",
+  retro: "Retro",
+}[theme]);

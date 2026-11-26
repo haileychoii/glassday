@@ -155,8 +155,8 @@ function App() {
     showTabActionNotice("탭을 삭제했습니다.");
   };
 
-  const handleChangeTabIcon = (tabId: string, icon: string) => {
-    if (!updateTabIcon(tabId, icon)) return;
+  const handleChangeTabIcon = (tabId: string, icon: string, applyToAllThemes: boolean) => {
+    if (!updateTabIcon(tabId, icon, getCurrentTheme(), applyToAllThemes)) return;
     showTabActionNotice("탭 아이콘을 저장했습니다.");
   };
 

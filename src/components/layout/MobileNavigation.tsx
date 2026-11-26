@@ -31,7 +31,7 @@ export const MobileNavigation = ({
   onSelectTab: (id: string) => void;
   onOpenQuickCapture: () => void;
   onAddTab: (icon: string) => void;
-  onChangeTabIcon: (tabId: string, icon: string) => void;
+  onChangeTabIcon: (tabId: string, icon: string, applyToAllThemes: boolean) => void;
   editMode: boolean;
 }) => {
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
@@ -82,9 +82,9 @@ export const MobileNavigation = ({
       ? tabs.find((tab) => tab.id === pickerTarget.tabId)
       : undefined;
 
-  const saveIcon = (icon: string) => {
+  const saveIcon = (icon: string, applyToAllThemes: boolean) => {
     if (pickerTarget?.type === "existing" && targetTab) {
-      onChangeTabIcon(targetTab.id, icon);
+      onChangeTabIcon(targetTab.id, icon, applyToAllThemes);
     } else if (pickerTarget?.type === "new") {
       onAddTab(icon);
     }
@@ -109,7 +109,9 @@ export const MobileNavigation = ({
           const isEditingIcon =
             pickerTarget?.type === "existing" && pickerTarget.tabId === tab.id;
           const displayedIcon =
-            previewIcon?.tabId === tab.id ? previewIcon.icon : tab.icon;
+            previewIcon?.tabId === tab.id
+              ? previewIcon.icon
+              : tab.iconByTheme?.[theme] ?? tab.icon;
 
           return (
             <button
@@ -189,9 +191,10 @@ export const MobileNavigation = ({
 
       {pickerTarget && (targetTab || pickerTarget.type === "new") && (
         <WorkspaceIconPicker
-          value={targetTab?.icon ?? "✨"}
+          value={targetTab?.iconByTheme?.[theme] ?? targetTab?.icon ?? "✨"}
           theme={theme}
           contextLabel={pickerTarget.type === "new" ? "새 탭 아이콘 선택" : `${targetTab?.label ?? "탭"} 아이콘 변경`}
+          showThemeScope={pickerTarget.type === "existing"}
           saveLabel={pickerTarget.type === "new" ? "새 탭 만들기" : "저장"}
           onSave={saveIcon}
           onPreview={(icon) =>
