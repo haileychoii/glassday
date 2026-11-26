@@ -27,13 +27,12 @@
  * - locked = 기본 tab의 Delete Disabled Variant
  * ============================================================
  */
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import { useLocalStorage } from "./useLocalStorage";
 import {
   DASHBOARD_STORAGE_SCHEMA_KEY,
   DASHBOARD_STORAGE_SCHEMA_VERSION,
-  SHARED_WORKSPACE_TABS_KEY,
 } from "../constants/dashboardStorage";
 import { defaultDashboardTabs } from "../constants/dashboardTabs";
 import type {
@@ -48,14 +47,22 @@ import type {
 const TABS_KEY = "glassday.dashboard.tabs.v1";
 const ACTIVE_TAB_KEY = "glassday.dashboard.activeTab.v1";
 
-type SharedWorkspaceTab = {
-  id: string;
-  label: string;
-  icon: string;
-  background?: string;
-  iconSource?: string;
-  widgetIds: WidgetId[];
-};
+/**
+ * 마지막 탭 동작 한 건을 복구하는 데 필요한 정보다.
+ * 삭제는 탭 전체 설정과 원래 순서를 보관하고, 추가는 새 id와 이전 선택을 보관한다.
+ */
+type TabActionUndo =
+  | {
+      type: "added";
+      tabId: string;
+      previousActiveTabId: string;
+    }
+  | {
+      type: "removed";
+      tab: DashboardTab;
+      index: number;
+      previousActiveTabId: string;
+    };
 
 const fallbackTab: DashboardTab = {
   id: "home",
@@ -338,21 +345,19 @@ const normalizeTabs = (
   return tabs.map((tab) => normalizeTab(tab, options));
 };
 
-const createNewTab = (icon = "✨", shared?: SharedWorkspaceTab): DashboardTab => {
+const createNewTab = (icon = "✨"): DashboardTab => {
   return {
-    id: shared?.id ?? createId(),
-    label: shared?.label ?? "New Tab",
-    icon: shared?.icon ?? icon,
+    id: createId(),
+    label: "New Tab",
+    icon,
     // A new workspace starts as a blank canvas. The user chooses its widgets
     // after it is created instead of inheriting an unexpected default pair.
-    widgetIds: shared?.widgetIds ?? [],
+    widgetIds: [],
     layouts: {
       wide: emptyLayouts(),
       laptop: emptyLayouts(),
     },
     locked: false,
-    background: shared?.background,
-    iconSource: shared?.iconSource,
   };
 };
 
@@ -361,18 +366,14 @@ const createNewTab = (icon = "✨", shared?: SharedWorkspaceTab): DashboardTab =
  * add/remove Widget은 목록과 두 mode의 layout을 함께 정리한다.
  */
 export const useDashboardTabs = () => {
+  /* 실수로 추가하거나 삭제한 탭을 바로 되돌릴 수 있도록 마지막 동작을 보관한다. */
+  const lastTabAction = useRef<TabActionUndo | null>(null);
   const { value: storedTabs, setValue: setTabs } = useLocalStorage<
     DashboardTab[]
   >(TABS_KEY, defaultDashboardTabs);
 
   const { value: activeTabId, setValue: setActiveTabId } =
     useLocalStorage<string>(ACTIVE_TAB_KEY, "home");
-
-  /* One-shot manifest applied by CloudSyncContext; layouts remain local. */
-  const {
-    value: incomingSharedTabs,
-    removeValue: clearIncomingSharedTabs,
-  } = useLocalStorage<SharedWorkspaceTab[]>(SHARED_WORKSPACE_TABS_KEY, []);
 
   const shouldUpgradeDashboardStorage =
     typeof window !== "undefined" &&
@@ -384,53 +385,6 @@ export const useDashboardTabs = () => {
       mergeCurrentDefaults: shouldUpgradeDashboardStorage,
     });
   }, [shouldUpgradeDashboardStorage, storedTabs]);
-
-  useEffect(() => {
-    if (incomingSharedTabs.length === 0) return;
-
-    setTabs((previousTabs) => {
-      const mergedTabs = normalizeTabs(previousTabs);
-      let changed = false;
-
-      incomingSharedTabs.forEach((sharedTab) => {
-        if (!sharedTab || typeof sharedTab.id !== "string") return;
-
-        const existingIndex = mergedTabs.findIndex((tab) => tab.id === sharedTab.id);
-        if (existingIndex < 0) {
-          mergedTabs.push(createNewTab(sharedTab.icon || "✨", sharedTab));
-          changed = true;
-          return;
-        }
-
-        const localTab = mergedTabs[existingIndex];
-        const nextTab: DashboardTab = {
-          ...localTab,
-          label: sharedTab.label || localTab.label,
-          icon: sharedTab.icon || localTab.icon,
-          background: sharedTab.background ?? localTab.background,
-          iconSource: sharedTab.iconSource ?? localTab.iconSource,
-          widgetIds: Array.isArray(sharedTab.widgetIds)
-            ? [...new Set(sharedTab.widgetIds.filter((id) => typeof id === "string"))]
-            : localTab.widgetIds,
-        };
-
-        if (
-          nextTab.label !== localTab.label ||
-          nextTab.icon !== localTab.icon ||
-          nextTab.background !== localTab.background ||
-          nextTab.iconSource !== localTab.iconSource ||
-          JSON.stringify(nextTab.widgetIds) !== JSON.stringify(localTab.widgetIds)
-        ) {
-          mergedTabs[existingIndex] = nextTab;
-          changed = true;
-        }
-      });
-
-      return changed ? mergedTabs : previousTabs;
-    });
-
-    clearIncomingSharedTabs();
-  }, [clearIncomingSharedTabs, incomingSharedTabs, setTabs]);
 
   useEffect(() => {
     if (typeof window === "undefined" || !shouldUpgradeDashboardStorage) {
@@ -522,6 +476,12 @@ export const useDashboardTabs = () => {
   const addTab = (icon = "✨") => {
     const newTab = createNewTab(icon);
 
+    lastTabAction.current = {
+      type: "added",
+      tabId: newTab.id,
+      previousActiveTabId: activeTabId,
+    };
+
     setTabs((prev) => [...normalizeTabs(prev), newTab]);
     setActiveTabId(newTab.id);
   };
@@ -555,6 +515,13 @@ export const useDashboardTabs = () => {
 
     if (!target || target.locked) return;
 
+    lastTabAction.current = {
+      type: "removed",
+      tab: target,
+      index: normalizedTabs.findIndex((tab) => tab.id === tabId),
+      previousActiveTabId: activeTabId,
+    };
+
     const nextTabs = normalizedTabs.filter((tab) => tab.id !== tabId);
 
     setTabs(nextTabs.length > 0 ? nextTabs : [fallbackTab]);
@@ -562,6 +529,38 @@ export const useDashboardTabs = () => {
     if (activeTabId === tabId) {
       setActiveTabId(nextTabs[0]?.id ?? "home");
     }
+  };
+
+  /** Restore the most recent tab add/delete without touching other tab data. */
+  const undoLastTabAction = () => {
+    const action = lastTabAction.current;
+    if (!action) return false;
+
+    lastTabAction.current = null;
+
+    if (action.type === "added") {
+      setTabs((prev) => {
+        const currentTabs = normalizeTabs(prev);
+        if (!currentTabs.some((tab) => tab.id === action.tabId)) return prev;
+
+        const nextTabs = currentTabs.filter((tab) => tab.id !== action.tabId);
+        return nextTabs.length > 0 ? nextTabs : [fallbackTab];
+      });
+
+      setActiveTabId(action.previousActiveTabId);
+      return true;
+    }
+
+    setTabs((prev) => {
+      const currentTabs = normalizeTabs(prev);
+      if (currentTabs.some((tab) => tab.id === action.tab.id)) return currentTabs;
+
+      const nextTabs = [...currentTabs];
+      nextTabs.splice(Math.min(action.index, nextTabs.length), 0, action.tab);
+      return nextTabs;
+    });
+    setActiveTabId(action.previousActiveTabId);
+    return true;
   };
 
   return {
@@ -576,5 +575,6 @@ export const useDashboardTabs = () => {
     setActiveTabMobileWidgetHeight,
     renameTab,
     removeTab,
+    undoLastTabAction,
   };
 };
