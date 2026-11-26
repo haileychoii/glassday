@@ -4,6 +4,9 @@
 keeps the same personal widgets and saved data as the mobile experience, with a resizable desktop
 canvas, shared widget frames, and theme-specific surfaces.
 
+On the production web URL, portrait phones use the separate mobile layout; rotating to landscape
+switches to the horizontal AppShell used by Laptop/Wide. Desktop and Tauri always use AppShell.
+
 > On GitHub, switch the branch selector to **`laptop-ui`** to view this branch's overview and visual
 > handoff. The root `README.md` is intentionally written for this branch.
 

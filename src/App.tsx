@@ -7,7 +7,7 @@
  *
  * [역할]
  * - 앱 전체 Provider 및 화면 구성
- * - Wide / Laptop / Mobile Web / Tauri 화면 분기
+ * - Wide / Laptop / Portrait Mobile Web / Tauri 화면 분기
  * - PC 및 모바일 위젯 편집 상태 관리
  * - Settings / Search / Quick Capture 관리
  * - 분리된 위젯 창 렌더링
@@ -36,7 +36,8 @@
  * [Runtime 규칙]
  * - Tauri: Laptop 모드 고정
  * - Desktop Web: Wide / Laptop 선택 가능
- * - Mobile Web: 모바일 전용 레이아웃 사용
+ * - Portrait Mobile Web: 모바일 전용 레이아웃 사용
+ * - Landscape Mobile Web: 가로형 AppShell 사용
  *
  * ============================================================
  */
@@ -181,8 +182,9 @@ function App() {
   /* ----------------------------------------------------------
      A. RUNTIME / RESPONSIVE SCREEN
 
-     Tauri에서는 창의 가로 길이가 좁아지더라도
-     MobileLayout으로 전환하지 않는다.
+     Tauri에서는 창의 가로 길이가 좁아져도 MobileLayout으로 바꾸지 않는다.
+     일반 Web도 세로 화면에서만 MobileLayout을 사용하고, 가로 회전하면
+     Laptop/Wide와 같은 AppShell로 전환한다.
 
      창 크기 대응은 DashboardGrid가 담당한다.
   ---------------------------------------------------------- */

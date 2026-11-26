@@ -191,6 +191,10 @@ Widget / [Feature Name] / [Content]  (위젯 내부 component)
 Figma Desktop/Laptop/Mobile 프레임을 만들 때, 각 프레임의 Widget Frame을 같은 component instance로
 배치한다. Desktop과 Mobile은 variable mode 또는 명시된 responsive 값으로 전환한다.
 
+- 배포 Web URL은 세로형 phone viewport에서만 별도 MobileLayout을 보여 준다. 같은 기기를
+  가로로 돌리면 Laptop/Wide와 같은 가로형 AppShell을 사용하므로 Figma에서도 `Mobile / Portrait`
+  와 `Mobile / Landscape → AppShell` 프레임을 구분한다.
+
 - Desktop/Laptop에서 header/body 공통 padding은 root frame가 아니라 token에서 온다.
 - Dashboard grid의 셀 간격은 12px이며 `DashboardGrid.tsx`가 같은 token을 읽는다.
 - Mobile의 위젯 간격은 8px이고, 화면 좌우 gutter는 공통 `--mobile-page-gutter`다.

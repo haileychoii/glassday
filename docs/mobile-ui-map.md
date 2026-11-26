@@ -19,8 +19,8 @@ flowchart TD
   B --> P[공유 데이터와 동기화 Provider]
   B --> W[WidgetRenderer: 위젯 인스턴스 한 벌]
   B --> D[화면 선택]
-  D -->|모바일 웹| ML[MobileLayout]
-  D -->|큰 화면 또는 앱 창| AL[AppShell]
+  D -->|세로 모바일 웹| ML[MobileLayout]
+  D -->|가로 모바일 웹 또는 큰 화면/앱 창| AL[AppShell]
   ML --> H[상단 앱 제목과 도구]
   ML --> M[스크롤 가능한 본문]
   ML --> N[하단 워크스페이스 탭]
@@ -82,7 +82,7 @@ mobile-common.css        모든 위젯에 공통인 외부 카드와 제목줄
 | 파일 | 쉽게 말해 무엇을 다루나요? | 함께 보는 파일 |
 |---|---|---|
 | `src/App.tsx` | 앱이 모바일 화면인지 큰 화면인지 선택하고, 데이터 제공자와 위젯을 조립 | `useResponsiveLayout.ts`, `MobileLayout.tsx`, `AppShell.tsx` |
-| `src/hooks/useResponsiveLayout.ts` | 모바일 브라우저 판정 | `App.tsx` |
+| `src/hooks/useResponsiveLayout.ts` | 세로 모바일 viewport 판정; 가로 방향이면 desktop AppShell 선택 | `App.tsx` |
 | `src/components/layout/MobileLayout.tsx` | 모바일 화면의 위/가운데/아래 뼈대, 상단 버튼, 스크롤, 하단 탭 배치 | `mobile.css`, `MobileNavigation.tsx` |
 | `src/components/layout/MobileNavigation.tsx` | 아이콘 중심 하단 탭과 빠른 추가 버튼. 탭 이름 표시 여부는 Display 환경설정에서 제어 | `WorkspaceTabIcon.tsx`, `mobile.css`, `SettingsModal.tsx`, `uiPreferences.ts` |
 | `src/components/mobile/MobileDashboard.tsx` | 활성 탭의 `widgetIds` 순서를 슬롯으로 만들고 Calendar/Career의 모바일 요약 카드를 선택 | `WidgetSlot.tsx`, 두 요약 카드 |

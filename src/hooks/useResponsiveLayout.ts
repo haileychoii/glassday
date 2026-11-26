@@ -6,16 +6,20 @@
 import { useSyncExternalStore } from "react";
 import { isTauri } from "@tauri-apps/api/core";
 
-const MOBILE_QUERY = "(width < 768px)";
+const MOBILE_WIDTH_QUERY = "(width < 768px)";
+const PORTRAIT_QUERY = "(orientation: portrait)";
 
 /**
- * A phone browser can expose a desktop-sized layout viewport when the user
- * enables "Request desktop site" or when the browser is embedded in a narrow
- * webview. In that case width alone would incorrectly mount the desktop shell.
+ * Mobile Web gets the dedicated phone layout only while the viewport is
+ * portrait. Rotating a phone or tablet to landscape switches to AppShell so
+ * the production URL follows the same horizontal dashboard as Laptop/Wide.
+ * The mobile browser check still handles "Request desktop site", where the
+ * portrait layout viewport can report a width above the normal phone breakpoint.
  *
- * 휴대폰 브라우저가 데스크톱 사이트 모드로 동작하면 CSS viewport가 768px
- * 이상으로 보고될 수 있다. Tauri는 이 판별에서 항상 제외하고, 일반 Web의
- * 모바일 user agent만 MobileLayout으로 보낸다.
+ * 모바일 웹은 세로 방향에서만 전용 MobileLayout을 사용한다. 기기를 가로로
+ * 돌리면 production URL에서도 AppShell의 가로형 Dashboard를 적용해 Tauri와
+ * Laptop/Wide 화면 흐름을 따른다. 데스크톱 사이트 모드의 넓은 viewport는
+ * 모바일 user agent로 보완 판별하되, 가로 방향이면 AppShell을 우선한다.
  */
 const isMobileBrowser = () => {
   if (typeof navigator === "undefined") return false;
@@ -30,17 +34,28 @@ const isMobileBrowser = () => {
   );
 };
 
-const matchesMobileLayout = () =>
-  window.matchMedia(MOBILE_QUERY).matches || isMobileBrowser();
+const matchesMobileLayout = () => {
+  const isPortrait = window.matchMedia(PORTRAIT_QUERY).matches;
+
+  return (
+    isPortrait &&
+    (window.matchMedia(MOBILE_WIDTH_QUERY).matches || isMobileBrowser())
+  );
+};
 
 const subscribe = (onChange: () => void) => {
   if (isTauri()) return () => {};
-  const query = window.matchMedia(MOBILE_QUERY);
-  query.addEventListener("change", onChange);
+  const widthQuery = window.matchMedia(MOBILE_WIDTH_QUERY);
+  const orientationQuery = window.matchMedia(PORTRAIT_QUERY);
+  widthQuery.addEventListener("change", onChange);
+  orientationQuery.addEventListener("change", onChange);
   window.addEventListener("resize", onChange, { passive: true });
+  window.addEventListener("orientationchange", onChange, { passive: true });
   return () => {
-    query.removeEventListener("change", onChange);
+    widthQuery.removeEventListener("change", onChange);
+    orientationQuery.removeEventListener("change", onChange);
     window.removeEventListener("resize", onChange);
+    window.removeEventListener("orientationchange", onChange);
   };
 };
 
