@@ -141,14 +141,18 @@ const emojiSheet = (
       label: extraLabels[number] ?? `${label} ${number}`,
     }));
 
-const expressionEmojis = emojiSheet("emoji-expressions", "표정·손", 146, {
+const expressionEmojis = emojiSheet("emoji-expressions", "표정·손", 150, {
   141: "점선 얼굴",
   142: "싸움 구름",
   143: "하트 장식 열나는 얼굴",
-  // 144–146은 새 Drive 이미지에서 배경을 정리해 추가한 개별 표정입니다.
+  // 144–150은 Drive 이미지에서 표정 하나씩 잘라 배경을 정리한 아이콘입니다.
   144: "혀 내민 장난 표정",
-  145: "어지러운 표정",
-  146: "깜짝 놀란 표정",
+  145: "빙글빙글 어지러운 얼굴",
+  146: "왜곡된 얼굴",
+  147: "파티 얼굴",
+  148: "애원하는 얼굴",
+  149: "추워서 떠는 얼굴",
+  150: "하트와 함께 웃는 얼굴",
 });
 const natureEmojis = emojiSheet("emoji-nature", "자연·음식", 141, {
   141: "해파리",
