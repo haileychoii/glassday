@@ -61,7 +61,7 @@
 
   pointer-events: none;
 
-  border-radius: 20px;
+  border-radius: var(--gd-radius-widget, 20px);
 
   background-image:
     linear-gradient(
@@ -111,8 +111,8 @@
 }
 
 /* =========================================================
-   4. Widget wrapper only
-   This layer only owns outer widget placement and clipping.
+   4. Widget placement wrapper
+   Keep overflow visible so resize handles can extend past the card edge.
 ========================================================= */
 
 .dashboard-grid-item {
@@ -126,7 +126,7 @@
 
   padding: 0;
 
-  overflow: hidden;
+  overflow: visible;
 
   box-sizing: border-box;
 
@@ -254,15 +254,10 @@
   text-overflow: ellipsis;
 
   color: hsl(var(--foreground) / 0.82);
-
-  background: hsl(var(--background) / 0.76);
-
-  border:
-    1px solid
-    hsl(var(--foreground) / 0.12);
-
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--gd-control-bg);
+  border: 1px solid var(--gd-control-border);
+  backdrop-filter: var(--gd-widget-inner-filter);
+  -webkit-backdrop-filter: var(--gd-widget-inner-filter);
 }
 
 /* =========================================================
@@ -291,39 +286,14 @@
 }
 
 /* =========================================================
-   9. Dragging / resizing layer
-========================================================= */
-
-.react-grid-item.react-draggable-dragging,
-.react-grid-item.react-resizable-resizing {
-  z-index: 100 !important;
-}
-
-/* =========================================================
-   10. Placeholder
+   9. Placeholder
 
    Shows the target slot while moving or resizing.
    Real collision handling still belongs to React Grid Layout.
 ========================================================= */
 
-.react-grid-item.react-grid-placeholder {
-  z-index: 2 !important;
-
-  opacity: 1 !important;
-
-  border:
-    1px solid
-    hsl(var(--primary) / 0.42);
-
-  border-radius:
-    var(--gd-radius-widget, 20px);
-
-  background:
-    hsl(var(--primary) / 0.12);
-}
-
 /* =========================================================
-   11. Resize handles
+   10. Resize handles
 ========================================================= */
 
 .dashboard-tab-space.is-editing
@@ -371,19 +341,8 @@
 }
 
 /* =========================================================
-   12. Top edge
+   11. Top edge
 ========================================================= */
-
-.react-resizable-handle-n {
-  top: -6px !important;
-  left: 18px !important;
-  right: 18px !important;
-
-  width: auto !important;
-  height: 14px !important;
-
-  cursor: ns-resize;
-}
 
 .react-resizable-handle-n::after {
   left: 0;
@@ -399,19 +358,8 @@
 }
 
 /* =========================================================
-   13. Bottom edge
+   12. Bottom edge
 ========================================================= */
-
-.react-resizable-handle-s {
-  bottom: -6px !important;
-  left: 18px !important;
-  right: 18px !important;
-
-  width: auto !important;
-  height: 14px !important;
-
-  cursor: ns-resize;
-}
 
 .react-resizable-handle-s::after {
   left: 0;
@@ -427,19 +375,8 @@
 }
 
 /* =========================================================
-   14. Left edge
+   13. Left edge
 ========================================================= */
-
-.react-resizable-handle-w {
-  left: -6px !important;
-  top: 18px !important;
-  bottom: 18px !important;
-
-  width: 14px !important;
-  height: auto !important;
-
-  cursor: ew-resize;
-}
 
 .react-resizable-handle-w::after {
   top: 0;
@@ -455,19 +392,8 @@
 }
 
 /* =========================================================
-   15. Right edge
+   14. Right edge
 ========================================================= */
-
-.react-resizable-handle-e {
-  right: -6px !important;
-  top: 18px !important;
-  bottom: 18px !important;
-
-  width: 14px !important;
-  height: auto !important;
-
-  cursor: ew-resize;
-}
 
 .react-resizable-handle-e::after {
   top: 0;
@@ -483,44 +409,8 @@
 }
 
 /* =========================================================
-   16. Corner handles
+   15. Corner handles
 ========================================================= */
-
-.react-resizable-handle-nw,
-.react-resizable-handle-ne,
-.react-resizable-handle-sw,
-.react-resizable-handle-se {
-  width: 20px !important;
-  height: 20px !important;
-}
-
-.react-resizable-handle-nw {
-  top: -7px !important;
-  left: -7px !important;
-
-  cursor: nwse-resize;
-}
-
-.react-resizable-handle-ne {
-  top: -7px !important;
-  right: -7px !important;
-
-  cursor: nesw-resize;
-}
-
-.react-resizable-handle-sw {
-  bottom: -7px !important;
-  left: -7px !important;
-
-  cursor: nesw-resize;
-}
-
-.react-resizable-handle-se {
-  right: -7px !important;
-  bottom: -7px !important;
-
-  cursor: nwse-resize;
-}
 
 .react-resizable-handle-nw::after,
 .react-resizable-handle-ne::after,
@@ -535,7 +425,7 @@
 }
 
 /* =========================================================
-   17. Reflow animation
+   16. Reflow animation
 ========================================================= */
 
 /* Only non-active widgets should animate when reflowing around changes. */
