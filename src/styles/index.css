@@ -64,6 +64,8 @@
 @import "./themes/study-surfaces.css";
 /* Timer colors, control faces, and progress-ring paint belong to theme styles. */
 @import "./themes/timer-surfaces.css";
+/* Diary canvas and note materials are kept with the other theme surfaces. */
+@import "./themes/diary-workspace-surfaces.css";
 
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";

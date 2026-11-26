@@ -1,0 +1,76 @@
+/* Diary canvas materials and note colors. Layout lives in widgets/diary-workspace.css. */
+
+.diary-workspace {
+  color: hsl(var(--foreground));
+}
+
+.diary-workspace__eyebrow {
+  color: hsl(var(--muted-foreground) / 0.82);
+}
+
+.diary-workspace__heading p {
+  color: hsl(var(--muted-foreground) / 0.78);
+}
+
+/* Canvas controls use the active theme's normal control and accent colors. */
+.diary-workspace__action {
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--gd-radius-button, 999px);
+  background: hsl(var(--card) / 0.62);
+  color: hsl(var(--foreground) / 0.86);
+}
+
+.diary-workspace__action:hover,
+.diary-workspace__action.is-active {
+  background: hsl(var(--primary) / 0.16);
+  border-color: hsl(var(--primary) / 0.52);
+}
+
+.diary-workspace__canvas {
+  border: 1px solid hsl(var(--border) / 0.62);
+  border-radius: var(--gd-radius-panel, 18px);
+  background:
+    linear-gradient(hsl(var(--foreground) / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--foreground) / 0.035) 1px, transparent 1px),
+    hsl(var(--card) / 0.26);
+  background-size: 24px 24px;
+}
+
+.diary-workspace__canvas.is-editing {
+  border-color: hsl(var(--primary) / 0.62);
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+.diary-workspace__canvas:not(.is-editing) .diary-canvas-item > .widget-instance-root > .glass-card {
+  box-shadow: none;
+}
+
+/* Diary's freeform note is a paper card, separate from embedded widgets. */
+.diary-note-block {
+  border: 1px solid hsl(42 58% 55% / 0.64);
+  border-radius: 12px;
+  background: hsl(48 92% 88% / 0.9);
+  color: hsl(38 35% 20%);
+  box-shadow: 0 8px 20px hsl(38 40% 24% / 0.12);
+}
+
+.diary-note-block__toolbar {
+  color: hsl(38 35% 28% / 0.7);
+}
+
+.diary-note-block__toolbar button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.diary-note-block textarea {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.diary-workspace__footer {
+  color: hsl(var(--muted-foreground) / 0.72);
+}
