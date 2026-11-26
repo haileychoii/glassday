@@ -1069,6 +1069,28 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
             </button>
           )}
 
+          {!item.postingUrl && (
+            /*
+             * Mobile Career's full list always exposes the posting-link action,
+             * including when no URL has been saved. Mirror that affordance in
+             * the desktop widget so a missing link can be added without first
+             * hunting through the detail form. Stop bubbling because the whole
+             * application card also opens that same detail window on click.
+             */
+            <button
+              type="button"
+              className="career-posting-link is-missing"
+              aria-label={`Add posting URL for ${item.company || "this application"}`}
+              onClick={(event) => {
+                event.stopPropagation();
+                openCareerWindow(item);
+              }}
+            >
+              <Plus className="w-3 h-3" aria-hidden="true" />
+              Add URL
+            </button>
+          )}
+
           <span>
             <FileText className="w-3 h-3" />
             CL {coverLetterCount}
