@@ -397,6 +397,61 @@
   line-height: 1;
 }
 
+.mobile-tab-icon-choice[aria-pressed="true"] {
+  background: hsl(var(--primary) / 0.14);
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: -2px;
+}
+
+.workspace-icon-picker-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid hsl(var(--foreground) / 0.12);
+}
+
+.workspace-icon-picker-actions button {
+  min-height: 34px;
+  padding: 6px 10px;
+  color: inherit;
+  background: var(--gd-control-bg, hsl(var(--background) / 0.7));
+  border: 1px solid var(--gd-control-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-control, 8px);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.workspace-icon-picker-actions button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.workspace-icon-picker-actions .workspace-icon-picker-spacer {
+  flex: 1 1 auto;
+}
+
+.workspace-icon-picker-actions .workspace-icon-picker-save {
+  color: hsl(var(--primary-foreground, 0 0% 100%));
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}
+
+.workspace-icon-picker-desktop {
+  top: calc(100% + 8px);
+  right: auto;
+  bottom: auto;
+  left: 0;
+  width: min(360px, calc(100vw - 24px));
+}
+
+.sidebar-tab-icon-editor {
+  position: relative;
+  z-index: 30;
+}
+
 .mobile-layout button:focus-visible {
   outline: 2px solid hsl(var(--foreground));
   outline-offset: -3px;

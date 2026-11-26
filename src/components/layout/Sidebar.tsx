@@ -37,6 +37,7 @@ type SidebarProps = {
   onSelectTab: (tabId: string) => void;
   onAddTab: () => void;
   onRenameTab: (tabId: string, label: string) => void;
+  onChangeTabIcon: (tabId: string, icon: string) => void;
   onRemoveTab: (tabId: string) => void;
 };
 
@@ -50,6 +51,7 @@ export const Sidebar = ({
   onSelectTab,
   onAddTab,
   onRenameTab,
+  onChangeTabIcon,
   onRemoveTab,
 }: SidebarProps) => {
   return (
@@ -105,6 +107,7 @@ export const Sidebar = ({
           collapsed={collapsed}
           onSelectTab={onSelectTab}
           onRenameTab={onRenameTab}
+          onChangeTabIcon={onChangeTabIcon}
           onRemoveTab={onRemoveTab}
         />
       </div>

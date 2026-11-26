@@ -58,6 +58,12 @@ type TabActionUndo =
       previousActiveTabId: string;
     }
   | {
+      type: "icon-changed";
+      tabId: string;
+      previousIcon: string;
+      nextIcon: string;
+    }
+  | {
       type: "removed";
       tab: DashboardTab;
       index: number;
@@ -509,6 +515,21 @@ export const useDashboardTabs = () => {
     });
   };
 
+  /** Save one icon change and keep its previous value for the global undo toast. */
+  const updateTabIcon = (tabId: string, icon: string) => {
+    const target = tabs.find((tab) => tab.id === tabId);
+    if (!target || target.icon === icon) return false;
+
+    lastTabAction.current = {
+      type: "icon-changed",
+      tabId,
+      previousIcon: target.icon,
+      nextIcon: icon,
+    };
+    updateTab(tabId, { icon });
+    return true;
+  };
+
   const removeTab = (tabId: string) => {
     const normalizedTabs = normalizeTabs(tabs);
     const target = normalizedTabs.find((tab) => tab.id === tabId);
@@ -551,6 +572,17 @@ export const useDashboardTabs = () => {
       return true;
     }
 
+    if (action.type === "icon-changed") {
+      setTabs((prev) =>
+        normalizeTabs(prev).map((tab) =>
+          tab.id === action.tabId
+            ? normalizeTab({ ...tab, icon: action.previousIcon })
+            : tab
+        )
+      );
+      return true;
+    }
+
     setTabs((prev) => {
       const currentTabs = normalizeTabs(prev);
       if (currentTabs.some((tab) => tab.id === action.tab.id)) return currentTabs;
@@ -574,6 +606,7 @@ export const useDashboardTabs = () => {
     addTab,
     setActiveTabMobileWidgetHeight,
     renameTab,
+    updateTabIcon,
     removeTab,
     undoLastTabAction,
   };

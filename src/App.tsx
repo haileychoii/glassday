@@ -125,6 +125,7 @@ function App() {
     addTab,
     setActiveTabMobileWidgetHeight,
     renameTab,
+    updateTabIcon,
     removeTab,
     undoLastTabAction,
   } = useDashboardTabs();
@@ -152,6 +153,11 @@ function App() {
 
     removeTab(tabId);
     showTabActionNotice("탭을 삭제했습니다.");
+  };
+
+  const handleChangeTabIcon = (tabId: string, icon: string) => {
+    if (!updateTabIcon(tabId, icon)) return;
+    showTabActionNotice("탭 아이콘을 저장했습니다.");
   };
 
   const handleUndoTabAction = () => {
@@ -326,6 +332,7 @@ function App() {
                 setEditMode(true);
               }}
               onRenameTab={renameTab}
+              onChangeTabIcon={handleChangeTabIcon}
               onRemoveTab={handleRemoveTab}
               editMode={editMode}
               onToggleEditMode={() => setEditMode((prev) => !prev)}
@@ -349,6 +356,7 @@ function App() {
               onSelectTab={setActiveTabId}
               onAddTab={handleAddTab}
               onRenameTab={renameTab}
+              onChangeTabIcon={handleChangeTabIcon}
               onRemoveTab={handleRemoveTab}
             >
               <DashboardGrid

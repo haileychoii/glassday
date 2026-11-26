@@ -823,6 +823,29 @@ aside .sidebar-workspace-list {
   flex-shrink: 0;
 }
 
+/* Tab icons can be changed independently from the tab's locked built-in data. */
+.sidebar-tab-icon-editor {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-tab-icon-edit {
+  display: inline-grid;
+  flex: 0 0 30px;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: var(--gd-radius-control, 8px);
+  cursor: pointer;
+}
+
 /* On tablet/mobile, the dedicated sidebar is replaced by the top workspace bar. */
 @media (max-width: 920px) {
   .app-sidebar,

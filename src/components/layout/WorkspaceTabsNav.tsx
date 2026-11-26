@@ -17,12 +17,13 @@
  * - Sidebar에서는 Vertical, Topbar에서는 CSS override로 Horizontal Auto Layout
  * ============================================================
  */
-import { Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import { cn } from "../../lib/utils";
 import type { DashboardTab } from "../../types/workspace";
+import { WorkspaceIconPicker } from "./WorkspaceIconPicker";
 import { WorkspaceTabIcon } from "./WorkspaceTabIcon";
 
 type WorkspaceTabsNavProps = {
@@ -33,6 +34,7 @@ type WorkspaceTabsNavProps = {
   onSelectTab: (tabId: string) => void;
   onAddTab?: () => void;
   onRenameTab: (tabId: string, label: string) => void;
+  onChangeTabIcon: (tabId: string, icon: string) => void;
   onRemoveTab: (tabId: string) => void;
   className?: string;
   addButtonClassName?: string;
@@ -53,12 +55,14 @@ export const WorkspaceTabsNav = ({
   onSelectTab,
   onAddTab,
   onRenameTab,
+  onChangeTabIcon,
   onRemoveTab,
   className,
   addButtonClassName,
   showAddButton = false,
 }: WorkspaceTabsNavProps) => {
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
+  const [editingIconTabId, setEditingIconTabId] = useState<string | null>(null);
 
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
@@ -134,6 +138,37 @@ export const WorkspaceTabsNav = ({
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
+            )}
+
+            {editMode && !collapsed && (
+              <div className="sidebar-tab-icon-editor" onClick={(event) => event.stopPropagation()}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setEditingIconTabId((current) =>
+                      current === tab.id ? null : tab.id
+                    )
+                  }
+                  className="sidebar-tab-icon-edit"
+                  title={`${tab.label} 아이콘 변경`}
+                  aria-label={`${tab.label} 아이콘 변경`}
+                  aria-expanded={editingIconTabId === tab.id}
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                </button>
+                {editingIconTabId === tab.id && (
+                  <WorkspaceIconPicker
+                    value={tab.icon}
+                    theme={theme}
+                    className="workspace-icon-picker-desktop"
+                    onCancel={() => setEditingIconTabId(null)}
+                    onSave={(icon) => {
+                      onChangeTabIcon(tab.id, icon);
+                      setEditingIconTabId(null);
+                    }}
+                  />
+                )}
+              </div>
             )}
           </div>
         ))}

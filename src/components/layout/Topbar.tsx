@@ -54,6 +54,7 @@ type TopbarProps = {
   onSelectTab: (tabId: string) => void;
   onAddTab: () => void;
   onRenameTab: (tabId: string, label: string) => void;
+  onChangeTabIcon: (tabId: string, icon: string) => void;
   onRemoveTab: (tabId: string) => void;
 };
 
@@ -70,6 +71,7 @@ export const Topbar = ({
   onSelectTab,
   onAddTab,
   onRenameTab,
+  onChangeTabIcon,
   onRemoveTab,
 }: TopbarProps) => {
   /*
@@ -316,6 +318,7 @@ export const Topbar = ({
             onSelectTab={onSelectTab}
             onAddTab={onAddTab}
             onRenameTab={onRenameTab}
+            onChangeTabIcon={onChangeTabIcon}
             onRemoveTab={onRemoveTab}
             className="topbar-mobile-workspace-list"
             addButtonClassName="topbar-mobile-add-button"

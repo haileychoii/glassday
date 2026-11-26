@@ -17,6 +17,7 @@ export const MobileLayout = ({
   onOpenSettings,
   onAddTab,
   onRenameTab,
+  onChangeTabIcon,
   onRemoveTab,
   editMode,
   onToggleEditMode,
@@ -30,6 +31,7 @@ export const MobileLayout = ({
   onOpenSettings: () => void;
   onAddTab: (icon: string) => void;
   onRenameTab: (tabId: string, label: string) => void;
+  onChangeTabIcon: (tabId: string, icon: string) => void;
   onRemoveTab: (tabId: string) => void;
   editMode: boolean;
   onToggleEditMode: () => void;
@@ -127,6 +129,8 @@ export const MobileLayout = ({
         onSelectTab={onSelectTab}
         onOpenQuickCapture={onOpenQuickCapture}
         onAddTab={onAddTab}
+        onChangeTabIcon={onChangeTabIcon}
+        editMode={editMode}
       />
     </div>
   );
