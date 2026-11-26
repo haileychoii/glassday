@@ -500,9 +500,34 @@
     color: #ffffff !important;
   }
 
+  /* Picker glyphs and the resize grip are controls, not Windows buttons;
+   * keep their icon itself visible without drawing a frame around it. */
+  & :is(.mobile-navigation-add-tab, .mobile-tab-icon-choice, .mobile-widget-size-controls button) {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: var(--w95-text) !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-tab-icon-picker {
+    color: var(--w95-text) !important;
+    background: var(--w95-bg) !important;
+    border: var(--w95-bevel-width) solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+    border-radius: 0 !important;
+    box-shadow: var(--w95-shadow-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
   /* Pixel PNGs have transparent margins. Render them larger than the 22px
    * desktop tab slot so the glyph reads clearly in the phone taskbar. */
-  & .mobile-navigation-icon {
+  & .mobile-navigation-item > :is(svg, img, .workspace-theme-icon) {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -511,7 +536,7 @@
     flex: 0 0 36px !important;
   }
 
-  & .mobile-navigation-icon .pixel-tab-icon {
+  & .mobile-navigation-item > .pixel-tab-icon {
     display: block !important;
     width: 32px !important;
     min-width: 32px !important;

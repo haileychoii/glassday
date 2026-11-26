@@ -129,6 +129,16 @@ body:has(.mobile-layout) .mobile-layout .mobile-navigation-item {
   padding: var(--gd-mobile-space-1) !important;
 }
 
+/* Touch drag must stay attached to the handle instead of becoming page scroll. */
+.mobile-layout .mobile-widget-size-handle {
+  touch-action: none;
+  cursor: ns-resize;
+}
+
+.mobile-layout .mobile-widget-size-reset {
+  cursor: pointer;
+}
+
 /* Intentional exceptions belong in the owning theme/widget file: override one
  * `--mobile-widget-*` alias on its themed layout or target slot/card. Shared
  * geometry consumes these aliases, so scoped token overrides stay effective. */
@@ -773,18 +783,20 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   height: var(--mobile-widget-icon-glyph-size) !important;
 }
 
-/* All bottom-tab glyphs share a fixed square icon box. This removes baseline
-   shifts between SVGs, emoji, and transparent PNG artwork. */
+/* Align the glyph itself, without adding a decorative box around the icon. */
 body:has(.mobile-layout) .mobile-layout .mobile-navigation
-  .mobile-navigation-item .mobile-navigation-icon {
-  display: grid !important;
-  flex: 0 0 32px !important;
-  place-items: center !important;
-  width: 32px !important;
-  height: 32px !important;
+  .mobile-navigation-item > :is(svg, img, .workspace-theme-icon) {
+  display: block !important;
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  height: 28px !important;
   margin: 0 !important;
   padding: 0 !important;
-  line-height: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  line-height: 1 !important;
   vertical-align: middle !important;
 }
 

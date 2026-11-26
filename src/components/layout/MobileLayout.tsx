@@ -3,19 +3,32 @@
  * App owns actions/providers; this shell only arranges their entry points.
  * Styles: styles/mobile.css. / 모바일 웹 전용이며 Tauri에는 렌더링하지 않습니다.
  */
-import { Plus, Search, Settings } from "lucide-react";
+import { Check, Pencil, Plus, Search, Settings } from "lucide-react";
 import { useEffect, useRef, type ReactNode } from "react";
 import type { DashboardTab } from "../../types/workspace";
 import { MobileNavigation } from "./MobileNavigation";
 
-export const MobileLayout = ({ tabs, activeTabId, onSelectTab, onOpenSearch,
-  onOpenQuickCapture, onOpenSettings, children }: {
+export const MobileLayout = ({
+  tabs,
+  activeTabId,
+  onSelectTab,
+  onOpenSearch,
+  onOpenQuickCapture,
+  onOpenSettings,
+  onAddTab,
+  editMode,
+  onToggleEditMode,
+  children,
+}: {
   tabs: DashboardTab[];
   activeTabId: string;
   onSelectTab: (id: string) => void;
   onOpenSearch: () => void;
   onOpenQuickCapture: () => void;
   onOpenSettings: () => void;
+  onAddTab: (icon: string) => void;
+  editMode: boolean;
+  onToggleEditMode: () => void;
   children: ReactNode;
 }) => {
   const scroller = useRef<HTMLDivElement>(null);
@@ -38,6 +51,15 @@ export const MobileLayout = ({ tabs, activeTabId, onSelectTab, onOpenSearch,
         <div className="mobile-header-actions">
           <button type="button" aria-label="Search Glassday" title="Search" onClick={onOpenSearch}><Search size={19} /></button>
           <button type="button" className="mobile-header-quick-capture" aria-label="Quick Capture" title="Quick Capture" onClick={onOpenQuickCapture}><Plus size={21} strokeWidth={2.4} /></button>
+          <button
+            type="button"
+            aria-label={editMode ? "Finish widget size editing" : "Edit widget sizes"}
+            title={editMode ? "Done" : "Edit widgets"}
+            aria-pressed={editMode}
+            onClick={onToggleEditMode}
+          >
+            {editMode ? <Check size={19} /> : <Pencil size={18} />}
+          </button>
           <button type="button" aria-label="Open settings" title="Settings" onClick={onOpenSettings}><Settings size={19} /></button>
         </div>
       </header>
@@ -49,6 +71,7 @@ export const MobileLayout = ({ tabs, activeTabId, onSelectTab, onOpenSearch,
         activeTabId={activeTabId}
         onSelectTab={onSelectTab}
         onOpenQuickCapture={onOpenQuickCapture}
+        onAddTab={onAddTab}
       />
     </div>
   );

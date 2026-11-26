@@ -2,6 +2,13 @@
  * See docs/mobile-ui-map.md for the component, host, and stylesheet map.
  */
 
+import {
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
+import { GripHorizontal, RotateCcw } from "lucide-react";
 import type { DashboardTab } from "../../types/workspace";
 
 import { widgetRegistry } from "../../constants/widgets";
@@ -13,9 +20,70 @@ import { MobileCareerCard } from "./MobileCareerCard";
 
 export const MobileDashboard = ({
   activeTab,
+  editMode,
+  onSetWidgetHeight,
 }: {
   activeTab: DashboardTab;
+  editMode: boolean;
+  onSetWidgetHeight: (widgetId: string, height: number | null) => void;
 }) => {
+  // A mobile size edit is only the card height. The card keeps its phone width,
+  // and the desktop Wide/Laptop layouts remain completely untouched.
+  const [previewHeight, setPreviewHeight] = useState<{
+    widgetId: string;
+    height: number;
+  } | null>(null);
+  const resizeGesture = useRef<{
+    widgetId: string;
+    pointerId: number;
+    startY: number;
+    startHeight: number;
+  } | null>(null);
+
+  const clampHeight = (height: number) =>
+    Math.max(160, Math.min(1200, Math.floor(window.innerHeight * 0.82), height));
+
+  const beginResize = (widgetId: string, event: ReactPointerEvent<HTMLButtonElement>) => {
+    const slot = event.currentTarget.closest<HTMLElement>(".mobile-widget-slot");
+    if (!slot) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    const startHeight = clampHeight(
+      activeTab.mobileWidgetHeights?.[widgetId] ?? slot.getBoundingClientRect().height
+    );
+    resizeGesture.current = {
+      widgetId,
+      pointerId: event.pointerId,
+      startY: event.clientY,
+      startHeight,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setPreviewHeight({ widgetId, height: startHeight });
+  };
+
+  const continueResize = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const gesture = resizeGesture.current;
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+
+    const height = clampHeight(
+      gesture.startHeight + event.clientY - gesture.startY
+    );
+    setPreviewHeight({ widgetId: gesture.widgetId, height });
+  };
+
+  const finishResize = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const gesture = resizeGesture.current;
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+
+    const height = clampHeight(
+      gesture.startHeight + event.clientY - gesture.startY
+    );
+    onSetWidgetHeight(gesture.widgetId, height);
+    resizeGesture.current = null;
+    setPreviewHeight(null);
+  };
+
   return (
     <div className="mobile-dashboard">
       {/*
@@ -32,6 +100,9 @@ export const MobileDashboard = ({
          */
         const slotClassName = [
           "mobile-widget-slot",
+          activeTab.mobileWidgetHeights?.[id] || previewHeight?.widgetId === id
+            ? "has-mobile-widget-height"
+            : "",
 
           id === "calendar"
             ? "mobile-widget-slot--calendar"
@@ -43,6 +114,13 @@ export const MobileDashboard = ({
         ]
           .filter(Boolean)
           .join(" ");
+        const widgetLabel = widgetRegistry[id]?.label ?? id;
+        const widgetHeight = previewHeight?.widgetId === id
+          ? previewHeight.height
+          : activeTab.mobileWidgetHeights?.[id];
+        const widgetStyle = widgetHeight
+          ? ({ "--mobile-widget-height": `${widgetHeight}px` } as CSSProperties)
+          : undefined;
 
         return (
           <div
@@ -50,7 +128,8 @@ export const MobileDashboard = ({
             className={slotClassName}
             data-widget-id={id}
             role="region"
-            aria-label={widgetRegistry[id]?.label ?? id}
+            aria-label={widgetLabel}
+            style={widgetStyle}
           >
             {id === "calendar" ? (
               <MobileCalendarCard />
@@ -58,6 +137,56 @@ export const MobileDashboard = ({
               <MobileCareerCard />
             ) : (
               <WidgetSlot widgetId={id} attachToParent />
+            )}
+            {editMode && (
+              <div
+                className="mobile-widget-size-controls"
+                role="group"
+                aria-label={`${widgetLabel} size controls`}
+              >
+                <button
+                  type="button"
+                  className="mobile-widget-size-handle"
+                  aria-label={`Resize ${widgetLabel}; drag vertically, or use arrow keys`}
+                  aria-keyshortcuts="ArrowUp ArrowDown"
+                  title="Drag to change widget height. Use arrow keys to resize."
+                  onPointerDown={(event) => beginResize(id, event)}
+                  onPointerMove={continueResize}
+                  onPointerUp={finishResize}
+                  onPointerCancel={finishResize}
+                  onKeyDown={(event) => {
+                    if (event.key === "Delete" || event.key === "Backspace") {
+                      event.preventDefault();
+                      onSetWidgetHeight(id, null);
+                      return;
+                    }
+                    if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
+                    event.preventDefault();
+                    const slot = event.currentTarget.closest<HTMLElement>(".mobile-widget-slot");
+                    const currentHeight =
+                      previewHeight?.widgetId === id
+                        ? previewHeight.height
+                        : activeTab.mobileWidgetHeights?.[id] ?? slot?.getBoundingClientRect().height ?? 320;
+                    onSetWidgetHeight(
+                      id,
+                      clampHeight(
+                        currentHeight + (event.key === "ArrowUp" ? 24 : -24)
+                      )
+                    );
+                  }}
+                >
+                  <GripHorizontal size={18} aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className="mobile-widget-size-reset"
+                  aria-label={`Reset ${widgetLabel} height`}
+                  title="Reset widget height"
+                  onClick={() => onSetWidgetHeight(id, null)}
+                >
+                  <RotateCcw size={15} aria-hidden="true" />
+                </button>
+              </div>
             )}
           </div>
         );

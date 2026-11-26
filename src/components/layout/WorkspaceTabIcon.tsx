@@ -24,6 +24,8 @@ import type { ThemeId } from "../../constants/themes";
 
 type WorkspaceTabIconProps = {
   tabId: string;
+  /** Emoji stored on a custom workspace; known emoji reuse the themed built-in glyph. */
+  icon?: string;
   theme: ThemeId;
   mobile?: boolean;
 };
@@ -70,16 +72,35 @@ const glassMobileIcons = {
   life: TbHeartFilled,
 };
 
-export const WorkspaceTabIcon = ({ tabId, theme, mobile = false }: WorkspaceTabIconProps) => {
+const iconTabIds: Record<string, string> = {
+  "🏠": "home",
+  "💼": "career",
+  "📚": "study",
+  "📔": "memo",
+  "🌿": "life",
+};
+
+export const WorkspaceTabIcon = ({
+  tabId,
+  icon,
+  theme,
+  mobile = false,
+}: WorkspaceTabIconProps) => {
   const className = `workspace-theme-icon workspace-theme-icon-${theme}`;
+  // Custom tabs select one of the same five icon identities used by built-in tabs.
+  const resolvedTabId = lucideIcons[tabId]
+    ? tabId
+    : iconTabIds[icon ?? ""] ?? tabId;
 
   if (mobile && (theme === "glass-light" || theme === "glass-dark")) {
-    const Icon = glassMobileIcons[tabId as keyof typeof glassMobileIcons] ?? TbHomeFilled;
+    const Icon =
+      glassMobileIcons[resolvedTabId as keyof typeof glassMobileIcons] ??
+      TbHomeFilled;
     return <Icon className={`${className} workspace-theme-icon-filled`} aria-hidden="true" />;
   }
 
   if (theme === "mac-core") {
-    const emoji = mobile ? macMobileEmoji[tabId] : macEmoji[tabId];
+    const emoji = mobile ? macMobileEmoji[resolvedTabId] : macEmoji[resolvedTabId];
     return (
       <span
         className={`${className}${mobile ? " workspace-theme-icon-ios-emoji" : ""}`}
@@ -93,8 +114,8 @@ export const WorkspaceTabIcon = ({ tabId, theme, mobile = false }: WorkspaceTabI
   if (theme === "retro") {
     return (
       <img
-        src={pinkDiaryIcons[tabId] ?? pinkDiaryIcons.diary}
-        className={`${className} pink-diary-tab-icon pink-diary-tab-icon-${tabId}`}
+        src={pinkDiaryIcons[resolvedTabId] ?? pinkDiaryIcons.diary}
+        className={`${className} pink-diary-tab-icon pink-diary-tab-icon-${resolvedTabId}`}
         alt=""
         aria-hidden="true"
         draggable={false}
@@ -105,7 +126,7 @@ export const WorkspaceTabIcon = ({ tabId, theme, mobile = false }: WorkspaceTabI
   if (theme === "pixel-desk") {
     return (
       <img
-        src={`/pixel-icons/${tabId === "memo" ? "diary" : tabId}.png`}
+        src={`/pixel-icons/${resolvedTabId === "memo" ? "diary" : resolvedTabId}.png`}
         className={`${className} pixel-tab-icon`}
         alt=""
         aria-hidden="true"
@@ -114,6 +135,6 @@ export const WorkspaceTabIcon = ({ tabId, theme, mobile = false }: WorkspaceTabI
     );
   }
 
-  const Icon = lucideIcons[tabId] ?? FolderOpen;
+  const Icon = lucideIcons[resolvedTabId] ?? FolderOpen;
   return <Icon className={className} aria-hidden="true" />;
 };

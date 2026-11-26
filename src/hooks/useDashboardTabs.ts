@@ -244,6 +244,25 @@ const normalizeModeLayouts = (value: unknown): DashboardModeLayouts => {
   };
 };
 
+/* Persist only usable mobile heights so stale or edited storage cannot
+ * collapse a card or stretch it past the range supported by the handle. */
+const normalizeMobileWidgetHeights = (
+  heights: DashboardTab["mobileWidgetHeights"]
+): DashboardTab["mobileWidgetHeights"] => {
+  if (!heights || typeof heights !== "object") return undefined;
+
+  return Object.fromEntries(
+    Object.entries(heights)
+      .filter((entry): entry is [string, number] =>
+        typeof entry[1] === "number" && Number.isFinite(entry[1])
+      )
+      .map(([widgetId, height]) => [
+        widgetId,
+        Math.round(Math.max(160, Math.min(1200, height))),
+      ])
+  );
+};
+
 const normalizeTab = (
   tab: DashboardTab,
   options: { mergeCurrentDefaults?: boolean } = {}
@@ -257,6 +276,7 @@ const normalizeTab = (
       ? [...new Set(tab.widgetIds.map(migrateWidgetId))]
       : [],
     layouts: normalizeModeLayouts(tab.layouts),
+    mobileWidgetHeights: normalizeMobileWidgetHeights(tab.mobileWidgetHeights),
     locked: Boolean(tab.locked),
   };
 
@@ -308,11 +328,11 @@ const normalizeTabs = (
   return tabs.map((tab) => normalizeTab(tab, options));
 };
 
-const createNewTab = (): DashboardTab => {
+const createNewTab = (icon = "✨"): DashboardTab => {
   return {
     id: createId(),
     label: "New Tab",
-    icon: "✨",
+    icon,
     widgetIds: ["memo", "calendar"],
     layouts: {
       wide: {
@@ -458,11 +478,28 @@ export const useDashboardTabs = () => {
     });
   };
 
-  const addTab = () => {
-    const newTab = createNewTab();
+  const addTab = (icon = "✨") => {
+    const newTab = createNewTab(icon);
 
     setTabs((prev) => [...normalizeTabs(prev), newTab]);
     setActiveTabId(newTab.id);
+  };
+
+  /** Save mobile-only card height without changing the desktop grid layouts. */
+  const setActiveTabMobileWidgetHeight = (
+    widgetId: WidgetId,
+    height: number | null
+  ) => {
+    if (!activeTab) return;
+
+    const nextHeights = { ...(activeTab.mobileWidgetHeights ?? {}) };
+    if (height === null) {
+      delete nextHeights[widgetId];
+    } else {
+      nextHeights[widgetId] = Math.round(Math.max(160, Math.min(1200, height)));
+    }
+
+    updateTab(activeTab.id, { mobileWidgetHeights: nextHeights });
   };
 
   const renameTab = (tabId: string, label: string) => {
@@ -495,6 +532,7 @@ export const useDashboardTabs = () => {
     addWidgetToActiveTab,
     removeWidgetFromActiveTab,
     addTab,
+    setActiveTabMobileWidgetHeight,
     renameTab,
     removeTab,
   };

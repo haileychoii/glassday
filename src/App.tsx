@@ -116,6 +116,7 @@ function App() {
     addWidgetToActiveTab,
     removeWidgetFromActiveTab,
     addTab,
+    setActiveTabMobileWidgetHeight,
     renameTab,
     removeTab,
   } = useDashboardTabs();
@@ -260,8 +261,15 @@ function App() {
               onOpenSearch={() => setCommandPaletteOpen(true)}
               onOpenQuickCapture={() => setQuickCaptureOpen(true)}
               onOpenSettings={() => setSettingsOpen(true)}
+              onAddTab={addTab}
+              editMode={editMode}
+              onToggleEditMode={() => setEditMode((prev) => !prev)}
             >
-              <MobileDashboard activeTab={activeTab} />
+              <MobileDashboard
+                activeTab={activeTab}
+                editMode={editMode}
+                onSetWidgetHeight={setActiveTabMobileWidgetHeight}
+              />
             </MobileLayout>
           ) : (
             <AppShell

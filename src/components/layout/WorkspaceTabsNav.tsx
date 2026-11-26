@@ -105,7 +105,7 @@ export const WorkspaceTabsNav = ({
               aria-label={collapsed ? tab.label : undefined}
             >
               <span className="sidebar-tab-icon">
-                <WorkspaceTabIcon tabId={tab.id} theme={theme} />
+                <WorkspaceTabIcon tabId={tab.id} icon={tab.icon} theme={theme} />
               </span>
 
               {!collapsed && editMode && !tab.locked ? (
