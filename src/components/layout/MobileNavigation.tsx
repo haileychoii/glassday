@@ -4,7 +4,7 @@
  * In edit mode, tap an existing tab to change its icon; tap Save to persist it.
  */
 import { useEffect, useRef, useState } from "react";
-import { Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 
 import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import type { DashboardTab } from "../../types/workspace";
@@ -114,6 +114,14 @@ export const MobileNavigation = ({
                 mobile
               />
               <span className="mobile-navigation-label">{tab.label}</span>
+              {editMode && (
+                <Pencil
+                  className="mobile-navigation-edit-mark"
+                  size={11}
+                  strokeWidth={2.4}
+                  aria-hidden="true"
+                />
+              )}
             </button>
           );
         })}
