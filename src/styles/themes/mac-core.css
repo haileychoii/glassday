@@ -625,7 +625,8 @@
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-modal-window,
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-window,
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-panel,
-:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .floating-window {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .floating-window,
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .career-floating-window {
   color: var(--mac-text) !important;
   background: var(--mac-window-bg) !important;
   border: 1px solid var(--mac-window-border) !important;
@@ -638,7 +639,7 @@
 }
 
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core)
-  :where(.settings-modal-header, .settings-header, .settings-titlebar, .floating-window-titlebar) {
+  :where(.settings-modal-header, .settings-header, .settings-titlebar, .floating-window-titlebar, .career-floating-titlebar) {
   background: var(--mac-titlebar-bg) !important;
   border-bottom: 1px solid var(--mac-window-separator) !important;
 }
@@ -681,7 +682,8 @@
   background: var(--mac-control-hover-bg) !important;
 }
 
-:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .settings-modal-body {
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core)
+  :where(.settings-modal-body, .career-floating-body) {
   background: var(--mac-content-bg) !important;
 }
 
@@ -745,27 +747,17 @@
     0 8px 18px rgb(20 24 36 / 0.1) !important;
 }
 
-/* Career owns a legacy custom portal, so it receives the same native window
-   recipe explicitly. / 공통 FloatingWindow를 쓰지 않는 Career도 동일하게 맞춘다. */
+/* Career still uses a custom portal, but its window surface shares the common
+   native window recipe above. Only its titlebar layout needs separate rules.
+   / Career 창도 위 공통 창 재질을 쓰고, 제목줄 배치만 별도로 조정합니다. */
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core) .career-floating-window {
-  color: var(--mac-text) !important;
-  background: var(--mac-window-bg) !important;
-  border: 1px solid var(--mac-window-border) !important;
   border-radius: var(--gd-radius-app) !important;
-  box-shadow:
-    0 38px 96px -46px rgb(22 24 32 / 0.5),
-    0 16px 34px -20px rgb(22 24 32 / 0.28),
-    inset 0 1px 0 rgb(255 255 255 / 0.88) !important;
-  backdrop-filter: blur(30px) saturate(154%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(154%) !important;
 }
 
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core) .career-floating-titlebar {
   position: relative !important;
   min-height: 66px !important;
   padding: 10px 16px 10px 70px !important;
-  background: var(--mac-titlebar-bg) !important;
-  border-bottom: 1px solid var(--mac-window-separator) !important;
 }
 
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core) .career-floating-titlebar::before {
@@ -840,7 +832,6 @@ body:is([data-theme="mac-core"], .theme-mac-core):has(.mobile-layout)
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core) .career-floating-body {
   padding: 14px !important;
   gap: 12px !important;
-  background: var(--mac-content-bg) !important;
 }
 
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core)
@@ -866,8 +857,8 @@ body:is([data-theme="mac-core"], .theme-mac-core):has(.mobile-layout)
 ========================================================= */
 
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core) ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: var(--gd-scrollbar-size);
+  height: var(--gd-scrollbar-size);
 }
 
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core) ::-webkit-scrollbar-track {
