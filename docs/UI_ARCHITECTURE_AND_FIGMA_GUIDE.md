@@ -1,10 +1,12 @@
 # Glassday UI Architecture and Figma Guide
 
-이 문서는 현재 `laptop-ui` 코드의 실제 import, component usage, className, Context,
-storage 연결을 기준으로 작성한 UI 구조 지도다. Figma에서 이름을 정하거나 Component,
-Variant, Auto Layout을 만들 때 코드의 Source of Truth를 빠르게 찾는 용도로 사용한다.
+이 문서는 현재 저장소의 실제 import, component usage, className, Context, storage 연결을
+기준으로 작성한 UI 구조 지도다. 화면을 잘 모르는 사람도 화면 이름에서 TSX, CSS, 데이터
+파일로 따라갈 수 있고, Figma Component/Variant/Auto Layout을 코드에 대응시킬 수 있도록 한다.
 
-> 이 문서는 UI를 새로 설계하는 명세가 아니다. 현재 렌더링되는 구조와 연결 관계를 설명한다.
+> 모바일 화면의 세부 파일 지도와 처음부터 위젯을 추가하는 단계는
+> [모바일 UI 파일 지도](mobile-ui-map.md)를 함께 참고한다. 이 문서는 현재 연결 구조를
+> 기록하며 실제 기능/시각 설계는 Figma 시안과 제품 요구사항에서 결정한다.
 
 ## 1. 전체 UI 구조
 
@@ -56,7 +58,7 @@ layer가 같은 구현이라고 가정하면 안 된다.
 
 ## 2. Widget이 Dashboard에 나타나는 과정
 
-1. `src/types/workspace.ts`의 `WidgetId`가 안정적인 Widget key를 정의한다.
+1. `src/types/workspace.ts`는 Widget ID에 붙이는 타입 이름(`WidgetId`, 현재 `string` 별칭)을 제공한다. 실제 사용하는 ID 목록은 다음 Registry에 있다.
 2. `src/constants/widgets.ts`의 `widgetRegistry`가 label, category, default size metadata를 연결한다.
 3. `src/components/grid/DashboardGrid.tsx`의 `widgetMap`이 `WidgetId`를 실제 React component로 변환한다.
 4. `src/components/grid/gridDefaults.ts`가 Wide/Laptop 및 `lg/md/sm`의 초기 16-column 좌표를 제공한다.
@@ -150,7 +152,6 @@ WidgetId
 - Components: Application Card, Status Chip, D-Day Badge, Board Column
 - Variants: List, Board, Empty, Detail Open, detailOnly
 - Floating: Career 전용 portal; Title Bar fixed, detail body scroll
-- 주의: `components/widgets/career/*`의 분리형 component는 현재 unmounted prototype이다.
 
 ### Study Planner
 
@@ -197,7 +198,7 @@ WidgetId
 - Detail Variants: Overview, Spending, Wishlist, Recurring
 - Components: Transaction Row, Wishlist Card, Recurring Row, Form Field, Donut Legend, Store Bar
 - Overlay Variants: Wishlist Detail, Purchased Dialog, Add Form Open/Closed
-- Scroll: Floating detail body 및 필요한 list
+- Scroll: 모바일 대시보드에서는 본문이 카드 높이에 맞게 늘고 페이지가 스크롤한다. 거래 목록과 편집 다이얼로그에는 필요한 내부 스크롤이 있다.
 - Data color: category palette는 theme token과 독립적인 finance data palette
 
 ### Mood
@@ -208,12 +209,53 @@ WidgetId
 - Scroll: Widget body
 - Responsive: `mood-widget` container query
 
-### Health
+### Habit Tracker
 
-- Root: `Widget / Health`
-- Child Frames: Three Metrics, Progress, Program, Reset
-- Variants: Editable, Goal Reached
-- Storage는 Widget local model이며 다른 Widget Context와 공유하지 않는다.
+- Root: `Widget / Habit Tracker`
+- Child Frames: Today Progress, Week Labels, Habit Row, Edit Form, Color Swatches, History
+- Variants: Empty, Read Only, Editing, Completed Today, Habit Color
+- Storage: 습관 이름, 사용자 색, 요일별 완료 기록을 위젯 데이터로 저장한다.
+- 주의: 예전 `health` widget ID는 현재 `useDashboardTabs.ts`에서 `habitTracker`로 이관한다. 새 화면이나 Figma Component의 key는 `habitTracker`를 쓴다.
+
+## 4.1 Figma 시안에서 새 컴포넌트로 이어지는 경로
+
+```mermaid
+flowchart LR
+  A[Figma Page / Screen Frame] --> B[Component Frame과 Auto Layout]
+  B --> C[Variants와 상태 이름]
+  C --> D[색·간격·radius token]
+  D --> E[Widget TSX: 구조와 상호작용]
+  E --> F[className 연결]
+  F --> G[Widget CSS: 내부 모양]
+  E --> H[Registry + Renderer + Grid]
+  G --> I[모바일 CSS: 작은 화면 배치]
+  G --> J[Theme CSS: 재질과 색]
+  H --> K[Wide/Laptop/Mobile 화면]
+  I --> K
+  J --> K
+```
+
+**Figma에서 코드로 옮길 때 지킬 약속**
+
+1. Figma의 카드 바깥/제목줄을 기존 `Widget Frame`과 맞춘다. TSX에서는 `GlassCard`를 재사용하고 내부 본문만 새로 구성한다.
+2. Figma Layer/Component 이름은 읽기 쉬운 화면 언어로 짓는다. 그 이름을 TSX `className`과 CSS 선택자에 그대로 연결한다. 예: `Habit Row` → `habit-tracker__item`.
+3. 공통 간격은 `spacing-tokens.css` 토큰을 우선 쓴다. 위젯 전용 반복 간격이 필요하면 CSS custom property 한 곳에서 정의하고 child들이 그 값을 쓴다.
+4. 색상 모드는 Figma Variable Mode와 `theme-surfaces.css`의 semantic token을 대응시킨다. 직접 고른 사용자 데이터 색은 theme surface token과 구별한다.
+5. Variant마다 보이는 요소와 동작을 먼저 표로 정한다. Disabled/Empty/Editing 같은 상태를 CSS만으로 흉내 내지 말고 TSX 상태와 연결한다.
+6. Figma에서 확정한 바깥 여백, 카드 제목 위치, body 시작선은 공통 frame 책임이다. 특정 widget CSS에 복제하지 않는다.
+7. 화면이 추가되면 `docs/mobile-ui-map.md`의 연결표와 이 문서의 Figma 구조표도 함께 고친다.
+
+| 코드에서 바꾸려는 것 | 시작 파일 | 연결해서 확인할 파일 |
+|---|---|---|
+| 새 위젯의 실제 ID와 선택기 이름/설명/분류 | `src/constants/widgets.ts` | `WidgetId` 타입은 `src/types/workspace.ts`에서 확인 |
+| 실제 위젯을 화면으로 만들기 | `src/components/widgets/[Name]Widget.tsx` | `GlassCard.tsx`, feature CSS |
+| ID를 React 위젯에 연결 | `src/components/widgets/WidgetRenderer.tsx` | `widgetComponents` |
+| 큰 화면 그리드 목록/기본 위치 | `src/components/grid/DashboardGrid.tsx`, `gridDefaults.ts` | `dashboardTabs.ts`, `useDashboardTabs.ts` |
+| 내부 구조와 큰 화면 스타일 | `src/styles/widgets/[name].css` | TSX `className` |
+| 모바일 배치와 콘텐츠 크기 | `src/styles/mobile-[name].css` 또는 위젯 CSS의 모바일 구간 | `src/styles/index.css`, `mobile-common.css` |
+| 테마별 색/재질 | `theme-surfaces.css`, `themes/[theme].css` | Figma Variable Mode |
+
+추가 절차와 모바일 배치 예시는 [모바일 UI 파일 지도](mobile-ui-map.md)의 “새 위젯을 실제 앱에 추가할 때”를 따른다.
 
 ## 5. Theme Map
 
@@ -229,8 +271,7 @@ WidgetId
 | `pixel-desk` | `styles/themes/pixel.css` | `[data-theme="pixel-desk"]`, `.theme-pixel-desk` | Pixel Desk |
 | `retro` | `styles/themes/retro.css` | `[data-theme="retro"]`, `.theme-retro` | Retro 98 |
 
-`src/styles/themes/glass.css`는 `index.css`에서 import되지 않는 legacy 파일이다. 저장된 과거
-`glass` 값은 `constants/themes.ts`에서 `glass-light`로 migration된다.
+저장된 과거 `glass` 테마 값은 `constants/themes.ts`에서 `glass-light`로 migration된다.
 
 ### Theme 적용 경로
 
@@ -376,7 +417,7 @@ Wide/Laptop mode, active tab, Grid layout, theme은 cloud restore 대상에서 �
 
 ### 새 Widget을 등록할 때
 
-1. `types/workspace.ts`의 WidgetId
+1. `types/workspace.ts`의 `WidgetId` 규약을 확인한다. 현재는 `string` 별칭이므로 별도 ID 목록에 값을 추가하지 않지만, 타입을 제한된 목록으로 바꾸는 설계라면 새 값도 등록한다.
 2. `constants/widgets.ts` metadata
 3. `DashboardGrid.tsx` widgetMap
 4. `gridDefaults.ts`의 Wide/Laptop 및 lg/md/sm 좌표
@@ -407,18 +448,7 @@ Wide/Laptop mode, active tab, Grid layout, theme은 cloud restore 대상에서 �
 3. Sidebar/Topbar/WorkspaceTabsNav DOM 구조
 4. Widget 내부 변화는 해당 container query에서 처리한다.
 
-## 9. 현재 코드에서 구분해야 할 Legacy / Inactive 파일
-
-- `src/components/layout/AppleDesktopDecor.tsx`: 전체 구현이 주석 처리되어 현재 미렌더링
-- `src/components/widgets/JournalWidget.tsx`: DailyJournalWidget export alias
-- `src/components/widgets/TodayTasksWidget.tsx`: 구현은 있으나 현재 widgetMap 미등록
-- `src/components/widgets/career/*`의 분리형 component/type/helper: 현재 CareerWidget 미사용 prototype
-- `src/components/widgets/alerts/alertUtils.ts`: 현재 AlertCenterWidget에서 미사용
-- `src/hooks/useDashboardLayout.ts`: 현재 Grid가 사용하지 않는 옛 단일 layout Hook
-- `src/types/journals.ts`: 현재 Daily Journal이 사용하지 않는 이전 model
-- `src/styles/themes/glass.css`: index 미import, registry 미등록 legacy Theme
-
-## 10. Figma 파일 구성 제안
+## 9. Figma 파일 구성 제안
 
 무료 페이지 수를 아끼면서 현재 구조를 이해하기 쉬운 구성은 다음과 같다.
 
@@ -436,7 +466,7 @@ Wide/Laptop mode, active tab, Grid layout, theme은 cloud restore 대상에서 �
 
 ### File 3: Life, Finance, Theme QA
 
-- Page 1: Money, Mood, Health
+- Page 1: Habit Tracker, Money, Mood
 - Page 2: Settings, Auth/Sync, Backup/Reset
 - Page 3: Theme Variant comparison and responsive test frames
 

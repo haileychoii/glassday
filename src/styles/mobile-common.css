@@ -1,7 +1,7 @@
 /*
  * Shared mobile widget geometry for every theme.
- * Connected components: MobileDashboard / MobileCareerCard / MobileCalendarCard /
- * MobileStudyCard and GlassCard's widget-frame header/body.
+ * Connected components: MobileDashboard, MobileCareerCard, MobileCalendarCard,
+ * and GlassCard's widget-frame header/body.
  * Theme styles keep ownership of color, material, font family, and bevels;
  * this final layer owns only spacing, title scale, and alignment.
  * 모든 테마의 모바일 공통 규격 파일입니다. 테마 CSS는 색과 표면 재질을,
@@ -9,29 +9,103 @@
  */
 
 .mobile-layout {
+  /* Radius tokens come from base.css. Pixel Desk alone sets them to zero. */
   --mobile-space-1: var(--gd-mobile-space-1);
   --mobile-space-2: var(--gd-mobile-space-2);
-  --mobile-space-3: var(--gd-mobile-space-3);
   --mobile-space-4: var(--gd-mobile-space-4);
-  --mobile-space-6: var(--gd-mobile-space-6);
   --mobile-widget-gap: var(--gd-mobile-widget-gap);
   --mobile-widget-inset: var(--gd-mobile-widget-inset);
-  --mobile-page-gap: var(--gd-mobile-widget-gap);
-  --mobile-section-gap: var(--mobile-space-4);
   --mobile-content-gap: var(--mobile-space-2);
   --mobile-tight-gap: var(--mobile-space-1);
+  --mobile-control-gap: 6px;
   --mobile-page-gutter: var(--mobile-space-4);
-  --mobile-widget-header-surface: var(--gd-surface-bg, hsl(var(--card)));
   --mobile-widget-header-height: var(--gd-mobile-widget-header-height);
   --mobile-widget-header-pad-inline: var(--gd-mobile-widget-inset);
   --mobile-widget-header-pad-block: var(--gd-mobile-widget-header-pad-y);
   --mobile-widget-title-size: 14px;
   --mobile-widget-subtitle-size: 11px;
-  --mobile-widget-header-min-height: var(--gd-mobile-widget-header-height);
-  --mobile-widget-icon-size: 22px;
+  --mobile-widget-min-body-height: 120px;
+  /* Match base.css desktop widget icon slot and glyph dimensions. */
+  --mobile-widget-icon-size: var(--gd-widget-desktop-icon-size, 26px);
+  --mobile-widget-icon-glyph-size: 15px;
   /* A 40px control stays compact in dense widget headers but is easier to tap.
    * 좁은 헤더를 과하게 키우지 않으면서 손가락으로 누르기 쉽게 맞춥니다. */
   --mobile-widget-action-size: 40px;
+}
+
+/* One radius hierarchy for nested mobile surfaces across rounded themes.
+ * Outer widget: 20px; inset surface: 12px; control: 8px. Circular actions
+ * and Pixel Desk are intentionally excluded. */
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora,
+  [data-theme="mac-core"], .theme-mac-core,
+  [data-theme="retro"], .theme-retro
+) .mobile-layout :is(
+  .mobile-widget-slot .glass-card,
+  .mobile-calendar-card,
+  .mobile-career-card
+) {
+  border-radius: var(--gd-radius-widget, 20px) !important;
+}
+
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora,
+  [data-theme="mac-core"], .theme-mac-core,
+  [data-theme="retro"], .theme-retro
+) .mobile-layout :is(
+  .study10-summary-card, .study10-timer, .study10-panel, .study10-task-row,
+  .study10-subject-total, .study10-subject-color-field > div,
+  .study10-empty, .study10-legacy-note,
+  .journal-section, .journal-summary-card, .memo-note-item,
+  .alert-center-item, .mobile-calendar-card__summary,
+  .mobile-career-metrics > div, .mobile-career-next,
+  .money-summary-panel, .money-budget-panel, .money-visual-panel,
+  .money-recent-panel, .money-detail-card,
+  .timer-widget-main-card, .timer-widget-settings-card
+) {
+  border-radius: var(--gd-radius-card, 16px) !important;
+}
+
+/* In glass themes Memo's workspace is a transparent layout wrapper, not a
+ * second card. Keep its paper editor as the only rounded inset surface. */
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora,
+  [data-theme="retro"], .theme-retro
+) .mobile-layout .mobile-widget-slot[data-widget-id="memo"] {
+  & .memo-workspace,
+  & .memo-list-panel,
+  & .memo-editor-shell { border-radius: 0 !important; }
+
+  & .memo-editor { border-radius: var(--gd-radius-button, 8px) !important; }
+}
+
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora,
+  [data-theme="mac-core"], .theme-mac-core,
+  [data-theme="retro"], .theme-retro
+) .mobile-layout :is(
+  input:not([type="color"]), textarea, select,
+  .study10-icon-button, .study10-today-button, .study10-date-control,
+  .study10-subject-tool, .study10-timer-button, .study10-add-button,
+  .study10-slot, .study10-task-delete, .study10-estimate-input,
+  .journal-date-nav button, .journal-date-nav input,
+  .journal-summary-toggle, .journal-mood-select,
+  .timer-widget-mode-button, .timer-widget-secondary,
+  .mobile-calendar-card__day
+) {
+  border-radius: var(--gd-radius-button, 8px) !important;
 }
 
 /* A compact, shared 4-point rhythm for the mobile shell and navigation. */
@@ -84,16 +158,15 @@ body:has(.mobile-layout) .mobile-layout .mobile-navigation-item {
  * may add a second offset around a widget. / 바깥 위치와 간격은 대시보드만 소유합니다. */
 .mobile-layout .mobile-main {
   padding: 0 !important;
-  /* Theme scrollbar skins (Mac Core uses a 10px scrollbar) must not reserve
-   * extra horizontal space beside the mobile dashboard. Touch scrolling stays
-   * available; only the visual gutter is removed. */
-  scrollbar-width: none !important;
+  /* Keep a slim rail when Display > Scrollbars is set to Show. The global
+   * preference class can still hide it without changing scroll behavior. */
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--gd-scrollbar-thumb) transparent !important;
 }
 
 .mobile-layout .mobile-main::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
+  width: 4px !important;
+  height: 4px !important;
 }
 
 .mobile-layout .mobile-widget-slot {
@@ -105,27 +178,27 @@ body:has(.mobile-layout) .mobile-layout .mobile-navigation-item {
   justify-self: stretch !important;
 }
 
-/* All mobile widget titles start at the same leading edge; actions stay trailing.
- * 전용 카드와 공통 카드의 제목 시작선을 왼쪽으로 통일하고 동작 버튼은 오른쪽에 둡니다. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
-  > .glass-card > .widget-frame__header > .widget-frame__title-group {
-  justify-content: flex-start !important;
-  text-align: left !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root
-  > .glass-card > .widget-frame__header > .widget-frame__title-group
-  > .widget-frame__copy {
-  align-items: flex-start !important;
-  text-align: left !important;
+/* Non-fixed widget hosts size to their content; scroll-card hosts inherit
+ * their slot height in the fixed-host rule below. */
+body:has(.mobile-layout) .mobile-layout
+  .mobile-widget-slot:not([data-widget-id="memo"]):not([data-widget-id="timer"]):not([data-widget-id="journal"])
+  > .widget-instance-root {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="career"]
   .mobile-career-card__heading,
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="calendar"]
-  .mobile-calendar-card__label,
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="study"]
-  .mobile-study-card__eyebrow {
+  .mobile-calendar-card__label {
   flex: 1 1 auto !important;
   min-width: 0 !important;
   justify-content: flex-start !important;
@@ -136,9 +209,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
 .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card,
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
-  .mobile-calendar-card,
-  .mobile-study-card
-) {
+  .mobile-calendar-card) {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -146,11 +217,24 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
   box-sizing: border-box !important;
 }
 
+/* WidgetSlot reparents the same DOM node used by the desktop grid. That node
+ * keeps React Grid Layout's absolute position, transform and pixel height
+ * unless mobile explicitly resets them. Those desktop coordinates leave
+ * empty grid rows and make cards appear as isolated horizontal rules. */
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root {
+  position: relative !important;
+  inset: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  z-index: auto !important;
+}
+
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
-  .mobile-calendar-card,
-  .mobile-study-card
-) > :not(:first-child) {
+  .mobile-calendar-card) > :not(:first-child) {
   min-width: 0 !important;
   margin-inline: 0 !important;
 }
@@ -158,6 +242,24 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
 .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card {
   box-sizing: border-box !important;
   min-width: 0 !important;
+}
+
+/* Content-height cards must not use size containment: it suppresses intrinsic
+ * block sizing and lets their contents paint over later dashboard widgets.
+ * Keep width container queries, while the fixed scroll cards keep their own
+ * explicit height contract below.
+ * 자연 높이 위젯은 높이 size containment를 해제해 다음 카드를 덮지 않게 합니다. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  :is(.glass-card, .career-widget):not(.memo-widget):not(.timer-widget):not(.daily-journal-widget) {
+  container-type: inline-size !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="study"]
+  > .widget-instance-root > .glass-card.study-widget {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
 }
 
 /* Memo and Journal use a 100%-height GlassCard with an internal scroll region.
@@ -178,9 +280,9 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
 .mobile-layout .mobile-widget-slot[data-widget-id]:not([data-widget-id="memo"]):not([data-widget-id="timer"]):not([data-widget-id="journal"])
   > .widget-instance-root > .glass-card {
   display: grid !important;
-  grid-template-rows: auto auto !important;
+  grid-template-rows: auto minmax(var(--mobile-widget-min-body-height), auto) !important;
   height: auto !important;
-  min-height: 0 !important;
+  min-height: var(--mobile-widget-min-body-height) !important;
   max-height: none !important;
   padding: 0 !important;
   overflow: visible !important;
@@ -189,26 +291,27 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="stud
 .mobile-layout .mobile-widget-slot[data-widget-id]:not([data-widget-id="memo"]):not([data-widget-id="timer"]):not([data-widget-id="journal"])
   > .widget-instance-root > .glass-card > .widget-frame__body {
   height: auto !important;
-  min-height: 0 !important;
+  min-height: var(--mobile-widget-min-body-height) !important;
   max-height: none !important;
   overflow: visible !important;
 }
 
-/* Today Focus and Alert Center are content-height cards on mobile. Their desktop
- * roots use `height: 100%`; preserve enough body room after switching to natural
- * height so the title row cannot consume the whole card. / 첫 두 위젯의 본문이
- * 헤더 한 줄 높이로 접히지 않도록 모바일 최소 본문 공간을 확보합니다. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="today"] {
-  display: block !important;
-  height: auto !important;
-  min-height: 280px !important;
-  overflow: visible !important;
+/* Long/fixed cards also keep a real body row when their inner layout has no
+ * intrinsic height (for example an empty Journal or Memo). This prevents the
+ * card from rendering as only a one-pixel border line. */
+.mobile-layout .mobile-widget-slot[data-widget-id]
+  > .widget-instance-root > .glass-card > .widget-frame__body {
+  min-height: var(--mobile-widget-min-body-height) !important;
 }
 
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="alerts"] {
+/* Today Focus and Alert Center must grow to their full content height on mobile.
+ * Fixed/1fr desktop tracks made their content spill over the next widget. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot:is(
+  [data-widget-id="today"], [data-widget-id="alerts"]
+) {
   display: block !important;
   height: auto !important;
-  min-height: 176px !important;
+  min-height: 0 !important;
   overflow: visible !important;
 }
 
@@ -216,52 +319,43 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot:is(
   [data-widget-id="today"], [data-widget-id="alerts"]
 ) > .widget-instance-root {
   display: block !important;
+  width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
   overflow: visible !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="today"]
-  > .widget-instance-root > .today-focus-widget {
-  display: grid !important;
-  height: auto !important;
-  min-height: 250px !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
+  > .widget-instance-root > .today-focus-widget,
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="alerts"]
+  > .widget-instance-root > .alert-center-widget {
+  display: flex !important;
   flex-direction: column !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
   overflow: visible !important;
 }
 
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="today"]
-  > .widget-instance-root > .today-focus-widget > .widget-frame__body {
-  display: flex !important;
-  flex: 0 0 auto !important;
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot:is(
+  [data-widget-id="today"], [data-widget-id="alerts"]
+) > .widget-instance-root > :is(.today-focus-widget, .alert-center-widget)
+  > .widget-frame__body {
+  display: block !important;
+  flex: none !important;
+  width: 100% !important;
   height: auto !important;
-  min-height: 190px !important;
+  min-height: 0 !important;
+  max-height: none !important;
   overflow: visible !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="today"] .today-focus {
+  display: grid !important;
+  width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
-  overflow: visible !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="alerts"]
-  > .widget-instance-root > .alert-center-widget {
-  display: grid !important;
-  height: auto !important;
-  min-height: 176px !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
-  flex-direction: column !important;
-  overflow: visible !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="alerts"]
-  > .widget-instance-root > .alert-center-widget > .widget-frame__body {
-  display: flex !important;
-  flex: 0 0 auto !important;
-  height: auto !important;
-  min-height: 100px !important;
   overflow: visible !important;
 }
 
@@ -279,11 +373,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
   --pd-mobile-surface: #fffafd;
   --pd-mobile-panel: #fff4f8;
   --pd-mobile-line: #ead7e0;
-  --mobile-widget-header-surface: var(--pd-mobile-surface);
-}
-
-:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .mobile-layout {
-  --mobile-widget-header-surface: var(--mac-widget-bg);
+  --gd-widget-header-bg: var(--pd-mobile-surface);
 }
 
 :is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout .mobile-main {
@@ -294,7 +384,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
 :is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
   .mobile-widget-slot .glass-card,
 :is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
-  :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card) {
+  :is(.mobile-career-card, .mobile-calendar-card) {
   background: var(--pd-mobile-surface) !important;
   border-color: var(--pd-mobile-line) !important;
   box-shadow: 0 3px 10px rgb(137 88 111 / 0.06) !important;
@@ -303,8 +393,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="aler
 :is(html, body):is([data-theme="retro"], .theme-retro) .mobile-layout
   :is(.journal-summary-card, .journal-section, .alert-center-item,
       .mobile-career-metrics > div, .mobile-career-next,
-      .mobile-calendar-card__summary, .mobile-study-card__metric,
-      .mobile-study-card__upcoming) {
+      .mobile-calendar-card__summary) {
   background: var(--pd-mobile-panel) !important;
   background-image: none !important;
   border: 1px solid var(--pd-mobile-line) !important;
@@ -342,9 +431,7 @@ body:has(.mobile-layout) .settings-section-tab {
 .mobile-layout .mobile-widget-slot[data-widget-id] :is(
   .widget-frame__actions button,
   .mobile-career-card__open,
-  .mobile-calendar-card__open,
-  .mobile-study-card__open
-) {
+  .mobile-calendar-card__open) {
   min-width: var(--mobile-widget-action-size) !important;
   min-height: var(--mobile-widget-action-size) !important;
   height: var(--mobile-widget-action-size) !important;
@@ -376,6 +463,40 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   padding: var(--mobile-widget-inset) !important;
 }
 
+/* The shared card owns the only visible surface around widget content. */
+body:has(.mobile-layout) .mobile-layout
+  .mobile-widget-slot .glass-card
+  > .widget-frame__body {
+  min-width: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* The GlassCard is the single outer surface for every standard widget. Its
+ * first child is a layout wrapper (planner, list, calendar frame, etc.), so
+ * theme fills belong on the actual sections inside that wrapper instead.
+ * Memo deliberately keeps its paper surface; Journal's content wrapper is
+ * transparent like the other widgets, while its inner sections still scroll. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  > .widget-instance-root > .glass-card:not(.memo-widget)
+  > .widget-frame__body > :first-child {
+  background: transparent;
+  background-image: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body:has(.mobile-layout) .mobile-layout
+  .mobile-widget-slot .glass-card
+  > .widget-frame__body > :first-child {
+  min-width: 0;
+}
+
 /* Memo's paper/workspace fills the already-inset body; a second workspace
  * padding made its visible content start farther in than every other widget. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo"]
@@ -397,24 +518,36 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo
 
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
-  .mobile-calendar-card,
-  .mobile-study-card
-) {
-  --mobile-card-inset: var(--mobile-widget-inset);
+  .mobile-calendar-card) {
   gap: var(--mobile-widget-inset) !important;
-  padding: 0 var(--mobile-widget-inset) var(--mobile-widget-inset) !important;
+  padding: 0 !important;
   box-sizing: border-box !important;
 }
 
 .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
   .mobile-career-card,
-  .mobile-calendar-card,
-  .mobile-study-card
-) > :is(
+  .mobile-calendar-card) > :not(.widget-frame__header) {
+  min-width: 0 !important;
+  width: auto !important;
+  margin-inline: var(--mobile-widget-inset) !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card,
+  .mobile-calendar-card) > :last-child:not(.widget-frame__header) {
+  margin-bottom: var(--mobile-widget-inset) !important;
+}
+
+body:has(.mobile-layout) .mobile-layout
+  :is(.mobile-career-card__preview, .mobile-calendar-agenda) {
+  gap: var(--mobile-control-gap) !important;
+}
+
+.mobile-layout .mobile-widget-slot[data-widget-id] > :is(
+  .mobile-career-card,
+  .mobile-calendar-card) > :is(
   .mobile-career-card__header,
-  .mobile-calendar-card__header,
-  .mobile-study-card__heading
-) {
+  .mobile-calendar-card__header) {
   display: flex !important;
   position: relative !important;
   isolation: isolate !important;
@@ -425,38 +558,7 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo
   justify-self: stretch !important;
   align-self: stretch !important;
   box-sizing: border-box !important;
-  background: transparent !important;
   overflow: visible !important;
-}
-
-/* Paint the purpose-built card title surfaces independently from the heading
- * width. The background layer crosses the card's shared inner padding while
- * text and controls stay on the normal content line.
- * 전용 카드의 제목 배경만 좌우 내부 여백을 넘어 칠하고 글자와 버튼 위치는 유지합니다. */
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
-  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
-) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading)::before {
-  content: "" !important;
-  position: absolute !important;
-  z-index: 0 !important;
-  inset: 0 calc(-1 * var(--mobile-widget-inset)) !important;
-  background: var(--mobile-widget-header-surface) !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  pointer-events: none !important;
-}
-
-body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id] > :is(
-  .mobile-career-card, .mobile-calendar-card, .mobile-study-card
-) > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) > * {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
-    html.theme-pixel-desk, body.theme-pixel-desk, html.pixel-desk, body.pixel-desk,
-    html.theme-pixel, body.theme-pixel) .mobile-layout {
-  --mobile-widget-header-surface: var(--w95-title, #000080);
 }
 
 :is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
@@ -492,6 +594,63 @@ body:has(.mobile-layout) .mobile-navigation-capture {
   height: var(--gd-mobile-widget-long-height) !important;
 }
 
+/* Shared modern-theme widget surface: one rule owns standard and dedicated
+ * cards. Theme files supply token values only; they do not restyle one widget.
+ * 모바일 공통 카드 재질은 위젯 종류마다 따로 배경을 정의하지 않습니다. */
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora
+) .mobile-layout :is(
+  .mobile-widget-slot .glass-card,
+  .mobile-calendar-card,
+  .mobile-career-card
+) {
+  color: hsl(var(--foreground) / 0.92) !important;
+  border: 1px solid var(--gd-surface-border) !important;
+  border-radius: var(--gd-radius-widget, 18px) !important;
+  background: var(--gd-surface-bg) !important;
+  background-clip: padding-box !important;
+  box-shadow: var(--gd-surface-shadow) !important;
+  backdrop-filter: var(--gd-surface-filter, blur(20px)) !important;
+  -webkit-backdrop-filter: var(--gd-surface-filter, blur(20px)) !important;
+}
+
+/* Money's desktop panels use opaque white gradients of their own. On mobile,
+ * make them consume the same inner-glass material as every other widget, and
+ * leave the sticky tab rail clear so it does not form a bright slab.
+ * Money 안쪽 패널도 공통 유리 토큰을 사용하고 탭 바탕은 투명하게 둡니다. */
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora
+) .mobile-layout .mobile-widget-slot[data-widget-id="money"] :is(
+  .money-summary-panel,
+  .money-budget-panel,
+  .money-visual-panel,
+  .money-recent-panel,
+  .money-detail-card
+) {
+  background: var(--gd-inner-bg) !important;
+  border-color: var(--gd-inner-border) !important;
+  box-shadow: var(--gd-widget-panel-shadow) !important;
+  backdrop-filter: var(--gd-surface-filter, blur(20px)) !important;
+  -webkit-backdrop-filter: var(--gd-surface-filter, blur(20px)) !important;
+}
+
+:is(html, body):is(
+  [data-theme="pastel"], .theme-pastel,
+  [data-theme="glass-light"], .theme-glass-light,
+  [data-theme="glass-dark"], .theme-glass-dark,
+  [data-theme="aurora"], .theme-aurora
+) .mobile-layout .mobile-widget-slot[data-widget-id="money"] .money-section-tabs {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 /* FINAL MOBILE WIDGET HEADER CONTRACT
  * Standard GlassCards and the three compact mobile cards now share the same
  * title class, icon slot, type scale and surface token. Dedicated cards already
@@ -501,8 +660,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   > .widget-instance-root > :is(.glass-card, .career-widget)
   > .widget-frame__header,
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card)
-  > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
+  > :is(.mobile-career-card, .mobile-calendar-card)
+  > :is(.mobile-career-card__header, .mobile-calendar-card__header) {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
@@ -517,29 +676,37 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   box-sizing: border-box !important;
   border: 0 !important;
   border-radius: 0 !important;
-  box-shadow: none !important;
-  background: var(--mobile-widget-header-surface) !important;
-  background-image: none !important;
 }
 
+/* Normalize every header inside a mobile widget slot, including headers
+ * rendered one wrapper deeper by feature widgets. The direct-child rule above
+ * remains the frame contract; this descendant rule closes wrapper-specific
+ * gaps so each title row gets the same vertical padding and center line.
+ * 모바일 위젯 안에서 한 단계 더 감싸진 헤더도 같은 높이와 세로 기준선을 씁니다. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card)
-  > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading) {
-  /* The card itself owns the shared inset. Do not inset this row twice. */
-  padding-inline: 0 !important;
-  background: transparent !important;
+  :is(.widget-frame__header, .mobile-career-card__header, .mobile-calendar-card__header) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: var(--mobile-widget-header-height) !important;
+  min-height: var(--mobile-widget-header-height) !important;
+  max-height: var(--mobile-widget-header-height) !important;
+  padding-block: var(--mobile-widget-header-pad-block) !important;
+  box-sizing: border-box !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__header > .widget-frame__title-group,
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > :is(.mobile-career-card, .mobile-calendar-card, .mobile-study-card)
-  > :is(.mobile-career-card__header, .mobile-calendar-card__header, .mobile-study-card__heading)
+  > :is(.mobile-career-card, .mobile-calendar-card)
+  > :is(.mobile-career-card__header, .mobile-calendar-card__header)
   > .widget-frame__title-group {
   display: flex !important;
+  /* Align the icon and title on one vertical center line, left to right. */
   align-items: center !important;
   justify-content: flex-start !important;
-  flex: 1 1 auto !important;
+  flex: 0 1 auto !important;
+  margin-right: auto !important;
   min-width: 0 !important;
   min-height: 0 !important;
   height: auto !important;
@@ -547,58 +714,20 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   padding: 0 !important;
   gap: var(--mobile-content-gap) !important;
   background: transparent !important;
+  text-align: left !important;
 }
 
+/* Desktop title copies reserve a 32px row and pin text to its top edge. On a
+ * phone that makes the title sit higher than the 22px icon slot. Remove that
+ * desktop minimum and give the title the same vertical box as the icon. */
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
-  .widget-frame__header > .widget-frame__title-group {
-  padding-inline: 0 !important;
-}
-
-/* On narrow phones Journal places its date controls below the title, while
- * keeping the title row identical in height, inset, icon size, and type to
- * every other widget header. */
-@media (max-width: 430px) {
-  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-    > .widget-instance-root > .glass-card.daily-journal-widget {
-    grid-template-rows: calc(var(--mobile-widget-header-height) + 42px) minmax(0, 1fr) !important;
-  }
-
-  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-    > .widget-instance-root > .glass-card.daily-journal-widget > .widget-frame__header {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    grid-template-rows: var(--mobile-widget-header-height) 42px !important;
-    height: calc(var(--mobile-widget-header-height) + 42px) !important;
-    min-height: calc(var(--mobile-widget-header-height) + 42px) !important;
-    max-height: none !important;
-    align-items: stretch !important;
-    justify-content: stretch !important;
-    padding-block: 0 !important;
-    gap: 0 !important;
-  }
-
-  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-    > .widget-instance-root > .glass-card.daily-journal-widget > .widget-frame__header
-    > .widget-frame__title-group {
-    grid-row: 1 !important;
-    width: 100% !important;
-    height: var(--mobile-widget-header-height) !important;
-    min-height: var(--mobile-widget-header-height) !important;
-    align-self: stretch !important;
-  }
-
-  body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="journal"]
-    > .widget-instance-root > .glass-card.daily-journal-widget > .widget-frame__header
-    > .widget-frame__actions {
-    grid-row: 2 !important;
-    width: 100% !important;
-    height: 42px !important;
-    min-height: 42px !important;
-    max-height: 42px !important;
-    padding: 0 !important;
-    align-self: stretch !important;
-    border-top: 1px solid var(--journal-panel-border) !important;
-  }
+  .widget-frame__header .widget-frame__copy {
+  min-height: 0 !important;
+  height: auto !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  gap: var(--mobile-tight-gap) !important;
+  text-align: left !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
@@ -623,18 +752,38 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__icon svg {
   display: block !important;
   flex: none !important;
-  width: 18px !important;
-  height: 18px !important;
+  width: var(--mobile-widget-icon-glyph-size) !important;
+  height: var(--mobile-widget-icon-glyph-size) !important;
+}
+
+/* All bottom-tab glyphs share a fixed square icon box. This removes baseline
+   shifts between SVGs, emoji, and transparent PNG artwork. */
+body:has(.mobile-layout) .mobile-layout .mobile-navigation
+  .mobile-navigation-item .mobile-navigation-icon {
+  display: grid !important;
+  flex: 0 0 32px !important;
+  place-items: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+  vertical-align: middle !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   .widget-frame__title {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
   min-width: 0 !important;
+  min-height: var(--mobile-widget-icon-size) !important;
   margin: 0 !important;
   font-size: var(--mobile-widget-title-size) !important;
   font-weight: 700 !important;
-  line-height: 1.25 !important;
+  line-height: var(--mobile-widget-icon-size) !important;
   letter-spacing: 0 !important;
+  text-align: left !important;
 }
 
 body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
@@ -644,6 +793,45 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
   margin-left: auto !important;
   background: transparent !important;
   border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Keep the compact Career action fully visible in the shared header row. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="career"]
+  .mobile-career-card__header {
+  overflow: visible !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="career"]
+  .mobile-career-card__open {
+  display: inline-flex !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
+  overflow: visible !important;
+}
+
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
+  :is(.mobile-career-card__open, .mobile-calendar-card__open) {
+  flex: 0 0 auto !important;
+  width: max-content !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+/* The widget frame supplies the memo's single shared inset. Remove the paper
+ * editor's legacy white stroke and highlight in the compact dashboard card;
+ * keep its note-specific paper fill and typography intact. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="memo"]
+  :is(.memo-workspace, .memo-editor-shell, .memo-editor) {
+  border: 0 !important;
+  outline: 0 !important;
   box-shadow: none !important;
 }
 
@@ -853,5 +1041,189 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id]
     color: #fff !important;
     background: #000080 !important;
     border-style: inset !important;
+  }
+}
+
+/* All mobile widget content surfaces use the same nested radius step. Color,
+   fill, shadow and borders still come from their active theme. */
+body:has(.mobile-layout) .mobile-layout .mobile-widget-slot :is(
+  .today-focus-hero, .today-focus-section, .today-focus-block,
+  .today-focus-task, .today-focus-mini-item, .calendar-event-item, .calendar-event-card,
+  .calendar-mini-card, .career-summary-card, .career-list-item, .career-board-card,
+  .memo-note-item, .memo-workspace, .memo-list-panel, .memo-editor,
+  .alert-item, .alert-center-item, .journal-summary-card, .journal-section,
+  .journal-score-inline, .journal-task-item, .journal-clip-item,
+  .study-card, .study-overview-panel, .study-input-panel, .study-goal-panel,
+  .study-week-panel, .study-task-panel, .study-record-list-panel,
+  .study10-summary-card, .study10-timer, .study10-panel, .study10-task-row,
+  .study10-subject-total, .study10-empty,
+  .timer-widget-main-card, .timer-widget-settings-card,
+  .money-summary-panel, .money-budget-panel, .money-visual-panel,
+  .money-recent-panel, .money-detail-card,
+  .habit-tracker-panel, .habit-tracker-row, .mood-row,
+  .mobile-calendar-card__summary, .mobile-career-metrics > div,
+  .mobile-career-next
+) {
+  border-radius: var(--gd-radius-card) !important;
+}
+
+/* Settings geometry has one owner across every theme. Theme styles may paint
+   these same boxes, but cannot change their dimensions or spacing. */
+.settings-modal-window,
+.settings-window,
+.settings-panel {
+  width: min(860px, calc(100vw - 40px)) !important;
+  max-width: 860px !important;
+  height: min(760px, calc(100dvh - 48px)) !important;
+  max-height: calc(100dvh - 48px) !important;
+  display: grid !important;
+  grid-template-rows: 78px auto minmax(0, 1fr) !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.settings-modal-header,
+.settings-header,
+.settings-titlebar {
+  height: 78px !important;
+  min-height: 78px !important;
+  padding: 16px 22px !important;
+  gap: 16px !important;
+  box-sizing: border-box !important;
+}
+
+.settings-modal-icon,
+.settings-icon {
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+}
+
+.settings-modal-title-wrap { gap: 12px !important; }
+.settings-modal-title-text { gap: 4px !important; }
+.settings-modal-header h2 { font-size: 16px !important; line-height: 1.1 !important; }
+.settings-modal-header p { font-size: 13px !important; line-height: 1.2 !important; }
+
+.settings-modal-body,
+.settings-body,
+.settings-content {
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 18px 22px 24px !important;
+  gap: 18px !important;
+  overflow: auto !important;
+  box-sizing: border-box !important;
+}
+
+.settings-section,
+.settings-card {
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 18px !important;
+  gap: 18px !important;
+  box-sizing: border-box !important;
+}
+
+.settings-theme-card {
+  min-height: 136px !important;
+  padding: 14px !important;
+  gap: 8px !important;
+}
+
+.settings-theme-preview { height: 68px !important; min-height: 68px !important; }
+
+@media (max-width: 767px) {
+  body:has(.mobile-layout) .settings-modal-backdrop {
+    place-items: stretch !important;
+    padding: 0 !important;
+  }
+
+  body:has(.mobile-layout) :is(.settings-modal-window, .settings-window, .settings-panel) {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    grid-template-rows: 58px auto minmax(0, 1fr) !important;
+    transform: none !important;
+  }
+
+  body:has(.mobile-layout) :is(.settings-modal-header, .settings-header, .settings-titlebar) {
+    height: 58px !important;
+    min-height: 58px !important;
+    padding: 8px max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left)) !important;
+    gap: 8px !important;
+  }
+
+  body:has(.mobile-layout) :is(.settings-modal-icon, .settings-icon) {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+  }
+
+  body:has(.mobile-layout) .settings-modal-title-wrap { gap: 8px !important; }
+  body:has(.mobile-layout) .settings-modal-header h2 { font-size: 14px !important; line-height: 1.15 !important; }
+  body:has(.mobile-layout) .settings-modal-header p { display: none !important; }
+
+  body:has(.mobile-layout) :is(.settings-close-button, .settings-modal-header > button, .settings-header > button, .settings-titlebar > button) {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+  }
+
+  body:has(.mobile-layout) :is(.settings-modal-body, .settings-body, .settings-content) {
+    padding: 10px max(10px, env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)) !important;
+    gap: 10px !important;
+  }
+
+  body:has(.mobile-layout) :is(.settings-section, .settings-card) {
+    padding: 14px !important;
+    gap: 14px !important;
+  }
+
+  body:has(.mobile-layout) .settings-theme-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
+  body:has(.mobile-layout) .settings-theme-card { min-height: 120px !important; padding: 8px !important; gap: 8px !important; grid-template-rows: 40px auto minmax(24px, auto) !important; }
+  body:has(.mobile-layout) .settings-theme-preview { height: 40px !important; min-height: 40px !important; }
+}
+
+/* Theme selectors are intentionally more specific in their visual layer.
+   Repeat only shared geometry here so their colors/borders still win. */
+html[data-theme] body .settings-modal-body,
+html[data-theme] body .settings-body,
+html[data-theme] body .settings-content {
+  margin: 0 !important;
+  padding: 18px 22px 24px !important;
+  gap: 18px !important;
+}
+
+html[data-theme] body .settings-section,
+html[data-theme] body .settings-card {
+  padding: 18px !important;
+  gap: 18px !important;
+}
+
+html[data-theme] body .settings-theme-card {
+  min-height: 136px !important;
+  padding: 14px !important;
+  gap: 8px !important;
+}
+
+@media (max-width: 767px) {
+  html[data-theme] body:has(.mobile-layout) .settings-modal-body,
+  html[data-theme] body:has(.mobile-layout) .settings-body,
+  html[data-theme] body:has(.mobile-layout) .settings-content {
+    padding: 10px max(10px, env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)) !important;
+    gap: 10px !important;
+  }
+
+  html[data-theme] body:has(.mobile-layout) .settings-section,
+  html[data-theme] body:has(.mobile-layout) .settings-card {
+    padding: 14px !important;
+    gap: 14px !important;
+  }
+
+  html[data-theme] body:has(.mobile-layout) .settings-theme-card {
+    min-height: 120px !important;
+    padding: 8px !important;
+    gap: 8px !important;
   }
 }

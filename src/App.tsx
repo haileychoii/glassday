@@ -103,7 +103,9 @@ import {
 } from "./constants/themes";
 
 import {
+  applyMobileTabLabelsVisibility,
   applyScrollbarVisibility,
+  getSavedMobileTabLabelsVisibility,
   getSavedScrollbarVisibility,
 } from "./constants/uiPreferences";
 
@@ -404,6 +406,9 @@ function App() {
 
     applyScrollbarVisibility(
       getSavedScrollbarVisibility()
+    );
+    applyMobileTabLabelsVisibility(
+      getSavedMobileTabLabelsVisibility()
     );
   }, []);
 

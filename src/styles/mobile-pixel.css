@@ -14,7 +14,6 @@
  *   └─ mobile-pixel.css (현재 파일, 마지막 import)
  *
  * src/components/mobile/MobileDashboard.tsx
- *   ├─ MobileStudyCard.tsx     → .mobile-study-card
  *   ├─ MobileCalendarCard.tsx  → .mobile-calendar-card
  *   ├─ MobileCareerCard.tsx    → .mobile-career-card
  *   └─ WidgetSlot.tsx
@@ -56,13 +55,27 @@
    * Figma 디자인 시스템에서도 같은 이름 사용 가능.
    * ========================================================= */
 
-  --w95-bg: #c0c0c0;
-  --w95-panel: #dfdfdf;
-  --w95-title: #000080;
+  --w95-bg: #c3c3c3;
+  --w95-panel: #dedede;
+  --w95-title: #0f0086;
   --w95-light: #ffffff;
+  --gd-widget-header-bg: var(--w95-title);
+  --gd-widget-header-color: var(--w95-light);
   --w95-shadow: #808080;
   --w95-dark: #404040;
   --w95-text: #000000;
+  /* Every Pixel frame uses one measurable stroke vocabulary. */
+  --w95-bevel-width: 2px;
+  --w95-flat-width: 1px;
+  /* The shared mobile frame runs later in index.css; zero radius tokens keep
+   * its geometry rule aligned with this theme instead of reintroducing pills. */
+  --gd-radius-app: 0px;
+  --gd-radius-panel: 0px;
+  --gd-radius-widget: 0px;
+  --gd-radius-card: 0px;
+  --gd-radius-inner: 0px;
+  --gd-radius-button: 0px;
+  --gd-widget-inner-radius: 0px;
 
   background: #008080;
   color: var(--w95-text);
@@ -78,7 +91,6 @@
 
   & :is(
     .mobile-widget-slot .glass-card,
-    .mobile-study-card,
     .mobile-calendar-card,
     .mobile-career-card
   ) {
@@ -87,7 +99,7 @@
     background: var(--w95-bg) !important;
     background-image: none !important;
 
-    border: 2px solid !important;
+    border: var(--w95-bevel-width) solid !important;
     border-color:
       var(--w95-light)
       var(--w95-dark)
@@ -96,9 +108,9 @@
 
     border-radius: 0 !important;
 
-    box-shadow:
-      inset 1px 1px var(--w95-light),
-      inset -1px -1px var(--w95-shadow) !important;
+    /* The light/dark border edges already form the Win95 raised bevel.
+     * Adding inset shadows here draws a second frame around every widget. */
+    box-shadow: none !important;
 
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -115,11 +127,7 @@
    * 실제 헤더가 있으므로 두 가짜 요소는 모바일에서 제거.
    * ========================================================= */
 
-  & .mobile-widget-slot .glass-card::before,
-  & .mobile-widget-slot .glass-card::after {
-    content: none !important;
-    display: none !important;
-  }
+
 
   /* =========================================================
    * 5. Study / Calendar / Career 자체 카드
@@ -130,39 +138,20 @@
    * ========================================================= */
 
   & :is(
-    .mobile-study-card,
     .mobile-calendar-card,
     .mobile-career-card
   ) {
     overflow: hidden;
   }
 
-  /* The final shared Pixel title-bar treatment lives in
-   * themes/pixel-widget-headers.css so mobile and desktop use one rule. */
+  /* widget-frame-theme.css supplies the common title surface; this file only
+   * provides Pixel's navy and white theme tokens. */
 
-  /* =========================================================
-   * 7. 제목 / 아이콘 위치
-   *
-   * GlassCard.tsx의 기존 title-group, copy를 재사용.
-   * 추가 div나 span을 만들지 않는다.
-   * ========================================================= */
-
-  & .mobile-widget-slot .glass-card :is(
-    .widget-frame__title-group,
-    .widget-frame__copy
-  ) {
-    min-width: 0;
-    min-height: 0 !important;
-
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  /* Icon color and bevel are theme appearance; dimensions live in mobile-common.css. */
+  /* Shared mobile-common.css owns title alignment and icon dimensions.
+   * Pixel uses the exact same 26px artwork and no SVG glyph as laptop. */
 
   & :is(
     .widget-frame__icon,
-    .mobile-study-card__eyebrow > svg,
     .mobile-calendar-card__label > svg,
     .mobile-career-card__heading > svg
   ) {
@@ -174,11 +163,64 @@
     box-shadow: none !important;
   }
 
+  /* Laptop Pixel headers use the bundled Win95 artwork at 26px. Use that same
+     asset in every mobile widget title, including standalone cards. */
+  & :is(
+    .today-focus-widget, .today-widget, .alert-center-widget,
+    .calendar-widget-card, .career-widget, .daily-journal-widget,
+    .memo-widget, .study-widget, .timer-widget, .money-widget,
+    .habit-tracker-widget, .mood-widget, .mobile-calendar-card,
+    .mobile-career-card
+  ) .widget-frame__icon {
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 26px 26px !important;
+  }
+
+  & :is(.today-focus-widget, .today-widget) .widget-frame__icon {
+    background-image: url("/pixel-icons/today.png") !important;
+  }
+  & .alert-center-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/alerts.png") !important;
+  }
+  & :is(.calendar-widget-card, .mobile-calendar-card) .widget-frame__icon {
+    background-image: url("/pixel-icons/calendar.png") !important;
+  }
+  & :is(.career-widget, .mobile-career-card) .widget-frame__icon {
+    background-image: url("/pixel-icons/career.png") !important;
+  }
+  & :is(.daily-journal-widget, .memo-widget) .widget-frame__icon {
+    background-image: url("/pixel-icons/diary.png") !important;
+  }
+  & .study-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/study.png") !important;
+  }
+  & .timer-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/timer.png") !important;
+  }
+  & .money-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/money.png") !important;
+  }
+  & .habit-tracker-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/life.png") !important;
+  }
+  & .mood-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/mood.png") !important;
+  }
+  & :is(
+    .today-focus-widget, .today-widget, .alert-center-widget,
+    .calendar-widget-card, .career-widget, .daily-journal-widget,
+    .memo-widget, .study-widget, .timer-widget, .money-widget,
+    .habit-tracker-widget, .mood-widget, .mobile-calendar-card,
+    .mobile-career-card
+  ) .widget-frame__icon > svg {
+    display: none !important;
+  }
+
   /* 모든 제목 글씨 12px, 흰색 */
 
   & :is(
     .widget-frame__title,
-    .mobile-study-card__eyebrow,
     .mobile-calendar-card__label,
     .mobile-career-card__heading,
     .mobile-career-card__heading strong
@@ -207,11 +249,10 @@
 
   & :is(
     .widget-frame__actions button,
-    .mobile-study-card__open,
     .mobile-calendar-card__open,
     .mobile-career-card__open
   ) {
-    border: 2px solid !important;
+    border: var(--w95-bevel-width) solid !important;
     border-color:
       var(--w95-light)
       var(--w95-dark)
@@ -249,8 +290,6 @@
 
   & :is(
     .mobile-calendar-card__summary,
-    .mobile-study-card__metric,
-    .mobile-study-card__upcoming,
     .mobile-career-metrics > div,
     .mobile-career-next
   ) {
@@ -263,13 +302,26 @@
     box-shadow: none !important;
   }
 
+  /* Career rows sit inside the widget frame, so keep them as flat content rows. */
+  & .mobile-career-row {
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+    background: var(--w95-panel) !important;
+    color: var(--w95-text) !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-career-status {
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+    background: var(--w95-panel) !important;
+    color: var(--w95-text) !important;
+  }
+
   /* =========================================================
    * 11. Daily Journal 베이지 배경 제거
    *
-   * 파일: themes/pixel-journal.css
-   *
-   * 이 파일은 기존 PC Journal도 다루므로 수정하지 않는다.
-   * 모바일에서만 패널 색상과 테두리를 통일한다.
+   * 모바일 Pixel Journal surface는 이 파일에서 직접 통일한다.
    * ========================================================= */
 
   & .daily-journal-widget :is(
@@ -281,7 +333,7 @@
     .journal-library-item,
     .journal-empty-box
   ) {
-    border: 1px solid var(--w95-shadow) !important;
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
     border-radius: 0 !important;
 
     background: var(--w95-panel) !important;
@@ -300,7 +352,7 @@
    * ========================================================= */
 
   & .alert-center-item {
-    border: 1px solid var(--w95-shadow) !important;
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
     border-radius: 0 !important;
 
     background: var(--w95-panel) !important;
@@ -310,19 +362,25 @@
   }
 
   & .alert-center-item.tone-danger {
-    border-left: 3px solid #ad3030 !important;
+    --w95-status-accent: #ad3030;
   }
 
   & .alert-center-item.tone-warning {
-    border-left: 3px solid #916700 !important;
+    --w95-status-accent: #916700;
   }
 
   & .alert-center-item.tone-info {
-    border-left: 3px solid var(--w95-title) !important;
+    --w95-status-accent: var(--w95-title);
   }
 
   & .alert-center-item.tone-success {
-    border-left: 3px solid #176b49 !important;
+    --w95-status-accent: #176b49;
+  }
+
+  & .alert-center-item {
+    border-left-width: var(--w95-flat-width) !important;
+    background:
+      linear-gradient(90deg, var(--w95-status-accent, var(--w95-panel)) 0 4px, var(--w95-panel) 4px) !important;
   }
 
   & :is(
@@ -358,7 +416,6 @@
 
   & :is(
     .mobile-calendar-week-day,
-    .mobile-study-card__shortcuts > button,
     .mobile-career-card__add,
     .money-pill,
     .money-section-tab,
@@ -368,7 +425,7 @@
     .journal-add-row button,
     .journal-score-stepper button
   ) {
-    border: 2px solid !important;
+    border: var(--w95-bevel-width) solid !important;
 
     border-color:
       var(--w95-light)
@@ -427,7 +484,7 @@
     .mobile-navigation-item,
     .mobile-navigation-capture
   ) {
-    border: 2px solid !important;
+    border: var(--w95-bevel-width) solid !important;
 
     border-color:
       var(--w95-light)
@@ -452,6 +509,40 @@
     color: #ffffff !important;
   }
 
+  /* Pixel PNGs have transparent margins. Render them larger than the 22px
+   * desktop tab slot so the glyph reads clearly in the phone taskbar. */
+  & .mobile-navigation-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 36px !important;
+    height: 36px !important;
+    flex: 0 0 36px !important;
+  }
+
+  & .mobile-navigation-icon .pixel-tab-icon {
+    display: block !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    image-rendering: pixelated !important;
+  }
+
+  /* The generic flat-row pass keeps 1px borders for most lists. Memo's note
+   * cards are raised Windows panels, so preserve the shared 2px bevel here. */
+  & .mobile-widget-slot .memo-widget .memo-note-item {
+    border: var(--w95-bevel-width) solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+    box-shadow: none !important;
+  }
+
   /* =========================================================
    * 17. 입력창
    *
@@ -461,7 +552,7 @@
    * ========================================================= */
 
   & .mobile-widget-slot :is(
-    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
     textarea,
     select
   ) {
@@ -469,7 +560,7 @@
 
     background: #ffffff !important;
 
-    border: 2px solid !important;
+    border: var(--w95-bevel-width) solid !important;
     border-color:
       var(--w95-shadow)
       var(--w95-light)
@@ -496,11 +587,70 @@
   ),
   & .mobile-widget-slot :is(
     button,
-    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
     textarea,
     select
   ) {
     border-radius: 0 !important;
+  }
+
+  /* =========================================================
+   * 18. Windows 95 border grammar
+   *
+   * Window / actionable button = one 2px raised bevel.
+   * Inset information surfaces = one 1px flat outline.
+   * Form fields = one 2px recessed border.
+   * This final pass removes old per-widget inset shadows that doubled frames.
+   * ========================================================= */
+
+  & .mobile-widget-slot :is(button, [role="button"], .glass-button):not(.mobile-career-row__main) {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: var(--w95-shadow-raised) !important;
+  }
+
+  & .mobile-widget-slot :is(
+    .study10-summary-card, .study10-timer, .study10-panel,
+    .study10-task-row, .study10-slot, .study10-empty,
+    .mobile-calendar-card__summary, .mobile-career-metrics > div,
+    .mobile-career-next, .mobile-career-row, .mobile-career-status,
+    .journal-summary-card, .journal-score-inline, .journal-section,
+    .journal-task-item, .journal-clip-item, .journal-library-item,
+    .journal-empty-box, .memo-note-item, .alert-center-item,
+    .money-summary-panel, .money-budget-panel, .money-visual-panel,
+    .money-recent-panel, .money-detail-card,
+    .today-focus-hero, .today-focus-section,
+    .today-focus-block
+  ) {
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  & :is(
+    .mobile-widget-slot .glass-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: var(--w95-shadow-raised-deep) !important;
+  }
+
+  & .mobile-widget-slot :is(
+    input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    textarea,
+    select
+  ) {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: var(--w95-shadow-input) !important;
+  }
+
+  & .mobile-widget-slot :is(button, [role="button"], .glass-button):not(.mobile-career-row__main):is(
+    .is-active, [aria-pressed="true"], :active
+  ) {
+    box-shadow: var(--w95-shadow-pressed) !important;
   }
 }
 
@@ -528,7 +678,6 @@
   /* 상세 페이지 공통 회색 배경 */
 
   & :is(
-    .mobile-study-detail,
     .mobile-calendar-detail,
     .mobile-career-detail
   ) {
@@ -539,7 +688,6 @@
   /* 상세 페이지 공통 남색 제목줄 */
 
   & :is(
-    .mobile-study-detail__header,
     .mobile-calendar-detail__header,
     .mobile-career-detail__header
   ) {
@@ -551,10 +699,99 @@
   }
 
   & :is(
-    .mobile-study-detail__heading strong,
     .mobile-calendar-detail__header h2,
     .mobile-career-detail__header h2
   ) {
     color: #ffffff !important;
+  }
+
+  /* Career detail is a portal outside .mobile-layout. Keep one Windows
+     frame around each company row; inner controls stay flat so nested bevels
+     do not look like buttons trapped inside the card. */
+  & .mobile-career-detail__header > div:first-child > span,
+  & .mobile-career-detail__header h2 small {
+    color: #dfdfdf !important;
+  }
+
+  & .mobile-career-search {
+    min-width: 0;
+    border: 1px solid #808080 !important;
+    border-radius: 0 !important;
+    background: #dfdfdf !important;
+    box-shadow: inset 1px 1px 0 #808080 !important;
+  }
+
+  & .mobile-career-search input {
+    min-width: 0;
+    border: 0 !important;
+    outline: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-career-status-rail {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    height: auto;
+    min-height: 0;
+    padding: 0;
+    gap: 6px;
+    overflow: visible;
+  }
+
+  & .mobile-career-status-rail button {
+    width: 100%;
+    min-width: 0;
+    min-height: 38px;
+    padding: 4px 6px;
+    border: 2px solid !important;
+    border-color: #ffffff #404040 #404040 #ffffff !important;
+    border-radius: 0 !important;
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080 !important;
+    white-space: normal;
+    line-height: 1.15;
+  }
+
+  & .mobile-career-status-rail button.is-active {
+    border-color: #404040 #ffffff #ffffff #404040 !important;
+    background: #000080 !important;
+    color: #ffffff !important;
+    box-shadow: inset 1px 1px 0 #000040 !important;
+  }
+
+  & .mobile-career-detail__list { gap: 8px; }
+
+  & .mobile-career-detail .mobile-career-row {
+    border: 1px solid #808080 !important;
+    border-radius: 0 !important;
+    background: #dfdfdf !important;
+    box-shadow: inset 1px 1px 0 #ffffff !important;
+  }
+
+  & .mobile-career-detail .mobile-career-row__main {
+    min-height: 42px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-career-detail .mobile-career-row__posting-link {
+    min-height: 30px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-career-detail .mobile-career-status {
+    padding: 2px 5px;
+    border: 1px solid #808080 !important;
+    border-radius: 0 !important;
+    background: #c0c0c0 !important;
+    color: #000000 !important;
   }
 }

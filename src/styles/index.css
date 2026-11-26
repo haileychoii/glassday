@@ -144,3 +144,14 @@
 @import "./widget-system.css";
 @import "./mobile-common.css";
 @import "./interaction-polish.css";
+
+/*
+ * Shared presentation layers from the mobile-web UI work.
+ * EN: Keep widget headers in one shared surface and apply the same radius
+ *     scale across themes; Pixel Desk then adds its scoped 95CSS bevels.
+ * KO: 위젯 제목 표면과 모서리 단계는 공통 규칙으로 통일하고,
+ *     Pixel Desk의 95CSS 입체 효과는 해당 테마에만 적용한다.
+ */
+@import "./themes/pixel-95css.css";
+@import "./widget-frame-theme.css";
+@import "./widget-radius-consistency.css";

@@ -254,6 +254,12 @@ export const getAppFontOptions = (): FontOption[] => {
 export const getSavedAppFont = (): string => {
   if (typeof window === "undefined") return DEFAULT_APP_FONT;
 
+  /* Pixel Desk has a fixed Mona12 interface font. Its Memo editor and saved
+     notes opt into their own font variables in the Memo widget stylesheet. */
+  if (document.documentElement.getAttribute("data-theme") === "pixel-desk") {
+    return pixelDeskFallback;
+  }
+
   if (hasUserSelectedAppFont()) {
     return window.localStorage.getItem(APP_FONT_STORAGE_KEY) || DEFAULT_APP_FONT;
   }

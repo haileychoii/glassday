@@ -62,13 +62,6 @@ body.theme-glass-light {
       rgba(231, 250, 245, 0.28)
     );
 
-  --gd-radius-app: 32px;
-  --gd-radius-panel: 28px;
-  --gd-radius-widget: 26px;
-  --gd-radius-card: 22px;
-  --gd-radius-inner: 18px;
-  --gd-radius-button: 999px;
-
   color: hsl(var(--foreground) / 0.94);
 }
 
@@ -196,13 +189,9 @@ body[data-theme="glass-light"] .glass-card {
 }
 
 /* inner panels */
-html[data-theme="glass-light"] .today-focus-main,
 html[data-theme="glass-light"] .today-focus-hero,
 html[data-theme="glass-light"] .today-focus-section,
 html[data-theme="glass-light"] .today-focus-block,
-html[data-theme="glass-light"] .today-mini-main,
-html[data-theme="glass-light"] .today-mini-next,
-html[data-theme="glass-light"] .today-tasks-progress,
 html[data-theme="glass-light"] .calendar-event-item,
 html[data-theme="glass-light"] .calendar-event-card,
 html[data-theme="glass-light"] .calendar-mini-card,
@@ -211,13 +200,9 @@ html[data-theme="glass-light"] .memo-note-item,
 html[data-theme="glass-light"] .alert-item,
 html[data-theme="glass-light"] .journal-section,
 html[data-theme="glass-light"] .study-card,
-body[data-theme="glass-light"] .today-focus-main,
 body[data-theme="glass-light"] .today-focus-hero,
 body[data-theme="glass-light"] .today-focus-section,
 body[data-theme="glass-light"] .today-focus-block,
-body[data-theme="glass-light"] .today-mini-main,
-body[data-theme="glass-light"] .today-mini-next,
-body[data-theme="glass-light"] .today-tasks-progress,
 body[data-theme="glass-light"] .calendar-event-item,
 body[data-theme="glass-light"] .calendar-event-card,
 body[data-theme="glass-light"] .calendar-mini-card,
@@ -502,10 +487,8 @@ body[data-theme="glass-light"] .timer-widget-mode-button.is-active {
 
 html[data-theme="glass-light"] .money-budget-fill,
 html[data-theme="glass-light"] .money-store-fill,
-html[data-theme="glass-light"] .cover-letter-progress i,
 body[data-theme="glass-light"] .money-budget-fill,
-body[data-theme="glass-light"] .money-store-fill,
-body[data-theme="glass-light"] .cover-letter-progress i {
+body[data-theme="glass-light"] .money-store-fill {
   background: var(--gd-glass-light-holo-progress) !important;
 }
 
@@ -522,7 +505,6 @@ body[data-theme="glass-light"] .timer-widget-progress-dot {
 
 html[data-theme="glass-light"] .widget-frame__actions .glass-button,
 html[data-theme="glass-light"] .glass-card-header > .glass-button,
-html[data-theme="glass-light"] .today-task-add-row button,
 html[data-theme="glass-light"] .study-record-form button,
 html[data-theme="glass-light"] .study-task-form button,
 html[data-theme="glass-light"] .study-detail-record-form button,
@@ -531,7 +513,6 @@ html[data-theme="glass-light"] .money-action-button,
 html[data-theme="glass-light"] .money-icon-button,
 body[data-theme="glass-light"] .widget-frame__actions .glass-button,
 body[data-theme="glass-light"] .glass-card-header > .glass-button,
-body[data-theme="glass-light"] .today-task-add-row button,
 body[data-theme="glass-light"] .study-record-form button,
 body[data-theme="glass-light"] .study-task-form button,
 body[data-theme="glass-light"] .study-detail-record-form button,
@@ -548,7 +529,6 @@ body[data-theme="glass-light"] .money-icon-button {
 
 html[data-theme="glass-light"] .widget-frame__actions .glass-button:hover,
 html[data-theme="glass-light"] .glass-card-header > .glass-button:hover,
-html[data-theme="glass-light"] .today-task-add-row button:hover,
 html[data-theme="glass-light"] .study-record-form button:hover,
 html[data-theme="glass-light"] .study-task-form button:hover,
 html[data-theme="glass-light"] .study-detail-record-form button:hover,
@@ -557,7 +537,6 @@ html[data-theme="glass-light"] .money-action-button:hover,
 html[data-theme="glass-light"] .money-icon-button:hover,
 body[data-theme="glass-light"] .widget-frame__actions .glass-button:hover,
 body[data-theme="glass-light"] .glass-card-header > .glass-button:hover,
-body[data-theme="glass-light"] .today-task-add-row button:hover,
 body[data-theme="glass-light"] .study-record-form button:hover,
 body[data-theme="glass-light"] .study-task-form button:hover,
 body[data-theme="glass-light"] .study-detail-record-form button:hover,
@@ -573,9 +552,7 @@ body[data-theme="glass-light"] .money-icon-button:hover {
 }
 
 html[data-theme="glass-light"] .today-focus-hero,
-html[data-theme="glass-light"] .today-focus-main,
-body[data-theme="glass-light"] .today-focus-hero,
-body[data-theme="glass-light"] .today-focus-main {
+body[data-theme="glass-light"] .today-focus-hero {
   background: var(--gd-glass-light-holo-soft) !important;
   border-color: rgba(255, 255, 255, 0.56) !important;
   box-shadow:
@@ -601,11 +578,6 @@ body[data-theme="glass-light"] .today-progress-ring {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.78),
     0 12px 26px rgba(119, 155, 205, 0.18) !important;
-}
-
-html[data-theme="glass-light"] .today-tasks-progress-fill,
-body[data-theme="glass-light"] .today-tasks-progress-fill {
-  background: var(--gd-glass-light-holo-progress) !important;
 }
 
 html[data-theme="glass-light"] .today-focus-check,
@@ -973,13 +945,9 @@ body.desktop-transparent[data-theme="glass-light"] .glass-card {
    8. INNER GLASS SURFACES
 ============================================================ */
 
-html.desktop-transparent[data-theme="glass-light"] .today-focus-main,
 html.desktop-transparent[data-theme="glass-light"] .today-focus-hero,
 html.desktop-transparent[data-theme="glass-light"] .today-focus-section,
 html.desktop-transparent[data-theme="glass-light"] .today-focus-block,
-html.desktop-transparent[data-theme="glass-light"] .today-mini-main,
-html.desktop-transparent[data-theme="glass-light"] .today-mini-next,
-html.desktop-transparent[data-theme="glass-light"] .today-tasks-progress,
 html.desktop-transparent[data-theme="glass-light"] .calendar-event-item,
 html.desktop-transparent[data-theme="glass-light"] .calendar-event-card,
 html.desktop-transparent[data-theme="glass-light"] .calendar-mini-card,
@@ -989,13 +957,9 @@ html.desktop-transparent[data-theme="glass-light"] .alert-item,
 html.desktop-transparent[data-theme="glass-light"] .journal-section,
 html.desktop-transparent[data-theme="glass-light"] .study-card,
 
-body.desktop-transparent[data-theme="glass-light"] .today-focus-main,
 body.desktop-transparent[data-theme="glass-light"] .today-focus-hero,
 body.desktop-transparent[data-theme="glass-light"] .today-focus-section,
 body.desktop-transparent[data-theme="glass-light"] .today-focus-block,
-body.desktop-transparent[data-theme="glass-light"] .today-mini-main,
-body.desktop-transparent[data-theme="glass-light"] .today-mini-next,
-body.desktop-transparent[data-theme="glass-light"] .today-tasks-progress,
 body.desktop-transparent[data-theme="glass-light"] .calendar-event-item,
 body.desktop-transparent[data-theme="glass-light"] .calendar-event-card,
 body.desktop-transparent[data-theme="glass-light"] .calendar-mini-card,

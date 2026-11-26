@@ -1,6 +1,6 @@
-/* One Pixel Desk title bar for every GlassCard and mobile-only widget header.
- * Title geometry stays with the shared layout rules; this file owns only the
- * Pixel title-bar surface and its foreground color. */
+/* Pixel title text inherits the shared title-bar color. Keep this selector for
+   aliases in older saved dashboards; the shared surface is in
+   src/styles/widget-frame-theme.css. */
 :is(
   html[data-theme="pixel-desk"],
   body[data-theme="pixel-desk"],
@@ -14,32 +14,6 @@
   .widget-frame__header,
   .glass-card-header,
   .widget-card-header,
-  .mobile-study-card__heading,
-  .mobile-calendar-card__header,
-  .mobile-career-card__header
-) {
-  background: var(--w95-title, var(--pixel-desktop-title, #000080)) !important;
-  background-image: none !important;
-  color: var(--w95-light, var(--pixel-desktop-light, #ffffff)) !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) :is(
-  .widget-frame__header,
-  .glass-card-header,
-  .widget-card-header,
-  .mobile-study-card__heading,
   .mobile-calendar-card__header,
   .mobile-career-card__header
 ) :is(
@@ -50,77 +24,7 @@
   .widget-frame__icon,
   .widget-frame__actions,
   h3,
-  p,
-  svg
+  p
 ) {
-  color: var(--w95-light, var(--pixel-desktop-light, #ffffff)) !important;
-}
-
-/* Keep the high-specificity mobile geometry contract from clearing the shared
- * Pixel surface on standard GlassCards. / 모바일 공통 규칙 뒤에서도 남색을 유지합니다. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > .widget-instance-root > :is(.glass-card, .career-widget)
-  > .widget-frame__header,
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > :is(.mobile-study-card, .mobile-calendar-card, .mobile-career-card)
-  > :is(.mobile-study-card__heading, .mobile-calendar-card__header, .mobile-career-card__header) {
-  background: var(--w95-title, #000080) !important;
-  background-image: none !important;
-  color: var(--w95-light, #ffffff) !important;
-}
-
-/* Dedicated cards paint a full-bleed bar behind their inset content row. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .mobile-layout .mobile-widget-slot[data-widget-id]
-  > :is(.mobile-study-card, .mobile-calendar-card, .mobile-career-card)
-  > :is(.mobile-study-card__heading, .mobile-calendar-card__header, .mobile-career-card__header)::before {
-  background: var(--w95-title, #000080) !important;
-}
-
-/* Desktop widgets usually live in app-shell-surface. This final shared rule
- * also covers widget frames mounted in theme portals outside that shell. */
-:is(
-  html[data-theme="pixel-desk"],
-  body[data-theme="pixel-desk"],
-  html.theme-pixel-desk,
-  body.theme-pixel-desk,
-  html.pixel-desk,
-  body.pixel-desk,
-  html.theme-pixel,
-  body.theme-pixel
-) .app-shell-surface :is(
-  .widget-frame__header,
-  .glass-card-header,
-  .widget-card-header,
-  .career-widget-header
-) {
-  background: var(--pixel-desktop-title, #000080) !important;
-  background-image: none !important;
-  color: var(--pixel-desktop-light, #ffffff) !important;
+  color: var(--w95-light, var(--pixel-desktop-light, #fff)) !important;
 }

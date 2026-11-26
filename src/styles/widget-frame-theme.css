@@ -1,0 +1,61 @@
+/* ============================================================
+   Shared Widget Header Surface
+
+   Every dashboard widget and mobile-only card uses one title-frame rule.
+   Themes set only these surface tokens (color/material); widgets do not paint
+   their own title backgrounds. / 제목줄 모양은 하나, 표면 색만 테마가 고른다.
+   ============================================================ */
+
+:root {
+  --gd-widget-header-bg: var(--gd-inner-bg, transparent);
+  --gd-widget-header-color: inherit;
+  --gd-widget-header-border: 0;
+  --gd-widget-header-shadow: none;
+}
+
+:is(html[data-theme="pastel"], body[data-theme="pastel"], html.theme-pastel, body.theme-pastel) {
+  --gd-widget-header-bg: var(--gd-inner-bg);
+  --gd-widget-header-color: hsl(var(--foreground));
+}
+
+/* Glass cards already provide the frosted surface. Painting a second surface
+   on the square header leaves a visible rectangle behind every title row. */
+:is(html[data-theme="glass-light"], body[data-theme="glass-light"], html.theme-glass-light, body.theme-glass-light,
+    html[data-theme="glass-dark"], body[data-theme="glass-dark"], html.theme-glass-dark, body.theme-glass-dark,
+    html[data-theme="aurora"], body[data-theme="aurora"], html.theme-aurora, body.theme-aurora) {
+  --gd-widget-header-bg: transparent;
+  --gd-widget-header-color: hsl(var(--foreground));
+}
+
+:is(html[data-theme="mac-core"], body[data-theme="mac-core"], html.theme-mac-core, body.theme-mac-core) {
+  --gd-widget-header-bg: var(--mac-widget-header-bg);
+  --gd-widget-header-color: var(--mac-title-text);
+  --gd-widget-header-border: 1px solid rgb(60 60 67 / 0.12);
+}
+
+:is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"], html.theme-pixel-desk, body.theme-pixel-desk,
+    html.pixel-desk, body.pixel-desk, html.theme-pixel, body.theme-pixel) {
+  --gd-widget-header-bg: var(--w95-title, var(--pixel-desktop-title, #000080));
+  --gd-widget-header-color: var(--w95-light, var(--pixel-desktop-light, #fff));
+  --gd-widget-header-border: 0;
+  --gd-widget-header-shadow: var(--w95-shadow-titlebar, none);
+}
+
+/* Retro is also used by Pink Diary; this palette token controls only header
+   color. The shared frame keeps its size and spacing across both appearances. */
+:is(html[data-theme="retro"], body[data-theme="retro"], html.theme-retro, body.theme-retro) {
+  --gd-widget-header-bg: var(--pd-rose-soft, #f8eaf0);
+  --gd-widget-header-color: var(--pd-ink, #3d3038);
+  --gd-widget-header-border: 1px solid var(--pd-border, #e7d8df);
+  --gd-widget-header-shadow: none;
+}
+
+:is(html[data-theme], body[data-theme], html[class*="theme-"], body[class*="theme-"], html.pixel-desk, body.pixel-desk)
+  :is(.widget-frame__header, .glass-card-header, .widget-card-header,
+      .mobile-calendar-card__header, .mobile-career-card__header) {
+  color: var(--gd-widget-header-color) !important;
+  background: var(--gd-widget-header-bg) !important;
+  border: 0 !important;
+  border-bottom: var(--gd-widget-header-border) !important;
+  box-shadow: var(--gd-widget-header-shadow) !important;
+}

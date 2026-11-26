@@ -4,7 +4,7 @@
    Shared selectors: Alert/Calendar/Career/Study/Journal root의 최소 크기와 overflow safety.
    Today Frames: Hero Summary, Top Tasks, linked Calendar/Career grid, Pinned Memo, Alert.
    today-focus 전용 layout과 여러 lightweight Widget의 공통 root guard가 함께 있는 파일이다.
-   Theme material은 이 파일이 아니라 theme-surfaces.css/themes/*.css에서 결정한다.
+   Theme material과 corner radius는 theme-surfaces.css/themes/*.css에서 결정한다.
    ============================================================ */
 /* =========================================================
    TODAY FOCUS / ALERT / BASIC WIDGET CONTENT
@@ -18,12 +18,10 @@
 
 .today-focus-card,
 .today-focus-widget,
-.today-mini-card,
 .alert-center-widget,
 .calendar-widget,
 .career-widget,
-.study-widget,
-.daily-journal-widget {
+.study-widget {
   width: 100%;
   height: 100%;
   min-width: 0;
@@ -38,20 +36,17 @@
 }
 
 .today-focus-card,
-.today-focus-widget,
-.today-mini-card {
+.today-focus-widget {
   container-type: size;
   container-name: today-focus-widget;
 }
 
 .today-focus-card .glass-card-body,
 .today-focus-widget .glass-card-body,
-.today-mini-card .glass-card-body,
 .alert-center-widget .glass-card-body,
 .calendar-widget .glass-card-body,
 .career-widget .glass-card-body,
-.study-widget .glass-card-body,
-.daily-journal-widget .glass-card-body {
+.study-widget .glass-card-body {
   flex: 1 1 auto;
 
   min-width: 0;
@@ -71,7 +66,6 @@
    1. Today hero
 ========================================================= */
 
-.today-focus-main,
 .today-focus-hero {
   width: 100%;
   min-width: 0;
@@ -83,12 +77,9 @@
   align-items: center;
   gap: var(--gd-widget-stack-gap);
 
-  border-radius: var(--gd-radius-card, 24px);
-
   box-sizing: border-box;
 }
 
-.today-focus-main > *,
 .today-focus-hero > * {
   min-width: 0;
 }
@@ -134,7 +125,6 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 999px;
 }
 
 /* =========================================================
@@ -143,9 +133,6 @@
 
 .today-focus-section,
 .today-focus-block,
-.today-mini-main,
-.today-mini-next,
-.today-tasks-progress,
 .study-card,
 .study-task,
 .study-record-item {
@@ -156,8 +143,6 @@
 
   display: grid;
   gap: var(--gd-widget-stack-gap);
-
-  border-radius: var(--gd-radius-inner, 20px);
 
   box-sizing: border-box;
 }
@@ -191,7 +176,7 @@
    3. Task list
 ========================================================= */
 
-.today-task-list,
+
 .today-focus-list,
 .today-focus-task-list,
 .study-list {
@@ -206,7 +191,7 @@
   overflow-x: hidden;
 }
 
-.today-task-item,
+
 .today-focus-task {
   width: 100%;
   min-width: 0;
@@ -217,12 +202,10 @@
   align-items: center;
   gap: 10px;
 
-  border-radius: var(--gd-radius-inner, 18px);
-
   box-sizing: border-box;
 }
 
-.today-task-check,
+
 .today-focus-task-check {
   width: 20px;
   height: 20px;
@@ -232,10 +215,9 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 999px;
 }
 
-.today-task-item span,
+
 .today-focus-task span,
 .today-task-text,
 .today-focus-task-text {
@@ -250,7 +232,7 @@
   white-space: nowrap;
 }
 
-.today-task-item.is-done .today-task-text,
+
 .today-focus-task.is-done .today-focus-task-text {
   text-decoration: line-through;
   opacity: 0.55;
@@ -280,8 +262,6 @@
   align-items: center;
   gap: 12px;
 
-  border-radius: var(--gd-radius-inner, 20px);
-
   box-sizing: border-box;
 }
 
@@ -300,7 +280,6 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 999px;
 }
 
 .alert-item-content,
@@ -368,8 +347,6 @@
   display: grid;
   gap: 4px;
 
-  border-radius: var(--gd-radius-inner, 20px);
-
   box-sizing: border-box;
 }
 
@@ -418,8 +395,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-
-  border-radius: var(--gd-radius-inner, 18px);
 
   box-sizing: border-box;
 }
@@ -487,9 +462,6 @@
 
   .today-focus-section,
   .today-focus-block,
-  .today-mini-main,
-  .today-mini-next,
-  .today-tasks-progress,
   .calendar-event-item,
   .calendar-event-card,
   .career-list-item,
@@ -504,26 +476,4 @@
   .today-focus-hero-value {
     font-size: 19px;
   }
-}
-
-/* =========================================================
-   9. Height restore
-   The focus widgets must remain scrollable instead of stretching the
-   whole dashboard column when content gets longer than the card.
-========================================================= */
-
-.today-focus-card,
-.today-focus-widget,
-.today-mini-card {
-  min-height: 0;
-}
-
-.today-focus-card .glass-card-body,
-.today-focus-widget .glass-card-body,
-.today-mini-card .glass-card-body {
-  flex: 1 1 auto;
-  min-height: 0;
-
-  overflow-y: auto;
-  overflow-x: hidden;
 }

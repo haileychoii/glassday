@@ -214,6 +214,42 @@ body.theme-retro {
   --gd-widget-control-active-bg: hsl(var(--accent));
 }
 
+/* Widget CSS owns layout only. Every theme supplies the same panel and
+   control roles through the tokens above; Alert severity does not repaint
+   whole rows with a separate palette. */
+:is(.today-focus-hero, .today-focus-section,
+    .today-focus-block, .today-focus-task, .alert-center-item) {
+  color: hsl(var(--foreground));
+  background: var(--gd-widget-panel-bg);
+  border: 1px solid var(--gd-widget-panel-border);
+  box-shadow: var(--gd-widget-panel-shadow);
+  border-radius: var(--gd-radius-card, 12px);
+}
+
+:is(.alert-center-icon, .alert-center-title-row span) {
+  color: hsl(var(--foreground));
+  background: var(--gd-widget-control-bg);
+  border: 1px solid var(--gd-widget-control-border);
+  border-radius: var(--gd-radius-button, 8px);
+}
+
+.alert-center-title-row strong {
+  color: hsl(var(--foreground));
+}
+
+.alert-center-content p {
+  color: hsl(var(--muted-foreground));
+}
+
+.alert-center-danger-icon {
+  color: hsl(var(--destructive, 0 72% 42%));
+}
+
+:is(.today-focus-progress-ring, .today-progress-ring,
+    .today-focus-task-check, .alert-item-icon, .alert-icon) {
+  border-radius: var(--gd-radius-button, 8px);
+}
+
 html[data-theme="glass-light"] body,
 body[data-theme="glass-light"],
 html[data-theme="glass-dark"] body,
@@ -331,12 +367,12 @@ body[data-theme="glass-dark"] :is(.topbar, aside) {
   -webkit-backdrop-filter: var(--gd-surface-filter) !important;
 }
 
-html[data-theme="pastel"] :is(.today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block, .today-mini-main, .today-mini-next, .today-tasks-progress, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-html[data-theme="glass-light"] :is(.today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block, .today-mini-main, .today-mini-next, .today-tasks-progress, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-html[data-theme="glass-dark"] :is(.today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block, .today-mini-main, .today-mini-next, .today-tasks-progress, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-body[data-theme="pastel"] :is(.today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block, .today-mini-main, .today-mini-next, .today-tasks-progress, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-body[data-theme="glass-light"] :is(.today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block, .today-mini-main, .today-mini-next, .today-tasks-progress, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
-body[data-theme="glass-dark"] :is(.today-focus-main, .today-focus-hero, .today-focus-section, .today-focus-block, .today-mini-main, .today-mini-next, .today-tasks-progress, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card) {
+html[data-theme="pastel"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+html[data-theme="glass-light"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+html[data-theme="glass-dark"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+body[data-theme="pastel"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+body[data-theme="glass-light"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card),
+body[data-theme="glass-dark"] :is(.today-focus-hero, .today-focus-section, .today-focus-block, .today-focus-task, .calendar-event-item, .calendar-event-card, .calendar-mini-card, .career-list-item, .memo-note-item, .memo-workspace, .alert-item, .alert-center-item, .journal-section, .journal-task-item, .study-card, .study-input-panel, .study-week-panel, .study-goal-panel, .study-task-panel, .study-record-list-panel, .settings-section, .settings-card) {
   color: hsl(var(--foreground) / 0.9) !important;
   background: var(--gd-inner-bg) !important;
   border-color: var(--gd-inner-border) !important;

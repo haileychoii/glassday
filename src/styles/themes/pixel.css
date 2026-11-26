@@ -16,11 +16,11 @@
  *      ├─ .widget-frame__header (실제 제목/아이콘/조작 버튼)
  *      └─ .widget-frame__body   (위젯 본문)
  *
- * [이번 정리]
- * 1. 192회 반복된 테마 루트 선택자를 동일한 의미의 :where(:is())로 단축.
- * 2. PC용 .glass-card 가짜 제목줄 (::before/::after)은 모바일에서 비활성화.
- * 3. PC용 24px 헤더 강제 규칙은 모바일에서 비활성화.
- * 4. 공통 안쪽 패널은 --w95-panel이 있으면 해당 색상을 우선 사용.
+ * [테마 분담]
+ * 1. 이 파일은 Pixel 색, 비트맵 폰트, Win95 바깥 프레임을 담당한다.
+ * 2. 실제 제목줄은 GlassCard의 .widget-frame__header 하나만 사용한다.
+ * 3. 제목줄 배경은 widget-frame-theme.css의 공통 토큰에서 지정한다.
+ * 4. Pixel만 공통 반경 토큰을 0으로 설정한다.
  *
  * [주의]
  * 기존 버튼 이벤트 / 위젯 저장 데이터 / 데스크톱 Grid 배치는 건드리지 않음.
@@ -87,13 +87,6 @@
   --gd-radius-card: 0px;
   --gd-radius-inner: 0px;
   --gd-radius-button: 0px;
-
-  --app-radius-shell: 0px;
-  --app-radius-panel: 0px;
-  --app-radius-card: 0px;
-  --app-radius-inner: 0px;
-  --app-radius-button: 0px;
-  --app-radius-chip: 0px;
 
   font-family: var(--glassday-app-font) !important;
 }
@@ -282,23 +275,19 @@ html[data-theme="pixel-desk"] .app-shell-main {
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) button,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) input,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) textarea,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) select,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-editor,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-title-input {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) select {
   font-family: var(--glassday-app-font) !important;
   letter-spacing: 0 !important;
   text-shadow: none !important;
 }
 
-/* Memo typography exception
-   Pixel Desk keeps its bitmap font for interface chrome, while the memo title,
-   rich text, list preview, and font options use the font saved on each note.
-   / 테마는 기본 UI 폰트만 정하고 메모별 서체를 덮어쓰지 않습니다. */
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :where(.memo-title-input, .memo-title-view, .memo-editor, .memo-editor *) {
+/* Mona12 is the Pixel Desk UI font. Memo text is the one intentional
+   exception: use the font saved for that note in its title and editor. */
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :is(.memo-title-input, .memo-title-view, .memo-editor, .memo-editor *) {
   font-family: var(--memo-title-font, var(--memo-font-family, inherit)) !important;
 }
 
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :where(.memo-note-title, .memo-note-preview) {
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :is(.memo-note-title, .memo-note-preview) {
   font-family: var(--memo-note-font, inherit) !important;
 }
 
@@ -357,7 +346,7 @@ html[data-theme="pixel-desk"] .app-shell-main {
    Buttons / inputs
 ========================================================= */
 
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) button,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) button:not(.mobile-career-row__main),
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-button,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .theme-segment-button,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .topbar-action-button,
@@ -378,7 +367,7 @@ html[data-theme="pixel-desk"] .app-shell-main {
   transform: none !important;
 }
 
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) button:active,
+:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) button:not(.mobile-career-row__main):active,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-button:active,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .theme-segment-button:active {
   border-top-color: #404040 !important;
@@ -481,56 +470,6 @@ html[data-theme="pixel-desk"] .app-shell-main {
   height: 16px !important;
 }
 
-/* ========================================================================
- * PC 전용 헤더 규격: 모바일에서는 .mobile-pixel.css가 38px 규격을 사용한다.
- * 뒤에 붙는 :where(:not(body:has(.mobile-layout) *))는 PC 전용 적용 조건.
- * :where()로 감싸 원래 선택자의 우선순위(specificity)를 유지한다.
- * CSS가 Portal로 옮겨진 위젯에도 동일하게 적용된다.
- * ======================================================================== */
-/* Pixel widget headers share one tighter start line so title placement stays
-   consistent across Today Focus, Career, Memo, Journal, and the rest. */
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card-header:where(:not(body:has(.mobile-layout) *)),
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .widget-frame__header:where(:not(body:has(.mobile-layout) *)) {
-  min-height: 24px !important;
-  padding: 2px 8px !important;
-  gap: 5px !important;
-  align-items: center !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card-title:where(:not(body:has(.mobile-layout) *)),
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .widget-card-title:where(:not(body:has(.mobile-layout) *)),
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .widget-frame__title:where(:not(body:has(.mobile-layout) *)) {
-  font-size: 11px !important;
-  line-height: 1.1 !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card-subtitle:where(:not(body:has(.mobile-layout) *)),
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .widget-card-subtitle:where(:not(body:has(.mobile-layout) *)),
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .widget-frame__subtitle:where(:not(body:has(.mobile-layout) *)) {
-  font-size: 10px !important;
-  line-height: 1.1 !important;
-}
-
-/* Pixel header anchor:
-   responsive.css and overrides.css are imported after this theme, so these
-   higher-specificity selectors keep every widget title on the same tighter
-   pixel title line. Today Focus uses the same GlassCard header as the rest. */
-:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card > :is(.glass-card-header, .widget-frame__header):where(:not(body:has(.mobile-layout) *)),
-:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .dashboard-grid-item > .glass-card > :is(.glass-card-header, .widget-frame__header):where(:not(body:has(.mobile-layout) *)),
-:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .app-mode-stage.is-laptop-mode .dashboard-grid-item > .glass-card > :is(.glass-card-header, .widget-frame__header):where(:not(body:has(.mobile-layout) *)),
-:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) :is(.today-focus-card, .today-focus-widget) > :is(.glass-card-header, .widget-frame__header):where(:not(body:has(.mobile-layout) *)) {
-  min-height: 24px !important;
-  padding: 2px 8px !important;
-  gap: 5px !important;
-  align-items: center !important;
-}
-
-:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card > :is(.glass-card-body, .widget-frame__body):where(:not(body:has(.mobile-layout) *)),
-:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .dashboard-grid-item > .glass-card > :is(.glass-card-body, .widget-frame__body):where(:not(body:has(.mobile-layout) *)),
-:is(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .app-mode-stage.is-laptop-mode .dashboard-grid-item > .glass-card > :is(.glass-card-body, .widget-frame__body):where(:not(body:has(.mobile-layout) *)) {
-  padding: 2px 8px 8px !important;
-}
-
 /* =========================================================
    Grid / card rectangle fix
 ========================================================= */
@@ -544,11 +483,7 @@ html[data-theme="pixel-desk"] .app-shell-main {
   box-shadow: none !important;
 }
 
-/* ========================================================================
- * PC Pixel 창 프레임.
- * 모바일: GlassCard.tsx에 실제 헤더가 있으므로 가짜 ::before/::after를 끈다.
- * 바깥 .glass-card, 가짜 버튼, 본문 height 강제까지 한꺼번에 PC로만 제한한다.
- * ======================================================================== */
+/* Pixel changes the card's Win95 surface and bevel; title geometry remains shared. */
 /* =========================================================
    Widget window
 ========================================================= */
@@ -558,7 +493,7 @@ html[data-theme="pixel-desk"] .app-shell-main {
   height: 100% !important;
   min-height: 0 !important;
 
-  padding: 30px 10px 10px !important;
+  padding: 0 !important;
 
   border-radius: 0 !important;
   overflow: hidden !important;
@@ -581,134 +516,7 @@ html[data-theme="pixel-desk"] .app-shell-main {
   -webkit-backdrop-filter: none !important;
 }
 
-/* Window titlebar */
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card:where(:not(body:has(.mobile-layout) *))::before {
-  content: "" !important;
-  display: block !important;
-
-  position: absolute !important;
-  top: 2px !important;
-  left: 2px !important;
-  right: 2px !important;
-  height: 28px !important;
-  z-index: 30 !important;
-
-  background: #000080 !important;
-  background-image: none !important;
-
-  border-radius: 0 !important;
-  border: none !important;
-  border-bottom: 2px solid #424242 !important;
-
-  box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.35),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.35) !important;
-
-  pointer-events: none !important;
-}
-
-/* Minimize / maximize / close */
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card:where(:not(body:has(.mobile-layout) *))::after {
-  content: "_  □  ×" !important;
-
-  position: absolute !important;
-  top: 6px !important;
-  right: 7px !important;
-  z-index: 31 !important;
-
-  height: 20px !important;
-  min-width: 62px !important;
-  padding: 0 4px !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  font-family:
-    "Mona12",
-    "MS Sans Serif",
-    "Tahoma",
-    sans-serif !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  letter-spacing: 3px !important;
-  line-height: 1 !important;
-
-  color: #111111 !important;
-  background: #c0c0c0 !important;
-  background-image: none !important;
-
-  border-top: 2px solid #ffffff !important;
-  border-left: 2px solid #ffffff !important;
-  border-right: 2px solid #424242 !important;
-  border-bottom: 2px solid #424242 !important;
-
-  box-shadow: none !important;
-  pointer-events: none !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card > *:where(:not(body:has(.mobile-layout) *)) {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .glass-card-body:where(:not(body:has(.mobile-layout) *)) {
-  height: 100% !important;
-  min-height: 0 !important;
-  padding: 4px 10px 10px !important;
-  overflow: auto !important;
-}
-
-/* =========================================================
-   Inner panels
-========================================================= */
-
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .journal-section,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .alert-item,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .alert-summary-card,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-hero,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-section,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-task,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-mini-item,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-career-item,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-memo,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .today-focus-empty,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-month-day-cell,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-week-timeline,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-event-item,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-list-panel,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-workspace,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .settings-section,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .career-detail-section,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-hero,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-subject-card,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-input-panel,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-goal-panel,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-week-panel,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-task-panel,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-record-list-panel,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-task,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-record-item,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .study-empty,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .career-card,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .career-list-item,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .calendar-mini-card,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-note-item,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .journal-task,
-:where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .journal-task-empty {
-  border-radius: 0 !important;
-  /* Desktop: 기존 베이지 표면 유지.
-     Mobile: mobile-pixel.css의 --w95-panel(#dfdfdf)을 상속받아 회색 통일. */
-  background: var(--w95-panel, #e8e8dc) !important;
-  background-image: none !important;
-  border-top: 2px solid #ffffff !important;
-  border-left: 2px solid #ffffff !important;
-  border-right: 2px solid #606060 !important;
-  border-bottom: 2px solid #606060 !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
+/* The shared GlassCard header is the only title bar; no pseudo controls. */
 
 /* =========================================================
    Floating windows / modals

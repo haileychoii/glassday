@@ -14,20 +14,6 @@ export const MobileNavigation = ({ tabs, activeTabId, onSelectTab, onOpenQuickCa
   activeTabId: string;
   onSelectTab: (id: string) => void;
   onOpenQuickCapture: () => void;
-}) => (
-  <NavigationContent
-    tabs={tabs}
-    activeTabId={activeTabId}
-    onSelectTab={onSelectTab}
-    onOpenQuickCapture={onOpenQuickCapture}
-  />
-);
-
-const NavigationContent = ({ tabs, activeTabId, onSelectTab, onOpenQuickCapture }: {
-  tabs: DashboardTab[];
-  activeTabId: string;
-  onSelectTab: (id: string) => void;
-  onOpenQuickCapture: () => void;
 }) => {
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
 
@@ -73,7 +59,7 @@ const NavigationContent = ({ tabs, activeTabId, onSelectTab, onOpenQuickCapture 
               theme={theme}
               icon={tab.icon} />
           </span>
-          <span>{tab.label}</span>
+          <span className="mobile-navigation-label">{tab.label}</span>
         </button>
       ))}
     </nav>

@@ -40,9 +40,6 @@ body.desktop-transparent[data-theme="glass-dark"] {
       rgba(0, 0, 0, 0.10)
     );
 
-  --gd-dark-shell-border:
-    rgba(255, 255, 255, 0.18);
-
   --gd-dark-shell-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     inset 0 0 0 1px rgba(255, 255, 255, 0.04),
@@ -50,19 +47,6 @@ body.desktop-transparent[data-theme="glass-dark"] {
 
 
   /* Widget */
-  --gd-dark-card-bg:
-    linear-gradient(
-      145deg,
-      rgba(36, 36, 38, 0.42),
-      rgba(0, 0, 0, 0.24)
-    );
-
-  --gd-dark-card-border:
-    rgba(255, 255, 255, 0.17);
-
-  --gd-dark-card-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 20px 54px rgba(0, 0, 0, 0.20);
 
 
   /* Inner Panel */
@@ -334,13 +318,9 @@ body.desktop-transparent[data-theme="glass-dark"] .glass-card {
    Tauri에서는 반투명 smoked glass로 낮춘다.
 ============================================================ */
 
-html.desktop-transparent[data-theme="glass-dark"] .today-focus-main,
 html.desktop-transparent[data-theme="glass-dark"] .today-focus-hero,
 html.desktop-transparent[data-theme="glass-dark"] .today-focus-section,
 html.desktop-transparent[data-theme="glass-dark"] .today-focus-block,
-html.desktop-transparent[data-theme="glass-dark"] .today-mini-main,
-html.desktop-transparent[data-theme="glass-dark"] .today-mini-next,
-html.desktop-transparent[data-theme="glass-dark"] .today-tasks-progress,
 html.desktop-transparent[data-theme="glass-dark"] .calendar-event-item,
 html.desktop-transparent[data-theme="glass-dark"] .calendar-event-card,
 html.desktop-transparent[data-theme="glass-dark"] .calendar-mini-card,
@@ -350,13 +330,9 @@ html.desktop-transparent[data-theme="glass-dark"] .alert-item,
 html.desktop-transparent[data-theme="glass-dark"] .journal-section,
 html.desktop-transparent[data-theme="glass-dark"] .study-card,
 
-body.desktop-transparent[data-theme="glass-dark"] .today-focus-main,
 body.desktop-transparent[data-theme="glass-dark"] .today-focus-hero,
 body.desktop-transparent[data-theme="glass-dark"] .today-focus-section,
 body.desktop-transparent[data-theme="glass-dark"] .today-focus-block,
-body.desktop-transparent[data-theme="glass-dark"] .today-mini-main,
-body.desktop-transparent[data-theme="glass-dark"] .today-mini-next,
-body.desktop-transparent[data-theme="glass-dark"] .today-tasks-progress,
 body.desktop-transparent[data-theme="glass-dark"] .calendar-event-item,
 body.desktop-transparent[data-theme="glass-dark"] .calendar-event-card,
 body.desktop-transparent[data-theme="glass-dark"] .calendar-mini-card,

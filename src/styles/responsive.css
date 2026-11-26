@@ -307,12 +307,6 @@ main {
     --gd-topbar-mobile-pad-bottom: 3px;
     --gd-topbar-mobile-rail-bleed-x: 2px;
     --gd-topbar-mobile-gap: 10px;
-    --gd-topbar-mobile-list-gap: 8px;
-    --gd-topbar-mobile-list-pad-bottom: 4px;
-    --gd-topbar-mobile-tab-min-width: 112px;
-    --gd-topbar-mobile-tab-height: 38px;
-    --gd-topbar-mobile-tab-pad-x: 12px;
-    --gd-topbar-mobile-tab-font-size: 14px;
     --gd-topbar-mobile-delete-size: 28px;
     --gd-shell-pad-x: 20px;
     --gd-shell-pad-top: 18px;
@@ -473,7 +467,6 @@ main {
     --gd-widget-frame-header-y: 16px;
     --gd-widget-frame-content-gap-top: 10px;
     --gd-widget-stack-gap: 10px;
-    --gd-widget-frame-panel-pad: 12px;
     --gd-shell-pad-x: 16px;
     --gd-shell-pad-top: 16px;
     --gd-shell-pad-bottom: 30px;
@@ -577,9 +570,11 @@ main {
     border-radius: 0 !important;
   }
 
-  input,
-  select,
-  textarea {
+  /* Compact Study controls already define their own type scale. The mobile
+     16px focus-zoom safeguard must not enlarge those fields and clip them. */
+  input:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *):not(.mobile-widget-slot[data-widget-id="journal"] .daily-journal-widget *),
+  select:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *):not(.mobile-widget-slot[data-widget-id="journal"] .daily-journal-widget *),
+  textarea:not(.mobile-widget-slot[data-widget-id="study"] .study10-planner *):not(.mobile-widget-slot[data-widget-id="journal"] .daily-journal-widget *) {
     font-size: var(--gd-mobile-input-font-size) !important;
   }
 
@@ -646,7 +641,6 @@ main {
     --gd-widget-frame-header-y: 16px;
     --gd-widget-frame-content-gap-top: 10px;
     --gd-widget-stack-gap: 8px;
-    --gd-widget-frame-panel-pad: 8px;
     --gd-shell-pad-x: 14px;
     --gd-shell-pad-top: 14px;
     --gd-shell-pad-bottom: 28px;
@@ -699,7 +693,6 @@ main {
     padding-top: var(--gd-topbar-actions-pad-top) !important;
   }
 
-  .today-focus-main,
   .today-focus-hero,
   .today-focus-section,
   .today-focus-block {

@@ -48,15 +48,17 @@
     height: var(--gd-mobile-widget-timer-height) !important;
   }
 
-  /* Pass the timer slot's fixed mobile height through its portal host and
-   * shared card. Without this chain, the card stays content-height and leaves
-   * an unused strip at the bottom of the slot. */
+  /* The widget host is reparented from the desktop grid and keeps its inline
+   * pixel height unless mobile binds it to this fixed mobile slot. */
   body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
     > .widget-instance-root {
+    width: 100% !important;
     height: 100% !important;
     min-height: 0 !important;
+    max-height: 100% !important;
   }
 
+  /* Fill the timer card and its body so the controls use the full base height. */
   body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="timer"]
     > .widget-instance-root > .glass-card.timer-widget {
     display: grid !important;
@@ -102,17 +104,18 @@
   ) .timer-widget-layout:not(.is-settings-visible) > .timer-widget-main-card {
     position: relative !important;
     display: grid !important;
-    grid-row: 1 !important;
     grid-template-columns: minmax(0, 1fr) !important;
-    grid-template-rows: 40px minmax(0, 1fr) 44px !important;
+    grid-template-rows: 40px minmax(0, 1fr) !important;
+    grid-row: 1 !important;
+    align-items: stretch !important;
+    justify-items: stretch !important;
     gap: var(--gd-mobile-space-2) !important;
     align-content: stretch !important;
-    justify-items: stretch !important;
     width: 100% !important;
     height: 100% !important;
     min-width: 0 !important;
     min-height: 0 !important;
-    padding: 0 !important;
+    padding: 0 0 calc(44px + var(--gd-mobile-space-2)) !important;
     background: transparent !important;
     background-image: none !important;
     border: 0 !important;
@@ -133,6 +136,7 @@
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-mode-row {
     display: flex !important;
     grid-row: 1 !important;
+    flex: none !important;
     align-self: stretch !important;
     width: 100% !important;
     min-width: 0 !important;
@@ -159,10 +163,11 @@
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-time-editor-shell {
     display: grid !important;
     grid-row: 2 !important;
+    flex: none !important;
     align-self: stretch !important;
     justify-self: stretch !important;
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
     min-width: 0 !important;
     min-height: 0 !important;
     container-type: size !important;
@@ -230,12 +235,30 @@
     body:has(.mobile-layout) .timer-floating-window
   ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-action-row {
     display: flex !important;
-    grid-row: 3 !important;
+    position: absolute !important;
+    inset-inline: 0 !important;
+    bottom: 0 !important;
+    grid-row: auto !important;
+    flex: none !important;
     align-self: stretch !important;
+    margin-top: 0 !important;
     width: 100% !important;
     height: 44px !important;
     min-height: 44px !important;
     gap: var(--gd-mobile-space-2) !important;
+  }
+
+  :is(
+    .mobile-layout [data-widget-id="timer"],
+    body:has(.mobile-layout) .timer-floating-window
+  ) .timer-widget-layout:not(.is-settings-visible) .timer-widget-prompt {
+    position: absolute !important;
+    inset-inline: 6px !important;
+    bottom: 52px !important;
+    z-index: 2 !important;
+    grid-row: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
   }
 
   :is(
@@ -360,7 +383,7 @@
   .timer-widget-prompt {
   left: 6px;
   right: 6px;
-  bottom: 5px;
+  bottom: 52px;
 
   padding: 10px;
   gap: 8px;

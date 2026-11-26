@@ -88,7 +88,6 @@
 .journal-main-scroll,
 .memo-note-list,
 .memo-floating-body,
-.today-task-list,
 .career-list,
 .study-list {
   min-height: 0;
@@ -463,21 +462,18 @@
 /* Keep Today Focus stable inside laptop preview even when the outer browser
    viewport crosses responsive breakpoints. In laptop mode this widget should
    react only to its own container size. */
-.app-mode-stage.is-laptop-mode .today-focus,
-.app-mode-stage.is-laptop-mode .today-mini {
+.app-mode-stage.is-laptop-mode .today-focus {
   gap: 10px !important;
 }
 
 .app-mode-stage.is-laptop-mode .today-focus-card,
-.app-mode-stage.is-laptop-mode .today-focus-widget,
-.app-mode-stage.is-laptop-mode .today-mini-card {
+.app-mode-stage.is-laptop-mode .today-focus-widget {
   padding: 0 !important;
   min-height: 0 !important;
 }
 
 .app-mode-stage.is-laptop-mode .today-focus-card .glass-card-body,
-.app-mode-stage.is-laptop-mode .today-focus-widget .glass-card-body,
-.app-mode-stage.is-laptop-mode .today-mini-card .glass-card-body {
+.app-mode-stage.is-laptop-mode .today-focus-widget .glass-card-body {
   height: 100% !important;
   min-height: 0 !important;
   overflow-y: auto !important;
@@ -516,10 +512,7 @@
 }
 
 .app-mode-stage.is-laptop-mode .today-focus-section,
-.app-mode-stage.is-laptop-mode .today-focus-block,
-.app-mode-stage.is-laptop-mode .today-mini-main,
-.app-mode-stage.is-laptop-mode .today-mini-next,
-.app-mode-stage.is-laptop-mode .today-tasks-progress {
+.app-mode-stage.is-laptop-mode .today-focus-block {
   padding: 12px !important;
   border-radius: 16px !important;
 }
@@ -924,59 +917,9 @@
   min-height: 0;
 }
 
-/* Shared compact widget frame behavior.
-   These rules intentionally target the semantic widget-frame classes instead
-   of positional selectors so the same structure is easier to mirror in Figma. */
-@container gd-widget (max-width: 620px) {
-  .glass-card > .widget-frame__header {
-    padding:
-      var(--gd-widget-header-pad-top)
-      var(--gd-widget-pad-x)
-      var(--gd-widget-header-pad-bottom);
-    gap: var(--gd-widget-stack-gap);
-    align-items: center;
-  }
-
-  .glass-card > .widget-frame__header > .glass-card-actions,
-  .glass-card > .widget-frame__header > .widget-frame__actions {
-    width: auto;
-    min-width: max-content;
-    display: flex;
-    justify-content: flex-end;
-    flex-wrap: nowrap;
-    gap: var(--gd-space-xs);
-  }
-
-  .glass-card > .widget-frame__body {
-    padding:
-      var(--gd-widget-content-gap-top)
-      var(--gd-widget-pad-x)
-      var(--gd-widget-pad-y);
-  }
-
-  .glass-card > .widget-frame__header h3 {
-    color: hsl(var(--foreground) / 0.92);
-    font-size: 13px;
-    line-height: 1.22;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .glass-card > .widget-frame__header p {
-    color: hsl(var(--muted-foreground) / 0.8);
-    font-size: 11px;
-    line-height: 1.25;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Career card rows are owned by widgets/career.css.
-     A generic narrow-widget override previously stacked every metadata badge,
-     making one application consume three extra rows even when 500px was free.
-     Career 메타 배지는 카드 너비 안에서 한 행을 유지하고 자체 컨테이너 규칙만 따릅니다. */
-}
+/* Career card rows are owned by widgets/career.css. A generic narrow-widget
+   override previously stacked every metadata badge and added unnecessary rows.
+   Career metadata remains one row and follows its widget's own container rules. */
 
 @container gd-widget (max-width: 440px) {
   .glass-card > .widget-frame__header {
@@ -1023,6 +966,8 @@
 ========================================================= */
 
 @container gd-widget (max-width: 620px) {
+  /* Keep compact header and body geometry in one shared rule. Theme files
+     should override tokens or add a narrowly scoped visual difference. */
   .glass-card > .widget-frame__header {
     align-items: center;
     gap: var(--gd-widget-header-gap);
@@ -1044,8 +989,18 @@
   .glass-card > .widget-frame__header > .glass-card-actions {
     width: auto;
     min-width: max-content;
+    display: flex;
+    justify-content: flex-end;
     align-self: center;
     flex-wrap: nowrap;
+    gap: var(--gd-space-xs);
+  }
+
+  .glass-card > .widget-frame__body {
+    padding:
+      var(--gd-widget-content-gap-top)
+      var(--gd-widget-pad-x)
+      var(--gd-widget-pad-y);
   }
 
   .glass-card > .widget-frame__header h3 {
@@ -1059,6 +1014,11 @@
 
   .glass-card > .widget-frame__header p {
     color: hsl(var(--muted-foreground) / 0.8);
+    font-size: 11px;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -1167,95 +1127,45 @@
   -webkit-overflow-scrolling: touch !important;
 }
 
-/* Daily Journal body inset
-   Override only the shared horizontal padding while leaving header alignment,
-   vertical spacing, and every other widget unchanged. */
-.dashboard-grid-item
-  > .glass-card.daily-journal-widget
-  > .widget-frame__body {
-  padding-inline: var(--journal-body-pad-x) !important;
+/* One dashboard frame geometry for every theme and widget. Theme CSS owns
+   colors, surfaces, blur, and borders; Pixel changes only the radius tokens. */
+.dashboard-grid-item > :is(.glass-card, .career-widget) {
+  border-radius: var(--gd-radius-widget) !important;
 }
 
-/* Daily Journal header alignment
-   The shared desktop composition keeps title copy on the left and date actions
-   on the right. Only the widget's own width, never the browser viewport, may
-   switch this header to two rows. / 제목은 항상 왼쪽 기준선을 유지한다. */
-.dashboard-grid-item
-  > .glass-card.daily-journal-widget
-  > .widget-frame__header {
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  text-align: left !important;
+.dashboard-grid-item > .glass-card {
+  display: grid !important;
+  grid-template-rows: var(--gd-widget-header-row-min-height) minmax(0, 1fr) !important;
+  padding: 0 !important;
 }
 
-.dashboard-grid-item
-  > .glass-card.daily-journal-widget
-  > .widget-frame__header
-  > .widget-frame__title-group,
-.dashboard-grid-item
-  > .glass-card.daily-journal-widget
-  > .widget-frame__header
-  .widget-frame__copy {
-  align-items: flex-start !important;
-  justify-content: flex-start !important;
-  text-align: left !important;
+.dashboard-grid-item > :is(.glass-card, .career-widget) > .widget-frame__header {
+  height: var(--gd-widget-header-row-min-height) !important;
+  min-height: var(--gd-widget-header-row-min-height) !important;
+  padding: var(--gd-widget-header-pad-top) var(--gd-widget-pad-x) var(--gd-widget-header-pad-bottom) !important;
+  gap: var(--gd-widget-header-gap) !important;
 }
 
-.dashboard-grid-item
-  > .glass-card.daily-journal-widget
-  > .widget-frame__header
-  > .widget-frame__actions {
-  width: auto !important;
-  margin-left: auto !important;
-  align-self: center !important;
+.dashboard-grid-item > :is(.glass-card, .career-widget) > .widget-frame__body {
+  margin: 0 !important;
+  padding: var(--gd-widget-content-gap-top) var(--gd-widget-pad-x) var(--gd-widget-pad-y) !important;
 }
 
-/* Compact Journal header
-   At genuinely narrow widget widths the date controls move below the title,
-   but both rows remain left-aligned and fully usable. */
-@container journal-widget (max-width: 420px) {
-  .dashboard-grid-item
-    > .glass-card.daily-journal-widget
-    > .widget-frame__header {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-  }
-
-  .dashboard-grid-item
-    > .glass-card.daily-journal-widget
-    > .widget-frame__header
-    > .widget-frame__actions,
-  .daily-journal-widget .journal-date-nav {
-    width: 100% !important;
-    margin-left: 0 !important;
-  }
-
-  .daily-journal-widget .journal-date-nav input {
-    width: auto !important;
-    flex: 1 1 auto !important;
-  }
-}
-
-/* Study header-to-content rhythm
-   The planner starts after one shared widget gap instead of inheriting the
-   compact 5px body offset. 제목과 첫 요약 카드 사이 간격은 이 토큰 하나로 조절한다. */
-.dashboard-grid-item > .glass-card.study-widget > .widget-frame__body {
-  padding-top: var(--gd-widget-gap) !important;
-}
-
-/* Pixel Desk previously forced every widget body to 2px. Study needs the same
-   readable title gap as other themes while retaining its square pixel frame. */
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk
-  )
-  .dashboard-grid-item
-  > .glass-card.study-widget
-  > .widget-frame__body {
-  padding-top: var(--gd-widget-gap) !important;
+.dashboard-grid-item :is(
+  .today-focus-hero, .today-focus-section, .today-focus-block,
+  .today-focus-task, .today-focus-mini-item, .calendar-event-item, .calendar-event-card,
+  .calendar-mini-card, .career-summary-card, .career-list-item, .career-board-card,
+  .memo-note-item, .memo-workspace, .memo-list-panel, .memo-editor,
+  .alert-item, .alert-center-item, .journal-summary-card, .journal-section,
+  .journal-score-inline, .journal-task-item, .journal-clip-item,
+  .study-card, .study-overview-panel, .study-input-panel, .study-goal-panel,
+  .study-week-panel, .study-task-panel, .study-record-list-panel,
+  .timer-widget-main-card, .timer-widget-settings-card,
+  .money-summary-panel, .money-budget-panel, .money-visual-panel,
+  .money-recent-panel, .money-detail-card,
+  .habit-tracker-panel, .habit-tracker-row, .mood-row
+) {
+  border-radius: var(--gd-radius-card) !important;
 }
 
 /* Nested widget scrollers
@@ -1620,7 +1530,6 @@
     .career-board-card,
     .career-detail-section,
     .career-empty-box,
-    .career-attachment-item,
     .money-overview-hero,
     .money-summary-panel,
     .money-budget-panel,
@@ -1691,7 +1600,6 @@
     .career-board-column,
     .career-detail-section,
     .career-empty-box,
-    .career-attachment-item,
     .money-overview-hero,
     .money-summary-panel,
     .money-budget-panel,
@@ -2098,7 +2006,6 @@
 ) {
   --mac-app-surface: rgb(255 255 255 / 0.78);
   --mac-app-surface-strong: rgb(255 255 255 / 0.9);
-  --mac-app-grouped: rgb(246 247 250 / 0.74);
   --mac-app-grouped-border: rgb(60 60 67 / 0.1);
   --mac-app-separator: rgb(60 60 67 / 0.12);
   --mac-app-shadow:
@@ -2108,10 +2015,6 @@
     linear-gradient(180deg, rgb(255 255 255 / 0.96), rgb(241 242 246 / 0.9));
   --mac-app-control-hover:
     linear-gradient(180deg, rgb(255 255 255 / 1), rgb(248 249 252 / 0.96));
-  --mac-app-blue: #0a84ff;
-  --mac-app-blue-soft: rgb(10 132 255 / 0.14);
-  --mac-app-green: #34c759;
-  --mac-app-red: #ff3b30;
 }
 
 :where(
@@ -2133,18 +2036,6 @@
   -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
 }
 
-:where(
-  html[data-theme="mac-core"],
-  body[data-theme="mac-core"],
-  html.theme-mac-core,
-  body.theme-mac-core
-)
-  .glass-card::before {
-  height: 42px !important;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.74), rgb(242 243 247 / 0.46)) !important;
-  border-bottom: 1px solid var(--mac-app-separator) !important;
-}
 
 /* Mac Core grouped surfaces
    Repeated widget internals should feel like Settings/Finder grouped rows,
@@ -2163,7 +2054,6 @@
     .career-board-card,
     .career-detail-section,
     .career-empty-box,
-    .career-attachment-item,
     .money-overview-hero,
     .money-summary-panel,
     .money-budget-panel,
@@ -2604,95 +2494,33 @@
     0 3px 8px -6px currentColor !important;
 }
 
-/* Pixel Desk final polish
-   This file loads after widget CSS, so Pixel-only corrections live here when
-   widget-level rules flatten the retro desktop material. / 위젯 CSS가 나중에
-   테두리만 남기는 경우, Pixel 테마에서만 마지막에 입체감을 되살린다. */
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .dashboard-grid-item
-  > .glass-card
-  > .widget-frame__header {
-  justify-content: flex-start !important;
-  text-align: left !important;
-}
-
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .dashboard-grid-item
-  > .glass-card
-  > .widget-frame__header
-  > .widget-frame__title-group {
-  flex: 1 1 auto !important;
-  justify-content: flex-start !important;
+/* All dashboard widget titles use the same left anchored icon/title cluster.
+   Theme styles can recolor the bar and text, but cannot recenter one widget. */
+.dashboard-grid-item > .glass-card > .widget-frame__header {
+  display: flex !important;
   align-items: center !important;
-  margin-right: auto !important;
+  justify-content: space-between !important;
   text-align: left !important;
 }
 
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .dashboard-grid-item
-  > .glass-card
-  > .widget-frame__header
-  :is(.widget-frame__copy, .glass-card-copy, .widget-card-copy) {
+.dashboard-grid-item > .glass-card > .widget-frame__header > .widget-frame__title-group {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  min-width: 0 !important;
+  margin: 0 auto 0 0 !important;
+  text-align: left !important;
+}
+
+.dashboard-grid-item > .glass-card > .widget-frame__header .widget-frame__copy {
   align-items: flex-start !important;
   justify-content: center !important;
   text-align: left !important;
 }
 
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .dashboard-grid-item
-  > .glass-card
-  > .widget-frame__header
-  :is(.widget-frame__title, .glass-card-title, .widget-card-title),
-:is(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .dashboard-grid-item
-  > .glass-card
-  > .widget-frame__header
-  :is(.widget-frame__subtitle, .glass-card-subtitle, .widget-card-subtitle) {
+.dashboard-grid-item > .glass-card > .widget-frame__header .widget-frame__title,
+.dashboard-grid-item > .glass-card > .widget-frame__header .widget-frame__subtitle {
   width: 100% !important;
   text-align: left !important;
 }
@@ -2808,7 +2636,7 @@
     body.theme-pixel
   )
   :is(
-    button,
+    button:not(.mobile-career-row__main),
     .glass-button,
     .calendar-nav-button,
     .calendar-view-button,
@@ -3184,7 +3012,7 @@
     body.theme-pixel
   )
   :is(
-    button,
+    button:not(.mobile-career-row__main),
     .glass-button,
     .calendar-nav-button,
     .calendar-view-button,
@@ -3869,21 +3697,10 @@
   font-size: var(--gd-tauri-type-root);
 }
 
-/* Exception only: the installed Tauri window uses a denser widget frame. */
-body:not(:has(.mobile-layout)) .tauri-app-window {
-  --gd-widget-header-row-min-height: 28px;
-  --gd-widget-pad-x: 10px;
-  --gd-widget-pad-y: 10px;
-}
-
 .tauri-app-window > .app-shell-surface {
-  /* Tauri density tokens
-     English: Reduce chrome height only in the desktop shell; the web laptop
-     preview keeps its larger design-review scale.
-     Korean: 실제 데스크톱 앱에서만 헤더/컨트롤 높이를 살짝 낮춘다. */
+  /* Tauri topbar sizing is host-specific. Widget geometry stays shared with
+     the web app so the same dashboard looks and behaves consistently. */
   --gd-topbar-min-height: 46px;
-  --gd-widget-header-row-min-height: 28px;
-  --gd-control-height-sm: 26px;
   --gd-control-height-md: 28px;
 }
 
