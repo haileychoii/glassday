@@ -54,6 +54,8 @@
 @import "./themes/career-surfaces.css";
 /* Memo paper and panel materials live in the theme layer as well. */
 @import "./themes/memo-surfaces.css";
+/* Money surfaces use shared theme tokens; the widget stylesheet keeps layout. */
+@import "./themes/money-surfaces.css";
 
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";
