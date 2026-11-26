@@ -98,6 +98,10 @@
   --gd-space-lg: 10px;
   --gd-space-xl: 12px;
   --gd-space-2xl: 16px;
+  /* Rebind aliases here: :root aliases have already resolved to wide-mode
+     values before this laptop-specific spacing scale is inherited. */
+  --gd-widget-gap-tight: var(--gd-space-sm);
+  --gd-widget-gap: var(--gd-space-md);
   --gd-widget-shell-pad-x: 6px;
   --gd-widget-shell-pad-bottom: 6px;
   --gd-widget-header-anchor-y: 8px;
@@ -109,8 +113,12 @@
   --gd-widget-header-pad-bottom: var(--gd-widget-content-gap-top);
   --gd-widget-header-gap: 5px;
   --gd-widget-title-gap: 4px;
-  --gd-widget-stack-gap: 8px;
+  --gd-widget-stack-gap: var(--gd-space-md);
   --gd-widget-panel-pad: 9px;
+  --gd-widget-section-gap: var(--gd-space-sm);
+  --gd-widget-section-margin-y: var(--gd-space-sm);
+  --gd-widget-content-start-margin: var(--gd-space-lg);
+  --gd-widget-section-title-bottom: var(--gd-space-sm);
   --gd-control-height-md: 30px;
   --gd-shell-pad-x: 18px;
   --gd-shell-pad-top: 10px;
