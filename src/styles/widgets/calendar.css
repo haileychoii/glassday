@@ -21,6 +21,13 @@
   --gd-calendar-range-lane-size: 9px;
 }
 
+/* The smaller laptop frame uses denser month rows. Keep this component
+   setting beside the calendar layout so presentation modes do not own widget internals. */
+.app-shell-surface.is-laptop .calendar-widget-card {
+  --gd-calendar-month-row-min: 42px;
+  --gd-calendar-range-lane-size: 8px;
+}
+
 .calendar-month-weekday {
   height: 22px;
   font-size: 10px;

@@ -254,6 +254,30 @@
   border-bottom: 1px solid var(--mac-window-separator) !important;
 }
 
+/* The window traffic lights are part of Mac Core's window chrome, not the
+   shared laptop layout. Other themes keep the same chrome spacing without
+   inheriting Mac-specific colors. */
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-traffic {
+  visibility: visible;
+}
+
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-traffic > span {
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.38);
+}
+
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-traffic > .is-close {
+  background: #ff5f57;
+}
+
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-traffic > .is-minimize {
+  background: #ffbd2f;
+}
+
+:is(html, body):is([data-theme="mac-core"], .theme-mac-core) .laptop-preview-traffic > .is-expand {
+  background: #28c840;
+}
+
 /* Laptop preview owns the native window chrome
    Do not render a second app-window border or traffic-light set inside it.
    Wide mode has no preview chrome, so its liquid-shell decorations remain.
