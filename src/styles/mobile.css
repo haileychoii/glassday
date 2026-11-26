@@ -216,26 +216,6 @@
   overflow: visible;
 }
 
-/* Today Focus의 우선순위 항목은 3개까지 표시 */
-.mobile-widget-slot[data-widget-id="today"]
-  .today-focus-task:nth-child(n + 4) {
-  display: none;
-}
-
-.mobile-widget-slot[data-widget-id="today"] .today-focus-task {
-  min-height: 44px;
-}
-
-.mobile-widget-slot[data-widget-id="today"] .today-focus-task-input {
-  min-width: 0;
-  font-size: 16px;
-}
-
-.mobile-widget-slot[data-widget-id="today"] .today-focus-grid {
-  grid-template-columns: minmax(0, 1fr);
-  overflow: visible;
-}
-
 /* Quick Capture 진입 버튼 */
 .mobile-navigation-capture {
   width: 100%;
@@ -595,64 +575,64 @@ body:has(.mobile-layout)
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-hero {
-    padding: 10px !important;
-    gap: 8px !important;
+    padding: var(--gd-mobile-widget-inset);
+    gap: var(--gd-mobile-control-gap);
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-kicker {
-    font-size: 9px !important;
-    line-height: 1.1 !important;
+    font-size: 9px;
+    line-height: 1.1;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-main {
-    font-size: clamp(17px, 5vw, 22px) !important;
-    line-height: 1.15 !important;
-    letter-spacing: -0.02em !important;
+    font-size: clamp(16px, 4.8vw, 20px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-ring {
-    width: 42px !important;
-    height: 42px !important;
-    min-width: 42px !important;
-    font-size: 11px !important;
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+    font-size: 11px;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-section {
-    padding: var(--gd-mobile-widget-inset) !important;
-    gap: var(--gd-mobile-tight-gap) !important;
+    padding: var(--gd-mobile-widget-inset);
+    gap: var(--gd-mobile-tight-gap);
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-section-title {
-    font-size: 10px !important;
+    font-size: 11px;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-task-list,
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-mini-list,
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-memo-list {
-    gap: var(--gd-mobile-tight-gap) !important;
+    gap: var(--gd-mobile-tight-gap);
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-task {
-    min-height: 36px !important;
-    padding: 6px 7px !important;
-    gap: 6px !important;
+    min-height: 36px;
+    padding: 6px 7px;
+    gap: 6px;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-task-input {
     min-width: 0;
-    font-size: 14px !important;
-    line-height: 1.2 !important;
+    font-size: 13px;
+    line-height: 1.25;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-check,
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-delete {
-    width: 24px !important;
-    min-width: 24px !important;
-    height: 24px !important;
+    width: 24px;
+    flex-basis: 24px;
+    height: 24px;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-grid {
-    gap: var(--gd-mobile-section-gap) !important;
+    gap: var(--gd-mobile-section-gap);
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-grid > .today-focus-section {
@@ -660,24 +640,24 @@ body:has(.mobile-layout)
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] :is(.today-focus-mini-item, .today-focus-career-item, .today-focus-memo) {
-    min-height: 34px !important;
-    padding: var(--gd-mobile-row-pad-y) var(--gd-mobile-row-pad-x) !important;
-    gap: var(--gd-mobile-control-gap) !important;
+    min-height: 34px;
+    padding: var(--gd-mobile-row-pad-y) var(--gd-mobile-row-pad-x);
+    gap: var(--gd-mobile-control-gap);
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] :is(.today-focus-mini-item strong, .today-focus-career-item strong, .today-focus-memo strong) {
-    font-size: 10px !important;
-    line-height: 1.2 !important;
+    font-size: 10px;
+    line-height: 1.2;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] :is(.today-focus-mini-item span, .today-focus-career-item span, .today-focus-memo span) {
-    font-size: 9px !important;
-    line-height: 1.2 !important;
+    font-size: 9px;
+    line-height: 1.2;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-dday {
-    font-size: 9px !important;
-    padding: 3px 5px !important;
+    font-size: 9px;
+    padding: 3px 5px;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="alerts"] .alert-center-list {

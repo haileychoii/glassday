@@ -259,15 +259,16 @@ export const TodayFocusWidget = () => {
           </div>
         </section>
 
-        {/* Figma Frame: Top Tasks / Vertical Auto Layout / Editable Task Row list */}
+        {/* Figma Frame: Editable focus task list. The list scrolls internally
+            so older saved tasks remain reachable without pushing out summaries. */}
         <section className="today-focus-section">
           <div className="today-focus-section-title">
             <Check className="w-3.5 h-3.5" />
-            Top 3
+            Focus tasks
           </div>
 
           <div className="today-focus-task-list">
-            {focusTasks.slice(0, 5).map((task) => (
+            {focusTasks.map((task) => (
               <div
                 key={task.id}
                 className={cn("today-focus-task", task.done && "is-done")}
