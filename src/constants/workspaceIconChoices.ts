@@ -27,6 +27,6 @@ const numberedIcons = (
   });
 
 export const workspaceIconCollections: Record<WorkspaceIconCollectionId, WorkspaceIconChoice[]> = {
-  "pink-iphone": numberedIcons("pink-iphone", 598, "Pink iPhone"),
-  "retro-pixel": numberedIcons("retro-pixel", 182, "Retro pixel"),
+  "pink-iphone": numberedIcons("pink-iphone", 598, "핑크 iPhone"),
+  "retro-pixel": numberedIcons("retro-pixel", 182, "레트로 픽셀"),
 };

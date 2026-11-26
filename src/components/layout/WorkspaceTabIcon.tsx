@@ -92,6 +92,20 @@ export const WorkspaceTabIcon = ({
     ? tabId
     : iconTabIds[icon ?? ""] ?? tabId;
 
+  // A selected sticker is stored as its stable public asset path. Keep that
+  // exact artwork on every theme instead of converting it back to a glyph.
+  if (icon?.startsWith("/workspace-icons/")) {
+    return (
+      <img
+        src={icon}
+        className="workspace-theme-icon workspace-custom-icon"
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+      />
+    );
+  }
+
   if (mobile && (theme === "glass-light" || theme === "glass-dark")) {
     const Icon =
       glassMobileIcons[resolvedTabId as keyof typeof glassMobileIcons] ??

@@ -525,6 +525,11 @@
     -webkit-backdrop-filter: none !important;
   }
 
+  & .mobile-tab-icon-choice > img {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
   /* Pixel PNGs have transparent margins. Render them larger than the 22px
    * desktop tab slot so the glyph reads clearly in the phone taskbar. */
   & .mobile-navigation-item > :is(svg, img, .workspace-theme-icon) {

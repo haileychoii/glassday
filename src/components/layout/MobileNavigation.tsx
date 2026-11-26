@@ -7,7 +7,14 @@ import { useEffect, useRef, useState } from "react";
 import { Plus } from "lucide-react";
 import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import type { DashboardTab } from "../../types/workspace";
+import {
+  workspaceIconCollections,
+  type WorkspaceIconCollectionId,
+} from "../../constants/workspaceIconChoices";
 import { WorkspaceTabIcon } from "./WorkspaceTabIcon";
+
+const iconCollectionForTheme = (theme: ThemeId): WorkspaceIconCollectionId =>
+  theme === "pixel-desk" || theme === "retro" ? "retro-pixel" : "pink-iphone";
 
 export const MobileNavigation = ({
   tabs,
@@ -23,13 +30,19 @@ export const MobileNavigation = ({
   onAddTab: (icon: string) => void;
 }) => {
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
+  const [iconCollection, setIconCollection] = useState<WorkspaceIconCollectionId>(
+    () => iconCollectionForTheme(getCurrentTheme())
+  );
   const [iconPickerOpen, setIconPickerOpen] = useState(false);
   const navigationRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
       const nextTheme = (event as CustomEvent<ThemeId>).detail;
-      if (nextTheme) setTheme(nextTheme);
+      if (nextTheme) {
+        setTheme(nextTheme);
+        setIconCollection(iconCollectionForTheme(nextTheme));
+      }
     };
     window.addEventListener("glassday-theme-change", handleThemeChange);
     return () => window.removeEventListener("glassday-theme-change", handleThemeChange);
@@ -45,13 +58,9 @@ export const MobileNavigation = ({
       });
   }, [activeTabId]);
 
-  const iconChoices = [
-    { id: "home", icon: "🏠", label: "Home icon" },
-    { id: "career", icon: "💼", label: "Career icon" },
-    { id: "study", icon: "📚", label: "Study icon" },
-    { id: "memo", icon: "📔", label: "Diary icon" },
-    { id: "life", icon: "🌿", label: "Life icon" },
-  ];
+  // Each entry points at a standalone transparent image in public/. Store that
+  // path on the new tab so desktop and mobile keep displaying the chosen art.
+  const iconChoices = workspaceIconCollections[iconCollection];
 
   return (
     <div className="mobile-navigation-shell">
@@ -71,6 +80,7 @@ export const MobileNavigation = ({
             key={tab.id}
             type="button"
             className="mobile-navigation-item"
+            aria-label={tab.label}
             aria-current={activeTabId === tab.id ? "page" : undefined}
             onClick={() => {
               onSelectTab(tab.id);
@@ -78,7 +88,7 @@ export const MobileNavigation = ({
             }}
             title={tab.label}
           >
-            {/* Render the chosen glyph directly, without a decorative icon tile. */}
+            {/* Render the chosen glyph or sticker directly, without a tile. */}
             <WorkspaceTabIcon
               tabId={tab.id}
               icon={tab.icon}
@@ -107,26 +117,51 @@ export const MobileNavigation = ({
           role="group"
           aria-label="Choose a workspace icon"
         >
-          {iconChoices.map((choice) => (
+          {/* Keep the two artwork families separate so pixel and iPhone-style
+              icons can both be found without mixing their visual language. */}
+          <div className="mobile-tab-icon-collections" role="group" aria-label="Icon style">
             <button
-              key={choice.id}
               type="button"
-              className="mobile-tab-icon-choice"
-              aria-label={`Add workspace with ${choice.label}`}
-              title={choice.label}
-              onClick={() => {
-                onAddTab(choice.icon);
-                setIconPickerOpen(false);
-              }}
+              className="mobile-tab-icon-collection"
+              aria-pressed={iconCollection === "pink-iphone"}
+              onClick={() => setIconCollection("pink-iphone")}
             >
-              <WorkspaceTabIcon
-                tabId={choice.id}
-                icon={choice.icon}
-                theme={theme}
-                mobile
-              />
+              핑크 iPhone
             </button>
-          ))}
+            <button
+              type="button"
+              className="mobile-tab-icon-collection"
+              aria-pressed={iconCollection === "retro-pixel"}
+              onClick={() => setIconCollection("retro-pixel")}
+            >
+              레트로 픽셀
+            </button>
+          </div>
+          <div className="mobile-tab-icon-grid" role="group" aria-label={`${iconCollection} icons`}>
+            {iconChoices.map((choice) => (
+              <button
+                key={choice.id}
+                type="button"
+                className="mobile-tab-icon-choice"
+                aria-label={`Add workspace with ${choice.label}`}
+                title={choice.label}
+                onClick={() => {
+                  // The asset URL is the tab's persisted icon identifier.
+                  onAddTab(choice.src);
+                  setIconPickerOpen(false);
+                }}
+              >
+                <img
+                  src={choice.src}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>

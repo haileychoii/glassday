@@ -222,14 +222,19 @@
   border-radius: 0;
 }
 
+/* A large image library needs a scrollable picker above the bottom navigation;
+   the image buttons themselves stay visually frameless. */
 .mobile-tab-icon-picker {
   position: absolute;
+  z-index: 25;
   right: max(8px, env(safe-area-inset-right));
   bottom: calc(100% + 8px);
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  width: min(360px, calc(100vw - 16px));
+  max-height: min(56vh, 480px);
   gap: 8px;
-  padding: 8px 12px;
+  padding: 10px;
   color: hsl(var(--foreground));
   background: var(--gd-surface-bg, hsl(var(--background)));
   border: 1px solid var(--gd-surface-border, hsl(var(--border)));
@@ -239,11 +244,47 @@
   -webkit-backdrop-filter: var(--gd-surface-filter, blur(16px));
 }
 
+.mobile-tab-icon-collections {
+  display: grid;
+  flex: 0 0 auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.mobile-tab-icon-collection {
+  min-width: 0;
+  min-height: 34px;
+  padding: 6px 8px;
+  color: hsl(var(--muted-foreground));
+  background: transparent;
+  border: 0;
+  border-radius: var(--gd-radius-control, 8px);
+  font: inherit;
+  font-size: 12px;
+}
+
+.mobile-tab-icon-collection[aria-pressed="true"] {
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.14);
+}
+
+.mobile-tab-icon-grid {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-content: start;
+  justify-items: center;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 .mobile-tab-icon-choice {
   display: grid;
-  flex: 0 0 40px;
+  flex: 0 0 44px;
   place-items: center;
-  width: 40px;
+  width: 44px;
   height: 44px;
   padding: 0;
   color: inherit;
@@ -255,8 +296,8 @@
 
 .mobile-tab-icon-choice > :is(svg, img, .workspace-theme-icon) {
   display: block;
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   object-fit: contain;
   font-size: 23px;
   line-height: 1;
