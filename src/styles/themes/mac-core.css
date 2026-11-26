@@ -193,8 +193,8 @@
   background: var(--mac-window-bg) !important;
   border: 1px solid var(--mac-window-border) !important;
   box-shadow: var(--mac-window-shadow) !important;
-  backdrop-filter: blur(34px) saturate(178%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(178%) !important;
+  backdrop-filter: var(--gd-app-filter) !important;
+  -webkit-backdrop-filter: var(--gd-app-filter) !important;
 }
 
 /* Native titlebar strip across the full window. */
@@ -424,8 +424,8 @@
   background: var(--mac-widget-bg) !important;
   border: 1px solid var(--mac-widget-border) !important;
   box-shadow: var(--mac-widget-shadow) !important;
-  backdrop-filter: blur(26px) saturate(168%) !important;
-  -webkit-backdrop-filter: blur(26px) saturate(168%) !important;
+  backdrop-filter: var(--gd-surface-filter) !important;
+  -webkit-backdrop-filter: var(--gd-surface-filter) !important;
 }
 
 :is(html, body):is([data-theme="mac-core"], .theme-mac-core)
@@ -496,8 +496,8 @@
   background: var(--mac-inner-bg) !important;
   border: 1px solid var(--mac-inner-border) !important;
   box-shadow: var(--mac-inner-shadow) !important;
-  backdrop-filter: blur(14px) saturate(148%) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(148%) !important;
+  backdrop-filter: var(--gd-widget-inner-filter) !important;
+  -webkit-backdrop-filter: var(--gd-widget-inner-filter) !important;
 }
 
 /* Icon wells should feel like system sidebar/list glyph containers. */
