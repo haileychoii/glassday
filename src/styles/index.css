@@ -60,6 +60,8 @@
 @import "./themes/mood-surfaces.css";
 /* Settings dialog materials and its theme preview artwork are surface styles. */
 @import "./themes/settings-surfaces.css";
+/* Study subject colors and panel materials are owned by the theme layer. */
+@import "./themes/study-surfaces.css";
 
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";

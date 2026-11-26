@@ -27,24 +27,6 @@
   --study10-gap-tight: var(--gd-widget-section-gap-tight, 6px);
   --study10-panel-pad: var(--gd-widget-panel-pad, 12px);
   --study10-control-height: var(--gd-control-height-md, 32px);
-  --study10-radius: var(--gd-radius-inner, 14px);
-  /* Shared theme surfaces
-     These aliases match Daily Journal and keep theme contrast consistent.
-     / Study 전용 회색을 만들지 않고 공통 위젯 면 토큰을 사용한다. */
-  --study10-panel-bg: var(--gd-widget-panel-bg);
-  --study10-panel-border: var(--gd-widget-panel-border);
-  --study10-panel-shadow: var(--gd-widget-panel-shadow);
-  --study10-control-bg: var(--gd-widget-control-bg);
-  --study10-control-border: var(--gd-widget-control-border);
-  --study10-control-active-bg: var(--gd-widget-control-active-bg);
-  --study10-accent-gradient:
-    linear-gradient(
-      100deg,
-      color-mix(in srgb, #90dbf4 70%, hsl(var(--card))),
-      color-mix(in srgb, #cfbaf0 64%, hsl(var(--card))) 48%,
-      color-mix(in srgb, #f9c6c9 62%, hsl(var(--card))) 76%,
-      color-mix(in srgb, #c9e4de 70%, hsl(var(--card)))
-    );
 }
 
 .study-widget {
@@ -60,7 +42,6 @@
 
 .study10-planner {
   min-width: 0;
-  color: hsl(var(--foreground) / 0.94);
   display: grid;
   gap: var(--study10-gap);
 }
@@ -69,7 +50,6 @@
 .study10-planner input,
 .study10-planner select,
 .study10-planner textarea {
-  color: inherit;
   font: inherit;
   letter-spacing: 0;
 }
@@ -99,11 +79,6 @@
   min-width: 0;
   min-height: 62px;
   padding: 9px 11px;
-  border: 1px solid var(--study10-panel-border);
-  border-radius: var(--study10-radius);
-  background: var(--study10-panel-bg);
-  box-shadow: var(--study10-panel-shadow);
-  backdrop-filter: blur(18px) saturate(116%);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -112,7 +87,6 @@
 
 .study10-summary-card > span,
 .study10-summary-card > label {
-  color: hsl(var(--muted-foreground) / 0.86);
   font-size: 10px;
   font-weight: 700;
 }
@@ -138,9 +112,6 @@
   min-width: 0;
   height: 23px;
   padding: 0 6px;
-  border: 1px solid var(--study10-control-border);
-  border-radius: calc(var(--study10-radius) * 0.6);
-  background: var(--study10-control-bg);
   font-size: 11px;
   font-weight: 700;
 }
@@ -153,15 +124,11 @@
   width: 100%;
   height: 4px;
   overflow: hidden;
-  border-radius: 999px;
-  background: hsl(var(--foreground) / 0.09);
 }
 
 .study10-progress span {
   display: block;
   height: 100%;
-  border-radius: inherit;
-  background: var(--study10-accent-gradient);
   transition: width 180ms ease;
 }
 
@@ -181,9 +148,6 @@
 .study10-icon-button,
 .study10-today-button {
   height: var(--study10-control-height);
-  border: 1px solid var(--study10-control-border);
-  border-radius: calc(var(--study10-radius) * 0.8);
-  background: var(--study10-control-bg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -205,7 +169,6 @@
 
 .study10-today-button {
   padding: 0 10px;
-  color: hsl(var(--foreground) / 0.72);
   font-size: 11px;
   font-weight: 700;
 }
@@ -214,9 +177,6 @@
   min-width: 0;
   height: var(--study10-control-height);
   padding: 0 9px;
-  border: 1px solid var(--study10-control-border);
-  border-radius: calc(var(--study10-radius) * 0.8);
-  background: var(--study10-control-bg);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -236,8 +196,6 @@
   width: 22px;
   min-width: 22px;
   padding: 0;
-  border: 0;
-  background: transparent;
   color-scheme: light dark;
 }
 
@@ -278,9 +236,6 @@
   min-width: 0;
   min-height: 37px;
   padding: 5px 7px;
-  border: 1px solid var(--study10-control-border);
-  border-radius: calc(var(--study10-radius) * 0.75);
-  background: var(--study10-control-bg);
   display: grid;
   grid-template-columns: 7px minmax(0, 1fr) auto;
   align-items: center;
@@ -290,36 +245,10 @@
     transform 140ms ease;
 }
 
-.study10-subject-tool:hover {
-  background: var(--study10-control-active-bg);
-}
-
-.study10-subject-tool.is-active {
-  border-color: var(--study-subject-color, hsl(var(--primary) / 0.78));
-  background:
-    linear-gradient(
-      color-mix(
-        in srgb,
-        var(--study-subject-color, hsl(var(--primary))) 14%,
-        transparent
-      ),
-      color-mix(
-        in srgb,
-        var(--study-subject-color, hsl(var(--primary))) 14%,
-        transparent
-      )
-    ),
-    var(--study10-control-active-bg);
-  box-shadow: inset 0 0 0 1px
-    color-mix(in srgb, var(--study-subject-color) 24%, transparent);
-}
-
 .study10-subject-dot,
 .study10-task-color {
   width: 7px;
   height: 18px;
-  border-radius: 999px;
-  background: var(--study-subject-color);
 }
 
 .study10-subject-tool > span:not(.study10-subject-dot) {
@@ -332,20 +261,16 @@
 }
 
 .study10-subject-tool small {
-  color: hsl(var(--muted-foreground) / 0.84);
   font-size: 9px;
   white-space: nowrap;
 }
 
 .study10-eraser-tool {
   grid-template-columns: 14px minmax(0, 1fr);
-  color: hsl(var(--muted-foreground) / 0.9);
 }
 
 .study10-subject-add-tool {
   grid-template-columns: 14px minmax(0, 1fr);
-  border-style: dashed;
-  color: hsl(var(--foreground) / 0.72);
 }
 
 .study10-subject-add-tool svg {
@@ -360,20 +285,10 @@
 .study10-timer {
   min-width: 0;
   padding: 7px 8px 7px 10px;
-  border: 1px solid var(--study10-panel-border);
-  border-radius: var(--study10-radius);
-  background: var(--study10-panel-bg);
-  box-shadow: var(--study10-panel-shadow);
-  backdrop-filter: blur(18px) saturate(116%);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--study10-gap);
-}
-
-.study10-timer.is-running {
-  border-color: hsl(var(--primary) / 0.48);
-  background: hsl(var(--primary) / 0.09);
 }
 
 .study10-timer-copy {
@@ -384,7 +299,6 @@
 }
 
 .study10-timer-copy span {
-  color: hsl(var(--muted-foreground) / 0.84);
   font-size: 9px;
   font-weight: 700;
 }
@@ -399,22 +313,12 @@
 .study10-add-button {
   min-height: 30px;
   padding: 0 10px;
-  border: 1px solid hsl(var(--primary) / 0.4);
-  border-radius: calc(var(--study10-radius) * 0.72);
-  background: hsl(var(--primary) / 0.13);
-  color: hsl(var(--foreground) / 0.9);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
   font-size: 10px;
   font-weight: 750;
-}
-
-.study10-timer-button {
-  background: var(--study10-accent-gradient);
-  border-color: color-mix(in srgb, #a3c4f3 58%, hsl(var(--border)));
-  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.44);
 }
 
 /* ---------------------------------------------------------
@@ -431,11 +335,6 @@
 .study10-panel {
   min-width: 0;
   padding: var(--study10-panel-pad);
-  border: 1px solid var(--study10-panel-border);
-  border-radius: var(--study10-radius);
-  background: var(--study10-panel-bg);
-  box-shadow: var(--study10-panel-shadow);
-  backdrop-filter: blur(18px) saturate(116%);
 }
 
 .study10-panel-heading {
@@ -461,7 +360,6 @@
 
 .study10-panel-heading small {
   overflow: hidden;
-  color: hsl(var(--muted-foreground) / 0.82);
   font-size: 9px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -472,12 +370,6 @@
   display: flex;
   align-items: center;
   gap: 4px;
-}
-
-.study10-lock-button.is-active {
-  color: hsl(var(--foreground) / 0.94);
-  border-color: color-mix(in srgb, #a3c4f3 62%, hsl(var(--border)));
-  background: color-mix(in srgb, #c6def1 34%, var(--study10-control-bg));
 }
 
 /* Timeline grid
@@ -502,12 +394,9 @@
   top: 0;
   z-index: 2;
   padding-bottom: 4px;
-  background: var(--study10-panel-bg);
-  backdrop-filter: blur(16px);
 }
 
 .study10-minute-head span {
-  color: hsl(var(--muted-foreground) / 0.7);
   font-size: 8px;
   text-align: center;
 }
@@ -520,7 +409,6 @@
 .study10-hour-label {
   display: flex;
   align-items: center;
-  color: hsl(var(--muted-foreground) / 0.86);
   font-size: 9px;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
@@ -530,27 +418,13 @@
   min-width: 0;
   height: 27px;
   padding: 0;
-  border: 1px solid var(--study10-control-border);
-  border-radius: calc(var(--study10-radius) * 0.38);
-  background: var(--study10-control-bg);
   touch-action: none;
   transition: border-color 110ms ease, background-color 110ms ease,
     transform 110ms ease;
 }
 
 .study10-slot:hover {
-  border-color: hsl(var(--foreground) / 0.38);
   transform: translateY(-1px);
-}
-
-.study10-slot.is-filled {
-  border-color: color-mix(in srgb, var(--study-subject-color) 72%, transparent);
-  background: color-mix(
-    in srgb,
-    var(--study-subject-color) 78%,
-    hsl(var(--card))
-  );
-  box-shadow: inset 0 0 0 1px hsl(0 0% 100% / 0.12);
 }
 
 .study10-planner.is-timeline-locked .study10-slot {
@@ -560,120 +434,6 @@
 
 .study10-planner.is-timeline-locked .study10-slot:hover {
   transform: none;
-}
-
-/* Glass-only subject fill
-   A restrained multi-stop tint gives filled cells a holographic shimmer while
-   Pixel, Retro, Pastel and Mac keep their native flat materials. */
-:is(
-    html[data-theme="glass"],
-    body[data-theme="glass"],
-    html.theme-glass,
-    body.theme-glass,
-    html[data-theme="glass-light"],
-    body[data-theme="glass-light"],
-    html.theme-glass-light,
-    body.theme-glass-light,
-    html[data-theme="glass-dark"],
-    body[data-theme="glass-dark"],
-    html.theme-glass-dark,
-    body.theme-glass-dark
-  )
-  .study10-slot.is-filled {
-  background:
-    linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--study-subject-color) 74%, white 26%),
-      color-mix(in srgb, var(--study-subject-color) 88%, #c6def1 12%) 45%,
-      color-mix(in srgb, var(--study-subject-color) 78%, #f2c6de 22%) 72%,
-      color-mix(in srgb, var(--study-subject-color) 84%, #c9e4de 16%)
-    ) !important;
-  box-shadow:
-    inset 0 1px 0 hsl(0 0% 100% / 0.42),
-    0 2px 7px color-mix(in srgb, var(--study-subject-color) 24%, transparent);
-}
-
-/* Mac Core subject color preservation
-   mac-core.css uses strong system-material overrides for rows and inputs.
-   These rules restore semantic planner colors without losing the macOS shape.
-   / mac-core에서도 시간표 색, 과목칩 색, 색상 picker가 실제 과목 색을 보여준다. */
-:is(
-    html[data-theme="mac-core"],
-    body[data-theme="mac-core"],
-    html.theme-mac-core,
-    body.theme-mac-core
-  )
-  .study10-subject-tool.is-active {
-  border-color: color-mix(in srgb, var(--study-subject-color) 64%, #8e8e93 36%) !important;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--study-subject-color) 22%, white 78%),
-      color-mix(in srgb, var(--study-subject-color) 12%, white 88%)
-    ) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.88),
-    inset 0 0 0 1px color-mix(in srgb, var(--study-subject-color) 24%, transparent) !important;
-}
-
-:is(
-    html[data-theme="mac-core"],
-    body[data-theme="mac-core"],
-    html.theme-mac-core,
-    body.theme-mac-core
-  )
-  :is(.study10-subject-dot, .study10-task-color) {
-  background: var(--study-subject-color) !important;
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--study-subject-color) 40%, white 60%) !important;
-}
-
-:is(
-    html[data-theme="mac-core"],
-    body[data-theme="mac-core"],
-    html.theme-mac-core,
-    body.theme-mac-core
-  )
-  .study10-slot.is-filled {
-  border-color: color-mix(in srgb, var(--study-subject-color) 70%, #8e8e93 30%) !important;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--study-subject-color) 82%, white 18%),
-      color-mix(in srgb, var(--study-subject-color) 70%, #f5f5f7 30%)
-    ) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.42),
-    0 2px 7px -4px color-mix(in srgb, var(--study-subject-color) 62%, transparent) !important;
-}
-
-:is(
-    html[data-theme="mac-core"],
-    body[data-theme="mac-core"],
-    html.theme-mac-core,
-    body.theme-mac-core
-  )
-  .study10-task-row {
-  border-color: color-mix(in srgb, var(--study-subject-color) 20%, rgb(60 60 67 / 0.17)) !important;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--study-subject-color) 10%, white 90%),
-      color-mix(in srgb, var(--study-subject-color) 5%, white 95%)
-    ) !important;
-}
-
-:is(
-    html[data-theme="mac-core"],
-    body[data-theme="mac-core"],
-    html.theme-mac-core,
-    body.theme-mac-core
-  )
-  .study10-subject-color-field input[type="color"] {
-  background: var(--study-subject-color) !important;
-  border: 1px solid color-mix(in srgb, var(--study-subject-color) 56%, #8e8e93 44%) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.52),
-    0 1px 3px rgb(22 24 32 / 0.12) !important;
 }
 
 /* Task and note column */
@@ -689,16 +449,6 @@
   display: grid;
   grid-template-columns: minmax(82px, 0.7fr) minmax(120px, 1.6fr) 70px auto;
   gap: 5px;
-}
-
-.study10-task-form select,
-.study10-task-form > input,
-.study10-estimate-input,
-.study10-note-panel textarea {
-  border: 1px solid var(--study10-control-border);
-  border-radius: calc(var(--study10-radius) * 0.65);
-  background: var(--study10-control-bg);
-  outline: none;
 }
 
 .study10-task-form select,
@@ -720,9 +470,6 @@
 .study10-estimate-input input {
   width: 100%;
   min-width: 0;
-  border: 0;
-  background: transparent;
-  outline: none;
   appearance: textfield;
   font-size: 10px;
 }
@@ -734,7 +481,6 @@
 }
 
 .study10-estimate-input span {
-  color: hsl(var(--muted-foreground) / 0.76);
   font-size: 9px;
 }
 
@@ -750,10 +496,6 @@
   min-width: 0;
   min-height: 39px;
   padding: 5px 6px;
-  border: 1px solid var(--study10-panel-border);
-  border-radius: calc(var(--study10-radius) * 0.68);
-  background: var(--study10-panel-bg);
-  box-shadow: var(--study10-panel-shadow);
   display: grid;
   grid-template-columns: 23px 5px minmax(0, 1fr) 26px;
   align-items: center;
@@ -771,8 +513,6 @@
 .study10-task-check,
 .study10-task-delete {
   padding: 0;
-  border: 1px solid var(--study10-control-border);
-  background: var(--study10-control-bg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -781,7 +521,6 @@
 .study10-task-check {
   width: 23px;
   height: 23px;
-  border-radius: 50%;
 }
 
 .study10-task-check svg,
@@ -793,8 +532,6 @@
 .study10-task-delete {
   width: 26px;
   height: 26px;
-  border-radius: calc(var(--study10-radius) * 0.55);
-  color: hsl(var(--muted-foreground) / 0.78);
 }
 
 .study10-task-copy {
@@ -819,7 +556,6 @@
 .study10-task-copy small,
 .study10-empty,
 .study10-legacy-note {
-  color: hsl(var(--muted-foreground) / 0.82);
   font-size: 9px;
 }
 
@@ -841,18 +577,8 @@
   line-height: 1.5;
 }
 
-.study10-task-form :is(input, select):focus,
-.study10-note-panel textarea:focus,
-.study10-goal-line input:focus {
-  border-color: hsl(var(--primary) / 0.58);
-  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.1);
-}
-
 .study10-legacy-note {
   padding: 8px 10px;
-  border: 1px dashed var(--study10-panel-border);
-  border-radius: calc(var(--study10-radius) * 0.75);
-  background: var(--study10-panel-bg);
   line-height: 1.45;
 }
 
@@ -860,11 +586,6 @@
    Floating detail
    It uses the same planner content and container queries as the widget.
 --------------------------------------------------------- */
-
-.study10-floating-window {
-  background: hsl(var(--card) / 0.88);
-  backdrop-filter: blur(34px) saturate(122%);
-}
 
 .study10-floating-window .floating-window-body {
   min-height: 0;
@@ -899,30 +620,13 @@
   padding: 16px;
   display: grid;
   place-items: center;
-  background: transparent;
 }
 
 .study10-subject-dialog {
-  --study10-accent-gradient:
-    linear-gradient(100deg, #d9f1f5, #ddd2f3 48%, #f6d8e5 76%, #d9eee8);
   width: min(360px, calc(100vw - 32px));
   max-height: min(520px, calc(100vh - 32px));
   padding: 14px;
   overflow-y: auto;
-  border: 1px solid hsl(var(--border) / 0.72);
-  border-radius: var(--gd-radius-card, 18px);
-  background:
-    linear-gradient(
-      145deg,
-      color-mix(in srgb, hsl(var(--card)) 94%, white 6%),
-      color-mix(in srgb, hsl(var(--card)) 90%, var(--study-subject-color) 10%)
-    );
-  color: hsl(var(--foreground) / 0.94);
-  box-shadow:
-    0 24px 70px hsl(var(--foreground) / 0.22),
-    inset 0 1px 0 hsl(0 0% 100% / 0.42);
-  backdrop-filter: blur(28px) saturate(128%);
-  -webkit-backdrop-filter: blur(28px) saturate(128%);
   display: grid;
   gap: 11px;
 }
@@ -945,7 +649,6 @@
 .study10-subject-dialog-header span,
 .study10-subject-dialog-field > span,
 .study10-subject-total span {
-  color: hsl(var(--muted-foreground) / 0.86);
   font-size: 10px;
   font-weight: 750;
 }
@@ -961,9 +664,6 @@
   width: 34px;
   height: 34px;
   padding: 0;
-  border: 1px solid hsl(var(--border) / 0.68);
-  border-radius: 50%;
-  background: hsl(var(--card) / 0.72);
   display: inline-grid;
   place-items: center;
 }
@@ -976,9 +676,6 @@
 .study10-subject-total {
   min-height: 50px;
   padding: 9px 11px;
-  border: 1px solid color-mix(in srgb, var(--study-subject-color) 36%, hsl(var(--border)));
-  border-radius: calc(var(--gd-radius-inner, 14px) * 0.8);
-  background: color-mix(in srgb, var(--study-subject-color) 16%, hsl(var(--card)));
 }
 
 .study10-subject-total strong {
@@ -996,11 +693,6 @@
 .study10-subject-dialog-field textarea {
   width: 100%;
   min-width: 0;
-  border: 1px solid hsl(var(--border) / 0.66);
-  border-radius: calc(var(--gd-radius-inner, 14px) * 0.72);
-  background: hsl(var(--card) / 0.72);
-  color: hsl(var(--foreground) / 0.94);
-  outline: none;
 }
 
 .study10-subject-dialog-field input:not([type="color"]) {
@@ -1014,18 +706,9 @@
   resize: vertical;
 }
 
-.study10-subject-dialog-field input:focus,
-.study10-subject-dialog-field textarea:focus {
-  border-color: color-mix(in srgb, var(--study-subject-color) 72%, hsl(var(--border)));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--study-subject-color) 18%, transparent);
-}
-
 .study10-subject-color-field > div {
   min-height: 38px;
   padding: 4px 8px 4px 5px;
-  border: 1px solid hsl(var(--border) / 0.66);
-  border-radius: calc(var(--gd-radius-inner, 14px) * 0.72);
-  background: hsl(var(--card) / 0.72);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1035,23 +718,15 @@
   width: 46px;
   height: 28px;
   padding: 0;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
   cursor: pointer;
 }
 
 .study10-subject-color-field code {
-  color: hsl(var(--muted-foreground) / 0.9);
   font-size: 11px;
 }
 
 .study10-subject-dialog-apply {
   min-height: 38px;
-  border: 1px solid color-mix(in srgb, var(--study-subject-color) 46%, hsl(var(--border)));
-  border-radius: calc(var(--gd-radius-inner, 14px) * 0.78);
-  background: var(--study10-accent-gradient);
-  color: hsl(var(--foreground) / 0.92);
   font-size: 11px;
   font-weight: 800;
 }
@@ -1231,148 +906,6 @@
   .study10-timeline-scroll {
     max-height: 180px;
   }
-}
-
-/* ---------------------------------------------------------
-   Pixel Desk and Retro 98
-   Only these two themes exchange glass blur/radius for OS-style hard panels.
---------------------------------------------------------- */
-
-:where(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html[data-theme="retro"],
-    body[data-theme="retro"]
-  )
-  :is(
-    .study10-summary-card,
-    .study10-date-control,
-    .study10-icon-button,
-    .study10-today-button,
-    .study10-subject-tool,
-    .study10-timer,
-    .study10-panel,
-    .study10-task-row,
-    .study10-note-panel textarea,
-    .study10-legacy-note,
-    .study10-subject-dialog,
-    .study10-subject-total,
-    .study10-subject-dialog-field input,
-    .study10-subject-dialog-field textarea
-  ) {
-  border-radius: 0;
-  background: hsl(var(--card));
-  backdrop-filter: none;
-  box-shadow: none;
-}
-
-:where(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html[data-theme="retro"],
-    body[data-theme="retro"]
-  )
-  :is(.study10-slot, .study10-task-check, .study10-task-delete) {
-  border-radius: 0;
-}
-
-:where(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html[data-theme="retro"],
-    body[data-theme="retro"]
-  )
-  .study10-floating-window {
-  background: hsl(var(--card));
-  backdrop-filter: none;
-}
-
-/* Pixel Desk planner color repair
-   The OS-style reset above intentionally flattens Study panels, but filled
-   timeline cells and selected subject chips still carry planner meaning.
-   Pixel surfaces should use muted OS tints instead of raw pastel blocks, so
-   the timetable still reads as one window. / 10분 칸의 과목 의미는 유지하되
-   픽셀 회색 UI와 어우러지도록 원색을 낮춘 팔레트로 섞는다. */
-:where(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .study10-subject-tool.is-active {
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--study-subject-color) 26%, #f1eee0 74%),
-      color-mix(in srgb, var(--study-subject-color) 22%, #d8d8cc 78%)
-    ) !important;
-  border-color: color-mix(in srgb, var(--study-subject-color) 20%, #606060 80%) !important;
-  box-shadow:
-    inset 1px 1px 0 #f8f8ef,
-    inset -1px -1px 0 #8f8f86 !important;
-}
-
-:where(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .study10-slot.is-filled {
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--study-subject-color) 34%, #f2efdf 66%),
-      color-mix(in srgb, var(--study-subject-color) 30%, #d8d8cc 70%)
-    ) !important;
-  border-color: color-mix(in srgb, var(--study-subject-color) 24%, #505050 76%) !important;
-  box-shadow:
-    inset 1px 1px 0 color-mix(in srgb, var(--study-subject-color) 10%, #ffffff 90%),
-    inset -1px -1px 0 color-mix(in srgb, var(--study-subject-color) 18%, #8a8a82 82%) !important;
-}
-
-:where(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  :is(.study10-subject-dot, .study10-task-color) {
-  background:
-    color-mix(in srgb, var(--study-subject-color) 72%, #d8d8cc 28%) !important;
-  border-radius: 0 !important;
-  box-shadow:
-    inset 1px 1px 0 color-mix(in srgb, var(--study-subject-color) 10%, #ffffff 90%),
-    inset -1px -1px 0 color-mix(in srgb, var(--study-subject-color) 22%, #707068 78%) !important;
-}
-
-:where(
-    html[data-theme="pixel-desk"],
-    body[data-theme="pixel-desk"],
-    html.theme-pixel-desk,
-    body.theme-pixel-desk,
-    html.pixel-desk,
-    body.pixel-desk,
-    html.theme-pixel,
-    body.theme-pixel
-  )
-  .study10-task-row {
-  background:
-    color-mix(in srgb, var(--study-subject-color, #e8e8dc) 12%, #e8e8dc 88%) !important;
-  border-color:
-    color-mix(in srgb, var(--study-subject-color, #606060) 14%, #606060 86%) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
