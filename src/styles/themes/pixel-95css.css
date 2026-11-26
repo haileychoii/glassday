@@ -92,6 +92,7 @@
 ) :is(.mobile-layout, .app-shell-surface) :is(
   .today-focus-hero, .today-focus-section,
   .today-focus-block, .today-focus-task, .today-focus-mini-item,
+  .today-focus-career-item, .today-focus-memo, .today-focus-alert,
   .alert-center-item, .alert-item, .alert-summary-card,
   .calendar-event-item, .calendar-event-card, .calendar-mini-card,
   .calendar-month-day-cell, .calendar-event-card,
@@ -115,15 +116,17 @@
   box-shadow: none !important;
 }
 
-/* Every interactive control uses the same raised face. Active state reverses
-   that same layered edge to read as physically pressed. */
+/* Actual controls share the same raised face and pressed state. Today Focus's
+   pinned memo is a linked summary row, so it stays in the flat inner-panel
+   group above instead of looking like a separate raised button. */
 :is(
   html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
   html.theme-pixel-desk, body.theme-pixel-desk,
   html.pixel-desk, body.pixel-desk,
   html.theme-pixel, body.theme-pixel
 ) :is(.mobile-layout, .app-shell-surface) :is(
-  button:not(.mobile-career-row__main), [role="button"]:not(.mobile-career-row__main), .glass-button, .career-icon-button,
+  button:not(.mobile-career-row__main):not(.today-focus-memo),
+  [role="button"]:not(.mobile-career-row__main):not(.today-focus-memo), .glass-button, .career-icon-button,
   .settings-theme-card, .mobile-career-status-rail button
 ) {
   border: 0;
