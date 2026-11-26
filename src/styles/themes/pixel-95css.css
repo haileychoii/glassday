@@ -78,9 +78,7 @@
 ) {
   background-color: var(--w95-face);
   background-image: none;
-  border: 0;
   border-radius: 0;
-  box-shadow: var(--w95-shadow-raised-deep);
 }
 
 /* One interior panel rule for every widget. Earlier theme files had separate

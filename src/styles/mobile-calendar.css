@@ -57,7 +57,6 @@ body:has(.mobile-layout) .mobile-calendar-detail * {
   width: 100%;
   min-width: 0;
   display: grid;
-  border: 1px solid var(--mc-border);
   border-radius: var(--mc-radius);
   background: var(--gd-surface-bg, hsl(var(--card) / 0.86));
   box-shadow: var(--gd-surface-shadow, 0 12px 32px -24px hsl(var(--foreground) / 0.24));

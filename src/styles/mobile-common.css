@@ -212,6 +212,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="cale
   min-width: 0 !important;
   margin: 0 !important;
   box-sizing: border-box !important;
+  /* One outer stroke for every mobile widget; each theme owns its color. */
+  border: 1px solid var(--gd-surface-border);
 }
 
 /* WidgetSlot reparents the same DOM node used by the desktop grid. That node
@@ -605,7 +607,6 @@ body:has(.mobile-layout) .mobile-navigation-capture {
   .mobile-career-card
 ) {
   color: hsl(var(--foreground) / 0.92) !important;
-  border: 1px solid var(--gd-surface-border) !important;
   border-radius: var(--gd-radius-widget, 18px) !important;
   background: var(--gd-surface-bg) !important;
   background-clip: padding-box !important;

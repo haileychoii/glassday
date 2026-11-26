@@ -62,7 +62,6 @@
   max-width: 100% !important;
   min-width: 0 !important;
   margin: 0 !important;
-  border: 1px solid var(--mc-border);
   border-radius: var(--gd-radius-widget, 18px);
   background: var(--gd-surface-bg, hsl(var(--card) / 0.87));
   box-shadow: var(--gd-surface-shadow, 0 12px 30px -25px hsl(var(--foreground) / 0.2));

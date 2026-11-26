@@ -627,16 +627,6 @@
     box-shadow: none !important;
   }
 
-  & :is(
-    .mobile-widget-slot .glass-card,
-    .mobile-calendar-card,
-    .mobile-career-card
-  ) {
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: var(--w95-shadow-raised-deep) !important;
-  }
-
   & .mobile-widget-slot :is(
     input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
     textarea,
