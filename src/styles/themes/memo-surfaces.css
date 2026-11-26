@@ -1,0 +1,1207 @@
+/* Memo materials and colors. Layout lives in widgets/memo.css. */
+
+
+.memo-list-panel {
+
+  border: 0;
+  border-right:
+    1px solid hsl(220 18% 82% / 0.5);
+
+  border-radius: 0;
+
+  background:
+    hsl(220 35% 97% / 0.62);
+
+  box-shadow:
+    inset -1px 0 0
+      hsl(0 0% 100% / 0.72);
+}
+
+.memo-widget-list-popover {
+
+  border-right: 0;
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      145deg,
+      hsl(222 34% 97% / 0.94),
+      hsl(252 22% 95% / 0.9)
+    );
+  border: 1px solid hsl(0 0% 100% / 0.62);
+
+  box-shadow:
+    0 22px 54px -26px hsl(220 32% 18% / 0.44),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88);
+
+  backdrop-filter: blur(34px) saturate(150%);
+  -webkit-backdrop-filter: blur(34px) saturate(150%);
+}
+
+.memo-list-header {
+
+  color:
+    hsl(var(--foreground) / 0.58);
+}
+
+.memo-mini-button,
+.memo-compact-toggle,
+.memo-list-close {
+
+  border-radius: 999px;
+
+  background:
+    hsl(0 0% 100% / 0.56);
+
+  border:
+    1px solid hsl(220 18% 82% / 0.48);
+
+  color:
+    hsl(var(--foreground) / 0.62);
+}
+
+.memo-mini-button:hover,
+.memo-compact-toggle:hover,
+.memo-list-close:hover {
+  background:
+    hsl(0 0% 100% / 0.82);
+}
+
+.memo-note-item {
+
+  border:
+    1px solid transparent;
+
+  border-radius: var(--gd-radius-card, 16px);
+
+  background: transparent;
+}
+
+.memo-note-item:hover {
+  background: var(--memo-note-surface-hover);
+}
+
+.memo-note-item.is-active {
+  background: var(--memo-note-surface-active);
+
+  border-color: var(--memo-note-border, hsl(220 18% 82% / 0.58));
+
+  box-shadow:
+    0 12px 30px -26px
+      hsl(220 28% 36% / 0.38),
+    inset 0 1px 0
+      hsl(0 0% 100% / 0.82);
+}
+
+.memo-note-item.is-pinned {
+  border-color:
+    hsl(var(--primary) / 0.26);
+}
+
+.memo-note-title {
+
+  color: var(--memo-note-text, hsl(var(--foreground) / 0.76));
+}
+
+.memo-note-preview {
+
+  color:
+    color-mix(
+      in srgb,
+      var(--memo-note-text, hsl(var(--foreground) / 0.42)) 56%,
+      transparent
+    );
+}
+
+.memo-note-color-dot {
+
+  border-radius: 999px;
+
+  border:
+    1px solid hsl(0 0% 100% / 0.72);
+}
+
+.memo-note-delete {
+
+  border-radius: 999px;
+
+  background:
+    hsl(0 0% 100% / 0.48);
+
+  border:
+    1px solid hsl(220 18% 82% / 0.48);
+
+  color:
+    hsl(var(--foreground) / 0.46);
+}
+
+.memo-note-delete:hover {
+  background:
+    hsl(0 80% 96% / 0.72);
+
+  color:
+    hsl(0 70% 45%);
+}
+
+.memo-workspace {
+
+  background:
+    hsl(0 0% 100% / 0.36);
+}
+
+.memo-title-input,
+.memo-title-view {
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+
+  box-shadow: none;
+  outline: none;
+
+  color:
+    var(
+      --memo-title-color,
+      hsl(var(--foreground) / 0.9)
+    );
+}
+
+.memo-select {
+
+  border-radius: 999px;
+
+  background:
+    hsl(0 0% 100% / 0.68);
+
+  border:
+    1px solid hsl(220 18% 82% / 0.54);
+
+  outline: none;
+}
+
+.memo-tool-button {
+
+  border-radius: 999px;
+
+  background:
+    hsl(0 0% 100% / 0.56);
+
+  border:
+    1px solid hsl(220 18% 82% / 0.5);
+}
+
+.memo-tool-button:hover {
+  background:
+    hsl(0 0% 100% / 0.82);
+}
+
+.memo-color-area {
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      hsl(0 0% 100% / 0.38),
+      hsl(0 0% 100% / 0.16)
+    );
+
+  border:
+    1px solid hsl(0 0% 100% / 0.46);
+}
+
+.memo-color-label {
+
+  color:
+    hsl(var(--foreground) / 0.54);
+}
+
+.memo-color-chip {
+
+  border-radius: 999px;
+
+  color:
+    hsl(220 24% 18% / 0.72);
+
+  border:
+    2px solid hsl(0 0% 100% / 0.82);
+
+  box-shadow:
+    0 4px 12px
+      hsl(220 20% 20% / 0.14),
+    inset 0 1px 0
+      hsl(0 0% 100% / 0.88);
+}
+
+.memo-color-chip.is-active {
+  outline:
+    2px solid hsl(var(--primary) / 0.52);
+
+  outline-offset: 2px;
+}
+
+.memo-color-swatch {
+
+  border-radius: 4px;
+
+  border:
+    1px solid hsl(var(--foreground) / 0.22);
+}
+
+.memo-color-swatch.is-active {
+  outline:
+    2px solid hsl(var(--primary) / 0.7);
+
+  outline-offset: 2px;
+}
+
+.memo-editor-label {
+
+  color:
+    hsl(var(--foreground) / 0.52);
+}
+
+.memo-editor,
+.memo-window-editor,
+[contenteditable="true"].memo-editor {
+
+  border-radius: var(--gd-radius-card, 18px);
+
+  outline: none;
+
+  color:
+    var(
+      --memo-editor-color,
+      hsl(var(--foreground) / 0.84)
+    );
+
+  background:
+    var(
+      --memo-paper-surface,
+      linear-gradient(
+        180deg,
+        color-mix(
+          in srgb,
+          var(--memo-paper-color, #fff7cf) 90%,
+          white 10%
+        ),
+        color-mix(
+          in srgb,
+          var(--memo-paper-color, #fff7cf) 76%,
+          rgb(255 255 255 / 0.22) 24%
+        )
+      )
+    );
+
+  border:
+    1px solid
+    var(
+      --memo-paper-border,
+      color-mix(
+        in srgb,
+        var(--memo-paper-color, #fff7cf) 62%,
+        rgb(255 255 255 / 0.38) 38%
+      )
+    );
+
+  box-shadow:
+    0 24px 70px -58px
+      hsl(330 40% 38% / 0.5),
+    inset 0 1px 0
+      hsl(0 0% 100% / 0.86);
+}
+
+.memo-editor-editing {
+  background:
+    var(
+      --memo-paper-surface,
+      linear-gradient(
+        180deg,
+        color-mix(
+          in srgb,
+          var(--memo-paper-color, #fff7cf) 94%,
+          white 6%
+        ),
+        color-mix(
+          in srgb,
+          var(--memo-paper-color, #fff7cf) 80%,
+          rgb(255 255 255 / 0.2) 20%
+        )
+      )
+    );
+}
+
+.memo-editor:empty::before {
+
+  color:
+    hsl(var(--foreground) / 0.34);
+}
+
+.memo-editor table {
+
+  border-collapse: collapse;
+}
+
+.memo-editor td,
+.memo-editor th {
+
+  border:
+    1px solid hsl(var(--foreground) / 0.18);
+}
+
+.memo-table-context-menu {
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.96),
+      hsl(220 28% 96% / 0.92)
+    );
+
+  border:
+    1px solid hsl(220 18% 82% / 0.78);
+
+  box-shadow:
+    0 22px 44px -20px
+      hsl(220 28% 18% / 0.32),
+    inset 0 1px 0
+      hsl(0 0% 100% / 0.92);
+
+  backdrop-filter:
+    blur(16px)
+    saturate(150%);
+
+  -webkit-backdrop-filter:
+    blur(16px)
+    saturate(150%);
+}
+
+.memo-table-context-item {
+
+  border: 0;
+  border-radius: 10px;
+
+  color:
+    hsl(var(--foreground) / 0.82);
+
+  background: transparent;
+}
+
+.memo-table-context-item:hover {
+  background:
+    hsl(220 30% 92% / 0.88);
+}
+
+.memo-table-context-divider {
+
+  background:
+    hsl(220 18% 82% / 0.58);
+}
+
+.memo-save-backdrop {
+
+  background:
+    radial-gradient(
+      circle at 50% 30%,
+      hsl(0 0% 100% / 0.16),
+      hsl(225 20% 18% / 0.2)
+    );
+
+  backdrop-filter:
+    blur(18px)
+    saturate(120%);
+
+  -webkit-backdrop-filter:
+    blur(18px)
+    saturate(120%);
+}
+
+.memo-save-dialog {
+
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      145deg,
+      hsl(0 0% 100% / 0.74),
+      hsl(0 0% 100% / 0.34)
+    );
+
+  border:
+    1px solid hsl(0 0% 100% / 0.78);
+
+  backdrop-filter:
+    blur(38px)
+    saturate(190%);
+
+  -webkit-backdrop-filter:
+    blur(38px)
+    saturate(190%);
+
+  box-shadow:
+    0 34px 100px -32px
+      hsl(220 35% 18% / 0.42),
+    inset 0 1px 0
+      hsl(0 0% 100% / 0.88),
+    inset 0 -1px 0
+      hsl(220 25% 40% / 0.06);
+}
+
+.memo-save-input {
+
+  border-radius: 18px;
+
+  background:
+    hsl(0 0% 100% / 0.42);
+
+  border:
+    1px solid hsl(0 0% 100% / 0.58);
+
+  outline: none;
+}
+
+.memo-save-input:focus {
+  background:
+    hsl(0 0% 100% / 0.62);
+
+  border-color:
+    hsl(var(--primary) / 0.45);
+}
+
+.memo-save-option {
+
+  border-radius: 20px;
+
+  background:
+    hsl(0 0% 100% / 0.32);
+
+  border:
+    1px solid hsl(0 0% 100% / 0.45);
+}
+
+.memo-save-option:hover {
+  background:
+    hsl(0 0% 100% / 0.55);
+}
+
+.memo-window-backdrop {
+
+  background: transparent !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.memo-window-layer {
+
+  background: transparent;
+
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.memo-window,
+.memo-floating-window {
+
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.46),
+      rgb(255 255 255 / 0.24)
+    );
+
+  border:
+    1px solid rgb(255 255 255 / 0.44);
+
+  backdrop-filter:
+    blur(48px)
+    saturate(158%);
+
+  -webkit-backdrop-filter:
+    blur(48px)
+    saturate(158%);
+
+  box-shadow:
+    0 42px 120px -46px
+      rgb(20 20 40 / 0.36),
+    inset 0 1px 0
+      rgb(255 255 255 / 0.74);
+}
+
+.memo-window-titlebar,
+.memo-floating-window-titlebar {
+
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.36),
+      rgb(255 255 255 / 0.18)
+    );
+
+  border-bottom:
+    1px solid rgb(255 255 255 / 0.28);
+}
+
+.memo-floating-window .floating-window-body,
+.memo-floating-window .memo-floating-body {
+  background: transparent;
+}
+
+.memo-floating-window .memo-list-panel,
+.memo-floating-window .memo-workspace {
+  backdrop-filter:
+    blur(26px)
+    saturate(138%);
+
+  -webkit-backdrop-filter:
+    blur(26px)
+    saturate(138%);
+}
+
+.memo-floating-window .memo-list-panel {
+  background:
+    rgb(255 255 255 / 0.22);
+
+  border-color:
+    rgb(255 255 255 / 0.24);
+}
+
+.memo-floating-window .memo-workspace {
+  background:
+    rgb(255 255 255 / 0.16);
+}
+
+.memo-window-resizer::before {
+
+  border-radius: 999px;
+
+  background:
+    hsl(var(--foreground) / 0.14);
+}
+
+.memo-window-resizer:hover::before,
+.memo-window-resizer.is-dragging::before {
+  background:
+    hsl(var(--primary) / 0.48);
+}
+
+.memo-widget-resizer::before {
+  border-radius: 999px;
+  background: hsl(var(--foreground) / 0.12);
+}
+
+.memo-widget-resizer:hover::before,
+.memo-widget-resizer.is-dragging::before {
+  background: hsl(var(--primary) / 0.48);
+}
+
+html[data-theme="glass-light"]
+.memo-floating-window,
+
+body[data-theme="glass-light"]
+.memo-floating-window,
+
+html.theme-glass-light
+.memo-floating-window,
+
+body.theme-glass-light
+.memo-floating-window {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.54),
+      rgb(255 255 255 / 0.3)
+    );
+
+  backdrop-filter:
+    blur(52px)
+    saturate(160%);
+
+  -webkit-backdrop-filter:
+    blur(52px)
+    saturate(160%);
+}
+
+html[data-theme="glass-light"]
+.memo-floating-window .memo-list-panel,
+
+html[data-theme="glass-light"]
+.memo-floating-window .memo-workspace,
+
+body[data-theme="glass-light"]
+.memo-floating-window .memo-list-panel,
+
+body[data-theme="glass-light"]
+.memo-floating-window .memo-workspace,
+
+html.theme-glass-light
+.memo-floating-window .memo-list-panel,
+
+html.theme-glass-light
+.memo-floating-window .memo-workspace,
+
+body.theme-glass-light
+.memo-floating-window .memo-list-panel,
+
+body.theme-glass-light
+.memo-floating-window .memo-workspace {
+  background:
+    rgb(255 255 255 / 0.18);
+}
+
+html[data-theme="glass-dark"]
+.memo-floating-window,
+
+body[data-theme="glass-dark"]
+.memo-floating-window,
+
+html.theme-glass-dark
+.memo-floating-window,
+
+body.theme-glass-dark
+.memo-floating-window {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(24 27 39 / 0.66),
+      rgb(13 17 28 / 0.42)
+    );
+
+  border-color:
+    rgb(194 210 255 / 0.16);
+
+  backdrop-filter:
+    blur(48px)
+    saturate(142%);
+
+  -webkit-backdrop-filter:
+    blur(48px)
+    saturate(142%);
+}
+
+html[data-theme="glass-dark"]
+.memo-floating-window-titlebar,
+
+body[data-theme="glass-dark"]
+.memo-floating-window-titlebar,
+
+html.theme-glass-dark
+.memo-floating-window-titlebar,
+
+body.theme-glass-dark
+.memo-floating-window-titlebar {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.12),
+      rgb(255 255 255 / 0.05)
+    );
+
+  border-bottom-color:
+    rgb(194 210 255 / 0.12);
+}
+
+html[data-theme="glass-dark"]
+.memo-floating-window .memo-list-panel,
+
+html[data-theme="glass-dark"]
+.memo-floating-window .memo-workspace,
+
+body[data-theme="glass-dark"]
+.memo-floating-window .memo-list-panel,
+
+body[data-theme="glass-dark"]
+.memo-floating-window .memo-workspace,
+
+html.theme-glass-dark
+.memo-floating-window .memo-list-panel,
+
+html.theme-glass-dark
+.memo-floating-window .memo-workspace,
+
+body.theme-glass-dark
+.memo-floating-window .memo-list-panel,
+
+body.theme-glass-dark
+.memo-floating-window .memo-workspace {
+  background:
+    rgb(18 23 36 / 0.28);
+}
+
+html[data-theme="glass-dark"]
+.memo-workspace .memo-editor,
+
+html[data-theme="glass-dark"]
+.memo-floating-window .memo-editor,
+
+body[data-theme="glass-dark"]
+.memo-workspace .memo-editor,
+
+body[data-theme="glass-dark"]
+.memo-floating-window .memo-editor,
+
+html.theme-glass-dark
+.memo-workspace .memo-editor,
+
+html.theme-glass-dark
+.memo-floating-window .memo-editor,
+
+body.theme-glass-dark
+.memo-workspace .memo-editor,
+
+body.theme-glass-dark
+.memo-floating-window .memo-editor {
+  background:
+    var(--memo-dark-paper);
+
+  border-color:
+    var(--memo-dark-border);
+
+  color:
+    var(
+      --memo-dark-text,
+      rgba(241, 244, 255, 0.94)
+    );
+}
+
+@container memo-widget (max-width: 700px) {
+
+  .memo-note-item {
+
+    border-radius: var(--gd-radius-card, 12px);
+  }
+}
+
+@container memo-widget (max-width: 700px) {
+
+  .memo-editor,
+  .memo-window-editor,
+  [contenteditable="true"].memo-editor {
+
+    border-radius: var(--gd-radius-button, 8px);
+  }
+}
+
+@container memo-widget (max-width: 560px) {
+  .memo-list-panel {
+
+    border-right:
+      1px solid hsl(220 18% 82% / 0.45);
+
+    border-radius:
+      0 20px 20px 0;
+
+    box-shadow:
+      16px 0 40px
+        hsl(220 28% 24% / 0.16),
+      inset -1px 0 0
+        hsl(0 0% 100% / 0.62);
+  }
+}
+
+@container memo-widget (max-width: 560px) {
+
+  .memo-editor,
+  .memo-window-editor,
+  [contenteditable="true"].memo-editor {
+
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 760px) {
+  .memo-window,
+  .memo-floating-window {
+
+    border-radius: 22px;
+  }
+}
+
+.memo-editor img[data-memo-image="true"],
+.memo-window-editor img[data-memo-image="true"] {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px hsl(230 30% 18% / 0.12);
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html[data-theme="retro"],
+  body[data-theme="retro"],
+  html.theme-retro,
+  body.theme-retro
+) :is(.memo-editor, .memo-window-editor) img[data-memo-image="true"] {
+  border-radius: 0;
+}
+
+.memo-widget .memo-app.is-compact-list-open > .memo-list-panel {
+  border-right: 0;
+  border-left: 1px solid hsl(220 18% 82% / 0.45);
+  border-radius: 18px;
+  box-shadow:
+    0 16px 38px -24px hsl(220 28% 16% / 0.34),
+    inset 1px 0 0 hsl(0 0% 100% / 0.72);
+}
+
+@container memo-widget (max-width: 560px) {
+
+  .memo-widget .memo-list-panel {
+    border-right: 1px solid hsl(220 18% 82% / 0.45);
+    border-bottom: 0;
+    border-radius: 20px;
+    background:
+      linear-gradient(
+        145deg,
+        hsl(222 34% 97% / 0.96),
+        hsl(252 22% 95% / 0.92)
+      );
+    box-shadow:
+      0 18px 48px hsl(220 30% 22% / 0.24),
+      inset -1px 0 0 hsl(0 0% 100% / 0.78);
+    backdrop-filter: blur(34px) saturate(150%);
+    -webkit-backdrop-filter: blur(34px) saturate(150%);
+  }
+}
+
+@container memo-widget (max-width: 560px) {
+
+  .memo-widget .memo-list-panel strong,
+  .memo-widget .memo-list-panel small,
+  .memo-widget .memo-title-view,
+  .memo-widget .memo-title-input,
+  .memo-widget .memo-editor {
+    color: hsl(var(--foreground) / 0.9);
+  }
+}
+
+@media (max-width: 860px) {
+
+  .memo-floating-body .memo-list-panel {
+    border-right: 0 !important;
+    border-bottom: 1px solid hsl(220 18% 82% / 0.45) !important;
+  }
+}
+
+.memo-widget .memo-app.is-inline-list-open > .memo-list-panel {
+  border-right: 1px solid hsl(220 18% 82% / 0.42);
+  border-radius: 16px;
+}
+
+:is(
+  html[data-theme="pastel"],
+  body[data-theme="pastel"],
+  html.theme-pastel,
+  body.theme-pastel,
+  html[data-theme="glass-light"],
+  body[data-theme="glass-light"],
+  html.theme-glass-light,
+  body.theme-glass-light,
+  html[data-theme="glass-dark"],
+  body[data-theme="glass-dark"],
+  html.theme-glass-dark,
+  body.theme-glass-dark,
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora,
+  html[data-theme="mac-core"],
+  body[data-theme="mac-core"],
+  html.theme-mac-core,
+  body.theme-mac-core
+)
+  .memo-widget
+  .memo-workspace {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+@container memo-widget (max-width: 560px) {
+  .memo-widget .memo-widget-list-popover {
+    border-radius: 18px;
+  }
+}
+
+:is(
+  html[data-theme="pastel"],
+  body[data-theme="pastel"],
+  html.theme-pastel,
+  body.theme-pastel,
+  html[data-theme="glass-light"],
+  body[data-theme="glass-light"],
+  html.theme-glass-light,
+  body.theme-glass-light,
+  html[data-theme="glass-dark"],
+  body[data-theme="glass-dark"],
+  html.theme-glass-dark,
+  body.theme-glass-dark,
+  html[data-theme="aurora"],
+  body[data-theme="aurora"],
+  html.theme-aurora,
+  body.theme-aurora,
+  html[data-theme="mac-core"],
+  body[data-theme="mac-core"],
+  html.theme-mac-core,
+  body.theme-mac-core
+)
+  .memo-widget
+  :is(.memo-workspace, .memo-editor, .memo-window-editor) {
+  border-radius: var(--gd-radius-card, 18px) !important;
+}
+
+:is(
+  html[data-theme="retro"], body[data-theme="retro"],
+  html.theme-retro, body.theme-retro
+) .memo-widget :is(.memo-workspace, .memo-editor, .memo-window-editor) {
+  border-radius: 0 !important;
+}
+
+.memo-window,
+.memo-floating-window {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(250 251 255 / 0.96),
+      rgb(238 240 248 / 0.92)
+    ) !important;
+  border-color: rgb(255 255 255 / 0.76) !important;
+  box-shadow:
+    0 44px 130px rgb(20 20 42 / 0.38),
+    inset 0 1px 0 rgb(255 255 255 / 0.92) !important;
+  backdrop-filter: blur(72px) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(72px) saturate(175%) !important;
+}
+
+.memo-window-titlebar,
+.memo-floating-window-titlebar {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.9),
+      rgb(248 249 254 / 0.7)
+    ) !important;
+  border-bottom-color: rgb(210 216 232 / 0.72) !important;
+}
+
+.memo-floating-window .floating-window-body,
+.memo-floating-window .memo-floating-body {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.42),
+      rgb(238 241 248 / 0.32)
+    ) !important;
+}
+
+.memo-floating-window .memo-list-panel,
+.memo-floating-window .memo-workspace {
+  background:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.88),
+      rgb(242 244 250 / 0.8)
+    ) !important;
+  border-color: rgb(210 216 232 / 0.66) !important;
+  backdrop-filter: blur(52px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(52px) saturate(160%) !important;
+}
+
+html[data-theme="glass-dark"] .memo-window,
+html[data-theme="glass-dark"] .memo-floating-window,
+body[data-theme="glass-dark"] .memo-window,
+body[data-theme="glass-dark"] .memo-floating-window,
+html.theme-glass-dark .memo-window,
+html.theme-glass-dark .memo-floating-window,
+body.theme-glass-dark .memo-window,
+body.theme-glass-dark .memo-floating-window {
+  background: var(--gd-dark-floating-bg) !important;
+  border-color: var(--gd-dark-floating-border) !important;
+  box-shadow: var(--gd-dark-floating-shadow) !important;
+}
+
+html[data-theme="aurora"] .memo-window,
+html[data-theme="aurora"] .memo-floating-window,
+body[data-theme="aurora"] .memo-window,
+body[data-theme="aurora"] .memo-floating-window,
+html.theme-aurora .memo-window,
+html.theme-aurora .memo-floating-window,
+body.theme-aurora .memo-window,
+body.theme-aurora .memo-floating-window {
+  background: var(--aurora-card-bg) !important;
+  border-color: var(--aurora-card-border) !important;
+  box-shadow:
+    0 44px 130px rgb(0 0 0 / 0.58),
+    inset 0 1px 0 rgb(255 255 255 / 0.12) !important;
+}
+
+html[data-theme="glass-dark"] .memo-floating-window .memo-list-panel,
+html[data-theme="glass-dark"] .memo-floating-window .memo-workspace,
+body[data-theme="glass-dark"] .memo-floating-window .memo-list-panel,
+body[data-theme="glass-dark"] .memo-floating-window .memo-workspace,
+html.theme-glass-dark .memo-floating-window .memo-list-panel,
+html.theme-glass-dark .memo-floating-window .memo-workspace,
+body.theme-glass-dark .memo-floating-window .memo-list-panel,
+body.theme-glass-dark .memo-floating-window .memo-workspace {
+  background: var(--gd-dark-panel-bg) !important;
+  border-color: var(--gd-dark-panel-border) !important;
+}
+
+html[data-theme="aurora"] .memo-floating-window .memo-list-panel,
+html[data-theme="aurora"] .memo-floating-window .memo-workspace,
+body[data-theme="aurora"] .memo-floating-window .memo-list-panel,
+body[data-theme="aurora"] .memo-floating-window .memo-workspace,
+html.theme-aurora .memo-floating-window .memo-list-panel,
+html.theme-aurora .memo-floating-window .memo-workspace,
+body.theme-aurora .memo-floating-window .memo-list-panel,
+body.theme-aurora .memo-floating-window .memo-workspace {
+  background: var(--aurora-panel-bg) !important;
+  border-color: var(--aurora-panel-border) !important;
+}
+
+html[data-theme="pixel-desk"] .memo-window,
+html[data-theme="pixel-desk"] .memo-floating-window,
+body[data-theme="pixel-desk"] .memo-window,
+body[data-theme="pixel-desk"] .memo-floating-window,
+html.theme-pixel-desk .memo-window,
+html.theme-pixel-desk .memo-floating-window,
+body.theme-pixel-desk .memo-window,
+body.theme-pixel-desk .memo-floating-window,
+html[data-theme="retro"] .memo-window,
+html[data-theme="retro"] .memo-floating-window,
+body[data-theme="retro"] .memo-window,
+body[data-theme="retro"] .memo-floating-window,
+html.theme-retro .memo-window,
+html.theme-retro .memo-floating-window,
+body.theme-retro .memo-window,
+body.theme-retro .memo-floating-window {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.memo-widget, .memo-floating-window, .memo-window) {
+  color: #000000 !important;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  border: 2px solid !important;
+  border-color: #ffffff #404040 #404040 #ffffff !important;
+  box-shadow: 1px 1px 0 #dfdfdf inset, -1px -1px 0 #808080 inset !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.memo-widget, .memo-floating-window, .memo-window) :is(
+  .memo-list-panel, .memo-workspace,
+  .memo-toolbar, .memo-editor-toolbar,
+  .memo-note-item,
+  .memo-tool-button, .memo-mini-button,
+  .memo-compact-toggle, .memo-list-close, .memo-note-delete
+) {
+  color: #000000 !important;
+  border-radius: 0 !important;
+  border: 2px solid !important;
+  border-color: #ffffff #404040 #404040 #ffffff !important;
+  background-color: #dfdfdf !important;
+  background-image: none !important;
+  box-shadow: inset 1px 1px 0 #f7f7f7, inset -1px -1px 0 #808080 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.memo-widget, .memo-floating-window, .memo-window) :is(
+  .memo-list-panel, .memo-toolbar, .memo-editor-toolbar
+) {
+  background: #c0c0c0 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.memo-widget, .memo-floating-window, .memo-window) .memo-workspace {
+  background: #c0c0c0 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.memo-widget, .memo-floating-window, .memo-window) .memo-editor {
+  color: var(--memo-editor-color, #000000) !important;
+  border-radius: 0 !important;
+  border: 2px solid !important;
+  border-color: #404040 #ffffff #ffffff #404040 !important;
+  background: var(--memo-paper-surface, #ffffff) !important;
+  box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #f7f7f7 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.memo-widget, .memo-floating-window, .memo-window) .memo-select {
+  color: #000000 !important;
+  border-radius: 0 !important;
+  border: 2px solid !important;
+  border-color: #404040 #ffffff #ffffff #404040 !important;
+  background: #ffffff !important;
+  box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #f7f7f7 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.memo-floating-window, .memo-window) {
+  box-shadow:
+    1px 1px 0 #dfdfdf inset,
+    -1px -1px 0 #808080 inset,
+    8px 8px 0 rgb(0 0 0 / 0.34) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.memo-floating-window, .memo-window) :is(
+  .memo-floating-window-titlebar, .memo-window-titlebar, .floating-window-titlebar
+) {
+  color: #ffffff !important;
+  background: #000080 !important;
+  border-bottom: 2px solid #000000 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.memo-floating-window, .memo-window) :is(.floating-window-body, .memo-floating-body) {
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+}

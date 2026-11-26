@@ -52,6 +52,8 @@
 @import "./widgets/diary-workspace.css";
 /* Career material and colors live in the theme layer; widget CSS owns layout. */
 @import "./themes/career-surfaces.css";
+/* Memo paper and panel materials live in the theme layer as well. */
+@import "./themes/memo-surfaces.css";
 
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";
