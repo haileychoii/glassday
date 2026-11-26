@@ -33,6 +33,7 @@ import { useLocalStorage } from "./useLocalStorage";
 import {
   DASHBOARD_STORAGE_SCHEMA_KEY,
   DASHBOARD_STORAGE_SCHEMA_VERSION,
+  SHARED_WORKSPACE_TABS_KEY,
 } from "../constants/dashboardStorage";
 import { defaultDashboardTabs } from "../constants/dashboardTabs";
 import type {
@@ -46,6 +47,15 @@ import type {
 
 const TABS_KEY = "glassday.dashboard.tabs.v1";
 const ACTIVE_TAB_KEY = "glassday.dashboard.activeTab.v1";
+
+type SharedWorkspaceTab = {
+  id: string;
+  label: string;
+  icon: string;
+  background?: string;
+  iconSource?: string;
+  widgetIds: WidgetId[];
+};
 
 const fallbackTab: DashboardTab = {
   id: "home",
@@ -328,19 +338,21 @@ const normalizeTabs = (
   return tabs.map((tab) => normalizeTab(tab, options));
 };
 
-const createNewTab = (icon = "✨"): DashboardTab => {
+const createNewTab = (icon = "✨", shared?: SharedWorkspaceTab): DashboardTab => {
   return {
-    id: createId(),
-    label: "New Tab",
-    icon,
+    id: shared?.id ?? createId(),
+    label: shared?.label ?? "New Tab",
+    icon: shared?.icon ?? icon,
     // A new workspace starts as a blank canvas. The user chooses its widgets
     // after it is created instead of inheriting an unexpected default pair.
-    widgetIds: [],
+    widgetIds: shared?.widgetIds ?? [],
     layouts: {
       wide: emptyLayouts(),
       laptop: emptyLayouts(),
     },
     locked: false,
+    background: shared?.background,
+    iconSource: shared?.iconSource,
   };
 };
 
@@ -356,6 +368,12 @@ export const useDashboardTabs = () => {
   const { value: activeTabId, setValue: setActiveTabId } =
     useLocalStorage<string>(ACTIVE_TAB_KEY, "home");
 
+  /* One-shot manifest applied by CloudSyncContext; layouts remain local. */
+  const {
+    value: incomingSharedTabs,
+    removeValue: clearIncomingSharedTabs,
+  } = useLocalStorage<SharedWorkspaceTab[]>(SHARED_WORKSPACE_TABS_KEY, []);
+
   const shouldUpgradeDashboardStorage =
     typeof window !== "undefined" &&
     window.localStorage.getItem(DASHBOARD_STORAGE_SCHEMA_KEY) !==
@@ -366,6 +384,53 @@ export const useDashboardTabs = () => {
       mergeCurrentDefaults: shouldUpgradeDashboardStorage,
     });
   }, [shouldUpgradeDashboardStorage, storedTabs]);
+
+  useEffect(() => {
+    if (incomingSharedTabs.length === 0) return;
+
+    setTabs((previousTabs) => {
+      const mergedTabs = normalizeTabs(previousTabs);
+      let changed = false;
+
+      incomingSharedTabs.forEach((sharedTab) => {
+        if (!sharedTab || typeof sharedTab.id !== "string") return;
+
+        const existingIndex = mergedTabs.findIndex((tab) => tab.id === sharedTab.id);
+        if (existingIndex < 0) {
+          mergedTabs.push(createNewTab(sharedTab.icon || "✨", sharedTab));
+          changed = true;
+          return;
+        }
+
+        const localTab = mergedTabs[existingIndex];
+        const nextTab: DashboardTab = {
+          ...localTab,
+          label: sharedTab.label || localTab.label,
+          icon: sharedTab.icon || localTab.icon,
+          background: sharedTab.background ?? localTab.background,
+          iconSource: sharedTab.iconSource ?? localTab.iconSource,
+          widgetIds: Array.isArray(sharedTab.widgetIds)
+            ? [...new Set(sharedTab.widgetIds.filter((id) => typeof id === "string"))]
+            : localTab.widgetIds,
+        };
+
+        if (
+          nextTab.label !== localTab.label ||
+          nextTab.icon !== localTab.icon ||
+          nextTab.background !== localTab.background ||
+          nextTab.iconSource !== localTab.iconSource ||
+          JSON.stringify(nextTab.widgetIds) !== JSON.stringify(localTab.widgetIds)
+        ) {
+          mergedTabs[existingIndex] = nextTab;
+          changed = true;
+        }
+      });
+
+      return changed ? mergedTabs : previousTabs;
+    });
+
+    clearIncomingSharedTabs();
+  }, [clearIncomingSharedTabs, incomingSharedTabs, setTabs]);
 
   useEffect(() => {
     if (typeof window === "undefined" || !shouldUpgradeDashboardStorage) {
