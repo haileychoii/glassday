@@ -12,11 +12,28 @@ import { useState, type ChangeEvent } from "react";
 
 import {
   workspaceBackgroundOptions,
-  workspaceIconOptions,
 } from "../../constants/workspaceAppearance";
+import {
+  workspaceIconCollections,
+  type WorkspaceIconCollectionId,
+} from "../../constants/workspaceIconChoices";
 import type { DashboardTab } from "../../types/workspace";
 
 import { WorkspaceTabIcon } from "./WorkspaceTabIcon";
+
+const iconCollections: Array<{ id: WorkspaceIconCollectionId; label: string }> = [
+  { id: "pink-iphone", label: "핑크 스티커" },
+  { id: "retro-pixel", label: "픽셀 아트" },
+  { id: "folder-art", label: "폴더 디자인" },
+];
+
+const collectionForTheme = (theme: Parameters<typeof WorkspaceTabIcon>[0]["theme"]): WorkspaceIconCollectionId =>
+  theme === "pixel-desk" || theme === "retro" ? "retro-pixel" : "pink-iphone";
+
+const collectionForIcon = (icon: string, fallback: WorkspaceIconCollectionId) => {
+  const match = icon.match(/^\/workspace-icons\/(pink-iphone|retro-pixel|folder-art)\//);
+  return (match?.[1] as WorkspaceIconCollectionId | undefined) ?? fallback;
+};
 
 type WorkspaceAppearanceDialogProps = {
   tab: DashboardTab;
@@ -37,6 +54,9 @@ export const WorkspaceAppearanceDialog = ({
   const [icon, setIcon] = useState(tab.icon || "✨");
   const [background, setBackground] = useState(tab.background || "");
   const [iconSource, setIconSource] = useState(tab.iconSource || "preset");
+  const [iconCollection, setIconCollection] = useState<WorkspaceIconCollectionId>(
+    () => collectionForIcon(tab.icon || "", collectionForTheme(theme))
+  );
 
   const handleUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -71,22 +91,46 @@ export const WorkspaceAppearanceDialog = ({
 
         <div className="workspace-appearance-section">
           <h3>Icon</h3>
-          <div className="workspace-icon-option-grid">
-            {workspaceIconOptions.map((option) => (
+          {/*
+            Mobile and laptop read the same workspaceIconChoices catalog.
+            The stored public asset path is the icon identity, so the exact
+            selected artwork is shared by both navigation layouts.
+          */}
+          <div className="workspace-icon-collections" role="group" aria-label="Icon style">
+            {iconCollections.map((collection) => (
               <button
-                key={option.id}
+                key={collection.id}
                 type="button"
-                className={icon === option.value ? "is-selected" : ""}
-                onClick={() => {
-                  setIcon(option.value);
-                  setIconSource(option.id);
-                }}
-                title={option.label}
-                aria-label={option.label}
+                className={iconCollection === collection.id ? "is-selected" : ""}
+                aria-pressed={iconCollection === collection.id}
+                onClick={() => setIconCollection(collection.id)}
               >
-                <span className="workspace-icon-option-preview">
-                  <WorkspaceTabIcon tabId={tab.id} tabLabel={tab.label} theme={theme} icon={option.value} />
-                </span>
+                {collection.label}
+              </button>
+            ))}
+          </div>
+          <div className="workspace-icon-option-grid" role="group" aria-label={`${iconCollections.find(({ id }) => id === iconCollection)?.label} 아이콘`}>
+            {workspaceIconCollections[iconCollection].map((choice) => (
+              <button
+                key={choice.id}
+                type="button"
+                className={icon === choice.src ? "is-selected" : ""}
+                onClick={() => {
+                  setIcon(choice.src);
+                  setIconSource(choice.id);
+                }}
+                title={choice.label}
+                aria-label={choice.label}
+              >
+                <img
+                  src={choice.src}
+                  className="workspace-icon-option-image"
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  loading="lazy"
+                  decoding="async"
+                />
               </button>
             ))}
           </div>
