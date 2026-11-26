@@ -401,6 +401,16 @@ body[data-theme="aurora"] :is(.today-focus-hero, .today-focus-section, .today-fo
   -webkit-backdrop-filter: var(--gd-widget-inner-filter) !important;
 }
 
+/* Clip the goal card's blurred backdrop to its rounded frame, not a square box.
+   목표 카드 안쪽 blur를 카드의 둥근 테두리 안에서 잘라 사각 면처럼 보이지 않게 합니다. */
+:is(html[data-theme="pastel"], html[data-theme="glass-light"], html[data-theme="glass-dark"], html[data-theme="aurora"],
+    body[data-theme="pastel"], body[data-theme="glass-light"], body[data-theme="glass-dark"], body[data-theme="aurora"])
+  .study10-summary-card--goal {
+  overflow: hidden;
+  border-radius: var(--study10-radius, var(--gd-radius-card, 14px));
+  background-clip: padding-box;
+}
+
 /* Hard pixel/retro materials remain opaque and do not inherit glass blur. */
 :is(html[data-theme="pixel-desk"], body[data-theme="pixel-desk"], html[data-theme="retro"], body[data-theme="retro"])
   :is(.study10-summary-card, .study10-timer, .study10-panel, .study10-minute-head) {
