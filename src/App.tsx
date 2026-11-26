@@ -268,6 +268,7 @@ function App() {
                 setEditMode(true);
               }}
               onRenameTab={renameTab}
+              onRemoveTab={removeTab}
               editMode={editMode}
               onToggleEditMode={() => setEditMode((prev) => !prev)}
             >

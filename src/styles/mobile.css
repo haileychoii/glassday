@@ -51,8 +51,29 @@
   overflow-wrap: anywhere;
 }
 
+.mobile-heading-edit-row {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 6px;
+}
+
+.mobile-heading-delete {
+  display: grid;
+  flex: 0 0 32px;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: hsl(var(--destructive));
+  background: transparent;
+  border: 1px solid var(--gd-surface-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-control, 8px);
+}
+
 .mobile-heading-name-input {
   display: block;
+  flex: 1 1 auto;
   width: 100%;
   min-width: 0;
   padding: 0 0 2px;
