@@ -1102,34 +1102,16 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot :is(
 .settings-modal-window,
 .settings-window,
 .settings-panel {
-  width: min(860px, calc(100vw - 40px)) !important;
-  max-width: 860px !important;
   height: min(760px, calc(100dvh - 48px)) !important;
   max-height: calc(100dvh - 48px) !important;
-  display: grid !important;
   grid-template-rows: 78px auto minmax(0, 1fr) !important;
-  overflow: hidden !important;
-  box-sizing: border-box !important;
 }
 
 .settings-modal-header,
 .settings-header,
 .settings-titlebar {
   height: 78px !important;
-  min-height: 78px !important;
-  padding: 16px 22px !important;
-  gap: 16px !important;
-  box-sizing: border-box !important;
 }
-
-.settings-modal-icon,
-.settings-icon {
-  width: 38px !important;
-  min-width: 38px !important;
-  height: 38px !important;
-}
-
-.settings-modal-title-wrap { gap: 12px !important; }
 .settings-modal-title-text { gap: 4px !important; }
 .settings-modal-header h2 { font-size: 16px !important; line-height: 1.1 !important; }
 .settings-modal-header p { font-size: 13px !important; line-height: 1.2 !important; }
@@ -1137,27 +1119,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot :is(
 .settings-modal-body,
 .settings-body,
 .settings-content {
-  min-height: 0 !important;
   margin: 0 !important;
-  padding: 18px 22px 24px !important;
-  gap: 18px !important;
   overflow: auto !important;
-  box-sizing: border-box !important;
-}
-
-.settings-section,
-.settings-card {
-  width: 100% !important;
-  min-width: 0 !important;
-  padding: 18px !important;
-  gap: 18px !important;
-  box-sizing: border-box !important;
-}
-
-.settings-theme-card {
-  min-height: 136px !important;
-  padding: 14px !important;
-  gap: 8px !important;
 }
 
 .settings-theme-preview { height: 68px !important; min-height: 68px !important; }
@@ -1189,8 +1152,6 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot :is(
     min-width: 30px !important;
     height: 30px !important;
   }
-
-  body:has(.mobile-layout) .settings-modal-title-wrap { gap: 8px !important; }
   body:has(.mobile-layout) .settings-modal-header h2 { font-size: 14px !important; line-height: 1.15 !important; }
   body:has(.mobile-layout) .settings-modal-header p { display: none !important; }
 
@@ -1210,9 +1171,8 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot :is(
     gap: 14px !important;
   }
 
-  body:has(.mobile-layout) .settings-theme-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
-  body:has(.mobile-layout) .settings-theme-card { min-height: 120px !important; padding: 8px !important; gap: 8px !important; grid-template-rows: 40px auto minmax(24px, auto) !important; }
-  body:has(.mobile-layout) .settings-theme-preview { height: 40px !important; min-height: 40px !important; }
+  body:has(.mobile-layout) .settings-theme-grid { gap: 8px !important; }
+  body:has(.mobile-layout) .settings-theme-card { padding: 8px !important; gap: 8px !important; }
 }
 
 /* Theme selectors are intentionally more specific in their visual layer.

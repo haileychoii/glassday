@@ -805,8 +805,6 @@
 .career-modal-kicker {
   font-size: 10px;
   font-weight: 850;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 
 .career-floating-title h2 {
@@ -844,8 +842,6 @@
 
 .career-section-title {
   margin-bottom: 12px;
-  font-size: 12px;
-  font-weight: 850;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -863,24 +859,15 @@
 }
 
 .career-detail-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
 .career-field {
-  min-width: 0;
-  display: grid;
   gap: 6px;
 }
 
 .career-field-wide {
   grid-column: 1 / -1;
-}
-
-.career-field span {
-  font-size: 11px;
-  font-weight: 800;
 }
 
 .career-field input,
@@ -902,8 +889,6 @@
 
 .career-textarea {
   min-height: 96px;
-  resize: vertical;
-  line-height: 1.55;
 }
 
 .career-notes-textarea {
@@ -1111,7 +1096,6 @@
 .career-modal-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
 }
 
 .career-small-button,
@@ -1127,8 +1111,6 @@
 .career-small-button {
   height: 34px;
   padding: 0 12px;
-  font-size: 12px;
-  font-weight: 800;
 }
 
 .career-icon-button,
@@ -1426,19 +1408,13 @@
 
 /* 자소서 문항 카드가 타이핑할 때 좌우로 흔들리지 않게 */
 .career-cover-wide-row {
-  width: 100% !important;
-  min-width: 0 !important;
   overflow: visible !important;
 }
 
 /* 질문 / Limit / Delete 줄 안정화 */
 .career-cover-question-line {
-  width: 100% !important;
-  min-width: 0 !important;
-  display: grid !important;
   grid-template-columns: 24px minmax(0, 1fr) 104px 38px !important;
   align-items: start !important;
-  gap: 10px !important;
 }
 
 /* 질문 아이콘 위치 고정 */
@@ -1457,8 +1433,6 @@
 
 /* 질문 textarea: 자동확장 금지, 대신 충분히 크게 */
 .career-cover-question-input {
-  width: 100% !important;
-  min-width: 0 !important;
 
   height: 128px !important;
   min-height: 128px !important;
@@ -1469,9 +1443,6 @@
   overflow-x: hidden !important;
 
   padding: 12px 14px !important;
-
-  font-size: 13px !important;
-  font-weight: 750 !important;
   line-height: 1.55 !important;
 
   white-space: pre-wrap !important;
@@ -1504,17 +1475,12 @@
 
 /* Answer / Strategy는 아래에서만 커지게 */
 .career-cover-writing-line {
-  width: 100% !important;
-  min-width: 0 !important;
-  display: grid !important;
   grid-template-columns: 1fr !important;
   gap: 12px !important;
 }
 
 .career-cover-answer-textarea,
 .career-cover-strategy-textarea {
-  width: 100% !important;
-  min-width: 0 !important;
   resize: none !important;
   overflow: hidden !important;
   field-sizing: initial !important;
@@ -2281,9 +2247,6 @@
   .career-cover-status-select {
     grid-column: 1 / 2 !important;
 
-    width: 100% !important;
-    min-width: 0 !important;
-
     height: 33px !important;
 
     padding: 0 7px !important;
@@ -2293,9 +2256,6 @@
 
   .career-cover-limit-field {
     grid-column: 2 / 3 !important;
-
-    width: 100% !important;
-    min-width: 0 !important;
 
     margin: 0 !important;
 
@@ -2327,11 +2287,9 @@
     margin: 0 !important;
 
     align-self: end !important;
-    justify-self: end !important;
   }
 
   .career-cover-writing-line {
-    grid-template-columns: 1fr !important;
 
     gap: 7px !important;
   }
@@ -2451,13 +2409,10 @@
 }
 
 .career-cover-question-line {
-  width: 100% !important;
-  display: grid !important;
   grid-template-columns: 24px minmax(0, 1fr) 78px 78px 104px 38px !important;
   grid-template-areas:
     "icon question question question question question"
     ". . fold done limit delete" !important;
-  align-items: start !important;
   gap: 8px 10px !important;
 }
 
@@ -2471,8 +2426,6 @@
   height: 104px !important;
   min-height: 104px !important;
   max-height: 104px !important;
-  resize: none !important;
-  overflow-y: auto !important;
 }
 
 .career-cover-done-toggle {
@@ -2526,8 +2479,6 @@
 
 .career-cover-question-line > .career-delete-button {
   grid-area: delete !important;
-  width: 38px !important;
-  height: 38px !important;
   margin: 0 !important;
   align-self: end !important;
 }

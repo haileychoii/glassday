@@ -14,19 +14,6 @@
    0. Global box safety
 ========================================================= */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  min-width: 0;
-  min-height: 100%;
-}
-
 /* =========================================================
    1. Remove decorative overlay layers only
    Keep structure intact and strip purely visual noise layers
@@ -45,21 +32,11 @@ body,
 ========================================================= */
 
 .dashboard-tab-space {
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
   padding:
     var(--gd-shell-pad-top)
     var(--gd-shell-pad-x)
     var(--gd-shell-pad-bottom);
   overflow-x: hidden;
-}
-
-.dashboard-edit-canvas {
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  overflow: visible;
 }
 
 .react-grid-layout {
@@ -73,10 +50,6 @@ body,
   min-width: 0;
   min-height: 0;
   max-width: 100%;
-}
-
-.dashboard-grid-item {
-  overflow: visible;
 }
 
 .dashboard-grid-item > .glass-card,
@@ -606,10 +579,7 @@ body,
 
 @media (max-width: 920px) {
   .topbar-mobile-workspaces {
-    display: flex;
-    align-items: center;
     gap: 10px;
-    min-width: 0;
   }
 
   .topbar-mobile-workspace-list {
@@ -618,19 +588,9 @@ body,
        Keep the whole workspace set visible so a phone user never has to swipe
        a navigation bar before finding a tab. / responsive.css의 한 줄 그리드
        규칙을 다시 flex 스크롤로 덮어쓰지 않도록 마지막 계층에서 고정한다. */
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
     gap: 5px;
-    width: 100%;
-    overflow: visible;
     overflow-x: visible;
     overflow-y: visible;
-    padding-bottom: 0;
-    scrollbar-width: none;
-  }
-
-  .topbar-mobile-workspace-list::-webkit-scrollbar {
-    display: none;
   }
 
   /* Compact fallback shell for 768-920px web widths. The dedicated
@@ -794,13 +754,10 @@ body,
 }
 
 .topbar-action-button {
-  height: 36px;
-  padding: 0 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  white-space: nowrap;
 }
 
 /* =========================================================
@@ -808,77 +765,11 @@ body,
 ========================================================= */
 
 .calendar-modal-window {
-  width: min(620px, calc(100vw - 48px)) !important;
-  max-height: min(760px, calc(100vh - 48px)) !important;
-  border-radius: 30px !important;
-  overflow: hidden !important;
-  box-sizing: border-box !important;
   position: fixed !important;
   left: 50% !important;
   top: 50% !important;
   transform: translate(-50%, -50%) !important;
   pointer-events: auto !important;
-}
-
-.calendar-modal-header {
-  min-height: 76px !important;
-  padding: 22px 24px 18px 24px !important;
-  display: flex !important;
-  align-items: flex-start !important;
-  justify-content: space-between !important;
-  gap: 16px !important;
-  box-sizing: border-box !important;
-}
-
-.calendar-modal-header > div {
-  min-width: 0 !important;
-  padding-left: 0 !important;
-}
-
-.calendar-modal-header .glass-button {
-  flex-shrink: 0 !important;
-}
-
-.calendar-modal-body {
-  padding: 18px 24px 24px 24px !important;
-  max-height: calc(min(760px, calc(100vh - 48px)) - 76px) !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  box-sizing: border-box !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 14px !important;
-}
-
-.calendar-detail-grid {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 14px !important;
-}
-
-.calendar-field {
-  min-width: 0 !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-.calendar-field input,
-.calendar-field textarea {
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-.event-color-picker {
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-.calendar-modal-actions {
-  padding-top: 2px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
 }
 
 /* =========================================================
@@ -888,9 +779,6 @@ body,
 ========================================================= */
 
 @media (max-width: 768px) {
-  .calendar-detail-grid {
-    grid-template-columns: 1fr !important;
-  }
 
   .calendar-modal-window {
     width: calc(100vw - 28px) !important;
@@ -1125,7 +1013,6 @@ body,
 
 .dashboard-grid-item > .glass-card.today-focus-widget {
   container-type: size !important;
-  container-name: gd-widget today-focus-widget !important;
 }
 
 /* Study needs height queries as well as width queries. Keep both container
@@ -3471,20 +3358,6 @@ body,
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.9),
     0 8px 18px rgb(20 24 36 / 0.1) !important;
-}
-
-:is(
-    html[data-theme="mac-core"],
-    body[data-theme="mac-core"],
-    html.theme-mac-core,
-    body.theme-mac-core
-  )
-  .career-floating-titlebar
-  .career-floating-close-button
-  svg {
-  width: 13px !important;
-  height: 13px !important;
-  stroke-width: 2 !important;
 }
 
 /* Mac Core Career list borders:
