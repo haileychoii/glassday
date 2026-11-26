@@ -209,14 +209,6 @@
   color: hsl(var(--foreground) / 0.82);
 }
 
-.money-detail-card {
-  background:
-    linear-gradient(145deg, hsl(0 0% 100% / 0.48), hsl(0 0% 100% / 0.24));
-  border-color: hsl(0 0% 100% / 0.5);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-}
-
 .money-section-heading h3 {
   color: hsl(var(--foreground) / 0.88);
 }
@@ -398,15 +390,6 @@
   .money-transaction-row {
     border-radius: 13px;
   }
-}
-
-html[data-theme="glass-dark"] .money-detail-card,
-body[data-theme="glass-dark"] .money-detail-card,
-html.theme-glass-dark .money-detail-card,
-body.theme-glass-dark .money-detail-card {
-  background:
-    linear-gradient(145deg, rgb(35 42 62 / 0.76), rgb(17 23 38 / 0.64));
-  border-color: rgb(184 202 246 / 0.22);
 }
 
 html[data-theme="glass-dark"] .money-purchase-dialog,
