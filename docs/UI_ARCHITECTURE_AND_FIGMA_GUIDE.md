@@ -7,6 +7,9 @@
 > 모바일 화면의 세부 파일 지도와 처음부터 위젯을 추가하는 단계는
 > [모바일 UI 파일 지도](mobile-ui-map.md)를 함께 참고한다. 이 문서는 현재 연결 구조를
 > 기록하며 실제 기능/시각 설계는 Figma 시안과 제품 요구사항에서 결정한다.
+>
+> Figma 페이지 구성, Widget Frame 규격, 변수와 Theme mode를 시안에 적용하는 방법은
+> [위젯 Figma 제작 가이드](FIGMA_WIDGET_HANDOFF.md)를 참고한다.
 
 ## 1. 전체 UI 구조
 
