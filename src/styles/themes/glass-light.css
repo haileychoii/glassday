@@ -82,7 +82,9 @@ body.theme-glass-light .bg-glass-gradient {
     linear-gradient(135deg, rgb(245 247 252 / 0.68), rgb(255 255 255 / 0.28)) !important;
 }
 
-/* app shell visual */
+/* App shell material is defined here once for the regular web theme.
+   Keeping its radius on the shared token prevents this theme from changing the
+   outer shape independently from the other themes. */
 html[data-theme="glass-light"] .glass-panel,
 html[data-theme="glass-light"] .liquid-shell,
 html[data-theme="glass-light"] .app-shell,
@@ -262,58 +264,8 @@ body.desktop-transparent[data-theme="glass-light"] .bg-glass-gradient {
   background: transparent !important;
 }
 
-/* final theme overrides: active sidebar + journal accents */
-html[data-theme="glass-light"] .glass-panel,
-html[data-theme="glass-light"] .liquid-shell,
-html[data-theme="glass-light"] .app-shell,
-html[data-theme="glass-light"] .dashboard-shell,
-html[data-theme="glass-light"] .workspace-shell,
-html[data-theme="glass-light"] .desktop-shell,
-html[data-theme="glass-light"] .main-shell,
-body[data-theme="glass-light"] .glass-panel,
-body[data-theme="glass-light"] .liquid-shell,
-body[data-theme="glass-light"] .app-shell,
-body[data-theme="glass-light"] .dashboard-shell,
-body[data-theme="glass-light"] .workspace-shell,
-body[data-theme="glass-light"] .desktop-shell,
-body[data-theme="glass-light"] .main-shell {
-  background: rgba(255, 255, 255, 0.13) !important;
-  border-color: rgba(255, 255, 255, 0.24) !important;
-  backdrop-filter: blur(2px) saturate(122%) !important;
-  -webkit-backdrop-filter: blur(2px) saturate(122%) !important;
-}
-
-html[data-theme="glass-light"] .app-sidebar,
-html[data-theme="glass-light"] .sidebar,
-body[data-theme="glass-light"] .app-sidebar,
-body[data-theme="glass-light"] .sidebar {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.16),
-      rgba(255, 255, 255, 0.07)
-    ) !important;
-  backdrop-filter: blur(3px) saturate(124%) !important;
-  -webkit-backdrop-filter: blur(3px) saturate(124%) !important;
-}
-
-html[data-theme="glass-light"] .topbar,
-body[data-theme="glass-light"] .topbar {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.22),
-      rgba(255, 255, 255, 0.1)
-    ) !important;
-  border-color: rgba(255, 255, 255, 0.22) !important;
-  border-radius: 20px 20px 0 0 !important;
-  box-shadow:
-    0 10px 28px rgba(82, 95, 150, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.42) !important;
-  backdrop-filter: blur(2.5px) saturate(123%) !important;
-  -webkit-backdrop-filter: blur(2.5px) saturate(123%) !important;
-}
-
+/* Settings window is intentionally denser than dashboard glass so its form
+   labels remain readable over a translucent wallpaper. */
 html[data-theme="glass-light"] .settings-modal-window,
 body[data-theme="glass-light"] .settings-modal-window,
 html.theme-glass-light .settings-modal-window,
@@ -882,7 +834,7 @@ body.desktop-transparent[data-theme="glass-light"] .topbar {
     1px solid rgba(255, 255, 255, 0.28) !important;
 
   border-radius:
-    20px 20px 0 0 !important;
+    var(--gd-radius-panel) !important;
 
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.42),
