@@ -591,7 +591,7 @@ body:has(.mobile-layout)
 @media (max-width: 767px) {
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus {
     display: grid;
-    gap: 7px;
+    gap: var(--gd-widget-stack-gap);
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-hero {
@@ -618,8 +618,8 @@ body:has(.mobile-layout)
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-section {
-    padding: 8px !important;
-    gap: 6px !important;
+    padding: var(--gd-widget-panel-pad) !important;
+    gap: var(--gd-widget-section-gap-tight) !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-section-title {
@@ -629,7 +629,7 @@ body:has(.mobile-layout)
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-task-list,
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-mini-list,
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-memo-list {
-    gap: 5px !important;
+    gap: var(--gd-widget-section-gap-tight) !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-task {
@@ -652,7 +652,7 @@ body:has(.mobile-layout)
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-grid {
-    gap: 7px !important;
+    gap: var(--gd-widget-section-gap) !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] .today-focus-grid > .today-focus-section {
@@ -661,8 +661,8 @@ body:has(.mobile-layout)
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] :is(.today-focus-mini-item, .today-focus-career-item, .today-focus-memo) {
     min-height: 34px !important;
-    padding: 6px 7px !important;
-    gap: 6px !important;
+    padding: var(--gd-space-xs) var(--gd-space-sm) !important;
+    gap: var(--gd-widget-inline-gap) !important;
   }
 
   body:has(.mobile-layout) .mobile-widget-slot[data-widget-id="today"] :is(.today-focus-mini-item strong, .today-focus-career-item strong, .today-focus-memo strong) {

@@ -486,7 +486,7 @@ body,
    viewport crosses responsive breakpoints. In laptop mode this widget should
    react only to its own container size. */
 .app-mode-stage.is-laptop-mode .today-focus {
-  gap: 10px !important;
+  gap: var(--gd-widget-stack-gap) !important;
 }
 
 .app-mode-stage.is-laptop-mode .today-focus-card,
@@ -531,12 +531,12 @@ body,
 
 .app-mode-stage.is-laptop-mode .today-focus-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 10px !important;
+  gap: var(--gd-widget-section-gap) !important;
 }
 
 .app-mode-stage.is-laptop-mode .today-focus-section,
 .app-mode-stage.is-laptop-mode .today-focus-block {
-  padding: 12px !important;
+  padding: var(--gd-widget-panel-pad) !important;
   border-radius: 16px !important;
 }
 
@@ -558,7 +558,7 @@ body,
 .app-mode-stage.is-laptop-mode .today-focus-career-item,
 .app-mode-stage.is-laptop-mode .today-focus-memo {
   min-height: 40px !important;
-  padding: 8px !important;
+  padding: var(--gd-space-sm) !important;
   border-radius: 14px !important;
 }
 

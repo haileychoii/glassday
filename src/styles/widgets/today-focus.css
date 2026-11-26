@@ -41,6 +41,27 @@
   container-name: today-focus-widget;
 }
 
+/* One spacing source for every Today Focus section and its nested lists.
+   Today Focus의 상위 섹션과 내부 목록은 공통 위젯 간격 토큰을 함께 사용합니다. */
+.today-focus {
+  display: grid;
+  gap: var(--gd-widget-stack-gap);
+}
+
+.today-focus-grid {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gd-widget-section-gap);
+}
+
+.today-focus-mini-list,
+.today-focus-memo-list {
+  min-width: 0;
+  display: grid;
+  gap: var(--gd-widget-section-gap-tight);
+}
+
 .today-focus-card .glass-card-body,
 .today-focus-widget .glass-card-body,
 .alert-center-widget .glass-card-body,
@@ -185,7 +206,7 @@
   min-height: 0;
 
   display: grid;
-  gap: 8px;
+  gap: var(--gd-widget-section-gap-tight);
 
   overflow-y: auto;
   overflow-x: hidden;
