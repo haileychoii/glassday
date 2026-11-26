@@ -40,9 +40,10 @@
   box-sizing: border-box;
 }
 
-/* Keep enough canvas height visible to show the 16-row edit grid. */
+/* DashboardGrid passes this mode's row count, row height, and gap inline so
+   the edit canvas follows the same source values as React Grid Layout. */
 .dashboard-edit-canvas.is-editing {
-  min-height: var(--gd-grid-min-height, calc(16 * 52px + 15 * 14px));
+  min-height: var(--gd-grid-min-height);
 }
 
 /* =========================================================
@@ -61,7 +62,7 @@
 
   pointer-events: none;
 
-  border-radius: var(--gd-radius-widget, 20px);
+  border-radius: var(--gd-radius-widget);
 
   background-image:
     linear-gradient(
@@ -77,7 +78,7 @@
 
   background-size:
     6.25% 100%,
-    100% calc(var(--gd-grid-row-height, 52px) + var(--gd-grid-gap, 14px));
+    100% calc(var(--gd-grid-row-height) + var(--gd-grid-gap));
 
   background-position: 0 0;
 }
@@ -174,7 +175,7 @@
   z-index: 80;
 
   border: 2px solid hsl(var(--primary) / 0.9);
-  border-radius: var(--gd-radius-widget, 20px);
+  border-radius: var(--gd-radius-widget);
 
   box-shadow:
     0 0 0 4px hsl(var(--primary) / 0.14),
@@ -242,7 +243,7 @@
 
   padding: 5px 9px;
 
-  border-radius: var(--gd-radius-button, 8px);
+  border-radius: var(--gd-radius-button);
 
   pointer-events: none;
 
@@ -283,7 +284,7 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: var(--gd-radius-button, 8px);
+  border-radius: var(--gd-radius-button);
 }
 
 /* =========================================================
@@ -368,7 +369,7 @@
 .react-resizable-handle-se::after {
   inset: 5px;
 
-  border-radius: var(--gd-radius-inner, 8px);
+  border-radius: var(--gd-radius-inner);
 
   background:
     hsl(var(--primary) / 0.78);
@@ -532,7 +533,7 @@
     hsl(var(--primary) / 0.42) !important;
 
   border-radius:
-    var(--gd-radius-widget, 20px);
+    var(--gd-radius-widget);
 }
 
 .dashboard-tab-space.is-editing .dashboard-grid-item {
