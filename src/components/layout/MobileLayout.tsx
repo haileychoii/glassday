@@ -5,7 +5,7 @@
  */
 import { Check, Pencil, Plus, Search, Settings, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { DashboardTab } from "../../types/workspace";
+import type { DashboardTab, WorkspaceTabIconChange } from "../../types/workspace";
 import { MobileNavigation } from "./MobileNavigation";
 
 export const MobileLayout = ({
@@ -17,7 +17,7 @@ export const MobileLayout = ({
   onOpenSettings,
   onAddTab,
   onRenameTab,
-  onChangeTabIcon,
+  onChangeTabIcons,
   onRemoveTab,
   editMode,
   onToggleEditMode,
@@ -31,7 +31,7 @@ export const MobileLayout = ({
   onOpenSettings: () => void;
   onAddTab: (icon: string) => void;
   onRenameTab: (tabId: string, label: string) => void;
-  onChangeTabIcon: (tabId: string, icon: string, applyToAllThemes: boolean) => void;
+  onChangeTabIcons: (changes: WorkspaceTabIconChange[]) => void;
   onRemoveTab: (tabId: string) => void;
   editMode: boolean;
   onToggleEditMode: () => void;
@@ -129,7 +129,7 @@ export const MobileLayout = ({
         onSelectTab={onSelectTab}
         onOpenQuickCapture={onOpenQuickCapture}
         onAddTab={onAddTab}
-        onChangeTabIcon={onChangeTabIcon}
+        onChangeTabIcons={onChangeTabIcons}
         editMode={editMode}
       />
     </div>

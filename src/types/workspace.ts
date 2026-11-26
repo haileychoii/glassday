@@ -13,6 +13,7 @@
  * ============================================================
  */
 import type { ComponentType } from "react";
+import type { ThemeId } from "../constants/themes";
 
 export type WidgetId = string;
 
@@ -82,4 +83,13 @@ export type DashboardTab = {
   /** 모바일에서 직접 조정한 위젯 높이(px). Wide/Laptop 배치와 독립적으로 보관한다. */
   mobileWidgetHeights?: Record<WidgetId, number>;
   locked?: boolean;
+};
+
+/** One pending tab icon update applied as part of the workspace edit action. */
+export type WorkspaceTabIconChange = {
+  tabId: string;
+  icon: string;
+  applyToAllThemes: boolean;
+  /** Theme selected when this draft was created, so later theme changes cannot redirect it. */
+  theme: ThemeId;
 };

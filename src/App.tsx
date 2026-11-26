@@ -65,7 +65,7 @@ import {
 } from "./constants/widgetNavigation";
 import { GLASSDAY_STORAGE_EVENT } from "./lib/glassdayStorage";
 import { useDashboardTabs } from "./hooks/useDashboardTabs";
-import type { DashboardLayoutMode } from "./types/workspace";
+import type { DashboardLayoutMode, WorkspaceTabIconChange } from "./types/workspace";
 
 const readLayoutModeFromUrl = (): DashboardLayoutMode | null => {
   if (typeof window === "undefined") return null;
@@ -126,6 +126,7 @@ function App() {
     setActiveTabMobileWidgetHeight,
     renameTab,
     updateTabIcon,
+    updateTabIcons,
     removeTab,
     undoLastTabAction,
   } = useDashboardTabs();
@@ -158,6 +159,11 @@ function App() {
   const handleChangeTabIcon = (tabId: string, icon: string, applyToAllThemes: boolean) => {
     if (!updateTabIcon(tabId, icon, getCurrentTheme(), applyToAllThemes)) return;
     showTabActionNotice("탭 아이콘을 저장했습니다.");
+  };
+
+  const handleChangeTabIcons = (changes: WorkspaceTabIconChange[]) => {
+    if (!updateTabIcons(changes)) return;
+    showTabActionNotice("탭 아이콘 변경을 적용했습니다.");
   };
 
   const handleUndoTabAction = () => {
@@ -332,7 +338,7 @@ function App() {
                 setEditMode(true);
               }}
               onRenameTab={renameTab}
-              onChangeTabIcon={handleChangeTabIcon}
+              onChangeTabIcons={handleChangeTabIcons}
               onRemoveTab={handleRemoveTab}
               editMode={editMode}
               onToggleEditMode={() => setEditMode((prev) => !prev)}

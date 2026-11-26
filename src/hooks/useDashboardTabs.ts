@@ -35,6 +35,7 @@ import {
   DASHBOARD_STORAGE_SCHEMA_VERSION,
 } from "../constants/dashboardStorage";
 import { defaultDashboardTabs } from "../constants/dashboardTabs";
+import type { ThemeId } from "../constants/themes";
 import type {
   DashboardLayoutMode,
   DashboardModeLayouts,
@@ -42,6 +43,7 @@ import type {
   GridLayoutItem,
   Layouts,
   WidgetId,
+  WorkspaceTabIconChange,
 } from "../types/workspace";
 
 const TABS_KEY = "glassday.dashboard.tabs.v1";
@@ -62,6 +64,10 @@ type TabActionUndo =
       tabId: string;
       previousIcon: string;
       previousIconByTheme?: DashboardTab["iconByTheme"];
+    }
+  | {
+      type: "icons-changed";
+      previousTabs: DashboardTab[];
     }
   | {
       type: "removed";
@@ -519,7 +525,7 @@ export const useDashboardTabs = () => {
   const updateTabIcon = (
     tabId: string,
     icon: string,
-    theme: import("../constants/themes").ThemeId,
+    theme: ThemeId,
     applyToAllThemes = false
   ) => {
     const target = tabs.find((tab) => tab.id === tabId);
@@ -544,6 +550,43 @@ export const useDashboardTabs = () => {
       nextIconByTheme[theme] = icon;
       updateTab(tabId, { iconByTheme: nextIconByTheme });
     }
+    return true;
+  };
+
+  /** Apply a staged group of tab icons together and make the whole action undoable. */
+  const updateTabIcons = (
+    changes: WorkspaceTabIconChange[]
+  ) => {
+    const changesByTabId = new Map(changes.map((change) => [change.tabId, change]));
+    const previousTabs: DashboardTab[] = [];
+    const nextTabs = normalizeTabs(tabs).map((tab) => {
+      const change = changesByTabId.get(tab.id);
+      if (!change) return tab;
+
+      let updatedTab: DashboardTab;
+      if (change.applyToAllThemes) {
+        if (tab.icon === change.icon && Object.keys(tab.iconByTheme ?? {}).length === 0) {
+          return tab;
+        }
+        updatedTab = { ...tab, icon: change.icon, iconByTheme: {} };
+      } else {
+        const currentThemeIcon = tab.iconByTheme?.[change.theme];
+        if (currentThemeIcon === change.icon || (!currentThemeIcon && tab.icon === change.icon)) {
+          return tab;
+        }
+        updatedTab = {
+          ...tab,
+          iconByTheme: { ...(tab.iconByTheme ?? {}), [change.theme]: change.icon },
+        };
+      }
+
+      previousTabs.push(tab);
+      return updatedTab;
+    });
+
+    if (previousTabs.length === 0) return false;
+    lastTabAction.current = { type: "icons-changed", previousTabs };
+    setTabs(nextTabs);
     return true;
   };
 
@@ -604,6 +647,14 @@ export const useDashboardTabs = () => {
       return true;
     }
 
+    if (action.type === "icons-changed") {
+      const previousById = new Map(action.previousTabs.map((tab) => [tab.id, tab]));
+      setTabs((prev) =>
+        normalizeTabs(prev).map((tab) => previousById.get(tab.id) ?? tab)
+      );
+      return true;
+    }
+
     setTabs((prev) => {
       const currentTabs = normalizeTabs(prev);
       if (currentTabs.some((tab) => tab.id === action.tab.id)) return currentTabs;
@@ -628,6 +679,7 @@ export const useDashboardTabs = () => {
     setActiveTabMobileWidgetHeight,
     renameTab,
     updateTabIcon,
+    updateTabIcons,
     removeTab,
     undoLastTabAction,
   };

@@ -37,13 +37,18 @@ type WorkspaceIconPickerProps = {
   theme: ThemeId;
   onSave: (icon: string, applyToAllThemes: boolean) => void;
   /** Show a temporary icon on the tab while the picker is still a draft. */
-  onPreview?: (icon: string) => void;
+  onPreview?: (icon: string, applyToAllThemes: boolean) => void;
   onCancel: () => void;
   className?: string;
   saveLabel?: string;
   /** Names the tab that will receive the icon, especially on the mobile picker. */
   contextLabel?: string;
   showThemeScope?: boolean;
+  /** Existing tab draft restored when the user switches between tabs. */
+  draftValue?: string;
+  initialApplyToAllThemes?: boolean;
+  /** Lets Apply commit drafts staged on other tabs as well. */
+  canApply?: boolean;
 };
 
 export const WorkspaceIconPicker = ({
@@ -56,6 +61,9 @@ export const WorkspaceIconPicker = ({
   saveLabel = "저장",
   contextLabel,
   showThemeScope = false,
+  draftValue,
+  initialApplyToAllThemes = false,
+  canApply = false,
 }: WorkspaceIconPickerProps) => {
   const [draftIcon, setDraftIcon] = useState(value);
   const [applyToAllThemes, setApplyToAllThemes] = useState(false);
@@ -64,9 +72,9 @@ export const WorkspaceIconPicker = ({
   );
 
   useEffect(() => {
-    setDraftIcon(value);
-    setApplyToAllThemes(false);
-  }, [contextLabel, value]);
+    setDraftIcon(draftValue ?? value);
+    setApplyToAllThemes(initialApplyToAllThemes);
+  }, [contextLabel, draftValue, initialApplyToAllThemes, value]);
 
   useEffect(() => {
     setCollection(iconCollectionForTheme(theme));
@@ -76,7 +84,12 @@ export const WorkspaceIconPicker = ({
 
   const chooseIcon = (icon: string) => {
     setDraftIcon(icon);
-    onPreview?.(icon);
+    onPreview?.(icon, applyToAllThemes);
+  };
+
+  const chooseScope = (nextApplyToAllThemes: boolean) => {
+    setApplyToAllThemes(nextApplyToAllThemes);
+    onPreview?.(draftIcon, nextApplyToAllThemes);
   };
 
   return (
@@ -147,14 +160,14 @@ export const WorkspaceIconPicker = ({
           <button
             type="button"
             aria-pressed={!applyToAllThemes}
-            onClick={() => setApplyToAllThemes(false)}
+            onClick={() => chooseScope(false)}
           >
             현재 테마만 · {themeLabel(theme)}
           </button>
           <button
             type="button"
             aria-pressed={applyToAllThemes}
-            onClick={() => setApplyToAllThemes(true)}
+            onClick={() => chooseScope(true)}
           >
             모든 테마
           </button>
@@ -175,7 +188,7 @@ export const WorkspaceIconPicker = ({
         <button
           type="button"
           className="workspace-icon-picker-save"
-          disabled={draftIcon === value && !applyToAllThemes}
+          disabled={draftIcon === value && !applyToAllThemes && !canApply}
           onClick={() => onSave(draftIcon, applyToAllThemes)}
         >
           {saveLabel}
