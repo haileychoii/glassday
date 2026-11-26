@@ -214,6 +214,16 @@ body:has(.mobile-layout) .mobile-layout .mobile-widget-slot[data-widget-id="cale
   box-sizing: border-box !important;
 }
 
+/* The host only moves a widget between desktop and mobile. It must never draw
+ * a second frame behind the real GlassCard, including fixed-height Journal
+ * and Memo hosts. The card itself remains the sole owner of theme borders. */
+.mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
 /* Only define shared card geometry here. Themes own whether a stroke is
  * visible and which material is used. */
 .mobile-layout .mobile-widget-slot[data-widget-id] > .widget-instance-root > .glass-card,
