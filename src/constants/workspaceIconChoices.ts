@@ -29,20 +29,19 @@ export type WorkspaceIconChoice = {
    Duplicate or incomplete art is hidden from new choices without breaking an
    existing tab that still points to its original image URL. */
 const repairedDuplicateSlots: Partial<Record<WorkspaceIconCollectionId, ReadonlySet<number>>> = {
-  "pink-iphone": new Set([92, 99, 102, 177, 179, 355, 357, 398]),
+  // These saved URLs now show a complete neighboring drawing. Keep them out of
+  // the picker where the replacement would otherwise duplicate a good icon.
+  "pink-iphone": new Set([92, 99, 102, 139, 177, 179, 288, 345, 348, 355, 357, 398, 405]),
   "retro-pixel": new Set([61, 62, 63, 69, 71, 109, 137, 139]),
 };
 
 /**
- * These pink illustration crops are visibly incomplete (detached shapes,
- * chopped paw pads, or a leftover sliver). Keep their files for old saved URLs,
- * but leave them out of the picker so nobody can select a broken-looking icon.
+ * These remaining source crops contain only meaningless detached shapes. Their
+ * files contain transparent placeholders so old saved icon URLs never display
+ * a chopped fragment; they are hidden from the picker as well.
  */
 const unusablePinkIllustrationSlots = new Set([
-  133, 139, 288, // sparkle crops contain a stray partial second sparkle
   216, 217, 218, // detached pink bars/squares with crop artifacts
-  405, // the growth-chart crop is missing most of its bars
-  345, 348, // paw artwork was split into disconnected pieces
   407, 408, 409, // isolated pill/bar fragments with stray crop pixels
   539, // a single leftover sliver rather than a complete illustration
 ]);
