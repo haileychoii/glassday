@@ -123,6 +123,18 @@ export type CareerImageAttachment = {
   createdAt: string;
 };
 
+/** 지원서 등 Career에 첨부하는 Word/Hancom 원본 파일.
+ * 파일 데이터도 Career snapshot에 포함되어 기존 로컬 저장/클라우드 동기화를 따릅니다.
+ */
+export type CareerDocumentAttachment = {
+  id: string;
+  name: string;
+  dataUrl: string;
+  mimeType: string;
+  size: number;
+  createdAt: string;
+};
+
 export type CareerItem = {
   /** Application Card, Calendar event, Floating Detail을 연결하는 record id. */
   id: string;
@@ -145,6 +157,7 @@ export type CareerItem = {
 
   postingUrl: string;
   jobDescription: string;
+  applicationFiles?: CareerDocumentAttachment[];
   jobImages?: CareerImageAttachment[];
   noteImages?: CareerImageAttachment[];
 

@@ -37,6 +37,7 @@ import {
   LayoutGrid,
   Link2,
   List,
+  Paperclip,
   Plus,
   Trash2,
   X,
@@ -51,6 +52,7 @@ import type {
 import { useDashboardData } from "../../context/DashboardDataContext";
 import { prepareLocalImageDataUrl } from "../../lib/localImage";
 import type {
+  CareerDocumentAttachment,
   CareerImageAttachment,
   CareerItem,
   CareerStage,
@@ -139,6 +141,34 @@ const careerStageStatusOptions: {
 const CAREER_IMAGE_LIMIT = 8;
 const CAREER_IMAGE_MAX_INPUT_BYTES = 12 * 1024 * 1024;
 const CAREER_IMAGE_MAX_EDGE = 1280;
+const CAREER_DOCUMENT_LIMIT = 5;
+const CAREER_DOCUMENT_MAX_FILE_BYTES = 4 * 1024 * 1024;
+const CAREER_DOCUMENT_MAX_TOTAL_BYTES = 8 * 1024 * 1024;
+const CAREER_DOCUMENT_EXTENSIONS = new Set(["doc", "docx", "hwp", "hwpx"]);
+
+const createCareerDocumentId = () => {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+
+  return `career-document-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+
+const readCareerDocument = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") resolve(reader.result);
+      else reject(new Error(`${file.name}: 파일을 읽지 못했어.`));
+    };
+    reader.onerror = () => reject(new Error(`${file.name}: 파일을 읽지 못했어.`));
+    reader.readAsDataURL(file);
+  });
+
+const formatFileSize = (bytes: number) =>
+  bytes < 1024 * 1024
+    ? `${Math.max(1, Math.round(bytes / 1024))} KB`
+    : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 
 const createJobImageId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -341,6 +371,7 @@ const normalizeCareer = (item: CareerItem): CareerItem => ({
   applicationEndTime: item.applicationEndTime ?? "23:59",
   postingUrl: item.postingUrl ?? "",
   jobDescription: item.jobDescription ?? "",
+  applicationFiles: Array.isArray(item.applicationFiles) ? item.applicationFiles : [],
   jobImages: Array.isArray(item.jobImages) ? item.jobImages : [],
   noteImages: Array.isArray(item.noteImages) ? item.noteImages : [],
   coverLetterQuestions: item.coverLetterQuestions ?? [],
@@ -412,6 +443,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     jobImages: "",
     noteImages: "",
   });
+  const [documentError, setDocumentError] = useState("");
 
   // Floating detail window geometry is intentionally separate from the dashboard
   // grid layout. Moving/resizing this editor should not push widgets around.
@@ -659,6 +691,74 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
       ...current,
       [field]: errors.join(" "),
     }));
+  };
+
+  /* Uploaded application documents remain attached to the Career record.
+     Small file/count limits keep the existing localStorage and cloud snapshot manageable.
+     파일은 새 저장소를 만들지 않고 Career 데이터와 함께 보관해 기존 동기화 흐름을 따릅니다. */
+  const addCareerDocuments = async (
+    event: ReactChangeEvent<HTMLInputElement>
+  ) => {
+    const input = event.currentTarget;
+    const files = Array.from(input.files ?? []);
+    input.value = "";
+
+    if (!selectedItem || files.length === 0) return;
+
+    const currentFiles = selectedItem.applicationFiles ?? [];
+    let totalBytes = currentFiles.reduce((sum, file) => sum + file.size, 0);
+    const preparedFiles: CareerDocumentAttachment[] = [];
+    const errors: string[] = [];
+
+    for (const file of files) {
+      const extension = file.name.split(".").pop()?.toLowerCase() ?? "";
+      if (!CAREER_DOCUMENT_EXTENSIONS.has(extension)) {
+        errors.push(`${file.name}: Word 또는 한글 문서만 첨부할 수 있어.`);
+        continue;
+      }
+      if (currentFiles.length + preparedFiles.length >= CAREER_DOCUMENT_LIMIT) {
+        errors.push(`지원 항목당 최대 ${CAREER_DOCUMENT_LIMIT}개까지 첨부할 수 있어.`);
+        break;
+      }
+      if (file.size > CAREER_DOCUMENT_MAX_FILE_BYTES) {
+        errors.push(`${file.name}: 파일당 최대 4MB까지 첨부할 수 있어.`);
+        continue;
+      }
+      if (totalBytes + file.size > CAREER_DOCUMENT_MAX_TOTAL_BYTES) {
+        errors.push("지원 항목의 첨부 파일은 합계 8MB까지 저장할 수 있어.");
+        break;
+      }
+
+      try {
+        const dataUrl = await readCareerDocument(file);
+        preparedFiles.push({
+          id: createCareerDocumentId(),
+          name: file.name,
+          dataUrl,
+          mimeType: file.type || "application/octet-stream",
+          size: file.size,
+          createdAt: new Date().toISOString(),
+        });
+        totalBytes += file.size;
+      } catch (error) {
+        errors.push(error instanceof Error ? error.message : `${file.name}: 첨부 실패`);
+      }
+    }
+
+    if (preparedFiles.length > 0) {
+      updateSelectedItem({ applicationFiles: [...currentFiles, ...preparedFiles] });
+    }
+    setDocumentError(errors.join(" "));
+  };
+
+  const removeCareerDocument = (documentId: string) => {
+    if (!selectedItem) return;
+    updateSelectedItem({
+      applicationFiles: (selectedItem.applicationFiles ?? []).filter(
+        (file) => file.id !== documentId
+      ),
+    });
+    setDocumentError("");
   };
 
   const removeCareerImage = (field: CareerImageField, imageId: string) => {
@@ -1359,6 +1459,62 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                         placeholder="https://..."
                       />
                     </label>
+
+                    <div className="career-field career-field-wide career-application-files">
+                      <div className="career-job-images-header">
+                        <div>
+                          <strong>Application Documents</strong>
+                          <span>
+                            Word / 한글 · {(selectedItem.applicationFiles ?? []).length}/{CAREER_DOCUMENT_LIMIT}개
+                            · 파일당 4MB, 합계 8MB
+                          </span>
+                        </div>
+                        <label className="career-job-image-add">
+                          <Paperclip className="w-3.5 h-3.5" aria-hidden="true" />
+                          파일 첨부
+                          <input
+                            type="file"
+                            accept=".doc,.docx,.hwp,.hwpx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/x-hwp,application/haansofthwp,application/vnd.hancom.hwpx"
+                            multiple
+                            onChange={(event) => void addCareerDocuments(event)}
+                          />
+                        </label>
+                      </div>
+
+                      {documentError && (
+                        <div className="career-job-image-error" role="alert">
+                          {documentError}
+                        </div>
+                      )}
+
+                      {(selectedItem.applicationFiles ?? []).length > 0 && (
+                        <div className="career-document-list">
+                          {(selectedItem.applicationFiles ?? []).map((file) => (
+                            <div className="career-document-row" key={file.id}>
+                              <a
+                                href={file.dataUrl}
+                                download={file.name}
+                                className="career-document-download"
+                                title={`${file.name} 다운로드`}
+                              >
+                                <FileText size={16} aria-hidden="true" />
+                                <span>{file.name}</span>
+                                <small>{formatFileSize(file.size)}</small>
+                              </a>
+                              <button
+                                type="button"
+                                className="career-document-remove"
+                                onClick={() => removeCareerDocument(file.id)}
+                                aria-label={`${file.name} 삭제`}
+                                title="첨부 파일 삭제"
+                              >
+                                <Trash2 size={14} aria-hidden="true" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
 
                     <label className="career-field career-field-wide">
                       <span>Job Posting / 공고 주요 내용</span>

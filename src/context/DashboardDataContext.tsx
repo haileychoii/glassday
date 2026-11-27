@@ -45,6 +45,7 @@ import type {
   CareerAttachmentLink,
   CareerInterviewReview,
   CareerItem,
+  CareerDocumentAttachment,
   CareerImageAttachment,
   CareerPriority,
   CareerStage,
@@ -375,6 +376,8 @@ const normalizeCareerItem = (item: Partial<CareerItem>): CareerItem => {
 
     postingUrl: item.postingUrl ?? "",
     jobDescription: item.jobDescription ?? "",
+
+    applicationFiles: normalizeCareerDocuments(item.applicationFiles),
 
     jobImages: normalizeCareerImages(item.jobImages),
     noteImages: normalizeCareerImages(item.noteImages),
@@ -914,5 +917,33 @@ const normalizeCareerImages = (value: unknown): CareerImageAttachment[] => {
             : new Date().toISOString(),
       },
     ];
+  });
+};
+
+/* Career document migration
+   기존 지원 데이터에는 applicationFiles가 없으므로 빈 목록으로 복구합니다.
+   URL, 백업, 클라우드 snapshot에서 잘못된 항목이 들어와도 UI가 깨지지 않게 검사합니다.
+*/
+const normalizeCareerDocuments = (value: unknown): CareerDocumentAttachment[] => {
+  if (!Array.isArray(value)) return [];
+
+  return value.flatMap((item) => {
+    if (
+      typeof item?.id !== "string" ||
+      typeof item?.name !== "string" ||
+      typeof item?.dataUrl !== "string" ||
+      !item.dataUrl.startsWith("data:")
+    ) {
+      return [];
+    }
+
+    return [{
+      id: item.id,
+      name: item.name,
+      dataUrl: item.dataUrl,
+      mimeType: typeof item.mimeType === "string" ? item.mimeType : "application/octet-stream",
+      size: Number.isFinite(item.size) ? Math.max(0, item.size) : 0,
+      createdAt: typeof item.createdAt === "string" ? item.createdAt : new Date().toISOString(),
+    }];
   });
 };
