@@ -26,15 +26,25 @@ export type WorkspaceIconChoice = {
 };
 
 /* Keep the original numeric paths stable for tabs that already saved an icon.
-   Repaired paths stay available to existing saved tabs; when a clean duplicate
-   exists, hide only that duplicate slot from new selections.
-   Asset audit 2026-11 removed detached crop fragments from 108, 140, 165, 281,
-   282, 289, 408, 515, 517, 519, 520, and 578. The remote branch has since
-   restored the full artwork at 168, so it remains available in the picker. */
+   Duplicate or incomplete art is hidden from new choices without breaking an
+   existing tab that still points to its original image URL. */
 const repairedDuplicateSlots: Partial<Record<WorkspaceIconCollectionId, ReadonlySet<number>>> = {
   "pink-iphone": new Set([92, 99, 102, 177, 179, 355, 357, 398]),
   "retro-pixel": new Set([61, 62, 63, 69, 71, 109, 137, 139]),
 };
+
+/**
+ * These pink illustration crops are visibly incomplete (detached shapes,
+ * chopped paw pads, or a leftover sliver). Keep their files for old saved URLs,
+ * but leave them out of the picker so nobody can select a broken-looking icon.
+ */
+const unusablePinkIllustrationSlots = new Set([
+  133, 139, // sparkle crops contain a stray partial second sparkle
+  216, 217, 218, // detached pink bars/squares with crop artifacts
+  345, 348, // paw artwork was split into disconnected pieces
+  407, 408, 409, // isolated pill/bar fragments with stray crop pixels
+  539, // a single leftover sliver rather than a complete illustration
+]);
 
 const numberedIcons = (
   collection: Exclude<WorkspaceIconCollectionId, "folder-art" | `emoji-${string}`>,
@@ -88,6 +98,55 @@ const pinkStickerAdditions = namedIcons("pink-iphone", [
   // 최근 Drive 추가분 중 핑크 일러스트 분류와 어울리는 단독 하트 아이콘.
   { number: 613, label: "사탕 핑크 하트" },
 ]);
+
+/**
+ * The illustration sheet was assembled from many source sheets, so its saved
+ * numeric order jumps between unrelated objects. Put recognizable families
+ * together in the picker. Any icon not listed here keeps its stable source
+ * order after these curated groups.
+ */
+const pinkIllustrationGroups: readonly (readonly number[])[] = [
+  // Cameras stay together, followed by computer and phone illustrations.
+  [59, 155, 318, 415, 516, 594],
+  [2, 98, 111, 114, 129, 197, 198, 248, 360, 368, 371, 372, 381, 387, 489, 528],
+  [5, 66, 81, 120, 191, 247, 302, 359, 383, 418, 556],
+  // Office supplies, writing tools, notes, books, files, and bags.
+  [11, 13, 14, 15, 18, 19, 21, 25, 51, 54, 56, 61, 62, 82, 85, 96, 106, 112, 115, 124, 143, 149, 176, 194, 195, 200, 201, 202, 203, 205, 206, 207, 253, 261, 268, 272, 377, 379, 385, 396, 436, 441, 442, 449, 490, 493, 494, 524, 525, 526, 533, 535, 561, 562, 563, 564, 567, 568],
+  [16, 64, 79, 94, 120, 159, 193, 251, 309, 312, 349, 369, 386, 433, 508, 534],
+  [17, 28, 49, 80, 89, 95, 116, 117, 165, 208, 220, 267, 296, 303, 365, 367, 380, 435, 447, 503, 512, 514, 571, 574, 576],
+  // Pink hearts and heart-shaped gifts.
+  [10, 20, 53, 54, 72, 76, 87, 88, 101, 107, 113, 130, 138, 225, 232, 242, 250, 269, 275, 290, 300, 303, 315, 317, 328, 339, 346, 356, 374, 391, 392, 401, 425, 452, 479, 487, 492, 515, 522, 527, 535, 554, 572, 588, 592, 598, 599, 605, 607, 608, 613],
+  // Cats and other cuddly characters.
+  [6, 26, 40, 41, 44, 45, 47, 63, 65, 71, 78, 83, 84, 93, 95, 97, 99, 103, 108, 117, 118, 122, 166, 167, 169, 177, 179, 181, 182, 183, 184, 185, 186, 187, 189, 190, 252, 255, 257, 259, 278, 279, 280, 281, 283, 284, 285, 286, 287, 325, 340, 343, 350, 354, 355, 357, 358, 363, 367, 370, 373, 376, 380, 384, 388, 389, 400, 422, 429, 430, 431, 434, 444, 477, 483, 520, 529, 530, 537, 540, 546, 547, 548, 552, 577, 601, 602, 604, 608, 610, 611],
+  // Flowers, plants, weather, and other nature illustrations.
+  [4, 8, 35, 43, 57, 58, 69, 90, 131, 135, 136, 137, 140, 158, 172, 178, 219, 223, 235, 236, 238, 239, 243, 245, 262, 288, 289, 293, 295, 298, 299, 314, 320, 321, 323, 324, 334, 335, 341, 343, 344, 347, 403, 404, 405, 410, 417, 420, 439, 465, 471, 472, 473, 474, 475, 476, 478, 482, 484, 511, 518, 519, 542, 543, 545, 549, 550, 553, 593, 596, 597, 600, 603, 604, 609],
+  // Cups, sweets, fruit, and other food or travel items.
+  [1, 31, 32, 33, 34, 35, 37, 39, 46, 60, 73, 74, 75, 77, 91, 104, 105, 132, 141, 144, 145, 146, 147, 148, 150, 160, 164, 170, 196, 204, 210, 212, 213, 214, 215, 221, 222, 224, 226, 227, 229, 230, 231, 234, 241, 244, 254, 256, 258, 263, 266, 275, 291, 292, 294, 297, 304, 307, 310, 311, 313, 316, 319, 322, 326, 327, 329, 331, 332, 333, 337, 338, 353, 375, 382, 393, 394, 395, 397, 399, 402, 406, 411, 412, 413, 416, 421, 423, 426, 427, 428, 432, 437, 438, 440, 443, 445, 446, 450, 451, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 466, 467, 468, 469, 470, 481, 485, 486, 491, 495, 496, 497, 499, 500, 501, 506, 509, 510, 513, 521, 536, 538, 541, 544, 555, 559, 560, 565, 566, 569, 570, 575, 578, 580, 581, 582, 583, 584, 585, 586, 587, 589, 590, 591, 592, 595, 598],
+];
+
+const arrangePinkIllustrations = (choices: WorkspaceIconChoice[]): WorkspaceIconChoice[] => {
+  const byNumber = new Map(choices.map((choice) => [Number(choice.id.slice(-3)), choice] as const));
+  const arranged: WorkspaceIconChoice[] = [];
+  const used = new Set<number>();
+
+  for (const group of pinkIllustrationGroups) {
+    for (const number of group) {
+      const choice = byNumber.get(number);
+      if (!choice || used.has(number) || unusablePinkIllustrationSlots.has(number)) continue;
+      arranged.push(choice);
+      used.add(number);
+    }
+  }
+
+  for (const choice of choices) {
+    const number = Number(choice.id.slice(-3));
+    if (used.has(number) || unusablePinkIllustrationSlots.has(number)) continue;
+    arranged.push(choice);
+    used.add(number);
+  }
+
+  return arranged;
+};
 
 const pixelArtAdditions = namedIcons("retro-pixel", [
   { number: 183, label: "픽셀 하트" },
@@ -196,8 +255,10 @@ const natureEmojis = emojiSheet("emoji-nature", "자연·음식", 141, {
 
 export const workspaceIconCollections: Record<WorkspaceIconCollectionId, WorkspaceIconChoice[]> = {
   "pink-iphone": [
-    ...numberedIcons("pink-iphone", 598, "일러스트 아이콘"),
-    ...pinkStickerAdditions,
+    ...arrangePinkIllustrations([
+      ...numberedIcons("pink-iphone", 598, "일러스트 아이콘"),
+      ...pinkStickerAdditions,
+    ]),
   ],
   "retro-pixel": [
     ...numberedIcons("retro-pixel", 182, "레트로 픽셀"),
