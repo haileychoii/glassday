@@ -21,6 +21,7 @@ import {
   TbHomeFilled,
 } from "react-icons/tb";
 import type { ThemeId } from "../../constants/themes";
+import { getWorkspaceOutlineIcon } from "./workspaceOutlineIcons";
 
 type WorkspaceTabIconProps = {
   tabId: string;
@@ -124,6 +125,11 @@ export const WorkspaceTabIcon = ({
         draggable={false}
       />
     );
+  }
+
+  const OutlineIcon = getWorkspaceOutlineIcon(icon);
+  if (OutlineIcon) {
+    return <OutlineIcon className={className} aria-hidden="true" />;
   }
 
   if (mobile && (theme === "glass-light" || theme === "glass-dark")) {

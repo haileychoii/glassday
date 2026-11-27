@@ -17,7 +17,8 @@ export type WorkspaceIconCollectionId =
   | "emoji-people"
   | "emoji-nature"
   | "emoji-food-travel"
-  | "emoji-objects";
+  | "emoji-objects"
+  | "outline-icons";
 
 export type WorkspaceIconChoice = {
   id: string;
@@ -98,6 +99,19 @@ const pinkStickerAdditions = namedIcons("pink-iphone", [
   // 최근 Drive 추가분 중 핑크 일러스트 분류와 어울리는 단독 하트 아이콘.
   { number: 613, label: "사탕 핑크 하트" },
 ]);
+
+/**
+ * The five original line-drawn navigation glyphs are available alongside the
+ * sticker art. Their stable values are rendered as Lucide SVGs, so they stay
+ * crisp at every picker and tab size without adding image files.
+ */
+const outlineIconChoices: WorkspaceIconChoice[] = [
+  { id: "outline-home", src: "outline:home", label: "홈 선 아이콘" },
+  { id: "outline-career", src: "outline:career", label: "커리어 선 아이콘" },
+  { id: "outline-study", src: "outline:study", label: "공부 선 아이콘" },
+  { id: "outline-memo", src: "outline:memo", label: "메모 선 아이콘" },
+  { id: "outline-life", src: "outline:life", label: "라이프 선 아이콘" },
+];
 
 /*
  * Icons from the latest Drive upload are cut from their original 5 × 5 sheets
@@ -536,4 +550,5 @@ export const workspaceIconCollections: Record<WorkspaceIconCollectionId, Workspa
   // neighboring cells. Slots 091–108 keep their saved URLs, with each image
   // recropped around the complete original artwork.
   "emoji-objects": emojiSheet("emoji-objects", "생활·기호", 140),
+  "outline-icons": outlineIconChoices,
 };

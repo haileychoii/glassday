@@ -14,6 +14,7 @@ import {
 } from "../../constants/workspaceIconChoices";
 import type { ThemeId } from "../../constants/themes";
 import { cn } from "../../lib/utils";
+import { getWorkspaceOutlineIcon } from "./workspaceOutlineIcons";
 
 const iconCollectionForTheme = (theme: ThemeId): WorkspaceIconCollectionId =>
   theme === "pixel-desk" || theme === "retro" ? "retro-pixel" : "pink-iphone";
@@ -24,12 +25,13 @@ const collections: Array<{
 }> = [
   { id: "pink-iphone", label: "일러스트" },
   { id: "retro-pixel", label: "픽셀" },
-  { id: "folder-art", label: "폴더·패턴" },
+  { id: "folder-art", label: "폴더" },
   { id: "emoji-expressions", label: "표정·손" },
   { id: "emoji-people", label: "사람·동물" },
   { id: "emoji-nature", label: "자연·음식" },
   { id: "emoji-food-travel", label: "음식·이동" },
   { id: "emoji-objects", label: "생활·기호" },
+  { id: "outline-icons", label: "기본 선" },
 ];
 
 type WorkspaceIconPickerProps = {
@@ -127,31 +129,39 @@ export const WorkspaceIconPicker = ({
         role="group"
         aria-label={`${collections.find((item) => item.id === collection)?.label} 아이콘`}
       >
-        {choices.map((choice) => (
-          <button
-            key={choice.id}
-            type="button"
-            className="mobile-tab-icon-choice"
-            aria-label={`${choice.label} 선택`}
-            aria-pressed={draftIcon === choice.src}
-            title={choice.label}
-            onClick={() => chooseIcon(choice.src)}
-          >
-            <img
-              src={choice.src}
-              alt=""
-              aria-hidden="true"
-              draggable={false}
-              loading="lazy"
-              decoding="async"
-            />
-            {draftIcon === choice.src && (
-              <span className="mobile-tab-icon-choice-check" aria-hidden="true">
-                <Check size={11} strokeWidth={3} />
-              </span>
-            )}
-          </button>
-        ))}
+        {choices.map((choice) => {
+          const OutlineIcon = getWorkspaceOutlineIcon(choice.src);
+
+          return (
+            <button
+              key={choice.id}
+              type="button"
+              className="mobile-tab-icon-choice"
+              aria-label={`${choice.label} 선택`}
+              aria-pressed={draftIcon === choice.src}
+              title={choice.label}
+              onClick={() => chooseIcon(choice.src)}
+            >
+              {OutlineIcon ? (
+                <OutlineIcon className="workspace-icon-choice-outline" aria-hidden="true" />
+              ) : (
+                <img
+                  src={choice.src}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              {draftIcon === choice.src && (
+                <span className="mobile-tab-icon-choice-check" aria-hidden="true">
+                  <Check size={11} strokeWidth={3} />
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {showThemeScope && (
