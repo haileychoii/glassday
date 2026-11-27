@@ -14,14 +14,23 @@
    ============================================================ */
 
 .mobile-layout .mobile-dashboard {
-  grid-auto-flow: row;
-  grid-auto-rows: max-content;
-  align-content: start;
+  /* This is a content-length list, not a two-dimensional grid. A grid row can
+     still be sized from a contained widget's empty layout box, even when its
+     painted contents are taller; that lets the next row cover those contents.
+     A column flex flow stacks each slot by its measured outer height. */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: var(--mobile-widget-gap);
 }
 
 .mobile-layout .mobile-dashboard > .mobile-widget-slot {
   position: relative;
   display: flow-root;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
   min-width: 0;
   align-self: start;
   isolation: isolate;
