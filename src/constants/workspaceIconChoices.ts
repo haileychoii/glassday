@@ -467,6 +467,9 @@ const emojiSheet = (
     // These two repeated drawings are visually identical to earlier cells.
     .filter((number) => !(collection === "emoji-people" && number === 138))
     .filter((number) => !(collection === "emoji-nature" && number === 56))
+    // Source row 4 has nine centered moon-and-star designs; slot 040 is kept
+    // as a complete legacy fallback image but is not offered as a duplicate.
+    .filter((number) => !(collection === "emoji-nature" && number === 40))
     // These final slots contain a stray transparent pixel or an empty grid cell.
     .filter((number) => !(collection === "emoji-objects" && number === 72))
     .filter((number) => !(collection === "emoji-objects" && number === 140))
