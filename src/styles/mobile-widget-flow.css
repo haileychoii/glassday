@@ -1,0 +1,54 @@
+/* ============================================================
+   Shared Mobile Widget Flow
+
+   The dashboard is one vertical list. Natural-height cards must contribute
+   their full content height to their grid row or the next widget can paint
+   over content that escaped its slot. Theme files may style the surface, but
+   they must not change this placement contract.
+   모바일 대시보드는 위젯을 한 열로 쌓습니다. 내용 높이가 슬롯 높이에
+   포함되어야 다음 위젯이 앞 위젯의 본문을 덮지 않습니다. 테마는 색과
+   표면만 바꾸고 이 배치 규칙은 공유합니다.
+
+   Memo, Journal, and Timer keep their intentional fixed-height scroll areas.
+   User-resized slots also keep their explicit height and their own scroll.
+   ============================================================ */
+
+.mobile-layout .mobile-dashboard {
+  grid-auto-flow: row;
+  grid-auto-rows: max-content;
+  align-content: start;
+}
+
+.mobile-layout .mobile-dashboard > .mobile-widget-slot {
+  position: relative;
+  display: flow-root;
+  min-width: 0;
+  align-self: start;
+  isolation: isolate;
+}
+
+/* Size containment makes an auto-height card ignore its own contents. Replace
+   it with width-only containment for cards in normal flow. Keep the container
+   names: widget CSS still uses them for its compact-width layouts.
+   size containment는 자동 높이 카드가 내부 내용의 높이를 무시하게 합니다.
+   자연 높이 카드에서는 너비만 감지하게 바꾸고, 기존 container 이름은
+   유지해 위젯 내부의 좁은 폭 반응형 규칙이 계속 작동하게 합니다. */
+.mobile-layout .mobile-dashboard > .mobile-widget-slot:not(.has-mobile-widget-height):not([data-widget-id="memo"]):not([data-widget-id="journal"]):not([data-widget-id="timer"])
+  > .widget-instance-root > .glass-card {
+  container-type: inline-size !important;
+  height: auto !important;
+  min-height: var(--gd-mobile-widget-min-body-height, 120px) !important;
+  max-height: none !important;
+}
+
+/* Keep auto-height content inside its own row; long content may scroll within
+   the body instead of extending into the following widget.
+   본문이 자신의 행 안에서 높이를 계산하게 해 다음 위젯 영역으로
+   콘텐츠가 흘러넘치지 않도록 합니다. */
+.mobile-layout .mobile-dashboard > .mobile-widget-slot:not(.has-mobile-widget-height):not([data-widget-id="memo"]):not([data-widget-id="journal"]):not([data-widget-id="timer"])
+  > .widget-instance-root > .glass-card > .widget-frame__body {
+  height: auto !important;
+  min-height: var(--gd-mobile-widget-min-body-height, 120px) !important;
+  max-height: none !important;
+  overflow: visible !important;
+}

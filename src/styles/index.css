@@ -83,3 +83,6 @@
 
 /* Pixel Desk is one theme; palette, desktop, mobile, widget, and 95CSS rules live together. */
 @import "./themes/pixel.css";
+
+/* Final mobile widget flow contract; applies the same slot geometry after every theme. */
+@import "./mobile-widget-flow.css";
