@@ -17,7 +17,7 @@
  * Event Floating Window. Variants: Day / Week / Month / Empty / Career Managed.
  * ============================================================
  */
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import {
   CalendarDays,
@@ -85,6 +85,11 @@ const formatCalendarSubtitle = (selectedDate: string) => {
   return `${selectedDate} · ${weekday.slice(0, 3)}`;
 };
 
+/* A 7-day time grid becomes comfortable once the widget has this much usable
+   width. Keep the cutoff local to CalendarWidget: the dashboard grid still
+   decides the actual size, and no other widget's responsive rules change. */
+const CALENDAR_WEEK_VIEW_MIN_WIDTH = 760;
+
 type DashboardDataWithCareerDetail = ReturnType<typeof useDashboardData> & {
   openCareerDetail?: (id: string) => void;
 };
@@ -106,9 +111,30 @@ export const CalendarWidget = () => {
   } = dashboardData;
 
   const [view, setView] = useState<CalendarView>("day");
+  const calendarFrameRef = useRef<HTMLDivElement>(null);
+  const hasChosenViewRef = useRef(false);
   const [selectedDate, setSelectedDate] = useState(toLocalDateInput());
   const [editingId, setEditingId] = useState<string | null>(null);
   const [weekEditMode, setWeekEditMode] = useState(false);
+
+  useEffect(() => {
+    const frame = calendarFrameRef.current;
+    if (!frame) return;
+
+    /* Start compact calendars in Day view and expanded calendars in Week view.
+       ResizeObserver watches the widget itself, not the browser viewport, so
+       dragging the calendar wider updates this widget without affecting the
+       rest of the dashboard. A manual Day/Week/Month choice always wins. */
+    const observer = new ResizeObserver(([entry]) => {
+      if (hasChosenViewRef.current || !entry) return;
+      setView(
+        entry.contentRect.width >= CALENDAR_WEEK_VIEW_MIN_WIDTH ? "week" : "day",
+      );
+    });
+
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, []);
 
   const editingEvent = editingId
     ? calendarEvents.find((event) => event.id === editingId) ?? null
@@ -300,7 +326,7 @@ export const CalendarWidget = () => {
           </button>
         }
       >
-        <div className="calendar-widget-frame">
+        <div ref={calendarFrameRef} className="calendar-widget-frame">
           {/* Figma Frame: Date Toolbar / View Segmented Control */}
           <div className="calendar-widget-toolbar">
             <div className="flex items-center gap-1">
@@ -337,7 +363,10 @@ export const CalendarWidget = () => {
                 <button
                   key={item}
                   type="button"
-                  onClick={() => setView(item)}
+                  onClick={() => {
+                    hasChosenViewRef.current = true;
+                    setView(item);
+                  }}
                   className={cn(
                     "calendar-view-button",
                     view === item && "is-active"
