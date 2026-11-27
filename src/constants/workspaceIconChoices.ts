@@ -39,8 +39,9 @@ const repairedDuplicateSlots: Partial<Record<WorkspaceIconCollectionId, Readonly
  * but leave them out of the picker so nobody can select a broken-looking icon.
  */
 const unusablePinkIllustrationSlots = new Set([
-  133, 139, // sparkle crops contain a stray partial second sparkle
+  133, 139, 288, // sparkle crops contain a stray partial second sparkle
   216, 217, 218, // detached pink bars/squares with crop artifacts
+  405, // the growth-chart crop is missing most of its bars
   345, 348, // paw artwork was split into disconnected pieces
   407, 408, 409, // isolated pill/bar fragments with stray crop pixels
   539, // a single leftover sliver rather than a complete illustration
