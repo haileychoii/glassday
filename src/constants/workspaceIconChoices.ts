@@ -453,9 +453,13 @@ const emojiSheet = (
     // These two repeated drawings are visually identical to earlier cells.
     .filter((number) => !(collection === "emoji-people" && number === 138))
     .filter((number) => !(collection === "emoji-nature" && number === 56))
-    // These last slots are a stray transparent pixel and an empty grid cell.
+    // These final slots contain a stray transparent pixel or an empty grid cell.
     .filter((number) => !(collection === "emoji-objects" && number === 72))
     .filter((number) => !(collection === "emoji-objects" && number === 140))
+    // These two source cells were never exported, so hiding them prevents a
+    // broken-image tile from appearing in the lifestyle-and-symbols picker.
+    .filter((number) => !(collection === "emoji-objects" && number === 121))
+    .filter((number) => !(collection === "emoji-objects" && number === 130))
     .map((number) => ({
       id: `${collection}-${String(number).padStart(3, "0")}`,
       // The distorted face artwork alone needs a smaller drawing so its round
