@@ -6,7 +6,7 @@
  * removes the preview without changing saved data.
  */
 import { Check } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 
 import {
   workspaceIconCollections,
@@ -40,6 +40,8 @@ type WorkspaceIconPickerProps = {
   onPreview?: (icon: string, applyToAllThemes: boolean) => void;
   onCancel: () => void;
   className?: string;
+  /** Optional viewport position for rendering the desktop picker in a portal. */
+  style?: CSSProperties;
   saveLabel?: string;
   /** Names the tab that will receive the icon, especially on the mobile picker. */
   contextLabel?: string;
@@ -58,6 +60,7 @@ export const WorkspaceIconPicker = ({
   onPreview,
   onCancel,
   className,
+  style,
   saveLabel = "저장",
   contextLabel,
   showThemeScope = false,
@@ -95,6 +98,7 @@ export const WorkspaceIconPicker = ({
   return (
     <section
       className={cn("mobile-tab-icon-picker workspace-icon-picker", className)}
+      style={style}
       role="dialog"
       aria-label={contextLabel ?? "워크스페이스 아이콘 선택"}
     >

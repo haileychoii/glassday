@@ -18,7 +18,8 @@
  * ============================================================
  */
 import { Pencil, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { getCurrentTheme, type ThemeId } from "../../constants/themes";
 import { cn } from "../../lib/utils";
@@ -64,6 +65,8 @@ export const WorkspaceTabsNav = ({
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
   const [editingIconTabId, setEditingIconTabId] = useState<string | null>(null);
   const [iconPreviewByTabId, setIconPreviewByTabId] = useState<Record<string, string>>({});
+  const iconEditButtons = useRef(new Map<string, HTMLButtonElement>());
+  const [pickerPosition, setPickerPosition] = useState<{ top: number; left: number } | null>(null);
 
   const clearIconPreview = (tabId: string) => {
     setIconPreviewByTabId((current) => {
@@ -77,12 +80,47 @@ export const WorkspaceTabsNav = ({
     if (editingIconTabId === tabId) {
       clearIconPreview(tabId);
       setEditingIconTabId(null);
+      setPickerPosition(null);
       return;
     }
 
     if (editingIconTabId) clearIconPreview(editingIconTabId);
     setEditingIconTabId(tabId);
+    setPickerPosition(null);
   };
+
+  // The desktop sidebar scroll area clips children that extend past its edge.
+  // Position the picker from its trigger, then render it at document level so
+  // the full dialog stays visible and usable on desktop screens.
+  useEffect(() => {
+    if (!editingIconTabId) return;
+
+    const updatePickerPosition = () => {
+      const trigger = iconEditButtons.current.get(editingIconTabId);
+      if (!trigger) return;
+
+      const rect = trigger.getBoundingClientRect();
+      const width = Math.min(360, window.innerWidth - 24);
+      const height = Math.min(520, window.innerHeight * 0.78, 720);
+      const left = Math.max(8, Math.min(rect.left, window.innerWidth - width - 8));
+      const below = rect.bottom + 8;
+      const top = below + height <= window.innerHeight - 8
+        ? below
+        : Math.max(8, rect.top - height - 8);
+
+      setPickerPosition({ top, left });
+    };
+
+    updatePickerPosition();
+    window.addEventListener("resize", updatePickerPosition);
+    // Capture scroll events from the sidebar as well as the page so the
+    // floating dialog remains attached to its icon-edit button.
+    window.addEventListener("scroll", updatePickerPosition, true);
+    return () => {
+      window.removeEventListener("resize", updatePickerPosition);
+      window.removeEventListener("scroll", updatePickerPosition, true);
+    };
+  }, [editingIconTabId]);
 
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
@@ -105,6 +143,7 @@ export const WorkspaceTabsNav = ({
     if (!editMode) {
       setEditingIconTabId(null);
       setIconPreviewByTabId({});
+      setPickerPosition(null);
     }
   }, [editMode]);
 
@@ -176,6 +215,10 @@ export const WorkspaceTabsNav = ({
               <div className="sidebar-tab-icon-editor" onClick={(event) => event.stopPropagation()}>
                 <button
                   type="button"
+                  ref={(element) => {
+                    if (element) iconEditButtons.current.set(tab.id, element);
+                    else iconEditButtons.current.delete(tab.id);
+                  }}
                   onClick={() => toggleIconPicker(tab.id)}
                   className="sidebar-tab-icon-edit"
                   title={`${tab.label} 아이콘 변경`}
@@ -184,13 +227,14 @@ export const WorkspaceTabsNav = ({
                 >
                   <Pencil className="w-3.5 h-3.5" />
                 </button>
-                {editingIconTabId === tab.id && (
+                {editingIconTabId === tab.id && pickerPosition && createPortal(
                   <WorkspaceIconPicker
                     value={tab.iconByTheme?.[theme] ?? tab.icon}
                     theme={theme}
                     contextLabel={`${tab.label} 탭 아이콘 변경`}
                     showThemeScope
                     className="workspace-icon-picker-desktop"
+                    style={{ top: pickerPosition.top, left: pickerPosition.left }}
                     onPreview={(icon) =>
                       setIconPreviewByTabId((current) => ({ ...current, [tab.id]: icon }))
                     }
@@ -203,7 +247,8 @@ export const WorkspaceTabsNav = ({
                       clearIconPreview(tab.id);
                       setEditingIconTabId(null);
                     }}
-                  />
+                  />,
+                  document.body
                 )}
               </div>
             )}
