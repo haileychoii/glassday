@@ -20,7 +20,7 @@
  * - themes/mac-core.css: Mac Core 전체의 재질과 타이포그래피
  * - themes/pixel.css: Pixel Desk의 PC 창 스타일
  * - mobile.css: 휴대폰 헤더·날짜 컨트롤 배치
- * - mobile-pixel.css: 휴대폰 Pixel Desk의 Win95 외형
+ * - themes/pixel.css: Pixel Desk의 공통 Win95 외형
  *
  * [핵심 원칙]
  * 1. Mac/Pixel/Pastel/Glass/Aurora/Retro 모두 같은 JSX와 레이아웃 사용.

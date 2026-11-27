@@ -4,11 +4,9 @@
  * ============================================================================
  *
  * [연결 파일]
- * src/styles/index.css
- *   ├─ themes/pixel.css       ← 현재 파일. Pixel 색상/버튼/PC 창 디자인
- *   ├─ widgets/*.css          ← 위젯별 데이터 화면 및 기능 스타일
- *   ├─ mobile.css             ← 모바일 화면 구성
- *   └─ mobile-pixel.css       ← 모바일 Win95 헤더/창/패널 최종 규격
+ * src/styles/index.css에서 이 테마 파일을 마지막에 한 번 불러온다.
+ * 이 파일 하나가 Pixel의 색상, 창, 위젯, 버튼, PC·모바일 공통 규칙을 담당한다.
+ * widgets/*.css와 mobile.css는 위젯 기능과 화면 배치만 담당한다.
  *
  * [화면 연결]
  * App.tsx → Desktop 대시보드 / MobileDashboard.tsx
@@ -16,11 +14,11 @@
  *      ├─ .widget-frame__header (실제 제목/아이콘/조작 버튼)
  *      └─ .widget-frame__body   (위젯 본문)
  *
- * [테마 분담]
- * 1. 이 파일은 Pixel 색, 비트맵 폰트, Win95 바깥 프레임을 담당한다.
- * 2. 실제 제목줄은 GlassCard의 .widget-frame__header 하나만 사용한다.
- * 3. 제목줄 배경은 widget-frame-theme.css의 공통 토큰에서 지정한다.
- * 4. 공통 반경 토큰의 Pixel 값은 pixel-95css.css 한 곳에서 설정한다.
+ * [테마 규칙]
+ * 1. Pixel 테마 전용 색, 비트맵 글꼴, 95CSS 창 표면과 컨트롤을 이 파일에서 관리한다.
+ * 2. 실제 제목줄은 공통 .widget-frame__header 하나를 사용한다.
+ * 3. 위젯 CSS는 기능과 내용 배치만 맡고 Pixel 색·테두리를 따로 정하지 않는다.
+ * 4. PC와 모바일은 같은 Pixel 표면 규칙과 네모 모서리를 사용한다.
  *
  * [주의]
  * 기존 버튼 이벤트 / 위젯 저장 데이터 / 데스크톱 Grid 배치는 건드리지 않음.
@@ -647,9 +645,7 @@ html[data-theme="pixel-desk"] .app-shell-main {
   scrollbar-color: #c0c0c0 var(--w95-bg, #d4d0c8) !important;
 }
 
-/* Pixel Calendar surfaces are owned by pixel-95css.css. Keep only the
-   standalone color-chip radius fallback here; shared widget radius rules
-   cover chips inside GlassCard, while this also covers floating Memo windows. */
+/* Calendar and memo color chips follow the shared square Pixel radius. */
 
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .event-color-chip,
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) .memo-color-chip {
@@ -750,4 +746,2131 @@ html[data-theme="pixel-desk"] .app-shell-main {
 
 :where(:is(html, body):is([data-theme="pixel-desk"], .theme-pixel-desk, .pixel-desk, .theme-pixel)) ::-webkit-scrollbar-corner {
   background: #d4d0c8;
+}
+
+
+/* ============================================================================
+ * PIXEL THEME SECTION: Desktop Pixel parity
+ * Kept in this file so the single Pixel theme has one stylesheet entry point.
+ * ============================================================================ */
+
+/* ============================================================================
+ * PIXEL DESK DESKTOP PARITY
+ *
+ * EN: Reuse the visual language from Pixel theme rules in this file on the desktop shell.
+ * This file intentionally changes only color, surface, border, radius, and
+ * state treatment. Grid dimensions, widget sizes, and content behavior stay
+ * owned by the existing layout/widget files.
+ *
+ * KO: Pixel theme rules in this file의 색상·표면·테두리 문법을 데스크톱에도 적용한다.
+ * 크기, 비율, 배치, 데이터 동작은 기존 레이아웃/위젯 CSS가 담당하므로
+ * 이 파일에서는 변경하지 않는다.
+ *
+ * Source relationship:
+ * - Mobile reference: src/styles/Pixel theme rules in this file
+ * - Desktop shell: src/components/layout/AppShell.tsx
+ * - Desktop widgets: src/components/grid/DashboardGrid.tsx + GlassCard.tsx
+ * ============================================================================ */
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface {
+  --pixel-desktop-bevel-width: 2px;
+  --pixel-desktop-flat-width: 1px;
+  --pixel-desktop-bg: #c3c3c3;
+  --pixel-desktop-panel: #dedede;
+  --pixel-desktop-title: #0f0086;
+  --pixel-desktop-light: #ffffff;
+  --pixel-desktop-shadow: #808080;
+  --pixel-desktop-dark: #404040;
+  --pixel-desktop-text: #000000;
+
+  background: var(--pixel-desktop-bg) !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+  border: var(--pixel-desktop-bevel-width) solid !important;
+  border-color:
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-light) !important;
+  box-shadow: none !important;
+  color: var(--pixel-desktop-text);
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* The app canvas stays teal, matching the mobile Pixel Desk desktop. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .app-shell-main {
+  background: #008080 !important;
+  background-image: none !important;
+}
+
+/* Sidebar and topbar use the same gray taskbar surface as mobile controls. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(aside, .topbar) {
+  background: var(--pixel-desktop-bg) !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/*
+ * EN: Use the real widget header instead of a second dark decorative frame.
+ * KO: 실제 위젯 제목줄만 남기고, 뒤에 겹치는 장식 프레임은 제거한다.
+ */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .glass-card {
+  background: var(--pixel-desktop-bg) !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .widget-frame__body {
+  background: var(--pixel-desktop-bg) !important;
+  background-image: none !important;
+  color: var(--pixel-desktop-text);
+}
+
+/*
+ * EN: Use a desktop-sized rhythm while keeping the mobile Pixel visual language.
+ * KO: 모바일의 색상/테두리 문법만 가져오고, 간격과 크기는 데스크톱 기준을 사용한다.
+ *
+ * Desktop references:
+ * - src/styles/layout-modes.css: desktop widget row and spacing tokens
+ * - src/styles/base.css: shared widget icon and title primitives
+ *
+ * The old desktop Pixel theme reserved 30px for a decorative fake title bar.
+ * The real `.widget-frame__header` is now the only title bar, so that extra
+ * space must be removed or every widget gets a different-looking top inset.
+ */
+/* Keep the desktop grid's existing sizing, but use one desktop widget gap. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .dashboard-grid {
+  gap: var(--gd-widget-stack-gap) !important;
+}
+
+/* Every GlassCard widget uses one real title row and one padded body row. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(.glass-card, .career-widget) {
+  display: grid !important;
+  grid-template-rows: var(--gd-widget-header-row-min-height) minmax(0, 1fr) !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Study/Calendar/Career use the same desktop title geometry as GlassCard widgets. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .glass-card > .widget-frame__header,
+  .career-widget > .widget-frame__header,
+  .mobile-calendar-card__header,
+  .mobile-career-card__header
+) {
+  box-sizing: border-box;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  height: var(--gd-widget-header-row-min-height) !important;
+  min-height: var(--gd-widget-header-row-min-height) !important;
+  padding: var(--gd-widget-header-pad-top) var(--gd-widget-pad-x) var(--gd-widget-header-pad-bottom) !important;
+  gap: var(--gd-widget-header-gap) !important;
+}
+
+/* Keep title groups, icons, and actions aligned to one desktop baseline. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .widget-frame__title-group,
+  .widget-frame__copy,
+  .career-widget-title-wrap,
+  .mobile-calendar-card__label,
+  .mobile-career-card__heading
+) {
+  min-width: 0;
+  min-height: 32px !important;
+  align-items: center !important;
+  gap: var(--gd-widget-title-gap) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .widget-frame__icon,
+  .mobile-calendar-card__label > svg,
+  .mobile-career-card__heading > svg
+) {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .widget-frame__title,
+  .mobile-calendar-card__label,
+  .mobile-career-card__heading,
+  .mobile-career-card__heading strong
+) {
+  margin: 0 !important;
+  font-size: var(--gd-widget-desktop-title-size) !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0 !important;
+}
+
+/* Pixel Desk keeps the compact desktop title row without a second subtitle line. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .widget-frame__subtitle {
+  display: none !important;
+}
+
+/* All desktop widget bodies start at the same inset, regardless of widget type. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .glass-card > .widget-frame__body,
+  .career-widget > .widget-frame__body
+) {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: var(--gd-widget-content-gap-top) var(--gd-widget-pad-x) var(--gd-widget-pad-y) !important;
+  overflow: auto;
+}
+
+/* Shared inner panels: same light gray surface, no glossy gradients. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .journal-summary-card,
+  .journal-section,
+  .journal-task-item,
+  .journal-score-inline,
+  .alert-item,
+  .alert-summary-card,
+  .today-focus-hero,
+  .today-focus-section,
+  .today-focus-ring,
+  .today-focus-task,
+  .today-focus-mini-item,
+  .today-focus-career-item,
+  .today-focus-memo,
+  .today-focus-alert,
+  .calendar-event-item,
+  .calendar-mini-card,
+  .calendar-month-day-cell,
+  .career-card,
+  .career-list-item,
+  .career-summary-card,
+  .money-summary-panel,
+  .money-budget-panel,
+  .money-visual-panel,
+  .money-recent-panel,
+  .money-detail-card,
+  .money-transaction-row,
+  .memo-list-panel,
+  .memo-note-item,
+  .mood-row,
+  .study-subject-card,
+  .study-task,
+  .study-record-item,
+  .timer-widget-main-card
+) {
+  background: var(--pixel-desktop-panel) !important;
+  background-image: none !important;
+  border: var(--pixel-desktop-flat-width) solid var(--pixel-desktop-shadow) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Buttons retain Win95 raised/inset states, but no longer use black outlines. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(button, .glass-button, .money-pill, .calendar-view-button, .career-filter-pill) {
+  background: var(--pixel-desktop-bg) !important;
+  background-image: none !important;
+  color: var(--pixel-desktop-text) !important;
+  border: var(--pixel-desktop-bevel-width) solid !important;
+  border-color:
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-light) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  button:hover,
+  .glass-button:hover,
+  .money-pill:hover,
+  .calendar-view-button:hover,
+  .career-filter-pill:hover
+) {
+  background: var(--pixel-desktop-panel) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  button:active,
+  .glass-button.is-active,
+  .calendar-view-button.is-active,
+  .money-pill.is-active,
+  .career-filter-pill.is-active
+) {
+  background: var(--pixel-desktop-title) !important;
+  color: var(--pixel-desktop-light) !important;
+  border-color:
+    var(--pixel-desktop-dark)
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-light)
+    var(--pixel-desktop-dark) !important;
+}
+
+/* Inputs follow Pixel theme rules in this file's white inset field treatment. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+  textarea,
+  select
+) {
+  background: #ffffff !important;
+  background-image: none !important;
+  color: var(--pixel-desktop-text) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: var(--w95-shadow-input) !important;
+}
+
+/*
+ * Supplied asset: public/windows95-app-icons-1.png
+ *
+ * EN: Pixel Desk workspace icons use fixed 28px boxes. The image is a
+ * transparent Windows 95 sprite sheet scaled once, then cropped by position.
+ * KO: 제공받은 Windows 95 스프라이트를 한 번만 축소하고 위치만 잘라 쓴다.
+ * 접힌 사이드바에서도 같은 28px 박스를 유지해 아이콘이 찌그러지지 않는다.
+ */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite {
+  display: inline-block !important;
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-image: url("/windows95-app-icons-1.png") !important;
+  background-repeat: no-repeat !important;
+  background-size: 247px 308px !important;
+  image-rendering: pixelated;
+  overflow: hidden;
+}
+
+/* Sprite positions correspond to the supplied 7-column Windows 95 sheet. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite-home {
+  background-position: -216px -15px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite-career {
+  background-position: -75px -174px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite-study {
+  background-position: -4px -215px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite-memo {
+  background-position: -110px -54px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-sprite-life {
+  background-position: -75px -134px !important;
+}
+
+/* Collapsed mode hides the label only; the sprite stays square and centered. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .sidebar-tab-item.is-collapsed .pixel-tab-sprite {
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  transform: none !important;
+}
+
+/*
+ * Supplied asset: public/pixel-icons/*.png
+ *
+ * EN: Each transparent crop is rendered as a real image, so neighboring
+ * sprite cells can never leak into a workspace icon.
+ * KO: 아이콘을 개별 투명 PNG로 잘라 사용해 다른 셀 조각이 섞이지 않는다.
+ */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .pixel-tab-icon {
+  display: block !important;
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  image-rendering: pixelated;
+}
+
+/* Main widget title icons reuse the supplied Windows 95 artwork. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .today-focus-widget .widget-frame__icon,
+  .today-widget .widget-frame__icon,
+  .alert-center-widget .widget-frame__icon,
+  .calendar-widget-card .widget-frame__icon,
+  .career-widget .widget-frame__icon,
+  .daily-journal-widget .widget-frame__icon,
+  .memo-widget .widget-frame__icon,
+  .study-widget .widget-frame__icon,
+  .timer-widget .widget-frame__icon,
+  .money-widget .widget-frame__icon,
+  .habit-tracker-widget .widget-frame__icon,
+  .mood-widget .widget-frame__icon
+) {
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 26px 26px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .today-focus-widget .widget-frame__icon,
+  .today-widget .widget-frame__icon
+) {
+  background-image: url("/pixel-icons/today.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .alert-center-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/alerts.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .calendar-widget-card .widget-frame__icon {
+  background-image: url("/pixel-icons/calendar.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .career-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/career.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .daily-journal-widget .widget-frame__icon,
+  .memo-widget .widget-frame__icon
+) {
+  background-image: url("/pixel-icons/diary.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .study-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/study.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .timer-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/timer.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .money-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/money.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .habit-tracker-widget .widget-frame__icon
+) {
+  background-image: url("/pixel-icons/life.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .mood-widget .widget-frame__icon {
+  background-image: url("/pixel-icons/mood.png") !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface :is(
+  .today-focus-widget,
+  .today-widget,
+  .alert-center-widget,
+  .calendar-widget-card,
+  .career-widget,
+  .daily-journal-widget,
+  .memo-widget,
+  .study-widget,
+  .timer-widget,
+  .money-widget,
+  .habit-tracker-widget,
+  .mood-widget
+) .widget-frame__icon > svg {
+  display: none !important;
+}
+
+/* Career's add button matches the compact Pixel Desk title action. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .career-widget-actions > .career-icon-button {
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .app-shell-surface .career-widget-actions > .career-icon-button svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* Final Windows 95 frame rule for desktop widget contents.
+ * Outer windows and real controls keep a 2px bevel; inset content rows keep
+ * one 1px outline. This removes legacy per-widget inset shadows and widths. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) .app-shell-surface :is(
+  .journal-summary-card, .journal-section, .journal-task-item,
+  .journal-score-inline, .alert-item, .alert-summary-card,
+  .today-focus-hero, .today-focus-section, .today-focus-ring, .today-focus-task,
+  .today-focus-mini-item, .today-focus-career-item, .today-focus-memo,
+  .today-focus-alert, .calendar-event-item, .calendar-mini-card,
+  .calendar-month-day-cell, .career-card, .career-list-item,
+  .career-summary-card, .money-summary-panel, .money-budget-panel,
+  .money-visual-panel, .money-recent-panel, .money-detail-card,
+  .money-transaction-row, .memo-list-panel, .memo-note-item,
+  .mood-row, .study-subject-card, .study-task, .study-record-item,
+  .timer-widget-main-card
+) {
+  border-width: var(--pixel-desktop-flat-width, 1px) !important;
+  border-style: solid !important;
+  border-color: var(--pixel-desktop-shadow) !important;
+  box-shadow: none !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) .app-shell-surface :is(button, .glass-button, [role="button"]):not(
+  [class*="row"], [class*="item"], [class*="card"], [class*="task"]
+) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: var(--w95-shadow-raised) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) .app-shell-surface :is(button, .glass-button, [role="button"]):is(
+  .is-active, [aria-pressed="true"], :active
+) {
+  box-shadow: var(--w95-shadow-pressed) !important;
+}
+
+
+/* ============================================================================
+ * PIXEL THEME SECTION: Shared Pixel widget headers
+ * Kept in this file so the single Pixel theme has one stylesheet entry point.
+ * ============================================================================ */
+
+/* Pixel title text inherits the shared title-bar color. Keep this selector for
+   aliases in older saved dashboards; the shared surface is in
+   src/styles/widget-frame-theme.css. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) :is(
+  .widget-frame__header,
+  .glass-card-header,
+  .widget-card-header,
+  .mobile-calendar-card__header,
+  .mobile-career-card__header
+) :is(
+  .widget-frame__title,
+  .widget-frame__subtitle,
+  .widget-frame__title-group,
+  .widget-frame__copy,
+  .widget-frame__icon,
+  .widget-frame__actions,
+  h3,
+  p
+) {
+  color: var(--w95-light, var(--pixel-desktop-light, #fff)) !important;
+}
+
+
+/* ============================================================================
+ * PIXEL THEME SECTION: Mobile Pixel layout and controls
+ * Kept in this file so the single Pixel theme has one stylesheet entry point.
+ * ============================================================================ */
+
+
+/* ============================================================================
+ * GLASSDAY — MOBILE PIXEL DESK / WINDOWS 95
+ * 파일: src/styles/Pixel theme rules in this file
+ * ============================================================================
+ *
+ * [목적]
+ * Pixel Desk 모바일 위젯의 제목줄, 아이콘, 색상, 테두리를 통일한다.
+ * 다른 테마나 PC 화면에는 영향을 주지 않는다.
+ *
+ * [실제 파일 연결]
+ *
+ * src/styles/index.css
+ *   └─ Pixel theme rules in this file (현재 파일, 마지막 import)
+ *
+ * src/components/mobile/MobileDashboard.tsx
+ *   ├─ MobileCalendarCard.tsx  → .mobile-calendar-card
+ *   ├─ MobileCareerCard.tsx    → .mobile-career-card
+ *   └─ WidgetSlot.tsx
+ *       └─ widgetHostContext.ts
+ *           └─ .widget-instance-root
+ *               └─ GlassCard.tsx → .glass-card
+ *
+ * [일반 위젯]
+ * GlassCard.tsx는 Today, Alert, Journal, Timer, Memo, Money 등에서 공유.
+ * 실제 제목줄: .widget-frame__header
+ * 실제 본문:   .widget-frame__body
+ *
+ * [기존 오류의 원인]
+ * 이전 CSS는 .mobile-widget-slot > .glass-card를 선택했다.
+ * 실제 DOM에는 중간에 .widget-instance-root가 있으므로 불일치했다.
+ * 그 결과 기존 pixel.css의 가짜 제목줄이 그대로 표시됐다.
+ *
+ * [수정 원칙]
+ * - React/JSX 요소 추가 없음
+ * - 기존 데이터 및 이벤트 핸들러 변경 없음
+ * - Windows 95 스타일 토큰 하나로 통일
+ * - 위젯별 예외는 꼭 필요한 곳에만 작성
+ * ============================================================================ */
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .mobile-layout {
+
+  /* =========================================================
+   * 1. 공통 디자인 토큰
+   *
+   * Figma 디자인 시스템에서도 같은 이름 사용 가능.
+   * ========================================================= */
+
+  --w95-bg: #c3c3c3;
+  --w95-panel: #dedede;
+  --w95-title: #0f0086;
+  --w95-light: #ffffff;
+  --gd-widget-header-bg: var(--w95-title);
+  --gd-widget-header-color: var(--w95-light);
+  --w95-shadow: #808080;
+  --w95-dark: #404040;
+  --w95-text: #000000;
+  /* Every Pixel frame uses one measurable stroke vocabulary. */
+  --w95-bevel-width: 2px;
+  --w95-flat-width: 1px;
+  /* The shared mobile frame runs later in index.css; zero radius tokens keep
+   * its geometry rule aligned with this theme instead of reintroducing pills. */
+  --gd-radius-app: 0px;
+  --gd-radius-panel: 0px;
+  --gd-radius-widget: 0px;
+  --gd-radius-card: 0px;
+  --gd-radius-inner: 0px;
+  --gd-radius-button: 0px;
+  --gd-widget-inner-radius: 0px;
+
+  background: #008080;
+  color: var(--w95-text);
+
+  /* =========================================================
+   * 3. 모든 위젯의 바깥 창
+   *
+   * 기본 위젯은 중간에 widget-instance-root가 있으므로
+   * 직접 자식(>) 대신 하위 선택자를 사용한다.
+   *
+   * Study/Calendar/Career는 독립 모바일 카드를 사용한다.
+   * ========================================================= */
+
+  & :is(
+    .mobile-widget-slot .glass-card,
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    min-width: 0;
+
+    background: var(--w95-bg) !important;
+    background-image: none !important;
+
+    border: var(--w95-bevel-width) solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+
+    /* The light/dark border edges already form the Win95 raised bevel.
+     * Adding inset shadows here draws a second frame around every widget. */
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* =========================================================
+   * 4. GlassCard 가짜 제목줄 제거
+   *
+   * 파일: src/styles/themes/pixel.css
+   *
+   * ::before → 남색 장식용 줄
+   * ::after  → 클릭할 수 없는 _ □ × 모양
+   *
+   * 실제 헤더가 있으므로 두 가짜 요소는 모바일에서 제거.
+   * ========================================================= */
+
+
+
+  /* =========================================================
+   * 5. Study / Calendar / Career 자체 카드
+   *
+   * 이 세 카드는 GlassCard 구조가 아니다.
+   * 실제 제목줄은 전체 폭으로 표시하고
+   * 나머지 콘텐츠에만 8px 여백을 준다.
+   * ========================================================= */
+
+  & :is(
+    .mobile-calendar-card,
+    .mobile-career-card
+  ) {
+    overflow: hidden;
+  }
+
+  /* widget-frame-theme.css supplies the common title surface; this file only
+   * provides Pixel's navy and white theme tokens. */
+
+  /* Shared mobile-common.css owns title alignment and icon dimensions.
+   * Pixel uses the exact same 26px artwork and no SVG glyph as laptop. */
+
+  & :is(
+    .widget-frame__icon,
+    .mobile-calendar-card__label > svg,
+    .mobile-career-card__heading > svg
+  ) {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+
+    color: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  /* Laptop Pixel headers use the bundled Win95 artwork at 26px. Use that same
+     asset in every mobile widget title, including standalone cards. */
+  & :is(
+    .today-focus-widget, .today-widget, .alert-center-widget,
+    .calendar-widget-card, .career-widget, .daily-journal-widget,
+    .memo-widget, .study-widget, .timer-widget, .money-widget,
+    .habit-tracker-widget, .mood-widget, .mobile-calendar-card,
+    .mobile-career-card
+  ) .widget-frame__icon {
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 26px 26px !important;
+  }
+
+  & :is(.today-focus-widget, .today-widget) .widget-frame__icon {
+    background-image: url("/pixel-icons/today.png") !important;
+  }
+  & .alert-center-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/alerts.png") !important;
+  }
+  & :is(.calendar-widget-card, .mobile-calendar-card) .widget-frame__icon {
+    background-image: url("/pixel-icons/calendar.png") !important;
+  }
+  & :is(.career-widget, .mobile-career-card) .widget-frame__icon {
+    background-image: url("/pixel-icons/career.png") !important;
+  }
+  & :is(.daily-journal-widget, .memo-widget) .widget-frame__icon {
+    background-image: url("/pixel-icons/diary.png") !important;
+  }
+  & .study-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/study.png") !important;
+  }
+  & .timer-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/timer.png") !important;
+  }
+  & .money-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/money.png") !important;
+  }
+  & .habit-tracker-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/life.png") !important;
+  }
+  & .mood-widget .widget-frame__icon {
+    background-image: url("/pixel-icons/mood.png") !important;
+  }
+  & :is(
+    .today-focus-widget, .today-widget, .alert-center-widget,
+    .calendar-widget-card, .career-widget, .daily-journal-widget,
+    .memo-widget, .study-widget, .timer-widget, .money-widget,
+    .habit-tracker-widget, .mood-widget, .mobile-calendar-card,
+    .mobile-career-card
+  ) .widget-frame__icon > svg {
+    display: none !important;
+  }
+
+  /* 모든 제목 글씨 12px, 흰색 */
+
+  & :is(
+    .widget-frame__title,
+    .mobile-calendar-card__label,
+    .mobile-career-card__heading,
+    .mobile-career-card__heading strong
+  ) {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    letter-spacing: 0 !important;
+  }
+
+  /* 좁은 휴대폰에서 제목이 두 줄로 내려가지 않도록 한다. */
+
+  & .widget-frame__title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* =========================================================
+   * 8. 제목줄 오른쪽 버튼
+   *
+   * Alert 새로고침, Timer 확대, Memo 편집,
+   * Study/Calendar/Career 전체 보기.
+   *
+   * 기존 버튼의 onClick 기능은 유지한다.
+   * ========================================================= */
+
+  & :is(
+    .widget-frame__actions button,
+    .mobile-calendar-card__open,
+    .mobile-career-card__open
+  ) {
+    border: var(--w95-bevel-width) solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+
+    background: var(--w95-bg) !important;
+    color: var(--w95-text) !important;
+
+    box-shadow: none !important;
+  }
+
+  /* =========================================================
+   * 9. 위젯 본문 배경
+   *
+   * .widget-frame__body는 GlassCard의 두 번째 행이다.
+   * Pixel 테마에서 지정한 beige 배경 대신 회색을 사용한다.
+   * ========================================================= */
+
+  & .mobile-widget-slot .glass-card > .widget-frame__body {
+    background: var(--w95-bg) !important;
+  }
+
+  /* =========================================================
+   * 10. Calendar / Study / Career 내부 패널
+   *
+   * Calendar → 선택 날짜 요약
+   * Study    → 공부 시간 / 완료한 할 일
+   * Career   → 지원 현황 / 다음 일정
+   *
+   * 기능 데이터와 의미 있는 상태 색상은 유지한다.
+   * ========================================================= */
+
+  & :is(
+    .mobile-calendar-card__summary,
+    .mobile-career-metrics > div,
+    .mobile-career-next
+  ) {
+    background: var(--w95-panel) !important;
+    background-image: none !important;
+  }
+
+  /* Career rows retain their content color; the shared inner-panel rule below
+     owns their border and corners. */
+  & .mobile-career-row {
+    background: var(--w95-panel) !important;
+    color: var(--w95-text) !important;
+  }
+
+  & .mobile-career-status {
+    background: var(--w95-panel) !important;
+    color: var(--w95-text) !important;
+  }
+
+  /* =========================================================
+   * 11. Daily Journal 베이지 배경 제거
+   *
+   * 모바일 Pixel Journal surface는 이 파일에서 직접 통일한다.
+   * ========================================================= */
+
+  & .daily-journal-widget :is(
+    .journal-summary-card,
+    .journal-score-inline,
+    .journal-section,
+    .journal-task-item,
+    .journal-clip-item,
+    .journal-library-item,
+    .journal-empty-box
+  ) {
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+
+    background: var(--w95-panel) !important;
+    background-image: none !important;
+
+    box-shadow: none !important;
+  }
+
+  /* =========================================================
+   * 12. Alert Center 파스텔 배경 제거
+   *
+   * AlertCenterWidget.tsx → .alert-center-item
+   *
+   * 기존 tone별 그라데이션을 없애고
+   * 위험/경고/정보/성공은 왼쪽 강조선으로만 표현한다.
+   * ========================================================= */
+
+  & .alert-center-item {
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+
+    background: var(--w95-panel) !important;
+    background-image: none !important;
+
+    box-shadow: none !important;
+  }
+
+  & .alert-center-item.tone-danger {
+    --w95-status-accent: #ad3030;
+  }
+
+  & .alert-center-item.tone-warning {
+    --w95-status-accent: #916700;
+  }
+
+  & .alert-center-item.tone-info {
+    --w95-status-accent: var(--w95-title);
+  }
+
+  & .alert-center-item.tone-success {
+    --w95-status-accent: #176b49;
+  }
+
+  & .alert-center-item {
+    border-left-width: var(--w95-flat-width) !important;
+    background:
+      linear-gradient(90deg, var(--w95-status-accent, var(--w95-panel)) 0 4px, var(--w95-panel) 4px) !important;
+  }
+
+  & :is(
+    .alert-center-icon,
+    .alert-center-title-row span
+  ) {
+    border-radius: 0 !important;
+    background: var(--w95-bg) !important;
+    box-shadow: none !important;
+  }
+
+  /* =========================================================
+   * 13. Timer 기본 배경 / 위젯 프레임
+   *
+   * 파일: TimerWidget.tsx
+   *       widgets/timer.css
+   *       mobile-timer.css
+   *
+   * Timer의 현재 베이지색은 기존 Pixel 테마에서 온다.
+   * 바깥 창과 원형 시계의 배경을 통일한다.
+   * ========================================================= */
+
+  & [data-widget-id="timer"] .timer-widget {
+    background: var(--w95-bg) !important;
+  }
+
+  /* =========================================================
+   * 15. 공통 입체 버튼
+   *
+   * 각 위젯의 버튼 기능은 변경하지 않는다.
+   * Pixel Desk에서만 외형을 Windows 95로 통일한다.
+   * ========================================================= */
+
+  & :is(
+    .mobile-calendar-week-day,
+    .mobile-career-card__add,
+    .money-pill,
+    .money-section-tab,
+    .timer-widget-mode-button,
+    .timer-widget-primary,
+    .timer-widget-secondary,
+    .journal-add-row button,
+    .journal-score-stepper button
+  ) {
+    border: var(--w95-bevel-width) solid !important;
+
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+
+    background: var(--w95-bg) !important;
+    color: var(--w95-text) !important;
+
+    box-shadow: none !important;
+  }
+
+  /* 선택된 상태는 남색 음각 버튼 */
+
+  & :is(
+    .mobile-calendar-week-day.is-selected,
+    .money-pill.is-active,
+    .money-section-tab.is-active,
+    .timer-widget-mode-button.is-active
+  ) {
+    border-color:
+      var(--w95-dark)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-dark) !important;
+
+    background: var(--w95-title) !important;
+    color: #ffffff !important;
+  }
+
+  & .mobile-calendar-week-day.is-selected
+    :is(span, strong) {
+    color: #ffffff !important;
+  }
+
+  /* =========================================================
+   * 16. 모바일 상단 / 하단 메뉴
+   *
+   * src/components/layout/MobileLayout.tsx
+   * Windows 95의 회색 Taskbar 스타일.
+   * ========================================================= */
+
+  & :is(.mobile-header, .mobile-navigation) {
+    border-radius: 0 !important;
+    background: var(--w95-bg) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  & :is(
+    .mobile-header-actions button,
+    .mobile-navigation-item,
+    .mobile-navigation-capture
+  ) {
+    border: var(--w95-bevel-width) solid !important;
+
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+
+    border-radius: 0 !important;
+
+    background: var(--w95-bg) !important;
+    color: var(--w95-text) !important;
+  }
+
+  & .mobile-navigation-item[aria-current="page"] {
+    border-color:
+      var(--w95-dark)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-dark) !important;
+
+    background: var(--w95-title) !important;
+    color: #ffffff !important;
+  }
+
+  /* Picker glyphs and the resize grip are controls, not Windows buttons;
+   * keep their icon itself visible without drawing a frame around it. */
+  & :is(.mobile-navigation-add-tab, .mobile-tab-icon-choice, .mobile-widget-size-controls button) {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: var(--w95-text) !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-tab-icon-picker {
+    color: var(--w95-text) !important;
+    background: var(--w95-bg) !important;
+    border: var(--w95-bevel-width) solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+    border-radius: 0 !important;
+    box-shadow: var(--w95-shadow-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  & .mobile-tab-icon-choice > img {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  /* Pixel PNGs have transparent margins. Render them larger than the 22px
+   * desktop tab slot so the glyph reads clearly in the phone taskbar. */
+  & .mobile-navigation-item > :is(svg, img, .workspace-theme-icon) {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 36px !important;
+    height: 36px !important;
+    flex: 0 0 36px !important;
+  }
+
+  /* Pressed bevel marks the current icon target without covering the icon. */
+  & .mobile-navigation-item[aria-pressed="true"] {
+    border-color:
+      var(--w95-dark)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-dark) !important;
+    background: var(--w95-title) !important;
+    color: #ffffff !important;
+    outline: 2px solid #ffcf52 !important;
+    outline-offset: -4px !important;
+    box-shadow: var(--w95-shadow-pressed) !important;
+  }
+
+  & .mobile-navigation-item[aria-pressed="true"]::after {
+    background: #ffcf52 !important;
+  }
+
+  /* The selected icon scope is a pressed Win95 button, not just bold text. */
+  & .mobile-tab-icon-picker .workspace-icon-scope-control button[aria-pressed="true"] {
+    justify-content: center !important;
+    color: #ffffff !important;
+    background: var(--w95-title) !important;
+    border-color:
+      var(--w95-dark)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-dark) !important;
+    box-shadow: var(--w95-shadow-pressed) !important;
+  }
+
+  /* Keep the label and check mark white even if a nested theme rule colors
+   * button contents independently from the selected button itself. */
+  & .mobile-tab-icon-picker .workspace-icon-scope-control button[aria-pressed="true"] > :is(span, svg) {
+    color: #ffffff !important;
+  }
+
+  & .mobile-navigation-item > .pixel-tab-icon {
+    display: block !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    image-rendering: pixelated !important;
+  }
+
+  /* The generic flat-row pass keeps 1px borders for most lists. Memo's note
+   * cards are raised Windows panels, so preserve the shared 2px bevel here. */
+  & .mobile-widget-slot .memo-widget .memo-note-item {
+    border: var(--w95-bevel-width) solid !important;
+    border-color:
+      var(--w95-light)
+      var(--w95-dark)
+      var(--w95-dark)
+      var(--w95-light) !important;
+    box-shadow: none !important;
+  }
+
+  /* =========================================================
+   * 17. 입력창
+   *
+   * Memo / Money / Journal / Study 등.
+   *
+   * 버튼과 달리 입력창은 흰색 Inset Border 사용.
+   * ========================================================= */
+
+  & .mobile-widget-slot :is(
+    input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    textarea,
+    select
+  ) {
+    border-radius: 0 !important;
+
+    background: #ffffff !important;
+
+    border: var(--w95-bevel-width) solid !important;
+    border-color:
+      var(--w95-shadow)
+      var(--w95-light)
+      var(--w95-light)
+      var(--w95-shadow) !important;
+  }
+
+  /* Pixel Desk is intentionally rectangular: only corners change here.
+   * Shared spacing, typography, widths, and control sizes stay in the common layer.
+   * Pixel Desk에서는 모서리만 직각으로 만들고 공통 간격·글자·치수는 유지합니다. */
+  & .mobile-widget-slot :is(
+    [class*="panel"],
+    [class*="card"],
+    [class*="item"],
+    [class*="section"],
+    [class*="agenda"],
+    [class*="preview"],
+    [class*="transaction"],
+    [class*="store-row"],
+    [class*="editor"],
+    [class*="note"],
+    [class*="pill"],
+    [class*="tab"]
+  ),
+  & .mobile-widget-slot :is(
+    button,
+    input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    textarea,
+    select
+  ) {
+    border-radius: 0 !important;
+  }
+
+  /* =========================================================
+   * 18. Windows 95 border grammar
+   *
+   * Window / actionable button = one 2px raised bevel.
+   * Inset information surfaces = one 1px flat outline.
+   * Form fields = one 2px recessed border.
+   * This final pass removes old per-widget inset shadows that doubled frames.
+   * ========================================================= */
+
+  & .mobile-widget-slot :is(button, [role="button"], .glass-button):not(.mobile-career-row__main) {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: var(--w95-shadow-raised) !important;
+  }
+
+  & .mobile-widget-slot :is(
+    .study10-summary-card, .study10-timer, .study10-panel,
+    .study10-task-row, .study10-slot, .study10-empty,
+    .mobile-calendar-card__summary, .mobile-career-metrics > div,
+    .mobile-career-next, .mobile-career-row, .mobile-career-status,
+    .journal-summary-card, .journal-score-inline, .journal-section,
+    .journal-task-item, .journal-clip-item, .journal-library-item,
+    .journal-empty-box, .memo-note-item, .alert-center-item,
+    .money-summary-panel, .money-budget-panel, .money-visual-panel,
+    .money-recent-panel, .money-detail-card,
+    .today-focus-hero, .today-focus-section, .today-focus-ring,
+    .today-focus-block, .today-focus-task, .today-focus-mini-item,
+    .today-focus-career-item, .today-focus-memo, .today-focus-alert
+  ) {
+    border: var(--w95-flat-width) solid var(--w95-shadow) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-widget-slot :is(
+    input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    textarea,
+    select
+  ) {
+    border: 0 !important;
+    box-shadow: var(--w95-shadow-input) !important;
+  }
+
+  & .mobile-widget-slot :is(button, [role="button"], .glass-button):not(.mobile-career-row__main):is(
+    .is-active, [aria-pressed="true"], :active
+  ) {
+    box-shadow: var(--w95-shadow-pressed) !important;
+  }
+}
+
+
+/* ============================================================================
+ * 18. 모바일 전체 화면 상세 보기
+ *
+ * Study / Calendar / Career의 전체 보기는 Portal로 렌더링한다.
+ * 따라서 .mobile-layout 바깥에 위치한다.
+ *
+ * Pixel Desk + 모바일 화면이 존재하는 경우에만 스타일 적용.
+ * ============================================================================ */
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+):has(.mobile-layout) {
+
+  /* 상세 페이지 공통 회색 배경 */
+
+  & :is(
+    .mobile-calendar-detail,
+    .mobile-career-detail
+  ) {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+  }
+
+  /* 상세 페이지 공통 남색 제목줄 */
+
+  & :is(
+    .mobile-calendar-detail__header,
+    .mobile-career-detail__header
+  ) {
+    background: #000080 !important;
+    color: #ffffff !important;
+
+    border-radius: 0 !important;
+    border-bottom: 2px solid #404040 !important;
+  }
+
+  & :is(
+    .mobile-calendar-detail__header h2,
+    .mobile-career-detail__header h2
+  ) {
+    color: #ffffff !important;
+  }
+
+  /* Career detail is a portal outside .mobile-layout. Keep one Windows
+     frame around each company row; inner controls stay flat so nested bevels
+     do not look like buttons trapped inside the card. */
+  & .mobile-career-detail__header > div:first-child > span,
+  & .mobile-career-detail__header h2 small {
+    color: #dfdfdf !important;
+  }
+
+  & .mobile-career-search {
+    min-width: 0;
+    border: 1px solid #808080 !important;
+    border-radius: 0 !important;
+    background: #dfdfdf !important;
+    box-shadow: inset 1px 1px 0 #808080 !important;
+  }
+
+  & .mobile-career-search input {
+    min-width: 0;
+    border: 0 !important;
+    outline: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-career-status-rail {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    height: auto;
+    min-height: 0;
+    padding: 0;
+    gap: 6px;
+    overflow: visible;
+  }
+
+  & .mobile-career-status-rail button {
+    width: 100%;
+    min-width: 0;
+    min-height: 38px;
+    padding: 4px 6px;
+    border: 2px solid !important;
+    border-color: #ffffff #404040 #404040 #ffffff !important;
+    border-radius: 0 !important;
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080 !important;
+    white-space: normal;
+    line-height: 1.15;
+  }
+
+  & .mobile-career-status-rail button.is-active {
+    border-color: #404040 #ffffff #ffffff #404040 !important;
+    background: #000080 !important;
+    color: #ffffff !important;
+    box-shadow: inset 1px 1px 0 #000040 !important;
+  }
+
+  & .mobile-career-detail__list { gap: 8px; }
+
+  & .mobile-career-detail .mobile-career-row {
+    border: 1px solid #808080 !important;
+    border-radius: 0 !important;
+    background: #dfdfdf !important;
+    box-shadow: inset 1px 1px 0 #ffffff !important;
+  }
+
+  & .mobile-career-detail .mobile-career-row__main {
+    min-height: 42px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-career-detail .mobile-career-row__posting-link {
+    min-height: 30px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  & .mobile-career-detail .mobile-career-status {
+    padding: 2px 5px;
+    border: 1px solid #808080 !important;
+    border-radius: 0 !important;
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+  }
+}
+
+
+/* ============================================================================
+ * PIXEL THEME SECTION: 95CSS surfaces and controls
+ * Kept in this file so the single Pixel theme has one stylesheet entry point.
+ * ============================================================================ */
+
+/*
+ * Pixel Desk component surfaces, adapted from the 95CSS framework:
+ * https://yoshimannaert.github.io/95CSS/
+ *
+ * This is deliberately scoped to Pixel Desk. We reuse its gray palette and
+ * layered inset shadows without importing its global reset or global element
+ * selectors, which would affect every other Glassday theme.
+ *
+ * 95CSS shadow roles:
+ * - raised: normal buttons and windows
+ * - pressed: active buttons and selected controls
+ * - input: white, recessed form fields
+ */
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) {
+  --w95-face: #c3c3c3;
+  --w95-face-light: #dedede;
+  --w95-white: #fff;
+  --w95-black: #000;
+  --w95-gray: #808080;
+  --w95-navy: #0f0086;
+  --w95-teal: #008080;
+  --w95-inner-face: #dedede;
+  --w95-inner-line: #808080;
+  /* Pixel Desk has one radius rule: every widget surface is square. */
+  --gd-radius-app: 0px;
+  --gd-radius-panel: 0px;
+  --gd-radius-widget: 0px;
+  --gd-radius-card: 0px;
+  --gd-radius-inner: 0px;
+  --gd-radius-button: 0px;
+  --gd-widget-inner-radius: 0px;
+  --gd-widget-header-bg: var(--w95-navy);
+  --gd-widget-header-color: var(--w95-white);
+
+  --w95-shadow-raised:
+    inset -2px -2px 0 var(--w95-black),
+    inset 2px 2px 0 var(--w95-white),
+    inset -4px -4px 0 var(--w95-gray),
+    inset 4px 4px 0 var(--w95-face-light);
+  --w95-shadow-raised-deep:
+    inset -2px -2px 0 var(--w95-black),
+    inset 2px 2px 0 var(--w95-white),
+    inset -4px -4px 0 var(--w95-gray);
+  --w95-shadow-pressed:
+    inset -2px -2px 0 var(--w95-white),
+    inset 2px 2px 0 var(--w95-black),
+    inset -4px -4px 0 var(--w95-face-light),
+    inset 4px 4px 0 var(--w95-gray);
+  --w95-shadow-input:
+    inset -2px -2px 0 var(--w95-white),
+    inset 2px 2px 0 var(--w95-gray),
+    inset -4px -4px 0 var(--w95-face),
+    inset 4px 4px 0 var(--w95-black);
+  /* Shared raised edge on every blue widget title bar. */
+  --w95-shadow-titlebar:
+    inset 2px 2px 0 rgb(255 255 255 / 0.62),
+    inset -2px -2px 0 #000040;
+}
+
+/* The outer widget is the dialog/window surface; the real shared titlebar
+   remains owned by widget-frame-theme.css. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  .mobile-widget-slot .glass-card,
+  .glass-card,
+  .mobile-calendar-card,
+  .mobile-career-card
+) {
+  background-color: var(--w95-face);
+  background-image: none;
+  border-radius: 0;
+}
+
+/* One interior panel rule for every widget. Earlier theme files had separate
+   Journal, Study, Timer, Money, and Career surface treatments; this shared
+   95CSS gray panel removes those mismatched fills and stroke weights. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  .today-focus-hero, .today-focus-section,
+  .today-focus-block, .today-focus-task, .today-focus-mini-item,
+  .today-focus-career-item, .today-focus-memo, .today-focus-alert,
+  .alert-center-item, .alert-item, .alert-summary-card,
+  .calendar-event-item, .calendar-event-card, .calendar-mini-card,
+  .calendar-month-day-cell, .calendar-event-card,
+  .career-summary-card, .career-card, .career-list-item,
+  .mobile-career-row, .mobile-career-next, .mobile-career-metrics > div,
+  .journal-summary-card, .journal-score-inline, .journal-section,
+  .journal-task-item, .journal-clip-item, .journal-library-item,
+  .money-summary-panel, .money-budget-panel, .money-visual-panel,
+  .money-recent-panel, .money-detail-card, .money-transaction-row,
+  .memo-list-panel, .memo-note-item, .memo-workspace,
+  .mood-row, .study-card, .study-overview-panel, .study-input-panel,
+  .study-goal-panel, .study-week-panel, .study-task-panel,
+  .study-record-list-panel, .study10-summary-card, .study10-timer,
+  .study10-panel, .study10-task-row, .study10-subject-total,
+  .study10-empty, .timer-widget-main-card
+) {
+  border: 1px solid var(--w95-inner-line) !important;
+  border-radius: 0 !important;
+  background: var(--w95-inner-face) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* Actual controls share the same raised face and pressed state. Today Focus's
+   pinned memo is a linked summary row, so it stays in the flat inner-panel
+   group above instead of looking like a separate raised button. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  button:not(.mobile-career-row__main):not(.today-focus-memo),
+  [role="button"]:not(.mobile-career-row__main):not(.today-focus-memo), .glass-button, .career-icon-button,
+  .settings-theme-card, .mobile-career-status-rail button
+) {
+  border: 0;
+  border-radius: 0;
+  background-color: var(--w95-face);
+  box-shadow: var(--w95-shadow-raised);
+}
+
+/* Inline task text is deliberately borderless inside its 95CSS row; treating
+   it like a full input field clips the compact Mona12 glyphs. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) .mobile-layout .mobile-widget-slot .daily-journal-widget .journal-task-item > input {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  min-height: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  padding: 0 4px !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  button:not(.mobile-career-row__main), [role="button"]:not(.mobile-career-row__main), .glass-button, .career-icon-button,
+  .settings-theme-card, .mobile-career-status-rail button
+):is(:active, .is-active, [aria-pressed="true"], [aria-selected="true"]) {
+  box-shadow: var(--w95-shadow-pressed);
+}
+
+/* Text fields use the 95CSS recessed white surface. Widget panels themselves
+   keep the standard gray face; only actual editable controls are white. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  input:not(.study10-estimate-input input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+  textarea, select, [contenteditable="true"]
+) {
+  border: 0;
+  border-radius: 0;
+  background-color: var(--w95-white);
+  box-shadow: var(--w95-shadow-input);
+}
+
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  .widget-frame__header, .mobile-calendar-card__header,
+  .mobile-career-card__header
+) {
+  background: var(--w95-navy);
+  color: var(--w95-white);
+  border: 0;
+  border-radius: 0;
+  box-shadow: var(--gd-widget-header-shadow) !important;
+}
+
+/* Header action keys have a gray face: arrows and their labels are black. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface)
+  :is(.widget-frame__header, .mobile-calendar-card__header, .mobile-career-card__header)
+  button,
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface)
+  :is(.widget-frame__header, .mobile-calendar-card__header, .mobile-career-card__header)
+  button svg {
+  color: var(--w95-black) !important;
+}
+
+/* Memo's writing area is the intentional exception to standard white fields:
+   it inherits the common gray window face and its own chosen font. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) .memo-editor {
+  background-color: var(--w95-face);
+  box-shadow: var(--w95-shadow-input);
+}
+
+/* Radius is a theme-wide rule, not a per-widget preference. Apply it last to
+   every widget implementation (GlassCard, Career's desktop shell, and the
+   standalone mobile Calendar/Career cards), including their inner controls. */
+:is(
+  html[data-theme="pixel-desk"], body[data-theme="pixel-desk"],
+  html.theme-pixel-desk, body.theme-pixel-desk,
+  html.pixel-desk, body.pixel-desk,
+  html.theme-pixel, body.theme-pixel
+) :is(.mobile-layout, .app-shell-surface) :is(
+  .glass-card, .glass-card *,
+  .career-widget, .career-widget *,
+  .mobile-calendar-card, .mobile-calendar-card *,
+  .mobile-career-card, .mobile-career-card *
+) {
+  border-radius: 0 !important;
+}
+
+/* =========================================================
+   Pixel Desk final event color bridge
+   Calendar has several late responsive rules and the Pixel theme has hard
+   Win98 panel backgrounds. Keep event surfaces data-colored in every view.
+   / Month, Week, Day 모두 일정별 --event-color가 마지막에 보이도록 한다.
+========================================================= */
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(
+    .calendar-event-item,
+    .calendar-week-event,
+    .calendar-week-range-bar,
+    .calendar-range-chip,
+    .calendar-month-single-chip
+  ) {
+  background:
+    color-mix(in srgb, var(--event-color, #fff3b0) 86%, #ffffff 14%) !important;
+  color: #111111 !important;
+  border-radius: 0 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #606060 !important;
+  border-bottom: 1px solid #606060 !important;
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--event-color, #fff3b0) 28%, #ffffff 72%) !important;
+  filter: saturate(1.05) brightness(1.02) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  .calendar-range-chip {
+  opacity: 0.72 !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(.calendar-event-item:hover, .calendar-week-event:hover, .calendar-week-range-bar:hover, .calendar-month-single-chip:hover, .calendar-range-chip:hover) {
+  background:
+    color-mix(in srgb, var(--event-color, #fff3b0) 96%, #ffffff 4%) !important;
+  opacity: 0.96 !important;
+  filter: saturate(1.18) brightness(1.03) !important;
+}
+
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.pixel-desk,
+  body.pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+)
+  :is(.calendar-event-item, .calendar-week-event, .calendar-week-range-bar, .calendar-month-single-chip)
+  :is(strong, span, .calendar-event-title, .calendar-event-time, .calendar-event-location) {
+  color: #111111 !important;
+}
+
+/* Pixel Desk keeps the cover-letter question field tall enough for editing. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk
+) .career-cover-question-input {
+  height: 128px !important;
+  min-height: 128px !important;
+  max-height: 128px !important;
+  overflow-y: auto !important;
+}
+
+/* Compact Pixel Desk metric rows to fit the raised panel frame. */
+:is(
+  html[data-theme="pixel-desk"],
+  body[data-theme="pixel-desk"],
+  html.theme-pixel-desk,
+  body.theme-pixel-desk,
+  html.theme-pixel,
+  body.theme-pixel
+) .mood-row {
+  padding: 5px 7px;
 }

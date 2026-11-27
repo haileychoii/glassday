@@ -32,7 +32,6 @@
 @import "./themes/glass-dark.css";
 @import "./themes/aurora.css";
 @import "./themes/mac-core.css";
-@import "./themes/pixel.css";
 @import "./themes/retro.css";
 @import "./theme-surfaces.css";
 
@@ -81,9 +80,6 @@
 /* Theme-specific mobile surfaces and settings appearance. */
 @import "./mobile-finish.css";
 
-/* Desktop Pixel Desk uses the same visual tokens as mobile-pixel.css. */
-@import "./themes/pixel-desktop-parity.css";
-
 /* Pink Diary's final visual layer stays after desktop and mobile overrides. */
 @import "./themes/pink-diary.css";
 
@@ -97,17 +93,11 @@
 @import "./mobile-common.css";
 @import "./mobile-glass.css";
 
-/* Pixel Desk title bars are shared by every desktop and mobile widget. */
-@import "./themes/pixel-widget-headers.css";
-
-/* Keep Pixel's square corners and raised controls after shared mobile geometry. */
-@import "./mobile-pixel.css";
-
 /* Widget title background is one shared frame; themes provide its surface token. */
 @import "./widget-frame-theme.css";
 
-/* Pixel controls and window faces follow the scoped 95CSS shadow language. */
-@import "./themes/pixel-95css.css";
-
 /* All widget shells, inner panels, and controls share one radius hierarchy. */
 @import "./widget-radius-consistency.css";
+
+/* Pixel Desk is one theme; palette, desktop, mobile, widget, and 95CSS rules live together. */
+@import "./themes/pixel.css";
