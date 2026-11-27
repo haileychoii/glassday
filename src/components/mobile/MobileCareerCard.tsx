@@ -18,7 +18,7 @@
  *               ├─ DashboardDataContext.tsx : 기업 원본 데이터 / 생성 / 상세 열기
  *               ├─ types/dashboard.ts : CareerItem / CareerStatus 타입
  *               ├─ calendar/calendarUtils.ts : 로컬 날짜 파싱
- *               └─ styles/mobile-career.css : 모바일 전용 디자인
+ *               └─ styles/mobile.css Career section : 모바일 전용 디자인
  *
  * [기존 Career 상세 창과 이어지는 과정]
  * 1. 이 카드가 useDashboardData().openCareerDetail(기업ID)를 호출합니다.

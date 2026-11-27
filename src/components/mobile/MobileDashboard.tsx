@@ -126,7 +126,7 @@ export const MobileDashboard = ({
       {activeTab.widgetIds.map((id) => {
         /*
          * Special cards need a slot class for their card-specific rules.
-         * Shared frame geometry stays in mobile-common.css.
+         * Shared frame geometry stays in mobile.css shared geometry section.
          */
         const slotClassName = [
           "mobile-widget-slot",

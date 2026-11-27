@@ -23,7 +23,7 @@
  *    - MobileCalendarCard 안에서 CalendarWidget을 두 번째로 렌더링하지 않습니다.
  * 5. src/components/widgets/calendar/calendarUtils.ts
  *    - 날짜 계산, 여러 날에 걸친 일정 판정, 일정 정렬 등을 공용으로 사용합니다.
- * 6. src/styles/mobile-calendar.css
+ * 6. src/styles/mobile.css Calendar section
  *    - 오직 모바일 셸과 이번 모바일 카드/화면만 스타일링합니다.
  *
  * [기존 데이터 보호]
@@ -69,7 +69,7 @@ import {
 } from "../widgets/calendar/calendarUtils";
 
 // 모바일 스타일은 src/styles/index.css에서 공통으로 로드합니다.
-// 이 컴포넌트는 화면 구조만 제공하고 카드 치수는 mobile-common.css에 맡깁니다.
+// 이 컴포넌트는 화면 구조만 제공하고 카드 치수는 mobile.css shared geometry section에 맡깁니다.
 
 /** '월간 / 주간 / 일정'은 렌더링 방식이며 저장 데이터 형식은 바꾸지 않습니다. */
 type MobileCalendarView = "month" | "week" | "agenda";

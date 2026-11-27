@@ -15,8 +15,8 @@
  * - types/journal.ts
  * - widgets/journal/journalUtils.ts
  * - styles/widgets/journal.css
- * - styles/mobile-journal.css (mobile-only Journal layout)
- * - styles/mobile-common.css (shared mobile frame and header geometry)
+ * - styles/mobile.css Daily Journal section (mobile-only Journal layout)
+ * - styles/mobile.css shared geometry section (shared mobile frame and header geometry)
  *
  * [기능]
  * 1. 날짜별 Journal 불러오기 및 저장
@@ -559,7 +559,7 @@ export const DailyJournalWidget = () => {
             08. JOURNAL CONTENT
             Today / Tomorrow / Work Log / Learned 등
 
-            모바일은 mobile-journal.css에서
+            모바일은 mobile.css Daily Journal section에서
             Summary와 기록이 함께 스크롤되도록 설정한다.
            ================================================== */}
 

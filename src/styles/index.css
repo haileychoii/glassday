@@ -7,7 +7,7 @@
    2) AppShell/Grid/Control/Floating Window 구조
    3) Theme Variant palette와 surface token
    4) 각 Widget 내부 Frame
-   5) viewport responsive와 최종 safety override
+   5) 반응형·모바일 레이아웃과 최종 safety override
 
    뒤에서 import된 파일이 같은 specificity의 앞 규칙을 덮으므로 순서를 바꾸면
    시각 결과가 달라질 수 있다. 새 CSS 파일은 담당 layer에만 추가한다.
@@ -63,35 +63,17 @@
 /* 5. Responsive rules and late-stage corrections */
 @import "./responsive.css";
 @import "./overrides.css";
-/* Mobile shell and feature layouts. */
+/* Shared widget fit and narrow-card behavior; theme surfaces remain untouched. */
+@import "./responsive-widgets.css";
 
+/* All mobile screen and mobile widget rules live in one documented stylesheet. */
 @import "./mobile.css";
-@import "./mobile-calendar.css";
-@import "./mobile-career.css";
-@import "./mobile-memo.css";
-@import "./mobile-money.css";
-@import "./mobile-timer.css";
-
-
-
-/* Journal composition follows the Pixel surface rules. */
-@import "./mobile-journal.css";
-
-/* Theme-specific mobile surfaces and settings appearance. */
-@import "./mobile-finish.css";
 
 /* Pink Diary's final visual layer stays after desktop and mobile overrides. */
 @import "./themes/pink-diary.css";
 
 /* Tauri-only host transparency and four-corner clipping must follow themes. */
 @import "./desktop-window.css";
-
-/* Shared widget fit and narrow-card behavior; theme surfaces remain untouched. */
-@import "./responsive-widgets.css";
-
-/* Final shared mobile spacing, frame geometry, and theme materials. */
-@import "./mobile-common.css";
-@import "./mobile-glass.css";
 
 /* Widget title background is one shared frame; themes provide its surface token. */
 @import "./widget-frame-theme.css";
