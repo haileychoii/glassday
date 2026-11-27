@@ -21,6 +21,7 @@
  * ============================================================
  */
 import {
+  DASHBOARD_TABS_STORAGE_KEY,
   DASHBOARD_STORAGE_SCHEMA_KEY,
   DASHBOARD_STORAGE_SCHEMA_VERSION,
   SHARED_WORKSPACE_TABS_KEY,
@@ -46,6 +47,91 @@ export type GlassdayStorageChangeDetail = {
 };
 
 const isBrowser = () => typeof window !== "undefined";
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+/** Build an empty per-device layout for a workspace first received from cloud. */
+const emptyWorkspaceLayouts = () => ({
+  wide: { lg: [], md: [], sm: [] },
+  laptop: { lg: [], md: [], sm: [] },
+});
+
+/**
+ * Cloud stores only tab identity and appearance. Merge that shared metadata
+ * onto each device's full tab records so layout coordinates and mobile sizing
+ * remain device-local while tab names, widgets, and per-theme icons travel
+ * with the user account.
+ */
+const mergeSharedWorkspaceTabs = (sharedTabsValue: string) => {
+  const rawLocalTabs = window.localStorage.getItem(DASHBOARD_TABS_STORAGE_KEY);
+  let sharedTabs: unknown;
+  let localTabs: unknown;
+
+  try {
+    sharedTabs = JSON.parse(sharedTabsValue);
+    localTabs = rawLocalTabs ? JSON.parse(rawLocalTabs) : [];
+  } catch {
+    return;
+  }
+
+  if (!Array.isArray(sharedTabs) || !Array.isArray(localTabs)) return;
+
+  const sharedById = new Map(
+    sharedTabs
+      .filter((tab): tab is Record<string, unknown> =>
+        isRecord(tab) && typeof tab.id === "string" && typeof tab.label === "string"
+      )
+      .map((tab) => [tab.id as string, tab])
+  );
+  const merged = localTabs.map((tab) => {
+    if (!isRecord(tab) || typeof tab.id !== "string") return tab;
+    const shared = sharedById.get(tab.id);
+    if (!shared) return tab;
+
+    const mergedTab: Record<string, unknown> = {
+      ...tab,
+      label: shared.label,
+      icon: typeof shared.icon === "string" ? shared.icon : "✨",
+      widgetIds: Array.isArray(shared.widgetIds)
+        ? shared.widgetIds.filter((id): id is string => typeof id === "string")
+        : [],
+    };
+
+    if (typeof shared.background === "string") mergedTab.background = shared.background;
+    if (typeof shared.iconSource === "string") mergedTab.iconSource = shared.iconSource;
+    if (isRecord(shared.iconByTheme)) {
+      mergedTab.iconByTheme = Object.fromEntries(
+        Object.entries(shared.iconByTheme).filter(
+          ([theme, icon]) =>
+            ["pastel", "glass-light", "glass-dark", "aurora", "mac-core", "pixel-desk", "retro"].includes(theme) &&
+            typeof icon === "string"
+        )
+      );
+    }
+
+    sharedById.delete(tab.id);
+    return mergedTab;
+  });
+
+  sharedById.forEach((shared) => {
+    merged.push({
+      id: shared.id,
+      label: shared.label,
+      icon: typeof shared.icon === "string" ? shared.icon : "✨",
+      background: typeof shared.background === "string" ? shared.background : "",
+      iconSource: typeof shared.iconSource === "string" ? shared.iconSource : "",
+      iconByTheme: isRecord(shared.iconByTheme) ? shared.iconByTheme : {},
+      widgetIds: Array.isArray(shared.widgetIds)
+        ? shared.widgetIds.filter((id): id is string => typeof id === "string")
+        : [],
+      layouts: emptyWorkspaceLayouts(),
+      locked: false,
+    });
+  });
+
+  window.localStorage.setItem(DASHBOARD_TABS_STORAGE_KEY, JSON.stringify(merged));
+};
 
 /* Cloud Sync Scope: durable user content.
    Wide/Laptop mode, active tab, Grid layout, theme은 이 브라우저의 view shell이므로
@@ -295,6 +381,11 @@ export const applyGlassdayStorageSnapshot = (
     }
   });
 
+  const sharedWorkspaceTabs = snapshot.data[SHARED_WORKSPACE_TABS_KEY];
+  if (canApplyDashboardState && typeof sharedWorkspaceTabs === "string") {
+    mergeSharedWorkspaceTabs(sharedWorkspaceTabs);
+  }
+
   markGlassdayLocalSyncedAt(syncedAt);
 
   emitGlassdayStorageChange({
@@ -326,7 +417,9 @@ export const patchLocalStorageEvents = () => {
   ) {
     originalSetItem.call(this, key, value);
 
-    if (isCloudSyncAllowedKey(key)) {
+    /* dashboard.tabs is omitted as a whole because layouts stay device-local,
+       but its shared identity/icon subset still needs to win sync conflicts. */
+    if (isCloudSyncAllowedKey(key) || key === DASHBOARD_TABS_STORAGE_KEY) {
       originalSetItem.call(
         this,
         GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY,
@@ -345,7 +438,7 @@ export const patchLocalStorageEvents = () => {
   storageProto.removeItem = function patchedRemoveItem(key: string) {
     originalRemoveItem.call(this, key);
 
-    if (isCloudSyncAllowedKey(key)) {
+    if (isCloudSyncAllowedKey(key) || key === DASHBOARD_TABS_STORAGE_KEY) {
       originalSetItem.call(
         this,
         GLASSDAY_LOCAL_SYNC_UPDATED_AT_KEY,

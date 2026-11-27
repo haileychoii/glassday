@@ -31,6 +31,7 @@ import { useEffect, useMemo, useRef } from "react";
 
 import { useLocalStorage } from "./useLocalStorage";
 import {
+  DASHBOARD_TABS_STORAGE_KEY,
   DASHBOARD_STORAGE_SCHEMA_KEY,
   DASHBOARD_STORAGE_SCHEMA_VERSION,
 } from "../constants/dashboardStorage";
@@ -46,7 +47,7 @@ import type {
   WorkspaceTabIconChange,
 } from "../types/workspace";
 
-const TABS_KEY = "glassday.dashboard.tabs.v1";
+const TABS_KEY = DASHBOARD_TABS_STORAGE_KEY;
 const ACTIVE_TAB_KEY = "glassday.dashboard.activeTab.v1";
 
 /**

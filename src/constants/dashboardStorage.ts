@@ -19,6 +19,8 @@ export const DASHBOARD_PENDING_AUTH_LAYOUT_MODE_KEY =
   "glassday.dashboard.pendingAuthLayoutMode.v1";
 export const DASHBOARD_STORAGE_SCHEMA_KEY =
   "glassday.dashboard.storageSchema.v1";
+/** Complete per-device tab records; only their shared metadata goes to cloud. */
+export const DASHBOARD_TABS_STORAGE_KEY = "glassday.dashboard.tabs.v1";
 /** Cloud-synced workspace metadata; per-device dashboard layouts stay local. */
 export const SHARED_WORKSPACE_TABS_KEY =
   "glassday.workspace.sharedTabs.v1";
