@@ -2,6 +2,7 @@
  * [Figma Mapping] Mobile / Workspace Navigation
  * Uses the same persisted DashboardTab records as the desktop sidebar.
  * In edit mode, stage icon changes across tabs and persist them together with Apply.
+ * The only bottom plus creates a workspace immediately; the header keeps Quick Capture separate.
  */
 import { useEffect, useRef, useState } from "react";
 import { Plus } from "lucide-react";
@@ -12,16 +13,12 @@ import type { DashboardTab, WorkspaceTabIconChange } from "../../types/workspace
 import { WorkspaceTabIcon } from "./WorkspaceTabIcon";
 import { WorkspaceIconPicker } from "./WorkspaceIconPicker";
 
-type IconPickerTarget =
-  | { type: "new" }
-  | { type: "existing"; tabId: string }
-  | null;
+type IconPickerTarget = { tabId: string } | null;
 
 export const MobileNavigation = ({
   tabs,
   activeTabId,
   onSelectTab,
-  onOpenQuickCapture,
   onAddTab,
   onChangeTabIcons,
   editMode,
@@ -29,27 +26,21 @@ export const MobileNavigation = ({
   tabs: DashboardTab[];
   activeTabId: string;
   onSelectTab: (id: string) => void;
-  onOpenQuickCapture: () => void;
   onAddTab: (icon: string) => void;
   onChangeTabIcons: (changes: WorkspaceTabIconChange[]) => void;
   editMode: boolean;
 }) => {
   const [theme, setTheme] = useState<ThemeId>(() => getCurrentTheme());
   const [pickerTarget, setPickerTarget] = useState<IconPickerTarget>(null);
-  const [previewIcon, setPreviewIcon] = useState<{ tabId: string | null; icon: string } | null>(null);
   const [draftIcons, setDraftIcons] = useState<Record<string, WorkspaceTabIconChange>>({});
   const navigationRef = useRef<HTMLElement>(null);
 
   const cancelPicker = () => {
-    setPreviewIcon(null);
     setDraftIcons({});
     setPickerTarget(null);
   };
 
-  const openPicker = (target: IconPickerTarget) => {
-    setPreviewIcon(null);
-    setPickerTarget(target);
-  };
+  const openPicker = (tabId: string) => setPickerTarget({ tabId });
 
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
@@ -64,7 +55,6 @@ export const MobileNavigation = ({
   useEffect(() => {
     // Leaving edit mode without Apply discards the whole temporary edit batch.
     if (!editMode && (pickerTarget || Object.keys(draftIcons).length > 0)) {
-      setPreviewIcon(null);
       setDraftIcons({});
       setPickerTarget(null);
     }
@@ -80,13 +70,12 @@ export const MobileNavigation = ({
       });
   }, [activeTabId]);
 
-  const targetTab =
-    pickerTarget?.type === "existing"
-      ? tabs.find((tab) => tab.id === pickerTarget.tabId)
-      : undefined;
+  const targetTab = pickerTarget
+    ? tabs.find((tab) => tab.id === pickerTarget.tabId)
+    : undefined;
 
   const saveIcon = (icon: string, applyToAllThemes: boolean) => {
-    if (pickerTarget?.type === "existing" && targetTab) {
+    if (targetTab) {
       const pendingChanges = {
         ...draftIcons,
         ...(icon !== (targetTab.iconByTheme?.[theme] ?? targetTab.icon) || applyToAllThemes
@@ -94,19 +83,13 @@ export const MobileNavigation = ({
           : {}),
       };
       onChangeTabIcons(Object.values(pendingChanges));
-    } else if (pickerTarget?.type === "new") {
-      if (Object.keys(draftIcons).length > 0) {
-        onChangeTabIcons(Object.values(draftIcons));
-      }
-      onAddTab(icon);
     }
-    setPreviewIcon(null);
     setDraftIcons({});
     setPickerTarget(null);
   };
 
   const stageIcon = (icon: string, applyToAllThemes: boolean) => {
-    if (pickerTarget?.type === "existing" && targetTab) {
+    if (targetTab) {
       setDraftIcons((current) => {
         const next = { ...current };
         const savedIcon = targetTab.iconByTheme?.[theme] ?? targetTab.icon;
@@ -122,28 +105,15 @@ export const MobileNavigation = ({
         }
         return next;
       });
-      return;
     }
-
-    if (pickerTarget?.type === "new") setPreviewIcon({ tabId: null, icon });
   };
 
   return (
     <div className="mobile-navigation-shell">
       <nav ref={navigationRef} className="mobile-navigation" aria-label="Workspaces">
-        <button
-          type="button"
-          className="mobile-navigation-capture"
-          aria-label="Open Quick Capture"
-          title="Quick Capture"
-          onClick={onOpenQuickCapture}
-        >
-          <Plus size={21} strokeWidth={2.4} aria-hidden="true" />
-        </button>
-
         {tabs.map((tab) => {
           const isEditingIcon =
-            pickerTarget?.type === "existing" && pickerTarget.tabId === tab.id;
+            pickerTarget?.tabId === tab.id;
           const pendingIcon = draftIcons[tab.id];
           const displayedIcon =
             pendingIcon && (pendingIcon.applyToAllThemes || pendingIcon.theme === theme)
@@ -163,7 +133,7 @@ export const MobileNavigation = ({
               aria-pressed={isEditingIcon}
               onClick={() => {
                 if (editMode) {
-                  openPicker({ type: "existing", tabId: tab.id });
+                  openPicker(tab.id);
                   return;
                 }
 
@@ -185,37 +155,17 @@ export const MobileNavigation = ({
 
         <button
           type="button"
-          className="mobile-navigation-add-tab"
-          aria-label={pickerTarget?.type === "new"
-            ? previewIcon?.tabId === null ? "새 탭 아이콘 미리보기" : "새 탭 아이콘 선택 중"
-            : "새 탭 추가"}
-          title="새 탭 추가"
-          aria-expanded={pickerTarget?.type === "new"}
-          onClick={() => {
-            if (pickerTarget?.type !== "new") openPicker({ type: "new" });
-          }}
+          className="mobile-navigation-action"
+          disabled={Boolean(pickerTarget)}
+          aria-label="새 워크스페이스 추가"
+          title="새 워크스페이스 추가"
+          onClick={() => onAddTab("✨")}
         >
-          {pickerTarget?.type === "new" && previewIcon?.tabId === null ? (
-            previewIcon.icon.startsWith("/workspace-icons/") ? (
-              <img
-                className="mobile-navigation-preview-icon"
-                src={previewIcon.icon}
-                alt=""
-                aria-hidden="true"
-                draggable={false}
-              />
-            ) : (
-              <span className="mobile-navigation-preview-icon" aria-hidden="true">
-                {previewIcon.icon}
-              </span>
-            )
-          ) : (
-            <Plus size={22} strokeWidth={2} aria-hidden="true" />
-          )}
+          <Plus size={22} strokeWidth={2} aria-hidden="true" />
         </button>
       </nav>
 
-      {pickerTarget && (targetTab || pickerTarget.type === "new") && (
+      {pickerTarget && targetTab && (
         <WorkspaceIconPicker
           value={targetTab?.iconByTheme?.[theme] ?? targetTab?.icon ?? "✨"}
           draftValue={targetTab && (draftIcons[targetTab.id]?.applyToAllThemes || draftIcons[targetTab.id]?.theme === theme)
@@ -224,9 +174,9 @@ export const MobileNavigation = ({
           initialApplyToAllThemes={targetTab ? draftIcons[targetTab.id]?.applyToAllThemes : false}
           canApply={Object.keys(draftIcons).length > 0}
           theme={theme}
-          contextLabel={pickerTarget.type === "new" ? "새 탭 아이콘 선택" : `${targetTab?.label ?? "탭"} 아이콘 변경`}
-          showThemeScope={pickerTarget.type === "existing"}
-          saveLabel={pickerTarget.type === "new" ? "새 탭 만들기" : "적용"}
+          contextLabel={`${targetTab.label} 아이콘 변경`}
+          showThemeScope
+          saveLabel="적용"
           onSave={saveIcon}
           onPreview={stageIcon}
           onCancel={cancelPicker}

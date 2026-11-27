@@ -3,7 +3,7 @@
  * App owns actions/providers; this shell only arranges their entry points.
  * Styles: styles/mobile.css. / 모바일 웹 전용이며 Tauri에는 렌더링하지 않습니다.
  */
-import { Check, Pencil, Plus, Search, Settings, Trash2 } from "lucide-react";
+import { Check, Inbox, Pencil, Search, Settings, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { DashboardTab, WorkspaceTabIconChange } from "../../types/workspace";
 import { MobileNavigation } from "./MobileNavigation";
@@ -107,7 +107,7 @@ export const MobileLayout = ({
         </div>
         <div className="mobile-header-actions">
           <button type="button" aria-label="Search Glassday" title="Search" onClick={onOpenSearch}><Search size={19} /></button>
-          <button type="button" className="mobile-header-quick-capture" aria-label="Quick Capture" title="Quick Capture" onClick={onOpenQuickCapture}><Plus size={21} strokeWidth={2.4} /></button>
+          <button type="button" aria-label="Quick Capture" title="Quick Capture" onClick={onOpenQuickCapture}><Inbox size={19} /></button>
           <button
             type="button"
             aria-label={editMode ? "Finish workspace editing" : "Edit workspace"}
@@ -127,7 +127,6 @@ export const MobileLayout = ({
         tabs={tabs}
         activeTabId={activeTabId}
         onSelectTab={onSelectTab}
-        onOpenQuickCapture={onOpenQuickCapture}
         onAddTab={onAddTab}
         onChangeTabIcons={onChangeTabIcons}
         editMode={editMode}

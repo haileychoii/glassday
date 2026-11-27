@@ -245,7 +245,7 @@
   [data-theme="aurora"], .theme-aurora
 ) .mobile-layout :is(
   .mobile-header-actions button,
-  .mobile-navigation-capture
+  .mobile-navigation-action
 ) {
   color: hsl(var(--primary)) !important;
   border: 1px solid var(--mobile-glass-nav-icon-active-border) !important;
@@ -267,7 +267,7 @@
   [data-theme="glass-light"], .theme-glass-light,
   [data-theme="glass-dark"], .theme-glass-dark,
   [data-theme="aurora"], .theme-aurora
-) .mobile-layout .mobile-header-actions button:not(.mobile-header-quick-capture) {
+) .mobile-layout .mobile-header-actions button {
   color: hsl(var(--foreground) / 0.86) !important;
   border-color: var(--mobile-glass-nav-icon-border) !important;
   background: var(--mobile-glass-nav-icon-bg) !important;
@@ -283,7 +283,7 @@
   [data-theme="glass-light"], .theme-glass-light,
   [data-theme="glass-dark"], .theme-glass-dark,
   [data-theme="aurora"], .theme-aurora
-) .mobile-layout .mobile-navigation-capture:active {
+) .mobile-layout .mobile-navigation-action:active {
   background: var(--mobile-glass-nav-icon-bg) !important;
   transform: scale(0.96);
 }

@@ -2141,7 +2141,7 @@ html[data-theme="pixel-desk"] .app-shell-main {
   & :is(
     .mobile-header-actions button,
     .mobile-navigation-item,
-    .mobile-navigation-capture
+    .mobile-navigation-action
   ) {
     border: var(--w95-bevel-width) solid !important;
 
@@ -2170,7 +2170,7 @@ html[data-theme="pixel-desk"] .app-shell-main {
 
   /* Picker glyphs and the resize grip are controls, not Windows buttons;
    * keep their icon itself visible without drawing a frame around it. */
-  & :is(.mobile-navigation-add-tab, .mobile-tab-icon-choice, .mobile-widget-size-controls button) {
+  & :is(.mobile-navigation-action, .mobile-tab-icon-choice, .mobile-widget-size-controls button) {
     border: 0 !important;
     border-radius: 0 !important;
     background: transparent !important;

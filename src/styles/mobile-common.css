@@ -596,17 +596,6 @@ body:has(.mobile-layout) .mobile-layout
   color: var(--w95-light, #fff) !important;
 }
 
-/* Quick Capture is a narrow utility key, not a full-width navigation tab.
- * 하단의 +는 작업공간 탭보다 좁은 전용 칸에 배치합니다. */
-body:has(.mobile-layout) .mobile-navigation-capture {
-  width: 52px !important;
-  max-width: 52px !important;
-  min-width: 52px !important;
-  height: 44px !important;
-  border-radius: 12px !important;
-  box-shadow: none !important;
-}
-
 /* Natural-height cards follow their content. Keep a fixed scroll surface only
  * for long-form Journal/Memo and the dedicated Timer panel. */
 .mobile-layout .mobile-dashboard > .mobile-widget-slot {
