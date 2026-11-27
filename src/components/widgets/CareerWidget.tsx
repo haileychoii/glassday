@@ -45,6 +45,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   ChangeEvent as ReactChangeEvent,
+  ClipboardEvent as ReactClipboardEvent,
   FormEvent as ReactFormEvent,
   PointerEvent as ReactPointerEvent,
 } from "react";
@@ -643,14 +644,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
      The field argument decides whether the attachment belongs to Application
      Core or Notes; validation, limits, and persistence remain identical.
      field만 바꾸면 두 사진 영역이 같은 저장 규칙을 사용합니다. */
-  const addCareerImages = async (
-    event: ReactChangeEvent<HTMLInputElement>,
+  const addCareerImageFiles = async (
+    files: File[],
     field: CareerImageField
   ) => {
-    const input = event.currentTarget;
-    const files = Array.from(input.files ?? []);
-    input.value = "";
-
     if (!selectedItem || files.length === 0) return;
 
     const currentImages = selectedItem[field] ?? [];
@@ -691,6 +688,41 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
       ...current,
       [field]: errors.join(" "),
     }));
+  };
+
+  const addCareerImages = (
+    event: ReactChangeEvent<HTMLInputElement>,
+    field: CareerImageField
+  ) => {
+    const input = event.currentTarget;
+    const files = Array.from(input.files ?? []);
+    input.value = "";
+    void addCareerImageFiles(files, field);
+  };
+
+  /* Job descriptions accept pasted screenshots as well as file-picker uploads.
+     Both paths enter the same image pipeline and remain attached to this Career record.
+     공고 설명 칸에 붙여넣은 이미지도 파일 선택과 같은 압축·검증·저장 과정을 거칩니다. */
+  const handleJobDescriptionPaste = (
+    event: ReactClipboardEvent<HTMLTextAreaElement>
+  ) => {
+    const imageFiles = Array.from(event.clipboardData.items)
+      .filter((item) => item.type.startsWith("image/"))
+      .map((item, index) => {
+        const file = item.getAsFile();
+        if (!file) return null;
+        if (file.name) return file;
+        const extension = file.type.split("/")[1] || "png";
+        return new File([file], `job-posting-${Date.now()}-${index + 1}.${extension}`, {
+          type: file.type,
+        });
+      })
+      .filter((file): file is File => file !== null);
+
+    if (imageFiles.length === 0) return;
+
+    event.preventDefault();
+    void addCareerImageFiles(imageFiles, "jobImages");
   };
 
   /* Uploaded application documents remain attached to the Career record.
@@ -1525,8 +1557,9 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
                             jobDescription: event.target.value,
                           })
                         }
+                        onPaste={handleJobDescriptionPaste}
                         className="career-textarea"
-                        placeholder="공고 주요 내용, 우대사항, 필요 역량, 직무 키워드..."
+                        placeholder="공고 주요 내용, 우대사항, 필요 역량, 직무 키워드... (이미지는 붙여넣기 가능)"
                       />
                     </label>
                   </div>
