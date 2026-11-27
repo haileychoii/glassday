@@ -286,6 +286,45 @@ const pinkDriveAdditions = namedIcons("pink-iphone", [
  * order after these curated groups.
  */
 const pinkIllustrationGroups: readonly (readonly number[])[] = [
+  // Keep matching silhouettes adjacent before the broader mixed collections.
+  // Heart-shaped art and heart stationery can be compared in one continuous run.
+  [
+    10, 20, 53, 54, 72, 76, 87, 88, 101, 107, 113, 130, 137, 138, 225, 232,
+    242, 250, 269, 275, 290, 300, 303, 315, 317, 328, 339, 346, 356, 374, 391,
+    392, 401, 425, 452, 479, 487, 492, 515, 522, 527, 535, 554, 572, 588, 592,
+    598, 599, 605, 607, 608, 613, 639, 640, 641, 642, 643, 644, 645, 646, 688,
+    689, 690, 691, 692, 693, 694, 708, 709, 710, 711, 712, 713, 714, 715, 716,
+    717, 725, 726, 750, 751, 752, 753, 754, 774,
+  ],
+  // All camera illustrations appear together, including Drive additions.
+  [59, 155, 318, 415, 516, 594, 683, 741],
+  // Book piles stay together rather than being scattered among notes and folders.
+  [16, 159, 193, 251, 312, 433, 508, 534, 562, 686],
+  // Bows and ribbon variations form one group.
+  [
+    9, 64, 134, 243, 249, 301, 316, 324, 335, 419, 424, 486, 514, 553, 647,
+    648, 649, 650, 651, 652, 653, 654, 680, 685, 695, 696, 697, 698, 699, 718,
+    719, 720, 721, 722, 723, 724, 755, 756, 757,
+  ],
+  // Cat-paw prints are grouped separately from cat faces and full cat poses.
+  [7, 68, 86, 345, 423, 485, 531, 550],
+  // Cat faces, then full cats in different poses.
+  [6, 47, 83, 108, 122, 184, 252, 281, 283, 284, 285, 286, 422, 429, 430, 546, 547],
+  [
+    40, 41, 44, 45, 63, 65, 71, 78, 84, 93, 183, 186, 187, 189, 190, 255, 257,
+    259, 278, 279, 280, 287, 289, 325, 340, 358, 363, 370, 376, 380, 384, 388,
+    400, 431, 434, 444, 477, 483, 520, 529, 530, 537, 540, 548, 552, 577,
+  ],
+  // Memo paper, planners, and writing tools stay together; calendars follow.
+  [
+    13, 14, 19, 21, 51, 62, 82, 106, 115, 142, 143, 149, 194, 200, 202, 253,
+    342, 385, 441, 449, 493, 494, 522, 524, 525, 533, 535, 558, 561, 568, 687,
+    746, 747, 748, 749,
+  ],
+  [85, 201, 254, 310, 394, 492, 563, 745],
+  // Clock faces and alarm clocks are adjacent, followed by perfume bottles.
+  [12, 74, 150, 214, 256, 311, 389, 432, 491, 538, 566],
+  [42, 164, 304, 333, 585, 637],
   // Cameras stay together, followed by computer and phone illustrations.
   [59, 155, 318, 415, 516, 594],
   [2, 98, 111, 114, 129, 197, 198, 248, 360, 368, 371, 372, 381, 387, 489, 528],
@@ -351,6 +390,35 @@ const pixelArtAdditions = namedIcons("retro-pixel", [
   { number: 188, label: "픽셀 공룡" },
   { number: 189, label: "픽셀 음표" },
 ]);
+
+/* These pixel drawings were originally mixed into the pink illustration
+   sheet. Keep their saved files and IDs intact, but show them only in Pixel. */
+const pinkPixelIllustrationNumbers = new Set([
+  94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108,
+  109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
+  123, 124, 125, 126, 127, 128, 129,
+  350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363,
+  364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377,
+  378, 379, 380, 381, 384, 385, 386, 387, 388, 414,
+]);
+
+const pinkIllustrationChoices = [
+  ...numberedIcons("pink-iphone", 598, "일러스트 아이콘"),
+  ...pinkStickerAdditions,
+  ...pinkDriveAdditions,
+];
+
+const pinkPixelIllustrationChoices = pinkIllustrationChoices
+  .filter((choice) => pinkPixelIllustrationNumbers.has(Number(choice.id.slice(-3))))
+  .filter((choice) => !unusablePinkIllustrationSlots.has(Number(choice.id.slice(-3))))
+  .map((choice) => ({
+    ...choice,
+    label: `픽셀 일러스트 ${Number(choice.id.slice(-3))}`,
+  }));
+
+const pinkIllustrationOnlyChoices = pinkIllustrationChoices.filter(
+  (choice) => !pinkPixelIllustrationNumbers.has(Number(choice.id.slice(-3)))
+);
 
 const folderDesignAdditions = namedIcons("folder-art", [
   { number: 1, label: "파스텔 폴더 묶음" },
@@ -448,16 +516,11 @@ const natureEmojis = emojiSheet("emoji-nature", "자연·음식", 141, {
 });
 
 export const workspaceIconCollections: Record<WorkspaceIconCollectionId, WorkspaceIconChoice[]> = {
-  "pink-iphone": [
-    ...arrangePinkIllustrations([
-      ...numberedIcons("pink-iphone", 598, "일러스트 아이콘"),
-      ...pinkStickerAdditions,
-      ...pinkDriveAdditions,
-    ]),
-  ],
+  "pink-iphone": arrangePinkIllustrations(pinkIllustrationOnlyChoices),
   "retro-pixel": [
     ...numberedIcons("retro-pixel", 182, "레트로 픽셀"),
     ...pixelArtAdditions,
+    ...pinkPixelIllustrationChoices,
   ],
   "folder-art": folderDesignAdditions,
   "emoji-expressions": orderedExpressionEmojis,
