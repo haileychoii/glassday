@@ -404,6 +404,8 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
     useState<CareerItem | null>(null);
   const [viewMode, setViewMode] = useState<CareerViewMode>("list");
   const [statusFilter, setStatusFilter] = useState<CareerStatus | "All">("All");
+  const careerWidgetRef = useRef<HTMLElement | null>(null);
+  const hasChosenViewRef = useRef(false);
   // Cover letter rows can get long, so each prompt keeps its own folded state.
   // 자소서 문항별로 답변/전략 영역만 접어 리스트 스캔성을 유지한다.
   const [collapsedCoverItems, setCollapsedCoverItems] = useState<
@@ -421,6 +423,24 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
   );
 
   const dragRef = useRef<DragState | null>(null);
+
+  useEffect(() => {
+    const widget = careerWidgetRef.current;
+    if (!widget || detailOnly) return;
+
+    /* Wide dashboard cards start in the application pipeline board. This
+       measures the Career card itself so a user can widen it without changing
+       the rest of the dashboard; an explicit List/Board choice remains in
+       control afterward. Mobile has its own Career card and never reaches this
+       desktop widget presentation. */
+    const observer = new ResizeObserver(([entry]) => {
+      if (hasChosenViewRef.current || !entry) return;
+      setViewMode(entry.contentRect.width >= 1060 ? "board" : "list");
+    });
+
+    observer.observe(widget);
+    return () => observer.disconnect();
+  }, [detailOnly]);
 
   const normalizedItems = useMemo(
     () => careerApplications.map(normalizeCareer),
@@ -1110,6 +1130,7 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
       {/* Figma Component: Career Widget / detailOnly에서는 이 Grid surface를 렌더링하지 않는다. */}
       {!detailOnly && (
       <section
+        ref={careerWidgetRef}
         className="glass-card widget-frame career-widget"
         /*
          * EN: Career owns a custom header for its pipeline controls, but it
@@ -1187,7 +1208,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
           <div className="career-view-toggle">
             <button
               type="button"
-              onClick={() => setViewMode("list")}
+              onClick={() => {
+                hasChosenViewRef.current = true;
+                setViewMode("list");
+              }}
               className={`career-filter-pill ${viewMode === "list" ? "is-active" : ""}`}
             >
               <List className="w-3.5 h-3.5" />
@@ -1196,7 +1220,10 @@ export const CareerWidget = ({ detailOnly = false }: CareerWidgetProps) => {
 
             <button
               type="button"
-              onClick={() => setViewMode("board")}
+              onClick={() => {
+                hasChosenViewRef.current = true;
+                setViewMode("board");
+              }}
               className={`career-filter-pill ${viewMode === "board" ? "is-active" : ""}`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />

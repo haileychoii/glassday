@@ -3300,3 +3300,26 @@ body.theme-retro .career-floating-window {
 .career-widget {
   gap: var(--career-layout-gap) !important;
 }
+
+/* Wide Career card → application pipeline board.
+   The query is attached to `.career-widget`, so it reacts to the grid item's
+   actual width rather than the browser window. In Board mode the compact
+   summary tiles give their vertical room to the stage columns; on narrower
+   cards the existing List presentation and summary remain unchanged.
+   / 넓어진 Career 위젯 안에서만 요약 타일을 접고 지원 단계 보드를 키운다. */
+@container career-widget (min-width: 1060px) {
+  .career-widget__body:has(> .career-board) {
+    grid-template-rows: auto minmax(0, 1fr) !important;
+  }
+
+  .career-widget__body:has(> .career-board) > .career-summary-grid {
+    display: none !important;
+  }
+
+  .career-widget__body > .career-board {
+    min-height: 0 !important;
+    grid-auto-columns: minmax(220px, 1fr) !important;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+  }
+}
