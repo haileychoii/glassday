@@ -100,6 +100,25 @@
   justify-content: center;
 }
 
+/* Calendar period shortcut beside the date controls, matching the compact
+   Today action in the wide schedule reference without changing shared widgets. */
+.calendar-today-button {
+  height: var(--gd-control-height-md);
+  flex: 0 0 auto;
+  padding-inline: var(--gd-widget-gap);
+  border: 1px solid hsl(var(--foreground) / 0.12);
+  border-radius: 999px;
+  color: hsl(var(--foreground) / 0.72);
+  background: hsl(0 0% 100% / 0.42);
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.calendar-today-button:hover {
+  background: hsl(0 0% 100% / 0.72);
+}
+
 .calendar-view-toggle {
   height: 32px;
   border-radius: 999px;
@@ -699,6 +718,72 @@
 
 .calendar-week-event span {
   color: hsl(225 20% 30% / 0.62);
+}
+
+/* The marker belongs to today's column and follows the same 44px-per-hour
+   coordinate used by event blocks. The small dark pill keeps its time legible
+   above the event surface, as in the weekly planner reference. */
+.calendar-week-current-time {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ff453a;
+  pointer-events: none;
+}
+
+.calendar-week-current-time::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff453a;
+}
+
+.calendar-week-current-time > span {
+  position: absolute;
+  left: 4px;
+  top: -10px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  color: #ffffff;
+  background: #242426;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* Once the widget itself is wide, let all seven columns fill the available
+   frame and give event labels a little more room. Narrow cards retain their
+   existing scrollable minimum-column behavior. */
+@container calendar-widget (min-width: 760px) {
+  .calendar-week-timeline {
+    border-radius: 14px;
+  }
+
+  .calendar-week-header,
+  .calendar-week-days,
+  .calendar-week-all-day-grid {
+    min-width: 100%;
+  }
+
+  .calendar-week-event {
+    padding: 8px 9px;
+    font-size: 11px;
+  }
+
+  .calendar-week-event strong {
+    font-size: 11px;
+  }
+
+  .calendar-week-event span {
+    font-size: 10px;
+  }
 }
 
 .calendar-range-chip {

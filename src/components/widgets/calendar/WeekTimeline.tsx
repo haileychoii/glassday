@@ -10,7 +10,7 @@
  * 좁은 container에서는 timeline 자체가 내부 scroll 영역이 된다.
  * ============================================================
  */
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import type { CalendarEvent } from "../../../types/dashboard";
 import { getEventColor as getCalendarEventColor } from "../../../constants/colors";
@@ -97,8 +97,6 @@ const MAX_ALL_DAY_LANES = 2;
 const MAX_TIMED_EVENTS_PER_DAY = 5;
 const SLOT_MINUTES = 30;
 const SLOT_HEIGHT = HOUR_HEIGHT / 2;
-
-const weekdayLabels = ["일", "월", "화", "수", "목", "금", "토"];
 
 const pad2 = (value: number) => String(value).padStart(2, "0");
 
@@ -264,10 +262,18 @@ export const WeekTimeline = ({
     useState<WeekResizeSelection | null>(null);
   const [overflowPreview, setOverflowPreview] =
     useState<WeekOverflowPreview | null>(null);
+  const [currentTime, setCurrentTime] = useState(() => new Date());
   const baseDate = selectedDate ?? currentDate ?? toDateString(new Date());
   const weekStart = weekStartDate ?? getMonday(baseDate);
   const weekEnd = addDays(weekStart, 6);
-  const todayString = toDateString(new Date());
+  const todayString = toDateString(currentTime);
+
+  useEffect(() => {
+    /* Keep the schedule's current-time marker moving while the dashboard stays
+       open. One-minute updates are enough for a calendar grid indicator. */
+    const timer = window.setInterval(() => setCurrentTime(new Date()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const weekDays = useMemo<WeekDay[]>(() => {
     return Array.from({ length: 7 }, (_, index) => {
@@ -276,8 +282,10 @@ export const WeekTimeline = ({
 
       return {
         date,
-        dayLabel: weekdayLabels[parsed.getDay()],
-        dateLabel: `${parsed.getMonth() + 1}/${parsed.getDate()}`,
+        dayLabel: new Intl.DateTimeFormat("en-US", { weekday: "short" })
+          .format(parsed)
+          .toUpperCase(),
+        dateLabel: pad2(parsed.getDate()),
         isToday: date === todayString,
         isSelected: date === baseDate,
       };
@@ -511,6 +519,15 @@ export const WeekTimeline = ({
       return `${pad2(hour)}:00`;
     });
   }, []);
+  const currentMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+  const currentTimeTop =
+    ((currentMinutes - START_HOUR * 60) / 60) * HOUR_HEIGHT;
+  const isCurrentTimeVisible =
+    currentMinutes >= START_HOUR * 60 && currentMinutes < END_HOUR * 60;
+  const currentTimeLabel = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(currentTime);
 
   return (
     <div className="calendar-week-timeline">
@@ -652,6 +669,16 @@ export const WeekTimeline = ({
                   {hourLabels.map((label) => (
                     <div key={label} className="calendar-week-hour-line" />
                   ))}
+
+                  {day.date === todayString && isCurrentTimeVisible && (
+                    <span
+                      className="calendar-week-current-time"
+                      style={{ top: currentTimeTop }}
+                      aria-label={`Current time ${currentTimeLabel}`}
+                    >
+                      <span>{currentTimeLabel}</span>
+                    </span>
+                  )}
 
                   {visibleDayEvents.map((event) => (
                     <button

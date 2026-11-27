@@ -60,16 +60,33 @@ import {
 } from "./calendar/calendarUtils";
 
 const formatHeaderLabel = (selectedDate: string, view: CalendarView) => {
+  const parsedDate = new Date(`${selectedDate}T00:00:00`);
+
   if (view === "day") {
-    return selectedDate;
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }).format(parsedDate);
   }
 
   if (view === "week") {
     const weekDates = getWeekDates(selectedDate);
-    return `${weekDates[0]} → ${weekDates[6]}`;
+    const start = new Date(`${weekDates[0]}T00:00:00`);
+    const end = new Date(`${weekDates[6]}T00:00:00`);
+    const rangeFormatter = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+    const year = new Intl.DateTimeFormat("en-US", { year: "numeric" }).format(end);
+    return `${rangeFormatter.format(start)} – ${rangeFormatter.format(end)}, ${year}`;
   }
 
-  return selectedDate.slice(0, 7);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(parsedDate);
 };
 
 const formatCalendarSubtitle = (selectedDate: string) => {
@@ -355,6 +372,14 @@ export const CalendarWidget = () => {
                 title={`Next ${view}`}
               >
                 <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedDate(toLocalDateInput())}
+                className="calendar-today-button"
+                aria-label="Go to today"
+              >
+                Today
               </button>
             </div>
 
