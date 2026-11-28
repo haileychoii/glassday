@@ -127,6 +127,8 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
   const previewUrlsRef = useRef<string[]>([]);
   const dropIndexRef = useRef<number | null>(null);
   const previousCardRectsRef = useRef<Map<string, DOMRect> | null>(null);
+  const pointerPositionRef = useRef<{ x: number; y: number } | null>(null);
+  const autoScrollFrameRef = useRef<number | null>(null);
 
   useLayoutEffect(() => {
     const previousRects = previousCardRectsRef.current;
@@ -153,6 +155,65 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
   }, []);
 
   useEffect(() => {
+    const clearDropSlot = () => {
+      if (dropIndexRef.current !== null) {
+        dropIndexRef.current = null;
+        setDropIndex(null);
+      }
+    };
+
+    const updateDropSlot = (grid: HTMLElement, target: Element | null, x: number, y: number, sourceId: string) => {
+      const insertionIndex = getGridInsertionIndex(grid, target, x, y, sourceId);
+      if (dropIndexRef.current === insertionIndex) return;
+      previousCardRectsRef.current = new Map(
+        Array.from(grid.querySelectorAll<HTMLElement>("[data-admin-icon-id]"))
+          .map((card) => [card.dataset.adminIconId ?? "", card.getBoundingClientRect()])
+      );
+      dropIndexRef.current = insertionIndex;
+      setDropIndex(insertionIndex);
+    };
+
+    const updateDropTargetAtPointer = (x: number, y: number, sourceId: string) => {
+      const target = document.elementFromPoint(x, y);
+      const targetCard = target?.closest<HTMLElement>("[data-admin-icon-id]");
+      const targetCategory = target?.closest<HTMLElement>("[data-admin-collection]");
+      const grid = document.querySelector<HTMLElement>(".workspace-icon-admin-grid");
+      if (grid?.contains(target as Node)) {
+        updateDropSlot(grid, target, x, y, sourceId);
+        setDropTargetId(targetCard?.dataset.adminIconId ?? null);
+      } else {
+        clearDropSlot();
+        setDropTargetId(targetCategory?.dataset.adminCollection ?? null);
+      }
+    };
+
+    const autoScrollTick = () => {
+      autoScrollFrameRef.current = null;
+      const drag = dragRef.current;
+      const pointer = pointerPositionRef.current;
+      const grid = document.querySelector<HTMLElement>(".workspace-icon-admin-grid");
+      if (!drag || drag.mode !== "dragging" || !pointer || !grid) return;
+
+      const rect = grid.getBoundingClientRect();
+      const edgeZone = Math.min(64, rect.height * 0.2);
+      const topAmount = Math.max(0, Math.min(1, (rect.top + edgeZone - pointer.y) / edgeZone));
+      const bottomAmount = Math.max(0, Math.min(1, (pointer.y - (rect.bottom - edgeZone)) / edgeZone));
+      const scrollSpeed = topAmount > 0
+        ? -Math.max(2, Math.ceil(18 * topAmount * topAmount))
+        : bottomAmount > 0
+          ? Math.max(2, Math.ceil(18 * bottomAmount * bottomAmount))
+          : 0;
+
+      if (scrollSpeed) {
+        const previousScrollTop = grid.scrollTop;
+        grid.scrollTop += scrollSpeed;
+        if (grid.scrollTop !== previousScrollTop) {
+          updateDropTargetAtPointer(pointer.x, pointer.y, drag.id);
+          autoScrollFrameRef.current = requestAnimationFrame(autoScrollTick);
+        }
+      }
+    };
+
     const handlePointerMove = (event: globalThis.PointerEvent) => {
       const drag = dragRef.current;
       if (!drag) return;
@@ -189,29 +250,12 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       if (drag.mode === "dragging") {
         setDraggingId(drag.id);
         setDragPreview({ src: drag.src, label: drag.label, x: event.clientX, y: event.clientY });
+        pointerPositionRef.current = { x: event.clientX, y: event.clientY };
       }
 
-      const target = document.elementFromPoint(event.clientX, event.clientY);
-      const targetCard = target?.closest<HTMLElement>("[data-admin-icon-id]");
-      const targetCategory = target?.closest<HTMLElement>("[data-admin-collection]");
-      const grid = document.querySelector<HTMLElement>(".workspace-icon-admin-grid");
-      if (grid?.contains(target as Node)) {
-        const insertionIndex = getGridInsertionIndex(grid, target, event.clientX, event.clientY, drag.id);
-        if (dropIndexRef.current !== insertionIndex) {
-          previousCardRectsRef.current = new Map(
-            Array.from(grid.querySelectorAll<HTMLElement>("[data-admin-icon-id]"))
-              .map((card) => [card.dataset.adminIconId ?? "", card.getBoundingClientRect()])
-          );
-          dropIndexRef.current = insertionIndex;
-          setDropIndex(insertionIndex);
-        }
-        setDropTargetId(targetCard?.dataset.adminIconId ?? null);
-      } else {
-        if (dropIndexRef.current !== null) {
-          dropIndexRef.current = null;
-          setDropIndex(null);
-        }
-        setDropTargetId(targetCategory?.dataset.adminCollection ?? null);
+      updateDropTargetAtPointer(event.clientX, event.clientY, drag.id);
+      if (drag.mode === "dragging" && autoScrollFrameRef.current === null) {
+        autoScrollFrameRef.current = requestAnimationFrame(autoScrollTick);
       }
     };
 
@@ -264,6 +308,9 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
         window.setTimeout(() => { suppressClickRef.current = false; }, 0);
       }
       dragRef.current = null;
+      pointerPositionRef.current = null;
+      if (autoScrollFrameRef.current !== null) cancelAnimationFrame(autoScrollFrameRef.current);
+      autoScrollFrameRef.current = null;
       setDraggingId(null);
       setDropTargetId(null);
       dropIndexRef.current = null;
@@ -273,6 +320,9 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
 
     const cancelDrag = () => {
       dragRef.current = null;
+      pointerPositionRef.current = null;
+      if (autoScrollFrameRef.current !== null) cancelAnimationFrame(autoScrollFrameRef.current);
+      autoScrollFrameRef.current = null;
       setDraggingId(null);
       setDropTargetId(null);
       dropIndexRef.current = null;
@@ -287,6 +337,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", finishDrag);
       window.removeEventListener("pointercancel", cancelDrag);
+      if (autoScrollFrameRef.current !== null) cancelAnimationFrame(autoScrollFrameRef.current);
     };
   }, []);
 
