@@ -133,6 +133,7 @@ export const MobileNavigation = ({
               aria-pressed={isEditingIcon}
               onClick={(event) => {
                 event.currentTarget.classList.remove("is-icon-drop-target");
+                navigationRef.current?.classList.remove("is-icon-drag-active");
                 if (editMode) {
                   openPicker(tab.id);
                   return;

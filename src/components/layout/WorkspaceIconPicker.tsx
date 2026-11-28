@@ -105,6 +105,12 @@ export const WorkspaceIconPicker = ({
   }, [contextLabel, draftValue, initialApplyToAllThemes, value]);
 
   useEffect(() => {
+    // Switching the tab being edited closes the manager and opens that tab's
+    // own picker, while preserving its staged icon draft in MobileNavigation.
+    setAdminManagerOpen(false);
+  }, [contextLabel]);
+
+  useEffect(() => {
     setCollection(iconCollectionForTheme(theme));
   }, [theme]);
 

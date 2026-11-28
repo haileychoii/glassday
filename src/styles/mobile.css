@@ -241,6 +241,15 @@
   border-top: 1px solid hsl(var(--foreground) / 0.14);
 }
 
+/* The full-screen icon manager normally covers the bottom tab bar. Lift only
+   the tab bar while sorting so a dragged icon can target another workspace. */
+.mobile-layout .mobile-navigation.is-icon-drag-active {
+  position: relative;
+  z-index: 10001;
+  background: hsl(var(--card) / 0.96);
+  box-shadow: 0 -8px 24px hsl(0 0% 0% / 0.18);
+}
+
 .mobile-navigation::-webkit-scrollbar { display: none; }
 
 .mobile-navigation-item {

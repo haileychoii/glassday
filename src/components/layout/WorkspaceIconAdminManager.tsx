@@ -171,6 +171,14 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
   }, [isFullscreen]);
 
   useEffect(() => {
+    const navigation = () => document.querySelector<HTMLElement>(".mobile-navigation");
+    const clearNavigationDragMode = () => navigation()?.classList.remove("is-icon-drag-active");
+    const revealNavigationForFullscreenDrag = () => {
+      if (document.querySelector(".workspace-icon-admin.is-fullscreen")) {
+        navigation()?.classList.add("is-icon-drag-active");
+      }
+    };
+
     const clearFocusedTabButton = () => {
       focusedTabButtonRef.current?.classList.remove("is-icon-drop-target");
       focusedTabButtonRef.current = null;
@@ -280,6 +288,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       }
 
       if (drag.mode === "dragging") {
+        revealNavigationForFullscreenDrag();
         setDraggingId(drag.id);
         setDragPreview({ src: drag.src, label: drag.label, x: event.clientX, y: event.clientY });
         pointerPositionRef.current = { x: event.clientX, y: event.clientY };
@@ -347,8 +356,12 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       autoScrollFrameRef.current = null;
       setDraggingId(null);
       setDropTargetId(null);
-      if (!document.elementFromPoint(event.clientX, event.clientY)?.closest(".mobile-navigation-item")) {
+      const endedOverNavigation = Boolean(
+        document.elementFromPoint(event.clientX, event.clientY)?.closest(".mobile-navigation-item")
+      );
+      if (!endedOverNavigation) {
         clearFocusedTabButton();
+        clearNavigationDragMode();
       }
       dropIndexRef.current = null;
       setDropIndex(null);
@@ -363,6 +376,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       setDraggingId(null);
       setDropTargetId(null);
       clearFocusedTabButton();
+      clearNavigationDragMode();
       dropIndexRef.current = null;
       setDropIndex(null);
       setDragPreview(null);
@@ -377,6 +391,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       window.removeEventListener("pointercancel", cancelDrag);
       if (autoScrollFrameRef.current !== null) cancelAnimationFrame(autoScrollFrameRef.current);
       clearFocusedTabButton();
+      clearNavigationDragMode();
     };
   }, []);
 
@@ -388,6 +403,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
     if (!choice) return;
     focusedTabButtonRef.current?.classList.remove("is-icon-drop-target");
     focusedTabButtonRef.current = null;
+    document.querySelector<HTMLElement>(".mobile-navigation")?.classList.remove("is-icon-drag-active");
     dragRef.current = {
       id,
       collection,
