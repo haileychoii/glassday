@@ -13,6 +13,7 @@ import {
   pinkPixelIllustrationNumbers,
   workspaceIconAssetPath,
 } from "./workspaceIconPaths";
+import { workspaceIconManifest } from "../generated/workspaceIconManifest";
 
 export type WorkspaceIconCollectionId =
   | "pink-iphone"
@@ -534,7 +535,7 @@ const natureEmojis = emojiSheet("emoji-nature", "자연·음식", 141, {
   141: "해파리",
 });
 
-export const workspaceIconCollections: Record<WorkspaceIconCollectionId, WorkspaceIconChoice[]> = {
+const curatedWorkspaceIconCollections: Record<WorkspaceIconCollectionId, WorkspaceIconChoice[]> = {
   "pink-iphone": arrangePinkIllustrations(pinkIllustrationOnlyChoices),
   "retro-pixel": [
     ...numberedIcons("retro-pixel", 182, "레트로 픽셀"),
@@ -552,4 +553,40 @@ export const workspaceIconCollections: Record<WorkspaceIconCollectionId, Workspa
   // recropped around the complete original artwork.
   "emoji-objects": emojiSheet("emoji-objects", "생활·기호", 140),
   "outline-icons": outlineIconChoices,
+};
+
+type AssetCollectionId = Exclude<WorkspaceIconCollectionId, "outline-icons">;
+
+/**
+ * The files physically inside workspace-icons category folders determine which
+ * picker tab shows them. Curated entries retain their labels and family order;
+ * any file moved or added by hand is discovered from its new folder and shown
+ * at the end of that category automatically on the next dev/build start.
+ */
+export const workspaceIconCollections: Record<WorkspaceIconCollectionId, WorkspaceIconChoice[]> = {
+  ...Object.fromEntries(
+    (Object.keys(workspaceIconManifest) as AssetCollectionId[]).map((collection) => {
+      const curatedByPath = new Map(
+        curatedWorkspaceIconCollections[collection].map((choice) => [choice.src, choice] as const)
+      );
+      const folderChoices = workspaceIconManifest[collection].map((src) => {
+        const curated = curatedByPath.get(src);
+        if (curated) return curated;
+
+        const filename = src.split("/").pop() ?? src;
+        const readableName = filename
+          .replace(/\.(avif|gif|jpe?g|png|webp)$/i, "")
+          .replace(/^(pink|retro)-/, "")
+          .replace(/[-_]+/g, " ");
+        return {
+          id: `${collection}-${filename}`,
+          src,
+          label: `아이콘 ${readableName}`,
+        };
+      });
+
+      return [collection, folderChoices];
+    })
+  ) as Record<AssetCollectionId, WorkspaceIconChoice[]>,
+  "outline-icons": curatedWorkspaceIconCollections["outline-icons"],
 };

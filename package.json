@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/generate-workspace-icon-manifest.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/generate-workspace-icon-manifest.mjs",
     "build": "tsc -b && vite build",
     "tauri": "tauri",
     "lint": "eslint .",
