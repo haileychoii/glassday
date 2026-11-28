@@ -21,6 +21,7 @@ import {
   TbHomeFilled,
 } from "react-icons/tb";
 import type { ThemeId } from "../../constants/themes";
+import { resolveWorkspaceIconPath } from "../../constants/workspaceIconPaths";
 import { getWorkspaceOutlineIcon } from "./workspaceOutlineIcons";
 
 type WorkspaceTabIconProps = {
@@ -108,14 +109,8 @@ export const WorkspaceTabIcon = ({
 
   // A selected sticker is stored as its stable public asset path. Keep that
   // exact artwork on every theme instead of converting it back to a glyph.
-  if (icon?.startsWith("/workspace-icons/")) {
-    // Rewrite icons saved before the optical-size correction so existing tabs
-    // also receive the new image URL and bypass stale browser/CDN cache.
-    const balancedArtwork: Record<string, string> = {
-      "/workspace-icons/emoji-expressions/146.webp":
-        "/workspace-icons/emoji-expressions/146-balanced.webp",
-    };
-    const artwork = balancedArtwork[icon] ?? icon;
+  const artwork = icon ? resolveWorkspaceIconPath(icon) : null;
+  if (artwork) {
     return (
       <img
         src={artwork}

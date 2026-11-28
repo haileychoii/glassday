@@ -13,6 +13,7 @@ import {
   type WorkspaceIconCollectionId,
 } from "../../constants/workspaceIconChoices";
 import type { ThemeId } from "../../constants/themes";
+import { resolveWorkspaceIconPath } from "../../constants/workspaceIconPaths";
 import { cn } from "../../lib/utils";
 import { getWorkspaceOutlineIcon } from "./workspaceOutlineIcons";
 
@@ -131,6 +132,7 @@ export const WorkspaceIconPicker = ({
       >
         {choices.map((choice) => {
           const OutlineIcon = getWorkspaceOutlineIcon(choice.src);
+          const selectedIcon = resolveWorkspaceIconPath(draftIcon) ?? draftIcon;
 
           return (
             <button
@@ -138,7 +140,7 @@ export const WorkspaceIconPicker = ({
               type="button"
               className="mobile-tab-icon-choice"
               aria-label={`${choice.label} 선택`}
-              aria-pressed={draftIcon === choice.src}
+              aria-pressed={selectedIcon === choice.src}
               title={choice.label}
               onClick={() => chooseIcon(choice.src)}
             >
@@ -154,7 +156,7 @@ export const WorkspaceIconPicker = ({
                   decoding="async"
                 />
               )}
-              {draftIcon === choice.src && (
+              {selectedIcon === choice.src && (
                 <span className="mobile-tab-icon-choice-check" aria-hidden="true">
                   <Check size={11} strokeWidth={3} />
                 </span>

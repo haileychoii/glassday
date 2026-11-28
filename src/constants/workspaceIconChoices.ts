@@ -2,13 +2,18 @@
  * Workspace icon catalog.
  *
  * This is the one catalog used by the tab-icon picker. Tabs save an icon's URL,
- * so existing URLs and their numbered files must stay in place when artwork is
- * updated. The collection IDs below correspond to the visible category buttons
+ * so category paths and numbered files stay stable when artwork is updated.
+ * Legacy workspace-icons URLs are translated at render time. Collection IDs correspond to the visible category buttons
  * in WorkspaceIconPicker.tsx. Emoji sheet numbers refer to cells in the uploaded
  * source sheets; named additions use a descriptive label for screen readers.
  * New images use transparent 160 × 160 WebP canvases; their visible artwork is
  * centered and scaled to a maximum side of 136px for consistent display size.
  */
+import {
+  pinkPixelIllustrationNumbers,
+  workspaceIconAssetPath,
+} from "./workspaceIconPaths";
+
 export type WorkspaceIconCollectionId =
   | "pink-iphone"
   | "retro-pixel"
@@ -58,7 +63,7 @@ const numberedIcons = (
       const paddedNumber = String(number).padStart(3, "0");
       return {
         id: `${collection}-${paddedNumber}`,
-        src: `/workspace-icons/${collection}/${paddedNumber}.webp`,
+        src: workspaceIconAssetPath(collection, `${paddedNumber}.webp`),
         label: `${label} ${number}`,
       };
     });
@@ -76,7 +81,7 @@ const namedIcons = (
     const paddedNumber = String(number).padStart(3, "0");
     return {
       id: `${collection}-${paddedNumber}`,
-      src: `/workspace-icons/${collection}/${paddedNumber}.webp`,
+      src: workspaceIconAssetPath(collection, `${paddedNumber}.webp`),
       label,
     };
   });
@@ -407,15 +412,6 @@ const pixelArtAdditions = namedIcons("retro-pixel", [
 
 /* These pixel drawings were originally mixed into the pink illustration
    sheet. Keep their saved files and IDs intact, but show them only in Pixel. */
-const pinkPixelIllustrationNumbers = new Set([
-  94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108,
-  109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
-  123, 124, 125, 126, 127, 128, 129,
-  350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363,
-  364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377,
-  378, 379, 380, 381, 384, 385, 386, 387, 388, 414,
-]);
-
 const pinkIllustrationChoices = [
   ...numberedIcons("pink-iphone", 598, "일러스트 아이콘"),
   ...pinkStickerAdditions,
@@ -481,10 +477,12 @@ const emojiSheet = (
       id: `${collection}-${String(number).padStart(3, "0")}`,
       // The distorted face artwork alone needs a smaller drawing so its round
       // face matches neighboring expressions. Heart decorations keep source size.
-      src:
+      src: workspaceIconAssetPath(
+        collection,
         collection === "emoji-expressions" && number === 146
-          ? "/workspace-icons/emoji-expressions/146-balanced.webp"
-          : `/workspace-icons/${collection}/${String(number).padStart(3, "0")}.webp`,
+          ? "146-balanced.webp"
+          : `${String(number).padStart(3, "0")}.webp`
+      ),
       label: extraLabels[number] ?? `${label} ${number}`,
     }));
 
