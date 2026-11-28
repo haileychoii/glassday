@@ -1,5 +1,5 @@
 import { ArrowLeft, GripVertical, ImagePlus, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState, type ChangeEvent, type DragEvent, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type PointerEvent } from "react";
 
 import {
   type WorkspaceIconChoice,
@@ -36,14 +36,15 @@ const toDraft = (catalog: WorkspaceIconCatalog): DraftCatalog =>
     categories.map(({ id }) => [id, catalog[id].map((choice) => ({ ...choice }))])
   ) as DraftCatalog;
 
-const reorder = <T extends { id: string }>(items: T[], sourceId: string, targetId: string): T[] => {
+/** Insert at a grid slot, including blank space after the last icon. */
+const reorderAt = <T extends { id: string }>(items: T[], sourceId: string, insertionIndex: number): T[] => {
   const sourceIndex = items.findIndex((item) => item.id === sourceId);
-  const targetIndex = items.findIndex((item) => item.id === targetId);
-  if (sourceIndex < 0 || targetIndex < 0 || sourceIndex === targetIndex) return items;
-
+  if (sourceIndex < 0) return items;
   const result = [...items];
   const [moved] = result.splice(sourceIndex, 1);
-  result.splice(targetIndex, 0, moved);
+  const adjustedIndex = Math.max(0, Math.min(result.length, insertionIndex > sourceIndex ? insertionIndex - 1 : insertionIndex));
+  if (adjustedIndex === sourceIndex) return items;
+  result.splice(adjustedIndex, 0, moved);
   return result;
 };
 
@@ -94,7 +95,18 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       const target = document.elementFromPoint(event.clientX, event.clientY);
       const targetCard = target?.closest<HTMLElement>("[data-admin-icon-id]");
       const targetCategory = target?.closest<HTMLElement>("[data-admin-collection]");
-      setDropTargetId(targetCard?.dataset.adminIconId ?? targetCategory?.dataset.adminCollection ?? null);
+      const grid = document.querySelector<HTMLElement>(".workspace-icon-admin-grid");
+      if (grid?.contains(target as Node) && !targetCard) {
+        const cards = Array.from(grid.querySelectorAll<HTMLElement>("[data-admin-icon-id]"));
+        const nearest = cards.reduce<{ id: string; distance: number } | null>((best, card) => {
+          const rect = card.getBoundingClientRect();
+          const distance = Math.hypot(event.clientX - (rect.left + rect.width / 2), event.clientY - (rect.top + rect.height / 2));
+          return !best || distance < best.distance ? { id: card.dataset.adminIconId ?? "", distance } : best;
+        }, null);
+        setDropTargetId(nearest?.id ?? "grid-end");
+      } else {
+        setDropTargetId(targetCard?.dataset.adminIconId ?? targetCategory?.dataset.adminCollection ?? null);
+      }
     };
 
     const finishDrag = (event: globalThis.PointerEvent) => {
@@ -127,11 +139,34 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
           });
           setCollection(targetCollection);
           setSelectedId(null);
-        } else if (targetId && targetId !== drag.id) {
+        } else {
+          const grid = document.querySelector<HTMLElement>(".workspace-icon-admin-grid");
+          const cards = grid ? Array.from(grid.querySelectorAll<HTMLElement>("[data-admin-icon-id]")) : [];
+          const insertionIndex = (() => {
+            if (!grid || !grid.contains(target as Node)) return -1;
+            if (!cards.length) return 0;
+            const hitIndex = targetId
+              ? cards.findIndex((card) => card.dataset.adminIconId === targetId)
+              : -1;
+            const candidates = hitIndex >= 0 ? [cards[hitIndex]] : cards;
+            const nearest = candidates.reduce<{ card: HTMLElement; distance: number } | null>((best, card) => {
+              const rect = card.getBoundingClientRect();
+              const distance = Math.hypot(event.clientX - (rect.left + rect.width / 2), event.clientY - (rect.top + rect.height / 2));
+              return !best || distance < best.distance ? { card, distance } : best;
+            }, null);
+            if (!nearest) return cards.length;
+            const index = cards.indexOf(nearest.card);
+            const rect = nearest.card.getBoundingClientRect();
+            const isAfter = event.clientY > rect.top + rect.height / 2 ||
+              (Math.abs(event.clientY - (rect.top + rect.height / 2)) <= rect.height / 2 && event.clientX > rect.left + rect.width / 2);
+            return index + (isAfter ? 1 : 0);
+          })();
+          if (insertionIndex >= 0) {
           setDraft((current) => ({
             ...current,
-            [drag.collection]: reorder(current[drag.collection], drag.id, targetId),
+              [drag.collection]: reorderAt(current[drag.collection], drag.id, insertionIndex),
           }));
+          }
         }
       }
       dragRef.current = null;
@@ -155,17 +190,9 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
     };
   }, []);
 
-  const startDrag = (
-    event: PointerEvent<HTMLButtonElement> | DragEvent<HTMLElement>,
-    id: string
-  ) => {
-    if ("button" in event && event.button !== 0) return;
-    if ("pointerId" in event) {
-      event.preventDefault();
-    } else {
-      event.dataTransfer.setData("text/plain", id);
-      event.dataTransfer.effectAllowed = "move";
-    }
+  const startDrag = (event: PointerEvent<HTMLButtonElement>, id: string) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
     dragRef.current = { id, collection };
     setDraggingId(id);
     setDropTargetId(id);
@@ -176,40 +203,6 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
         // The global pointer listeners still complete the drop if capture is unavailable.
       }
     }
-  };
-
-  const handleDrop = (event: DragEvent<HTMLElement>, targetId: string) => {
-    event.preventDefault();
-    const dragged = dragRef.current?.id;
-    if (dragged && dragged !== targetId) {
-      setDraft((current) => ({
-        ...current,
-        [collection]: reorder(current[collection], dragged, targetId),
-      }));
-    }
-    dragRef.current = null;
-    setDraggingId(null);
-    setDropTargetId(null);
-  };
-
-  const moveDragToCategory = (event: DragEvent<HTMLButtonElement>, targetCollection: WorkspaceIconCollectionId) => {
-    event.preventDefault();
-    const drag = dragRef.current;
-    if (!drag || drag.collection === targetCollection) return;
-    setDraft((current) => {
-      const choice = current[drag.collection].find((item) => item.id === drag.id);
-      if (!choice) return current;
-      return {
-        ...current,
-        [drag.collection]: current[drag.collection].filter((item) => item.id !== drag.id),
-        [targetCollection]: [...current[targetCollection], choice],
-      };
-    });
-    setCollection(targetCollection);
-    setSelectedId(null);
-    dragRef.current = null;
-    setDraggingId(null);
-    setDropTargetId(null);
   };
 
   const handleFiles = (event: ChangeEvent<HTMLInputElement>) => {
@@ -339,8 +332,6 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
             data-admin-collection={item.id}
             className="mobile-tab-icon-collection"
             aria-pressed={collection === item.id}
-            onDragOver={(event) => event.preventDefault()}
-            onDrop={(event) => moveDragToCategory(event, item.id)}
             onClick={() => {
               setCollection(item.id);
               setSelectedId(null);
@@ -386,15 +377,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
             data-admin-icon-id={choice.id}
             data-admin-collection={collection}
             role="listitem"
-            draggable
-            onDragStart={(event) => startDrag(event, choice.id)}
-            onDragOver={(event) => event.preventDefault()}
-            onDrop={(event) => handleDrop(event, choice.id)}
-            onDragEnd={() => {
-              dragRef.current = null;
-              setDraggingId(null);
-              setDropTargetId(null);
-            }}
+            draggable={false}
           >
             <button
               className="workspace-icon-admin-drag"

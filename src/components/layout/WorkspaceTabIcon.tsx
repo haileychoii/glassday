@@ -32,6 +32,9 @@ type WorkspaceTabIconProps = {
   mobile?: boolean;
 };
 
+/** Persisted choice meaning that this workspace intentionally has no icon. */
+export const NO_WORKSPACE_ICON = "__workspace_icon_none__";
+
 const lucideIcons: Record<string, typeof House> = {
   home: House,
   career: BriefcaseBusiness,
@@ -101,6 +104,8 @@ export const WorkspaceTabIcon = ({
   theme,
   mobile = false,
 }: WorkspaceTabIconProps) => {
+  if (icon === NO_WORKSPACE_ICON) return null;
+
   const className = `workspace-theme-icon workspace-theme-icon-${theme}`;
   // Custom tabs select one of the same five icon identities used by built-in tabs.
   const resolvedTabId = lucideIcons[tabId]

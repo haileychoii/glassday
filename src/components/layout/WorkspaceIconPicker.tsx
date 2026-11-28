@@ -5,7 +5,7 @@
  * the tab. Only Save persists it; Undo restores the starting icon and Cancel
  * removes the preview without changing saved data.
  */
-import { Check, Settings2 } from "lucide-react";
+import { Check, ImageOff, Settings2 } from "lucide-react";
 import { useEffect, useState, type CSSProperties } from "react";
 
 import {
@@ -23,6 +23,7 @@ import { WORKSPACE_ICON_ADMIN_USER_ID } from "../../constants/workspaceIconAdmin
 import { useCloudSync } from "../../context/CloudSyncContext";
 import { WorkspaceIconAdminManager } from "./WorkspaceIconAdminManager";
 import { getWorkspaceOutlineIcon } from "./workspaceOutlineIcons";
+import { NO_WORKSPACE_ICON } from "./WorkspaceTabIcon";
 
 const iconCollectionForTheme = (theme: ThemeId): WorkspaceIconCollectionId =>
   theme === "pixel-desk" || theme === "retro" ? "retro-pixel" : "pink-iphone";
@@ -176,6 +177,21 @@ export const WorkspaceIconPicker = ({
         role="group"
         aria-label={`${collections.find((item) => item.id === collection)?.label} 아이콘`}
       >
+        <button
+          type="button"
+          className="mobile-tab-icon-choice mobile-tab-icon-choice-none"
+          aria-label="아이콘 없음 선택"
+          aria-pressed={draftIcon === NO_WORKSPACE_ICON}
+          onClick={() => chooseIcon(NO_WORKSPACE_ICON)}
+        >
+          <ImageOff aria-hidden="true" />
+          <span>없음</span>
+          {draftIcon === NO_WORKSPACE_ICON && (
+            <span className="mobile-tab-icon-choice-check" aria-hidden="true">
+              <Check size={11} strokeWidth={3} />
+            </span>
+          )}
+        </button>
         {choices.map((choice) => {
           const OutlineIcon = getWorkspaceOutlineIcon(choice.src);
           const selectedIcon = resolveWorkspaceIconPath(draftIcon) ?? draftIcon;
