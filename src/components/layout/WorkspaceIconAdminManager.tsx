@@ -129,6 +129,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
   const previousCardRectsRef = useRef<Map<string, DOMRect> | null>(null);
   const pointerPositionRef = useRef<{ x: number; y: number } | null>(null);
   const autoScrollFrameRef = useRef<number | null>(null);
+  const focusedTabButtonRef = useRef<HTMLElement | null>(null);
 
   useLayoutEffect(() => {
     const previousRects = previousCardRectsRef.current;
@@ -155,6 +156,20 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
   }, []);
 
   useEffect(() => {
+    const clearFocusedTabButton = () => {
+      focusedTabButtonRef.current?.classList.remove("is-icon-drop-target");
+      focusedTabButtonRef.current = null;
+    };
+
+    const focusTabButton = (button: HTMLElement | null) => {
+      if (focusedTabButtonRef.current === button && button?.classList.contains("is-icon-drop-target")) return;
+      clearFocusedTabButton();
+      if (button) {
+        button.classList.add("is-icon-drop-target");
+        focusedTabButtonRef.current = button;
+      }
+    };
+
     const clearDropSlot = () => {
       if (dropIndexRef.current !== null) {
         dropIndexRef.current = null;
@@ -177,6 +192,8 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       const target = document.elementFromPoint(x, y);
       const targetCard = target?.closest<HTMLElement>("[data-admin-icon-id]");
       const targetCategory = target?.closest<HTMLElement>("[data-admin-collection]");
+      const targetTabButton = target?.closest<HTMLElement>(".mobile-navigation-item");
+      focusTabButton(targetTabButton ?? null);
       const grid = document.querySelector<HTMLElement>(".workspace-icon-admin-grid");
       if (grid?.contains(target as Node)) {
         updateDropSlot(grid, target, x, y, sourceId);
@@ -267,6 +284,8 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
         const target = document.elementFromPoint(event.clientX, event.clientY);
         const targetCard = target?.closest<HTMLElement>("[data-admin-icon-id]");
         const targetCategory = target?.closest<HTMLElement>("[data-admin-collection]");
+        const targetTabButton = target?.closest<HTMLElement>(".mobile-navigation-item");
+        focusTabButton(targetTabButton ?? null);
         const targetId = targetCard?.dataset.adminIconId;
         const targetCollection = (targetCard?.dataset.adminCollection ?? targetCategory?.dataset.adminCollection) as
           | WorkspaceIconCollectionId
@@ -313,6 +332,9 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       autoScrollFrameRef.current = null;
       setDraggingId(null);
       setDropTargetId(null);
+      if (!document.elementFromPoint(event.clientX, event.clientY)?.closest(".mobile-navigation-item")) {
+        clearFocusedTabButton();
+      }
       dropIndexRef.current = null;
       setDropIndex(null);
       setDragPreview(null);
@@ -325,6 +347,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       autoScrollFrameRef.current = null;
       setDraggingId(null);
       setDropTargetId(null);
+      clearFocusedTabButton();
       dropIndexRef.current = null;
       setDropIndex(null);
       setDragPreview(null);
@@ -338,6 +361,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       window.removeEventListener("pointerup", finishDrag);
       window.removeEventListener("pointercancel", cancelDrag);
       if (autoScrollFrameRef.current !== null) cancelAnimationFrame(autoScrollFrameRef.current);
+      clearFocusedTabButton();
     };
   }, []);
 
@@ -347,6 +371,8 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
     if ((event.target as HTMLElement).closest(".workspace-icon-admin-delete")) return;
     const choice = draft[collection].find((item) => item.id === id);
     if (!choice) return;
+    focusedTabButtonRef.current?.classList.remove("is-icon-drop-target");
+    focusedTabButtonRef.current = null;
     dragRef.current = {
       id,
       collection,

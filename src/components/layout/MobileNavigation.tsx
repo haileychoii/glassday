@@ -131,7 +131,8 @@ export const MobileNavigation = ({
               aria-label={editMode ? `${tab.label}${isEditingIcon ? ", 아이콘 선택 중" : " 아이콘 편집"}` : tab.label}
               aria-current={activeTabId === tab.id ? "page" : undefined}
               aria-pressed={isEditingIcon}
-              onClick={() => {
+              onClick={(event) => {
+                event.currentTarget.classList.remove("is-icon-drop-target");
                 if (editMode) {
                   openPicker(tab.id);
                   return;

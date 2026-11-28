@@ -305,6 +305,18 @@
   background: hsl(var(--primary) / 0.18);
 }
 
+/* While an icon is held over a workspace tab, show the tab as a clear drop and
+   navigation target. The focus ring stays until the user activates that tab. */
+.mobile-layout .mobile-navigation-item.is-icon-drop-target {
+  z-index: 2;
+  outline: 3px solid hsl(var(--primary));
+  outline-offset: -3px;
+  box-shadow: 0 0 0 4px hsl(var(--primary) / 0.22);
+  filter: brightness(1.12);
+  transform: translateY(-4px) scale(1.06);
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+
 /* Mark only the tab whose icon picker is open, without covering its artwork. */
 .mobile-navigation-item[aria-pressed="true"] {
   position: relative;
