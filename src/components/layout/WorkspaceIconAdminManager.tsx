@@ -29,7 +29,7 @@ const categories: Array<{ id: WorkspaceIconCollectionId; label: string }> = [
 
 type DraftChoice = WorkspaceIconChoice & { pendingFile?: File };
 type DraftCatalog = Record<WorkspaceIconCollectionId, DraftChoice[]>;
-type DragState = { id: string; collection: WorkspaceIconCollectionId; lastTarget: string | null };
+type DragState = { id: string; collection: WorkspaceIconCollectionId };
 
 const toDraft = (catalog: WorkspaceIconCatalog): DraftCatalog =>
   Object.fromEntries(
@@ -75,6 +75,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
   const [collection, setCollection] = useState<WorkspaceIconCollectionId>("pink-iphone");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dropTargetId, setDropTargetId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -92,32 +93,65 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
 
       const target = document.elementFromPoint(event.clientX, event.clientY);
       const targetCard = target?.closest<HTMLElement>("[data-admin-icon-id]");
-      const targetId = targetCard?.dataset.adminIconId;
-      if (!targetId || targetId === drag.id) {
-        drag.lastTarget = null;
-        return;
-      }
-      if (drag.lastTarget === targetId) return;
-
-      drag.lastTarget = targetId;
-      setDraft((current) => ({
-        ...current,
-        [drag.collection]: reorder(current[drag.collection], drag.id, targetId),
-      }));
+      const targetCategory = target?.closest<HTMLElement>("[data-admin-collection]");
+      setDropTargetId(targetCard?.dataset.adminIconId ?? targetCategory?.dataset.adminCollection ?? null);
     };
 
-    const finishDrag = () => {
+    const finishDrag = (event: globalThis.PointerEvent) => {
+      const drag = dragRef.current;
+      if (drag) {
+        const target = document.elementFromPoint(event.clientX, event.clientY);
+        const targetCard = target?.closest<HTMLElement>("[data-admin-icon-id]");
+        const targetCategory = target?.closest<HTMLElement>("[data-admin-collection]");
+        const targetId = targetCard?.dataset.adminIconId;
+        const targetCollection = (targetCard?.dataset.adminCollection ?? targetCategory?.dataset.adminCollection) as
+          | WorkspaceIconCollectionId
+          | undefined;
+
+        if (targetCollection && targetCollection !== drag.collection) {
+          const movedId = drag.id;
+          setDraft((current) => {
+            const moved = current[drag.collection].find((item) => item.id === movedId);
+            if (!moved) return current;
+            const sourceItems = current[drag.collection].filter((item) => item.id !== movedId);
+            const destinationItems = [...current[targetCollection]];
+            const targetIndex = targetId
+              ? destinationItems.findIndex((item) => item.id === targetId)
+              : -1;
+            destinationItems.splice(targetIndex < 0 ? destinationItems.length : targetIndex, 0, moved);
+            return {
+              ...current,
+              [drag.collection]: sourceItems,
+              [targetCollection]: destinationItems,
+            };
+          });
+          setCollection(targetCollection);
+          setSelectedId(null);
+        } else if (targetId && targetId !== drag.id) {
+          setDraft((current) => ({
+            ...current,
+            [drag.collection]: reorder(current[drag.collection], drag.id, targetId),
+          }));
+        }
+      }
       dragRef.current = null;
       setDraggingId(null);
+      setDropTargetId(null);
+    };
+
+    const cancelDrag = () => {
+      dragRef.current = null;
+      setDraggingId(null);
+      setDropTargetId(null);
     };
 
     window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("pointerup", finishDrag);
-    window.addEventListener("pointercancel", finishDrag);
+    window.addEventListener("pointercancel", cancelDrag);
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", finishDrag);
-      window.removeEventListener("pointercancel", finishDrag);
+      window.removeEventListener("pointercancel", cancelDrag);
     };
   }, []);
 
@@ -128,13 +162,20 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
     if ("button" in event && event.button !== 0) return;
     if ("pointerId" in event) {
       event.preventDefault();
-      event.currentTarget.setPointerCapture(event.pointerId);
     } else {
       event.dataTransfer.setData("text/plain", id);
       event.dataTransfer.effectAllowed = "move";
     }
-    dragRef.current = { id, collection, lastTarget: null };
+    dragRef.current = { id, collection };
     setDraggingId(id);
+    setDropTargetId(id);
+    if ("pointerId" in event) {
+      try {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      } catch {
+        // The global pointer listeners still complete the drop if capture is unavailable.
+      }
+    }
   };
 
   const handleDrop = (event: DragEvent<HTMLElement>, targetId: string) => {
@@ -148,6 +189,27 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
     }
     dragRef.current = null;
     setDraggingId(null);
+    setDropTargetId(null);
+  };
+
+  const moveDragToCategory = (event: DragEvent<HTMLButtonElement>, targetCollection: WorkspaceIconCollectionId) => {
+    event.preventDefault();
+    const drag = dragRef.current;
+    if (!drag || drag.collection === targetCollection) return;
+    setDraft((current) => {
+      const choice = current[drag.collection].find((item) => item.id === drag.id);
+      if (!choice) return current;
+      return {
+        ...current,
+        [drag.collection]: current[drag.collection].filter((item) => item.id !== drag.id),
+        [targetCollection]: [...current[targetCollection], choice],
+      };
+    });
+    setCollection(targetCollection);
+    setSelectedId(null);
+    dragRef.current = null;
+    setDraggingId(null);
+    setDropTargetId(null);
   };
 
   const handleFiles = (event: ChangeEvent<HTMLInputElement>) => {
@@ -277,6 +339,8 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
             data-admin-collection={item.id}
             className="mobile-tab-icon-collection"
             aria-pressed={collection === item.id}
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={(event) => moveDragToCategory(event, item.id)}
             onClick={() => {
               setCollection(item.id);
               setSelectedId(null);
@@ -318,8 +382,9 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
         {draft[collection].map((choice) => (
           <article
             key={choice.id}
-            className={`workspace-icon-admin-card${selectedId === choice.id ? " is-selected" : ""}${draggingId === choice.id ? " is-dragging" : ""}`}
+            className={`workspace-icon-admin-card${selectedId === choice.id ? " is-selected" : ""}${draggingId === choice.id ? " is-dragging" : ""}${dropTargetId === choice.id ? " is-drop-target" : ""}`}
             data-admin-icon-id={choice.id}
+            data-admin-collection={collection}
             role="listitem"
             draggable
             onDragStart={(event) => startDrag(event, choice.id)}
@@ -328,6 +393,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
             onDragEnd={() => {
               dragRef.current = null;
               setDraggingId(null);
+              setDropTargetId(null);
             }}
           >
             <button

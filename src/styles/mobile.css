@@ -473,6 +473,11 @@
   opacity: 0.55;
 }
 
+.workspace-icon-admin-card.is-drop-target:not(.is-dragging) {
+  outline: 2px dashed hsl(var(--primary));
+  outline-offset: 1px;
+}
+
 .workspace-icon-admin-drag,
 .workspace-icon-admin-delete {
   position: absolute;
