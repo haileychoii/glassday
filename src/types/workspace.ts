@@ -42,7 +42,7 @@ export type WorkspaceId = string;
 export type GridLayoutItem = {
   /** Widget Registry와 Component map을 연결하는 영구 key. */
   i: string;
-  /** 16-column Grid 안의 시작 column과 row. */
+  /** Desktop 12-column Grid 안의 시작 column과 row. */
   x: number;
   y: number;
   /** column/row 단위 Frame 크기. 실제 px은 DashboardGrid의 rowHeight/gap에서 계산된다. */

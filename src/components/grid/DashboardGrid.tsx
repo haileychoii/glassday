@@ -7,7 +7,7 @@
  *
  * [역할]
  * - Workspace별 위젯 렌더링
- * - 16-column Grid 배치
+ * - 12-column desktop Grid 배치
  * - 실제 Canvas 너비 측정
  * - 위젯 이동 및 8방향 Resize
  * - 위젯 충돌 및 세로 Reflow
@@ -30,7 +30,7 @@
  * - overrides.css
  *
  * [Grid 규칙]
- * - 모든 Breakpoint는 16-column
+ * - 모든 desktop Breakpoint는 같은 12-column 좌표계
  * - lg: 980px 이상
  * - md: 620px 이상
  * - sm: 620px 미만
@@ -104,7 +104,7 @@ import "react-resizable/css/styles.css";
    CSS에서는 이 값으로 생성한 CSS 변수를 사용한다.
 ============================================================ */
 
-const GRID_COLUMNS = 16;
+const GRID_COLUMNS = 12;
 
 const INITIAL_VISIBLE_ROWS = 16;
 
@@ -131,6 +131,21 @@ const readDashboardWidgetGap = (): number => {
   const value = Number.parseFloat(token);
 
   return Number.isFinite(value) ? value : 12;
+};
+
+/* Desktop's horizontal column gutter follows the grid reference proportions.
+   The vertical widget gap remains the existing --gd-widget-outer-gap token. */
+const readDashboardColumnGutter = (canvasWidth: number): number => {
+  const styles = getComputedStyle(document.documentElement);
+  const readToken = (name: string, fallback: number) => {
+    const value = Number.parseFloat(styles.getPropertyValue(name).trim());
+    return Number.isFinite(value) ? value : fallback;
+  };
+  const minimum = readToken("--gd-dashboard-gutter-x-min", 12);
+  const ratio = readToken("--gd-dashboard-gutter-x-ratio", 0.0167);
+  const maximum = readToken("--gd-dashboard-gutter-x-max", 24);
+
+  return Math.min(maximum, Math.max(minimum, canvasWidth * ratio));
 };
 
 const GRID_SETTINGS = {
@@ -185,7 +200,7 @@ const WIDGET_LAYOUT_CONSTRAINTS: Partial<
   >
 > = {
   calendar: {
-    minW: 5,
+    minW: 4,
     minH: 9,
   },
 };
@@ -383,7 +398,7 @@ const getBreakpoint = (
    h : 세로 크기
 
    가장 중요한 조건:
-   x + w <= 16
+   x + w <= 12
 ============================================================ */
 
 const normalizeLayoutItem = (
@@ -442,7 +457,7 @@ const normalizeLayoutItem = (
     maxH ?? Infinity
   );
 
-  // 위젯 오른쪽 끝이 16열을 초과하지 않도록 제한
+  // 위젯 오른쪽 끝이 12열 바깥으로 나가지 않도록 제한
   const x = clamp(
     safeInteger(item.x, 0),
     0,
@@ -838,7 +853,7 @@ const hasLayoutChanged = (
 /* ============================================================
    12. MOVE / RESIZE CALCULATION
 
-   Pointer 이동량을 16-column Grid 단위로 변환한다.
+   Pointer 이동량을 12-column Grid 단위로 변환한다.
 
    Move:
    - x, y 변경
@@ -1133,12 +1148,14 @@ const DashboardCanvas = ({
 
   const preferredGap =
     readDashboardWidgetGap();
+  const preferredColumnGutter =
+    readDashboardColumnGutter(width);
 
   // 극단적으로 좁은 화면에서도 Gap의 합이
   // 사용 가능한 전체 너비를 초과하지 않도록 제한한다.
-  const gridGap = width > 0
+  const gridGapX = width > 0
     ? Math.min(
-        preferredGap,
+        preferredColumnGutter,
         Math.max(
           0,
           Math.floor(
@@ -1147,7 +1164,10 @@ const DashboardCanvas = ({
           )
         )
       )
-    : preferredGap;
+    : preferredColumnGutter;
+
+  // Keep the previous vertical widget-to-widget rhythm unchanged.
+  const gridGapY = preferredGap;
 
 
   /* ----------------------------------------------------------
@@ -1766,14 +1786,14 @@ const DashboardCanvas = ({
     // 실제 Column 너비 및 이동 단위
     const columnWidth = (
       width -
-      gridGap * (GRID_COLUMNS - 1)
+      gridGapX * (GRID_COLUMNS - 1)
     ) / GRID_COLUMNS;
 
     const columnStep =
-      columnWidth + gridGap;
+      columnWidth + gridGapX;
 
     const rowStep =
-      rowHeight + gridGap;
+      rowHeight + gridGapY;
 
 
     // Web Preview의 Scale이 적용된 경우
@@ -1890,13 +1910,16 @@ const DashboardCanvas = ({
     "--gd-grid-row-height":
       `${rowHeight}px`,
 
-    "--gd-grid-gap":
-      `${gridGap}px`,
+    "--gd-grid-gap-x":
+      `${gridGapX}px`,
+
+    "--gd-grid-gap-y":
+      `${gridGapY}px`,
 
     "--gd-grid-min-height":
       `${
         INITIAL_VISIBLE_ROWS * rowHeight +
-        (INITIAL_VISIBLE_ROWS - 1) * gridGap
+        (INITIAL_VISIBLE_ROWS - 1) * gridGapY
       }px`,
 
   } as CSSProperties;
@@ -1950,7 +1973,7 @@ const DashboardCanvas = ({
 
             {collidingWidgetIds.length > 0
               ? "Rearranging widgets"
-              : "16-column grid - move & resize"}
+              : "12-column grid - move & resize"}
 
           </div>
         )}
@@ -2069,8 +2092,8 @@ const DashboardCanvas = ({
             rowHeight={rowHeight}
 
             margin={[
-              gridGap,
-              gridGap,
+              gridGapX,
+              gridGapY,
             ]}
 
             containerPadding={[0, 0]}

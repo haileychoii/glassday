@@ -134,10 +134,10 @@ const MobileWidgetSlot = ({
   const hasCustomHeight = item.height !== null;
 
   /**
-   * Grid column은 화면에 즉시 반영한다.
+   * 모바일 4열 기준에 맞춰 슬롯 폭을 바로 반영한다.
    *
-   * 전체 폭: 1 / -1
-   * 절반 폭: span 1
+   * 전체 폭: 1 / -1 (4열 전체)
+   * 절반 폭: span 2 (4열 중 절반)
    *
    * 세로 높이는 CSS 변수로 전달한다.
    * height를 일반 inline style로 직접 적용하면
@@ -145,7 +145,7 @@ const MobileWidgetSlot = ({
    */
   const slotStyle = {
     gridColumn:
-      item.width === "half" ? "span 1" : "1 / -1",
+      item.width === "half" ? "span 2" : "1 / -1",
 
     ...(hasCustomHeight
       ? {
@@ -246,10 +246,9 @@ export const MobileDashboard = ({
       data-tab-id={activeTab.id}
       aria-label={`${activeTab.label} 모바일 위젯`}
       style={{
-        // 모바일에서는 항상 2열 Grid를 사용한다.
-        // 전체 폭 위젯은 두 열을 모두 차지한다.
+        // 4열 기준선을 사용하고 슬롯은 2열 또는 4열을 차지한다.
         gridTemplateColumns:
-          "repeat(2, minmax(0, 1fr))",
+          "repeat(4, minmax(0, 1fr))",
       }}
     >
       {/* ================================================

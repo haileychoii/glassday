@@ -21,7 +21,10 @@
   --mobile-content-gap: var(--mobile-space-2);
   --mobile-tight-gap: var(--mobile-space-1);
   --mobile-control-gap: 6px;
-  --mobile-page-gutter: var(--mobile-space-4);
+  /* At a 375px phone width this resolves to the reference's balanced 16px
+   * side inset, then scales gently with the available screen width. */
+  --mobile-page-gutter: clamp(12px, 4.25vw, 16px);
+  --mobile-grid-gutter: clamp(12px, 4.25vw, 16px);
   --mobile-widget-header-height: calc(
     max(var(--mobile-widget-icon-size), var(--mobile-widget-action-size)) +
     var(--mobile-widget-header-pad-y) +
@@ -142,16 +145,17 @@ body:has(.mobile-layout) .mobile-layout .mobile-navigation-item {
  * `--mobile-widget-*` alias on its themed layout or target slot/card. Shared
  * geometry consumes these aliases, so scoped token overrides stay effective. */
 
-/* Give every widget one shared column, width, and vertical rhythm.
- * 모바일 위젯은 한 열과 같은 폭, 같은 위젯 사이 간격을 사용합니다. */
+/* All mobile slots align to the same four-column frame. Full widgets span all
+ * four, half widgets span two; vertical spacing stays at the existing token. */
 .mobile-layout .mobile-dashboard,
 :is(html, body):is([data-theme], [class*="theme-"])
   .mobile-layout .mobile-dashboard {
   width: 100% !important;
   max-width: 760px !important;
   margin-inline: auto !important;
-  grid-template-columns: minmax(0, 1fr) !important;
-  gap: var(--mobile-widget-gap) !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  row-gap: var(--mobile-widget-gap) !important;
+  column-gap: var(--mobile-grid-gutter) !important;
   /* The same fixed inset owns both outer edges for every theme. Do not let
    * theme/browser safe-area values make one side wider than the other. */
   padding: var(--mobile-space-2) var(--mobile-page-gutter)

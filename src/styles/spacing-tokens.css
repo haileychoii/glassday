@@ -30,6 +30,11 @@
   --gd-ratio-4: calc(var(--gd-ratio-unit) * 4);
   --gd-ratio-6: calc(var(--gd-ratio-unit) * 6);
   --gd-widget-outer-gap: 12px;
+  /* Desktop 12-column column gap: grows with the canvas to echo the Figma
+     margin/gutter proportions. The row gap above remains the same 12px. */
+  --gd-dashboard-gutter-x-min: 12px;
+  --gd-dashboard-gutter-x-ratio: 0.0167;
+  --gd-dashboard-gutter-x-max: 24px;
 
   /* 2. Widget shell spacing
      Change these first to tighten or loosen most widgets at once.
@@ -150,7 +155,7 @@
   /* Wide dashboard canvas
      main pad + shell pad is the actual distance from topbar/sidebar to widgets.
      Wide 여백은 아래 다섯 값만 조절하면 되고 위젯 개별 margin은 건드리지 않는다. */
-  --gd-shell-pad-x: 12px;
+  --gd-shell-pad-x: clamp(24px, 5.8vw, 112px);
   --gd-shell-pad-top: 10px;
   --gd-shell-pad-bottom: 24px;
   --gd-main-pad-x: 4px;

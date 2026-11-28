@@ -80,7 +80,7 @@
 
 .mobile-dashboard {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
   padding: 10px max(10px, env(safe-area-inset-right))
     22px max(10px, env(safe-area-inset-left));
@@ -984,13 +984,15 @@ body:has(.mobile-layout)
  * - MobileWidgetEditor.tsx          : editing controls and height slider
  *
  * Keep all layout rules inside .mobile-layout. No changes to the desktop
- * DashboardGrid's 16-column coordinates, Wide/Laptop modes or saved widget data.
+ * DashboardGrid's 12-column coordinates, Wide/Laptop modes or saved widget data.
  * ============================================================================ */
 
-/* Two underlying grid columns. The JSX sets grid-column per slot: full spans
-   both columns; half spans one. This rule also acts as a CSS fallback. */
+/* Four mobile alignment columns. Full widgets span all four; half widgets span
+   two. Vertical row spacing remains the existing mobile-widget-gap token. */
 .mobile-layout .mobile-dashboard[data-mobile-grid="editable"] {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  row-gap: var(--mobile-widget-gap) !important;
+  column-gap: var(--mobile-grid-gutter) !important;
   align-items: start;
 }
 
@@ -1011,7 +1013,7 @@ body:has(.mobile-layout)
 
 .mobile-layout .mobile-dashboard[data-mobile-grid="editable"]
   > .mobile-widget-slot[data-mobile-width="half"] {
-  grid-column: span 1;
+  grid-column: span 2;
 }
 
 /* Auto height must keep current widget-specific behavior.

@@ -4,7 +4,7 @@
  * ============================================================
  *
  * 역할:
- * - 처음 생성되는 Workspace와 누락 위젯이 사용할 16-column 기본 좌표다.
+ * - 처음 생성되는 Workspace와 누락 위젯이 사용할 12-column 기본 좌표다.
  * - Wide와 Laptop은 별도 layout이며 서로의 사용자 편집 결과를 덮어쓰지 않는다.
  *
  * 연결 관계:
@@ -15,7 +15,7 @@
  *
  * Figma 변환:
  * - 각 breakpoint 배열은 하나의 Layout Variant다.
- * - x/w는 16-column 기준, y/h는 DashboardGrid의 rowHeight/gap 기준이다.
+ * - x/w는 12-column 기준, y/h는 DashboardGrid의 rowHeight/gap 기준이다.
  *
  * 수정 주의:
  * - `i`는 `widgetRegistry` 및 `widgetMap` key와 반드시 일치해야 한다.
@@ -31,14 +31,14 @@ export const wideDefaultLayouts: Layouts = {
       i: "today",
       x: 0,
       y: 0,
-      w: 8,
+      w: 6,
       h: 10,
     },
     {
       i: "alerts",
-      x: 8,
+      x: 6,
       y: 0,
-      w: 8,
+      w: 6,
       h: 10,
     },
 
@@ -46,15 +46,15 @@ export const wideDefaultLayouts: Layouts = {
       i: "journal",
       x: 0,
       y: 10,
-      w: 8,
+      w: 6,
       h: 32,
     },
 
     {
       i: "calendar",
-      x: 8,
+      x: 6,
       y: 10,
-      w: 8,
+      w: 6,
       // Calendar stays useful without reserving a full page for an empty day.
       // 일정이 없는 날에도 빈 공간만 길어지지 않도록 기본 높이를 줄인다.
       h: 12,
@@ -64,17 +64,17 @@ export const wideDefaultLayouts: Layouts = {
 
     {
       i: "career",
-      x: 8,
+      x: 6,
       y: 26,
-      w: 8,
+      w: 6,
       h: 12,
     },
 
     {
       i: "memo",
-      x: 8,
+      x: 6,
       y: 38,
-      w: 8,
+      w: 6,
       h: 12,
     },
 
@@ -82,30 +82,30 @@ export const wideDefaultLayouts: Layouts = {
       i: "study",
       x: 0,
       y: 42,
-      w: 8,
+      w: 6,
       h: 18,
     },
     {
       i: "timer",
-      x: 8,
+      x: 6,
       y: 60,
-      w: 8,
+      w: 6,
       h: 8,
     },
 
     {
       i: "habitTracker",
-      x: 8,
+      x: 6,
       y: 54,
-      w: 4,
+      w: 3,
       h: 8,
     },
 
     {
       i: "money",
-      x: 12,
+      x: 9,
       y: 54,
-      w: 4,
+      w: 3,
       h: 8,
     },
 
@@ -113,7 +113,7 @@ export const wideDefaultLayouts: Layouts = {
       i: "mood",
       x: 0,
       y: 60,
-      w: 8,
+      w: 6,
       h: 8,
     },
   ],
@@ -123,14 +123,14 @@ export const wideDefaultLayouts: Layouts = {
       i: "today",
       x: 0,
       y: 0,
-      w: 8,
+      w: 6,
       h: 10,
     },
     {
       i: "alerts",
-      x: 8,
+      x: 6,
       y: 0,
-      w: 8,
+      w: 6,
       h: 10,
     },
 
@@ -138,15 +138,15 @@ export const wideDefaultLayouts: Layouts = {
       i: "journal",
       x: 0,
       y: 10,
-      w: 8,
+      w: 6,
       h: 32,
     },
 
     {
       i: "calendar",
-      x: 8,
+      x: 6,
       y: 10,
-      w: 8,
+      w: 6,
       h: 12,
       minW: 4,
       minH: 6,
@@ -154,17 +154,17 @@ export const wideDefaultLayouts: Layouts = {
 
     {
       i: "career",
-      x: 8,
+      x: 6,
       y: 26,
-      w: 8,
+      w: 6,
       h: 12,
     },
 
     {
       i: "memo",
-      x: 8,
+      x: 6,
       y: 38,
-      w: 8,
+      w: 6,
       h: 16,
     },
 
@@ -172,30 +172,30 @@ export const wideDefaultLayouts: Layouts = {
       i: "study",
       x: 0,
       y: 42,
-      w: 8,
+      w: 6,
       h: 18,
     },
     {
       i: "timer",
-      x: 8,
+      x: 6,
       y: 60,
-      w: 8,
+      w: 6,
       h: 8,
     },
 
     {
       i: "habitTracker",
-      x: 8,
+      x: 6,
       y: 54,
-      w: 4,
+      w: 3,
       h: 8,
     },
 
     {
       i: "money",
-      x: 12,
+      x: 9,
       y: 54,
-      w: 4,
+      w: 3,
       h: 8,
     },
 
@@ -203,7 +203,7 @@ export const wideDefaultLayouts: Layouts = {
       i: "mood",
       x: 0,
       y: 60,
-      w: 8,
+      w: 6,
       h: 8,
     },
   ],
@@ -213,7 +213,7 @@ export const wideDefaultLayouts: Layouts = {
       i: "today",
       x: 0,
       y: 0,
-      w: 16,
+      w: 12,
       h: 12,
     },
 
@@ -221,7 +221,7 @@ export const wideDefaultLayouts: Layouts = {
       i: "alerts",
       x: 0,
       y: 12,
-      w: 16,
+      w: 12,
       h: 11,
     },
 
@@ -229,7 +229,7 @@ export const wideDefaultLayouts: Layouts = {
       i: "journal",
       x: 0,
       y: 23,
-      w: 16,
+      w: 12,
       h: 34,
     },
 
@@ -237,7 +237,7 @@ export const wideDefaultLayouts: Layouts = {
       i: "calendar",
       x: 0,
       y: 57,
-      w: 16,
+      w: 12,
       h: 12,
       minW: 4,
       minH: 6,
@@ -247,7 +247,7 @@ export const wideDefaultLayouts: Layouts = {
       i: "career",
       x: 0,
       y: 73,
-      w: 16,
+      w: 12,
       h: 12,
     },
 
@@ -255,7 +255,7 @@ export const wideDefaultLayouts: Layouts = {
       i: "memo",
       x: 0,
       y: 85,
-      w: 16,
+      w: 12,
       h: 16,
     },
 
@@ -263,14 +263,14 @@ export const wideDefaultLayouts: Layouts = {
       i: "study",
       x: 0,
       y: 101,
-      w: 16,
+      w: 12,
       h: 18,
     },
     {
       i: "timer",
       x: 0,
       y: 119,
-      w: 16,
+      w: 12,
       h: 10,
     },
 
@@ -278,7 +278,7 @@ export const wideDefaultLayouts: Layouts = {
       i: "habitTracker",
       x: 0,
       y: 129,
-      w: 16,
+      w: 12,
       h: 9,
     },
 
@@ -286,7 +286,7 @@ export const wideDefaultLayouts: Layouts = {
       i: "money",
       x: 0,
       y: 138,
-      w: 16,
+      w: 12,
       h: 9,
     },
 
@@ -294,7 +294,7 @@ export const wideDefaultLayouts: Layouts = {
       i: "mood",
       x: 0,
       y: 147,
-      w: 16,
+      w: 12,
       h: 9,
     },
   ],
@@ -303,43 +303,43 @@ export const wideDefaultLayouts: Layouts = {
 /** Laptop App 기본 배치: 고정 preview Frame 안의 조밀한 layout. */
 export const laptopDefaultLayouts: Layouts = {
   lg: [
-    { i: "today", x: 0, y: 0, w: 7, h: 9 },
-    { i: "alerts", x: 7, y: 0, w: 9, h: 9 },
-    { i: "journal", x: 0, y: 9, w: 8, h: 23 },
-    { i: "calendar", x: 8, y: 9, w: 8, h: 9, minW: 4, minH: 6 },
-    { i: "study", x: 8, y: 22, w: 8, h: 13 },
-    { i: "career", x: 0, y: 32, w: 8, h: 11 },
-    { i: "memo", x: 8, y: 35, w: 8, h: 14 },
-    { i: "habitTracker", x: 0, y: 43, w: 4, h: 7 },
-    { i: "money", x: 4, y: 43, w: 4, h: 7 },
-    { i: "mood", x: 0, y: 50, w: 8, h: 7 },
-    { i: "timer", x: 8, y: 49, w: 8, h: 8 },
+    { i: "today", x: 0, y: 0, w: 5, h: 9 },
+    { i: "alerts", x: 5, y: 0, w: 7, h: 9 },
+    { i: "journal", x: 0, y: 9, w: 6, h: 23 },
+    { i: "calendar", x: 6, y: 9, w: 6, h: 9, minW: 4, minH: 6 },
+    { i: "study", x: 6, y: 22, w: 6, h: 13 },
+    { i: "career", x: 0, y: 32, w: 6, h: 11 },
+    { i: "memo", x: 6, y: 35, w: 6, h: 14 },
+    { i: "habitTracker", x: 0, y: 43, w: 3, h: 7 },
+    { i: "money", x: 3, y: 43, w: 3, h: 7 },
+    { i: "mood", x: 0, y: 50, w: 6, h: 7 },
+    { i: "timer", x: 6, y: 49, w: 6, h: 8 },
   ],
   md: [
-    { i: "today", x: 0, y: 0, w: 8, h: 9 },
-    { i: "alerts", x: 8, y: 0, w: 8, h: 9 },
-    { i: "journal", x: 0, y: 9, w: 8, h: 23 },
-    { i: "calendar", x: 8, y: 9, w: 8, h: 9, minW: 4, minH: 6 },
-    { i: "study", x: 8, y: 22, w: 8, h: 13 },
-    { i: "career", x: 0, y: 32, w: 8, h: 11 },
-    { i: "memo", x: 8, y: 35, w: 8, h: 14 },
-    { i: "habitTracker", x: 0, y: 43, w: 8, h: 7 },
-    { i: "money", x: 8, y: 49, w: 8, h: 7 },
-    { i: "mood", x: 0, y: 50, w: 8, h: 7 },
-    { i: "timer", x: 8, y: 56, w: 8, h: 8 },
+    { i: "today", x: 0, y: 0, w: 6, h: 9 },
+    { i: "alerts", x: 6, y: 0, w: 6, h: 9 },
+    { i: "journal", x: 0, y: 9, w: 6, h: 23 },
+    { i: "calendar", x: 6, y: 9, w: 6, h: 9, minW: 4, minH: 6 },
+    { i: "study", x: 6, y: 22, w: 6, h: 13 },
+    { i: "career", x: 0, y: 32, w: 6, h: 11 },
+    { i: "memo", x: 6, y: 35, w: 6, h: 14 },
+    { i: "habitTracker", x: 0, y: 43, w: 6, h: 7 },
+    { i: "money", x: 6, y: 49, w: 6, h: 7 },
+    { i: "mood", x: 0, y: 50, w: 6, h: 7 },
+    { i: "timer", x: 6, y: 56, w: 6, h: 8 },
   ],
   sm: [
-    { i: "today", x: 0, y: 0, w: 16, h: 10 },
-    { i: "alerts", x: 0, y: 10, w: 16, h: 10 },
-    { i: "journal", x: 0, y: 20, w: 16, h: 28 },
-    { i: "calendar", x: 0, y: 48, w: 16, h: 14, minW: 4, minH: 6 },
-    { i: "study", x: 0, y: 62, w: 16, h: 15 },
-    { i: "career", x: 0, y: 77, w: 16, h: 11 },
-    { i: "memo", x: 0, y: 88, w: 16, h: 15 },
-    { i: "timer", x: 0, y: 103, w: 16, h: 10 },
-    { i: "habitTracker", x: 0, y: 113, w: 16, h: 8 },
-    { i: "money", x: 0, y: 121, w: 16, h: 8 },
-    { i: "mood", x: 0, y: 129, w: 16, h: 8 },
+    { i: "today", x: 0, y: 0, w: 12, h: 10 },
+    { i: "alerts", x: 0, y: 10, w: 12, h: 10 },
+    { i: "journal", x: 0, y: 20, w: 12, h: 28 },
+    { i: "calendar", x: 0, y: 48, w: 12, h: 14, minW: 4, minH: 6 },
+    { i: "study", x: 0, y: 62, w: 12, h: 15 },
+    { i: "career", x: 0, y: 77, w: 12, h: 11 },
+    { i: "memo", x: 0, y: 88, w: 12, h: 15 },
+    { i: "timer", x: 0, y: 103, w: 12, h: 10 },
+    { i: "habitTracker", x: 0, y: 113, w: 12, h: 8 },
+    { i: "money", x: 0, y: 121, w: 12, h: 8 },
+    { i: "mood", x: 0, y: 129, w: 12, h: 8 },
   ],
 };
 

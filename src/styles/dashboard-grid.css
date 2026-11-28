@@ -5,7 +5,7 @@
    외부 engine: react-grid-layout / react-resizable
 
    Figma 구조:
-   - Dashboard Canvas = 16-column layout frame
+   - Dashboard Canvas = 12-column layout frame
    - Grid Item = Widget instance frame
    - Edit Variant = dimmed canvas + selected outline + move/resize handles
 
@@ -42,11 +42,11 @@
 
 /* Keep enough canvas height visible to show the 16-row edit grid. */
 .dashboard-edit-canvas.is-editing {
-  min-height: calc(16 * 52px + 15 * 14px);
+  min-height: var(--gd-grid-min-height, calc(16 * 52px + 15 * 12px));
 }
 
 /* =========================================================
-   2. 16-column visual grid
+   2. 12-column visual grid
 ========================================================= */
 
 .dashboard-edit-canvas.is-editing::before {
@@ -76,8 +76,8 @@
     );
 
   background-size:
-    6.25% 100%,
-    100% 66px;
+    8.333333% 100%,
+    100% calc(var(--gd-grid-row-height, 52px) + var(--gd-grid-gap-y, 12px));
 
   background-position: 0 0;
 }

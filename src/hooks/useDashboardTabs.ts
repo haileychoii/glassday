@@ -74,7 +74,7 @@ type SharedWorkspaceTab = {
   widgetIds: WidgetId[];
 };
 
-const GRID_COLUMNS = 16;
+const GRID_COLUMNS = 12;
 
 
 /* ============================================================
@@ -165,24 +165,24 @@ const createModeLayouts = (
 
 const fallbackLayouts: Layouts = {
   lg: [
-    { i: "today", x: 0, y: 0, w: 4, h: 4 },
-    { i: "calendar", x: 4, y: 0, w: 6, h: 5 },
-    { i: "memo", x: 10, y: 0, w: 6, h: 5 },
-    { i: "study", x: 0, y: 4, w: 6, h: 5 },
+    { i: "today", x: 0, y: 0, w: 3, h: 4 },
+    { i: "calendar", x: 3, y: 0, w: 5, h: 5 },
+    { i: "memo", x: 8, y: 0, w: 4, h: 5 },
+    { i: "study", x: 0, y: 4, w: 5, h: 5 },
   ],
 
   md: [
-    { i: "today", x: 0, y: 0, w: 8, h: 4 },
-    { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
-    { i: "memo", x: 0, y: 4, w: 8, h: 5 },
-    { i: "study", x: 8, y: 5, w: 8, h: 5 },
+    { i: "today", x: 0, y: 0, w: 6, h: 4 },
+    { i: "calendar", x: 6, y: 0, w: 6, h: 5 },
+    { i: "memo", x: 0, y: 4, w: 6, h: 5 },
+    { i: "study", x: 6, y: 5, w: 6, h: 5 },
   ],
 
   sm: [
-    { i: "today", x: 0, y: 0, w: 16, h: 4 },
-    { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
-    { i: "memo", x: 0, y: 9, w: 16, h: 5 },
-    { i: "study", x: 0, y: 14, w: 16, h: 5 },
+    { i: "today", x: 0, y: 0, w: 12, h: 4 },
+    { i: "calendar", x: 0, y: 4, w: 12, h: 5 },
+    { i: "memo", x: 0, y: 9, w: 12, h: 5 },
+    { i: "study", x: 0, y: 14, w: 12, h: 5 },
   ],
 };
 
@@ -313,7 +313,8 @@ const normalizeLayoutItem = (
    ============================================================ */
 
 const normalizeLayoutArray = (
-  value: unknown
+  value: unknown,
+  sourceColumns = GRID_COLUMNS
 ): GridLayoutItem[] => {
   if (!Array.isArray(value)) return [];
 
@@ -329,6 +330,29 @@ const normalizeLayoutArray = (
 
       seenIds.add(item.i);
       return true;
+    })
+    .map((item) => {
+      if (sourceColumns === GRID_COLUMNS) return item;
+
+      /* Existing workspace layouts use 16 columns. Convert both edges, not
+         x and width independently, so adjacent widgets stay aligned after the
+         16→12 change. Keep y/h untouched to preserve every vertical interval. */
+      const nextX = Math.round(item.x * GRID_COLUMNS / sourceColumns);
+      const nextRight = Math.round(
+        (item.x + item.w) * GRID_COLUMNS / sourceColumns
+      );
+      const scaleLimit = (value: unknown) =>
+        typeof value === "number" && Number.isFinite(value)
+          ? Math.max(1, Math.round(value * GRID_COLUMNS / sourceColumns))
+          : value;
+
+      return {
+        ...item,
+        x: nextX,
+        w: Math.max(1, nextRight - nextX),
+        ...(item.minW !== undefined ? { minW: scaleLimit(item.minW) } : {}),
+        ...(item.maxW !== undefined ? { maxW: scaleLimit(item.maxW) } : {}),
+      };
     });
 
   // 정상 좌표를 가진 위젯 중 가장 아래쪽 위치
@@ -378,16 +402,17 @@ const normalizeLayoutArray = (
    ============================================================ */
 
 const normalizeLayouts = (
-  layouts: unknown
+  layouts: unknown,
+  sourceColumns = GRID_COLUMNS
 ): Layouts => {
   if (!isRecord(layouts)) {
     return emptyLayouts();
   }
 
   return {
-    lg: normalizeLayoutArray(layouts.lg),
-    md: normalizeLayoutArray(layouts.md),
-    sm: normalizeLayoutArray(layouts.sm),
+    lg: normalizeLayoutArray(layouts.lg, sourceColumns),
+    md: normalizeLayoutArray(layouts.md, sourceColumns),
+    sm: normalizeLayoutArray(layouts.sm, sourceColumns),
   };
 };
 
@@ -408,7 +433,8 @@ const normalizeLayouts = (
    ============================================================ */
 
 const normalizeModeLayouts = (
-  value: unknown
+  value: unknown,
+  sourceColumns = GRID_COLUMNS
 ): DashboardModeLayouts => {
   if (!isRecord(value)) {
     return {
@@ -421,8 +447,8 @@ const normalizeModeLayouts = (
     "wide" in value || "laptop" in value;
 
   if (hasModeShape) {
-    const wide = normalizeLayouts(value.wide);
-    const laptop = normalizeLayouts(value.laptop);
+    const wide = normalizeLayouts(value.wide, sourceColumns);
+    const laptop = normalizeLayouts(value.laptop, sourceColumns);
 
     // 기존 Laptop 데이터가 없으면 Wide에서 복원한다.
     const hasLaptopLayouts =
@@ -440,7 +466,7 @@ const normalizeModeLayouts = (
 
   // 이전 버전의 단일 Layout 구조
   return createModeLayouts(
-    normalizeLayouts(value)
+    normalizeLayouts(value, sourceColumns)
   );
 };
 
@@ -516,6 +542,7 @@ const mergeLayoutsWithDefaults = (
 
 type NormalizeOptions = {
   mergeCurrentDefaults?: boolean;
+  migrateGridColumnsFrom?: number;
 };
 
 
@@ -540,7 +567,10 @@ const normalizeTab = (
       ? [...new Set(tab.widgetIds.map(migrateWidgetId))]
       : [],
 
-    layouts: normalizeModeLayouts(tab.layouts),
+    layouts: normalizeModeLayouts(
+      tab.layouts,
+      options.migrateGridColumnsFrom
+    ),
 
     locked: Boolean(tab.locked),
   };
@@ -612,18 +642,18 @@ const createNewTab = (shared?: SharedWorkspaceTab): DashboardTab => {
 
   const newLayouts: Layouts = {
     lg: [
-      { i: "memo", x: 0, y: 0, w: 5, h: 4 },
-      { i: "calendar", x: 5, y: 0, w: 7, h: 5 },
+      { i: "memo", x: 0, y: 0, w: 4, h: 4 },
+      { i: "calendar", x: 4, y: 0, w: 5, h: 5 },
     ],
 
     md: [
-      { i: "memo", x: 0, y: 0, w: 8, h: 4 },
-      { i: "calendar", x: 8, y: 0, w: 8, h: 5 },
+      { i: "memo", x: 0, y: 0, w: 6, h: 4 },
+      { i: "calendar", x: 6, y: 0, w: 6, h: 5 },
     ],
 
     sm: [
-      { i: "memo", x: 0, y: 0, w: 16, h: 4 },
-      { i: "calendar", x: 0, y: 4, w: 16, h: 5 },
+      { i: "memo", x: 0, y: 0, w: 12, h: 4 },
+      { i: "calendar", x: 0, y: 4, w: 12, h: 5 },
     ],
   };
 
@@ -734,15 +764,28 @@ export const useDashboardTabs = () => {
       DASHBOARD_STORAGE_SCHEMA_KEY
     ) !== String(DASHBOARD_STORAGE_SCHEMA_VERSION);
 
+  /* Only user-saved tab layouts need the 16→12 horizontal conversion. On a
+     first run there is no saved grid to migrate, and current defaults are
+     already expressed in the new 12-column coordinate system. */
+  const hasSavedDashboardTabs =
+    typeof window !== "undefined" &&
+    window.localStorage.getItem(TABS_KEY) !== null;
+  const legacyGridColumns =
+    shouldUpgradeDashboardStorage && hasSavedDashboardTabs
+      ? 16
+      : undefined;
+
 
   const tabs = useMemo(() => {
     return normalizeTabs(storedTabs, {
       mergeCurrentDefaults:
         shouldUpgradeDashboardStorage,
+      migrateGridColumnsFrom: legacyGridColumns,
     });
   }, [
     storedTabs,
     shouldUpgradeDashboardStorage,
+    legacyGridColumns,
   ]);
 
   useEffect(() => {
@@ -807,6 +850,7 @@ export const useDashboardTabs = () => {
     setTabs((previousTabs) =>
       normalizeTabs(previousTabs, {
         mergeCurrentDefaults: true,
+        migrateGridColumnsFrom: legacyGridColumns,
       })
     );
 
@@ -818,6 +862,7 @@ export const useDashboardTabs = () => {
   }, [
     setTabs,
     shouldUpgradeDashboardStorage,
+    legacyGridColumns,
   ]);
 
 
