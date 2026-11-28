@@ -29,7 +29,13 @@ const categories: Array<{ id: WorkspaceIconCollectionId; label: string }> = [
 
 type DraftChoice = WorkspaceIconChoice & { pendingFile?: File };
 type DraftCatalog = Record<WorkspaceIconCollectionId, DraftChoice[]>;
-type DragState = { id: string; collection: WorkspaceIconCollectionId };
+type DragState = {
+  id: string;
+  collection: WorkspaceIconCollectionId;
+  startX: number;
+  startY: number;
+  moved: boolean;
+};
 
 const toDraft = (catalog: WorkspaceIconCatalog): DraftCatalog =>
   Object.fromEntries(
@@ -81,6 +87,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dragRef = useRef<DragState | null>(null);
+  const suppressClickRef = useRef(false);
   const previewUrlsRef = useRef<string[]>([]);
 
   useEffect(() => () => {
@@ -91,6 +98,13 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
     const handlePointerMove = (event: globalThis.PointerEvent) => {
       const drag = dragRef.current;
       if (!drag) return;
+
+      // Ignore taps and tiny hand jitter so tapping an icon still selects it.
+      if (!drag.moved) {
+        if (Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < 6) return;
+        drag.moved = true;
+        setDraggingId(drag.id);
+      }
 
       const target = document.elementFromPoint(event.clientX, event.clientY);
       const targetCard = target?.closest<HTMLElement>("[data-admin-icon-id]");
@@ -111,7 +125,9 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
 
     const finishDrag = (event: globalThis.PointerEvent) => {
       const drag = dragRef.current;
-      if (drag) {
+      if (drag?.moved) {
+        suppressClickRef.current = true;
+        window.setTimeout(() => { suppressClickRef.current = false; }, 0);
         const target = document.elementFromPoint(event.clientX, event.clientY);
         const targetCard = target?.closest<HTMLElement>("[data-admin-icon-id]");
         const targetCategory = target?.closest<HTMLElement>("[data-admin-collection]");
@@ -190,19 +206,18 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
     };
   }, []);
 
-  const startDrag = (event: PointerEvent<HTMLButtonElement>, id: string) => {
+  const startDrag = (event: PointerEvent<HTMLElement>, id: string) => {
     if (event.button !== 0) return;
-    event.preventDefault();
-    dragRef.current = { id, collection };
-    setDraggingId(id);
-    setDropTargetId(id);
-    if ("pointerId" in event) {
-      try {
-        event.currentTarget.setPointerCapture(event.pointerId);
-      } catch {
-        // The global pointer listeners still complete the drop if capture is unavailable.
-      }
-    }
+    // The delete control keeps its own click action and must never start a drag.
+    if ((event.target as HTMLElement).closest(".workspace-icon-admin-delete")) return;
+    dragRef.current = {
+      id,
+      collection,
+      startX: event.clientX,
+      startY: event.clientY,
+      moved: false,
+    };
+    setDropTargetId(null);
   };
 
   const handleFiles = (event: ChangeEvent<HTMLInputElement>) => {
@@ -378,12 +393,18 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
             data-admin-collection={collection}
             role="listitem"
             draggable={false}
+            onPointerDown={(event) => startDrag(event, choice.id)}
+            onClickCapture={(event) => {
+              if (!suppressClickRef.current) return;
+              suppressClickRef.current = false;
+              event.preventDefault();
+              event.stopPropagation();
+            }}
           >
             <button
               className="workspace-icon-admin-drag"
               type="button"
               aria-label={`${choice.label} 순서 이동`}
-              onPointerDown={(event) => startDrag(event, choice.id)}
             >
               <GripVertical size={16} />
             </button>
@@ -407,6 +428,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
               type="button"
               aria-label={`${choice.label} 선택 목록에서 삭제`}
               title="선택 목록에서 삭제"
+              onPointerDown={(event) => event.stopPropagation()}
               onClick={() => deleteChoice(choice.id)}
             >
               <Trash2 size={15} />
