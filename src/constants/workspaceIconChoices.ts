@@ -559,9 +559,9 @@ type AssetCollectionId = Exclude<WorkspaceIconCollectionId, "outline-icons">;
 
 /**
  * The files physically inside workspace-icons category folders determine which
- * picker tab shows them. Curated entries retain their labels and family order;
- * any file moved or added by hand is discovered from its new folder and shown
- * at the end of that category automatically on the next dev/build start.
+ * picker tab shows them. Curated entries retain their labels; the generated
+ * manifest determines order from each category's ORDER.txt and then filenames.
+ * Any file moved or added by hand is discovered from its new folder.
  */
 export const workspaceIconCollections: Record<WorkspaceIconCollectionId, WorkspaceIconChoice[]> = {
   ...Object.fromEntries(
