@@ -623,6 +623,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
             data-admin-collection={collection}
             role="listitem"
             draggable={false}
+            onContextMenu={(event) => event.preventDefault()}
             onPointerDown={(event) => startDrag(event, choice.id)}
             onClickCapture={(event) => {
               if (!suppressClickRef.current) return;
