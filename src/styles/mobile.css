@@ -363,6 +363,12 @@
   box-shadow: var(--gd-surface-shadow, 0 8px 24px hsl(0 0% 0% / 0.12));
 }
 
+/* Bound the mobile picker so the icon list scrolls inside the dialog. */
+.mobile-navigation-shell .mobile-tab-icon-picker {
+  height: min(78dvh, 720px);
+  min-height: 0;
+}
+
 .workspace-icon-picker-context {
   display: flex;
   flex: 0 0 auto;
@@ -441,13 +447,13 @@
 
 .workspace-icon-admin-grid {
   display: grid;
-  flex: 1 1 auto;
+  flex: 1 1 0;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-content: start;
   gap: 6px;
   width: 100%;
   min-width: 0;
-  min-height: 180px;
+  min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -477,8 +483,44 @@
 }
 
 .workspace-icon-admin-card.is-dragging {
-  opacity: 0.55;
+  opacity: 0.16;
   cursor: grabbing;
+  transform: scale(0.92);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.workspace-icon-admin-drag-preview {
+  position: fixed;
+  z-index: 10000;
+  display: grid;
+  width: 68px;
+  height: 76px;
+  justify-items: center;
+  align-content: center;
+  gap: 2px;
+  pointer-events: none;
+  transform: translate(-50%, -54%) scale(1.08);
+  color: hsl(var(--foreground));
+  background: hsl(var(--card) / 0.94);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--gd-radius-control, 8px);
+  box-shadow: 0 8px 18px hsl(0 0% 0% / 0.3);
+  opacity: 0.97;
+}
+
+.workspace-icon-admin-drag-preview > :is(img, svg) {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.workspace-icon-admin-drag-preview > span {
+  max-width: 62px;
+  overflow: hidden;
+  font-size: 9px;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .workspace-icon-admin-card.is-drop-target:not(.is-dragging) {
@@ -592,12 +634,12 @@
 
 .mobile-tab-icon-grid {
   display: grid;
-  flex: 1 1 auto;
+  flex: 1 1 0;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-auto-rows: 44px;
   align-content: start;
   justify-items: center;
-  min-height: 176px;
+  min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;

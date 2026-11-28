@@ -1,5 +1,6 @@
 import { ArrowLeft, GripVertical, ImagePlus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState, type ChangeEvent, type PointerEvent } from "react";
+import { createPortal } from "react-dom";
 
 import {
   type WorkspaceIconChoice,
@@ -34,8 +35,14 @@ type DragState = {
   collection: WorkspaceIconCollectionId;
   startX: number;
   startY: number;
-  moved: boolean;
+  lastY: number;
+  startedAt: number;
+  pointerType: string;
+  mode: "pending" | "dragging" | "scrolling";
+  src: string;
+  label: string;
 };
+type DragPreview = { src: string; label: string; x: number; y: number };
 
 const toDraft = (catalog: WorkspaceIconCatalog): DraftCatalog =>
   Object.fromEntries(
@@ -82,6 +89,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
   const [collection, setCollection] = useState<WorkspaceIconCollectionId>("pink-iphone");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragPreview, setDragPreview] = useState<DragPreview | null>(null);
   const [dropTargetId, setDropTargetId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -99,11 +107,38 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       const drag = dragRef.current;
       if (!drag) return;
 
-      // Ignore taps and tiny hand jitter so tapping an icon still selects it.
-      if (!drag.moved) {
+      const deltaY = drag.lastY - event.clientY;
+      drag.lastY = event.clientY;
+
+      // Touch swipes scroll the library. Holding briefly before moving starts
+      // icon sorting, matching the familiar home-screen long-press interaction.
+      if (drag.pointerType === "touch" && drag.mode === "pending") {
+        const deltaX = event.clientX - drag.startX;
+        const deltaFromStartY = event.clientY - drag.startY;
+        if (Date.now() - drag.startedAt < 250 && Math.abs(deltaFromStartY) >= 6 && Math.abs(deltaFromStartY) >= Math.abs(deltaX)) {
+          drag.mode = "scrolling";
+          suppressClickRef.current = true;
+        } else if (Date.now() - drag.startedAt < 250 && Math.abs(deltaX) >= 6 && Math.abs(deltaX) > Math.abs(deltaFromStartY)) {
+          drag.mode = "dragging";
+        } else if (Date.now() - drag.startedAt >= 250 && Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) >= 6) {
+          drag.mode = "dragging";
+        } else {
+          return;
+        }
+      } else if (drag.mode === "pending") {
         if (Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < 6) return;
-        drag.moved = true;
+        drag.mode = "dragging";
+      }
+
+      if (drag.mode === "scrolling") {
+        const grid = document.querySelector<HTMLElement>(".workspace-icon-admin-grid");
+        if (grid) grid.scrollTop += deltaY;
+        return;
+      }
+
+      if (drag.mode === "dragging") {
         setDraggingId(drag.id);
+        setDragPreview({ src: drag.src, label: drag.label, x: event.clientX, y: event.clientY });
       }
 
       const target = document.elementFromPoint(event.clientX, event.clientY);
@@ -125,7 +160,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
 
     const finishDrag = (event: globalThis.PointerEvent) => {
       const drag = dragRef.current;
-      if (drag?.moved) {
+      if (drag?.mode === "dragging") {
         suppressClickRef.current = true;
         window.setTimeout(() => { suppressClickRef.current = false; }, 0);
         const target = document.elementFromPoint(event.clientX, event.clientY);
@@ -185,15 +220,20 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
           }
         }
       }
+      if (drag?.mode === "scrolling") {
+        window.setTimeout(() => { suppressClickRef.current = false; }, 0);
+      }
       dragRef.current = null;
       setDraggingId(null);
       setDropTargetId(null);
+      setDragPreview(null);
     };
 
     const cancelDrag = () => {
       dragRef.current = null;
       setDraggingId(null);
       setDropTargetId(null);
+      setDragPreview(null);
     };
 
     window.addEventListener("pointermove", handlePointerMove);
@@ -210,12 +250,19 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
     if (event.button !== 0) return;
     // The delete control keeps its own click action and must never start a drag.
     if ((event.target as HTMLElement).closest(".workspace-icon-admin-delete")) return;
+    const choice = draft[collection].find((item) => item.id === id);
+    if (!choice) return;
     dragRef.current = {
       id,
       collection,
       startX: event.clientX,
       startY: event.clientY,
-      moved: false,
+      lastY: event.clientY,
+      startedAt: Date.now(),
+      pointerType: event.pointerType,
+      mode: "pending",
+      src: choice.src,
+      label: choice.label,
     };
     setDropTargetId(null);
   };
@@ -446,6 +493,22 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
           {saving ? "저장 중…" : "적용"}
         </button>
       </footer>
+      {dragPreview && createPortal(
+        <div
+          className="workspace-icon-admin-drag-preview"
+          style={{ left: dragPreview.x, top: dragPreview.y }}
+          aria-hidden="true"
+        >
+          {(() => {
+            const OutlineIcon = getWorkspaceOutlineIcon(dragPreview.src);
+            return OutlineIcon
+              ? <OutlineIcon />
+              : <img src={dragPreview.src} alt="" draggable={false} />;
+          })()}
+          <span>{dragPreview.label}</span>
+        </div>,
+        document.body
+      )}
     </section>
   );
 };
