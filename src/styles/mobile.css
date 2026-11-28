@@ -364,10 +364,176 @@
 }
 
 .workspace-icon-picker-context {
-  display: grid;
+  display: flex;
   flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
   gap: 2px;
   padding: 2px 4px 6px;
+}
+
+.workspace-icon-picker-context > div {
+  display: grid;
+  gap: 2px;
+}
+
+.workspace-icon-admin-open,
+.workspace-icon-admin-header > button,
+.workspace-icon-admin-tools > button,
+.workspace-icon-admin-tools > select {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 9px;
+  color: hsl(var(--foreground));
+  background: var(--gd-control-bg, hsl(var(--background) / 0.7));
+  border: 1px solid var(--gd-control-border, hsl(var(--border)));
+  border-radius: var(--gd-radius-control, 8px);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.workspace-icon-admin {
+  gap: 8px;
+}
+
+.workspace-icon-admin-header {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.workspace-icon-admin-header > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.workspace-icon-admin-header strong {
+  font-size: 14px;
+}
+
+.workspace-icon-admin-header span {
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+}
+
+.workspace-icon-admin-categories {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.workspace-icon-admin-tools {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.workspace-icon-admin-tools > span {
+  margin-left: auto;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+}
+
+.workspace-icon-admin-grid {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-content: start;
+  gap: 6px;
+  min-height: 180px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 2px;
+}
+
+.workspace-icon-admin-card {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 76px;
+  place-items: center;
+  padding: 18px 3px 3px;
+  background: var(--gd-control-bg, hsl(var(--background) / 0.7));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--gd-radius-control, 8px);
+  touch-action: manipulation;
+}
+
+.workspace-icon-admin-card.is-selected {
+  border: 2px solid hsl(var(--primary));
+  background: hsl(var(--primary) / 0.12);
+}
+
+.workspace-icon-admin-card.is-dragging {
+  opacity: 0.55;
+}
+
+.workspace-icon-admin-drag,
+.workspace-icon-admin-delete {
+  position: absolute;
+  top: 1px;
+  display: grid;
+  width: 23px;
+  height: 22px;
+  place-items: center;
+  padding: 0;
+  color: hsl(var(--muted-foreground));
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+  cursor: grab;
+}
+
+.workspace-icon-admin-drag {
+  left: 1px;
+  touch-action: none;
+}
+
+.workspace-icon-admin-delete {
+  right: 1px;
+  cursor: pointer;
+}
+
+.workspace-icon-admin-preview {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  justify-items: center;
+  gap: 3px;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.workspace-icon-admin-preview :is(img, svg) {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.workspace-icon-admin-preview span {
+  width: 100%;
+  overflow: hidden;
+  color: hsl(var(--muted-foreground));
+  font-size: 9px;
+  line-height: 1.15;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspace-icon-admin-error {
+  flex: 0 0 auto;
+  margin: 0;
+  color: hsl(var(--destructive));
+  font-size: 11px;
 }
 
 .workspace-icon-picker-context strong {

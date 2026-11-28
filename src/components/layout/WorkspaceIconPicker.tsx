@@ -5,16 +5,23 @@
  * the tab. Only Save persists it; Undo restores the starting icon and Cancel
  * removes the preview without changing saved data.
  */
-import { Check } from "lucide-react";
+import { Check, Settings2 } from "lucide-react";
 import { useEffect, useState, type CSSProperties } from "react";
 
 import {
-  workspaceIconCollections,
   type WorkspaceIconCollectionId,
 } from "../../constants/workspaceIconChoices";
 import type { ThemeId } from "../../constants/themes";
 import { resolveWorkspaceIconPath } from "../../constants/workspaceIconPaths";
 import { cn } from "../../lib/utils";
+import {
+  getDefaultWorkspaceIconCatalog,
+  loadWorkspaceIconCatalog,
+  type WorkspaceIconCatalog,
+} from "../../lib/workspaceIconCatalog";
+import { WORKSPACE_ICON_ADMIN_USER_ID } from "../../constants/workspaceIconAdmin";
+import { useCloudSync } from "../../context/CloudSyncContext";
+import { WorkspaceIconAdminManager } from "./WorkspaceIconAdminManager";
 import { getWorkspaceOutlineIcon } from "./workspaceOutlineIcons";
 
 const iconCollectionForTheme = (theme: ThemeId): WorkspaceIconCollectionId =>
@@ -71,11 +78,25 @@ export const WorkspaceIconPicker = ({
   initialApplyToAllThemes = false,
   canApply = false,
 }: WorkspaceIconPickerProps) => {
+  const { user } = useCloudSync();
   const [draftIcon, setDraftIcon] = useState(value);
   const [applyToAllThemes, setApplyToAllThemes] = useState(false);
   const [collection, setCollection] = useState<WorkspaceIconCollectionId>(
     () => iconCollectionForTheme(theme)
   );
+  const [catalog, setCatalog] = useState<WorkspaceIconCatalog>(getDefaultWorkspaceIconCatalog);
+  const [adminManagerOpen, setAdminManagerOpen] = useState(false);
+  const isIconAdmin = user?.id === WORKSPACE_ICON_ADMIN_USER_ID;
+
+  useEffect(() => {
+    let active = true;
+    void loadWorkspaceIconCatalog()
+      .then((nextCatalog) => {
+        if (active) setCatalog(nextCatalog);
+      })
+      .catch((error) => console.error("Could not load shared workspace icons.", error));
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     setDraftIcon(draftValue ?? value);
@@ -86,7 +107,22 @@ export const WorkspaceIconPicker = ({
     setCollection(iconCollectionForTheme(theme));
   }, [theme]);
 
-  const choices = workspaceIconCollections[collection];
+  const choices = catalog[collection];
+
+  if (adminManagerOpen && isIconAdmin) {
+    return (
+      <WorkspaceIconAdminManager
+        catalog={catalog}
+        className={className}
+        style={style}
+        onCancel={() => setAdminManagerOpen(false)}
+        onSaved={(nextCatalog) => {
+          setCatalog(nextCatalog);
+          setAdminManagerOpen(false);
+        }}
+      />
+    );
+  }
 
   const chooseIcon = (icon: string) => {
     setDraftIcon(icon);
@@ -105,12 +141,22 @@ export const WorkspaceIconPicker = ({
       role="dialog"
       aria-label={contextLabel ?? "워크스페이스 아이콘 선택"}
     >
-      {contextLabel && (
-        <div className="workspace-icon-picker-context" aria-live="polite">
-          <strong>{contextLabel}</strong>
+      <div className="workspace-icon-picker-context" aria-live="polite">
+        <div>
+          <strong>{contextLabel ?? "아이콘 선택"}</strong>
           <span>아이콘을 누르면 탭에서 미리 볼 수 있어요.</span>
         </div>
-      )}
+        {isIconAdmin && (
+          <button
+            className="workspace-icon-admin-open"
+            type="button"
+            onClick={() => setAdminManagerOpen(true)}
+            aria-label="아이콘 관리 열기"
+          >
+            <Settings2 size={16} /> 관리
+          </button>
+        )}
+      </div>
       <div className="mobile-tab-icon-collections" role="group" aria-label="아이콘 분류">
         {collections.map((option) => (
           <button
