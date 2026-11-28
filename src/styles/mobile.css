@@ -381,6 +381,27 @@
   min-height: 0;
 }
 
+/* Full-view icon management gives the grid the complete phone viewport while
+   keeping its category controls and Apply action fixed inside the dialog. */
+.workspace-icon-admin.is-fullscreen {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  right: auto;
+  bottom: auto;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-height: none;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: calc(10px + env(safe-area-inset-top))
+    max(10px, env(safe-area-inset-right))
+    calc(10px + env(safe-area-inset-bottom))
+    max(10px, env(safe-area-inset-left));
+  border-radius: 0;
+}
+
 .workspace-icon-picker-context {
   display: flex;
   flex: 0 0 auto;

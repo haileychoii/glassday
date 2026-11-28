@@ -1,4 +1,4 @@
-import { ArrowLeft, GripVertical, ImagePlus, Trash2 } from "lucide-react";
+import { ArrowLeft, GripVertical, ImagePlus, Maximize2, Minimize2, Trash2 } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState, type ChangeEvent, type PointerEvent } from "react";
 import { createPortal } from "react-dom";
 
@@ -117,6 +117,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragPreview, setDragPreview] = useState<DragPreview | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [dropTargetId, setDropTargetId] = useState<string | null>(null);
   const [dropIndex, setDropIndex] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
@@ -154,6 +155,20 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
   useEffect(() => () => {
     previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
   }, []);
+
+  useEffect(() => {
+    if (!isFullscreen) return;
+    const previousOverflow = document.documentElement.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsFullscreen(false);
+    };
+    document.documentElement.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.documentElement.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isFullscreen]);
 
   useEffect(() => {
     const clearFocusedTabButton = () => {
@@ -514,7 +529,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
 
   return (
     <section
-      className={`mobile-tab-icon-picker workspace-icon-picker workspace-icon-admin${className ? ` ${className}` : ""}`}
+      className={`mobile-tab-icon-picker workspace-icon-picker workspace-icon-admin${isFullscreen ? " is-fullscreen" : ""}${className ? ` ${className}` : ""}`}
       style={style}
       role="dialog"
       aria-label="아이콘 관리"
@@ -525,8 +540,17 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
         </button>
         <div>
           <strong>아이콘 관리</strong>
-          <span>드래그해 순서를 바꾸고, 추가하거나 정리하세요.</span>
+          <span>아이콘을 정리한 뒤 적용하면 모든 테마의 아이콘 목록에 반영돼요.</span>
         </div>
+        <button
+          type="button"
+          onClick={() => setIsFullscreen((current) => !current)}
+          aria-label={isFullscreen ? "전체 화면 축소" : "아이콘 관리 전체 화면"}
+          aria-pressed={isFullscreen}
+          title={isFullscreen ? "전체 화면 축소" : "전체 화면으로 보기"}
+        >
+          {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+        </button>
       </header>
 
       <div className="mobile-tab-icon-collections workspace-icon-admin-categories" role="group" aria-label="관리할 아이콘 분류">
