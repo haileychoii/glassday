@@ -543,6 +543,25 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
     gridEntries.splice(slotIndex, 0, { key: "drag-slot", choice: null });
   }
 
+  // Compare every category and its order so leaving the manager cannot silently
+  // discard an upload, deletion, move, or sort that has not been applied yet.
+  const hasUnsavedChanges = categories.some(({ id }) => {
+    const savedChoices = catalog[id];
+    const draftChoices = draft[id];
+    return draftChoices.length !== savedChoices.length || draftChoices.some((choice, index) => {
+      const savedChoice = savedChoices[index];
+      return !savedChoice || choice.id !== savedChoice.id || choice.src !== savedChoice.src || choice.label !== savedChoice.label;
+    });
+  });
+
+  const confirmCancel = () => {
+    if (
+      hasUnsavedChanges &&
+      !window.confirm("지금까지 편집한 내용이 취소됩니다. 취소하시겠습니까?")
+    ) return;
+    onCancel();
+  };
+
   return (
     <section
       className={`mobile-tab-icon-picker workspace-icon-picker workspace-icon-admin${isFullscreen ? " is-fullscreen" : ""}${className ? ` ${className}` : ""}`}
@@ -551,7 +570,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       aria-label="아이콘 관리"
     >
       <header className="workspace-icon-admin-header">
-        <button type="button" onClick={onCancel} aria-label="아이콘 선택으로 돌아가기">
+        <button type="button" onClick={confirmCancel} aria-label="아이콘 선택으로 돌아가기">
           <ArrowLeft size={18} />
         </button>
         <div>
@@ -660,7 +679,11 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
               aria-label={`${choice.label} 선택 목록에서 삭제`}
               title="선택 목록에서 삭제"
               onPointerDown={(event) => event.stopPropagation()}
-              onClick={() => deleteChoice(choice.id)}
+              onClick={() => {
+                if (window.confirm("이 아이콘이 삭제됩니다. 삭제하시겠습니까?")) {
+                  deleteChoice(choice.id);
+                }
+              }}
             >
               <Trash2 size={15} />
             </button>
@@ -673,7 +696,7 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       {error && <p className="workspace-icon-admin-error" role="alert">{error}</p>}
 
       <footer className="workspace-icon-picker-actions">
-        <button type="button" onClick={onCancel} disabled={saving}>취소</button>
+        <button type="button" onClick={confirmCancel} disabled={saving}>취소</button>
         <span className="workspace-icon-picker-spacer" />
         <button className="workspace-icon-picker-save" type="button" onClick={() => void save()} disabled={saving}>
           {saving ? "저장 중…" : "적용"}
