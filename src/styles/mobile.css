@@ -684,6 +684,13 @@
   line-height: 1;
 }
 
+/* Keep the icon removal label visually secondary to the icon glyph. */
+.mobile-tab-icon-choice-none > span:not(.mobile-tab-icon-choice-check) {
+  color: hsl(var(--muted-foreground));
+  font-size: 8px;
+  line-height: 1;
+}
+
 .mobile-tab-icon-choice[aria-pressed="true"] {
   background: hsl(var(--primary) / 0.14);
   outline: 2px solid hsl(var(--primary));
