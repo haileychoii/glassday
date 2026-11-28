@@ -707,6 +707,11 @@
   line-height: 1;
 }
 
+.mobile-tab-icon-choice-none > svg {
+  width: 28px;
+  height: 28px;
+}
+
 .mobile-tab-icon-choice[aria-pressed="true"] {
   background: hsl(var(--primary) / 0.14);
   outline: 2px solid hsl(var(--primary));
