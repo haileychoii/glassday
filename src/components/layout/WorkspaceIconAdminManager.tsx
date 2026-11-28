@@ -1,5 +1,5 @@
 import { ArrowLeft, GripVertical, ImagePlus, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState, type ChangeEvent, type PointerEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ChangeEvent, type PointerEvent } from "react";
 import { createPortal } from "react-dom";
 
 import {
@@ -55,10 +55,37 @@ const reorderAt = <T extends { id: string }>(items: T[], sourceId: string, inser
   if (sourceIndex < 0) return items;
   const result = [...items];
   const [moved] = result.splice(sourceIndex, 1);
-  const adjustedIndex = Math.max(0, Math.min(result.length, insertionIndex > sourceIndex ? insertionIndex - 1 : insertionIndex));
+  const adjustedIndex = Math.max(0, Math.min(result.length, insertionIndex));
   if (adjustedIndex === sourceIndex) return items;
   result.splice(adjustedIndex, 0, moved);
   return result;
+};
+
+/** Find the insertion boundary on the regular 4-column icon grid. */
+const getGridInsertionIndex = (
+  grid: HTMLElement,
+  target: Element | null,
+  x: number,
+  y: number,
+  sourceId: string
+): number => {
+  const cards = Array.from(grid.querySelectorAll<HTMLElement>("[data-admin-icon-id]"))
+    .filter((card) => card.dataset.adminIconId !== sourceId);
+  if (cards.length === 0) return 0;
+  const hitCard = target?.closest<HTMLElement>("[data-admin-icon-id]");
+  const hitIndex = hitCard?.dataset.adminIconId !== sourceId && hitCard ? cards.indexOf(hitCard) : -1;
+  const candidates = hitIndex >= 0 ? [cards[hitIndex]] : cards;
+  const nearest = candidates.reduce<{ card: HTMLElement; distance: number } | null>((best, card) => {
+    const rect = card.getBoundingClientRect();
+    const distance = Math.hypot(x - (rect.left + rect.width / 2), y - (rect.top + rect.height / 2));
+    return !best || distance < best.distance ? { card, distance } : best;
+  }, null);
+  if (!nearest) return cards.length;
+  const index = cards.indexOf(nearest.card);
+  const rect = nearest.card.getBoundingClientRect();
+  const after = y > rect.top + rect.height / 2 ||
+    (Math.abs(y - (rect.top + rect.height / 2)) <= rect.height / 2 && x > rect.left + rect.width / 2);
+  return index + (after ? 1 : 0);
 };
 
 const fileExtension = (file: File): string => {
@@ -91,12 +118,35 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragPreview, setDragPreview] = useState<DragPreview | null>(null);
   const [dropTargetId, setDropTargetId] = useState<string | null>(null);
+  const [dropIndex, setDropIndex] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dragRef = useRef<DragState | null>(null);
   const suppressClickRef = useRef(false);
   const previewUrlsRef = useRef<string[]>([]);
+  const dropIndexRef = useRef<number | null>(null);
+  const previousCardRectsRef = useRef<Map<string, DOMRect> | null>(null);
+
+  useLayoutEffect(() => {
+    const previousRects = previousCardRectsRef.current;
+    if (!previousRects) return;
+    previousCardRectsRef.current = null;
+    document.querySelectorAll<HTMLElement>(".workspace-icon-admin-grid [data-admin-icon-id]").forEach((card) => {
+      const id = card.dataset.adminIconId;
+      const previous = id ? previousRects.get(id) : undefined;
+      if (!previous) return;
+      const current = card.getBoundingClientRect();
+      const deltaX = previous.left - current.left;
+      const deltaY = previous.top - current.top;
+      if (deltaX || deltaY) {
+        card.animate(
+          [{ transform: `translate(${deltaX}px, ${deltaY}px)` }, { transform: "translate(0, 0)" }],
+          { duration: 180, easing: "cubic-bezier(0.2, 0.75, 0.25, 1)" }
+        );
+      }
+    });
+  }, [dropIndex]);
 
   useEffect(() => () => {
     previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
@@ -145,16 +195,23 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       const targetCard = target?.closest<HTMLElement>("[data-admin-icon-id]");
       const targetCategory = target?.closest<HTMLElement>("[data-admin-collection]");
       const grid = document.querySelector<HTMLElement>(".workspace-icon-admin-grid");
-      if (grid?.contains(target as Node) && !targetCard) {
-        const cards = Array.from(grid.querySelectorAll<HTMLElement>("[data-admin-icon-id]"));
-        const nearest = cards.reduce<{ id: string; distance: number } | null>((best, card) => {
-          const rect = card.getBoundingClientRect();
-          const distance = Math.hypot(event.clientX - (rect.left + rect.width / 2), event.clientY - (rect.top + rect.height / 2));
-          return !best || distance < best.distance ? { id: card.dataset.adminIconId ?? "", distance } : best;
-        }, null);
-        setDropTargetId(nearest?.id ?? "grid-end");
+      if (grid?.contains(target as Node)) {
+        const insertionIndex = getGridInsertionIndex(grid, target, event.clientX, event.clientY, drag.id);
+        if (dropIndexRef.current !== insertionIndex) {
+          previousCardRectsRef.current = new Map(
+            Array.from(grid.querySelectorAll<HTMLElement>("[data-admin-icon-id]"))
+              .map((card) => [card.dataset.adminIconId ?? "", card.getBoundingClientRect()])
+          );
+          dropIndexRef.current = insertionIndex;
+          setDropIndex(insertionIndex);
+        }
+        setDropTargetId(targetCard?.dataset.adminIconId ?? null);
       } else {
-        setDropTargetId(targetCard?.dataset.adminIconId ?? targetCategory?.dataset.adminCollection ?? null);
+        if (dropIndexRef.current !== null) {
+          dropIndexRef.current = null;
+          setDropIndex(null);
+        }
+        setDropTargetId(targetCategory?.dataset.adminCollection ?? null);
       }
     };
 
@@ -192,31 +249,14 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
           setSelectedId(null);
         } else {
           const grid = document.querySelector<HTMLElement>(".workspace-icon-admin-grid");
-          const cards = grid ? Array.from(grid.querySelectorAll<HTMLElement>("[data-admin-icon-id]")) : [];
-          const insertionIndex = (() => {
-            if (!grid || !grid.contains(target as Node)) return -1;
-            if (!cards.length) return 0;
-            const hitIndex = targetId
-              ? cards.findIndex((card) => card.dataset.adminIconId === targetId)
-              : -1;
-            const candidates = hitIndex >= 0 ? [cards[hitIndex]] : cards;
-            const nearest = candidates.reduce<{ card: HTMLElement; distance: number } | null>((best, card) => {
-              const rect = card.getBoundingClientRect();
-              const distance = Math.hypot(event.clientX - (rect.left + rect.width / 2), event.clientY - (rect.top + rect.height / 2));
-              return !best || distance < best.distance ? { card, distance } : best;
-            }, null);
-            if (!nearest) return cards.length;
-            const index = cards.indexOf(nearest.card);
-            const rect = nearest.card.getBoundingClientRect();
-            const isAfter = event.clientY > rect.top + rect.height / 2 ||
-              (Math.abs(event.clientY - (rect.top + rect.height / 2)) <= rect.height / 2 && event.clientX > rect.left + rect.width / 2);
-            return index + (isAfter ? 1 : 0);
-          })();
+          const insertionIndex = grid?.contains(target as Node)
+            ? getGridInsertionIndex(grid, target, event.clientX, event.clientY, drag.id)
+            : -1;
           if (insertionIndex >= 0) {
-          setDraft((current) => ({
-            ...current,
+            setDraft((current) => ({
+              ...current,
               [drag.collection]: reorderAt(current[drag.collection], drag.id, insertionIndex),
-          }));
+            }));
           }
         }
       }
@@ -226,6 +266,8 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       dragRef.current = null;
       setDraggingId(null);
       setDropTargetId(null);
+      dropIndexRef.current = null;
+      setDropIndex(null);
       setDragPreview(null);
     };
 
@@ -233,6 +275,8 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       dragRef.current = null;
       setDraggingId(null);
       setDropTargetId(null);
+      dropIndexRef.current = null;
+      setDropIndex(null);
       setDragPreview(null);
     };
 
@@ -265,6 +309,8 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       label: choice.label,
     };
     setDropTargetId(null);
+    dropIndexRef.current = null;
+    setDropIndex(null);
   };
 
   const handleFiles = (event: ChangeEvent<HTMLInputElement>) => {
@@ -368,6 +414,26 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
 
   const currentCategory = categories.find((item) => item.id === collection);
   const selectedChoice = draft[collection].find((item) => item.id === selectedId);
+  const activeDrag = dragRef.current;
+  const isSortingCurrentCategory = Boolean(
+    draggingId && activeDrag?.mode === "dragging" && activeDrag.collection === collection
+  );
+  const sourceIndex = isSortingCurrentCategory
+    ? draft[collection].findIndex((item) => item.id === draggingId)
+    : -1;
+  const visibleChoices = isSortingCurrentCategory
+    ? draft[collection].filter((item) => item.id !== draggingId)
+    : draft[collection];
+  const slotIndex = isSortingCurrentCategory
+    ? Math.max(0, Math.min(visibleChoices.length, dropIndex ?? sourceIndex))
+    : -1;
+  const gridEntries: Array<{ key: string; choice: DraftChoice | null }> = visibleChoices.map((choice) => ({
+    key: choice.id,
+    choice,
+  }));
+  if (isSortingCurrentCategory) {
+    gridEntries.splice(slotIndex, 0, { key: "drag-slot", choice: null });
+  }
 
   return (
     <section
@@ -432,10 +498,10 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
       </div>
 
       <div className="workspace-icon-admin-grid" role="list" aria-label={`${currentCategory?.label} 아이콘 관리`}>
-        {draft[collection].map((choice) => (
+        {gridEntries.map(({ key, choice }) => choice ? (
           <article
-            key={choice.id}
-            className={`workspace-icon-admin-card${selectedId === choice.id ? " is-selected" : ""}${draggingId === choice.id ? " is-dragging" : ""}${dropTargetId === choice.id ? " is-drop-target" : ""}`}
+            key={key}
+            className={`workspace-icon-admin-card${selectedId === choice.id ? " is-selected" : ""}${dropTargetId === choice.id ? " is-drop-target" : ""}`}
             data-admin-icon-id={choice.id}
             data-admin-collection={collection}
             role="listitem"
@@ -481,6 +547,8 @@ export const WorkspaceIconAdminManager = ({ catalog, onCancel, onSaved, classNam
               <Trash2 size={15} />
             </button>
           </article>
+        ) : (
+          <div key={key} className="workspace-icon-admin-slot" data-admin-drop-slot role="listitem" aria-hidden="true" />
         ))}
       </div>
 
